@@ -1,0 +1,146 @@
+---
+import { Image } from 'astro:assets';
+import { categories } from '../content.config';
+
+interface Props {
+	post: { id: string; body?: string; data: Record<string, any> };
+}
+
+const { post } = Astro.props;
+const { title, date, category, cover, youtube, video } = post.data;
+
+const categoryLabel = categories.find((c) => c.id === category)?.label ?? category;
+
+const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+
+function getYoutubeThumbnail(url: string) {
+	const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
+	return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : null;
+}
+
+function excerpt(text: string | undefined, length = 140) {
+	if (!text) return '';
+	const plain = text
+		.replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+		.replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+		.replace(/[#>*_`~-]/g, '')
+		.replace(/\s+/g, ' ')
+		.trim();
+	return plain.length > length ? `${plain.slice(0, length).trim()}…` : plain;
+}
+
+const youtubeThumbnail = youtube ? getYoutubeThumbnail(youtube) : null;
+const isVideo = Boolean(youtubeThumbnail || video);
+---
+
+<a class="card" href={`/posts/${post.id}/`}>
+	{
+		cover ? (
+			<Image
+				class="media"
+				src={cover}
+				alt=""
+				widths={[400, 800]}
+				sizes="(max-width: 700px) 100vw, 400px"
+				width={800}
+				height={Math.round(800 * (cover.height / cover.width))}
+			/>
+		) : youtubeThumbnail ? (
+			<span class="media-wrap">
+				<img class="media" src={youtubeThumbnail} alt="" loading="lazy" width="480" height="360" />
+				<span class="play" aria-hidden="true">
+					▶
+				</span>
+			</span>
+		) : video ? (
+			<span class="media video-placeholder" aria-hidden="true">
+				▶ Видео
+			</span>
+		) : null
+	}
+	<div class="body">
+		<span class="category">{categoryLabel}</span>
+		<h3 class="title">{title}</h3>
+		<span class="date">{dateFormatter.format(date)}</span>
+		{!cover && !isVideo && <p class="excerpt">{excerpt(post.body)}</p>}
+	</div>
+</a>
+
+<style>
+	.card {
+		display: flex;
+		flex-direction: column;
+		color: var(--color-text);
+		background: var(--color-bg-elevated);
+		border-radius: var(--radius-md);
+		overflow: hidden;
+		border: 1px solid var(--color-border);
+		transition: border-color var(--transition-fast);
+	}
+
+	.card:hover,
+	.card:focus-visible {
+		border-color: var(--color-accent);
+		color: var(--color-text);
+	}
+
+	.media,
+	.media-wrap :global(.media) {
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		object-fit: cover;
+	}
+
+	.media-wrap {
+		position: relative;
+		display: block;
+	}
+
+	.play {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: var(--font-size-xl);
+		color: #fff;
+		text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+	}
+
+	.video-placeholder {
+		aspect-ratio: 16 / 9;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: var(--color-bg);
+		color: var(--color-text-muted);
+		font-size: var(--font-size-lg);
+	}
+
+	.body {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-1);
+		padding: var(--space-2);
+	}
+
+	.category {
+		color: var(--color-accent);
+		font-size: var(--font-size-sm);
+	}
+
+	.title {
+		margin: 0;
+		font-size: var(--font-size-lg);
+	}
+
+	.date {
+		color: var(--color-text-muted);
+		font-size: var(--font-size-sm);
+	}
+
+	.excerpt {
+		color: var(--color-text-muted);
+		margin: var(--space-1) 0 0;
+	}
+</style>

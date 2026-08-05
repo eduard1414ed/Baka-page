@@ -1,11 +1,17 @@
 ---
 import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import PostFeed from '../components/PostFeed.astro';
 import banner from '../assets/images/banner.png';
 import cover from '../assets/images/cover.jpeg';
 import { platforms } from '../data/platforms.js';
 
 const description = 'Подкаст об аниме и о том, что скрывается между кадрами';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
 ---
 
 <Layout title="Бака! — подкаст об аниме" description={description}>
@@ -45,6 +51,10 @@ const description = 'Подкаст об аниме и о том, что скр�
 			</div>
 		</div>
 	</section>
+
+	<section class="feed">
+		<PostFeed posts={posts} />
+	</section>
 </Layout>
 
 <style>
@@ -60,6 +70,12 @@ const description = 'Подкаст об аниме и о том, что скр�
 		aspect-ratio: 1200 / 675;
 		object-fit: cover;
 		border-radius: var(--radius-md);
+	}
+
+	.feed {
+		max-width: 72rem;
+		margin: 0 auto;
+		padding: 0 var(--space-3) var(--space-4);
 	}
 
 	.intro {
