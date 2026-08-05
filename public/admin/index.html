@@ -46,7 +46,7 @@
 					{ label: 'Текст ссылки на источник', name: 'source-label', widget: 'string', required: false },
 					{ label: 'Ссылка на источник', name: 'source-url', widget: 'string', required: false },
 				],
-				pattern: /^::image\{([\s\S]*)\}$/,
+				pattern: /^::image\{([^\n]*)\}$/,
 				fromBlock: (match) => {
 					const attrs = {};
 					const re = /([\w-]+)="((?:[^"])*)"/g;
@@ -85,7 +85,7 @@
 					{ label: 'Картинки', name: 'images', widget: 'image', multiple: true },
 					{ label: 'Общая подпись', name: 'caption', widget: 'string', required: false },
 				],
-				pattern: /^::gallery\{([\s\S]*)\}$/,
+				pattern: /^::gallery\{([^\n]*)\}$/,
 				fromBlock: (match) => {
 					const attrs = {};
 					const re = /([\w-]+)="((?:[^"])*)"/g;
