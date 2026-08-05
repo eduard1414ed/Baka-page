@@ -133,16 +133,15 @@
 				toPreview: (data) => `<span style="opacity:0.6">🔒 ${escapeHtml(data.text)}</span>`,
 			});
 
-			// Видео в любом месте текста: ссылка на YouTube или свой файл.
-			// Если заполнено и то, и то — на сайте покажется YouTube.
+			// Видео в любом месте текста — пока только ссылкой на YouTube.
+			// Свой файл понадобится грузить на Hetzner, а не в репозиторий: это
+			// отдельная задача (лимит Cloudflare — 25 МБ на файл, свои видео —
+			// на этап "Выпуски и плеер", делать сразу через сервер, а не сюда.
 			CMS.registerEditorComponent({
 				id: 'video',
 				label: 'Видео',
 				icon: 'movie',
-				fields: [
-					{ label: 'Ссылка на YouTube', name: 'youtube', widget: 'string', required: false },
-					{ label: 'Свой файл (если без YouTube)', name: 'src', widget: 'file', required: false },
-				],
+				fields: [{ label: 'Ссылка на YouTube', name: 'youtube', widget: 'string' }],
 				pattern: /^::video\{([^\n]*)\}$/,
 				fromBlock: (match) => {
 					const attrs = {};
@@ -155,19 +154,11 @@
 
 					return attrs;
 				},
-				toBlock: (data) => {
-					const parts = [];
-					if (data.youtube) parts.push(`youtube="${escapeAttr(data.youtube)}"`);
-					if (data.src) parts.push(`src="${data.src}"`);
-
-					return `\n::video{${parts.join(' ')}}\n`;
-				},
+				toBlock: (data) => `\n::video{youtube="${escapeAttr(data.youtube)}"}\n`,
 				toPreview: (data) =>
 					data.youtube
 						? `<div style="opacity:0.6">▶ YouTube: ${escapeHtml(data.youtube)}</div>`
-						: data.src
-							? `<div style="opacity:0.6">▶ видео: ${escapeHtml(data.src)}</div>`
-							: `<div style="opacity:0.6">Видео (заполните ссылку или файл)</div>`,
+						: `<div style="opacity:0.6">Видео (вставьте ссылку на YouTube)</div>`,
 			});
 		</script>
 	</body>
