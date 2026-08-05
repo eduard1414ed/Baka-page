@@ -3,6 +3,13 @@ title: 'Знакомьтесь: Ёдзи Такэсигэ'
 date: 2026-08-05
 category: note
 draft: false
+buttons:
+  - label: Patreon
+    url: https://www.patreon.com/bakapodcast/posts/bunko-kagurabati-164719402?utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=postshare_creator&utm_content=join_link
+    style: secondary
+  - label: Boosty
+    url: https://boosty.to/bakapodcast/posts/c7b28f03-90d5-415f-8ace-6609a832340a?share=success_publish_link
+    style: primary
 ---
 
 ::image{src="/images/uploads/photo_2026-08-05%2017.48.25.jpeg" alt="Кадр: Сказание о Земноморье" caption="Кадр: Сказание о Земноморье" width="full"}
