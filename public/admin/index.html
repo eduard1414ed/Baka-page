@@ -81,8 +81,16 @@
 				label: 'Галерея',
 				icon: 'photo_library',
 				fields: [
-					// multiple: true — можно выбрать/перетащить сразу несколько файлов за раз.
-					{ label: 'Картинки', name: 'images', widget: 'image', multiple: true },
+					// Загрузка по одному файлу через "Добавить" — надёжно работает.
+					// multiple:true (загрузка пачкой) здесь ломала ссылки на картинки:
+					// CMS не успевала подставить финальный путь и сохраняла временный
+					// blob: (живёт только пока открыта вкладка браузера, потом мёртв).
+					{
+						label: 'Картинки',
+						name: 'images',
+						widget: 'list',
+						field: { label: 'Файл', name: 'image', widget: 'image' },
+					},
 					{ label: 'Общая подпись', name: 'caption', widget: 'string', required: false },
 				],
 				pattern: /^::gallery\{([^\n]*)\}$/,
@@ -115,7 +123,7 @@
 					return { caption: attrs.caption ? attrs.caption.replaceAll('&quot;', '"') : '', images };
 				},
 				toBlock: (data) => {
-					const images = (data.images || []).filter(Boolean);
+					const images = (data.images || []).filter((src) => typeof src === 'string' && src && !src.startsWith('blob:'));
 					const itemsB64 = toBase64Utf8(JSON.stringify(images));
 
 					return `::gallery{caption="${escapeAttr(data.caption)}" items="${itemsB64}"}`;
