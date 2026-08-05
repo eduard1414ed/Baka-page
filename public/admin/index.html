@@ -63,7 +63,9 @@
 					if (data['source-label']) parts.push(`source-label="${escapeAttr(data['source-label'])}"`);
 					if (data['source-url']) parts.push(`source-url="${data['source-url']}"`);
 
-					return `::image{${parts.join(' ')}}`;
+					// Перенос строки по краям — на случай, если блок вставили посреди фразы:
+					// без разрыва строки директива читается просто как текст, не как блок.
+					return `\n::image{${parts.join(' ')}}\n`;
 				},
 				toPreview: (data) => `
 					<figure style="margin:0">
@@ -97,7 +99,7 @@
 
 					return attrs;
 				},
-				toBlock: (data) => `::spoiler-start{label="${escapeAttr(data.label || 'Показать спойлер')}"}`,
+				toBlock: (data) => `\n::spoiler-start{label="${escapeAttr(data.label || 'Показать спойлер')}"}\n`,
 				toPreview: (data) =>
 					`<div style="opacity:0.6;font-size:0.875rem">▾ начало спойлера («${escapeHtml(data.label || 'Показать спойлер')}»)</div>`,
 			});
@@ -109,7 +111,7 @@
 				fields: [],
 				pattern: /^::spoiler-end\{\}$/,
 				fromBlock: () => ({}),
-				toBlock: () => '::spoiler-end{}',
+				toBlock: () => '\n::spoiler-end{}\n',
 				toPreview: () => `<div style="opacity:0.6;font-size:0.875rem">▴ конец спойлера</div>`,
 			});
 		</script>
