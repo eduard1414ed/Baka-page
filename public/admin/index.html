@@ -132,6 +132,43 @@
 				toBlock: (data) => `:spoiler-inline[${escapeMdInline(data.text)}]{}`,
 				toPreview: (data) => `<span style="opacity:0.6">🔒 ${escapeHtml(data.text)}</span>`,
 			});
+
+			// Видео в любом месте текста: ссылка на YouTube или свой файл.
+			// Если заполнено и то, и то — на сайте покажется YouTube.
+			CMS.registerEditorComponent({
+				id: 'video',
+				label: 'Видео',
+				icon: 'movie',
+				fields: [
+					{ label: 'Ссылка на YouTube', name: 'youtube', widget: 'string', required: false },
+					{ label: 'Свой файл (если без YouTube)', name: 'src', widget: 'file', required: false },
+				],
+				pattern: /^::video\{([^\n]*)\}$/,
+				fromBlock: (match) => {
+					const attrs = {};
+					const re = /([\w-]+)="((?:[^"])*)"/g;
+					let m;
+
+					while ((m = re.exec(match[1]))) {
+						attrs[m[1]] = m[2].replaceAll('&quot;', '"');
+					}
+
+					return attrs;
+				},
+				toBlock: (data) => {
+					const parts = [];
+					if (data.youtube) parts.push(`youtube="${escapeAttr(data.youtube)}"`);
+					if (data.src) parts.push(`src="${data.src}"`);
+
+					return `\n::video{${parts.join(' ')}}\n`;
+				},
+				toPreview: (data) =>
+					data.youtube
+						? `<div style="opacity:0.6">▶ YouTube: ${escapeHtml(data.youtube)}</div>`
+						: data.src
+							? `<div style="opacity:0.6">▶ видео: ${escapeHtml(data.src)}</div>`
+							: `<div style="opacity:0.6">Видео (заполните ссылку или файл)</div>`,
+			});
 		</script>
 	</body>
 </html>

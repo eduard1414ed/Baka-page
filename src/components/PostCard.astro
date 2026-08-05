@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import { categories } from '../content.config';
+import { getYoutubeThumbnailUrl } from '../lib/youtube.mjs';
 
 interface Props {
 	post: { id: string; body?: string; data: Record<string, any> };
@@ -13,11 +14,6 @@ const categoryLabel = categories.find((c) => c.id === category)?.label ?? catego
 
 const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
 
-function getYoutubeThumbnail(url: string) {
-	const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
-	return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : null;
-}
-
 function excerpt(text: string | undefined, length = 140) {
 	if (!text) return '';
 	const plain = text
@@ -29,7 +25,7 @@ function excerpt(text: string | undefined, length = 140) {
 	return plain.length > length ? `${plain.slice(0, length).trim()}…` : plain;
 }
 
-const youtubeThumbnail = youtube ? getYoutubeThumbnail(youtube) : null;
+const youtubeThumbnail = youtube ? getYoutubeThumbnailUrl(youtube) : null;
 const isVideo = Boolean(youtubeThumbnail || video);
 ---
 

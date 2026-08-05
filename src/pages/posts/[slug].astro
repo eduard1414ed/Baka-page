@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
 import { categories } from '../../content.config';
+import { getYoutubeEmbedUrl } from '../../lib/youtube.mjs';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('posts', ({ data }) => !data.draft);
@@ -19,12 +20,7 @@ const { title, date, category, cover, youtube, video } = post.data;
 const categoryLabel = categories.find((c) => c.id === category)?.label ?? category;
 const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
 
-function getYoutubeEmbed(url: string) {
-	const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
-	return match ? `https://www.youtube.com/embed/${match[1]}` : null;
-}
-
-const youtubeEmbed = youtube ? getYoutubeEmbed(youtube) : null;
+const youtubeEmbed = youtube ? getYoutubeEmbedUrl(youtube) : null;
 ---
 
 <Layout title={`${title} — Бака!`}>
@@ -403,6 +399,29 @@ const youtubeEmbed = youtube ? getYoutubeEmbed(youtube) : null;
 		position: static;
 		margin-left: 0;
 		margin-right: 0;
+	}
+
+	.content :global(.video-wrap) {
+		position: relative;
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		margin: var(--space-3) 0;
+		border-radius: var(--radius-md);
+		overflow: hidden;
+	}
+
+	.content :global(.video-wrap iframe) {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		border: 0;
+	}
+
+	.content :global(video.video) {
+		width: 100%;
+		margin: var(--space-3) 0;
+		border-radius: var(--radius-md);
 	}
 </style>
 
