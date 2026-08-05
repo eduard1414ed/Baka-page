@@ -44,4 +44,7 @@ collections:
           - { label: Обзор, value: review }
           - { label: Бонус, value: bonus }
       - { label: Черновик, name: draft, widget: boolean, default: true }
-      - { label: Текст, name: body, widget: markdown }
+      - label: Текст
+        name: body
+        widget: richtext
+        editor_components: [code-block, image, figure]

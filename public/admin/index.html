@@ -21,7 +21,9 @@
 					.replaceAll('"', '&quot;');
 
 			CMS.registerEditorComponent({
-				id: 'image',
+				// id отдельно от синтаксиса ::image{...} в тексте — так называется только
+				// сама кнопка/пункт в CMS. Встроенный простой блок картинки уже занял id "image".
+				id: 'figure',
 				label: 'Изображение с подписью',
 				icon: 'image',
 				fields: [
