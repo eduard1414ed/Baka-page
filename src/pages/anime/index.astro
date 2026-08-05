@@ -13,9 +13,13 @@ for (const post of posts) {
 	}
 }
 
+function displayTitle(entry: (typeof animeList)[number]) {
+	return entry.data.titleRu || entry.data.titleOriginal;
+}
+
 const sorted = animeList
 	.map((entry) => ({ entry, count: mentionCounts.get(entry.id) ?? 0 }))
-	.sort((a, b) => b.count - a.count || a.entry.data.titleRu.localeCompare(b.entry.data.titleRu, 'ru'));
+	.sort((a, b) => b.count - a.count || displayTitle(a.entry).localeCompare(displayTitle(b.entry), 'ru'));
 ---
 
 <Layout title="Тайтлы — Бака!" description="Все аниме, которые упоминались в подкасте">

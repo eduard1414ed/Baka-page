@@ -1,6 +1,7 @@
 {
 	"id": "howls-moving-castle",
-	"shikimoriId": 431,
+	"source": "shikimori",
+	"sourceId": 431,
 	"titleRu": "Ходячий замок",
 	"titleOriginal": "Howl no Ugoku Shiro",
 	"year": 2004,

@@ -1,6 +1,7 @@
 {
 	"id": "tales-from-earthsea",
-	"shikimoriId": 1829,
+	"source": "shikimori",
+	"sourceId": 1829,
 	"titleRu": "Сказания Земноморья",
 	"titleOriginal": "Ged Senki",
 	"year": 2006,

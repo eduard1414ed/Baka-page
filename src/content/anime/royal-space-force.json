@@ -1,6 +1,7 @@
 {
 	"id": "royal-space-force",
-	"shikimoriId": 1034,
+	"source": "shikimori",
+	"sourceId": 1034,
 	"titleRu": "Королевские космические силы: Крылья Хоннеамиз",
 	"titleOriginal": "Ouritsu Uchuugun: Honneamise no Tsubasa",
 	"year": 1987,

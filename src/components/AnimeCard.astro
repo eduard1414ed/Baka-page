@@ -7,8 +7,10 @@ interface Props {
 }
 
 const { anime, count } = Astro.props;
-const { titleRu, year, poster } = anime.data;
+const { titleRu, titleOriginal, year, poster } = anime.data;
 const posterSrcs = getAnimePosterSrcs(poster);
+const displayTitle = titleRu || titleOriginal;
+const needsTranslation = !titleRu;
 
 function pluralizeMentions(n: number) {
 	const mod10 = n % 10;
@@ -37,7 +39,8 @@ function pluralizeMentions(n: number) {
 		)
 	}
 	<div class="body">
-		<h3 class="title">{titleRu}</h3>
+		<h3 class="title">{displayTitle}</h3>
+		{needsTranslation && <span class="badge">нужен перевод</span>}
 		<span class="meta">
 			{year}
 			{count > 0 && ` · ${count} ${pluralizeMentions(count)}`}
@@ -93,6 +96,16 @@ function pluralizeMentions(n: number) {
 
 	.meta {
 		color: var(--color-text-muted);
+		font-size: var(--font-size-sm);
+	}
+
+	.badge {
+		display: inline-block;
+		width: fit-content;
+		padding: 0.1em 0.5em;
+		border-radius: var(--radius-full);
+		background: var(--color-accent-2);
+		color: var(--color-bg);
 		font-size: var(--font-size-sm);
 	}
 </style>

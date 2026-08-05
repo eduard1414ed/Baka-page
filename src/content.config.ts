@@ -47,8 +47,13 @@ const anime = defineCollection({
 	loader: glob({ pattern: '**/*.json', base: './src/content/anime' }),
 	schema: z.object({
 		id: z.string(),
-		shikimoriId: z.number(),
-		titleRu: z.string(),
+		// Откуда взяты данные — Shikimori основной, AniList запасной (если
+		// в Shikimori тайтла нет). Список источников — scripts/fetch-anime.mjs.
+		source: z.enum(['shikimori', 'anilist']),
+		sourceId: z.number(),
+		// У AniList не бывает русских названий — тогда titleRu пустой,
+		// на страницах тайтла это явно помечено, вписывается вручную.
+		titleRu: z.string().optional(),
 		titleOriginal: z.string(),
 		year: z.number().optional(),
 		studio: z.string().optional(),

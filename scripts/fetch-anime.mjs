@@ -1,22 +1,31 @@
-// Разово запрашивает данные тайтла с Shikimori и кладёт результат в кэш:
-// картинку — в public/anime/, JSON — в src/content/anime/. Сборка сайта
-// эти файлы просто читает и сама на Shikimori никогда не ходит.
+// Разово ищет тайтл по названию и кладёт результат в кэш: картинку —
+// в public/anime/, JSON — в src/content/anime/. Сборка сайта эти файлы
+// просто читает и сама ни на Shikimori, ни на AniList никогда не ходит.
 //
-// Запуск: node scripts/fetch-anime.mjs slug:id [slug:id ...]
-// Пример: node scripts/fetch-anime.mjs spirited-away:199 howls-moving-castle:431
+// Запуск: node scripts/fetch-anime.mjs slug:поисковый_запрос [slug:запрос ...]
+// Пример: node scripts/fetch-anime.mjs spirited-away:Spirited Away
 //
 // slug — как тайтл будет называться в адресе сайта (/anime/slug/), выбираете сами.
-// id — числовой ID тайтла на Shikimori, его видно в адресе страницы тайтла
-//      на самом Shikimori: https://shikimori.one/animes/z199-... -> id 199.
+// запрос — название на любом языке, как для поиска на самом Shikimori.
+//
+// Источники пробуются по очереди (см. SOURCES ниже): сначала Shikimori,
+// и только если там ничего не нашлось — AniList. Если тайтл взят из
+// AniList, у него не будет русского названия (titleRu) — скрипт скажет
+// об этом прямо, впишите его потом в файл тайтла вручную.
 
 import { writeFile, mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { ANIME_POSTER_WIDTHS } from '../src/lib/animePoster.mjs';
+import * as shikimori from './anime-sources/shikimori.mjs';
+import * as anilist from './anime-sources/anilist.mjs';
 
-const SHIKIMORI_BASE = 'https://shikimori.one';
-const USER_AGENT = 'BakaPodcastSite/1.0 (+https://github.com/eduard1414ed/Baka-page)';
-const PAUSE_MS = 1500; // Shikimori ограничивает частоту запросов — не долбим подряд.
+// Порядок = приоритет поиска. Чтобы добавить третий источник — написать
+// модуль такой же формы (id, label, find(query)) и дописать его в список,
+// больше нигде ничего менять не нужно.
+const SOURCES = [shikimori, anilist];
+
+const PAUSE_MS = 1500; // пауза между тайтлами — источники ограничивают частоту запросов.
 
 const ROOT = new URL('../', import.meta.url);
 const ANIME_CONTENT_DIR = new URL('src/content/anime/', ROOT);
@@ -26,27 +35,8 @@ function sleep(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// Shikimori вставляет в описание разметку вида [character=384]Имя[/character] —
-// на сайте она не нужна, оставляем только текст внутри тегов.
-function cleanDescription(description) {
-	if (!description) return undefined;
-	return description.replace(/\[\/?\w+(?:=\d+)?\]/g, '').trim();
-}
-
-async function fetchAnimeData(shikimoriId) {
-	const response = await fetch(`${SHIKIMORI_BASE}/api/animes/${shikimoriId}`, {
-		headers: { 'User-Agent': USER_AGENT },
-	});
-	if (!response.ok) {
-		throw new Error(`Shikimori ответил ${response.status} для id ${shikimoriId}`);
-	}
-	return response.json();
-}
-
-async function downloadPoster(imagePath, slug) {
-	const response = await fetch(`${SHIKIMORI_BASE}${imagePath}`, {
-		headers: { 'User-Agent': USER_AGENT },
-	});
+async function downloadPoster(posterUrl, slug) {
+	const response = await fetch(posterUrl);
 	if (!response.ok) {
 		throw new Error(`Не удалось скачать обложку: ${response.status}`);
 	}
@@ -62,58 +52,84 @@ async function downloadPoster(imagePath, slug) {
 	}
 }
 
-async function fetchOne(slug, shikimoriId) {
-	console.log(`→ ${slug}: запрашиваю тайтл ${shikimoriId} с Shikimori…`);
-	const data = await fetchAnimeData(shikimoriId);
+async function findAcrossSources(query) {
+	for (const source of SOURCES) {
+		console.log(`  ищу в ${source.label}…`);
+		let result;
+		try {
+			result = await source.find(query);
+		} catch (error) {
+			console.error(`  ${source.label} ответил с ошибкой, пробую следующий источник: ${error.message}`);
+			continue;
+		}
+		if (result) {
+			console.log(`  нашёл в ${source.label}: ${result.matchedName}`);
+			return { source, result };
+		}
+		console.log(`  в ${source.label} не нашлось.`);
+	}
+	return null;
+}
 
-	const year = data.aired_on ? Number(data.aired_on.slice(0, 4)) : undefined;
-	const studio = data.studios?.[0]?.name;
-	const posterPath = data.image?.original;
+async function fetchOne(slug, query) {
+	console.log(`→ ${slug}: ищу «${query}»…`);
+	const found = await findAcrossSources(query);
 
-	if (posterPath) {
+	if (!found) {
+		console.log(`  тайтл «${query}» не найден ни в одном источнике (${SOURCES.map((s) => s.label).join(', ')}).`);
+		return;
+	}
+
+	const { source, result } = found;
+
+	if (result.posterUrl) {
 		console.log(`  скачиваю обложку и сжимаю в ${ANIME_POSTER_WIDTHS.join('/')}px…`);
-		await downloadPoster(posterPath, slug);
+		await downloadPoster(result.posterUrl, slug);
 	}
 
 	const entry = {
 		id: slug,
-		shikimoriId: data.id,
-		titleRu: data.russian || data.name,
-		titleOriginal: data.name,
-		...(year && { year }),
-		...(studio && { studio }),
-		...(posterPath && { poster: `/anime/${slug}.jpg` }),
-		...(cleanDescription(data.description) && { synopsis: cleanDescription(data.description) }),
-		...(data.url && { url: `${SHIKIMORI_BASE}${data.url}` }),
+		source: source.id,
+		sourceId: result.sourceId,
+		...(result.titleRu && { titleRu: result.titleRu }),
+		titleOriginal: result.titleOriginal,
+		...(result.year && { year: result.year }),
+		...(result.studio && { studio: result.studio }),
+		...(result.posterUrl && { poster: `/anime/${slug}.jpg` }),
+		...(result.synopsis && { synopsis: result.synopsis }),
+		...(result.url && { url: result.url }),
 	};
 
 	await mkdir(ANIME_CONTENT_DIR, { recursive: true });
 	const outPath = new URL(`${slug}.json`, ANIME_CONTENT_DIR);
 	await writeFile(outPath, JSON.stringify(entry, null, '\t') + '\n', 'utf8');
-	console.log(`  сохранено: src/content/anime/${slug}.json`);
+
+	const warning = result.titleRu ? '' : '  ⚠ нет русского названия — впишите titleRu вручную в этот файл';
+	console.log(`  сохранено: src/content/anime/${slug}.json${warning}`);
 }
 
 async function main() {
 	const args = process.argv.slice(2);
 	if (args.length === 0) {
-		console.log('Использование: node scripts/fetch-anime.mjs slug:id [slug:id ...]');
-		console.log('Пример: node scripts/fetch-anime.mjs spirited-away:199');
+		console.log('Использование: node scripts/fetch-anime.mjs slug:поисковый_запрос [slug:запрос ...]');
+		console.log('Пример: node scripts/fetch-anime.mjs spirited-away:Spirited Away');
 		process.exit(1);
 	}
 
 	const pairs = args.map((arg) => {
-		const [slug, idStr] = arg.split(':');
-		const id = Number(idStr);
-		if (!slug || !id) {
-			throw new Error(`Не понял аргумент "${arg}", нужен формат slug:id`);
+		const sep = arg.indexOf(':');
+		const slug = sep === -1 ? '' : arg.slice(0, sep);
+		const query = sep === -1 ? '' : arg.slice(sep + 1).trim();
+		if (!slug || !query) {
+			throw new Error(`Не понял аргумент "${arg}", нужен формат slug:запрос`);
 		}
-		return { slug, id };
+		return { slug, query };
 	});
 
 	for (let i = 0; i < pairs.length; i++) {
-		const { slug, id } = pairs[i];
+		const { slug, query } = pairs[i];
 		try {
-			await fetchOne(slug, id);
+			await fetchOne(slug, query);
 		} catch (error) {
 			console.error(`  ошибка для ${slug}: ${error.message}`);
 		}

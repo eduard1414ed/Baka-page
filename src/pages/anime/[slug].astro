@@ -10,8 +10,11 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { titleRu, titleOriginal, year, studio, poster, synopsis, url } = entry.data;
+const { titleRu, titleOriginal, year, studio, poster, synopsis, url, source } = entry.data;
 const posterSrcs = getAnimePosterSrcs(poster);
+const displayTitle = titleRu || titleOriginal;
+const needsTranslation = !titleRu;
+const sourceLabel = source === 'anilist' ? 'AniList' : 'Shikimori';
 
 const posts = (
 	await getCollection(
@@ -21,7 +24,7 @@ const posts = (
 ).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
-<Layout title={`${titleRu} — Бака!`} description={synopsis?.slice(0, 160)}>
+<Layout title={`${displayTitle} — Бака!`} description={synopsis?.slice(0, 160)}>
 	<section class="anime-page">
 		<a class="back" href="/anime/">← Все тайтлы</a>
 
@@ -38,15 +41,23 @@ const posts = (
 				)
 			}
 			<div class="info">
-				<h1>{titleRu}</h1>
-				{titleOriginal && titleOriginal !== titleRu && <p class="original">{titleOriginal}</p>}
+				<h1>{displayTitle}</h1>
+				{
+					needsTranslation ? (
+						<p class="translation-notice">
+							⚠ нет русского названия — впишите titleRu в src/content/anime/{entry.id}.json
+						</p>
+					) : (
+						titleOriginal !== titleRu && <p class="original">{titleOriginal}</p>
+					)
+				}
 				<p class="meta">
 					{[year, studio].filter(Boolean).join(' · ')}
 				</p>
 				{
 					url && (
 						<a class="shikimori-link" href={url} target="_blank" rel="noopener noreferrer">
-							Страница на Shikimori →
+							Страница на {sourceLabel} →
 						</a>
 					)
 				}
@@ -117,6 +128,16 @@ const posts = (
 	.original {
 		color: var(--color-text-muted);
 		font-style: italic;
+		margin: 0;
+	}
+
+	.translation-notice {
+		width: fit-content;
+		padding: 0.15em 0.6em;
+		border-radius: var(--radius-sm);
+		background: var(--color-accent-2);
+		color: var(--color-bg);
+		font-size: var(--font-size-sm);
 		margin: 0;
 	}
 

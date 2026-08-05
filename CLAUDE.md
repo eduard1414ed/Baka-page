@@ -66,8 +66,14 @@
 
 ### Тайтл (`src/content/anime/*.json`)
 
-`id` (slug), `shikimoriId`, `titleRu`, `titleOriginal`, `year`, `studio`,
-`poster`, `synopsis`, `url`.
+`id` (slug), `source` (`shikimori` или `anilist` — откуда взяты данные),
+`sourceId` (числовой ID в этом источнике), `titleRu` (необязательное —
+у AniList русских названий не бывает, тогда вписывается вручную),
+`titleOriginal`, `year`, `studio`, `poster`, `synopsis`, `url`.
+
+Shikimori — основной источник, AniList — запасной (если тайтла нет
+в Shikimori). Источники в `scripts/fetch-anime.mjs` подключаются модулями
+одной формы, значит третий источник добавляется без переписывания скрипта.
 
 ### Транскрипт (`src/content/transcripts/*.json`)
 

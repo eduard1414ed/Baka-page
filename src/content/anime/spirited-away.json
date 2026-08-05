@@ -1,6 +1,7 @@
 {
 	"id": "spirited-away",
-	"shikimoriId": 199,
+	"source": "shikimori",
+	"sourceId": 199,
 	"titleRu": "Унесённые призраками",
 	"titleOriginal": "Sen to Chihiro no Kamikakushi",
 	"year": 2001,
