@@ -28,7 +28,10 @@ export default function remarkGallery() {
 			}
 			if (!Array.isArray(items)) return;
 
-			const srcs = items.filter((src) => typeof src === 'string' && src);
+			// blob: — временная ссылка браузера, которая живёт только в открытой вкладке
+			// админки; если такая всё же попала в файл (старые/незавершённые сохранения),
+			// показывать её на сайте бессмысленно — она гарантированно не откроется.
+			const srcs = items.filter((src) => typeof src === 'string' && src && !src.startsWith('blob:'));
 			if (srcs.length === 0) return;
 
 			const caption = unescapeAttr(attrs.caption);

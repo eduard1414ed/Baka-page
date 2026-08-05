@@ -105,6 +105,13 @@
 						}
 					}
 
+					// На случай старых записей: раньше картинки хранились как {src, alt},
+					// сейчас — просто строка-ссылка. Понимаем оба варианта, чтобы старый
+					// пост при открытии не путал редактор.
+					images = images
+						.map((item) => (item && typeof item === 'object' ? item.src : item))
+						.filter((src) => typeof src === 'string' && src && !src.startsWith('blob:'));
+
 					return { caption: attrs.caption ? attrs.caption.replaceAll('&quot;', '"') : '', images };
 				},
 				toBlock: (data) => {
