@@ -96,7 +96,9 @@ const youtubeEmbed = youtube ? getYoutubeEmbedUrl(youtube) : null;
 			overlay.className = 'lightbox';
 
 			const bigImg = document.createElement('img');
-			bigImg.src = sourceImg.src;
+			// .src — то, что браузер выбрал из srcset для превью, необязательно
+			// самое крупное; data-full всегда указывает на него явно.
+			bigImg.src = sourceImg.dataset.full || sourceImg.src;
 			bigImg.alt = sourceImg.alt;
 			overlay.appendChild(bigImg);
 

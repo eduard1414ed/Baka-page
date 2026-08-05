@@ -1,4 +1,5 @@
 import { visit } from 'unist-util-visit';
+import { getImageVariantSrcs } from '../lib/imageVariants.mjs';
 
 // Значения атрибутов приходят экранированными из админки (см. public/admin/index.html) —
 // там кавычка ломает разбор синтаксиса директивы, поэтому её заменяют на &quot;.
@@ -24,12 +25,35 @@ function parseImageNode(node) {
 	};
 }
 
-function buildLink(item) {
+// Сжатые webp-версии (2 размера) появляются уже после этого шага, отдельным
+// проходом по готовой сборке — см. src/plugins/optimize-uploads-integration.mjs.
+// Здесь просто заранее знаем, как будут называться файлы.
+function buildLink(item, sizes) {
+	const variants = getImageVariantSrcs(item.src);
+	const largest = variants[variants.length - 1];
+	const srcset = variants.map((v) => `${v.src} ${v.width}w`).join(', ');
+
 	return {
 		type: 'element',
 		tagName: 'a',
-		properties: { href: item.src, class: 'figure-zoom' },
-		children: [{ type: 'element', tagName: 'img', properties: { src: item.src, alt: item.alt, loading: 'lazy' }, children: [] }],
+		properties: { href: largest.src, class: 'figure-zoom' },
+		children: [
+			{
+				type: 'element',
+				tagName: 'img',
+				properties: {
+					src: largest.src,
+					srcset,
+					sizes,
+					alt: item.alt,
+					loading: 'lazy',
+					// .src после выбора браузером нужного варианта из srcset может
+					// указывать не на самый крупный файл — лайтбоксу нужен именно он.
+					'data-full': largest.src,
+				},
+				children: [],
+			},
+		],
 	};
 }
 
@@ -49,7 +73,8 @@ function buildCaption(item) {
 }
 
 function singleFigureData(item) {
-	const children = [buildLink(item)];
+	const sizes = item.isFull ? '100vw' : '(max-width: 700px) 100vw, 700px';
+	const children = [buildLink(item, sizes)];
 	const caption = buildCaption(item);
 	if (caption) children.push(caption);
 
@@ -62,8 +87,10 @@ function singleFigureData(item) {
 function groupFigureData(items) {
 	const isCarousel = items.length > CAROUSEL_THRESHOLD;
 
+	const sizes = isCarousel ? '(max-width: 700px) 100vw, 700px' : '(max-width: 700px) 50vw, 350px';
+
 	const itemNodes = items.map((item) => {
-		const children = [buildLink(item)];
+		const children = [buildLink(item, sizes)];
 		const caption = buildCaption(item);
 		if (caption) children.push(caption);
 		return { type: 'element', tagName: 'div', properties: { class: isCarousel ? 'carousel-slide' : 'gallery-item' }, children };
