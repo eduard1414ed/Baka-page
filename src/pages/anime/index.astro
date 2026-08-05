@@ -1,0 +1,54 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import AnimeCard from '../../components/AnimeCard.astro';
+
+const posts = await getCollection('posts', ({ data }) => !data.draft);
+const animeList = await getCollection('anime');
+
+const mentionCounts = new Map<string, number>();
+for (const post of posts) {
+	for (const ref of post.data.anime ?? []) {
+		mentionCounts.set(ref.id, (mentionCounts.get(ref.id) ?? 0) + 1);
+	}
+}
+
+const sorted = animeList
+	.map((entry) => ({ entry, count: mentionCounts.get(entry.id) ?? 0 }))
+	.sort((a, b) => b.count - a.count || a.entry.data.titleRu.localeCompare(b.entry.data.titleRu, 'ru'));
+---
+
+<Layout title="Тайтлы — Бака!" description="Все аниме, которые упоминались в подкасте">
+	<section class="anime-index">
+		<h1>Тайтлы</h1>
+		{
+			sorted.length === 0 ? (
+				<p class="empty">Пока нет ни одного тайтла.</p>
+			) : (
+				<div class="grid">
+					{sorted.map(({ entry, count }) => (
+						<AnimeCard anime={entry} count={count} />
+					))}
+				</div>
+			)
+		}
+	</section>
+</Layout>
+
+<style>
+	.anime-index {
+		max-width: 72rem;
+		margin: 0 auto;
+		padding: var(--space-4) var(--space-3);
+	}
+
+	.empty {
+		color: var(--color-text-muted);
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+		gap: var(--space-3);
+	}
+</style>

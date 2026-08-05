@@ -3,6 +3,11 @@ title: 'Знакомьтесь: Ёдзи Такэсигэ'
 date: 2026-08-05
 category: note
 draft: false
+anime:
+  - spirited-away
+  - howls-moving-castle
+  - tales-from-earthsea
+  - royal-space-force
 buttons:
   - label: Patreon
     url: https://www.patreon.com/bakapodcast/posts/bunko-kagurabati-164719402?utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=postshare_creator&utm_content=join_link

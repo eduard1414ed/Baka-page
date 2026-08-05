@@ -1,4 +1,4 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection, reference, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
 // Категории поста. Одна категория на пост.
@@ -35,7 +35,28 @@ const posts = defineCollection({
 			transcript: z.string().optional(),
 			script: z.string().optional(),
 			draft: z.boolean().default(false),
+			// Пока проставляется вручную в файле поста. Автозаполнение из разметки
+			// названий в тексте — следующий шаг (см. тз/03-тайтлы.md).
+			anime: z.array(reference('anime')).optional(),
 		}),
 });
 
-export const collections = { posts };
+// Справочник тайтлов. Файлы — кэш данных с Shikimori, их создаёт и обновляет
+// scripts/fetch-anime.mjs, сама сборка сайта Shikimori не дёргает никогда.
+const anime = defineCollection({
+	loader: glob({ pattern: '**/*.json', base: './src/content/anime' }),
+	schema: z.object({
+		id: z.string(),
+		shikimoriId: z.number(),
+		titleRu: z.string(),
+		titleOriginal: z.string(),
+		year: z.number().optional(),
+		studio: z.string().optional(),
+		// Путь к обложке в public/anime/ — см. src/lib/animePoster.mjs.
+		poster: z.string().optional(),
+		synopsis: z.string().optional(),
+		url: z.string().url().optional(),
+	}),
+});
+
+export const collections = { posts, anime };

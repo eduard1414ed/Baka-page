@@ -1,0 +1,168 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getAnimePosterSrcs } from '../../lib/animePoster.mjs';
+
+export async function getStaticPaths() {
+	const animeList = await getCollection('anime');
+	return animeList.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { titleRu, titleOriginal, year, studio, poster, synopsis, url } = entry.data;
+const posterSrcs = getAnimePosterSrcs(poster);
+
+const posts = (
+	await getCollection(
+		'posts',
+		({ data }) => !data.draft && (data.anime ?? []).some((ref: { id: string }) => ref.id === entry.id),
+	)
+).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<Layout title={`${titleRu} — Бака!`} description={synopsis?.slice(0, 160)}>
+	<section class="anime-page">
+		<a class="back" href="/anime/">← Все тайтлы</a>
+
+		<div class="header">
+			{
+				posterSrcs.length > 0 && (
+					<img
+						class="poster"
+						src={posterSrcs[0].src}
+						srcset={posterSrcs.map((s) => `${s.src} ${s.width}w`).join(', ')}
+						sizes="220px"
+						alt=""
+					/>
+				)
+			}
+			<div class="info">
+				<h1>{titleRu}</h1>
+				{titleOriginal && titleOriginal !== titleRu && <p class="original">{titleOriginal}</p>}
+				<p class="meta">
+					{[year, studio].filter(Boolean).join(' · ')}
+				</p>
+				{
+					url && (
+						<a class="shikimori-link" href={url} target="_blank" rel="noopener noreferrer">
+							Страница на Shikimori →
+						</a>
+					)
+				}
+				{synopsis && <p class="synopsis">{synopsis}</p>}
+			</div>
+		</div>
+
+		<h2 class="mentions-title">Упоминания{posts.length > 0 && ` (${posts.length})`}</h2>
+		{
+			posts.length === 0 ? (
+				<p class="empty">Пока нет постов с этим тайтлом.</p>
+			) : (
+				<div class="grid">
+					{posts.map((post) => (
+						<PostCard post={post} />
+					))}
+				</div>
+			)
+		}
+	</section>
+</Layout>
+
+<style>
+	.anime-page {
+		max-width: 72rem;
+		margin: 0 auto;
+		padding: var(--space-4) var(--space-3);
+	}
+
+	.back {
+		display: inline-block;
+		color: var(--color-text-muted);
+		font-size: var(--font-size-sm);
+		margin-bottom: var(--space-3);
+	}
+
+	.back:hover,
+	.back:focus-visible {
+		color: var(--color-accent-hover);
+	}
+
+	.header {
+		display: flex;
+		gap: var(--space-3);
+		margin-bottom: var(--space-4);
+	}
+
+	.poster {
+		width: 220px;
+		flex-shrink: 0;
+		aspect-ratio: 2 / 3;
+		object-fit: cover;
+		border-radius: var(--radius-md);
+		background: var(--color-bg-elevated);
+	}
+
+	.info {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-1);
+		min-width: 0;
+	}
+
+	.info h1 {
+		margin: 0;
+	}
+
+	.original {
+		color: var(--color-text-muted);
+		font-style: italic;
+		margin: 0;
+	}
+
+	.meta {
+		color: var(--color-text-muted);
+		font-size: var(--font-size-sm);
+		margin: 0;
+	}
+
+	.shikimori-link {
+		color: var(--color-accent);
+		font-size: var(--font-size-sm);
+		width: fit-content;
+	}
+
+	.shikimori-link:hover,
+	.shikimori-link:focus-visible {
+		color: var(--color-accent-hover);
+	}
+
+	.synopsis {
+		color: var(--color-text-muted);
+		margin: var(--space-1) 0 0;
+	}
+
+	.mentions-title {
+		margin-bottom: var(--space-2);
+	}
+
+	.empty {
+		color: var(--color-text-muted);
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+		gap: var(--space-3);
+	}
+
+	@media (max-width: 600px) {
+		.header {
+			flex-direction: column;
+		}
+
+		.poster {
+			width: 160px;
+		}
+	}
+</style>
