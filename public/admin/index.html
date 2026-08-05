@@ -19,6 +19,9 @@
 					.replaceAll('<', '&lt;')
 					.replaceAll('>', '&gt;')
 					.replaceAll('"', '&quot;');
+			// UTF-8-совместимые base64: обычный btoa/atob не умеют в кириллицу напрямую.
+			const toBase64Utf8 = (value) => btoa(unescape(encodeURIComponent(value)));
+			const fromBase64Utf8 = (value) => decodeURIComponent(escape(atob(value)));
 
 			CMS.registerEditorComponent({
 				// id отдельно от синтаксиса ::image{...} в тексте — так называется только
@@ -71,6 +74,67 @@
 						${data.caption ? `<figcaption style="opacity:0.7;font-size:0.875rem;margin-top:4px">${escapeHtml(data.caption)}</figcaption>` : ''}
 					</figure>
 				`,
+			});
+
+			CMS.registerEditorComponent({
+				id: 'gallery',
+				label: 'Галерея',
+				icon: 'photo_library',
+				fields: [
+					{
+						label: 'Картинки',
+						name: 'images',
+						widget: 'list',
+						fields: [
+							{ label: 'Файл', name: 'src', widget: 'image' },
+							{ label: 'Альт-текст', name: 'alt', widget: 'string', required: false },
+						],
+					},
+					{ label: 'Общая подпись', name: 'caption', widget: 'string', required: false },
+				],
+				pattern: /^::gallery\{([\s\S]*)\}$/,
+				fromBlock: (match) => {
+					const attrs = {};
+					const re = /([\w-]+)="((?:[^"])*)"/g;
+					let m;
+
+					while ((m = re.exec(match[1]))) {
+						attrs[m[1]] = m[2];
+					}
+
+					let images = [];
+
+					if (attrs.items) {
+						try {
+							images = JSON.parse(fromBase64Utf8(attrs.items));
+						} catch {
+							images = [];
+						}
+					}
+
+					return { caption: attrs.caption ? attrs.caption.replaceAll('&quot;', '"') : '', images };
+				},
+				toBlock: (data) => {
+					const images = (data.images || [])
+						.filter((item) => item && item.src)
+						.map((item) => ({ src: item.src, alt: item.alt || '' }));
+					const itemsB64 = toBase64Utf8(JSON.stringify(images));
+
+					return `::gallery{caption="${escapeAttr(data.caption)}" items="${itemsB64}"}`;
+				},
+				toPreview: (data) => {
+					const thumbs = (data.images || [])
+						.map(
+							(item) =>
+								`<img src="${item.src ?? ''}" alt="${escapeHtml(item.alt)}" style="width:72px;height:72px;object-fit:cover;border-radius:6px;margin:2px" />`,
+						)
+						.join('');
+
+					return `
+						<div>${thumbs}</div>
+						${data.caption ? `<div style="opacity:0.7;font-size:0.875rem;margin-top:4px">${escapeHtml(data.caption)}</div>` : ''}
+					`;
+				},
 			});
 		</script>
 	</body>
