@@ -81,15 +81,8 @@
 				label: 'Галерея',
 				icon: 'photo_library',
 				fields: [
-					{
-						label: 'Картинки',
-						name: 'images',
-						widget: 'list',
-						fields: [
-							{ label: 'Файл', name: 'src', widget: 'image' },
-							{ label: 'Альт-текст', name: 'alt', widget: 'string', required: false },
-						],
-					},
+					// multiple: true — можно выбрать/перетащить сразу несколько файлов за раз.
+					{ label: 'Картинки', name: 'images', widget: 'image', multiple: true },
 					{ label: 'Общая подпись', name: 'caption', widget: 'string', required: false },
 				],
 				pattern: /^::gallery\{([\s\S]*)\}$/,
@@ -115,19 +108,14 @@
 					return { caption: attrs.caption ? attrs.caption.replaceAll('&quot;', '"') : '', images };
 				},
 				toBlock: (data) => {
-					const images = (data.images || [])
-						.filter((item) => item && item.src)
-						.map((item) => ({ src: item.src, alt: item.alt || '' }));
+					const images = (data.images || []).filter(Boolean);
 					const itemsB64 = toBase64Utf8(JSON.stringify(images));
 
 					return `::gallery{caption="${escapeAttr(data.caption)}" items="${itemsB64}"}`;
 				},
 				toPreview: (data) => {
 					const thumbs = (data.images || [])
-						.map(
-							(item) =>
-								`<img src="${item.src ?? ''}" alt="${escapeHtml(item.alt)}" style="width:72px;height:72px;object-fit:cover;border-radius:6px;margin:2px" />`,
-						)
+						.map((src) => `<img src="${src}" style="width:72px;height:72px;object-fit:cover;border-radius:6px;margin:2px" />`)
 						.join('');
 
 					return `

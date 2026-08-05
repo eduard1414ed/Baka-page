@@ -98,6 +98,26 @@ const youtubeEmbed = youtube ? getYoutubeEmbed(youtube) : null;
 			document.body.appendChild(overlay);
 		});
 	});
+
+	document.querySelectorAll<HTMLElement>('.gallery-carousel').forEach((carousel) => {
+		const track = carousel.querySelector<HTMLElement>('.carousel-track');
+		const slides = carousel.querySelectorAll('.carousel-slide');
+		if (!track || slides.length === 0) return;
+
+		let index = 0;
+		const update = () => {
+			track.style.transform = `translateX(-${index * 100}%)`;
+		};
+
+		carousel.querySelector('.carousel-prev')?.addEventListener('click', () => {
+			index = (index - 1 + slides.length) % slides.length;
+			update();
+		});
+		carousel.querySelector('.carousel-next')?.addEventListener('click', () => {
+			index = (index + 1) % slides.length;
+			update();
+		});
+	});
 </script>
 
 <style>
@@ -218,7 +238,7 @@ const youtubeEmbed = youtube ? getYoutubeEmbed(youtube) : null;
 
 	.content :global(.gallery-grid) {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+		grid-template-columns: repeat(2, 1fr);
 		gap: var(--space-1);
 	}
 
@@ -230,6 +250,55 @@ const youtubeEmbed = youtube ? getYoutubeEmbed(youtube) : null;
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+	}
+
+	.content :global(.carousel-viewport) {
+		position: relative;
+		overflow: hidden;
+		border-radius: var(--radius-md);
+	}
+
+	.content :global(.carousel-track) {
+		display: flex;
+		transition: transform var(--transition-fast);
+	}
+
+	.content :global(.carousel-slide) {
+		flex: 0 0 100%;
+		aspect-ratio: 4 / 3;
+	}
+
+	.content :global(.carousel-slide img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.content :global(.carousel-prev),
+	.content :global(.carousel-next) {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 2.5rem;
+		height: 2.5rem;
+		border: 0;
+		border-radius: var(--radius-full);
+		background: rgba(0, 0, 0, 0.5);
+		color: #fff;
+		font-size: var(--font-size-lg);
+		line-height: 1;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.content :global(.carousel-prev) {
+		left: var(--space-1);
+	}
+
+	.content :global(.carousel-next) {
+		right: var(--space-1);
 	}
 </style>
 
