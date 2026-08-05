@@ -5,7 +5,8 @@ import { visit } from 'unist-util-visit';
 // Тут — обратная замена. Обе стороны должны экранировать одинаково.
 const unescapeAttr = (value = '') => value.replaceAll('&quot;', '"');
 
-const CAROUSEL_THRESHOLD = 5;
+// 4 картинки и меньше — сетка, 5 и больше — карусель.
+const CAROUSEL_THRESHOLD = 4;
 
 const text = (value) => ({ type: 'text', value });
 
