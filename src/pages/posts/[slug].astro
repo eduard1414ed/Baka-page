@@ -118,6 +118,28 @@ const youtubeEmbed = youtube ? getYoutubeEmbed(youtube) : null;
 			update();
 		});
 	});
+
+	document.querySelectorAll<HTMLElement>('.spoiler').forEach((spoiler) => {
+		const button = spoiler.querySelector<HTMLButtonElement>('.spoiler-toggle');
+		const template = spoiler.querySelector<HTMLTemplateElement>('.spoiler-content');
+		if (!button || !template) return;
+
+		const openLabel = button.textContent ?? 'Показать спойлер';
+		let revealed: HTMLElement | null = null;
+
+		button.addEventListener('click', () => {
+			if (!revealed) {
+				revealed = document.createElement('div');
+				revealed.className = 'spoiler-revealed';
+				revealed.appendChild(template.content.cloneNode(true));
+				spoiler.appendChild(revealed);
+			} else {
+				revealed.hidden = !revealed.hidden;
+			}
+
+			button.textContent = revealed.hidden ? openLabel : 'Скрыть спойлер';
+		});
+	});
 </script>
 
 <style>
@@ -307,6 +329,51 @@ const youtubeEmbed = youtube ? getYoutubeEmbed(youtube) : null;
 
 	.content :global(.carousel-next) {
 		right: var(--space-1);
+	}
+
+	.content :global(.spoiler) {
+		margin: var(--space-3) 0;
+	}
+
+	.content :global(.spoiler-toggle) {
+		padding: var(--space-1) var(--space-2);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		background: var(--color-bg-elevated);
+		color: var(--color-accent);
+		font-size: var(--font-size-sm);
+		cursor: pointer;
+		transition: border-color var(--transition-fast);
+	}
+
+	.content :global(.spoiler-toggle:hover) {
+		border-color: var(--color-accent);
+	}
+
+	.content :global(.spoiler-revealed) {
+		margin-top: var(--space-2);
+		padding: var(--space-2) var(--space-3);
+		border-left: 2px solid var(--color-accent);
+		background: var(--color-bg-elevated);
+		border-radius: var(--radius-sm);
+	}
+
+	.content :global(.spoiler-revealed > :first-child) {
+		margin-top: 0;
+	}
+
+	.content :global(.spoiler-revealed > :last-child) {
+		margin-bottom: 0;
+	}
+
+	/* Внутри спойлера картинка "во всю ширину" ломала бы разметку (расчёт
+	   full-bleed завязан на то, что элемент лежит прямо в колонке текста) —
+	   тут просто показываем её в колонку. */
+	.content :global(.spoiler-revealed figure.figure-full) {
+		width: 100%;
+		position: static;
+		margin-left: 0;
+		margin-right: 0;
 	}
 </style>
 

@@ -76,6 +76,42 @@
 			// с подписью" подряд без текста между ними сайт сам собирает в галерею
 			// (сетка/карусель) — см. src/plugins/remark-image-figure.mjs. Раньше
 			// список картинок внутри своего компонента ненадёжно сохранялся в CMS.
+
+			// Спойлер — два простых маркера вместо одного составного блока: начало
+			// и конец, а между ними — обычный текст/картинки редактируются как
+			// везде. Разбирает и прячет их src/plugins/remark-spoiler.mjs.
+			CMS.registerEditorComponent({
+				id: 'spoiler-start',
+				label: 'Спойлер: начало',
+				icon: 'visibility_off',
+				fields: [{ label: 'Текст кнопки', name: 'label', widget: 'string', required: false }],
+				pattern: /^::spoiler-start\{([^\n]*)\}$/,
+				fromBlock: (match) => {
+					const attrs = {};
+					const re = /([\w-]+)="((?:[^"])*)"/g;
+					let m;
+
+					while ((m = re.exec(match[1]))) {
+						attrs[m[1]] = m[2].replaceAll('&quot;', '"');
+					}
+
+					return attrs;
+				},
+				toBlock: (data) => `::spoiler-start{label="${escapeAttr(data.label || 'Показать спойлер')}"}`,
+				toPreview: (data) =>
+					`<div style="opacity:0.6;font-size:0.875rem">▾ начало спойлера («${escapeHtml(data.label || 'Показать спойлер')}»)</div>`,
+			});
+
+			CMS.registerEditorComponent({
+				id: 'spoiler-end',
+				label: 'Спойлер: конец',
+				icon: 'visibility',
+				fields: [],
+				pattern: /^::spoiler-end\{\}$/,
+				fromBlock: () => ({}),
+				toBlock: () => '::spoiler-end{}',
+				toPreview: () => `<div style="opacity:0.6;font-size:0.875rem">▴ конец спойлера</div>`,
+			});
 		</script>
 	</body>
 </html>
