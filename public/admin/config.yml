@@ -47,4 +47,4 @@ collections:
       - label: Текст
         name: body
         widget: richtext
-        editor_components: [code-block, image, figure, gallery]
+        editor_components: [code-block, image, figure]

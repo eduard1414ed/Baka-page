@@ -239,14 +239,14 @@ const youtubeEmbed = youtube ? getYoutubeEmbed(youtube) : null;
 	.content :global(.gallery-grid) {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
-		gap: var(--space-1);
+		gap: var(--space-2);
 	}
 
-	.content :global(.gallery-grid .figure-zoom) {
+	.content :global(.gallery-item .figure-zoom) {
 		aspect-ratio: 1 / 1;
 	}
 
-	.content :global(.gallery-grid .figure-zoom img) {
+	.content :global(.gallery-item .figure-zoom img) {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
@@ -260,18 +260,26 @@ const youtubeEmbed = youtube ? getYoutubeEmbed(youtube) : null;
 
 	.content :global(.carousel-track) {
 		display: flex;
+		align-items: flex-start;
 		transition: transform var(--transition-fast);
 	}
 
 	.content :global(.carousel-slide) {
 		flex: 0 0 100%;
+	}
+
+	.content :global(.carousel-slide .figure-zoom) {
 		aspect-ratio: 4 / 3;
 	}
 
-	.content :global(.carousel-slide img) {
+	.content :global(.carousel-slide .figure-zoom img) {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+	}
+
+	.content :global(.carousel-slide figcaption) {
+		padding: var(--space-1) var(--space-3);
 	}
 
 	.content :global(.carousel-prev),

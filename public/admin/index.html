@@ -19,9 +19,6 @@
 					.replaceAll('<', '&lt;')
 					.replaceAll('>', '&gt;')
 					.replaceAll('"', '&quot;');
-			// UTF-8-совместимые base64: обычный btoa/atob не умеют в кириллицу напрямую.
-			const toBase64Utf8 = (value) => btoa(unescape(encodeURIComponent(value)));
-			const fromBase64Utf8 = (value) => decodeURIComponent(escape(atob(value)));
 
 			CMS.registerEditorComponent({
 				// id отдельно от синтаксиса ::image{...} в тексте — так называется только
@@ -75,70 +72,10 @@
 					</figure>
 				`,
 			});
-
-			CMS.registerEditorComponent({
-				id: 'gallery',
-				label: 'Галерея',
-				icon: 'photo_library',
-				fields: [
-					// Загрузка по одному файлу через "Добавить" — надёжно работает.
-					// multiple:true (загрузка пачкой) здесь ломала ссылки на картинки:
-					// CMS не успевала подставить финальный путь и сохраняла временный
-					// blob: (живёт только пока открыта вкладка браузера, потом мёртв).
-					{
-						label: 'Картинки',
-						name: 'images',
-						widget: 'list',
-						field: { label: 'Файл', name: 'image', widget: 'image' },
-					},
-					{ label: 'Общая подпись', name: 'caption', widget: 'string', required: false },
-				],
-				pattern: /^::gallery\{([^\n]*)\}$/,
-				fromBlock: (match) => {
-					const attrs = {};
-					const re = /([\w-]+)="((?:[^"])*)"/g;
-					let m;
-
-					while ((m = re.exec(match[1]))) {
-						attrs[m[1]] = m[2];
-					}
-
-					let images = [];
-
-					if (attrs.items) {
-						try {
-							images = JSON.parse(fromBase64Utf8(attrs.items));
-						} catch {
-							images = [];
-						}
-					}
-
-					// На случай старых записей: раньше картинки хранились как {src, alt},
-					// сейчас — просто строка-ссылка. Понимаем оба варианта, чтобы старый
-					// пост при открытии не путал редактор.
-					images = images
-						.map((item) => (item && typeof item === 'object' ? item.src : item))
-						.filter((src) => typeof src === 'string' && src && !src.startsWith('blob:'));
-
-					return { caption: attrs.caption ? attrs.caption.replaceAll('&quot;', '"') : '', images };
-				},
-				toBlock: (data) => {
-					const images = (data.images || []).filter((src) => typeof src === 'string' && src && !src.startsWith('blob:'));
-					const itemsB64 = toBase64Utf8(JSON.stringify(images));
-
-					return `::gallery{caption="${escapeAttr(data.caption)}" items="${itemsB64}"}`;
-				},
-				toPreview: (data) => {
-					const thumbs = (data.images || [])
-						.map((src) => `<img src="${src}" style="width:72px;height:72px;object-fit:cover;border-radius:6px;margin:2px" />`)
-						.join('');
-
-					return `
-						<div>${thumbs}</div>
-						${data.caption ? `<div style="opacity:0.7;font-size:0.875rem;margin-top:4px">${escapeHtml(data.caption)}</div>` : ''}
-					`;
-				},
-			});
+			// Отдельного блока "Галерея" больше нет: несколько блоков "Изображение
+			// с подписью" подряд без текста между ними сайт сам собирает в галерею
+			// (сетка/карусель) — см. src/plugins/remark-image-figure.mjs. Раньше
+			// список картинок внутри своего компонента ненадёжно сохранялся в CMS.
 		</script>
 	</body>
 </html>
