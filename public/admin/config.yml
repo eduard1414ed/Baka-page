@@ -6,6 +6,11 @@ backend:
 
 site_url: https://baka-page.eduard1414ed.workers.dev
 
+# Обязательное поле для CMS — куда класть загруженные картинки.
+# Полей с картинками пока нет, но без этой настройки CMS не запускается.
+media_folder: src/assets/images/uploads
+public_folder: /images/uploads
+
 # Русские заголовки переводим в латиницу для адреса файла (например
 # «Тестовый пост» → «testovyy-post»), иначе имя файла станет нечитаемым.
 slug:
