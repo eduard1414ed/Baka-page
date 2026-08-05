@@ -5,7 +5,7 @@ category: podcast
 cover: '../../assets/images/cover.jpeg'
 youtube: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
 audioGuid: 'test-guid-001'
-draft: true
+draft: false
 ---
 
 Это тестовый пост, чтобы проверить, что схема поста работает правильно.
