@@ -1,17 +1,111 @@
 ---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import banner from '../assets/images/banner.png';
+import cover from '../assets/images/cover.jpeg';
+import { platforms } from '../data/platforms.js';
 
+const description = 'Подкаст об аниме и о том, что скрывается между кадрами';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="Бака! — подкаст об аниме" description={description}>
+	<div class="hero-banner">
+		<Image
+			src={banner}
+			alt="Иллюстрация: девушка на кровати смотрит в ноутбук"
+			widths={[640, 1200]}
+			sizes="(max-width: 700px) 640px, 1200px"
+			width={1200}
+			height={Math.round(1200 * (banner.height / banner.width))}
+			priority
+		/>
+	</div>
+
+	<section class="intro">
+		<Image
+			src={cover}
+			alt="Обложка подкаста «Бака!»"
+			widths={[160, 320]}
+			sizes="160px"
+			width={160}
+			height={160}
+			class="cover"
+		/>
+		<div>
+			<h1>Бака!</h1>
+			<p class="description">{description}</p>
+			<div class="buttons">
+				{
+					platforms.map((platform) => (
+						<a class="button" href={platform.url} target="_blank" rel="noopener noreferrer">
+							{platform.label}
+						</a>
+					))
+				}
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.hero-banner {
+		max-width: 1200px;
+		margin: var(--space-3) auto 0;
+		padding: 0 var(--space-3);
+	}
+
+	.hero-banner :global(img) {
+		width: 100%;
+		border-radius: var(--radius-md);
+	}
+
+	.intro {
+		max-width: var(--content-width);
+		margin: 0 auto;
+		padding: var(--space-4) var(--space-3);
+		display: flex;
+		gap: var(--space-3);
+		align-items: flex-start;
+		flex-wrap: wrap;
+	}
+
+	.intro :global(.cover) {
+		border-radius: var(--radius-md);
+		flex-shrink: 0;
+	}
+
+	h1 {
+		font-size: var(--font-size-2xl);
+	}
+
+	.description {
+		color: var(--color-text-muted);
+		font-size: var(--font-size-lg);
+		max-width: 32rem;
+	}
+
+	.buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-1);
+		margin-top: var(--space-3);
+	}
+
+	.button {
+		display: inline-block;
+		padding: var(--space-1) var(--space-2);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-full);
+		color: var(--color-text);
+		font-size: var(--font-size-sm);
+		transition:
+			border-color var(--transition-fast),
+			color var(--transition-fast);
+	}
+
+	.button:hover,
+	.button:focus-visible {
+		border-color: var(--color-accent);
+		color: var(--color-accent-hover);
+	}
+</style>
