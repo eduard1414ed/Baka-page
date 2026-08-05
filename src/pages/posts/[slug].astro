@@ -4,6 +4,8 @@ import { Image } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
 import { categories } from '../../content.config';
 import { getYoutubeEmbedUrl } from '../../lib/youtube.mjs';
+import { getLinkIcon } from '../../lib/linkIcon.mjs';
+import PlatformIcon from '../../components/PlatformIcon.astro';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('posts', ({ data }) => !data.draft);
@@ -16,7 +18,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 
-const { title, date, category, cover, youtube, video } = post.data;
+const { title, date, category, cover, youtube, video, buttons } = post.data;
 const categoryLabel = categories.find((c) => c.id === category)?.label ?? category;
 const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -58,6 +60,19 @@ const youtubeEmbed = youtube ? getYoutubeEmbedUrl(youtube) : null;
 		}
 
 		{!youtubeEmbed && video && <video class="video" src={video} controls preload="none" />}
+
+		{
+			buttons && buttons.length > 0 && (
+				<div class="buttons">
+					{buttons.map((button: { label: string; url: string; style: 'primary' | 'secondary' }) => (
+						<a class={`button button-${button.style}`} href={button.url} target="_blank" rel="noopener noreferrer">
+							<PlatformIcon name={getLinkIcon(button.url)} />
+							{button.label}
+						</a>
+					))}
+				</div>
+			)
+		}
 
 		<div class="content">
 			<Content />
@@ -224,6 +239,47 @@ const youtubeEmbed = youtube ? getYoutubeEmbedUrl(youtube) : null;
 		width: 100%;
 		border-radius: var(--radius-md);
 		margin-bottom: var(--space-3);
+	}
+
+	.buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2);
+		margin-bottom: var(--space-3);
+	}
+
+	.button {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-1);
+		padding: var(--space-1) var(--space-2);
+		border-radius: var(--radius-sm);
+		font-size: var(--font-size-sm);
+		transition:
+			background-color var(--transition-fast),
+			border-color var(--transition-fast);
+	}
+
+	.button-primary {
+		background: var(--color-accent);
+		color: var(--color-bg);
+	}
+
+	.button-primary:hover,
+	.button-primary:focus-visible {
+		background: var(--color-accent-hover);
+		color: var(--color-bg);
+	}
+
+	.button-secondary {
+		border: 1px solid var(--color-border);
+		color: var(--color-text);
+	}
+
+	.button-secondary:hover,
+	.button-secondary:focus-visible {
+		border-color: var(--color-accent);
+		color: var(--color-accent);
 	}
 
 	.content :global(p) {

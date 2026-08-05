@@ -1,0 +1,58 @@
+---
+interface Props {
+	name: string | null;
+}
+
+const { name } = Astro.props;
+---
+
+{
+	name === 'youtube' && (
+		<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+			<rect x="2" y="5" width="20" height="14" rx="4" fill="none" stroke="currentColor" stroke-width="1.6" />
+			<path d="M10 8.5l6 3.5-6 3.5z" />
+		</svg>
+	)
+}
+{
+	name === 'spotify' && (
+		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+			<circle cx="12" cy="12" r="9.5" />
+			<path d="M7 10.2c3.5-1 6.5-1 10 .6" />
+			<path d="M7.5 13c2.8-.8 5.2-.8 8 .5" />
+			<path d="M8 15.7c2.2-.6 4-.6 6 .4" />
+		</svg>
+	)
+}
+{
+	name === 'apple' && (
+		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+			<circle cx="12" cy="12" r="9.5" />
+			<circle cx="12" cy="10" r="3" />
+			<path d="M12 13v6" stroke-linecap="round" />
+		</svg>
+	)
+}
+{
+	name === 'boosty' && (
+		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true">
+			<path d="M12 20.3s-7.5-4.3-7.5-10a4.6 4.6 0 0 1 7.5-3.6A4.6 4.6 0 0 1 19.5 10.3c0 5.7-7.5 10-7.5 10z" />
+		</svg>
+	)
+}
+{
+	name === 'telegram' && (
+		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+			<path d="M3 11.8l17-7.3-3 15.4-5.4-4-2.7 2.6-.3-4z" />
+			<path d="M20 4.5L9.6 13.5" />
+		</svg>
+	)
+}
+
+<style>
+	svg {
+		width: 1.1em;
+		height: 1.1em;
+		flex-shrink: 0;
+	}
+</style>

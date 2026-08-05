@@ -44,6 +44,20 @@ collections:
           - { label: Обзор, value: review }
           - { label: Бонус, value: bonus }
       - { label: Черновик, name: draft, widget: boolean, default: true }
+      - label: Кнопки
+        name: buttons
+        widget: list
+        required: false
+        fields:
+          - { label: Подпись, name: label, widget: string }
+          - { label: Ссылка, name: url, widget: string }
+          - label: Стиль
+            name: style
+            widget: select
+            options:
+              - { label: Основная, value: primary }
+              - { label: Второстепенная, value: secondary }
+            default: secondary
       - label: Текст
         name: body
         widget: richtext
