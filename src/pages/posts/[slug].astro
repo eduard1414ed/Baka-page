@@ -381,6 +381,12 @@ const youtubeEmbed = youtube ? getYoutubeEmbed(youtube) : null;
 		border-radius: var(--radius-sm);
 	}
 
+	/* Без этого атрибут hidden не срабатывает: правила выше задают display
+	   с более высоким приоритетом, чем встроенный стиль браузера для [hidden]. */
+	.content :global(.spoiler-revealed[hidden]) {
+		display: none;
+	}
+
 	.content :global(.spoiler-revealed > :first-child) {
 		margin-top: 0;
 	}
