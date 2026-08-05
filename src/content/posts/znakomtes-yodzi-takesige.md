@@ -2,7 +2,7 @@
 title: 'Знакомьтесь: Ёдзи Такэсигэ'
 date: 2026-08-05
 category: note
-draft: true
+draft: false
 ---
 
 ![Кадр: Сказание о Земноморье](/images/uploads/photo_2026-08-05%2017.48.25.jpeg)
