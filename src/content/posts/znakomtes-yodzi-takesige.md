@@ -5,10 +5,29 @@ category: note
 draft: false
 ---
 
+
 ::image{src="/images/uploads/photo_2026-08-05%2017.48.25.jpeg" alt="Кадр: Сказание о Земноморье" caption="Кадр: Сказание о Земноморье" width="full"}
 
 
 Ёдзи Такэсигэ — один из главных художников фонов 80-х и 90-х годов. Именно он рисовал потрясающие пейзажи в дебютном фильме студии Gainax, «Королевские космические силы: Крылья Хоннеамиз» ([о котором у нас в этом месяце вышел эпизод, послушайте!](https://t.me/podcastbaka/4112))
+
+
+::image{src="/images/uploads/EXHgUKgWoAEOczN.jpeg" alt="" width="column"}
+
+
+
+::image{src="/images/uploads/DEMtX_tXoAAZKfK.jpeg" alt="" width="column"}
+
+
+
+::image{src="/images/uploads/D0-c1V5X4AE0hrv.jpeg" alt="" width="column"}
+
+
+
+::image{src="/images/uploads/HOp5G8gXkAApcEd.jpeg" alt="" width="column"}
+
+
+Японцы очень любят играть с масштабом. Когда я был в Осаке, я обнаружил там аппараты с микроскопической мангой, которую можно было на удачу вытащить (мне достался томик «Магической битвы»). Она размером с брелок на ключи.
 
 
 ::image{src="/images/uploads/3.jpeg" alt="" width="column"}
@@ -44,3 +63,4 @@ draft: false
 
 
 ::video{youtube="https://youtu.be/vjfUAV5WD6I"}
+
