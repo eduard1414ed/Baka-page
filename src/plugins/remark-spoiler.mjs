@@ -2,14 +2,42 @@
 // та же логика, что и в remark-image-figure.mjs.
 const unescapeAttr = (value = '') => value.replaceAll('&quot;', '"');
 
+function spoilerNode(buttonLabel, contentChildren, { inline }) {
+	return {
+		type: 'spoiler',
+		children: [
+			{
+				type: 'spoilerButton',
+				children: [],
+				data: {
+					hName: 'button',
+					hProperties: { type: 'button', class: 'spoiler-toggle' },
+					hChildren: [{ type: 'text', value: buttonLabel }],
+				},
+			},
+			{
+				type: 'spoilerContent',
+				children: contentChildren,
+				data: { hName: 'template', hProperties: { class: 'spoiler-content' } },
+			},
+		],
+		data: {
+			hName: inline ? 'span' : 'div',
+			hProperties: { class: inline ? 'spoiler spoiler-inline' : 'spoiler' },
+		},
+	};
+}
+
 /**
- * `::spoiler-start{label="..."}` ... произвольный markdown (текст, наши блоки
- * картинки/галереи) ... `::spoiler-end{}` → один <div class="spoiler"> с кнопкой
- * и спрятанным в <template> содержимым (не рендерится и не читается поисковиком,
- * пока пользователь не нажмёт — раскрывается только через JS, см. [slug].astro).
+ * Два способа спрятать содержимое до клика — оба в <template> (не рендерится и
+ * не читается поисковиком, пока не нажать — раскрывается через JS в [slug].astro):
  *
- * Два отдельных маркера вместо одной пары "открылось-закрылось" в редакторе —
- * потому что многострочные блоки в CMS ненадёжны (см. историю с галереей).
+ * 1. Блок: `::spoiler-start{label="..."}` ... абзацы/картинки/галерея ...
+ *    `::spoiler-end{}` — два отдельных маркера вместо пары "открылось-закрылось"
+ *    в одном блоке, потому что многострочные блоки в CMS ненадёжны (см. историю
+ *    с галереей).
+ * 2. Слово/фраза внутри предложения: `:spoiler-inline[скрытый текст]{}` —
+ *    один компонент, содержимое прямо в квадратных скобках.
  */
 export default function remarkSpoiler() {
 	return (tree) => {
@@ -30,28 +58,14 @@ export default function remarkSpoiler() {
 				}
 
 				if (capturing && child.type === 'leafDirective' && child.name === 'spoiler-end') {
-					newChildren.push({
-						type: 'spoiler',
-						children: [
-							{
-								type: 'spoilerButton',
-								children: [],
-								data: {
-									hName: 'button',
-									hProperties: { type: 'button', class: 'spoiler-toggle' },
-									hChildren: [{ type: 'text', value: label }],
-								},
-							},
-							{
-								type: 'spoilerContent',
-								children: captured,
-								data: { hName: 'template', hProperties: { class: 'spoiler-content' } },
-							},
-						],
-						data: { hName: 'div', hProperties: { class: 'spoiler' } },
-					});
+					newChildren.push(spoilerNode(label, captured, { inline: false }));
 					capturing = false;
 					captured = [];
+					continue;
+				}
+
+				if (!capturing && child.type === 'textDirective' && child.name === 'spoiler-inline') {
+					newChildren.push(spoilerNode('•••', child.children ?? [], { inline: true }));
 					continue;
 				}
 

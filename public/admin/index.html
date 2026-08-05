@@ -114,6 +114,24 @@
 				toBlock: () => '\n::spoiler-end{}\n',
 				toPreview: () => `<div style="opacity:0.6;font-size:0.875rem">▴ конец спойлера</div>`,
 			});
+
+			// Для одного слова/фразы внутри предложения — без переноса строки, поэтому
+			// отдельный синтаксис (один двоеточие вместо двух: :spoiler-inline[...]{}).
+			// Экранируем markdown-спецсимволы в тексте, иначе, например, "*" сделает
+			// половину фразы курсивом или сломает разбор.
+			const escapeMdInline = (value) => String(value ?? '').replace(/([\\`*_[\]])/g, '\\$1');
+			const unescapeMdInline = (value) => String(value ?? '').replace(/\\(.)/g, '$1');
+
+			CMS.registerEditorComponent({
+				id: 'spoiler-inline',
+				label: 'Спойлер (слово/фраза)',
+				icon: 'visibility_off',
+				fields: [{ label: 'Скрытый текст', name: 'text', widget: 'string' }],
+				pattern: /^:spoiler-inline\[((?:\\.|[^\]\\])*)\]\{\}$/,
+				fromBlock: (match) => ({ text: unescapeMdInline(match[1]) }),
+				toBlock: (data) => `:spoiler-inline[${escapeMdInline(data.text)}]{}`,
+				toPreview: (data) => `<span style="opacity:0.6">🔒 ${escapeHtml(data.text)}</span>`,
+			});
 		</script>
 	</body>
 </html>

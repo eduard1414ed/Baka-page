@@ -49,4 +49,4 @@ collections:
         widget: richtext
         # Встроенный простой блок картинки (id "image") убран специально: он не умеет
         # ни подпись, ни альт-текст, ни группировку в галерею — путал с нашим "figure".
-        editor_components: [code-block, figure, spoiler-start, spoiler-end]
+        editor_components: [code-block, figure, spoiler-start, spoiler-end, spoiler-inline]

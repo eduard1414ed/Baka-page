@@ -129,7 +129,9 @@ const youtubeEmbed = youtube ? getYoutubeEmbed(youtube) : null;
 
 		button.addEventListener('click', () => {
 			if (!revealed) {
-				revealed = document.createElement('div');
+				// span, а не div — этот блок может оказаться внутри строки текста
+				// (спойлер на слово/фразу), там div недопустим.
+				revealed = document.createElement('span');
 				revealed.className = 'spoiler-revealed';
 				revealed.appendChild(template.content.cloneNode(true));
 				spoiler.appendChild(revealed);
@@ -351,9 +353,30 @@ const youtubeEmbed = youtube ? getYoutubeEmbed(youtube) : null;
 	}
 
 	.content :global(.spoiler-revealed) {
+		display: block;
 		margin-top: var(--space-2);
 		padding: var(--space-2) var(--space-3);
 		border-left: 2px solid var(--color-accent);
+		background: var(--color-bg-elevated);
+		border-radius: var(--radius-sm);
+	}
+
+	/* Спойлер на слово/фразу — прямо в строке текста, без своего блока. */
+	.content :global(.spoiler-inline) {
+		margin: 0;
+	}
+
+	.content :global(.spoiler-inline .spoiler-toggle) {
+		padding: 0 var(--space-1);
+		font-size: inherit;
+		line-height: inherit;
+	}
+
+	.content :global(.spoiler-inline .spoiler-revealed) {
+		display: inline;
+		margin: 0;
+		padding: 0 var(--space-1);
+		border-left: none;
 		background: var(--color-bg-elevated);
 		border-radius: var(--radius-sm);
 	}
