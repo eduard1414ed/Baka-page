@@ -1,0 +1,123 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { categories } from '../../content.config';
+
+export function getStaticPaths() {
+	return categories.map((category) => ({
+		params: { category: category.id },
+		props: { category },
+	}));
+}
+
+const { category } = Astro.props;
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft && data.category === category.id)).sort(
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+
+<Layout title={`${category.label} — Бака!`}>
+	<section class="category">
+		<nav class="tabs" aria-label="Категории">
+			{
+				categories.map((c) => (
+					<a href={`/category/${c.id}/`} class:list={['tab', { active: c.id === category.id }]}>
+						{c.label}
+					</a>
+				))
+			}
+		</nav>
+
+		<h1>{category.label}</h1>
+
+		{
+			posts.length === 0 ? (
+				<p class="empty">Пока нет постов в этой категории.</p>
+			) : (
+				<ul class="posts">
+					{posts.map((post) => (
+						<li>
+							<a href={`/posts/${post.id}/`}>
+								<span class="post-title">{post.data.title}</span>
+								<span class="post-date">{dateFormatter.format(post.data.date)}</span>
+							</a>
+						</li>
+					))}
+				</ul>
+			)
+		}
+	</section>
+</Layout>
+
+<style>
+	.category {
+		max-width: var(--content-width);
+		margin: 0 auto;
+		padding: var(--space-4) var(--space-3);
+	}
+
+	.tabs {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-1);
+		margin-bottom: var(--space-3);
+	}
+
+	.tab {
+		padding: var(--space-1) var(--space-2);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-full);
+		color: var(--color-text-muted);
+		font-size: var(--font-size-sm);
+		transition:
+			border-color var(--transition-fast),
+			color var(--transition-fast);
+	}
+
+	.tab:hover,
+	.tab:focus-visible {
+		border-color: var(--color-accent);
+		color: var(--color-accent-hover);
+	}
+
+	.tab.active {
+		border-color: var(--color-accent);
+		color: var(--color-text);
+	}
+
+	.empty {
+		color: var(--color-text-muted);
+	}
+
+	.posts {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-1);
+	}
+
+	.posts li a {
+		display: flex;
+		justify-content: space-between;
+		gap: var(--space-2);
+		padding: var(--space-2) 0;
+		border-bottom: 1px solid var(--color-border);
+		color: var(--color-text);
+	}
+
+	.posts li a:hover,
+	.posts li a:focus-visible {
+		color: var(--color-accent-hover);
+	}
+
+	.post-date {
+		color: var(--color-text-muted);
+		font-size: var(--font-size-sm);
+		white-space: nowrap;
+	}
+</style>
