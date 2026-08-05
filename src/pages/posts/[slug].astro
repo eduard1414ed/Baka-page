@@ -69,6 +69,37 @@ const youtubeEmbed = youtube ? getYoutubeEmbed(youtube) : null;
 	</article>
 </Layout>
 
+<script>
+	function closeLightbox(overlay: HTMLElement, onKeydown: (event: KeyboardEvent) => void) {
+		overlay.remove();
+		document.removeEventListener('keydown', onKeydown);
+	}
+
+	document.querySelectorAll<HTMLAnchorElement>('.content a.figure-zoom').forEach((link) => {
+		link.addEventListener('click', (event) => {
+			event.preventDefault();
+			const sourceImg = link.querySelector('img');
+			if (!sourceImg) return;
+
+			const overlay = document.createElement('div');
+			overlay.className = 'lightbox';
+
+			const bigImg = document.createElement('img');
+			bigImg.src = sourceImg.src;
+			bigImg.alt = sourceImg.alt;
+			overlay.appendChild(bigImg);
+
+			const onKeydown = (event: KeyboardEvent) => {
+				if (event.key === 'Escape') closeLightbox(overlay, onKeydown);
+			};
+
+			overlay.addEventListener('click', () => closeLightbox(overlay, onKeydown));
+			document.addEventListener('keydown', onKeydown);
+			document.body.appendChild(overlay);
+		});
+	});
+</script>
+
 <style>
 	.post {
 		max-width: var(--content-width);
@@ -142,5 +173,66 @@ const youtubeEmbed = youtube ? getYoutubeEmbed(youtube) : null;
 		padding-left: var(--space-2);
 		border-left: 2px solid var(--color-accent);
 		color: var(--color-text-muted);
+	}
+
+	.content :global(figure.figure) {
+		margin: var(--space-3) 0;
+	}
+
+	.content :global(figure.figure-full) {
+		width: 100vw;
+		position: relative;
+		left: 50%;
+		right: 50%;
+		margin-left: -50vw;
+		margin-right: -50vw;
+	}
+
+	.content :global(.figure-zoom) {
+		display: block;
+		cursor: zoom-in;
+	}
+
+	.content :global(.figure-zoom img) {
+		width: 100%;
+		border-radius: var(--radius-md);
+	}
+
+	.content :global(figure.figure-full .figure-zoom img) {
+		border-radius: 0;
+	}
+
+	.content :global(figcaption) {
+		margin-top: var(--space-1);
+		padding: 0 var(--space-1);
+		font-size: var(--font-size-sm);
+		color: var(--color-text-muted);
+		text-align: center;
+	}
+
+	.content :global(figure.figure-full figcaption) {
+		max-width: var(--content-width);
+		margin-left: auto;
+		margin-right: auto;
+	}
+</style>
+
+<style is:global>
+	.lightbox {
+		position: fixed;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: var(--space-3);
+		background: rgba(0, 0, 0, 0.85);
+		cursor: zoom-out;
+		z-index: 100;
+	}
+
+	.lightbox img {
+		max-width: 100%;
+		max-height: 100%;
+		border-radius: var(--radius-md);
 	}
 </style>

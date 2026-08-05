@@ -8,5 +8,68 @@
 	</head>
 	<body>
 		<script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js" type="module"></script>
+		<script type="module">
+			// Кавычка ломает разбор синтаксиса блока ::image{...}, поэтому в записанном
+			// в файл тексте её заменяют на &quot;. Обратную замену делает плагин
+			// src/plugins/remark-image-figure.mjs — при изменении логики поправить и там, и там.
+			const escapeAttr = (value) => String(value ?? '').replaceAll('"', '&quot;');
+			const escapeHtml = (value) =>
+				String(value ?? '')
+					.replaceAll('&', '&amp;')
+					.replaceAll('<', '&lt;')
+					.replaceAll('>', '&gt;')
+					.replaceAll('"', '&quot;');
+
+			CMS.registerEditorComponent({
+				id: 'image',
+				label: 'Изображение с подписью',
+				icon: 'image',
+				fields: [
+					{ label: 'Файл', name: 'src', widget: 'image' },
+					{ label: 'Альт-текст (для незрячих и поиска)', name: 'alt', widget: 'string' },
+					{ label: 'Подпись под картинкой', name: 'caption', widget: 'string', required: false },
+					{
+						label: 'Ширина',
+						name: 'width',
+						widget: 'select',
+						options: [
+							{ label: 'В колонку', value: 'column' },
+							{ label: 'Во всю ширину', value: 'full' },
+						],
+						default: 'column',
+					},
+					{ label: 'Текст ссылки на источник', name: 'source-label', widget: 'string', required: false },
+					{ label: 'Ссылка на источник', name: 'source-url', widget: 'string', required: false },
+				],
+				pattern: /^::image\{([\s\S]*)\}$/,
+				fromBlock: (match) => {
+					const attrs = {};
+					const re = /([\w-]+)="((?:[^"])*)"/g;
+					let m;
+
+					while ((m = re.exec(match[1]))) {
+						attrs[m[1]] = m[2].replaceAll('&quot;', '"');
+					}
+
+					return attrs;
+				},
+				toBlock: (data) => {
+					const parts = [`src="${data.src ?? ''}"`, `alt="${escapeAttr(data.alt)}"`];
+
+					if (data.caption) parts.push(`caption="${escapeAttr(data.caption)}"`);
+					parts.push(`width="${data.width || 'column'}"`);
+					if (data['source-label']) parts.push(`source-label="${escapeAttr(data['source-label'])}"`);
+					if (data['source-url']) parts.push(`source-url="${data['source-url']}"`);
+
+					return `::image{${parts.join(' ')}}`;
+				},
+				toPreview: (data) => `
+					<figure style="margin:0">
+						<img src="${data.src ?? ''}" alt="${escapeHtml(data.alt)}" style="max-width:100%;border-radius:8px" />
+						${data.caption ? `<figcaption style="opacity:0.7;font-size:0.875rem;margin-top:4px">${escapeHtml(data.caption)}</figcaption>` : ''}
+					</figure>
+				`,
+			});
+		</script>
 	</body>
 </html>
