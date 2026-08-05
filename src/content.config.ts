@@ -1,14 +1,13 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
-// Шесть категорий поста. Одна категория на пост.
+// Категории поста. Одна категория на пост.
 export const categories = [
 	{ id: 'podcast', label: 'Подкаст' },
 	{ id: 'videoessay', label: 'Видеоэссе' },
-	{ id: 'note', label: 'Заметка' },
-	{ id: 'review', label: 'Обзор' },
-	{ id: 'interview', label: 'Интервью' },
-	{ id: 'bonus', label: 'Бонус' },
+	{ id: 'note', label: 'Заметки' },
+	{ id: 'review', label: 'Обзоры' },
+	{ id: 'bonus', label: 'Бонусы' },
 ] as const;
 
 const categoryIds = categories.map((c) => c.id) as [string, ...string[]];

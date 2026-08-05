@@ -49,7 +49,7 @@
 |---|---|
 | `title` | Заголовок |
 | `date` | Дата публикации |
-| `category` | `podcast`, `videoessay`, `note`, `review`, `interview`, `bonus` |
+| `category` | `podcast`, `videoessay`, `note`, `review`, `bonus` |
 | `cover` | Обложка для ленты и соцсетей |
 | `anime` | Массив ID тайтлов; заполняется автоматически из разметки в тексте |
 | `youtube` | Ссылка на ролик |
