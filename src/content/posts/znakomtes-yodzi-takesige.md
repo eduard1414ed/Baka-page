@@ -9,9 +9,15 @@ draft: false
 
 Ёдзи Такэсигэ — один из главных художников фонов 80-х и 90-х годов. Именно он рисовал потрясающие пейзажи в дебютном фильме студии Gainax, «Королевские космические силы: Крылья Хоннеамиз» ([о котором у нас в этом месяце вышел эпизод, послушайте!](https://t.me/podcastbaka/4112))
 
-::image{src="/images/uploads/3.jpeg" alt=""}
-::image{src="/images/uploads/4.jpeg" alt=""}
-::image{src="/images/uploads/HOUZ3QgbcAEz4jY.jpeg" alt=""}
+::image{src="/images/uploads/3.jpeg" alt="" width="column"}
+
+::image{src="/images/uploads/4.jpeg" alt="" width="column"}
+
+::image{src="/images/uploads/HOUZ3QgbcAEz4jY.jpeg" alt="" width="column"}
+
+::image{src="/images/uploads/1.jpeg" alt="" width="column"}
+
+::image{src="/images/uploads/5.jpeg" alt="" width="column"}
 
 После этого Такэсигэ попал в студию Ghibli. Он выступил художником-постановщиком целого ряда знаковых работ студии: «Унесённых призраками», «Ходячего замка», «Сказаний Земноморья» и «Мальчика и птицы».
 
