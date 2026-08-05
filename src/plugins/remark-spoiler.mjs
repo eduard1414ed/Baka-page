@@ -2,7 +2,18 @@
 // та же логика, что и в remark-image-figure.mjs.
 const unescapeAttr = (value = '') => value.replaceAll('&quot;', '"');
 
-function spoilerNode(buttonLabel, contentChildren, { inline }) {
+// Длина скрытого текста (считая только реальные буквы, без markdown-разметки) —
+// нужна, чтобы плашка-заглушка была той же ширины, что и спрятанный текст.
+function textLength(nodes) {
+	let length = 0;
+	for (const node of nodes) {
+		if (node.type === 'text') length += node.value.length;
+		else if (Array.isArray(node.children)) length += textLength(node.children);
+	}
+	return length;
+}
+
+function blockSpoilerNode(buttonLabel, contentChildren) {
 	return {
 		type: 'spoiler',
 		children: [
@@ -21,10 +32,39 @@ function spoilerNode(buttonLabel, contentChildren, { inline }) {
 				data: { hName: 'template', hProperties: { class: 'spoiler-content' } },
 			},
 		],
-		data: {
-			hName: inline ? 'span' : 'div',
-			hProperties: { class: inline ? 'spoiler spoiler-inline' : 'spoiler' },
-		},
+		data: { hName: 'div', hProperties: { class: 'spoiler' } },
+	};
+}
+
+// Инлайн-вариант — сплошная цветная плашка нужной ширины вместо кнопки с текстом,
+// раскрывается на том же месте (см. .spoiler-inline в [slug].astro).
+function inlineSpoilerNode(contentChildren) {
+	const length = textLength(contentChildren) || 1;
+
+	return {
+		type: 'spoiler',
+		children: [
+			{
+				type: 'spoilerButton',
+				children: [],
+				data: {
+					hName: 'button',
+					hProperties: {
+						type: 'button',
+						class: 'spoiler-toggle',
+						style: `width:${length}ch`,
+						'aria-label': 'Показать скрытый текст',
+					},
+					hChildren: [],
+				},
+			},
+			{
+				type: 'spoilerContent',
+				children: contentChildren,
+				data: { hName: 'template', hProperties: { class: 'spoiler-content' } },
+			},
+		],
+		data: { hName: 'span', hProperties: { class: 'spoiler spoiler-inline' } },
 	};
 }
 
@@ -58,14 +98,14 @@ export default function remarkSpoiler() {
 				}
 
 				if (capturing && child.type === 'leafDirective' && child.name === 'spoiler-end') {
-					newChildren.push(spoilerNode(label, captured, { inline: false }));
+					newChildren.push(blockSpoilerNode(label, captured));
 					capturing = false;
 					captured = [];
 					continue;
 				}
 
 				if (!capturing && child.type === 'textDirective' && child.name === 'spoiler-inline') {
-					newChildren.push(spoilerNode('•••', child.children ?? [], { inline: true }));
+					newChildren.push(inlineSpoilerNode(child.children ?? []));
 					continue;
 				}
 

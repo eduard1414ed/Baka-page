@@ -115,7 +115,9 @@ const youtubeEmbed = youtube ? getYoutubeEmbedUrl(youtube) : null;
 		});
 	});
 
-	document.querySelectorAll<HTMLElement>('.spoiler').forEach((spoiler) => {
+	// Блочный спойлер (абзацы/картинки/галерея) — кнопка с текстом остаётся видна,
+	// раскрытое содержимое появляется под ней.
+	document.querySelectorAll<HTMLElement>('.spoiler:not(.spoiler-inline)').forEach((spoiler) => {
 		const button = spoiler.querySelector<HTMLButtonElement>('.spoiler-toggle');
 		const template = spoiler.querySelector<HTMLTemplateElement>('.spoiler-content');
 		if (!button || !template) return;
@@ -125,9 +127,7 @@ const youtubeEmbed = youtube ? getYoutubeEmbedUrl(youtube) : null;
 
 		button.addEventListener('click', () => {
 			if (!revealed) {
-				// span, а не div — этот блок может оказаться внутри строки текста
-				// (спойлер на слово/фразу), там div недопустим.
-				revealed = document.createElement('span');
+				revealed = document.createElement('div');
 				revealed.className = 'spoiler-revealed';
 				revealed.appendChild(template.content.cloneNode(true));
 				spoiler.appendChild(revealed);
@@ -136,6 +136,34 @@ const youtubeEmbed = youtube ? getYoutubeEmbedUrl(youtube) : null;
 			}
 
 			button.textContent = revealed.hidden ? openLabel : 'Скрыть спойлер';
+		});
+	});
+
+	// Инлайн-спойлер (слово/фраза) — цветная плашка заменяется текстом на том же
+	// месте по клику, повторный клик по тексту прячет его обратно.
+	document.querySelectorAll<HTMLElement>('.spoiler-inline').forEach((spoiler) => {
+		const button = spoiler.querySelector<HTMLButtonElement>('.spoiler-toggle');
+		const template = spoiler.querySelector<HTMLTemplateElement>('.spoiler-content');
+		if (!button || !template) return;
+
+		let revealed: HTMLElement | null = null;
+
+		const hide = () => {
+			if (revealed) revealed.hidden = true;
+			button.hidden = false;
+		};
+
+		button.addEventListener('click', () => {
+			if (!revealed) {
+				revealed = document.createElement('span');
+				revealed.className = 'spoiler-revealed';
+				revealed.appendChild(template.content.cloneNode(true));
+				revealed.addEventListener('click', hide);
+				spoiler.insertBefore(revealed, button);
+			}
+
+			revealed.hidden = false;
+			button.hidden = true;
 		});
 	});
 </script>
@@ -363,15 +391,25 @@ const youtubeEmbed = youtube ? getYoutubeEmbedUrl(youtube) : null;
 	}
 
 	.content :global(.spoiler-inline .spoiler-toggle) {
-		padding: 0 var(--space-1);
-		font-size: inherit;
-		line-height: inherit;
+		/* Ширина задана инлайн-стилем (см. remark-spoiler.mjs) — под длину
+		   спрятанного текста. Сплошная плашка вместо кнопки с надписью. */
+		height: 1em;
+		vertical-align: -0.15em;
+		padding: 0;
+		border: none;
+		border-radius: 3px;
+		background: var(--color-accent);
+	}
+
+	.content :global(.spoiler-inline .spoiler-toggle[hidden]) {
+		display: none;
 	}
 
 	.content :global(.spoiler-inline .spoiler-revealed) {
 		display: inline;
 		margin: 0;
 		padding: 0 var(--space-1);
+		cursor: pointer;
 		border-left: none;
 		background: var(--color-bg-elevated);
 		border-radius: var(--radius-sm);
