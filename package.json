@@ -1,5 +1,5 @@
 {
-  "name": "astro-tmp",
+  "name": "baki-podcast",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -13,5 +13,8 @@
   },
   "dependencies": {
     "astro": "^7.1.6"
+  },
+  "devDependencies": {
+    "wrangler": "^4.119.0"
   }
 }

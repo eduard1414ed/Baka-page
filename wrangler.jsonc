@@ -1,0 +1,7 @@
+{
+	"name": "baki-podcast",
+	"compatibility_date": "2026-08-05",
+	"assets": {
+		"directory": "./dist"
+	}
+}
