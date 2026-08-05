@@ -47,4 +47,6 @@ collections:
       - label: Текст
         name: body
         widget: richtext
-        editor_components: [code-block, image, figure]
+        # Встроенный простой блок картинки (id "image") убран специально: он не умеет
+        # ни подпись, ни альт-текст, ни группировку в галерею — путал с нашим "figure".
+        editor_components: [code-block, figure]
