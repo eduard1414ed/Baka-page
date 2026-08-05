@@ -1,0 +1,41 @@
+backend:
+  name: github
+  repo: eduard1414ed/Baka-page
+  branch: main
+  base_url: https://baki-cms-auth.eduard1414ed.workers.dev
+
+site_url: https://baka-page.eduard1414ed.workers.dev
+
+# Русские заголовки переводим в латиницу для адреса файла (например
+# «Тестовый пост» → «testovyy-post»), иначе имя файла станет нечитаемым.
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: '-'
+
+collections:
+  - name: posts
+    label: Посты
+    label_singular: Пост
+    folder: src/content/posts
+    create: true
+    format: frontmatter
+    extension: md
+    fields:
+      - { label: Заголовок, name: title, widget: string }
+      - label: Дата
+        name: date
+        widget: datetime
+        date_format: 'YYYY-MM-DD'
+        time_format: false
+      - label: Категория
+        name: category
+        widget: select
+        options:
+          - { label: Подкаст, value: podcast }
+          - { label: Видеоэссе, value: videoessay }
+          - { label: Заметка, value: note }
+          - { label: Обзор, value: review }
+          - { label: Бонус, value: bonus }
+      - { label: Черновик, name: draft, widget: boolean, default: true }
+      - { label: Текст, name: body, widget: markdown }
