@@ -2,7 +2,7 @@
 title: 'Тест отложенной публикации'
 date: 2026-08-06
 category: note
-draft: true
+draft: false
 publishAt: 2026-08-06T13:33:00.000Z
 ---
 
