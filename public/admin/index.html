@@ -133,15 +133,23 @@
 				toPreview: (data) => `<span style="opacity:0.6">🔒 ${escapeHtml(data.text)}</span>`,
 			});
 
-			// Видео в любом месте текста — пока только ссылкой на YouTube.
-			// Свой файл понадобится грузить на Hetzner, а не в репозиторий: это
-			// отдельная задача (лимит Cloudflare — 25 МБ на файл, свои видео —
-			// на этап "Выпуски и плеер", делать сразу через сервер, а не сюда.
+			// Видео в любом месте текста — YouTube-ссылка или прямая ссылка на свой
+			// файл (заливается через Cyberduck на Hetzner, см. тз/04). Заполняйте
+			// только одно поле — если заполнены оба, победит YouTube (см. remark-video.mjs).
 			CMS.registerEditorComponent({
 				id: 'video',
 				label: 'Видео',
 				icon: 'movie',
-				fields: [{ label: 'Ссылка на YouTube', name: 'youtube', widget: 'string' }],
+				fields: [
+					{ label: 'Ссылка на YouTube', name: 'youtube', widget: 'string', required: false },
+					{
+						label: 'Прямая ссылка на файл (свой видео, залитый на Hetzner)',
+						name: 'video',
+						widget: 'string',
+						required: false,
+						hint: 'Заполняйте это ИЛИ ссылку на YouTube выше — не оба сразу.',
+					},
+				],
 				pattern: /^::video\{([^\n]*)\}$/,
 				fromBlock: (match) => {
 					const attrs = {};
@@ -154,11 +162,17 @@
 
 					return attrs;
 				},
-				toBlock: (data) => `\n::video{youtube="${escapeAttr(data.youtube)}"}\n`,
-				toPreview: (data) =>
-					data.youtube
-						? `<div style="opacity:0.6">▶ YouTube: ${escapeHtml(data.youtube)}</div>`
-						: `<div style="opacity:0.6">Видео (вставьте ссылку на YouTube)</div>`,
+				toBlock: (data) => {
+					const attrs = [];
+					if (data.youtube) attrs.push(`youtube="${escapeAttr(data.youtube)}"`);
+					if (data.video) attrs.push(`video="${escapeAttr(data.video)}"`);
+					return `\n::video{${attrs.join(' ')}}\n`;
+				},
+				toPreview: (data) => {
+					if (data.youtube) return `<div style="opacity:0.6">▶ YouTube: ${escapeHtml(data.youtube)}</div>`;
+					if (data.video) return `<div style="opacity:0.6">▶ Видео: ${escapeHtml(data.video)}</div>`;
+					return `<div style="opacity:0.6">Видео (вставьте ссылку на YouTube или на файл)</div>`;
+				},
 			});
 
 			// Кнопка «Аниме» — метка тайтла в тексте: :anime[Текст]{id="frieren" source="shikimori" source-id="9253"}.

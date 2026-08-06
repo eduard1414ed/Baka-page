@@ -583,6 +583,13 @@ const animeEntries = anime ? (await Promise.all(anime.map((ref) => getEntry(ref)
 		border: 0;
 	}
 
+	.content :global(.content-video) {
+		display: block;
+		width: 100%;
+		margin: var(--space-3) 0;
+		border-radius: var(--radius-md);
+	}
+
 	.content :global(.timecode) {
 		font-variant-numeric: tabular-nums;
 		border-bottom: 1px dashed var(--color-accent);
