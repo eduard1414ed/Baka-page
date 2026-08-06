@@ -1,6 +1,8 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import PlayerBar from '../components/PlayerBar.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -21,6 +23,9 @@ const { title, description = 'Подкаст об аниме и о том, чт�
 		<meta name="description" content={description} />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		<!-- Переходы между страницами без полной перезагрузки — без этого плеер
+		     физически не может пережить переход на другую страницу, см. тз/04. -->
+		<ClientRouter />
 	</head>
 	<body>
 		<Header />
@@ -28,5 +33,6 @@ const { title, description = 'Подкаст об аниме и о том, чт�
 			<slot />
 		</main>
 		<Footer />
+		<PlayerBar />
 	</body>
 </html>

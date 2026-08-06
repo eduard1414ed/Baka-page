@@ -76,7 +76,17 @@ const animeEntries = anime ? (await Promise.all(anime.map((ref) => getEntry(ref)
 
 		{
 			category === 'podcast' && episode && (
-				<audio class="episode-audio" src={episode.audioUrl} controls preload="none" />
+				<button
+					type="button"
+					class="episode-play-trigger"
+					data-guid={episode.guid}
+					data-audio={episode.audioUrl}
+					data-title={title}
+					data-cover={episode.imageUrl ?? ''}
+					data-link={`/posts/${post.id}/`}
+				>
+					▶ Слушать выпуск
+				</button>
 			)
 		}
 
@@ -110,108 +120,120 @@ const animeEntries = anime ? (await Promise.all(anime.map((ref) => getEntry(ref)
 </Layout>
 
 <script>
+	// Из-за <ClientRouter /> в Layout.astro переходы между постами теперь идут
+	// без полной перезагрузки страницы (это нужно закреплённому плееру — см.
+	// src/components/PlayerBar.astro). Но у всех постов один и тот же
+	// собранный файл скрипта, поэтому браузер выполняет его только один раз
+	// за сессию — если оставить код на верхнем уровне, лайтбокс/спойлеры/
+	// карусель будут работать только у первого открытого поста. Оборачиваем
+	// в astro:page-load, это событие срабатывает и при первой загрузке,
+	// и после каждого перехода.
 	function closeLightbox(overlay: HTMLElement, onKeydown: (event: KeyboardEvent) => void) {
 		overlay.remove();
 		document.removeEventListener('keydown', onKeydown);
 	}
 
-	document.querySelectorAll<HTMLAnchorElement>('.content a.figure-zoom').forEach((link) => {
-		link.addEventListener('click', (event) => {
-			event.preventDefault();
-			const sourceImg = link.querySelector('img');
-			if (!sourceImg) return;
+	function initPostInteractions() {
+		document.querySelectorAll<HTMLAnchorElement>('.content a.figure-zoom').forEach((link) => {
+			link.addEventListener('click', (event) => {
+				event.preventDefault();
+				const sourceImg = link.querySelector('img');
+				if (!sourceImg) return;
 
-			const overlay = document.createElement('div');
-			overlay.className = 'lightbox';
+				const overlay = document.createElement('div');
+				overlay.className = 'lightbox';
 
-			const bigImg = document.createElement('img');
-			// .src — то, что браузер выбрал из srcset для превью, необязательно
-			// самое крупное; data-full всегда указывает на него явно.
-			bigImg.src = sourceImg.dataset.full || sourceImg.src;
-			bigImg.alt = sourceImg.alt;
-			overlay.appendChild(bigImg);
+				const bigImg = document.createElement('img');
+				// .src — то, что браузер выбрал из srcset для превью, необязательно
+				// самое крупное; data-full всегда указывает на него явно.
+				bigImg.src = sourceImg.dataset.full || sourceImg.src;
+				bigImg.alt = sourceImg.alt;
+				overlay.appendChild(bigImg);
 
-			const onKeydown = (event: KeyboardEvent) => {
-				if (event.key === 'Escape') closeLightbox(overlay, onKeydown);
+				const onKeydown = (event: KeyboardEvent) => {
+					if (event.key === 'Escape') closeLightbox(overlay, onKeydown);
+				};
+
+				overlay.addEventListener('click', () => closeLightbox(overlay, onKeydown));
+				document.addEventListener('keydown', onKeydown);
+				document.body.appendChild(overlay);
+			});
+		});
+
+		document.querySelectorAll<HTMLElement>('.gallery-carousel').forEach((carousel) => {
+			const track = carousel.querySelector<HTMLElement>('.carousel-track');
+			const slides = carousel.querySelectorAll('.carousel-slide');
+			if (!track || slides.length === 0) return;
+
+			let index = 0;
+			const update = () => {
+				track.style.transform = `translateX(-${index * 100}%)`;
 			};
 
-			overlay.addEventListener('click', () => closeLightbox(overlay, onKeydown));
-			document.addEventListener('keydown', onKeydown);
-			document.body.appendChild(overlay);
+			carousel.querySelector('.carousel-prev')?.addEventListener('click', () => {
+				index = (index - 1 + slides.length) % slides.length;
+				update();
+			});
+			carousel.querySelector('.carousel-next')?.addEventListener('click', () => {
+				index = (index + 1) % slides.length;
+				update();
+			});
 		});
-	});
 
-	document.querySelectorAll<HTMLElement>('.gallery-carousel').forEach((carousel) => {
-		const track = carousel.querySelector<HTMLElement>('.carousel-track');
-		const slides = carousel.querySelectorAll('.carousel-slide');
-		if (!track || slides.length === 0) return;
+		// Блочный спойлер (абзацы/картинки/галерея) — кнопка с текстом остаётся видна,
+		// раскрытое содержимое появляется под ней.
+		document.querySelectorAll<HTMLElement>('.spoiler:not(.spoiler-inline)').forEach((spoiler) => {
+			const button = spoiler.querySelector<HTMLButtonElement>('.spoiler-toggle');
+			const template = spoiler.querySelector<HTMLTemplateElement>('.spoiler-content');
+			if (!button || !template) return;
 
-		let index = 0;
-		const update = () => {
-			track.style.transform = `translateX(-${index * 100}%)`;
-		};
+			const openLabel = button.textContent ?? 'Показать спойлер';
+			let revealed: HTMLElement | null = null;
 
-		carousel.querySelector('.carousel-prev')?.addEventListener('click', () => {
-			index = (index - 1 + slides.length) % slides.length;
-			update();
+			button.addEventListener('click', () => {
+				if (!revealed) {
+					revealed = document.createElement('div');
+					revealed.className = 'spoiler-revealed';
+					revealed.appendChild(template.content.cloneNode(true));
+					spoiler.appendChild(revealed);
+				} else {
+					revealed.hidden = !revealed.hidden;
+				}
+
+				button.textContent = revealed.hidden ? openLabel : 'Скрыть спойлер';
+			});
 		});
-		carousel.querySelector('.carousel-next')?.addEventListener('click', () => {
-			index = (index + 1) % slides.length;
-			update();
+
+		// Инлайн-спойлер (слово/фраза) — цветная плашка заменяется текстом на том же
+		// месте по клику, повторный клик по тексту прячет его обратно.
+		document.querySelectorAll<HTMLElement>('.spoiler-inline').forEach((spoiler) => {
+			const button = spoiler.querySelector<HTMLButtonElement>('.spoiler-toggle');
+			const template = spoiler.querySelector<HTMLTemplateElement>('.spoiler-content');
+			if (!button || !template) return;
+
+			let revealed: HTMLElement | null = null;
+
+			const hide = () => {
+				if (revealed) revealed.hidden = true;
+				button.hidden = false;
+			};
+
+			button.addEventListener('click', () => {
+				if (!revealed) {
+					revealed = document.createElement('span');
+					revealed.className = 'spoiler-revealed';
+					revealed.appendChild(template.content.cloneNode(true));
+					revealed.addEventListener('click', hide);
+					spoiler.insertBefore(revealed, button);
+				}
+
+				revealed.hidden = false;
+				button.hidden = true;
+			});
 		});
-	});
+	}
 
-	// Блочный спойлер (абзацы/картинки/галерея) — кнопка с текстом остаётся видна,
-	// раскрытое содержимое появляется под ней.
-	document.querySelectorAll<HTMLElement>('.spoiler:not(.spoiler-inline)').forEach((spoiler) => {
-		const button = spoiler.querySelector<HTMLButtonElement>('.spoiler-toggle');
-		const template = spoiler.querySelector<HTMLTemplateElement>('.spoiler-content');
-		if (!button || !template) return;
-
-		const openLabel = button.textContent ?? 'Показать спойлер';
-		let revealed: HTMLElement | null = null;
-
-		button.addEventListener('click', () => {
-			if (!revealed) {
-				revealed = document.createElement('div');
-				revealed.className = 'spoiler-revealed';
-				revealed.appendChild(template.content.cloneNode(true));
-				spoiler.appendChild(revealed);
-			} else {
-				revealed.hidden = !revealed.hidden;
-			}
-
-			button.textContent = revealed.hidden ? openLabel : 'Скрыть спойлер';
-		});
-	});
-
-	// Инлайн-спойлер (слово/фраза) — цветная плашка заменяется текстом на том же
-	// месте по клику, повторный клик по тексту прячет его обратно.
-	document.querySelectorAll<HTMLElement>('.spoiler-inline').forEach((spoiler) => {
-		const button = spoiler.querySelector<HTMLButtonElement>('.spoiler-toggle');
-		const template = spoiler.querySelector<HTMLTemplateElement>('.spoiler-content');
-		if (!button || !template) return;
-
-		let revealed: HTMLElement | null = null;
-
-		const hide = () => {
-			if (revealed) revealed.hidden = true;
-			button.hidden = false;
-		};
-
-		button.addEventListener('click', () => {
-			if (!revealed) {
-				revealed = document.createElement('span');
-				revealed.className = 'spoiler-revealed';
-				revealed.appendChild(template.content.cloneNode(true));
-				revealed.addEventListener('click', hide);
-				spoiler.insertBefore(revealed, button);
-			}
-
-			revealed.hidden = false;
-			button.hidden = true;
-		});
-	});
+	document.addEventListener('astro:page-load', initPostInteractions);
 </script>
 
 <style>
@@ -272,9 +294,24 @@ const animeEntries = anime ? (await Promise.all(anime.map((ref) => getEntry(ref)
 		margin-bottom: var(--space-3);
 	}
 
-	.episode-audio {
-		width: 100%;
+	.episode-play-trigger {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-1);
 		margin-bottom: var(--space-3);
+		padding: var(--space-1) var(--space-3);
+		border: none;
+		border-radius: var(--radius-full);
+		background: var(--color-accent);
+		color: var(--color-bg);
+		font-size: var(--font-size-base);
+		cursor: pointer;
+		transition: background-color var(--transition-fast);
+	}
+
+	.episode-play-trigger:hover,
+	.episode-play-trigger:focus-visible {
+		background: var(--color-accent-hover);
 	}
 
 	.buttons {
@@ -566,6 +603,16 @@ const animeEntries = anime ? (await Promise.all(anime.map((ref) => getEntry(ref)
 		width: 100%;
 		height: 100%;
 		border: 0;
+	}
+
+	.content :global(.timecode) {
+		font-variant-numeric: tabular-nums;
+		border-bottom: 1px dashed var(--color-accent);
+	}
+
+	.content :global(.timecode:hover),
+	.content :global(.timecode:focus-visible) {
+		border-bottom-style: solid;
 	}
 </style>
 

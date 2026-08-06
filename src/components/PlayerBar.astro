@@ -1,0 +1,389 @@
+---
+// Закреплённый снизу плеер выпусков — единственный экземпляр, живёт в Layout.astro
+// на каждой странице. transition:persist (см. Layout.astro и <ClientRouter />)
+// не даёт браузеру пересоздать этот <audio> при переходе на другую страницу —
+// именно поэтому звук не прерывается, а не какой-то отдельный JS-трюк.
+//
+// Запускает воспроизведение любая страница поста через кнопку с классом
+// .episode-play-trigger (см. src/pages/posts/[slug].astro) — она несёт данные
+// выпуска в data-атрибутах, а сама эта кнопка каждый раз новая (страница
+// пересоздаётся), поэтому слушатель на неё навешивается заново при каждом
+// переходе, см. скрипт ниже.
+//
+// Таймкоды в тексте выпуска (src/plugins/remark-timecode.mjs) работают через
+// тот же механизм: ссылка с data-seconds ищет ближайшую .episode-play-trigger
+// на странице, чтобы узнать, какой выпуск и куда перематывать.
+---
+
+<div id="player-bar" class="player-bar" hidden transition:persist transition:name="player-bar">
+	<a id="player-link" class="player-info" href="#">
+		<img id="player-cover" class="player-cover" alt="" width="48" height="48" />
+		<span id="player-title" class="player-title"></span>
+	</a>
+
+	<div class="player-controls">
+		<button id="player-back15" type="button" class="player-btn" aria-label="Назад на 15 секунд">−15</button>
+		<button id="player-toggle" type="button" class="player-btn player-toggle" aria-label="Играть">▶</button>
+		<button id="player-fwd15" type="button" class="player-btn" aria-label="Вперёд на 15 секунд">+15</button>
+	</div>
+
+	<div class="player-seek">
+		<span id="player-time-current" class="player-time">0:00</span>
+		<input id="player-range" class="player-range" type="range" min="0" max="0" step="1" value="0" aria-label="Перемотка" />
+		<span id="player-time-duration" class="player-time">0:00</span>
+	</div>
+
+	<select id="player-rate" class="player-rate" aria-label="Скорость воспроизведения">
+		<option value="0.75">0.75×</option>
+		<option value="1" selected>1×</option>
+		<option value="1.25">1.25×</option>
+		<option value="1.5">1.5×</option>
+		<option value="1.75">1.75×</option>
+		<option value="2">2×</option>
+	</select>
+
+	<audio id="player-audio" preload="none"></audio>
+</div>
+
+<script>
+	const STORAGE_KEY = 'baka-player-state';
+
+	function formatTime(totalSeconds: number): string {
+		if (!Number.isFinite(totalSeconds) || totalSeconds < 0) return '0:00';
+		const pad = (n: number) => String(n).padStart(2, '0');
+		const s = Math.floor(totalSeconds % 60);
+		const m = Math.floor(totalSeconds / 60) % 60;
+		const h = Math.floor(totalSeconds / 3600);
+		return h > 0 ? `${h}:${pad(m)}:${pad(s)}` : `${m}:${pad(s)}`;
+	}
+
+	function readSavedState(): { guid: string; audio: string; title: string; cover: string; link: string; time: number; rate: number } | null {
+		try {
+			const raw = localStorage.getItem(STORAGE_KEY);
+			return raw ? JSON.parse(raw) : null;
+		} catch {
+			return null;
+		}
+	}
+
+	function writeSavedState(state: Record<string, unknown>) {
+		try {
+			localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+		} catch {
+			// приватный режим браузера может запрещать localStorage — просто не запоминаем позицию
+		}
+	}
+
+	// Однократная настройка: сам плеер (#player-bar) пережит через transition:persist,
+	// поэтому кнопки внутри него существуют на странице всегда — навешивать
+	// обработчики на них второй раз при следующем переходе не нужно и вредно
+	// (дублировались бы клики). Флаг на window переживает клиентскую навигацию.
+	function initPlayerOnce() {
+		if ((window as any).__bakaPlayerReady) return;
+		(window as any).__bakaPlayerReady = true;
+
+		const bar = document.getElementById('player-bar') as HTMLDivElement;
+		const audio = document.getElementById('player-audio') as HTMLAudioElement;
+		const link = document.getElementById('player-link') as HTMLAnchorElement;
+		const cover = document.getElementById('player-cover') as HTMLImageElement;
+		const title = document.getElementById('player-title') as HTMLSpanElement;
+		const toggle = document.getElementById('player-toggle') as HTMLButtonElement;
+		const back15 = document.getElementById('player-back15') as HTMLButtonElement;
+		const fwd15 = document.getElementById('player-fwd15') as HTMLButtonElement;
+		const range = document.getElementById('player-range') as HTMLInputElement;
+		const timeCurrent = document.getElementById('player-time-current') as HTMLSpanElement;
+		const timeDuration = document.getElementById('player-time-duration') as HTMLSpanElement;
+		const rateSelect = document.getElementById('player-rate') as HTMLSelectElement;
+
+		let currentGuid: string | null = null;
+		let scrubbing = false;
+
+		function showBar() {
+			bar.hidden = false;
+			document.body.classList.add('has-player');
+		}
+
+		function saveState() {
+			if (!currentGuid) return;
+			writeSavedState({
+				guid: currentGuid,
+				audio: audio.src,
+				title: title.textContent ?? '',
+				cover: cover.src,
+				link: link.href,
+				time: audio.currentTime,
+				rate: audio.playbackRate,
+			});
+		}
+
+		// Загружает выпуск в плеер. Если это уже играющий выпуск — просто
+		// перематывает (не сбрасывая на 0), иначе подставляет новый источник.
+		// seekSeconds задаётся кликом по таймкоду в тексте; без него — обычный
+		// запуск (с сохранённой позиции, если она была, иначе с начала).
+		function loadEpisode(data: DOMStringMap, seekSeconds?: number) {
+			const { guid, audio: audioUrl, title: episodeTitle, cover: coverUrl, link: linkUrl } = data;
+			if (!guid || !audioUrl) return;
+
+			title.textContent = episodeTitle ?? '';
+			if (coverUrl) cover.src = coverUrl;
+			if (linkUrl) link.href = linkUrl;
+			showBar();
+
+			if (guid === currentGuid) {
+				if (typeof seekSeconds === 'number') audio.currentTime = seekSeconds;
+				audio.play();
+				return;
+			}
+
+			currentGuid = guid;
+			audio.src = audioUrl;
+
+			const saved = readSavedState();
+			const resumeAt = typeof seekSeconds === 'number' ? seekSeconds : saved && saved.guid === guid ? saved.time : 0;
+
+			const onLoaded = () => {
+				audio.currentTime = resumeAt;
+				audio.play();
+				audio.removeEventListener('loadedmetadata', onLoaded);
+			};
+			audio.addEventListener('loadedmetadata', onLoaded);
+		}
+
+		// При полной перезагрузке сайта (не клиентский переход) память о выпуске
+		// теряется вместе со страницей — восстанавливаем из localStorage. Без
+		// автовоспроизведения: просто показываем плеер на паузе, готовым продолжить.
+		const saved = readSavedState();
+		if (saved) {
+			currentGuid = saved.guid;
+			title.textContent = saved.title;
+			cover.src = saved.cover;
+			link.href = saved.link;
+			audio.src = saved.audio;
+			audio.playbackRate = saved.rate || 1;
+			rateSelect.value = String(saved.rate || 1);
+			const onLoaded = () => {
+				audio.currentTime = saved.time;
+				audio.removeEventListener('loadedmetadata', onLoaded);
+			};
+			audio.addEventListener('loadedmetadata', onLoaded);
+			showBar();
+		}
+
+		toggle.addEventListener('click', () => {
+			if (audio.paused) audio.play();
+			else audio.pause();
+		});
+
+		back15.addEventListener('click', () => {
+			audio.currentTime = Math.max(0, audio.currentTime - 15);
+		});
+
+		fwd15.addEventListener('click', () => {
+			audio.currentTime = Math.min(audio.duration || Infinity, audio.currentTime + 15);
+		});
+
+		range.addEventListener('input', () => {
+			scrubbing = true;
+			timeCurrent.textContent = formatTime(Number(range.value));
+		});
+		range.addEventListener('change', () => {
+			audio.currentTime = Number(range.value);
+			scrubbing = false;
+		});
+
+		rateSelect.addEventListener('change', () => {
+			audio.playbackRate = Number(rateSelect.value);
+			saveState();
+		});
+
+		audio.addEventListener('play', () => {
+			toggle.textContent = '⏸';
+			toggle.setAttribute('aria-label', 'Пауза');
+		});
+		audio.addEventListener('pause', () => {
+			toggle.textContent = '▶';
+			toggle.setAttribute('aria-label', 'Играть');
+			saveState();
+		});
+		audio.addEventListener('loadedmetadata', () => {
+			range.max = String(Math.floor(audio.duration || 0));
+			timeDuration.textContent = formatTime(audio.duration);
+		});
+		audio.addEventListener('timeupdate', () => {
+			if (scrubbing) return;
+			range.value = String(Math.floor(audio.currentTime));
+			timeCurrent.textContent = formatTime(audio.currentTime);
+			// Пишем в localStorage не на каждый тик (несколько раз в секунду),
+			// а примерно раз в 5 секунд — достаточно для восстановления позиции.
+			if (Math.floor(audio.currentTime) % 5 === 0) saveState();
+		});
+
+		// Подстраховка: если вкладку закрыли или перезагрузили во время
+		// воспроизведения, событие pause выше может не успеть сработать.
+		window.addEventListener('beforeunload', saveState);
+
+		(window as any).__bakaLoadEpisode = loadEpisode;
+	}
+
+	// Кнопка «Слушать выпуск» и таймкоды в тексте — часть обычной страницы поста,
+	// пересоздаются заново при каждом переходе (в отличие от самого плеера),
+	// поэтому слушатели на них навешиваем каждый раз без всякой защиты от повтора.
+	function bindPageControls() {
+		const loadEpisode = (window as any).__bakaLoadEpisode as ((data: DOMStringMap, seekSeconds?: number) => void) | undefined;
+		if (!loadEpisode) return;
+
+		document.querySelectorAll<HTMLButtonElement>('.episode-play-trigger').forEach((trigger) => {
+			trigger.addEventListener('click', () => loadEpisode(trigger.dataset));
+		});
+
+		document.querySelectorAll<HTMLAnchorElement>('.timecode').forEach((link) => {
+			link.addEventListener('click', (event) => {
+				event.preventDefault();
+				const trigger = document.querySelector<HTMLButtonElement>('.episode-play-trigger');
+				if (!trigger) return;
+				const seconds = Number(link.dataset.seconds);
+				loadEpisode(trigger.dataset, Number.isFinite(seconds) ? seconds : undefined);
+			});
+		});
+	}
+
+	document.addEventListener('astro:page-load', () => {
+		initPlayerOnce();
+		bindPageControls();
+	});
+</script>
+
+<style>
+	.player-bar {
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 60;
+		display: flex;
+		align-items: center;
+		gap: var(--space-2);
+		padding: var(--space-1) var(--space-2);
+		background: var(--color-bg-elevated);
+		border-top: 1px solid var(--color-border);
+	}
+
+	.player-info {
+		display: flex;
+		align-items: center;
+		gap: var(--space-1);
+		min-width: 0;
+		flex: 0 1 12rem;
+		color: var(--color-text);
+	}
+
+	.player-cover {
+		width: 2.5rem;
+		height: 2.5rem;
+		border-radius: var(--radius-sm);
+		object-fit: cover;
+		flex-shrink: 0;
+		background: var(--color-bg);
+	}
+
+	.player-title {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		font-size: var(--font-size-sm);
+	}
+
+	.player-controls {
+		display: flex;
+		align-items: center;
+		gap: var(--space-1);
+		flex-shrink: 0;
+	}
+
+	.player-btn {
+		border: 1px solid var(--color-border);
+		background: transparent;
+		color: var(--color-text);
+		border-radius: var(--radius-full);
+		cursor: pointer;
+		font-size: var(--font-size-sm);
+		line-height: 1;
+		padding: 0.5rem 0.6rem;
+		transition: border-color var(--transition-fast);
+	}
+
+	.player-btn:hover,
+	.player-btn:focus-visible {
+		border-color: var(--color-accent);
+		color: var(--color-accent);
+	}
+
+	.player-toggle {
+		width: 2.25rem;
+		height: 2.25rem;
+		padding: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: var(--font-size-base);
+	}
+
+	.player-seek {
+		display: flex;
+		align-items: center;
+		gap: var(--space-1);
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+
+	.player-time {
+		font-size: var(--font-size-sm);
+		color: var(--color-text-muted);
+		flex-shrink: 0;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.player-range {
+		flex: 1 1 auto;
+		accent-color: var(--color-accent);
+	}
+
+	.player-rate {
+		flex-shrink: 0;
+		background: var(--color-bg);
+		color: var(--color-text);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		padding: 0.35rem 0.4rem;
+		font-size: var(--font-size-sm);
+	}
+
+	@media (max-width: 640px) {
+		.player-bar {
+			flex-wrap: wrap;
+		}
+
+		.player-info {
+			flex: 1 1 auto;
+		}
+
+		.player-seek {
+			order: 3;
+			flex: 1 1 100%;
+		}
+	}
+</style>
+
+<style is:global>
+	/* Резервируем место снизу страницы, пока плеер виден, чтобы он не перекрывал
+	   собой подвал/конец текста поста. */
+	body.has-player {
+		padding-bottom: 4.5rem;
+	}
+
+	@media (max-width: 640px) {
+		body.has-player {
+			padding-bottom: 6.5rem;
+		}
+	}
+</style>
