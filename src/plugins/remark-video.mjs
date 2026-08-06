@@ -43,7 +43,10 @@ export default function remarkVideo() {
 
 			node.data = {
 				hName: 'video',
-				hProperties: { class: 'content-video', src: fileUrl, controls: true, preload: 'none' },
+				// preload="metadata" (не "none") — браузер подгружает первый кадр как
+				// превью, иначе видео выглядит пустым тёмным прямоугольником, пока
+				// не нажать play, и кажется сломанным.
+				hProperties: { class: 'content-video', src: fileUrl, controls: true, preload: 'metadata' },
 				hChildren: [],
 			};
 		});

@@ -73,7 +73,7 @@ const animeEntries = anime ? (await Promise.all(anime.map((ref) => getEntry(ref)
 			)
 		}
 
-		{!youtubeEmbed && video && <video class="video" src={video} controls preload="none" />}
+		{!youtubeEmbed && video && <video class="video" src={video} controls preload="metadata" />}
 
 		{
 			category === 'podcast' && episode && (
