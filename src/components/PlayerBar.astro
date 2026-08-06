@@ -42,6 +42,8 @@
 		<option value="2">2×</option>
 	</select>
 
+	<button id="player-close" type="button" class="player-btn player-close" aria-label="Закрыть плеер и остановить воспроизведение">✕</button>
+
 	<audio id="player-audio" preload="none"></audio>
 </div>
 
@@ -94,6 +96,7 @@
 		const timeCurrent = document.getElementById('player-time-current') as HTMLSpanElement;
 		const timeDuration = document.getElementById('player-time-duration') as HTMLSpanElement;
 		const rateSelect = document.getElementById('player-rate') as HTMLSelectElement;
+		const close = document.getElementById('player-close') as HTMLButtonElement;
 
 		let currentGuid: string | null = null;
 		let scrubbing = false;
@@ -114,6 +117,14 @@
 				time: audio.currentTime,
 				rate: audio.playbackRate,
 			});
+		}
+
+		function clearSavedState() {
+			try {
+				localStorage.removeItem(STORAGE_KEY);
+			} catch {
+				// приватный режим браузера — и так нечего чистить
+			}
 		}
 
 		// Загружает выпуск в плеер. Если это уже играющий выпуск — просто
@@ -178,6 +189,23 @@
 			// Событие ratechange от audio ниже само обновит rateSelect.value —
 			// в том числе у всех .episode-player на странице, см. bindEpisodePlayers().
 			audio.playbackRate = Number(rateSelect.value);
+		});
+
+		// Закрыть плеер — полностью остановить и забыть выпуск (не просто пауза).
+		// currentGuid обнуляем до audio.pause(), чтобы обработчик pause ниже не
+		// успел заново сохранить позицию в тот же момент, когда мы её стираем.
+		close.addEventListener('click', () => {
+			currentGuid = null;
+			audio.pause();
+			audio.removeAttribute('src');
+			audio.load();
+			clearSavedState();
+			bar.hidden = true;
+			document.body.classList.remove('has-player');
+			// Не все браузеры гарантированно шлют своё событие pause синхронно —
+			// досылаем вручную, чтобы .episode-player на странице (см. ниже) сразу
+			// сбросили свой вид на «не запущено», а не остались висеть с иконкой паузы.
+			audio.dispatchEvent(new Event('pause'));
 		});
 
 		audio.addEventListener('play', () => {
@@ -299,7 +327,19 @@
 					audio.removeEventListener('ratechange', sync);
 					return;
 				}
-				if (!isActive()) return;
+
+				if (!isActive()) {
+					// Раньше был активным (играл именно этот выпуск), а теперь плеер
+					// закрыли или переключили на другой — сбрасываем карточку в
+					// исходный вид, а не оставляем последнюю иконку/время висеть.
+					toggle.textContent = '▶';
+					toggle.setAttribute('aria-label', 'Играть');
+					if (!scrubbing) {
+						range.value = '0';
+						timeCurrent.textContent = '0:00';
+					}
+					return;
+				}
 
 				toggle.textContent = audio.paused ? '▶' : '⏸';
 				toggle.setAttribute('aria-label', audio.paused ? 'Играть' : 'Пауза');
@@ -362,6 +402,13 @@
 		padding: var(--space-1) var(--space-2);
 		background: var(--color-bg-elevated);
 		border-top: 1px solid var(--color-border);
+	}
+
+	/* [hidden] и .player-bar одинаково «весомы» для браузера (оба — это просто
+	   один селектор), а объявлено это в CSS позже — без этого правила плеер
+	   был виден всегда, атрибут hidden ничего не перебивал. */
+	.player-bar[hidden] {
+		display: none;
 	}
 
 	.player-info {
@@ -452,6 +499,18 @@
 		border-radius: var(--radius-sm);
 		padding: 0.35rem 0.4rem;
 		font-size: var(--font-size-sm);
+	}
+
+	.player-close {
+		border: none;
+		color: var(--color-text-muted);
+		padding: 0.5rem;
+	}
+
+	.player-close:hover,
+	.player-close:focus-visible {
+		border-color: transparent;
+		color: var(--color-accent);
 	}
 
 	@media (max-width: 640px) {
