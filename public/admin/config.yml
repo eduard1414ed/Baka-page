@@ -44,6 +44,18 @@ collections:
           - { label: Обзор, value: review }
           - { label: Бонус, value: bonus }
       - { label: Черновик, name: draft, widget: boolean, default: true }
+      - label: Тайтлы поста (вручную)
+        name: anime
+        widget: relation
+        collection: anime
+        search_fields: [titleRu, titleOriginal]
+        display_fields: [titleRu, titleOriginal]
+        multiple: true
+        required: false
+        hint: >-
+          Обычно ничего вписывать не нужно — тайтлы, отмеченные кнопкой «Аниме» в тексте,
+          подставляются сюда сами при сохранении. Добавляйте вручную только то, что не
+          в тексте (упомянуто в другом падеже, только в подписи к картинке и т. п.).
       - label: Кнопки
         name: buttons
         widget: list
@@ -64,3 +76,41 @@ collections:
         # Встроенный простой блок картинки (id "image") убран специально: он не умеет
         # ни подпись, ни альт-текст, ни группировку в галерею — путал с нашим "figure".
         editor_components: [code-block, figure, video, spoiler-start, spoiler-end, spoiler-inline, anime]
+
+  # Справочник тайтлов — открыт здесь только для того, чтобы поле «Тайтлы поста»
+  # выше могло искать по нему (widget: relation). Создание новых тайтлов через
+  # эту полку выключено (create: false): каждый новый тайтл — это ещё и скачанная
+  # и сжатая обложка, а это умеет делать только кнопка «Аниме» в тексте (робот
+  # на GitHub донабирает данные) или scripts/fetch-anime.mjs, но не сама CMS.
+  - name: anime
+    label: Тайтлы (справочник)
+    label_singular: Тайтл
+    folder: src/content/anime
+    create: false
+    delete: false
+    format: json
+    extension: json
+    summary: '{{titleRu}} ({{titleOriginal}})'
+    fields:
+      - label: ID (slug, часть адреса /anime/…)
+        name: id
+        widget: string
+        hint: 'Не меняйте — это часть адреса страницы, правка тут файл не переименует и сломает ссылки.'
+      - label: Источник данных
+        name: source
+        widget: select
+        options: [shikimori, anilist]
+      - { label: ID в источнике, name: sourceId, widget: number, value_type: int }
+      - label: Русское название
+        name: titleRu
+        widget: string
+        required: false
+        hint: >-
+          Единственное поле, которое иногда стоит поправить руками — например,
+          вписать перевод тайтлу из AniList (там русских названий не бывает).
+      - { label: Оригинальное название, name: titleOriginal, widget: string }
+      - { label: Год, name: year, widget: number, required: false, value_type: int }
+      - { label: Студия, name: studio, widget: string, required: false }
+      - { label: Обложка (путь в public/anime/), name: poster, widget: string, required: false }
+      - { label: Описание, name: synopsis, widget: text, required: false }
+      - { label: Ссылка на источник, name: url, widget: string, required: false }
