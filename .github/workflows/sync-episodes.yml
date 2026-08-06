@@ -1,0 +1,49 @@
+name: Добор выпусков из RSS
+
+# Раз в день проверяет RSS подкаста и заводит черновик для каждого выпуска,
+# у которого ещё нет поста (scripts/sync-episodes.mjs), см.
+# тз/04-выпуски-и-плеер.md. Опубликованные посты не трогает никогда —
+# только создаёт новые файлы. Коммитит результат сам, руками запускать
+# не нужно (но можно — кнопкой «Run workflow» на вкладке Actions).
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-episodes
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm ci
+
+      - name: Добрать новые выпуски
+        run: node scripts/sync-episodes.mjs
+
+      - name: Закоммитить, если нашлось что-то новое
+        run: |
+          git config user.name "baka-episodes-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add src/content/posts
+          if git diff --cached --quiet; then
+            echo "Новых выпусков нет."
+          else
+            git commit -m "Добавить черновики новых выпусков из RSS"
+            git pull --rebase origin main
+            git push
+          fi
