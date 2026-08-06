@@ -155,12 +155,19 @@
 			audio.playbackRate = saved?.rate || 1;
 			const resumeAt = typeof seekSeconds === 'number' ? seekSeconds : saved && saved.guid === guid ? saved.time : 0;
 
-			const onLoaded = () => {
-				audio.currentTime = resumeAt;
-				audio.play();
-				audio.removeEventListener('loadedmetadata', onLoaded);
-			};
-			audio.addEventListener('loadedmetadata', onLoaded);
+			// play() — синхронно, в том же тике клика, иначе браузер перестаёт
+			// считать вызов частью действия пользователя и молча блокирует звук
+			// (то самое «жмёшь плей — ничего не происходит, жмёшь ещё раз — играет»).
+			// Перемотку на сохранённую позицию делаем отдельно, когда придут
+			// метаданные — звук уже идёт, просто короткий скачок позиции.
+			audio.play();
+			if (resumeAt > 0) {
+				const onLoaded = () => {
+					audio.currentTime = resumeAt;
+					audio.removeEventListener('loadedmetadata', onLoaded);
+				};
+				audio.addEventListener('loadedmetadata', onLoaded);
+			}
 		}
 
 		toggle.addEventListener('click', () => {
