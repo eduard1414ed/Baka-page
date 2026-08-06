@@ -478,11 +478,166 @@
 				},
 			});
 
-			// Поле anime у поста в редакторе не показываем (в списке fields в config.yml
-			// его нет) — оно целиком считается из меток :anime[...] в тексте, вручную
-			// вести его не нужно (см. тз/03-тайтлы.md, п. 3). Дописанное вручную в файл
-			// поста (например, тайтл упомянут только в подписи к картинке, не в тексте)
-			// не трогаем — только добавляем новое, никогда не стираем существующее.
+			// Поле «Тайтлы поста» — для тайтлов, которые нельзя поймать разметкой в тексте
+			// (другой падеж, упоминание только в подписи к картинке и т. п., см.
+			// тз/03-тайтлы.md, п. 3). Список уже известных тайтлов — чекбоксами; для
+			// тайтла, которого в справочнике ещё нет, — та же живая строка поиска по
+			// Shikimori/AniList, что и у кнопки «Аниме» в тексте (см. searchShikimori/
+			// searchAnilist/buildAnimeSlug выше). При сохранении (см. preSave ниже)
+			// такие «новые» записи превращаются в id + служебную метку ::anime-ref{}
+			// в тексте — без неё робот, который потом донабирает справочник, не будет
+			// знать, что за тайтл искать.
+			const AnimePickerControl = createClass({
+				getInitialState() {
+					return { items: toPlainArray(this.props.value), indexList: [], query: '', results: [], loading: false };
+				},
+				componentDidMount() {
+					getAnimeIndex().then((indexList) => this.setState({ indexList }));
+				},
+				keyOf(item) {
+					return typeof item === 'string' ? item : item.id;
+				},
+				commit(items) {
+					this.setState({ items });
+					this.props.onChange(items);
+				},
+				toggleKnown(id) {
+					const exists = this.state.items.some((it) => this.keyOf(it) === id);
+					this.commit(exists ? this.state.items.filter((it) => this.keyOf(it) !== id) : [...this.state.items, id]);
+				},
+				removeItem(id) {
+					this.commit(this.state.items.filter((it) => this.keyOf(it) !== id));
+				},
+				scheduleSearch(query) {
+					clearTimeout(this._timer);
+					if (query.trim().length < 2) {
+						this.setState({ results: [], loading: false });
+						return;
+					}
+					this._timer = setTimeout(() => this.runSearch(query), 400);
+				},
+				async runSearch(query) {
+					this.setState({ loading: true });
+					let results = await searchShikimori(query);
+					if (results.length === 0) results = await searchAnilist(query);
+					if (this.state.query.trim() === query.trim()) this.setState({ loading: false, results });
+				},
+				handleQueryChange(e) {
+					const query = e.target.value;
+					this.setState({ query });
+					this.scheduleSearch(query);
+				},
+				async handlePickNew(item) {
+					const slug = await buildAnimeSlug(item);
+					if (this.state.items.some((it) => this.keyOf(it) === slug)) {
+						this.setState({ query: '', results: [] });
+						return;
+					}
+					const pendingItem = { id: slug, source: item.source, sourceId: item.sourceId, label: item.title };
+					this.setState({ query: '', results: [] });
+					this.commit([...this.state.items, pendingItem]);
+				},
+				render() {
+					const { items, indexList, query, results, loading } = this.state;
+
+					const known = indexList.map((entry) =>
+						h(
+							'label',
+							{ key: entry.id, style: { display: 'flex', alignItems: 'center', gap: '6px', padding: '2px 0' } },
+							h('input', {
+								type: 'checkbox',
+								checked: items.some((it) => this.keyOf(it) === entry.id),
+								onChange: () => this.toggleKnown(entry.id),
+							}),
+							entry.titleRu || entry.titleOriginal,
+						),
+					);
+
+					const pendingOnly = items.filter((it) => typeof it !== 'string' && !indexList.some((e) => e.id === it.id));
+					const pendingChips = pendingOnly.map((item) =>
+						h(
+							'div',
+							{ key: item.id, style: { display: 'flex', alignItems: 'center', gap: '6px', padding: '2px 0' } },
+							h('span', {}, `✓ ${item.label} (новый — появится в справочнике после публикации)`),
+							h('button', { type: 'button', onClick: () => this.removeItem(item.id) }, '×'),
+						),
+					);
+
+					return h(
+						'div',
+						{},
+						known.length > 0 ? h('div', { key: 'known', style: { marginBottom: '8px' } }, known) : null,
+						pendingChips.length > 0 ? h('div', { key: 'pending', style: { marginBottom: '8px' } }, pendingChips) : null,
+						h('input', {
+							key: 'search',
+							id: this.props.forID,
+							className: this.props.classNameWrapper,
+							type: 'text',
+							placeholder: 'Искать новый тайтл (Shikimori/AniList)…',
+							value: query,
+							onChange: this.handleQueryChange,
+							style: { width: '100%', boxSizing: 'border-box' },
+						}),
+						loading ? h('div', { key: 'loading', style: { fontSize: '13px', opacity: 0.7 } }, 'Ищу…') : null,
+						!loading && results.length > 0
+							? h(
+									'ul',
+									{
+										key: 'results',
+										style: {
+											listStyle: 'none',
+											margin: '4px 0 0',
+											padding: 0,
+											border: '1px solid #ccc',
+											borderRadius: '4px',
+											maxHeight: '220px',
+											overflowY: 'auto',
+										},
+									},
+									results.map((item, i) =>
+										h(
+											'li',
+											{
+												key: i,
+												onClick: () => this.handlePickNew(item),
+												style: {
+													display: 'flex',
+													gap: '8px',
+													alignItems: 'center',
+													padding: '6px 8px',
+													cursor: 'pointer',
+													borderBottom: '1px solid #eee',
+												},
+											},
+											item.poster
+												? h('img', {
+														key: 'poster',
+														src: item.poster,
+														style: { width: '28px', height: '38px', objectFit: 'cover', borderRadius: '2px', flexShrink: 0 },
+													})
+												: null,
+											h(
+												'span',
+												{ key: 'label' },
+												`${item.title}${item.year ? ` (${item.year})` : ''} — ${item.source === 'shikimori' ? 'Shikimori' : 'AniList'}`,
+											),
+										),
+									),
+								)
+							: null,
+					);
+				},
+			});
+
+			const AnimePickerPreview = createClass({
+				render() {
+					const items = toPlainArray(this.props.value);
+					return h('span', {}, items.map((it) => (typeof it === 'string' ? it : it.label)).join(', '));
+				},
+			});
+
+			CMS.registerFieldType('anime-picker', AnimePickerControl, AnimePickerPreview);
+
 			function extractAnimeIdsFromBody(body) {
 				const ids = [];
 				const re = /:anime\[[^\]]*\]\{id="([^"]+)"/g;
@@ -522,11 +677,28 @@
 				return found;
 			}
 
+			// Поле «Тайтлы поста» хранит либо готовые id (строкой), либо, для тайтлов
+			// без справочника, объект {id, source, sourceId, label} — из вторых при
+			// сохранении собираются служебные метки ::anime-ref{} в тексте (см. выше).
+			function splitAnimePickerItems(items) {
+				const ids = [];
+				const pending = [];
+				for (const item of items) {
+					if (typeof item === 'string') {
+						ids.push(item);
+					} else if (item && item.id) {
+						ids.push(item.id);
+						if (item.source && item.sourceId) pending.push(item);
+					}
+				}
+				return { ids, pending };
+			}
+
 			CMS.registerEventListener({
 				name: 'preSave',
 				handler: async ({ entry }) => {
 					const data = entry.get('data');
-					const body = data.get('body');
+					let body = data.get('body') ?? '';
 
 					const unmarked = await findUnmarkedKnownTitles(body);
 					if (unmarked.length > 0) {
@@ -535,10 +707,17 @@
 						);
 					}
 
+					const { ids: manualIds, pending } = splitAnimePickerItems(toPlainArray(data.get('anime')));
+					for (const item of pending) {
+						body += `\n\n::anime-ref{id="${item.id}" source="${item.source}" source-id="${item.sourceId}"}`;
+					}
+
 					const fromText = extractAnimeIdsFromBody(body);
-					const existing = toPlainArray(data.get('anime'));
-					const merged = [...fromText, ...existing.filter((id) => !fromText.includes(id))];
-					return data.set('anime', merged);
+					const merged = [...fromText, ...manualIds.filter((id) => !fromText.includes(id))];
+
+					let newData = data.set('anime', merged);
+					if (pending.length > 0) newData = newData.set('body', body);
+					return newData;
 				},
 			});
 		</script>

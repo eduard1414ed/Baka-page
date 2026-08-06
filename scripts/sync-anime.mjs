@@ -1,7 +1,9 @@
 // Робот на GitHub Actions (.github/workflows/sync-anime.yml): после каждого пуша
 // в src/content/posts ищет в текстах меток :anime[...]{id="" source="" source-id=""}
-// (их ставит кнопка «Аниме» в админке — public/admin/index.html), которых ещё нет
-// в справочнике (src/content/anime/), и донабирает по ним данные — точно по
+// (ставит кнопка «Аниме» в тексте) и ::anime-ref{id="" source="" source-id=""}
+// (ставит поле «Тайтлы поста», для тайтлов, которых в тексте вообще нет) —
+// обе формы регистрирует public/admin/index.html. Которых ещё нет
+// в справочнике (src/content/anime/) — донабирает данные, точно по
 // source+sourceId, без поиска по названию, значит без риска перепутать похожие
 // тайтлы (см. тз/03-тайтлы.md, «подводные камни»).
 //
@@ -18,7 +20,7 @@ const PAUSE_MS = 1200;
 
 const POSTS_DIR = new URL('../src/content/posts/', import.meta.url);
 
-const MARKER_RE = /:anime\[[^\]]*\]\{id="([^"]+)"\s+source="([^"]+)"\s+source-id="(\d+)"\}/g;
+const MARKER_RE = /:{1,2}anime(?:-ref)?(?:\[[^\]]*\])?\{id="([^"]+)"\s+source="([^"]+)"\s+source-id="(\d+)"\}/g;
 
 async function collectMarkers() {
 	const files = (await readdir(POSTS_DIR)).filter((name) => name.endsWith('.md'));

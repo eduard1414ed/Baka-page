@@ -46,7 +46,15 @@ function autoLinkNode(id, text) {
  * в такую же ссылку — руками расставлять метки по старым постам не нужно.
  * Ищется точное совпадение текста: название в другом падеже («Ходячего замка»
  * вместо «Ходячий замок») не найдётся — тогда стоит вручную отметить его
- * кнопкой «Аниме» в редакторе.
+ * кнопкой «Аниме» в редакторе или полем «Тайтлы поста».
+ *
+ * `::anime-ref{id="" source="" source-id=""}` — служебная метка без видимого
+ * текста, ничего не выводит на странице. Ставит поле «Тайтлы поста» в CMS
+ * (public/admin/index.html, preSave), когда через него добавляют тайтл,
+ * которого ещё нет в справочнике: сам по себе тайтл в тексте не упомянут
+ * (иначе не нужно было бы это поле), но роботу на GitHub Actions
+ * (scripts/sync-anime.mjs) нужно откуда-то узнать source/source-id, чтобы
+ * его найти — эта метка и есть то место.
  */
 export default function remarkAnime() {
 	return (tree, file) => {
@@ -66,6 +74,13 @@ export default function remarkAnime() {
 
 			seen.add(id);
 			node.data = { hName: 'a', hProperties: { href: `/anime/${id}`, class: 'anime-mention' } };
+		});
+
+		// Служебная метка (см. описание выше) — ничего не показываем, просто убираем узел.
+		visit(tree, 'leafDirective', (node, index, parent) => {
+			if (node.name !== 'anime-ref' || !parent || typeof index !== 'number') return;
+			parent.children.splice(index, 1);
+			return index;
 		});
 
 		const frontmatterAnime = file.data?.astro?.frontmatter?.anime;

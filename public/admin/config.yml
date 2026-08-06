@@ -46,16 +46,13 @@ collections:
       - { label: Черновик, name: draft, widget: boolean, default: true }
       - label: Тайтлы поста (вручную)
         name: anime
-        widget: relation
-        collection: anime
-        search_fields: [titleRu, titleOriginal]
-        display_fields: [titleRu, titleOriginal]
-        multiple: true
+        widget: anime-picker
         required: false
         hint: >-
           Обычно ничего вписывать не нужно — тайтлы, отмеченные кнопкой «Аниме» в тексте,
           подставляются сюда сами при сохранении. Добавляйте вручную только то, что не
-          в тексте (упомянуто в другом падеже, только в подписи к картинке и т. п.).
+          в тексте (упомянуто в другом падеже, только в подписи к картинке и т. п.) —
+          можно выбрать из уже известных или найти новый тайтл прямо тут.
       - label: Кнопки
         name: buttons
         widget: list
