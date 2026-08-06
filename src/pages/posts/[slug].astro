@@ -9,9 +9,10 @@ import { findEpisodeByGuid } from '../../lib/podcastFeed.mjs';
 import PlatformIcon from '../../components/PlatformIcon.astro';
 import AnimeBadge from '../../components/AnimeBadge.astro';
 import EpisodePlayer from '../../components/EpisodePlayer.astro';
+import { isPublished } from '../../lib/publishing.mjs';
 
 export async function getStaticPaths() {
-	const posts = await getCollection('posts', ({ data }) => !data.draft);
+	const posts = await getCollection('posts', ({ data }) => isPublished(data));
 	return Promise.all(
 		posts.map(async (post) => ({
 			params: { slug: post.id },

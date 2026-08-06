@@ -6,10 +6,11 @@ import PostFeed from '../components/PostFeed.astro';
 import banner from '../assets/images/banner.png';
 import cover from '../assets/images/cover.jpeg';
 import { platforms } from '../data/platforms.js';
+import { isPublished } from '../lib/publishing.mjs';
 
 const description = 'Подкаст об аниме и о том, что скрывается между кадрами';
 
-const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
+const posts = (await getCollection('posts', ({ data }) => isPublished(data))).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 ---

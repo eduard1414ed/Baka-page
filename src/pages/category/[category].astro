@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import PostFeed from '../../components/PostFeed.astro';
 import { categories } from '../../content.config';
+import { isPublished } from '../../lib/publishing.mjs';
 
 export function getStaticPaths() {
 	return categories.map((category) => ({
@@ -13,7 +14,7 @@ export function getStaticPaths() {
 
 const { category } = Astro.props;
 
-const posts = (await getCollection('posts', ({ data }) => !data.draft && data.category === category.id)).sort(
+const posts = (await getCollection('posts', ({ data }) => isPublished(data) && data.category === category.id)).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 ---
