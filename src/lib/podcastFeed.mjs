@@ -32,6 +32,7 @@ function decodeXmlText(raw) {
 		.replace(/&gt;/g, '>')
 		.replace(/&quot;/g, '"')
 		.replace(/&#0?39;/g, "'")
+		.replace(/&apos;/g, "'")
 		.replace(/&amp;/g, '&')
 		.trim();
 }
@@ -45,7 +46,7 @@ function parseDuration(raw) {
 	return parts.reduce((acc, part) => acc * 60 + part, 0);
 }
 
-function parseItem(block) {
+function parseItem(block, fallbackImageUrl) {
 	const guid = textField(block, 'guid');
 	const audioUrl = attrField(block, 'enclosure', 'url');
 	if (!guid || !audioUrl) return null; // без этих двух полей выпуск бесполезен
@@ -61,6 +62,12 @@ function parseItem(block) {
 		audioUrl,
 		durationSec: durationRaw ? parseDuration(durationRaw) : null,
 		link: textField(block, 'link'),
+		// Своя обложка у выпуска (itunes:image) — если её вдруг нет, берём
+		// обложку подкаста целиком, чтобы поле не осталось пустым.
+		imageUrl: attrField(block, 'itunes:image', 'href') ?? fallbackImageUrl,
+		// HTML как есть (CDATA) — форматирование и ссылки сохраняются, для
+		// текста поста переводится в markdown отдельно, см. htmlToMarkdown.mjs.
+		descriptionHtml: textField(block, 'description'),
 	};
 }
 
@@ -77,9 +84,11 @@ export async function fetchFeedItems() {
 		if (!response.ok) throw new Error(`HTTP ${response.status}`);
 		const xml = await response.text();
 
+		const channelImage = attrField(xml, 'itunes:image', 'href') ?? textField(xml, 'url');
+
 		const items = [];
 		for (const match of xml.matchAll(ITEM_RE)) {
-			const item = parseItem(match[1]);
+			const item = parseItem(match[1], channelImage);
 			if (item) items.push(item);
 		}
 		cachedItems = items;

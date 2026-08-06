@@ -9,9 +9,10 @@
 
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { fetchFeedItems } from '../src/lib/podcastFeed.mjs';
+import { htmlToMarkdown } from '../src/lib/htmlToMarkdown.mjs';
 
-const POSTS_DIR = new URL('../src/content/posts/', import.meta.url);
-const AUDIO_GUID_RE = /^audioGuid:\s*['"]?([^'"\n]+?)['"]?\s*$/m;
+export const POSTS_DIR = new URL('../src/content/posts/', import.meta.url);
+export const AUDIO_GUID_RE = /^audioGuid:\s*['"]?([^'"\n]+?)['"]?\s*$/m;
 
 async function collectKnownGuids() {
 	const files = (await readdir(POSTS_DIR)).filter((name) => name.endsWith('.md'));
@@ -46,10 +47,25 @@ function toFrontmatterDate(pubDate) {
 	return date.toISOString().slice(0, 10);
 }
 
+// Обложку и описание не скачиваем и не храним у себя — так же, как и с аудио
+// (CLAUDE.md), это ссылки прямо на хостинг подкаста. Обложка — обычная
+// картинка в тексте поста, не заведена как файл поста (это отдельный,
+// управляемый через CMS путь, см. тз/04-выпуски-и-плеер.md).
+export function buildBody(episode) {
+	const parts = [];
+	if (episode.imageUrl) parts.push(`![Обложка выпуска](${episode.imageUrl})`);
+
+	const description = htmlToMarkdown(episode.descriptionHtml);
+	if (description) parts.push(description);
+
+	return parts.join('\n\n');
+}
+
 function buildDraft(episode) {
 	const title = escapeYamlSingleQuoted(episode.title);
 	const guid = escapeYamlSingleQuoted(episode.guid);
 	const date = toFrontmatterDate(episode.pubDate);
+	const body = buildBody(episode);
 
 	return `---
 title: '${title}'
@@ -58,6 +74,8 @@ category: podcast
 audioGuid: '${guid}'
 draft: true
 ---
+
+${body}
 `;
 }
 
@@ -88,4 +106,9 @@ async function main() {
 	console.log('Готово.');
 }
 
-main();
+// import.meta.url === process.argv[1] (через file://) — запускаем main() только
+// при прямом вызове (node scripts/sync-episodes.mjs), не при импорте экспортов
+// (используется в разовом скрипте добора обложки/описания в старые черновики).
+if (import.meta.url === new URL(process.argv[1], 'file://').href) {
+	main();
+}

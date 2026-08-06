@@ -344,6 +344,17 @@ const animeEntries = anime ? (await Promise.all(anime.map((ref) => getEntry(ref)
 		color: var(--color-text-muted);
 	}
 
+	/* Запасной стиль для обычной картинки в тексте (![]()) — например, обложки
+	   выпуска, которую вставляет робот сверки прямой ссылкой, см.
+	   scripts/sync-episodes.mjs. Блок «Изображение с подписью» из редактора
+	   получает свои размеры через figure.figure ниже, эта картинка проще. */
+	.content :global(p > img) {
+		display: block;
+		width: 100%;
+		border-radius: var(--radius-md);
+		margin: var(--space-3) 0;
+	}
+
 	.content :global(figure.figure) {
 		margin: var(--space-3) 0;
 	}
