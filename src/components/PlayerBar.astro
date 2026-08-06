@@ -4,15 +4,15 @@
 // не даёт браузеру пересоздать этот <audio> при переходе на другую страницу —
 // именно поэтому звук не прерывается, а не какой-то отдельный JS-трюк.
 //
-// Запускает воспроизведение любая страница поста через кнопку с классом
-// .episode-play-trigger (см. src/pages/posts/[slug].astro) — она несёт данные
-// выпуска в data-атрибутах, а сама эта кнопка каждый раз новая (страница
-// пересоздаётся), поэтому слушатель на неё навешивается заново при каждом
-// переходе, см. скрипт ниже.
-//
-// Таймкоды в тексте выпуска (src/plugins/remark-timecode.mjs) работают через
-// тот же механизм: ссылка с data-seconds ищет ближайшую .episode-play-trigger
-// на странице, чтобы узнать, какой выпуск и куда перематывать.
+// Запускает воспроизведение визуальный плеер на странице выпуска
+// (src/components/EpisodePlayer.astro, класс .episode-player) — он несёт данные
+// выпуска в data-атрибутах, а сам пересоздаётся заново при каждом переходе
+// (в отличие от этого компонента), поэтому слушатели на него навешиваются
+// заново каждый раз, см. bindEpisodePlayers() ниже. window.__bakaPlayer —
+// общий интерфейс к этому плееру: и .episode-player, и таймкоды
+// (src/plugins/remark-timecode.mjs) управляют звуком через него, а не
+// напрямую через <audio> — так весь код одного места решает, что считать
+// «тем же выпуском» (currentGuid), а что — новой загрузкой.
 ---
 
 <div id="player-bar" class="player-bar" hidden transition:persist transition:name="player-bar">
@@ -139,6 +139,9 @@
 			audio.src = audioUrl;
 
 			const saved = readSavedState();
+			// Скорость — это скорее общая привычка слушателя, чем свойство конкретного
+			// выпуска, поэтому применяем последнюю сохранённую при любом новом запуске.
+			audio.playbackRate = saved?.rate || 1;
 			const resumeAt = typeof seekSeconds === 'number' ? seekSeconds : saved && saved.guid === guid ? saved.time : 0;
 
 			const onLoaded = () => {
@@ -147,26 +150,6 @@
 				audio.removeEventListener('loadedmetadata', onLoaded);
 			};
 			audio.addEventListener('loadedmetadata', onLoaded);
-		}
-
-		// При полной перезагрузке сайта (не клиентский переход) память о выпуске
-		// теряется вместе со страницей — восстанавливаем из localStorage. Без
-		// автовоспроизведения: просто показываем плеер на паузе, готовым продолжить.
-		const saved = readSavedState();
-		if (saved) {
-			currentGuid = saved.guid;
-			title.textContent = saved.title;
-			cover.src = saved.cover;
-			link.href = saved.link;
-			audio.src = saved.audio;
-			audio.playbackRate = saved.rate || 1;
-			rateSelect.value = String(saved.rate || 1);
-			const onLoaded = () => {
-				audio.currentTime = saved.time;
-				audio.removeEventListener('loadedmetadata', onLoaded);
-			};
-			audio.addEventListener('loadedmetadata', onLoaded);
-			showBar();
 		}
 
 		toggle.addEventListener('click', () => {
@@ -192,8 +175,9 @@
 		});
 
 		rateSelect.addEventListener('change', () => {
+			// Событие ratechange от audio ниже само обновит rateSelect.value —
+			// в том числе у всех .episode-player на странице, см. bindEpisodePlayers().
 			audio.playbackRate = Number(rateSelect.value);
-			saveState();
 		});
 
 		audio.addEventListener('play', () => {
@@ -209,6 +193,10 @@
 			range.max = String(Math.floor(audio.duration || 0));
 			timeDuration.textContent = formatTime(audio.duration);
 		});
+		audio.addEventListener('ratechange', () => {
+			rateSelect.value = String(audio.playbackRate);
+			saveState();
+		});
 		audio.addEventListener('timeupdate', () => {
 			if (scrubbing) return;
 			range.value = String(Math.floor(audio.currentTime));
@@ -222,34 +210,142 @@
 		// воспроизведения, событие pause выше может не успеть сработать.
 		window.addEventListener('beforeunload', saveState);
 
-		(window as any).__bakaLoadEpisode = loadEpisode;
+		(window as any).__bakaPlayer = {
+			load: loadEpisode,
+			audio,
+			getGuid: () => currentGuid,
+		};
 	}
 
-	// Кнопка «Слушать выпуск» и таймкоды в тексте — часть обычной страницы поста,
-	// пересоздаются заново при каждом переходе (в отличие от самого плеера),
-	// поэтому слушатели на них навешиваем каждый раз без всякой защиты от повтора.
-	function bindPageControls() {
-		const loadEpisode = (window as any).__bakaLoadEpisode as ((data: DOMStringMap, seekSeconds?: number) => void) | undefined;
-		if (!loadEpisode) return;
+	// Визуальный плеер на странице выпуска (.episode-player, см.
+	// src/components/EpisodePlayer.astro) — часть обычной страницы поста,
+	// пересоздаётся заново при каждом переходе (в отличие от самого закреплённого
+	// плеера), поэтому слушатели на него навешиваем каждый раз без защиты от
+	// повтора. Может показывать выпуск, который сейчас не играет в закреплённом
+	// плеере (например, открыли другой пост, пока что-то уже слушали) — тогда его
+	// кнопки управляют не звуком напрямую, а запускают этот выпуск через load().
+	function bindEpisodePlayers() {
+		const api = (window as any).__bakaPlayer as
+			| { load: (data: DOMStringMap, seekSeconds?: number) => void; audio: HTMLAudioElement; getGuid: () => string | null }
+			| undefined;
+		if (!api) return;
 
-		document.querySelectorAll<HTMLButtonElement>('.episode-play-trigger').forEach((trigger) => {
-			trigger.addEventListener('click', () => loadEpisode(trigger.dataset));
+		document.querySelectorAll<HTMLElement>('.episode-player').forEach((card) => {
+			const guid = card.dataset.guid;
+			if (!guid) return;
+
+			const toggle = card.querySelector<HTMLButtonElement>('.ep-toggle');
+			const back15 = card.querySelector<HTMLButtonElement>('.ep-back15');
+			const fwd15 = card.querySelector<HTMLButtonElement>('.ep-fwd15');
+			const range = card.querySelector<HTMLInputElement>('.ep-range');
+			const rateSelect = card.querySelector<HTMLSelectElement>('.ep-rate');
+			const timeCurrent = card.querySelector<HTMLSpanElement>('.ep-time-current');
+			const timeDuration = card.querySelector<HTMLSpanElement>('.ep-time-duration');
+			if (!toggle || !back15 || !fwd15 || !range || !rateSelect || !timeCurrent || !timeDuration) return;
+
+			const { audio } = api;
+			const isActive = () => api.getGuid() === guid;
+			let scrubbing = false;
+
+			// Пока выпуск ещё не запущен, показываем длительность из RSS (если она
+			// известна) вместо «0:00» — так карточка не выглядит сломанной до клика.
+			const fallbackDuration = Number(card.dataset.duration || 0);
+			if (fallbackDuration > 0) {
+				range.max = String(Math.floor(fallbackDuration));
+				timeDuration.textContent = formatTime(fallbackDuration);
+			}
+
+			toggle.addEventListener('click', () => {
+				if (isActive()) {
+					if (audio.paused) audio.play();
+					else audio.pause();
+				} else {
+					api.load(card.dataset);
+				}
+			});
+
+			back15.addEventListener('click', () => {
+				if (isActive()) audio.currentTime = Math.max(0, audio.currentTime - 15);
+			});
+
+			fwd15.addEventListener('click', () => {
+				if (isActive()) audio.currentTime = Math.min(audio.duration || Infinity, audio.currentTime + 15);
+			});
+
+			range.addEventListener('input', () => {
+				scrubbing = true;
+				timeCurrent.textContent = formatTime(Number(range.value));
+			});
+			range.addEventListener('change', () => {
+				if (isActive()) audio.currentTime = Number(range.value);
+				else api.load(card.dataset, Number(range.value));
+				scrubbing = false;
+			});
+
+			rateSelect.addEventListener('change', () => {
+				if (isActive()) audio.playbackRate = Number(rateSelect.value);
+			});
+
+			// Слушатели навешаны на общий <audio> (см. описание компонента выше),
+			// а карточка при переходе на другую страницу исчезает вместе с DOM —
+			// сама снимает с себя эти слушатели, как только заметит, что её больше
+			// нет на странице, а не копится молча до следующей перезагрузки.
+			const sync = () => {
+				if (!document.body.contains(card)) {
+					audio.removeEventListener('play', sync);
+					audio.removeEventListener('pause', sync);
+					audio.removeEventListener('timeupdate', sync);
+					audio.removeEventListener('loadedmetadata', sync);
+					audio.removeEventListener('ratechange', sync);
+					return;
+				}
+				if (!isActive()) return;
+
+				toggle.textContent = audio.paused ? '▶' : '⏸';
+				toggle.setAttribute('aria-label', audio.paused ? 'Играть' : 'Пауза');
+				rateSelect.value = String(audio.playbackRate);
+				if (audio.duration) {
+					range.max = String(Math.floor(audio.duration));
+					timeDuration.textContent = formatTime(audio.duration);
+				}
+				if (!scrubbing) {
+					range.value = String(Math.floor(audio.currentTime));
+					timeCurrent.textContent = formatTime(audio.currentTime);
+				}
+			};
+
+			audio.addEventListener('play', sync);
+			audio.addEventListener('pause', sync);
+			audio.addEventListener('timeupdate', sync);
+			audio.addEventListener('loadedmetadata', sync);
+			audio.addEventListener('ratechange', sync);
+
+			sync();
 		});
+	}
+
+	// Таймкоды в тексте выпуска (src/plugins/remark-timecode.mjs) — ищут на
+	// странице визуальный плеер выпуска, чтобы узнать, какой выпуск и куда
+	// перематывать.
+	function bindTimecodes() {
+		const api = (window as any).__bakaPlayer as { load: (data: DOMStringMap, seekSeconds?: number) => void } | undefined;
+		if (!api) return;
 
 		document.querySelectorAll<HTMLAnchorElement>('.timecode').forEach((link) => {
 			link.addEventListener('click', (event) => {
 				event.preventDefault();
-				const trigger = document.querySelector<HTMLButtonElement>('.episode-play-trigger');
-				if (!trigger) return;
+				const card = document.querySelector<HTMLElement>('.episode-player');
+				if (!card) return;
 				const seconds = Number(link.dataset.seconds);
-				loadEpisode(trigger.dataset, Number.isFinite(seconds) ? seconds : undefined);
+				api.load(card.dataset, Number.isFinite(seconds) ? seconds : undefined);
 			});
 		});
 	}
 
 	document.addEventListener('astro:page-load', () => {
 		initPlayerOnce();
-		bindPageControls();
+		bindEpisodePlayers();
+		bindTimecodes();
 	});
 </script>
 

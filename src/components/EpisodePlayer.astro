@@ -1,0 +1,162 @@
+---
+// Визуальный плеер выпуска, встроенный в текст поста по ширине колонки.
+// Сам ничего не умеет играть — это просто разметка с данными в data-атрибутах,
+// вся логика (запуск, перемотка, скорость, синхронизация с закреплённым плеером
+// внизу) — в src/components/PlayerBar.astro, bindEpisodePlayers(). Дублирует
+// закреплённый плеер намеренно (см. тз/04): управляет тем же самым звуком,
+// оба показывают одно и то же состояние одновременно.
+interface Props {
+	guid: string;
+	audioUrl: string;
+	title: string;
+	cover?: string | null;
+	link: string;
+	durationSec?: number | null;
+}
+
+const { guid, audioUrl, title, cover, link, durationSec } = Astro.props;
+---
+
+<div
+	class="episode-player"
+	data-guid={guid}
+	data-audio={audioUrl}
+	data-title={title}
+	data-cover={cover ?? ''}
+	data-link={link}
+	data-duration={durationSec ?? ''}
+>
+	{cover && <img class="ep-cover" src={cover} alt="" width="72" height="72" />}
+
+	<button type="button" class="ep-toggle" aria-label="Играть">▶</button>
+
+	<div class="ep-body">
+		<div class="ep-controls">
+			<button type="button" class="ep-back15" aria-label="Назад на 15 секунд">−15</button>
+			<select class="ep-rate" aria-label="Скорость воспроизведения">
+				<option value="0.75">0.75×</option>
+				<option value="1" selected>1×</option>
+				<option value="1.25">1.25×</option>
+				<option value="1.5">1.5×</option>
+				<option value="1.75">1.75×</option>
+				<option value="2">2×</option>
+			</select>
+			<button type="button" class="ep-fwd15" aria-label="Вперёд на 15 секунд">+15</button>
+		</div>
+
+		<input class="ep-range" type="range" min="0" max="0" step="1" value="0" aria-label="Перемотка" />
+	</div>
+
+	<div class="ep-time"><span class="ep-time-current">0:00</span> / <span class="ep-time-duration">0:00</span></div>
+</div>
+
+<style>
+	.episode-player {
+		display: flex;
+		align-items: center;
+		gap: var(--space-2);
+		width: 100%;
+		margin-bottom: var(--space-3);
+		padding: var(--space-2);
+		background: var(--color-bg-elevated);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+	}
+
+	.ep-cover {
+		width: 4.5rem;
+		height: 4.5rem;
+		border-radius: var(--radius-sm);
+		object-fit: cover;
+		flex-shrink: 0;
+	}
+
+	.ep-toggle {
+		flex-shrink: 0;
+		width: 3rem;
+		height: 3rem;
+		border: none;
+		border-radius: var(--radius-full);
+		background: var(--color-accent);
+		color: var(--color-bg);
+		font-size: var(--font-size-lg);
+		line-height: 1;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: background-color var(--transition-fast);
+	}
+
+	.ep-toggle:hover,
+	.ep-toggle:focus-visible {
+		background: var(--color-accent-hover);
+	}
+
+	.ep-body {
+		flex: 1 1 auto;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-1);
+	}
+
+	.ep-controls {
+		display: flex;
+		align-items: center;
+		gap: var(--space-1);
+	}
+
+	.ep-back15,
+	.ep-fwd15 {
+		border: 1px solid var(--color-border);
+		background: transparent;
+		color: var(--color-text);
+		border-radius: var(--radius-full);
+		cursor: pointer;
+		font-size: var(--font-size-sm);
+		padding: 0.35rem 0.55rem;
+		transition: border-color var(--transition-fast);
+	}
+
+	.ep-back15:hover,
+	.ep-back15:focus-visible,
+	.ep-fwd15:hover,
+	.ep-fwd15:focus-visible {
+		border-color: var(--color-accent);
+		color: var(--color-accent);
+	}
+
+	.ep-rate {
+		background: var(--color-bg);
+		color: var(--color-text);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		padding: 0.3rem 0.35rem;
+		font-size: var(--font-size-sm);
+	}
+
+	.ep-range {
+		width: 100%;
+		accent-color: var(--color-accent);
+	}
+
+	.ep-time {
+		flex-shrink: 0;
+		font-size: var(--font-size-sm);
+		color: var(--color-text-muted);
+		font-variant-numeric: tabular-nums;
+	}
+
+	@media (max-width: 480px) {
+		.episode-player {
+			flex-wrap: wrap;
+		}
+
+		.ep-time {
+			order: 3;
+			width: 100%;
+			text-align: right;
+		}
+	}
+</style>

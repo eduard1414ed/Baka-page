@@ -8,6 +8,7 @@ import { getLinkIcon } from '../../lib/linkIcon.mjs';
 import { findEpisodeByGuid } from '../../lib/podcastFeed.mjs';
 import PlatformIcon from '../../components/PlatformIcon.astro';
 import AnimeBadge from '../../components/AnimeBadge.astro';
+import EpisodePlayer from '../../components/EpisodePlayer.astro';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('posts', ({ data }) => !data.draft);
@@ -76,17 +77,14 @@ const animeEntries = anime ? (await Promise.all(anime.map((ref) => getEntry(ref)
 
 		{
 			category === 'podcast' && episode && (
-				<button
-					type="button"
-					class="episode-play-trigger"
-					data-guid={episode.guid}
-					data-audio={episode.audioUrl}
-					data-title={title}
-					data-cover={episode.imageUrl ?? ''}
-					data-link={`/posts/${post.id}/`}
-				>
-					▶ Слушать выпуск
-				</button>
+				<EpisodePlayer
+					guid={episode.guid}
+					audioUrl={episode.audioUrl}
+					title={title}
+					cover={episode.imageUrl}
+					link={`/posts/${post.id}/`}
+					durationSec={episode.durationSec}
+				/>
 			)
 		}
 
@@ -292,26 +290,6 @@ const animeEntries = anime ? (await Promise.all(anime.map((ref) => getEntry(ref)
 		width: 100%;
 		border-radius: var(--radius-md);
 		margin-bottom: var(--space-3);
-	}
-
-	.episode-play-trigger {
-		display: inline-flex;
-		align-items: center;
-		gap: var(--space-1);
-		margin-bottom: var(--space-3);
-		padding: var(--space-1) var(--space-3);
-		border: none;
-		border-radius: var(--radius-full);
-		background: var(--color-accent);
-		color: var(--color-bg);
-		font-size: var(--font-size-base);
-		cursor: pointer;
-		transition: background-color var(--transition-fast);
-	}
-
-	.episode-play-trigger:hover,
-	.episode-play-trigger:focus-visible {
-		background: var(--color-accent-hover);
 	}
 
 	.buttons {
