@@ -13,44 +13,16 @@
 // AniList, у него не будет русского названия (titleRu) — скрипт скажет
 // об этом прямо, впишите его потом в файл тайтла вручную.
 
-import { writeFile, mkdir } from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
-import sharp from 'sharp';
-import { ANIME_POSTER_WIDTHS } from '../src/lib/animePoster.mjs';
 import * as shikimori from './anime-sources/shikimori.mjs';
 import * as anilist from './anime-sources/anilist.mjs';
+import { writeAnimeEntry, sleep } from './anime-lib.mjs';
 
 // Порядок = приоритет поиска. Чтобы добавить третий источник — написать
-// модуль такой же формы (id, label, find(query)) и дописать его в список,
-// больше нигде ничего менять не нужно.
+// модуль такой же формы (id, label, find(query), findById(sourceId)) и дописать
+// его в список, больше нигде ничего менять не нужно.
 const SOURCES = [shikimori, anilist];
 
 const PAUSE_MS = 1500; // пауза между тайтлами — источники ограничивают частоту запросов.
-
-const ROOT = new URL('../', import.meta.url);
-const ANIME_CONTENT_DIR = new URL('src/content/anime/', ROOT);
-const ANIME_PUBLIC_DIR = new URL('public/anime/', ROOT);
-
-function sleep(ms) {
-	return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function downloadPoster(posterUrl, slug) {
-	const response = await fetch(posterUrl);
-	if (!response.ok) {
-		throw new Error(`Не удалось скачать обложку: ${response.status}`);
-	}
-	const buffer = Buffer.from(await response.arrayBuffer());
-
-	await mkdir(ANIME_PUBLIC_DIR, { recursive: true });
-	for (const width of ANIME_POSTER_WIDTHS) {
-		const outPath = fileURLToPath(new URL(`${slug}-${width}w.webp`, ANIME_PUBLIC_DIR));
-		await sharp(buffer)
-			.resize({ width, withoutEnlargement: true })
-			.webp({ quality: 82 })
-			.toFile(outPath);
-	}
-}
 
 async function findAcrossSources(query) {
 	for (const source of SOURCES) {
@@ -82,27 +54,8 @@ async function fetchOne(slug, query) {
 
 	const { source, result } = found;
 
-	if (result.posterUrl) {
-		console.log(`  скачиваю обложку и сжимаю в ${ANIME_POSTER_WIDTHS.join('/')}px…`);
-		await downloadPoster(result.posterUrl, slug);
-	}
-
-	const entry = {
-		id: slug,
-		source: source.id,
-		sourceId: result.sourceId,
-		...(result.titleRu && { titleRu: result.titleRu }),
-		titleOriginal: result.titleOriginal,
-		...(result.year && { year: result.year }),
-		...(result.studio && { studio: result.studio }),
-		...(result.posterUrl && { poster: `/anime/${slug}.jpg` }),
-		...(result.synopsis && { synopsis: result.synopsis }),
-		...(result.url && { url: result.url }),
-	};
-
-	await mkdir(ANIME_CONTENT_DIR, { recursive: true });
-	const outPath = new URL(`${slug}.json`, ANIME_CONTENT_DIR);
-	await writeFile(outPath, JSON.stringify(entry, null, '\t') + '\n', 'utf8');
+	if (result.posterUrl) console.log(`  скачиваю обложку и сжимаю…`);
+	await writeAnimeEntry(slug, source, result);
 
 	const warning = result.titleRu ? '' : '  ⚠ нет русского названия — впишите titleRu вручную в этот файл';
 	console.log(`  сохранено: src/content/anime/${slug}.json${warning}`);

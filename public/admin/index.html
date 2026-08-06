@@ -160,6 +160,387 @@
 						? `<div style="opacity:0.6">▶ YouTube: ${escapeHtml(data.youtube)}</div>`
 						: `<div style="opacity:0.6">Видео (вставьте ссылку на YouTube)</div>`,
 			});
+
+			// Кнопка «Аниме» — метка тайтла в тексте: :anime[Текст]{id="frieren" source="shikimori" source-id="9253"}.
+			// id — slug тайтла в справочнике (src/content/anime/), source/source-id — Shikimori
+			// или AniList id, по нему робот на GitHub Actions потом точно (без поиска по названию,
+			// значит без риска перепутать похожие тайтлы) добирает данные и обложку — см.
+			// scripts/sync-anime.mjs. Сама разметка превращается в ссылку на сайте только для
+			// первого упоминания тайтла в посте — это делает src/plugins/remark-anime.mjs.
+			//
+			// В самом справочнике на этот момент тайтла может ещё не быть — это нормально,
+			// его следующим шагом создаст робот. Уже известные тайтлы (public/anime-index.json,
+			// собирается при сборке сайта) переиспользуются по source+source-id, чтобы не
+			// плодить дубликаты с разными slug на один и тот же тайтл.
+
+			// Транслитерация только для того, чтобы slug из русского названия выглядел
+			// читаемо в адресе страницы — на поиск и на выбор тайтла не влияет.
+			const CYRILLIC_MAP = {
+				а: 'a',
+				б: 'b',
+				в: 'v',
+				г: 'g',
+				д: 'd',
+				е: 'e',
+				ё: 'e',
+				ж: 'zh',
+				з: 'z',
+				и: 'i',
+				й: 'y',
+				к: 'k',
+				л: 'l',
+				м: 'm',
+				н: 'n',
+				о: 'o',
+				п: 'p',
+				р: 'r',
+				с: 's',
+				т: 't',
+				у: 'u',
+				ф: 'f',
+				х: 'h',
+				ц: 'ts',
+				ч: 'ch',
+				ш: 'sh',
+				щ: 'sch',
+				ъ: '',
+				ы: 'y',
+				ь: '',
+				э: 'e',
+				ю: 'yu',
+				я: 'ya',
+			};
+
+			function slugify(text) {
+				const transliterated = String(text ?? '')
+					.toLowerCase()
+					.split('')
+					.map((ch) => (ch in CYRILLIC_MAP ? CYRILLIC_MAP[ch] : ch))
+					.join('');
+				return (
+					transliterated
+						.normalize('NFD')
+						.replace(/[\u0300-\u036f]/g, '')
+						.replace(/[^a-z0-9]+/g, '-')
+						.replace(/^-+|-+$/g, '')
+						.slice(0, 60) || 'anime'
+				);
+			}
+
+			function getAnimeIndex() {
+				if (!window.__animeIndexPromise) {
+					window.__animeIndexPromise = fetch('/anime-index.json')
+						.then((res) => (res.ok ? res.json() : []))
+						.catch(() => []);
+				}
+				return window.__animeIndexPromise;
+			}
+
+			// Свой slug для тайтла, который уже есть в справочнике по source+sourceId —
+			// переиспользуем его, а не создаём новый файл на тот же тайтл.
+			async function buildAnimeSlug(item) {
+				const index = await getAnimeIndex();
+				const existing = index.find((entry) => entry.source === item.source && entry.sourceId === item.sourceId);
+				if (existing) return existing.id;
+
+				const base = slugify(item.titleOriginal || item.title);
+				const taken = new Set(index.map((entry) => entry.id));
+				let slug = base;
+				let suffix = 1;
+				while (taken.has(slug)) {
+					suffix += 1;
+					slug = `${base}-${suffix}`;
+				}
+				return slug;
+			}
+
+			async function searchShikimori(query) {
+				try {
+					const res = await fetch(`https://shikimori.io/api/animes?search=${encodeURIComponent(query)}&limit=8`);
+					if (!res.ok) return [];
+					const data = await res.json();
+					return data.map((item) => ({
+						source: 'shikimori',
+						sourceId: item.id,
+						title: item.russian || item.name,
+						titleOriginal: item.name,
+						year: item.aired_on ? item.aired_on.slice(0, 4) : '',
+						poster: item.image?.preview ? `https://shikimori.one${item.image.preview}` : '',
+					}));
+				} catch {
+					return [];
+				}
+			}
+
+			async function searchAnilist(query) {
+				try {
+					const gql = `query($q: String) { Page(perPage: 8) { media(search: $q, type: ANIME) {
+						id title { romaji } startDate { year } coverImage { medium }
+					} } }`;
+					const res = await fetch('https://graphql.anilist.co', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ query: gql, variables: { q: query } }),
+					});
+					if (!res.ok) return [];
+					const json = await res.json();
+					const list = json.data?.Page?.media ?? [];
+					return list.map((item) => ({
+						source: 'anilist',
+						sourceId: item.id,
+						title: item.title.romaji,
+						titleOriginal: item.title.romaji,
+						year: item.startDate?.year ? String(item.startDate.year) : '',
+						poster: item.coverImage?.medium || '',
+					}));
+				} catch {
+					return [];
+				}
+			}
+
+			// Поле выбора тайтла — свой тип поля (не обычный текст), потому что ищет
+			// вживую по Shikimori/AniList, а не по значению из формы. React передан
+			// самой Sveltia CMS глобально (h/createClass), без этого поле пришлось бы
+			// собирать отдельным шагом сборки — а у нас админка простой статический файл.
+			const AnimeSearchControl = createClass({
+				getInitialState() {
+					const value = this.props.value || {};
+					return { query: value.label || '', results: [], loading: false, picked: value.id ? value : null };
+				},
+				isValid() {
+					return this.state.picked ? true : { error: { message: 'Выберите тайтл из списка подсказок' } };
+				},
+				scheduleSearch(query) {
+					clearTimeout(this._timer);
+					if (query.trim().length < 2) {
+						this.setState({ results: [], loading: false });
+						return;
+					}
+					this._timer = setTimeout(() => this.runSearch(query), 400);
+				},
+				async runSearch(query) {
+					this.setState({ loading: true });
+					let results = await searchShikimori(query);
+					if (results.length === 0) results = await searchAnilist(query);
+					// Запрос мог устареть, пока ждали ответ — не затираем более новый ввод.
+					if (this.state.query.trim() === query.trim()) this.setState({ loading: false, results });
+				},
+				handleQueryChange(e) {
+					const query = e.target.value;
+					this.setState({ query, picked: null, results: [] });
+					this.props.onChange({ label: query, id: '', source: '', sourceId: null });
+					this.scheduleSearch(query);
+				},
+				async handlePick(item) {
+					const slug = await buildAnimeSlug(item);
+					const value = { label: this.state.query || item.title, id: slug, source: item.source, sourceId: item.sourceId };
+					this.setState({ picked: value, results: [] });
+					this.props.onChange(value);
+				},
+				handleReset() {
+					this.setState({ picked: null, results: [] });
+				},
+				render() {
+					const { query, results, loading, picked } = this.state;
+					const children = [
+						h('input', {
+							key: 'input',
+							id: this.props.forID,
+							className: this.props.classNameWrapper,
+							type: 'text',
+							placeholder: 'Название тайтла (рус. или ориг.)…',
+							value: query,
+							onChange: this.handleQueryChange,
+							style: { width: '100%', marginBottom: '6px', boxSizing: 'border-box' },
+						}),
+					];
+
+					if (loading) children.push(h('div', { key: 'loading', style: { fontSize: '13px', opacity: 0.7 } }, 'Ищу…'));
+
+					if (!picked && !loading && results.length > 0) {
+						children.push(
+							h(
+								'ul',
+								{
+									key: 'results',
+									style: {
+										listStyle: 'none',
+										margin: 0,
+										padding: 0,
+										border: '1px solid #ccc',
+										borderRadius: '4px',
+										maxHeight: '260px',
+										overflowY: 'auto',
+									},
+								},
+								results.map((item, i) =>
+									h(
+										'li',
+										{
+											key: i,
+											onClick: () => this.handlePick(item),
+											style: {
+												display: 'flex',
+												gap: '8px',
+												alignItems: 'center',
+												padding: '6px 8px',
+												cursor: 'pointer',
+												borderBottom: '1px solid #eee',
+											},
+										},
+										item.poster
+											? h('img', {
+													key: 'poster',
+													src: item.poster,
+													style: { width: '32px', height: '44px', objectFit: 'cover', borderRadius: '2px', flexShrink: 0 },
+												})
+											: null,
+										h(
+											'span',
+											{ key: 'label' },
+											`${item.title}${item.year ? ` (${item.year})` : ''} — ${item.source === 'shikimori' ? 'Shikimori' : 'AniList'}`,
+										),
+									),
+								),
+							),
+						);
+					}
+
+					if (!picked && !loading && query.trim().length >= 2 && results.length === 0) {
+						children.push(h('div', { key: 'empty', style: { fontSize: '13px', opacity: 0.7 } }, 'Ничего не нашлось.'));
+					}
+
+					if (picked) {
+						children.push(
+							h(
+								'div',
+								{
+									key: 'picked',
+									style: {
+										display: 'flex',
+										justifyContent: 'space-between',
+										alignItems: 'center',
+										gap: '8px',
+										padding: '6px 8px',
+										background: '#eaf5ea',
+										borderRadius: '4px',
+										fontSize: '13px',
+										color: '#1a1a1a',
+									},
+								},
+								h('span', { key: 'text' }, `✓ ${picked.label} → /anime/${picked.id}`),
+								h('button', { key: 'reset', type: 'button', onClick: this.handleReset }, 'Искать другой'),
+							),
+						);
+					}
+
+					return h('div', {}, children);
+				},
+			});
+
+			const AnimeSearchPreview = createClass({
+				render() {
+					const value = this.props.value || {};
+					return h('span', {}, value.label ? `🎬 ${value.label}` : '');
+				},
+			});
+
+			CMS.registerFieldType('anime-search', AnimeSearchControl, AnimeSearchPreview);
+
+			CMS.registerEditorComponent({
+				id: 'anime',
+				label: 'Аниме',
+				icon: 'movie_filter',
+				fields: [{ label: 'Тайтл', name: 'match', widget: 'anime-search' }],
+				pattern: /^:anime\[((?:\\.|[^\]\\])*)\]\{([^\n]*)\}$/,
+				fromBlock: (match) => {
+					const label = unescapeMdInline(match[1]);
+					const attrs = {};
+					const re = /([\w-]+)="((?:[^"])*)"/g;
+					let m;
+
+					while ((m = re.exec(match[2]))) {
+						attrs[m[1]] = m[2];
+					}
+
+					return {
+						match: { label, id: attrs.id || '', source: attrs.source || '', sourceId: attrs['source-id'] ? Number(attrs['source-id']) : null },
+					};
+				},
+				toBlock: (data) => {
+					const m = data.match || {};
+					if (!m.id) return '';
+					return `:anime[${escapeMdInline(m.label)}]{id="${m.id}" source="${m.source}" source-id="${m.sourceId}"}`;
+				},
+				toPreview: (data) => {
+					const m = data.match || {};
+					return m.label ? `<span style="opacity:0.75">🎬 ${escapeHtml(m.label)}</span>` : `<span style="opacity:0.5">Аниме (не выбрано)</span>`;
+				},
+			});
+
+			// Поле anime у поста в редакторе не показываем (в списке fields в config.yml
+			// его нет) — оно целиком считается из меток :anime[...] в тексте, вручную
+			// вести его не нужно (см. тз/03-тайтлы.md, п. 3). Дописанное вручную в файл
+			// поста (например, тайтл упомянут только в подписи к картинке, не в тексте)
+			// не трогаем — только добавляем новое, никогда не стираем существующее.
+			function extractAnimeIdsFromBody(body) {
+				const ids = [];
+				const re = /:anime\[[^\]]*\]\{id="([^"]+)"/g;
+				let m;
+				while ((m = re.exec(String(body ?? '')))) {
+					if (!ids.includes(m[1])) ids.push(m[1]);
+				}
+				return ids;
+			}
+
+			function toPlainArray(value) {
+				if (!value) return [];
+				if (typeof value.toJS === 'function') return value.toJS();
+				return Array.isArray(value) ? value : [];
+			}
+
+			// Проверка при сохранении: ищем в тексте (вне уже расставленных меток) названия
+			// тайтлов, которые уже есть в справочнике — вдруг упомянули, но забыли отметить
+			// кнопкой «Аниме» (см. тз/03-тайтлы.md, п. 5). Ничего не меняет и не блокирует
+			// сохранение — только подсказывает, дальше решает автор.
+			function stripAnimeMarkers(body) {
+				return String(body ?? '').replace(/:anime\[[^\]]*\]\{[^}]*\}/g, ' ');
+			}
+
+			async function findUnmarkedKnownTitles(body) {
+				const index = await getAnimeIndex();
+				const plainText = stripAnimeMarkers(body);
+				const found = [];
+
+				for (const entry of index) {
+					const names = [entry.titleRu, entry.titleOriginal].filter((name) => name && name.length >= 3);
+					if (names.some((name) => plainText.includes(name))) {
+						found.push(entry.titleRu || entry.titleOriginal);
+					}
+				}
+
+				return found;
+			}
+
+			CMS.registerEventListener({
+				name: 'preSave',
+				handler: async ({ entry }) => {
+					const data = entry.get('data');
+					const body = data.get('body');
+
+					const unmarked = await findUnmarkedKnownTitles(body);
+					if (unmarked.length > 0) {
+						window.alert(
+							`Похоже, в тексте упомянут${unmarked.length === 1 ? '' : 'ы'} тайтл${unmarked.length === 1 ? '' : 'ы'} без разметки: ${unmarked.join(', ')}.\n\nЕсли забыли — отметьте кнопкой «Аниме», иначе на них не будет ссылки и плашки под постом.`,
+						);
+					}
+
+					const fromText = extractAnimeIdsFromBody(body);
+					const existing = toPlainArray(data.get('anime'));
+					const merged = [...fromText, ...existing.filter((id) => !fromText.includes(id))];
+					return data.set('anime', merged);
+				},
+			});
 		</script>
 	</body>
 </html>

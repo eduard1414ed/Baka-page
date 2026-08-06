@@ -1,0 +1,52 @@
+name: Добор тайтлов из постов
+
+# После публикации поста в тексте могут быть метки тайтлов, которых ещё нет
+# в справочнике (src/content/anime/) — кнопка «Аниме» в админке ставит метку
+# сразу, а данные и обложку добирает этот робот (scripts/sync-anime.mjs),
+# см. тз/03-тайтлы.md. Запускается сам после каждого пуша с изменениями
+# в постах, коммитит найденное обратно в репозиторий — руками ничего
+# запускать не нужно.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/content/posts/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-anime
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm ci
+
+      - name: Добрать новые тайтлы
+        run: node scripts/sync-anime.mjs
+
+      - name: Закоммитить, если нашлось что-то новое
+        run: |
+          git config user.name "baka-anime-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add src/content/anime public/anime
+          if git diff --cached --quiet; then
+            echo "Новых тайтлов нет."
+          else
+            git commit -m "Добавить тайтлы, размеченные в постах"
+            git pull --rebase origin main
+            git push
+          fi

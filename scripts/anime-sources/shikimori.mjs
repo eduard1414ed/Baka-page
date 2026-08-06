@@ -25,14 +25,7 @@ async function request(path) {
 	return response.json();
 }
 
-// Возвращает найденные данные тайтла или null, если Shikimori ничего не нашёл.
-export async function find(query) {
-	const results = await request(`/api/animes?search=${encodeURIComponent(query)}&limit=1`);
-	if (results.length === 0) return null;
-
-	const match = results[0];
-	const data = await request(`/api/animes/${match.id}`);
-
+function toEntry(data) {
 	const year = data.aired_on ? Number(data.aired_on.slice(0, 4)) : undefined;
 	const studio = data.studios?.[0]?.name;
 	const posterPath = data.image?.original;
@@ -50,4 +43,21 @@ export async function find(query) {
 		synopsis: cleanDescription(data.description),
 		url: data.url ? `${BASE}${data.url}` : undefined,
 	};
+}
+
+// Возвращает найденные данные тайтла или null, если Shikimori ничего не нашёл.
+export async function find(query) {
+	const results = await request(`/api/animes?search=${encodeURIComponent(query)}&limit=1`);
+	if (results.length === 0) return null;
+
+	const data = await request(`/api/animes/${results[0].id}`);
+	return toEntry(data);
+}
+
+// Тайтл уже опознан по id (например, выбран в живом поиске в админке) — без поиска
+// по названию, значит без риска перепутать похожие тайтлы. Использует робот,
+// который донабирает справочник после публикации поста (scripts/sync-anime.mjs).
+export async function findById(sourceId) {
+	const data = await request(`/api/animes/${sourceId}`);
+	return toEntry(data);
 }

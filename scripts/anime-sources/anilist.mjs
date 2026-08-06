@@ -10,30 +10,29 @@ const USER_AGENT = 'BakaPodcastSite/1.0 (+https://github.com/eduard1414ed/Baka-p
 export const id = 'anilist';
 export const label = 'AniList';
 
-const QUERY = `
-	query ($search: String) {
-		Media(search: $search, type: ANIME) {
-			id
-			title {
-				romaji
-			}
-			startDate {
-				year
-			}
-			studios(isMain: true) {
-				nodes {
-					name
-				}
-			}
-			coverImage {
-				extraLarge
-				large
-			}
-			description(asHtml: false)
-			siteUrl
+const FIELDS = `
+	id
+	title {
+		romaji
+	}
+	startDate {
+		year
+	}
+	studios(isMain: true) {
+		nodes {
+			name
 		}
 	}
+	coverImage {
+		extraLarge
+		large
+	}
+	description(asHtml: false)
+	siteUrl
 `;
+
+const QUERY = `query ($search: String) { Media(search: $search, type: ANIME) { ${FIELDS} } }`;
+const QUERY_BY_ID = `query ($id: Int) { Media(id: $id, type: ANIME) { ${FIELDS} } }`;
 
 function stripHtml(text) {
 	if (!text) return undefined;
@@ -45,23 +44,7 @@ function stripHtml(text) {
 	);
 }
 
-// Возвращает найденные данные тайтла или null, если AniList ничего не нашёл.
-// "Не найдено" AniList отдаёт как ошибку с HTTP 404 — это не сбой, а нормальный ответ.
-export async function find(query) {
-	const response = await fetch(ENDPOINT, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json', 'User-Agent': USER_AGENT },
-		body: JSON.stringify({ query: QUERY, variables: { search: query } }),
-	});
-
-	if (!response.ok && response.status !== 404) {
-		throw new Error(`AniList ответил ${response.status}`);
-	}
-
-	const json = await response.json();
-	const data = json.data?.Media;
-	if (!data) return null;
-
+function toEntry(data) {
 	return {
 		sourceId: data.id,
 		matchedName: data.title.romaji,
@@ -73,4 +56,34 @@ export async function find(query) {
 		synopsis: stripHtml(data.description),
 		url: data.siteUrl,
 	};
+}
+
+async function request(query, variables) {
+	const response = await fetch(ENDPOINT, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', 'User-Agent': USER_AGENT },
+		body: JSON.stringify({ query, variables }),
+	});
+
+	// "Не найдено" AniList отдаёт как ошибку с HTTP 404 — это не сбой, а нормальный ответ.
+	if (!response.ok && response.status !== 404) {
+		throw new Error(`AniList ответил ${response.status}`);
+	}
+
+	const json = await response.json();
+	return json.data?.Media ?? null;
+}
+
+// Возвращает найденные данные тайтла или null, если AniList ничего не нашёл.
+export async function find(query) {
+	const data = await request(QUERY, { search: query });
+	return data ? toEntry(data) : null;
+}
+
+// Тайтл уже опознан по id (например, выбран в живом поиске в админке) — без поиска
+// по названию. Использует робот, который донабирает справочник после публикации
+// поста (scripts/sync-anime.mjs).
+export async function findById(sourceId) {
+	const data = await request(QUERY_BY_ID, { id: sourceId });
+	return data ? toEntry(data) : null;
 }

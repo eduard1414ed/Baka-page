@@ -1,0 +1,61 @@
+---
+import { getAnimePosterSrcs } from '../lib/animePoster.mjs';
+
+interface Props {
+	anime: { id: string; data: Record<string, any> };
+}
+
+const { anime } = Astro.props;
+const { titleRu, titleOriginal, poster } = anime.data;
+const posterSrcs = getAnimePosterSrcs(poster);
+const displayTitle = titleRu || titleOriginal;
+---
+
+<a class="badge" href={`/anime/${anime.id}/`}>
+	{
+		posterSrcs.length > 0 ? (
+			<img class="poster" src={posterSrcs[0].src} alt="" loading="lazy" />
+		) : (
+			<span class="poster poster-placeholder" aria-hidden="true">
+				?
+			</span>
+		)
+	}
+	<span class="title">{displayTitle}</span>
+</a>
+
+<style>
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-1);
+		padding: 0.25em 0.75em 0.25em 0.25em;
+		border-radius: var(--radius-full);
+		border: 1px solid var(--color-border);
+		background: var(--color-bg-elevated);
+		color: var(--color-text);
+		font-size: var(--font-size-sm);
+		transition: border-color var(--transition-fast);
+	}
+
+	.badge:hover,
+	.badge:focus-visible {
+		border-color: var(--color-accent);
+		color: var(--color-accent);
+	}
+
+	.poster {
+		width: 1.75em;
+		height: 1.75em;
+		border-radius: var(--radius-full);
+		object-fit: cover;
+		background: var(--color-bg);
+	}
+
+	.poster-placeholder {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--color-text-muted);
+	}
+</style>
