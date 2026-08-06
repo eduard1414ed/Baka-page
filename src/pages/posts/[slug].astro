@@ -5,18 +5,25 @@ import Layout from '../../layouts/Layout.astro';
 import { categories } from '../../content.config';
 import { getYoutubeEmbedUrl } from '../../lib/youtube.mjs';
 import { getLinkIcon } from '../../lib/linkIcon.mjs';
+import { findEpisodeByGuid } from '../../lib/podcastFeed.mjs';
 import PlatformIcon from '../../components/PlatformIcon.astro';
 import AnimeBadge from '../../components/AnimeBadge.astro';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('posts', ({ data }) => !data.draft);
-	return posts.map((post) => ({
-		params: { slug: post.id },
-		props: { post },
-	}));
+	return Promise.all(
+		posts.map(async (post) => ({
+			params: { slug: post.id },
+			// Аудио отдаёт хостинг подкаста по прямой ссылке из RSS — файлы себе
+			// не копируем (см. CLAUDE.md), поэтому ссылку ищем в фиде по audioGuid
+			// поста при каждой сборке. Если фид недоступен или выпуск из него
+			// пропал — episode будет null, страница просто останется без плеера.
+			props: { post, episode: post.data.audioGuid ? await findEpisodeByGuid(post.data.audioGuid) : null },
+		})),
+	);
 }
 
-const { post } = Astro.props;
+const { post, episode } = Astro.props;
 const { Content } = await render(post);
 
 const { title, date, category, cover, youtube, video, buttons, anime } = post.data;
@@ -66,6 +73,12 @@ const animeEntries = anime ? (await Promise.all(anime.map((ref) => getEntry(ref)
 		}
 
 		{!youtubeEmbed && video && <video class="video" src={video} controls preload="none" />}
+
+		{
+			category === 'podcast' && episode && (
+				<audio class="episode-audio" src={episode.audioUrl} controls preload="none" />
+			)
+		}
 
 		{
 			buttons && buttons.length > 0 && (
@@ -256,6 +269,11 @@ const animeEntries = anime ? (await Promise.all(anime.map((ref) => getEntry(ref)
 	.video {
 		width: 100%;
 		border-radius: var(--radius-md);
+		margin-bottom: var(--space-3);
+	}
+
+	.episode-audio {
+		width: 100%;
 		margin-bottom: var(--space-3);
 	}
 
