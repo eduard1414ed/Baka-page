@@ -945,6 +945,12 @@ def estimate_archive(episodes, provider, state, of=None):
 
 
 def main():
+	# Пишем в лог построчно, а не копим в буфере. Python по умолчанию буферизует
+	# вывод, когда пишет в файл, а не в терминал, — и при запуске через nohup
+	# лог многочасового прогона оставался пустым до самого конца, следить
+	# за ходом было нечем.
+	sys.stdout.reconfigure(line_buffering=True)
+
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--guid", help="guid выпуска из RSS")
 	parser.add_argument("--list", action="store_true", help="показать список выпусков и статус")
