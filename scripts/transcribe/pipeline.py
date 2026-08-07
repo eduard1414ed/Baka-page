@@ -481,7 +481,7 @@ def format_estimate(est):
 	return line
 
 
-def process_episode(episode, provider, api_key, dry_run=False, out_suffix=None):
+def process_episode(episode, provider, api_key, dry_run=False, out_suffix=None, with_names=False):
 	est = provider.estimate(episode["duration_sec"])
 
 	print(f"Выпуск: {episode['title']}")
@@ -521,10 +521,6 @@ def process_episode(episode, provider, api_key, dry_run=False, out_suffix=None):
 
 		slug, speaker_names, speaker_info, notes = assign_speaker_names(replicas, wav_samples, sr)
 
-		print("Ищу известные тайтлы для проверки названий...")
-		anime_index = fetch_anime_index()
-		corrections = find_anime_corrections(replicas, anime_index)
-
 		# Имя спикера в реплики НЕ вписываем — только номер голоса. Имена лежат
 		# отдельной картой speakers, поэтому переименовать гостя (или поменять
 		# ведущих местами) можно правкой одной строки, без повторного
@@ -552,12 +548,11 @@ def process_episode(episode, provider, api_key, dry_run=False, out_suffix=None):
 		actual_sec = result.get("audio_duration_sec") or episode["duration_sec"]
 		actual = provider.estimate(actual_sec)
 
+		# Сохраняем СРАЗУ, как только транскрипт готов. За распознавание уже
+		# заплачено, и всё, что делается после, не должно уметь потерять результат.
 		stem = episode["guid"] if not out_suffix else f"{episode['guid']}.{out_suffix}"
 		out_path = OUTPUT_DIR / f"{stem}.json"
 		out_path.write_text(json.dumps(transcript, ensure_ascii=False, indent=2))
-
-		corrections_path = OUTPUT_DIR / f"{stem}.corrections.json"
-		corrections_path.write_text(json.dumps(corrections, ensure_ascii=False, indent=2))
 
 		state = load_state()
 		state[episode["guid"]] = {
@@ -585,9 +580,25 @@ def process_episode(episode, provider, api_key, dry_run=False, out_suffix=None):
 			print(f"  {n}")
 		print(f"Фактическая длительность по данным сервиса: {actual_sec/60:.1f} мин")
 		print(f"Стоимость: {format_estimate(actual)}")
-		print(f"Найдено предложений исправить название: {len(corrections)}")
 		print(f"Файл транскрипта: {out_path}")
-		print(f"Файл с предложениями по названиям: {corrections_path}")
+
+		# Сверка названий по умолчанию НЕ делается: она бесплатная, к распознаванию
+		# отношения не имеет и запускается отдельно (--recheck-names), когда
+		# справочник тайтлов дорастёт. Здесь она только замедляла бы прогон
+		# и лезла в сеть за списком тайтлов после того, как деньги уже потрачены.
+		if with_names:
+			try:
+				print("Ищу известные тайтлы для проверки названий...")
+				anime_index = fetch_anime_index()
+				corrections = find_anime_corrections(replicas, anime_index)
+				corrections_path = OUTPUT_DIR / f"{stem}.corrections.json"
+				corrections_path.write_text(json.dumps(corrections, ensure_ascii=False, indent=2))
+				print(f"Найдено предложений исправить название: {len(corrections)}")
+				print(f"Файл с предложениями по названиям: {corrections_path}")
+			except Exception as exc:
+				# Транскрипт уже сохранён выше, терять его из-за этого нельзя.
+				print(f"Сверка названий не удалась ({exc}) — транскрипт цел.")
+				print("Запустите позже: python3 pipeline.py --recheck-names")
 
 		return transcript
 	finally:
@@ -634,7 +645,9 @@ def select_part(episodes, part, of):
 	return split_into_parts(work, of)[part - 1]
 
 
-def run_archive(episodes, provider, api_key, state, part=None, of=None, assume_yes=False):
+def run_archive(
+	episodes, provider, api_key, state, part=None, of=None, assume_yes=False, with_names=False
+):
 	"""Прогнать пачку выпусков подряд, продолжая с места обрыва."""
 	selected = select_part(episodes, part, of)
 	pending = [e for e in selected if state.get(e["guid"], {}).get("status") != "done"]
@@ -676,7 +689,7 @@ def run_archive(episodes, provider, api_key, state, part=None, of=None, assume_y
 		print("=" * 70)
 		print(f"[{i} из {len(pending)}]  {datetime.now():%H:%M:%S}")
 		try:
-			process_episode(episode, provider, api_key)
+			process_episode(episode, provider, api_key, with_names=with_names)
 			ok.append(episode)
 		except KeyboardInterrupt:
 			print("\nОстановлено вручную. Сделанное сохранено, продолжить можно тем же запуском.")
@@ -874,6 +887,12 @@ def main():
 		default=0.72,
 		help="порог похожести при сверке названий (0.72 по умолчанию, выше — меньше мусора)",
 	)
+	parser.add_argument(
+		"--with-names",
+		action="store_true",
+		help="сверять названия аниме прямо во время распознавания (по умолчанию нет — "
+		"это отдельная бесплатная операция, см. --recheck-names)",
+	)
 	args = parser.parse_args()
 
 	if args.part and not args.of:
@@ -915,7 +934,7 @@ def main():
 			sys.exit(1)
 		run_archive(
 			episodes, provider, api_key, state,
-			part=args.part, of=args.of, assume_yes=args.yes,
+			part=args.part, of=args.of, assume_yes=args.yes, with_names=args.with_names,
 		)
 		return
 
@@ -955,7 +974,8 @@ def main():
 		sys.exit(1)
 
 	process_episode(
-		episode, provider, api_key, dry_run=args.dry_run, out_suffix=args.out_suffix
+		episode, provider, api_key, dry_run=args.dry_run, out_suffix=args.out_suffix,
+		with_names=args.with_names,
 	)
 
 
