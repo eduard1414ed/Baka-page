@@ -32,6 +32,11 @@ const posts = defineCollection({
 					}),
 				)
 				.optional(),
+			// Имя файла расшифровки в src/content/transcripts/ (без .json).
+			// Обычно заполнять не нужно: у выпусков подкаста расшифровка находится
+			// сама по audioGuid — файл называется тем же guid. Поле нужно там, где
+			// audioGuid нет вовсе: видеоэссе живут на YouTube, в RSS их нет,
+			// а расшифровка у них по тз/05 (шаг 2) будет.
 			transcript: z.string().optional(),
 			script: z.string().optional(),
 			draft: z.boolean().default(false),
@@ -71,4 +76,57 @@ const anime = defineCollection({
 	}),
 });
 
-export const collections = { posts, anime };
+// Расшифровки выпусков. Файлы делает scripts/transcribe/pipeline.py на Hetzner
+// (см. тз/05-транскрипты.md), сайт их только читает. Имя файла — guid выпуска
+// из RSS, по нему страница поста и находит свою расшифровку: сначала по полю
+// `transcript`, если оно заполнено, иначе по `audioGuid` (см. src/pages/posts/[slug].astro).
+const transcripts = defineCollection({
+	// Не '**/*.json': рядом в transcripts/ в корне лежат ещё *.corrections.json
+	// и state.json — у них другой формат, и попади они сюда, сборка бы упала.
+	loader: glob({ pattern: '*.json', base: './src/content/transcripts' }),
+	schema: z.object({
+		// Откуда взялся текст. `recognized` — распознано с аудио; `aligned` —
+		// готовый сценарий, выровненный по звуку (шаг 2 тз/05, ещё не делали).
+		// Сейчас во всех 107 файлах стоит `recognized`.
+		source: z.enum(['recognized', 'aligned']),
+		provider: z.string().optional(),
+		episodeGuid: z.string(),
+		episodeTitle: z.string().optional(),
+		// Карта «номер голоса → имя»: speaker_0 → «Эд». Имена лежат отдельно от
+		// реплик специально — переименование это правка одной строки, а не всего
+		// файла (тз/05, шаг 4). Знак `?` в имени = автоматика сомневалась;
+		// читателю такой голос показываем как «Спикер не определён»,
+		// см. src/lib/transcript.mjs.
+		speakers: z.record(z.string(), z.string()),
+		// Подсказки для ручной простановки имён. На странице не используются —
+		// нужны будущему виджету правки имён в админке (тз/05, шаг 4).
+		// Осторожно: needsName стоит у КАЖДОГО гостя (их в архиве 64), поэтому
+		// судить по нему о сомнении нельзя — только по знаку `?` в имени.
+		speakerInfo: z
+			.record(
+				z.string(),
+				z.object({
+					role: z.string(),
+					detectedBy: z.string(),
+					// null, если высоту голоса измерить не удалось
+					pitchHz: z.number().nullable().optional(),
+					speechSeconds: z.number().optional(),
+					needsName: z.boolean().optional(),
+					// true = имя вписано человеком, --recheck-speakers такое не трогает
+					manual: z.boolean().optional(),
+				}),
+			)
+			.optional(),
+		// Таймкоды в секундах от начала выпуска, с точностью до сотых.
+		replicas: z.array(
+			z.object({
+				start: z.number(),
+				end: z.number(),
+				speaker: z.string(),
+				text: z.string(),
+			}),
+		),
+	}),
+});
+
+export const collections = { posts, anime, transcripts };
