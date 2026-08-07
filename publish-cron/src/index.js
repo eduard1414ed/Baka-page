@@ -10,7 +10,6 @@
  * к GitHub), чтобы не тратить впустую сборки (лимит автосборок в месяц).
  */
 
-const SITE_URL = 'https://baka-page.eduard1414ed.workers.dev';
 const REPO = 'eduard1414ed/Baka-page';
 const BRANCH = 'main';
 
@@ -90,11 +89,12 @@ async function publishOne(path, env) {
 
 /**
  * Одна проверка: посмотреть очередь, опубликовать всё, чему пришло время.
- * @param {{ GITHUB_TOKEN: string }} env - Секреты воркера.
+ * @param {{ GITHUB_TOKEN: string, SITE: Fetcher }} env - Секреты и привязки воркера.
  * @returns {Promise<{ checked: number, due: number, published: string[], skipped: string[] }>} Итог проверки.
  */
 async function run(env) {
-	const queueRes = await fetch(`${SITE_URL}/publish-queue.json`, { cf: { cacheTtl: 0 } });
+	// Через Service Binding, а не публичный workers.dev-адрес — см. wrangler.jsonc.
+	const queueRes = await env.SITE.fetch('https://baka-page.eduard1414ed.workers.dev/publish-queue.json');
 
 	if (!queueRes.ok) {
 		throw new Error(`Не смог получить publish-queue.json: ${queueRes.status}`);
