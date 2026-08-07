@@ -634,5 +634,329 @@
       "note": "по цене плана Creator, $0.35/час"
     },
     "transcriptFile": "/root/baki-transcripts/output/1fd3337c-50d5-4c3e-8571-4e952b6489ef.json"
+  },
+  "c9c17887-fd23-4a5a-8b84-ece15b1f372e": {
+    "title": "Милый во Франксе | Наглый плагиат Евангелиона или удачное романтическое аниме?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2087,
+    "cost": {
+      "usd": 0.203,
+      "credits": 923,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/c9c17887-fd23-4a5a-8b84-ece15b1f372e.json"
+  },
+  "678b652f-395d-4baa-9c57-564af410a87b": {
+    "title": "Моб Психо 100 | Почему в этом сериале невозможный продакшн и как комедия раздвигает границы",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2103,
+    "cost": {
+      "usd": 0.204,
+      "credits": 930,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/678b652f-395d-4baa-9c57-564af410a87b.json"
+  },
+  "a6e42440-9844-49ed-b531-869c12c99e4c": {
+    "title": "Госпожа Кагуя | Чем вдохновляется Ака Акасака, и как он обманывает наши ожидания?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2385,
+    "cost": {
+      "usd": 0.232,
+      "credits": 1054,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/a6e42440-9844-49ed-b531-869c12c99e4c.json"
+  },
+  "86250c7a-a0e6-401a-bebc-1ffe039abdbd": {
+    "title": "Платиновый предел | В чем ошиблись создатели «Тетради смерти» и как не стоит рассказывать истории",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2282,
+    "cost": {
+      "usd": 0.222,
+      "credits": 1009,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/86250c7a-a0e6-401a-bebc-1ffe039abdbd.json"
+  },
+  "43eef42d-c809-44ae-997a-718347c03496": {
+    "title": "Токийский гуль | Что пошло не так с аниме и почему стоит читать мангу",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 1947,
+    "cost": {
+      "usd": 0.189,
+      "credits": 861,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/43eef42d-c809-44ae-997a-718347c03496.json"
+  },
+  "1ed31fc0-e4c0-4949-b800-884754e81b9b": {
+    "title": "Гуррен-Лаганн | О чем может быть меха-аниме и как должны заканчиваться героические истории?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2236,
+    "cost": {
+      "usd": 0.217,
+      "credits": 989,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/1ed31fc0-e4c0-4949-b800-884754e81b9b.json"
+  },
+  "95606e6a-40f5-48cf-9af3-d51c34598038": {
+    "title": "Истребитель демонов. Второй сезон | Как фильм стал самым кассовым аниме в истории",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2152,
+    "cost": {
+      "usd": 0.209,
+      "credits": 952,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/95606e6a-40f5-48cf-9af3-d51c34598038.json"
+  },
+  "04ff3905-cd31-47da-9a89-a5344b9b3315": {
+    "title": "Реинкарнация безработного | Как рассказать идеальную историю взросления и сделать хороший исекай?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2720,
+    "cost": {
+      "usd": 0.264,
+      "credits": 1203,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/04ff3905-cd31-47da-9a89-a5344b9b3315.json"
+  },
+  "fff0edd9-87ab-4e50-81e1-9fc9458d90fe": {
+    "title": "Истребитель демонов | Как создать идеального героя и не заскучать?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2262,
+    "cost": {
+      "usd": 0.22,
+      "credits": 1000,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/fff0edd9-87ab-4e50-81e1-9fc9458d90fe.json"
+  },
+  "bc0d49aa-f8e4-4575-a2d9-4e03446d4ec7": {
+    "title": "Шаман Кинг | Почему это плохая экранизация и за что мы ее любим?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 3040,
+    "cost": {
+      "usd": 0.296,
+      "credits": 1344,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/bc0d49aa-f8e4-4575-a2d9-4e03446d4ec7.json"
+  },
+  "ce3732ee-8225-4180-9508-c49f2c014036": {
+    "title": "Семья Шпиона | Как появилась эта история и почему это аниме года?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2462,
+    "cost": {
+      "usd": 0.239,
+      "credits": 1089,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/ce3732ee-8225-4180-9508-c49f2c014036.json"
+  },
+  "447c4410-b5fc-473e-b46f-2344ff777b35": {
+    "title": "Финал сезона | Легенда о героях Галактики, Тетрадь дружбы Нацумэ и розыгрыш манги",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 3141,
+    "cost": {
+      "usd": 0.305,
+      "credits": 1389,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/447c4410-b5fc-473e-b46f-2344ff777b35.json"
+  },
+  "438b5003-56db-4ca8-98ec-bbe3fdfb6190": {
+    "title": "Наруто. Какаши Гайден | Каким было детство Какаши и за что умер Дейдара?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2137,
+    "cost": {
+      "usd": 0.208,
+      "credits": 945,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/438b5003-56db-4ca8-98ec-bbe3fdfb6190.json"
+  },
+  "90cb4dbb-5527-4da0-9dfb-dbcbec2717ba": {
+    "title": "Красная черта | Последнее настоящее искусство или просто фильм для гиков?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 1853,
+    "cost": {
+      "usd": 0.18,
+      "credits": 820,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/90cb4dbb-5527-4da0-9dfb-dbcbec2717ba.json"
+  },
+  "feb0fca1-1537-477a-ae54-457fc324b070": {
+    "title": "Наруто. Команда Хеби | Последний ли это день Орочимару, и как Саске собирал команду?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2316,
+    "cost": {
+      "usd": 0.225,
+      "credits": 1024,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/feb0fca1-1537-477a-ae54-457fc324b070.json"
+  },
+  "b941ab68-f4fe-43f8-b466-ce60b76fa3ee": {
+    "title": "Магическая битва | Лучший ли это сёнен или просто копия других аниме?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2793,
+    "cost": {
+      "usd": 0.272,
+      "credits": 1235,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/b941ab68-f4fe-43f8-b466-ce60b76fa3ee.json"
+  },
+  "6b3acd79-462c-4674-bbeb-2f2684a89fe1": {
+    "title": "Специальный выпуск | Кристина Лиа: косплей, каким он бывает и зачем им заниматься",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 3822,
+    "cost": {
+      "usd": 0.372,
+      "credits": 1690,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/6b3acd79-462c-4674-bbeb-2f2684a89fe1.json"
+  },
+  "3440ade7-6d5e-40b1-ab77-822503a6c3b2": {
+    "title": "Наруто. Подавление Акацуки | Правда ли Хидан бессмертный и плачем ли мы над Асумой?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2229,
+    "cost": {
+      "usd": 0.217,
+      "credits": 986,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/3440ade7-6d5e-40b1-ab77-822503a6c3b2.json"
+  },
+  "07903b60-ad9f-45f4-82d3-cde5b4865737": {
+    "title": "Специальный выпуск | Ислам Ганджаев: озвучка аниме, личный бренд и немного коучинга",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 3434,
+    "cost": {
+      "usd": 0.334,
+      "credits": 1518,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/07903b60-ad9f-45f4-82d3-cde5b4865737.json"
+  },
+  "e257290c-8602-42d5-a90a-d24b2dcad516": {
+    "title": "Тетрадь смерти | Почему это не идеальная история и какие детали в ней можно упустить?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2492,
+    "cost": {
+      "usd": 0.242,
+      "credits": 1102,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/e257290c-8602-42d5-a90a-d24b2dcad516.json"
+  },
+  "0024e6b6-9338-42af-8420-3b0cf13ce244": {
+    "title": "Наруто. Долгожданная встреча | Ждали ли мы возвращения Саске и почему это худшая арка сезона?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 1905,
+    "cost": {
+      "usd": 0.185,
+      "credits": 842,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/0024e6b6-9338-42af-8420-3b0cf13ce244.json"
+  },
+  "85164855-32f4-4eb0-ae4f-50100069ff50": {
+    "title": "Сердцу хочется кричать | Почему это незаслуженно забытая драма, и чем она лучше «Формы Голоса»?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2404,
+    "cost": {
+      "usd": 0.234,
+      "credits": 1063,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/85164855-32f4-4eb0-ae4f-50100069ff50.json"
+  },
+  "8b146b74-52b8-40d2-884e-591ced10413c": {
+    "title": "Наруто. Спасение Казекаге | Кто стал прототипом Дейдары и почему Сакура теперь — главная героиня?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2245,
+    "cost": {
+      "usd": 0.218,
+      "credits": 992,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/8b146b74-52b8-40d2-884e-591ced10413c.json"
+  },
+  "b310c782-0a85-440b-a98f-6ec2334a0e63": {
+    "title": "Этот глупый свин не понимает мечту девочки-зайки | Как это аниме обманывает ожидания и что такое здоровые отношения?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2318,
+    "cost": {
+      "usd": 0.225,
+      "credits": 1025,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/b310c782-0a85-440b-a98f-6ec2334a0e63.json"
+  },
+  "73285382-94bf-4884-9c86-45518e966a69": {
+    "title": "Атака Титанов. Финал | Как закончился четвертый сезон и что же было в манге?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2805,
+    "cost": {
+      "usd": 0.273,
+      "credits": 1240,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/73285382-94bf-4884-9c86-45518e966a69.json"
+  },
+  "af6b4aea-6355-41e4-bcf2-6c7adf19252a": {
+    "title": "Дитя погоды | Чем удивляет Макото Синкай, и как он отдает долг молодости?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2456,
+    "cost": {
+      "usd": 0.239,
+      "credits": 1086,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/af6b4aea-6355-41e4-bcf2-6c7adf19252a.json"
+  },
+  "6bce6889-0a89-4acc-9e38-c8b0a43dc924": {
+    "title": "Атака Титанов. Четвертый сезон | Как изменился Эрен Йегер и что на самом деле хотел сказать автор?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2644,
+    "cost": {
+      "usd": 0.257,
+      "credits": 1169,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/6bce6889-0a89-4acc-9e38-c8b0a43dc924.json"
   }
 }
