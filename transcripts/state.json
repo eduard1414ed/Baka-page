@@ -346,5 +346,293 @@
       "note": "по цене плана Creator, $0.35/час"
     },
     "transcriptFile": "/root/baki-transcripts/output/c8b68e5c-05c4-4689-a1c5-8ac2202487ee.json"
+  },
+  "14014df2-4fcc-4505-9b28-7f1cd8cfbefe": {
+    "title": "Благословение небожителей — детективный сериал по-китайски",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2615,
+    "cost": {
+      "usd": 0.254,
+      "credits": 1156,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/14014df2-4fcc-4505-9b28-7f1cd8cfbefe.json"
+  },
+  "476e12fa-36d6-4fb8-bcea-3b0ebf15b074": {
+    "title": "Судзумэ — завершающий фильм Макото Синкая?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2708,
+    "cost": {
+      "usd": 0.263,
+      "credits": 1197,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/476e12fa-36d6-4fb8-bcea-3b0ebf15b074.json"
+  },
+  "ed4663dc-0472-44ea-85bf-ad19e683a2b0": {
+    "title": "Эрго Прокси | Интеллектуальное или псевдоинтеллектуальное аниме?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 3026,
+    "cost": {
+      "usd": 0.294,
+      "credits": 1338,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/ed4663dc-0472-44ea-85bf-ad19e683a2b0.json"
+  },
+  "0114d7c3-c36d-4d06-bde1-8e447cf68e04": {
+    "title": "Интервью с переводчиком «Скотта Пилигрима» | Специальный эпизод",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 1538,
+    "cost": {
+      "usd": 0.15,
+      "credits": 680,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/0114d7c3-c36d-4d06-bde1-8e447cf68e04.json"
+  },
+  "42f03c6a-e255-45d8-8969-ef3fd66d3c16": {
+    "title": "Великая небесная стена | Разбираем все тайны главного мистического аниме прошлого года",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 3220,
+    "cost": {
+      "usd": 0.313,
+      "credits": 1424,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/42f03c6a-e255-45d8-8969-ef3fd66d3c16.json"
+  },
+  "385581a2-2bce-4dd4-9474-1c402dabc1b0": {
+    "title": "Лучшие аниме года | Бака Anime Awards 2023",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 3498,
+    "cost": {
+      "usd": 0.34,
+      "credits": 1546,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/385581a2-2bce-4dd4-9474-1c402dabc1b0.json"
+  },
+  "603a4812-9514-435b-a148-49c43383e42f": {
+    "title": "Пожиратель душ — самый недооцененный сёнен? | Хеллоуинский спешал",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 5075,
+    "cost": {
+      "usd": 0.493,
+      "credits": 2244,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/603a4812-9514-435b-a148-49c43383e42f.json"
+  },
+  "ecb4c017-d8cc-45fc-99aa-b0bffd9e6ac7": {
+    "title": "Волейбол! | Главное спортивное аниме десятилетия?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2093,
+    "cost": {
+      "usd": 0.203,
+      "credits": 925,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/ecb4c017-d8cc-45fc-99aa-b0bffd9e6ac7.json"
+  },
+  "d6b9eaa8-7d0e-49e0-961a-5fc22690f67d": {
+    "title": "Монстр | Как появился главный аниме-триллер",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2665,
+    "cost": {
+      "usd": 0.259,
+      "credits": 1178,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/d6b9eaa8-7d0e-49e0-961a-5fc22690f67d.json"
+  },
+  "558f9ce6-ec46-4c43-a3f8-f163d8540e5c": {
+    "title": "ДжоДжо. Первый сезон | Как инновационная манга превратилась в переоцененное аниме",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2396,
+    "cost": {
+      "usd": 0.233,
+      "credits": 1060,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/558f9ce6-ec46-4c43-a3f8-f163d8540e5c.json"
+  },
+  "007e2598-5657-4539-939a-da44875ce762": {
+    "title": "Звездное дитя | Насколько реально показан мир японского шоу-бизнеса? ft. сэйю Женя Давидюк",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2658,
+    "cost": {
+      "usd": 0.258,
+      "credits": 1175,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/007e2598-5657-4539-939a-da44875ce762.json"
+  },
+  "6a9314ea-f48f-4f0f-8108-36f829e84a86": {
+    "title": "Эхо террора | Лучший сериал Ватанабэ или клон «Тетради смерти»?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2159,
+    "cost": {
+      "usd": 0.21,
+      "credits": 955,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/6a9314ea-f48f-4f0f-8108-36f829e84a86.json"
+  },
+  "b6533c48-4760-4826-b38a-8f8df019663c": {
+    "title": "Кобаяси и её горничная-дракон | Как показать взрослых людей и рассмешить дракона",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 1866,
+    "cost": {
+      "usd": 0.181,
+      "credits": 825,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/b6533c48-4760-4826-b38a-8f8df019663c.json"
+  },
+  "fd43662d-bb76-46ee-9f3d-98423f037a9e": {
+    "title": "Бек | Как музыка вдохновляет мангу и аниме",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 1831,
+    "cost": {
+      "usd": 0.178,
+      "credits": 810,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/fd43662d-bb76-46ee-9f3d-98423f037a9e.json"
+  },
+  "4aec558d-ee3d-4099-b229-370f8e6bcac4": {
+    "title": "Меланхолия Харухи Судзумии | Аниме опередившее время и как его смотреть?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2387,
+    "cost": {
+      "usd": 0.232,
+      "credits": 1055,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/4aec558d-ee3d-4099-b229-370f8e6bcac4.json"
+  },
+  "4f86d1b0-739a-485a-a21f-f3572b889ee7": {
+    "title": "Сага о Винланде | Торфинн — это Саске, и как сделать аниме про викингов?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2311,
+    "cost": {
+      "usd": 0.225,
+      "credits": 1022,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/4f86d1b0-739a-485a-a21f-f3572b889ee7.json"
+  },
+  "883f0592-b2d3-4fe7-992b-c2653143a395": {
+    "title": "Специальный выпуск | Аниме о музыке: «Нана», «Рок-тихоня», «Тусовщик Кунмин», «Твоя апрельская ложь»",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2508,
+    "cost": {
+      "usd": 0.244,
+      "credits": 1109,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/883f0592-b2d3-4fe7-992b-c2653143a395.json"
+  },
+  "b8589067-97fe-4189-8374-5c052f43b954": {
+    "title": "Токийские мстители | Почему ностальгия сильнее логики?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2357,
+    "cost": {
+      "usd": 0.229,
+      "credits": 1042,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/b8589067-97fe-4189-8374-5c052f43b954.json"
+  },
+  "67ae5cff-827f-46c3-8c9c-741ddbaf3294": {
+    "title": "Врата Штейна | Как разделить сериал на две части и не провалиться?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 1953,
+    "cost": {
+      "usd": 0.19,
+      "credits": 864,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/67ae5cff-827f-46c3-8c9c-741ddbaf3294.json"
+  },
+  "b564115f-ecc6-4b99-95e3-351d708543c4": {
+    "title": "Специальный выпуск | Как показывают аниме в России",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2269,
+    "cost": {
+      "usd": 0.221,
+      "credits": 1003,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/b564115f-ecc6-4b99-95e3-351d708543c4.json"
+  },
+  "c6531857-5251-4a60-bebb-7e326829f905": {
+    "title": "Созданный в Бездне | Как веб-манга стала успешным аниме?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2126,
+    "cost": {
+      "usd": 0.207,
+      "credits": 940,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/c6531857-5251-4a60-bebb-7e326829f905.json"
+  },
+  "1d517ea2-46dd-4dbf-a741-6a094b0c2f23": {
+    "title": "Вайолет Эвергарден | Как показать искренние чувства и преодолеть войну",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2842,
+    "cost": {
+      "usd": 0.276,
+      "credits": 1256,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/1d517ea2-46dd-4dbf-a741-6a094b0c2f23.json"
+  },
+  "f80a5689-41bc-4585-ab06-752054ef67fe": {
+    "title": "Призрак в Доспехах | Как киберпанк стал отражением реальности, и о чем на самом деле этот фильм",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2346,
+    "cost": {
+      "usd": 0.228,
+      "credits": 1037,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/f80a5689-41bc-4585-ab06-752054ef67fe.json"
+  },
+  "1fd3337c-50d5-4c3e-8571-4e952b6489ef": {
+    "title": "Человек-Бензопила | Как аниме отличается от манги и стоит ли ждать второй сезон",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2358,
+    "cost": {
+      "usd": 0.229,
+      "credits": 1043,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/1fd3337c-50d5-4c3e-8571-4e952b6489ef.json"
   }
 }
