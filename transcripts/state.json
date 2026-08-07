@@ -958,5 +958,329 @@
       "note": "по цене плана Creator, $0.35/час"
     },
     "transcriptFile": "/root/baki-transcripts/output/6bce6889-0a89-4acc-9e38-c8b0a43dc924.json"
+  },
+  "e91f80ba-eaa9-4069-b6aa-cb6c9f86e5e1": {
+    "title": "Агент времени | Что такое донхуа и как китайский сериал покорил мир?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2467,
+    "cost": {
+      "usd": 0.24,
+      "credits": 1091,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/e91f80ba-eaa9-4069-b6aa-cb6c9f86e5e1.json"
+  },
+  "14713e74-8de7-4470-943b-ac0371f5dc68": {
+    "title": "Атака титанов. Третий сезон | Почему Армин лучший и что находится в подвале?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2849,
+    "cost": {
+      "usd": 0.277,
+      "credits": 1260,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/14713e74-8de7-4470-943b-ac0371f5dc68.json"
+  },
+  "59399549-34ff-4dea-bbfa-eef5ded45cfa": {
+    "title": "Атака титанов. Второй сезон | Откуда в стене титаны и почему важно смотреть OVA?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 1664,
+    "cost": {
+      "usd": 0.162,
+      "credits": 736,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/59399549-34ff-4dea-bbfa-eef5ded45cfa.json"
+  },
+  "f6145113-9618-4b40-899b-6fc14d35a8ad": {
+    "title": "Самурай Чамплу | Когда путь важнее цели и кто лучше, Муген или Дзин?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2223,
+    "cost": {
+      "usd": 0.216,
+      "credits": 983,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/f6145113-9618-4b40-899b-6fc14d35a8ad.json"
+  },
+  "2d547113-a873-4ba7-b9fb-92d861425c4d": {
+    "title": "Атака титанов. Первый сезон | Как правильно рассказывать о войне и кто съел Эрена Йегера?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2229,
+    "cost": {
+      "usd": 0.217,
+      "credits": 985,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/2d547113-a873-4ba7-b9fb-92d861425c4d.json"
+  },
+  "75a2d03f-350b-435d-b3b3-6e95a73ccf3b": {
+    "title": "Индустрия манги в России | Зачем покупать мангу в книгах и правда ли сейчас новый манга-бум?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 1803,
+    "cost": {
+      "usd": 0.175,
+      "credits": 797,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/75a2d03f-350b-435d-b3b3-6e95a73ccf3b.json"
+  },
+  "0b80eb34-93f2-4eaf-9e9e-bbccc5e48394": {
+    "title": "Необычное такси | Что, если бы Тарантино снимал аниме и как сделать детектив про моржа?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2370,
+    "cost": {
+      "usd": 0.23,
+      "credits": 1048,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/0b80eb34-93f2-4eaf-9e9e-bbccc5e48394.json"
+  },
+  "a023b90f-02be-4d08-9562-d47bc5042fdb": {
+    "title": "Стальной алхимик. Финал | Как сделана идеальная концовка и зачем смотреть это аниме?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 3126,
+    "cost": {
+      "usd": 0.304,
+      "credits": 1382,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/a023b90f-02be-4d08-9562-d47bc5042fdb.json"
+  },
+  "a21b2af7-6835-4354-8169-e113d32bc495": {
+    "title": "Выдающиеся звери | Как работает дискриминация животных и сколько нужно львов, чтобы победить медведя?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2463,
+    "cost": {
+      "usd": 0.239,
+      "credits": 1089,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/a21b2af7-6835-4354-8169-e113d32bc495.json"
+  },
+  "31359b3d-1d9f-494c-8717-f686e4aefef8": {
+    "title": "Стальной алхимик. Хоэнхайм и Гордыня | Кем оказался последний гомункул и кто изменил Шрама?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2627,
+    "cost": {
+      "usd": 0.255,
+      "credits": 1162,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/31359b3d-1d9f-494c-8717-f686e4aefef8.json"
+  },
+  "5ad90156-17aa-45aa-be21-0f68baad654a": {
+    "title": "Хочу съесть твою поджелудочную | Почему это не банальная романтика и как осознать, что все мы смертны?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2312,
+    "cost": {
+      "usd": 0.225,
+      "credits": 1022,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/5ad90156-17aa-45aa-be21-0f68baad654a.json"
+  },
+  "3ab83958-9e33-4b40-91a5-93209ddc89ad": {
+    "title": "Стальной алхимик. Бриггс и Обжорство | Что случилось в Ишваре и кто такой Отец?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2198,
+    "cost": {
+      "usd": 0.214,
+      "credits": 972,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/3ab83958-9e33-4b40-91a5-93209ddc89ad.json"
+  },
+  "545a0371-bb9c-42ba-87b5-88817d6f1f8a": {
+    "title": "Ковбой Бибоп | Как сериал изобрел новый жанр и почему у него такой потрясающий саундтрек?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2632,
+    "cost": {
+      "usd": 0.256,
+      "credits": 1164,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/545a0371-bb9c-42ba-87b5-88817d6f1f8a.json"
+  },
+  "8041453f-038e-4353-9e04-7dec66074852": {
+    "title": "Стальной алхимик. Рашвелл и Похоть | Что такое истина и какой гомункул самый человечный?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2434,
+    "cost": {
+      "usd": 0.237,
+      "credits": 1076,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/8041453f-038e-4353-9e04-7dec66074852.json"
+  },
+  "722384f6-2451-4588-80fa-04dbafa2fa9a": {
+    "title": "Сонни бой | Как понять это аниме и зачем для этого вспоминать Евангелион?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2581,
+    "cost": {
+      "usd": 0.251,
+      "credits": 1141,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/722384f6-2451-4588-80fa-04dbafa2fa9a.json"
+  },
+  "173e3830-d0b5-428d-8697-8b0ec3af5923": {
+    "title": "Стальной алхимик. Введение | Насколько безжалостно это аниме и алхимия — это магия или наука?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2075,
+    "cost": {
+      "usd": 0.202,
+      "credits": 918,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/173e3830-d0b5-428d-8697-8b0ec3af5923.json"
+  },
+  "5070a3b9-bd28-4618-99e1-db12acc96755": {
+    "title": "Паприка |  Как снимает Сатоси Кон и почему это так нравится Нолану?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 1943,
+    "cost": {
+      "usd": 0.189,
+      "credits": 859,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/5070a3b9-bd28-4618-99e1-db12acc96755.json"
+  },
+  "6aa46237-e5cc-449c-a749-6c4e1b1c3c19": {
+    "title": "Наруто. Преследование Саске. Часть 2 | Кто должен был умереть в последней арке и что будет в следующем сезоне?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 1719,
+    "cost": {
+      "usd": 0.167,
+      "credits": 760,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/6aa46237-e5cc-449c-a749-6c4e1b1c3c19.json"
+  },
+  "1527487c-ccfa-4013-aa47-c55b72f5e09b": {
+    "title": "Форма голоса | Чем фильм хуже оригинальной манги и правда ли буллинг — важная тема?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2224,
+    "cost": {
+      "usd": 0.216,
+      "credits": 983,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/1527487c-ccfa-4013-aa47-c55b72f5e09b.json"
+  },
+  "f4814a9d-7173-42af-886c-5ad771a4276a": {
+    "title": "Наруто. Преследование Саске. Часть 1 | Как взрослеют персонажи и почему нам это нравится?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2060,
+    "cost": {
+      "usd": 0.2,
+      "credits": 911,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/f4814a9d-7173-42af-886c-5ad771a4276a.json"
+  },
+  "7853d887-ffab-448c-833f-521715665b58": {
+    "title": "Тайная жизнь пингвинов | Лучший ли это фильм для детей и должна ли нас смущать грудь?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 1861,
+    "cost": {
+      "usd": 0.181,
+      "credits": 823,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/7853d887-ffab-448c-833f-521715665b58.json"
+  },
+  "0f2cf678-a295-46f9-ae68-17cd68705862": {
+    "title": "Наруто. Возвращение Итачи. Поиски Цунаде | Почему Итачи — bad boy, а Кисаме — такая акула?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2012,
+    "cost": {
+      "usd": 0.196,
+      "credits": 890,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/0f2cf678-a295-46f9-ae68-17cd68705862.json"
+  },
+  "8cffdfe6-7120-4936-be54-09bb7566a6c2": {
+    "title": "Евангелион | Почему это культовое аниме и какой финал — настоящий?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2522,
+    "cost": {
+      "usd": 0.245,
+      "credits": 1115,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/8cffdfe6-7120-4936-be54-09bb7566a6c2.json"
+  },
+  "a4dbcffa-6c31-43de-9835-4b008f79a5dd": {
+    "title": "Наруто. Экзамен на Чуунина. Часть 2 | Жаль ли нам Третьего Хокаге и кто был прав, Наруто или Неджи?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2426,
+    "cost": {
+      "usd": 0.236,
+      "credits": 1073,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/a4dbcffa-6c31-43de-9835-4b008f79a5dd.json"
+  },
+  "a9c40228-0a06-4e6f-8be4-9fbcd58c6d26": {
+    "title": "Торадора | Разбираем всех главных персонажей и пытаемся решить, лучшее ли это романтическое аниме?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2540,
+    "cost": {
+      "usd": 0.247,
+      "credits": 1123,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/a9c40228-0a06-4e6f-8be4-9fbcd58c6d26.json"
+  },
+  "72fd7b71-e68a-4a81-bde3-2c4d4270a76e": {
+    "title": "Наруто. Экзамен на Чуунина. Часть 1 | Темари — лучшая героиня аниме и что не так с Гаарой?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2198,
+    "cost": {
+      "usd": 0.214,
+      "credits": 972,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/72fd7b71-e68a-4a81-bde3-2c4d4270a76e.json"
+  },
+  "3f96e3a7-a26f-4523-882c-56206baac0ae": {
+    "title": "Наруто. Введение. Страна Волн | За что мы любим Забузу и не любим Сакуру?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 1808,
+    "cost": {
+      "usd": 0.176,
+      "credits": 799,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/3f96e3a7-a26f-4523-882c-56206baac0ae.json"
   }
 }
