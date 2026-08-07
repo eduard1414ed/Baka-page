@@ -82,10 +82,13 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 		<button class="tr-follow" type="button" aria-pressed="false" hidden>Следить за плеером</button>
 	</div>
 
-	{/* Появляется, когда на страницу пришли по ссылке «обсуждали в выпуске на 12:04». */}
+	{/* Появляется, когда на страницу пришли по ссылке «обсуждали в выпуске на 12:04».
+	    Само название тайтла при этом вписывается в поле поиска выше — чтобы
+	    сразу было видно, что стрелки живые и есть что листать. Здесь его
+	    поэтому не повторяем, а объясняем, чем этот режим отличается от поиска. */}
 	<p class="tr-hits" hidden>
-		<span>Упоминания: <b class="tr-hits-name"></b></span>
-		<button class="tr-hits-off" type="button">✕ сбросить</button>
+		<span>Показаны все упоминания тайтла — листайте стрелками ↑↓</span>
+		<button class="tr-hits-off" type="button">✕ обычный поиск</button>
 	</p>
 
 	<div class="tr-body">
@@ -164,9 +167,8 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 		const expand = section.querySelector<HTMLButtonElement>('.tr-expand');
 		const follow = section.querySelector<HTMLButtonElement>('.tr-follow');
 		const hits = section.querySelector<HTMLElement>('.tr-hits');
-		const hitsName = section.querySelector<HTMLElement>('.tr-hits-name');
 		const hitsOff = section.querySelector<HTMLButtonElement>('.tr-hits-off');
-		if (!input || !counter || !body || !expand || !follow || !hits || !hitsName || !hitsOff) return;
+		if (!input || !counter || !body || !expand || !follow || !hits || !hitsOff) return;
 
 		const paragraphs = Array.from(section.querySelectorAll<HTMLElement>('.tr-text'));
 		// Текст абзаца при подсветке не меняется (меняется только обёртка <mark>),
@@ -307,7 +309,13 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 			expand.textContent = opened ? 'Свернуть транскрипт' : 'Развернуть транскрипт целиком';
 		});
 
-		hitsOff.addEventListener('click', () => clearHighlights());
+		// Возврат к обычному поиску. Поле чистим здесь, а не в clearHighlights():
+		// туда мы заходим и из самого поиска на каждое нажатие клавиши, там
+		// стирать набранное нельзя.
+		hitsOff.addEventListener('click', () => {
+			input.value = '';
+			clearHighlights();
+		});
 
 		// Режим упоминаний тайтла: пришли со страницы /anime/<slug> по ссылке
 		// вида /posts/ep-102/#anime=naruto&t=716 — подсвечиваем ВСЕ упоминания
@@ -318,7 +326,6 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 		// места пропустит, а разметка по справочнику — нет (тз/05, шаг 5).
 		function showMentions(animeId: string, seconds: number) {
 			clearHighlights();
-			input.value = '';
 
 			const found = Array.from(section.querySelectorAll<HTMLElement>('.tr-anime')).filter(
 				(el) => el.dataset.anime === animeId,
@@ -327,8 +334,20 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 
 			matches = found;
 			found.forEach((el) => el.classList.add('is-hit'));
-			hitsName!.textContent = found[0].textContent ?? '';
 			hits!.hidden = false;
+
+			// Название — в поле поиска: иначе поле пустое, стрелки активны, и по
+			// экрану не понять, что листать есть что.
+			//
+			// Берём название ТАК, КАК ОНО НАПИСАНО В ТРАНСКРИПТЕ, а не из
+			// справочника: в ep-134 в справочнике «Кэйон!», а в тексте звучит
+			// «K-On!» — увидев в поле «Кэйон!», вы решили бы, что поиск врёт.
+			//
+			// Значение присваиваем напрямую: событие input от этого не
+			// срабатывает, поэтому обычный текстовый поиск не запускается
+			// и подсветку упоминаний не сбивает. А стоит начать печатать —
+			// поиск перехватит управление, это и нужно.
+			input!.value = found[0].textContent ?? '';
 			steps.forEach((step) => (step.disabled = false));
 
 			// Сначала подводим к транскрипту саму страницу, потом внутри блока —
