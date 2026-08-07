@@ -89,13 +89,25 @@ def is_excluded(title):
 		return True
 	return any(part in low for part in EXCLUDE_TITLE_PARTS)
 
-# Граница между мужским и женским голосом, Гц. Мужской обычно 85–180,
-# женский 165–255 — диапазоны почти не пересекаются, что и делает способ
-# надёжным при двух разнополых ведущих (см. Шаг 4 в ТЗ).
-# Нужна не для того, чтобы определять пол, а чтобы поймать случай, когда
-# в «ведущие» по объёму речи пролез гость: если оба главных голоса оказались
-# по одну сторону границы, пара подозрительная.
-VOICE_SPLIT_HZ = 165
+# Эталонная высота голоса ведущих, Гц. Не выдумана — намерена на живых выпусках
+# (Эд: 138, 136, 134, 132, 130; Ксюша: 193, 193, 190, 186). Разброс у каждого
+# около 8 Гц, диапазоны не пересекаются и близко.
+HOST_MALE_HZ = 134
+HOST_FEMALE_HZ = 190
+
+# Насколько голос может отклониться от эталона и всё ещё считаться ведущим.
+# 12 Гц подобрано по этим же замерам: покрывает весь наблюдавшийся разброс
+# и при этом отсекает гостей (Терлецкий 115 Гц — в 19 Гц от Эда, не попадает).
+# Если однажды ведущего перестанет узнавать (простуда, другой микрофон) —
+# крутить эту цифру, а не эталоны.
+HOST_PITCH_TOLERANCE_HZ = 12
+
+# Когда на роль ведущего по голосу подходит несколько человек, имя помечается
+# знаком «?» как требующее проверки. Но если соперник говорил совсем мало,
+# сомневаться не в чем: в «Порко Россо» гость с 12 секундами речи попадал
+# в диапазон Эда и зря заставлял перепроверять весь выпуск. Считаем соперником
+# только того, кто наговорил хотя бы четверть от победителя.
+HOST_RIVAL_SHARE = 0.25
 
 
 def load_env(path):
@@ -322,81 +334,104 @@ def assign_speaker_names(replicas, wav_samples, sr):
 	# когда будете вписывать имена руками.
 	pitches = {sid: speaker_pitch(wav_samples, sr, by_speaker[sid]) for sid in ranked}
 
+	by_slug_pitch = {slug[sid]: pitches[sid] for sid in ranked}
+	by_slug_secs = {slug[sid]: durations[sid] for sid in ranked}
+	names, info, notes = name_speakers(by_slug_pitch, by_slug_secs)
+	return slug, names, info, notes
+
+
+def name_speakers(pitches, durations):
+	"""Разложить имена по голосам, зная только высоту и время речи каждого.
+
+	Вынесено отдельно от аудио специально: те же данные лежат в готовом
+	транскрипте (блок speakerInfo), поэтому пересчитать имена можно бесплатно,
+	не распознавая выпуск заново (--recheck-speakers).
+
+	На вход: {speaker_0: высота Гц или None} и {speaker_0: секунд речи}.
+	"""
+	ranked = sorted(durations, key=lambda sid: durations[sid], reverse=True)
 	names = {}
 	notes = []
-	main_two = ranked[:2]
+	meta = {}  # sid -> (role, detectedBy, needsName)
 
-	if len(main_two) == 2 and all(pitches[sid] is not None for sid in main_two):
-		lower = min(main_two, key=lambda sid: pitches[sid])
-		higher = max(main_two, key=lambda sid: pitches[sid])
-		names[slug[lower]] = HOST_MALE
-		names[slug[higher]] = HOST_FEMALE
-		hosts_method = "pitch"
+	measured = [sid for sid in ranked if pitches.get(sid) is not None]
 
-		# Ведущими считаются два самых разговорчивых голоса. В выпуске с гостями
-		# это может подвести: если гость-мужчина наговорил больше Ксюши, в пару
-		# попадут два мужских голоса и гостю достанется её имя. Ловим это по
-		# тому, что оба голоса оказались по одну сторону границы.
-		split_ok = pitches[lower] < VOICE_SPLIT_HZ <= pitches[higher]
-		hosts_reliable = split_ok
-		notes.append(
-			f"Определено по высоте голоса: {slug[lower]} -> {HOST_MALE} "
-			f"({pitches[lower]:.0f} Гц), {slug[higher]} -> {HOST_FEMALE} "
-			f"({pitches[higher]:.0f} Гц)"
-		)
-		if not split_ok:
-			names[slug[lower]] = f"{HOST_MALE}?"
-			names[slug[higher]] = f"{HOST_FEMALE}?"
-			hosts_method = "pitch-ambiguous"
-			notes.append(
-				f"ВНИМАНИЕ: оба главных голоса лежат по одну сторону границы "
-				f"{VOICE_SPLIT_HZ} Гц, то есть похожи по полу. Скорее всего, в пару "
-				"ведущих попал гость, который много говорил. ИМЕНА НУЖНО ПРОВЕРИТЬ "
-				"РУКАМИ (отмечены знаком ?)."
-			)
-	elif len(main_two) == 2:
-		# Запасной способ — по объёму речи, если измерение высоты не удалось.
-		names[slug[main_two[0]]] = f"{HOST_MALE}?"
-		names[slug[main_two[1]]] = f"{HOST_FEMALE}?"
-		hosts_method = "volume"
-		hosts_reliable = False
-		notes.append(
-			"Не удалось надёжно измерить высоту голоса — имена расставлены "
-			"по объёму речи, ЭТО НУЖНО ПРОВЕРИТЬ РУКАМИ (отмечено знаком ?)."
-		)
-	elif len(main_two) == 1:
-		names[slug[main_two[0]]] = f"{HOST_MALE}/{HOST_FEMALE}?"
-		hosts_method = "single"
-		hosts_reliable = False
-		notes.append("В выпуске обнаружен только один голос — определить пару не удалось.")
+	if measured:
+		# Ведущего ищем по совпадению с ЕГО эталонной высотой голоса, а не по тому,
+		# кто больше говорил. Раньше было наоборот, и на интервью это разваливалось:
+		# гость наговаривал 39 минут из 47, попадал в пару ведущих и забирал имя,
+		# а Ксюша с её сорока секундами становилась «Гостем». Проверено на живых
+		# выпусках с Черменом и Терлецким — там были перепутаны все голоса.
+		# Разговорчивость осталась, но только как тай-брейк между теми, кто
+		# и так подошёл по голосу.
+		taken = set()
+		for ref_hz, host_name in ((HOST_MALE_HZ, HOST_MALE), (HOST_FEMALE_HZ, HOST_FEMALE)):
+			candidates = [
+				sid for sid in measured
+				if sid not in taken and abs(pitches[sid] - ref_hz) <= HOST_PITCH_TOLERANCE_HZ
+			]
+			if not candidates:
+				notes.append(
+					f"{host_name} в этом выпуске не найден(а): нет голоса с высотой "
+					f"около {ref_hz} Гц. Так и должно быть, если {host_name} не участвовал(а)."
+				)
+				continue
+			winner = max(candidates, key=lambda sid: durations[sid])
+			taken.add(winner)
+			# Сомневаемся только если соперник говорил сопоставимо с победителем.
+			rivals = [
+				s for s in candidates
+				if s != winner and durations[s] >= durations[winner] * HOST_RIVAL_SHARE
+			]
+			names[winner] = f"{host_name}?" if rivals else host_name
+			meta[winner] = ("host", "pitch", bool(rivals))
+			if rivals:
+				others = ", ".join(f"{s} ({pitches[s]:.0f} Гц)" for s in rivals)
+				notes.append(
+					f"{host_name} -> {winner} ({pitches[winner]:.0f} Гц) — из подходящих "
+					f"по голосу говорил(а) больше всех. Но рядом по высоте есть и другие, "
+					f"кто говорил заметно: {others}. ПРОВЕРЬТЕ (имя помечено знаком ?)."
+				)
+			else:
+				notes.append(f"{host_name} -> {winner} ({pitches[winner]:.0f} Гц)")
 	else:
-		hosts_method = "none"
-		hosts_reliable = False
+		# Высоту не удалось измерить ни у кого — только тогда откатываемся
+		# к старому способу «два самых разговорчивых», с пометкой «проверить».
+		for sid, host_name in zip(ranked[:2], (HOST_MALE, HOST_FEMALE)):
+			names[sid] = f"{host_name}?"
+			meta[sid] = ("host", "volume", True)
+		if ranked:
+			notes.append(
+				"Не удалось измерить высоту голоса ни у одного спикера — имена расставлены "
+				"по объёму речи, ЭТО НУЖНО ПРОВЕРИТЬ РУКАМИ (отмечено знаком ?)."
+			)
 
-	for extra_idx, sid in enumerate(ranked[2:], start=1):
-		names[slug[sid]] = "Гость" if extra_idx == 1 else f"Гость {extra_idx}"
+	guests = [sid for sid in ranked if sid not in meta]
+	for n, sid in enumerate(guests, start=1):
+		names[sid] = "Гость" if n == 1 else f"Гость {n}"
+		meta[sid] = ("guest", "order", True)
 
-	if len(ranked) > 2:
+	if guests:
 		notes.append(
-			f"Гостей в выпуске: {len(ranked) - 2}. Имена им скрипт не придумывает — "
+			f"Гостей в выпуске: {len(guests)}. Имена им скрипт не придумывает — "
 			"впишите сами, поправив карту speakers в файле транскрипта."
 		)
 
 	info = {}
-	for i, sid in enumerate(ranked):
-		is_host = i < 2
-		info[slug[sid]] = {
-			"role": "host" if is_host else "guest",
+	for sid in ranked:
+		role, detected_by, needs_name = meta[sid]
+		info[sid] = {
+			"role": role,
 			# Чем определили: высотой голоса, объёмом речи или просто порядком.
-			"detectedBy": hosts_method if is_host else "order",
-			"pitchHz": round(pitches[sid]) if pitches[sid] is not None else None,
+			"detectedBy": detected_by,
+			"pitchHz": round(pitches[sid]) if pitches.get(sid) is not None else None,
 			"speechSeconds": round(durations[sid], 1),
 			# Ради этого флага всё и затевалось: по нему интерфейс на сайте
 			# поймёт, у кого имя ещё нужно вписать или проверить руками.
-			"needsName": (not is_host) or not hosts_reliable,
+			"needsName": needs_name,
 		}
 
-	return slug, names, info, notes
+	return names, info, notes
 
 
 # --- Исправление искажённых названий аниме -------------------------------
@@ -725,6 +760,61 @@ def run_archive(
 			print(f"  {episode['title']} — {exc}")
 
 
+def recheck_speakers():
+	"""Пересчитать имена ведущих по уже сохранённым транскриптам. Бесплатно.
+
+	Высота голоса и время речи уже лежат в блоке speakerInfo, а больше для
+	раскладки имён ничего не нужно — значит подкрутить эталоны (HOST_MALE_HZ,
+	HOST_FEMALE_HZ, HOST_PITCH_TOLERANCE_HZ) и переразложить имена можно
+	когда угодно, не платя за распознавание второй раз.
+
+	Имена, вписанные руками, при этом затрутся — на то и команда.
+	"""
+	files = [
+		f for f in sorted(OUTPUT_DIR.glob("*.json"))
+		if not f.name.endswith(".corrections.json")
+	] if OUTPUT_DIR.exists() else []
+	if not files:
+		print("В папке результатов нет транскриптов.", file=sys.stderr)
+		sys.exit(1)
+
+	print(f"Эталоны: {HOST_MALE} {HOST_MALE_HZ} Гц, {HOST_FEMALE} {HOST_FEMALE_HZ} Гц, "
+	      f"допуск ±{HOST_PITCH_TOLERANCE_HZ} Гц")
+	print(f"Транскриптов: {len(files)}")
+	print()
+
+	changed = 0
+	for f in files:
+		data = json.loads(f.read_text())
+		old_info = data.get("speakerInfo")
+		if not old_info:
+			print(f"  {f.name}: нет блока speakerInfo, пропускаю (старый формат)")
+			continue
+
+		pitches = {sid: v.get("pitchHz") for sid, v in old_info.items()}
+		durations = {sid: v.get("speechSeconds", 0.0) for sid, v in old_info.items()}
+		names, info, notes = name_speakers(pitches, durations)
+
+		was = data.get("speakers", {})
+		data["speakers"] = names
+		data["speakerInfo"] = info
+		f.write_text(json.dumps(data, ensure_ascii=False, indent=2))
+
+		title = data.get("episodeTitle", f.stem)[:45]
+		if was != names:
+			changed += 1
+			print(f"  {title:<45} ИЗМЕНЕНО")
+			for sid in sorted(names):
+				if was.get(sid) != names[sid]:
+					print(f"      {sid}: {was.get(sid, '—')} -> {names[sid]} "
+					      f"({info[sid]['pitchHz']} Гц, {info[sid]['speechSeconds']/60:.1f} мин)")
+		else:
+			print(f"  {title:<45} без изменений")
+
+	print()
+	print(f"Изменено выпусков: {changed} из {len(files)}")
+
+
 def recheck_names(min_ratio=0.72):
 	"""Заново сверить названия аниме по уже сохранённым транскриптам.
 
@@ -882,6 +972,11 @@ def main():
 		help="заново сверить названия аниме по готовым транскриптам (бесплатно)",
 	)
 	parser.add_argument(
+		"--recheck-speakers",
+		action="store_true",
+		help="заново разложить имена ведущих по готовым транскриптам (бесплатно)",
+	)
+	parser.add_argument(
 		"--min-similarity",
 		type=float,
 		default=0.72,
@@ -910,6 +1005,10 @@ def main():
 
 	if args.recheck_names:
 		recheck_names(min_ratio=args.min_similarity)
+		return
+
+	if args.recheck_speakers:
+		recheck_speakers()
 		return
 
 	episodes = fetch_feed_items()
