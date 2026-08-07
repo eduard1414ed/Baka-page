@@ -22,3 +22,12 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Python
+__pycache__/
+*.pyc
+
+# рабочие файлы транскрипции (аудио, результаты, состояние) — живут на Hetzner
+scripts/transcribe/tmp/
+scripts/transcribe/output/
+scripts/transcribe/state.json

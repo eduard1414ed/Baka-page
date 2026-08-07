@@ -1,13 +1,21 @@
 #!/usr/bin/env python3
-"""Транскрипция выпусков подкаста через ElevenLabs Scribe. Работает на Hetzner
-(см. тз/05-транскрипты.md) — качает по одному выпуску из RSS, отправляет на
-распознавание, сразу удаляет аудио, определяет ведущих по высоте голоса,
-предлагает исправления искажённых названий аниме (не применяет их сама).
+"""Транскрипция выпусков подкаста. Работает на Hetzner (см. тз/05-транскрипты.md) —
+качает по одному выпуску из RSS, отправляет на распознавание, сразу удаляет аудио,
+определяет ведущих по высоте голоса, предлагает исправления искажённых названий
+аниме (не применяет их сама).
+
+Сам сервис распознавания сюда не зашит: он подключается модулем из папки
+providers/ (форма модуля описана в providers/__init__.py). Всё, что делает этот
+файл, от выбранного сервиса не зависит.
 
 Использование:
-  python3 pipeline.py --list                 показать выпуски и статус обработки
+  python3 pipeline.py --list                  показать выпуски и статус обработки
   python3 pipeline.py --guid <guid>           обработать один выпуск
   python3 pipeline.py --guid <guid> --dry-run посчитать стоимость, ничего не отправлять
+  python3 pipeline.py --estimate-archive      смета на весь архив, ничего не отправлять
+  python3 pipeline.py --guid <guid> --provider soniox --out-suffix soniox
+                                              прогнать другим сервисом, не затирая
+                                              уже готовый транскрипт
 """
 
 import argparse
@@ -23,10 +31,10 @@ from urllib.request import Request, urlopen
 import numpy as np
 import requests
 
+import providers
+
 FEED_URL = "https://cloud.mave.digital/33503"
 ANIME_INDEX_URL = "https://baka-page.eduard1414ed.workers.dev/anime-index.json"
-STT_URL = "https://api.elevenlabs.io/v1/speech-to-text"
-CREDITS_PER_MINUTE = 330
 
 WORK_DIR = Path(__file__).resolve().parent
 STATE_FILE = WORK_DIR / "state.json"
@@ -103,36 +111,18 @@ def download_audio(url, dest):
 				f.write(chunk)
 
 
-def call_elevenlabs_stt(audio_path, api_key):
-	with open(audio_path, "rb") as f:
-		files = {"file": (audio_path.name, f, "audio/mpeg")}
-		data = {
-			"model_id": "scribe_v2",
-			"diarize": "true",
-			"timestamps_granularity": "word",
-			"language_code": "ru",
-		}
-		response = requests.post(
-			STT_URL,
-			headers={"xi-api-key": api_key},
-			files=files,
-			data=data,
-			timeout=1800,
-		)
-	if response.status_code != 200:
-		raise RuntimeError(f"ElevenLabs ответил {response.status_code}: {response.text[:500]}")
-	return response.json()
-
-
 # --- Сборка реплик из слов ---------------------------------------------
 
 def build_replicas(words):
+	"""Склеивает подряд идущие слова одного спикера в реплики.
+
+	На вход идёт нормализованный список от провайдера (см. providers/__init__.py),
+	поэтому эта функция одинакова для любого сервиса распознавания.
+	"""
 	replicas = []
 	current = None
 	for word in words:
-		if word.get("type") != "word":
-			continue
-		speaker = word.get("speaker_id", "speaker_0")
+		speaker = word["speaker"]
 		if current is None or current["speaker"] != speaker:
 			if current is not None:
 				replicas.append(current)
@@ -301,13 +291,25 @@ def find_anime_corrections(replicas, anime_index, min_ratio=0.72, max_ratio=0.97
 
 # --- Основной сценарий -----------------------------------------------------
 
-def process_episode(episode, api_key, dry_run=False):
-	minutes = episode["duration_sec"] / 60
-	estimated_credits = int(minutes * CREDITS_PER_MINUTE) + 1
+def format_estimate(est):
+	parts = []
+	if est.get("usd") is not None:
+		parts.append(f"${est['usd']}")
+	if est.get("credits") is not None:
+		parts.append(f"{est['credits']} кредитов")
+	line = ", ".join(parts) if parts else "цена неизвестна"
+	if est.get("note"):
+		line += f" ({est['note']})"
+	return line
+
+
+def process_episode(episode, provider, api_key, dry_run=False, out_suffix=None):
+	est = provider.estimate(episode["duration_sec"])
 
 	print(f"Выпуск: {episode['title']}")
 	print(f"Длительность: {episode['duration_sec']//60}:{episode['duration_sec']%60:02d}")
-	print(f"Ориентировочно кредитов: {estimated_credits}")
+	print(f"Сервис: {provider.label}")
+	print(f"Ориентировочная стоимость: {format_estimate(est)}")
 
 	if dry_run:
 		return None
@@ -322,14 +324,14 @@ def process_episode(episode, api_key, dry_run=False):
 		print("Скачиваю аудио...")
 		download_audio(episode["audio_url"], mp3_path)
 
-		print("Отправляю на распознавание в ElevenLabs (может занять несколько минут)...")
-		result = call_elevenlabs_stt(mp3_path, api_key)
+		print(f"Отправляю на распознавание в {provider.label} (может занять несколько минут)...")
+		result = provider.transcribe(mp3_path, api_key)
 
 		print("Готовлю копию для измерения высоты голоса...")
 		convert_to_wav16k(mp3_path, wav_path)
 		wav_samples, sr = load_wav_mono16(wav_path)
 
-		replicas = build_replicas(result.get("words", []))
+		replicas = build_replicas(result["words"])
 		speaker_map, notes, durations, pitches = assign_speaker_names(replicas, wav_samples, sr)
 
 		print("Ищу известные тайтлы для проверки названий...")
@@ -338,6 +340,7 @@ def process_episode(episode, api_key, dry_run=False):
 
 		transcript = {
 			"source": "recognized",
+			"provider": provider.id,
 			"episodeGuid": episode["guid"],
 			"episodeTitle": episode["title"],
 			"speakers": speaker_map,
@@ -352,20 +355,25 @@ def process_episode(episode, api_key, dry_run=False):
 			],
 		}
 
-		out_path = OUTPUT_DIR / f"{episode['guid']}.json"
+		# Длительность по данным сервиса точнее, чем itunes:duration из RSS
+		# (тот пишется вручную и иногда врёт) — считаем стоимость по ней.
+		actual_sec = result.get("audio_duration_sec") or episode["duration_sec"]
+		actual = provider.estimate(actual_sec)
+
+		stem = episode["guid"] if not out_suffix else f"{episode['guid']}.{out_suffix}"
+		out_path = OUTPUT_DIR / f"{stem}.json"
 		out_path.write_text(json.dumps(transcript, ensure_ascii=False, indent=2))
 
-		corrections_path = OUTPUT_DIR / f"{episode['guid']}.corrections.json"
+		corrections_path = OUTPUT_DIR / f"{stem}.corrections.json"
 		corrections_path.write_text(json.dumps(corrections, ensure_ascii=False, indent=2))
-
-		actual_minutes = result.get("audio_duration_secs", episode["duration_sec"]) / 60
-		actual_credits = int(actual_minutes * CREDITS_PER_MINUTE) + 1
 
 		state = load_state()
 		state[episode["guid"]] = {
 			"title": episode["title"],
 			"status": "done",
-			"creditsUsed": actual_credits,
+			"provider": provider.id,
+			"audioSeconds": round(actual_sec),
+			"cost": actual,
 			"transcriptFile": str(out_path),
 		}
 		save_state(state)
@@ -375,7 +383,8 @@ def process_episode(episode, api_key, dry_run=False):
 		print(f"Спикеры: {speaker_map}")
 		for n in notes:
 			print(f"  {n}")
-		print(f"Потрачено кредитов: {actual_credits}")
+		print(f"Фактическая длительность по данным сервиса: {actual_sec/60:.1f} мин")
+		print(f"Стоимость: {format_estimate(actual)}")
 		print(f"Найдено предложений исправить название: {len(corrections)}")
 		print(f"Файл транскрипта: {out_path}")
 		print(f"Файл с предложениями по названиям: {corrections_path}")
@@ -387,15 +396,57 @@ def process_episode(episode, api_key, dry_run=False):
 				p.unlink()
 
 
+def estimate_archive(episodes, provider, state):
+	"""Смета на весь архив. В сеть не ходит, ничего не отправляет."""
+	pending = [e for e in episodes if state.get(e["guid"], {}).get("status") != "done"]
+	total_sec = sum(e["duration_sec"] for e in episodes)
+	pending_sec = sum(e["duration_sec"] for e in pending)
+
+	print(f"Сервис: {provider.label}")
+	print(f"Всего выпусков в RSS: {len(episodes)}, суммарно {total_sec/3600:.1f} ч")
+	print(f"Уже обработано: {len(episodes) - len(pending)}")
+	print(f"Осталось обработать: {len(pending)}, суммарно {pending_sec/3600:.1f} ч")
+	print()
+	print(f"Стоимость по прайсу, весь архив: {format_estimate(provider.estimate(total_sec))}")
+	print(f"Стоимость по прайсу, остаток:    {format_estimate(provider.estimate(pending_sec))}")
+
+	# У сервиса может быть месячная квота, уже оплаченная подпиской, — тогда
+	# «стоимость по прайсу» выше не равна тому, что придётся доплатить.
+	if hasattr(provider, "estimate_out_of_pocket"):
+		pocket = provider.estimate_out_of_pocket(pending_sec)
+		print()
+		print("Сколько реально доплачивать (остаток, за один платёжный период):")
+		print(f"  внутри месячной квоты: {pocket['included_hours']:.1f} ч — уже оплачено подпиской")
+		print(f"  сверх квоты:           {pocket['over_hours']:.1f} ч = {pocket['credits']} кредитов")
+		print(f"  ДОПЛАТА:               ${pocket['usd']}")
+		if pocket.get("warning"):
+			print()
+			print(f"  {pocket['warning']}")
+
+
 def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--guid", help="guid выпуска из RSS")
 	parser.add_argument("--list", action="store_true", help="показать список выпусков и статус")
-	parser.add_argument("--dry-run", action="store_true", help="только посчитать кредиты")
+	parser.add_argument("--dry-run", action="store_true", help="только посчитать стоимость")
+	parser.add_argument(
+		"--estimate-archive", action="store_true", help="смета на весь архив, без отправки"
+	)
+	parser.add_argument(
+		"--provider",
+		default=providers.DEFAULT,
+		choices=providers.names(),
+		help=f"сервис распознавания (по умолчанию {providers.DEFAULT})",
+	)
+	parser.add_argument(
+		"--out-suffix",
+		help="приписка к имени файла результата — чтобы сравнить два сервиса, не затирая",
+	)
 	args = parser.parse_args()
 
+	provider = providers.get(args.provider)
 	env = load_env(WORK_DIR / ".env")
-	api_key = env.get("ELEVENLABS_API_KEY")
+	api_key = env.get(provider.env_key)
 
 	episodes = fetch_feed_items()
 	state = load_state()
@@ -406,8 +457,12 @@ def main():
 			print(f"{ep['duration_sec']//60:>4}:{ep['duration_sec']%60:02d}  [{status:12}]  {ep['title']}  ({ep['guid']})")
 		return
 
+	if args.estimate_archive:
+		estimate_archive(episodes, provider, state)
+		return
+
 	if not args.guid:
-		print("Укажите --guid или --list", file=sys.stderr)
+		print("Укажите --guid, --list или --estimate-archive", file=sys.stderr)
 		sys.exit(1)
 
 	episode = next((e for e in episodes if e["guid"] == args.guid), None)
@@ -415,15 +470,23 @@ def main():
 		print(f"Выпуск с guid {args.guid} не найден в RSS", file=sys.stderr)
 		sys.exit(1)
 
-	if episode["guid"] in state and state[episode["guid"]]["status"] == "done" and not args.dry_run:
+	# Повторно за уже сделанное не платим. Но если явно просят другой сервис
+	# или другое имя файла — это осознанное сравнение, пропускать не надо.
+	already = state.get(episode["guid"], {})
+	repeat_on_purpose = args.out_suffix or (
+		already.get("provider") and already["provider"] != provider.id
+	)
+	if already.get("status") == "done" and not args.dry_run and not repeat_on_purpose:
 		print("Этот выпуск уже обработан, пропускаю (см. state.json).")
 		return
 
 	if not api_key and not args.dry_run:
-		print("Не найден ELEVENLABS_API_KEY в .env", file=sys.stderr)
+		print(f"Не найден {provider.env_key} в .env", file=sys.stderr)
 		sys.exit(1)
 
-	process_episode(episode, api_key, dry_run=args.dry_run)
+	process_episode(
+		episode, provider, api_key, dry_run=args.dry_run, out_suffix=args.out_suffix
+	)
 
 
 if __name__ == "__main__":
