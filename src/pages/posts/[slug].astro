@@ -11,6 +11,7 @@ import AnimeBadge from '../../components/AnimeBadge.astro';
 import EpisodePlayer from '../../components/EpisodePlayer.astro';
 import Transcript from '../../components/Transcript.astro';
 import { hasUsableTimecodes } from '../../lib/transcript.mjs';
+import { resolveEpisodeCover } from '../../lib/episodeCover.mjs';
 import { isPublished } from '../../lib/publishing.mjs';
 
 export async function getStaticPaths() {
@@ -43,6 +44,12 @@ const { title, date, category, cover, youtube, video, buttons, anime } = post.da
 const transcriptId = post.data.transcript ?? post.data.audioGuid;
 const transcript = transcriptId ? await getEntry('transcripts', transcriptId) : undefined;
 const showTranscript = transcript && hasUsableTimecodes(transcript.data);
+
+// Обложка выпуска для плеера. Хостинг подкаста отдаёт квадрат 2000×2000
+// весом около 1 МБ на картинку 72×72 — берём сжатую копию из public/episodes/
+// (см. src/lib/episodeCover.mjs). Если её ещё не скачали, вернётся исходная
+// ссылка: тяжело, но не битая картинка.
+const playerCover = episode?.imageUrl ? resolveEpisodeCover(episode.imageUrl).src : null;
 const categoryLabel = categories.find((c) => c.id === category)?.label ?? category;
 const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -96,7 +103,7 @@ const animeEntries = anime ? (await Promise.all(anime.map((ref) => getEntry(ref)
 					guid={episode.guid}
 					audioUrl={episode.audioUrl}
 					title={title}
-					cover={episode.imageUrl}
+					cover={playerCover}
 					link={`/posts/${post.id}/`}
 					durationSec={episode.durationSec}
 				/>
@@ -383,6 +390,12 @@ const animeEntries = anime ? (await Promise.all(anime.map((ref) => getEntry(ref)
 	.content :global(p > img) {
 		display: block;
 		width: 100%;
+		/* Обязательно вместе с width: обложка выпуска приходит с атрибутами
+		   width/height в разметке (см. src/plugins/remark-episode-cover.mjs) —
+		   они держат место, пока картинка грузится, чтобы текст не подпрыгивал.
+		   Без height: auto браузер применил бы высоту из атрибута буквально
+		   и картинка растянулась бы. */
+		height: auto;
 		border-radius: var(--radius-md);
 		margin: var(--space-3) 0;
 	}

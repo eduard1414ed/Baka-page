@@ -10,6 +10,7 @@
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { fetchFeedItems } from '../src/lib/podcastFeed.mjs';
 import { htmlToMarkdown } from '../src/lib/htmlToMarkdown.mjs';
+import { downloadEpisodeCover, writeCoverManifest } from './episode-cover-lib.mjs';
 
 export const POSTS_DIR = new URL('../src/content/posts/', import.meta.url);
 export const AUDIO_GUID_RE = /^audioGuid:\s*['"]?([^'"\n]+?)['"]?\s*$/m;
@@ -101,7 +102,29 @@ async function main() {
 		const path = new URL(`${slug}.md`, POSTS_DIR);
 		await writeFile(path, buildDraft(episode), 'utf8');
 		console.log(`→ src/content/posts/${slug}.md (${episode.title})`);
+
+		// Сразу скачиваем и сжимаем обложку. Хостинг подкаста отдаёт квадрат
+		// 2000×2000 весом 1–5 МБ и сжимать не умеет (см. src/lib/episodeCover.mjs),
+		// поэтому без этого шага каждый новый выпуск возвращал бы на свою страницу
+		// мегабайт картинки. Ссылка в теле поста остаётся исходной — подменой
+		// занимается сборка (src/plugins/remark-episode-cover.mjs).
+		//
+		// Сбой не должен мешать главному: пост уже создан, а страница без сжатой
+		// обложки просто покажет прямую ссылку на хостинг — тяжело, но работает.
+		// Добрать потом: node scripts/fetch-episode-covers.mjs
+		try {
+			const result = await downloadEpisodeCover(episode.imageUrl);
+			if (result.status === 'done') {
+				console.log(`  обложка сжата: ${(result.sourceBytes / 1024).toFixed(0)} КБ → ${(result.outBytes / 1024).toFixed(0)} КБ`);
+			}
+		} catch (error) {
+			console.error(`  обложку сжать не удалось: ${error.message}`);
+		}
 	}
+
+	// Список скачанных обложек — его читает сборка сайта, без обновления новые
+	// обложки на страницах не появятся (см. src/lib/episodeCover.mjs).
+	await writeCoverManifest();
 
 	console.log('Готово.');
 }
