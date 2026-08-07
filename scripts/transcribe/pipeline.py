@@ -45,6 +45,24 @@ TMP_DIR = WORK_DIR / "tmp"
 HOST_MALE = "Эд"
 HOST_FEMALE = "Ксюша"
 
+# Выпуски, которые НЕ надо распознавать: у них есть готовый точный сценарий,
+# автор подгружает его сам. По ТЗ (шаг 2) их путь другой — выравнивание готового
+# текста по звуку, а не распознавание. Из архива распознавания они исключены,
+# из проекта — нет.
+#
+# Сравнение по куску названия, без учёта регистра. «эссе» заодно ловит
+# «Мини-эссе», отдельное правило не нужно.
+#
+# «врата аниме» — обязательно целой фразой. По одному слову «врата» под нож
+# попал бы выпуск «Врата Штейна | Как разделить сериал на две части…» — это
+# разбор аниме Steins;Gate, а не рубрика, и распознавать его надо.
+EXCLUDE_TITLE_PARTS = ["эссе", "врата аниме"]
+
+
+def is_excluded(title):
+	low = title.lower()
+	return any(part in low for part in EXCLUDE_TITLE_PARTS)
+
 
 def load_env(path):
 	env = {}
@@ -398,13 +416,24 @@ def process_episode(episode, provider, api_key, dry_run=False, out_suffix=None):
 
 def estimate_archive(episodes, provider, state):
 	"""Смета на весь архив. В сеть не ходит, ничего не отправляет."""
-	pending = [e for e in episodes if state.get(e["guid"], {}).get("status") != "done"]
-	total_sec = sum(e["duration_sec"] for e in episodes)
+	all_sec = sum(e["duration_sec"] for e in episodes)
+	excluded = [e for e in episodes if is_excluded(e["title"])]
+	work = [e for e in episodes if not is_excluded(e["title"])]
+	pending = [e for e in work if state.get(e["guid"], {}).get("status") != "done"]
+
+	excluded_sec = sum(e["duration_sec"] for e in excluded)
+	total_sec = sum(e["duration_sec"] for e in work)
 	pending_sec = sum(e["duration_sec"] for e in pending)
 
 	print(f"Сервис: {provider.label}")
-	print(f"Всего выпусков в RSS: {len(episodes)}, суммарно {total_sec/3600:.1f} ч")
-	print(f"Уже обработано: {len(episodes) - len(pending)}")
+	print(f"Всего выпусков в RSS: {len(episodes)}, суммарно {all_sec/3600:.1f} ч")
+	print(
+		f"Исключено (готовый сценарий): {len(excluded)}, "
+		f"суммарно {excluded_sec/3600:.1f} ч — "
+		f"по словам в названии: {', '.join(EXCLUDE_TITLE_PARTS)}"
+	)
+	print(f"К распознаванию: {len(work)}, суммарно {total_sec/3600:.1f} ч")
+	print(f"Уже обработано: {len(work) - len(pending)}")
 	print(f"Осталось обработать: {len(pending)}, суммарно {pending_sec/3600:.1f} ч")
 	print()
 	print(f"Стоимость по прайсу, весь архив: {format_estimate(provider.estimate(total_sec))}")
@@ -442,6 +471,11 @@ def main():
 		"--out-suffix",
 		help="приписка к имени файла результата — чтобы сравнить два сервиса, не затирая",
 	)
+	parser.add_argument(
+		"--force",
+		action="store_true",
+		help="распознать выпуск, даже если он исключён (есть готовый сценарий)",
+	)
 	args = parser.parse_args()
 
 	provider = providers.get(args.provider)
@@ -453,7 +487,10 @@ def main():
 
 	if args.list:
 		for ep in episodes:
-			status = state.get(ep["guid"], {}).get("status", "не обработан")
+			if is_excluded(ep["title"]):
+				status = "исключён"
+			else:
+				status = state.get(ep["guid"], {}).get("status", "не обработан")
 			print(f"{ep['duration_sec']//60:>4}:{ep['duration_sec']%60:02d}  [{status:12}]  {ep['title']}  ({ep['guid']})")
 		return
 
@@ -468,6 +505,15 @@ def main():
 	episode = next((e for e in episodes if e["guid"] == args.guid), None)
 	if not episode:
 		print(f"Выпуск с guid {args.guid} не найден в RSS", file=sys.stderr)
+		sys.exit(1)
+
+	if is_excluded(episode["title"]) and not args.force:
+		print(
+			f"Выпуск «{episode['title']}» исключён из распознавания: у него есть\n"
+			f"готовый сценарий (сработало по слову из списка: {', '.join(EXCLUDE_TITLE_PARTS)}).\n"
+			"Если всё-таки нужно распознать именно его — добавьте --force.",
+			file=sys.stderr,
+		)
 		sys.exit(1)
 
 	# Повторно за уже сделанное не платим. Но если явно просят другой сервис
