@@ -40,8 +40,12 @@ def estimate(duration_sec):
 	}
 
 
-def estimate_out_of_pocket(duration_sec):
+def estimate_out_of_pocket(duration_sec, already_used_sec=0):
 	"""Сколько придётся доплатить сверх подписки, которая и так оплачена.
+
+	`already_used_sec` — сколько аудио уже распознано и, значит, съедено
+	из месячной квоты. Без этого смета врёт в меньшую сторону: после пробных
+	прогонов квота уже не пустая, а скрипт считал бы её нетронутой.
 
 	Считает по ставке подписочных кредитов ($0.35/час). Точную ставку
 	usage based billing за превышение ElevenLabs публично не раскрывает
@@ -50,15 +54,21 @@ def estimate_out_of_pocket(duration_sec):
 	но обещать точную цифру нельзя.
 	"""
 	hours = duration_sec / 3600
-	over_hours = max(0.0, hours - MONTHLY_INCLUDED_HOURS)
+	used_hours = already_used_sec / 3600
+	quota_left = max(0.0, MONTHLY_INCLUDED_HOURS - used_hours)
+	over_hours = max(0.0, hours - quota_left)
 	return {
-		"included_hours": min(hours, MONTHLY_INCLUDED_HOURS),
+		"included_hours": min(hours, quota_left),
+		"quota_left_hours": quota_left,
+		"already_used_hours": used_hours,
 		"over_hours": over_hours,
 		"usd": round(over_hours * USD_PER_HOUR, 2),
 		"credits": int(over_hours * CREDITS_PER_HOUR) + 1 if over_hours else 0,
 		"warning": (
 			"Ставку за превышение квоты ElevenLabs публично не раскрывает — "
-			"реальный счёт может оказаться до полутора раз выше."
+			"реальный счёт может оказаться до полутора раз выше. "
+			"Израсходованная квота считается по state.json, то есть в предположении, "
+			"что всё распознанное попало в текущий платёжный период."
 		),
 	}
 

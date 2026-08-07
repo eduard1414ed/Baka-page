@@ -910,9 +910,17 @@ def estimate_archive(episodes, provider, state, of=None):
 	# У сервиса может быть месячная квота, уже оплаченная подпиской, — тогда
 	# «стоимость по прайсу» выше не равна тому, что придётся доплатить.
 	if hasattr(provider, "estimate_out_of_pocket"):
-		pocket = provider.estimate_out_of_pocket(pending_sec)
+		# Квота уже могла быть частично израсходована — на пробные прогоны
+		# или на предыдущие части архива. Считаем по тому, что записано в state.
+		spent_sec = sum(
+			v.get("audioSeconds", 0) for v in state.values() if v.get("status") == "done"
+		)
+		pocket = provider.estimate_out_of_pocket(pending_sec, already_used_sec=spent_sec)
 		print()
 		print("Сколько реально доплачивать (остаток, за один платёжный период):")
+		if pocket.get("already_used_hours"):
+			print(f"  из квоты уже потрачено: {pocket['already_used_hours']:.1f} ч, "
+			      f"осталось {pocket['quota_left_hours']:.1f} ч")
 		print(f"  внутри месячной квоты: {pocket['included_hours']:.1f} ч — уже оплачено подпиской")
 		print(f"  сверх квоты:           {pocket['over_hours']:.1f} ч = {pocket['credits']} кредитов")
 		print(f"  ДОПЛАТА:               ${pocket['usd']}")
