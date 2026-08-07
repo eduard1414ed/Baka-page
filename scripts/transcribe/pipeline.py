@@ -32,6 +32,7 @@ providers/ (форма модуля описана в providers/__init__.py). В
 """
 
 import argparse
+import gzip
 import json
 import re
 import shutil
@@ -115,6 +116,12 @@ HOST_FEMALE_TOLERANCE_HZ = 28
 # в диапазон Эда и зря заставлял перепроверять весь выпуск. Считаем соперником
 # только того, кто наговорил хотя бы четверть от победителя.
 HOST_RIVAL_SHARE = 0.25
+
+# Границы реплики. Пауза длиннее полутора секунд — это конец мысли, там и режем.
+# 75 секунд — потолок на всякий случай: если человек говорит без заметных пауз,
+# реплика всё равно не должна вырасти в нечитаемую простыню.
+PAUSE_SPLIT_SEC = 1.5
+MAX_REPLICA_SEC = 75
 
 
 def load_env(path):
@@ -222,17 +229,36 @@ def check_disk_space(episodes, min_free_mb=1500):
 
 # --- Сборка реплик из слов ---------------------------------------------
 
-def build_replicas(words):
+def build_replicas(words, pause_sec=PAUSE_SPLIT_SEC, max_sec=MAX_REPLICA_SEC):
 	"""Склеивает подряд идущие слова одного спикера в реплики.
 
 	На вход идёт нормализованный список от провайдера (см. providers/__init__.py),
 	поэтому эта функция одинакова для любого сервиса распознавания.
+
+	Границы реплики — три:
+	  * сменился голос;
+	  * между словами пауза длиннее `pause_sec` (конец мысли или фразы);
+	  * реплика доросла до `max_sec` — режем на ближайшем слове.
+
+	Раньше границей была только смена голоса, и на монологах это давало
+	один кусок на весь выпуск: в архиве нашлись два выпуска по 24 и 17 минут
+	ОДНОЙ репликой. Для интерфейса (шаг 5) это негодно — клик по реплике
+	должен перематывать плеер, а внутрь такого блока не ткнёшь.
 	"""
 	replicas = []
 	current = None
+	prev_end = None
 	for word in words:
 		speaker = word["speaker"]
-		if current is None or current["speaker"] != speaker:
+		gap = (word["start"] - prev_end) if prev_end is not None else 0.0
+		too_long = current is not None and (word["end"] - current["start"]) > max_sec
+		need_break = (
+			current is None
+			or current["speaker"] != speaker
+			or gap > pause_sec
+			or too_long
+		)
+		if need_break:
 			if current is not None:
 				replicas.append(current)
 			current = {
@@ -244,6 +270,7 @@ def build_replicas(words):
 		else:
 			current["end"] = word["end"]
 			current["text"] += word["text"] if word["text"] in ",.!?;:…" else " " + word["text"]
+		prev_end = word["end"]
 	if current is not None:
 		replicas.append(current)
 	return replicas
@@ -601,6 +628,14 @@ def process_episode(episode, provider, api_key, dry_run=False, out_suffix=None, 
 		out_path = OUTPUT_DIR / f"{stem}.json"
 		out_path.write_text(json.dumps(transcript, ensure_ascii=False, indent=2))
 
+		# Пословные данные — отдельным сжатым файлом. Сам сайт их читать не будет,
+		# они нужны только чтобы переразбить реплики (--resplit), если правила
+		# нарезки придётся менять. Без них любая переделка означала бы повторную
+		# оплату распознавания. Сжатие даёт примерно семикратную экономию.
+		words_path = OUTPUT_DIR / f"{stem}.words.json.gz"
+		with gzip.open(words_path, "wt", encoding="utf-8") as f:
+			json.dump(result["words"], f, ensure_ascii=False)
+
 		state = load_state()
 		state[episode["guid"]] = {
 			"title": episode["title"],
@@ -772,6 +807,61 @@ def run_archive(
 			print(f"  {episode['title']} — {exc}")
 
 
+def resplit_replicas(pause_sec=PAUSE_SPLIT_SEC, max_sec=MAX_REPLICA_SEC):
+	"""Заново нарезать реплики по сохранённым пословным данным. Бесплатно.
+
+	Работает только там, где рядом с транскриптом лежит `<guid>.words.json.gz`
+	(файлы, распознанные до появления этой возможности, придётся оставить
+	как есть или прогнать заново — пословных данных для них нет).
+	"""
+	files = [
+		f for f in sorted(OUTPUT_DIR.glob("*.json"))
+		if not f.name.endswith(".corrections.json")
+	] if OUTPUT_DIR.exists() else []
+	if not files:
+		print("В папке результатов нет транскриптов.", file=sys.stderr)
+		sys.exit(1)
+
+	print(f"Правила нарезки: пауза дольше {pause_sec} сек или реплика длиннее {max_sec} сек")
+	print()
+
+	changed = skipped = 0
+	for f in files:
+		words_path = f.parent / (f.stem + ".words.json.gz")
+		if not words_path.exists():
+			skipped += 1
+			continue
+		data = json.loads(f.read_text())
+		with gzip.open(words_path, "rt", encoding="utf-8") as wf:
+			words = json.load(wf)
+
+		# Номера голосов уже розданы — нельзя раздать их заново, иначе поедут
+		# имена. Берём соответствие из самих реплик: слово и старая реплика
+		# пересекаются по времени, значит голос тот же.
+		old = data["replicas"]
+		rebuilt = build_replicas(words, pause_sec=pause_sec, max_sec=max_sec)
+		by_time = sorted((r["start"], r["end"], r["speaker"]) for r in old)
+		for r in rebuilt:
+			mid = (r["start"] + r["end"]) / 2
+			match = next((sid for s, e, sid in by_time if s <= mid <= e), None)
+			r["speaker"] = match or r["speaker"]
+
+		was = len(old)
+		data["replicas"] = [
+			{"start": round(r["start"], 2), "end": round(r["end"], 2),
+			 "speaker": r["speaker"], "text": r["text"].strip()}
+			for r in rebuilt
+		]
+		f.write_text(json.dumps(data, ensure_ascii=False, indent=2))
+		longest = max((r["end"] - r["start"]) for r in rebuilt)
+		changed += 1
+		print(f"  {data.get('episodeTitle', f.stem)[:45]:<45} {was:>4} -> {len(rebuilt):>4} реплик, "
+		      f"самая длинная {longest:.0f} сек")
+
+	print()
+	print(f"Переразбито: {changed}, пропущено (нет пословных данных): {skipped}")
+
+
 def recheck_speakers():
 	"""Пересчитать имена ведущих по уже сохранённым транскриптам. Бесплатно.
 
@@ -898,7 +988,7 @@ def export_transcripts(dest):
 	print(f"  scp root@СЕРВЕР:{dest} .")
 
 
-def estimate_archive(episodes, provider, state, of=None):
+def estimate_archive(episodes, provider, state, of=None, used_credits=None):
 	"""Смета на весь архив. В сеть не ходит, ничего не отправляет."""
 	all_sec = sum(e["duration_sec"] for e in episodes)
 	excluded = [e for e in episodes if is_excluded(e["title"])]
@@ -926,20 +1016,27 @@ def estimate_archive(episodes, provider, state, of=None):
 	# У сервиса может быть месячная квота, уже оплаченная подпиской, — тогда
 	# «стоимость по прайсу» выше не равна тому, что придётся доплатить.
 	if hasattr(provider, "estimate_out_of_pocket"):
-		# Квота уже могла быть частично израсходована — на пробные прогоны
-		# или на предыдущие части архива. Считаем по тому, что записано в state.
+		# Квота уже могла быть частично израсходована — на пробные прогоны,
+		# на предыдущие части архива или вообще на озвучку. Точное число знает
+		# только кабинет, поэтому его можно передать через --credits-used.
 		spent_sec = sum(
 			v.get("audioSeconds", 0) for v in state.values() if v.get("status") == "done"
 		)
-		pocket = provider.estimate_out_of_pocket(pending_sec, already_used_sec=spent_sec)
+		pocket = provider.estimate_out_of_pocket(
+			pending_sec, already_used_sec=spent_sec, used_credits=used_credits
+		)
 		print()
-		print("Сколько реально доплачивать (остаток, за один платёжный период):")
-		if pocket.get("already_used_hours"):
-			print(f"  из квоты уже потрачено: {pocket['already_used_hours']:.1f} ч, "
-			      f"осталось {pocket['quota_left_hours']:.1f} ч")
-		print(f"  внутри месячной квоты: {pocket['included_hours']:.1f} ч — уже оплачено подпиской")
-		print(f"  сверх квоты:           {pocket['over_hours']:.1f} ч = {pocket['credits']} кредитов")
-		print(f"  ДОПЛАТА:               ${pocket['usd']}")
+		print("Хватит ли месячной квоты (за один платёжный период):")
+		print(f"  квота:            {pocket['quota_credits']} кредитов")
+		print(f"  уже потрачено:    {pocket['used_credits']} ({pocket['source']})")
+		print(f"  свободно:         {pocket['quota_left_credits']}")
+		print(f"  нужно на остаток: {pocket['need_credits']}")
+		if pocket["over_credits"]:
+			print(f"  СВЕРХ КВОТЫ:      {pocket['over_credits']} кредитов "
+			      f"= {pocket['over_hours']:.1f} ч, ДОПЛАТА ${pocket['usd']}")
+		else:
+			left = pocket["quota_left_credits"] - pocket["need_credits"]
+			print(f"  ХВАТАЕТ, доплаты нет. После прогона останется {left} кредитов")
 		if pocket.get("warning"):
 			print()
 			print(f"  {pocket['warning']}")
@@ -1007,6 +1104,18 @@ def main():
 		help="заново разложить имена ведущих по готовым транскриптам (бесплатно)",
 	)
 	parser.add_argument(
+		"--credits-used",
+		type=int,
+		metavar="N",
+		help="сколько кредитов уже потрачено в этом периоде (число из кабинета, "
+		"Subscription -> Credits used). Учитывает и озвучку, не только распознавание",
+	)
+	parser.add_argument(
+		"--resplit",
+		action="store_true",
+		help="заново нарезать реплики по сохранённым пословным данным (бесплатно)",
+	)
+	parser.add_argument(
 		"--min-similarity",
 		type=float,
 		default=0.72,
@@ -1041,6 +1150,10 @@ def main():
 		recheck_speakers()
 		return
 
+	if args.resplit:
+		resplit_replicas()
+		return
+
 	episodes = fetch_feed_items()
 	state = load_state()
 
@@ -1054,7 +1167,7 @@ def main():
 		return
 
 	if args.estimate_archive:
-		estimate_archive(episodes, provider, state, of=args.of)
+		estimate_archive(episodes, provider, state, of=args.of, used_credits=args.credits_used)
 		return
 
 	if args.run:

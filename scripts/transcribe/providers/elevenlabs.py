@@ -26,9 +26,16 @@ CREDITS_PER_HOUR = 1591
 # выбивается (elevenlabs.io/pricing/api, колонка Creator, проверено 7 августа 2026).
 USD_PER_HOUR = 0.35
 
-# Сколько часов Scribe v2 включено в подписку Creator за месяц (та же таблица).
-# Всё, что сверх, идёт в usage based billing и выставляется в конце периода.
-MONTHLY_INCLUDED_HOURS = 62.85
+# Месячная квота аккаунта в кредитах. ВЗЯТО ИЗ ЛИЧНОГО КАБИНЕТА (Subscription →
+# Credits used), а не со страницы цен: там для Creator указано 100 000 кредитов
+# (это и есть те «62,85 часа Scribe v2»), а на этом аккаунте выдаётся 212 857.
+# Не подгонять под страницу цен — сверяться с кабинетом.
+MONTHLY_QUOTA_CREDITS = 212857
+
+# ВАЖНО: квота общая на весь ElevenLabs, а не только на распознавание речи.
+# Озвучка и прочие эксперименты едят те же кредиты, и скрипт про них не знает.
+# Поэтому «сколько уже потрачено» надо брать из кабинета (--credits-used),
+# иначе смета посчитает свободным то, что уже израсходовано на другое.
 
 
 def estimate(duration_sec):
@@ -40,35 +47,39 @@ def estimate(duration_sec):
 	}
 
 
-def estimate_out_of_pocket(duration_sec, already_used_sec=0):
+def estimate_out_of_pocket(duration_sec, already_used_sec=0, used_credits=None):
 	"""Сколько придётся доплатить сверх подписки, которая и так оплачена.
 
-	`already_used_sec` — сколько аудио уже распознано и, значит, съедено
-	из месячной квоты. Без этого смета врёт в меньшую сторону: после пробных
-	прогонов квота уже не пустая, а скрипт считал бы её нетронутой.
-
-	Считает по ставке подписочных кредитов ($0.35/час). Точную ставку
-	usage based billing за превышение ElevenLabs публично не раскрывает
-	(статья справки закрыта), поэтому реальная доплата может оказаться
-	до полутора раз выше — при сумме порядка десяти долларов это не критично,
-	но обещать точную цифру нельзя.
+	`used_credits` — сколько кредитов уже съедено в этом платёжном периоде,
+	по данным кабинета. Это самое честное число: оно учитывает и распознавание,
+	и озвучку, и всё остальное. Если его не передали, считаем по `already_used_sec`
+	(сколько аудио распознано по нашим записям) — но тогда чужие траты не видны
+	и смета будет оптимистичнее реальности.
 	"""
-	hours = duration_sec / 3600
-	used_hours = already_used_sec / 3600
-	quota_left = max(0.0, MONTHLY_INCLUDED_HOURS - used_hours)
-	over_hours = max(0.0, hours - quota_left)
+	need_credits = int(duration_sec / 3600 * CREDITS_PER_HOUR) + 1
+	if used_credits is None:
+		used_credits = int(already_used_sec / 3600 * CREDITS_PER_HOUR)
+		source = "по нашим записям, без учёта озвучки и прочих трат"
+	else:
+		source = "по кабинету, с учётом всех трат"
+
+	quota_left = max(0, MONTHLY_QUOTA_CREDITS - used_credits)
+	over_credits = max(0, need_credits - quota_left)
 	return {
-		"included_hours": min(hours, quota_left),
-		"quota_left_hours": quota_left,
-		"already_used_hours": used_hours,
-		"over_hours": over_hours,
-		"usd": round(over_hours * USD_PER_HOUR, 2),
-		"credits": int(over_hours * CREDITS_PER_HOUR) + 1 if over_hours else 0,
+		"need_credits": need_credits,
+		"used_credits": used_credits,
+		"quota_credits": MONTHLY_QUOTA_CREDITS,
+		"quota_left_credits": quota_left,
+		"source": source,
+		"over_credits": over_credits,
+		"over_hours": over_credits / CREDITS_PER_HOUR,
+		"usd": round(over_credits / CREDITS_PER_HOUR * USD_PER_HOUR, 2),
 		"warning": (
-			"Ставку за превышение квоты ElevenLabs публично не раскрывает — "
-			"реальный счёт может оказаться до полутора раз выше. "
-			"Израсходованная квота считается по state.json, то есть в предположении, "
-			"что всё распознанное попало в текущий платёжный период."
+			"Квота общая на весь ElevenLabs — озвучка ест те же кредиты, "
+			"и скрипт про них не знает. Точную цифру брать в кабинете "
+			"(Subscription → Credits used) и передавать через --credits-used. "
+			"Ставку за превышение ElevenLabs публично не раскрывает, так что при "
+			"выходе за квоту реальный счёт может быть до полутора раз выше."
 		),
 	}
 
