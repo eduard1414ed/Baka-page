@@ -58,6 +58,14 @@ HOST_FEMALE = "Ксюша"
 # разбор аниме Steins;Gate, а не рубрика, и распознавать его надо.
 EXCLUDE_TITLE_PARTS = ["эссе", "врата аниме"]
 
+# Граница между мужским и женским голосом, Гц. Мужской обычно 85–180,
+# женский 165–255 — диапазоны почти не пересекаются, что и делает способ
+# надёжным при двух разнополых ведущих (см. Шаг 4 в ТЗ).
+# Нужна не для того, чтобы определять пол, а чтобы поймать случай, когда
+# в «ведущие» по объёму речи пролез гость: если оба главных голоса оказались
+# по одну сторону границы, пара подозрительная.
+VOICE_SPLIT_HZ = 165
+
 
 def is_excluded(title):
 	low = title.lower()
@@ -223,6 +231,18 @@ def speaker_pitch(samples, sr, segments, cap_seconds=120):
 
 
 def assign_speaker_names(replicas, wav_samples, sr):
+	"""Раздать голосам номера и имена.
+
+	Возвращает четыре вещи:
+	  slug   — как голос назвал сервис -> наш номер (speaker_0, speaker_1, …).
+	           Нумеруем сами, по объёму речи, чтобы формат не зависел от того,
+	           как спикеров обозначил конкретный сервис распознавания.
+	  names  — наш номер -> имя. Это и есть карта, которую потом правят руками:
+	           поменял имя в одной строке — поменялось во всём выпуске.
+	  info   — что известно про каждый голос: ведущий или гость, чем определён,
+	           высота голоса, сколько говорил, нужно ли вписать имя вручную.
+	  notes  — что показать на экране после прогона.
+	"""
 	by_speaker = {}
 	for r in replicas:
 		by_speaker.setdefault(r["speaker"], []).append(r)
@@ -231,44 +251,88 @@ def assign_speaker_names(replicas, wav_samples, sr):
 		sid: sum(r["end"] - r["start"] for r in segs) for sid, segs in by_speaker.items()
 	}
 	ranked = sorted(durations, key=lambda sid: durations[sid], reverse=True)
+	slug = {sid: f"speaker_{i}" for i, sid in enumerate(ranked)}
 
-	speaker_map = {}
+	# Высоту меряем у всех голосов, не только у ведущих: для гостей она
+	# ничего не решает автоматически, но помогает вам понять, кто где,
+	# когда будете вписывать имена руками.
+	pitches = {sid: speaker_pitch(wav_samples, sr, by_speaker[sid]) for sid in ranked}
+
+	names = {}
 	notes = []
-
 	main_two = ranked[:2]
-	pitches = {}
-	for sid in main_two:
-		pitches[sid] = speaker_pitch(wav_samples, sr, by_speaker[sid])
 
 	if len(main_two) == 2 and all(pitches[sid] is not None for sid in main_two):
 		lower = min(main_two, key=lambda sid: pitches[sid])
 		higher = max(main_two, key=lambda sid: pitches[sid])
-		speaker_map[lower] = HOST_MALE
-		speaker_map[higher] = HOST_FEMALE
+		names[slug[lower]] = HOST_MALE
+		names[slug[higher]] = HOST_FEMALE
+		hosts_method = "pitch"
+
+		# Ведущими считаются два самых разговорчивых голоса. В выпуске с гостями
+		# это может подвести: если гость-мужчина наговорил больше Ксюши, в пару
+		# попадут два мужских голоса и гостю достанется её имя. Ловим это по
+		# тому, что оба голоса оказались по одну сторону границы.
+		split_ok = pitches[lower] < VOICE_SPLIT_HZ <= pitches[higher]
+		hosts_reliable = split_ok
 		notes.append(
-			f"Определено по высоте голоса: {lower} -> {HOST_MALE} "
-			f"({pitches[lower]:.0f} Гц), {higher} -> {HOST_FEMALE} ({pitches[higher]:.0f} Гц)"
+			f"Определено по высоте голоса: {slug[lower]} -> {HOST_MALE} "
+			f"({pitches[lower]:.0f} Гц), {slug[higher]} -> {HOST_FEMALE} "
+			f"({pitches[higher]:.0f} Гц)"
 		)
+		if not split_ok:
+			names[slug[lower]] = f"{HOST_MALE}?"
+			names[slug[higher]] = f"{HOST_FEMALE}?"
+			hosts_method = "pitch-ambiguous"
+			notes.append(
+				f"ВНИМАНИЕ: оба главных голоса лежат по одну сторону границы "
+				f"{VOICE_SPLIT_HZ} Гц, то есть похожи по полу. Скорее всего, в пару "
+				"ведущих попал гость, который много говорил. ИМЕНА НУЖНО ПРОВЕРИТЬ "
+				"РУКАМИ (отмечены знаком ?)."
+			)
 	elif len(main_two) == 2:
 		# Запасной способ — по объёму речи, если измерение высоты не удалось.
-		by_volume = sorted(main_two, key=lambda sid: durations[sid], reverse=True)
-		speaker_map[by_volume[0]] = f"{HOST_MALE}?"
-		speaker_map[by_volume[1]] = f"{HOST_FEMALE}?"
+		names[slug[main_two[0]]] = f"{HOST_MALE}?"
+		names[slug[main_two[1]]] = f"{HOST_FEMALE}?"
+		hosts_method = "volume"
+		hosts_reliable = False
 		notes.append(
 			"Не удалось надёжно измерить высоту голоса — имена расставлены "
 			"по объёму речи, ЭТО НУЖНО ПРОВЕРИТЬ РУКАМИ (отмечено знаком ?)."
 		)
 	elif len(main_two) == 1:
-		sid = main_two[0]
-		speaker_map[sid] = f"{HOST_MALE}/{HOST_FEMALE}?"
+		names[slug[main_two[0]]] = f"{HOST_MALE}/{HOST_FEMALE}?"
+		hosts_method = "single"
+		hosts_reliable = False
 		notes.append("В выпуске обнаружен только один голос — определить пару не удалось.")
+	else:
+		hosts_method = "none"
+		hosts_reliable = False
 
 	for extra_idx, sid in enumerate(ranked[2:], start=1):
-		name = "Гость" if extra_idx == 1 else f"Гость {extra_idx}"
-		speaker_map[sid] = name
-		notes.append(f"{sid} -> {name} (третий и далее голос, имя нужно вписать вручную)")
+		names[slug[sid]] = "Гость" if extra_idx == 1 else f"Гость {extra_idx}"
 
-	return speaker_map, notes, durations, pitches
+	if len(ranked) > 2:
+		notes.append(
+			f"Гостей в выпуске: {len(ranked) - 2}. Имена им скрипт не придумывает — "
+			"впишите сами, поправив карту speakers в файле транскрипта."
+		)
+
+	info = {}
+	for i, sid in enumerate(ranked):
+		is_host = i < 2
+		info[slug[sid]] = {
+			"role": "host" if is_host else "guest",
+			# Чем определили: высотой голоса, объёмом речи или просто порядком.
+			"detectedBy": hosts_method if is_host else "order",
+			"pitchHz": round(pitches[sid]) if pitches[sid] is not None else None,
+			"speechSeconds": round(durations[sid], 1),
+			# Ради этого флага всё и затевалось: по нему интерфейс на сайте
+			# поймёт, у кого имя ещё нужно вписать или проверить руками.
+			"needsName": (not is_host) or not hosts_reliable,
+		}
+
+	return slug, names, info, notes
 
 
 # --- Исправление искажённых названий аниме -------------------------------
@@ -350,23 +414,28 @@ def process_episode(episode, provider, api_key, dry_run=False, out_suffix=None):
 		wav_samples, sr = load_wav_mono16(wav_path)
 
 		replicas = build_replicas(result["words"])
-		speaker_map, notes, durations, pitches = assign_speaker_names(replicas, wav_samples, sr)
+		slug, speaker_names, speaker_info, notes = assign_speaker_names(replicas, wav_samples, sr)
 
 		print("Ищу известные тайтлы для проверки названий...")
 		anime_index = fetch_anime_index()
 		corrections = find_anime_corrections(replicas, anime_index)
 
+		# Имя спикера в реплики НЕ вписываем — только номер голоса. Имена лежат
+		# отдельной картой speakers, поэтому переименовать гостя (или поменять
+		# ведущих местами) можно правкой одной строки, без повторного
+		# распознавания. Так требует и модель данных в CLAUDE.md.
 		transcript = {
 			"source": "recognized",
 			"provider": provider.id,
 			"episodeGuid": episode["guid"],
 			"episodeTitle": episode["title"],
-			"speakers": speaker_map,
+			"speakers": speaker_names,
+			"speakerInfo": speaker_info,
 			"replicas": [
 				{
 					"start": round(r["start"], 2),
 					"end": round(r["end"], 2),
-					"speaker": speaker_map.get(r["speaker"], r["speaker"]),
+					"speaker": slug[r["speaker"]],
 					"text": r["text"].strip(),
 				}
 				for r in replicas
@@ -398,7 +467,15 @@ def process_episode(episode, provider, api_key, dry_run=False, out_suffix=None):
 
 		print("\n--- Итог ---")
 		print(f"Реплик: {len(transcript['replicas'])}")
-		print(f"Спикеры: {speaker_map}")
+		print("Голоса:")
+		for sid, name in speaker_names.items():
+			meta = speaker_info[sid]
+			pitch = f"{meta['pitchHz']} Гц" if meta["pitchHz"] is not None else "высота не измерена"
+			mark = "  <- вписать/проверить имя" if meta["needsName"] else ""
+			print(
+				f"  {sid}: {name} ({meta['role']}, {pitch}, "
+				f"говорил {meta['speechSeconds']/60:.1f} мин){mark}"
+			)
 		for n in notes:
 			print(f"  {n}")
 		print(f"Фактическая длительность по данным сервиса: {actual_sec/60:.1f} мин")
