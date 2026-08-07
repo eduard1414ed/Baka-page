@@ -1,0 +1,68 @@
+[
+  {
+    "replica_index": 9,
+    "found": "Ходячего замка",
+    "suggested": "Ходячий замок",
+    "similarity": 0.74
+  },
+  {
+    "replica_index": 81,
+    "found": "Ходячем замке",
+    "suggested": "Ходячий замок",
+    "similarity": 0.77
+  },
+  {
+    "replica_index": 85,
+    "found": "круто",
+    "suggested": "Наруто",
+    "similarity": 0.73
+  },
+  {
+    "replica_index": 107,
+    "found": "Унесенные призраками",
+    "suggested": "Унесённые призраками",
+    "similarity": 0.95
+  },
+  {
+    "replica_index": 108,
+    "found": "Унесенные призраками",
+    "suggested": "Унесённые призраками",
+    "similarity": 0.95
+  },
+  {
+    "replica_index": 110,
+    "found": "Ходячем замке",
+    "suggested": "Ходячий замок",
+    "similarity": 0.77
+  },
+  {
+    "replica_index": 122,
+    "found": "круто",
+    "suggested": "Наруто",
+    "similarity": 0.73
+  },
+  {
+    "replica_index": 126,
+    "found": "круто",
+    "suggested": "Наруто",
+    "similarity": 0.73
+  },
+  {
+    "replica_index": 153,
+    "found": "Унесенные призраками",
+    "suggested": "Унесённые призраками",
+    "similarity": 0.95
+  },
+  {
+    "replica_index": 217,
+    "found": "Ходячего замка",
+    "suggested": "Ходячий замок",
+    "similarity": 0.74
+  },
+  {
+    "replica_index": 226,
+    "found": "Ходячего замка",
+    "suggested": "Ходячий замок",
+    "similarity": 0.74
+  }
+]

@@ -1,0 +1,350 @@
+{
+  "bd8604a9-a0d9-4d84-87fc-93eb05710bee": {
+    "title": "Дорохедоро — кровь, грязь и гёдза | Подкаст",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 1469,
+    "cost": {
+      "usd": 0.143,
+      "credits": 650,
+      "note": "по кабинету ElevenLabs"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/bd8604a9-a0d9-4d84-87fc-93eb05710bee.json"
+  },
+  "fe37e9aa-942e-4aa3-8dad-9f6995459bfa": {
+    "title": "Специальный выпуск | Чермен Качмазов: как шутить об аниме?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2844,
+    "cost": {
+      "usd": 0.276,
+      "credits": 1257,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/fe37e9aa-942e-4aa3-8dad-9f6995459bfa.json"
+  },
+  "75923464-3aa4-4607-8abe-4f3310884cc8": {
+    "title": "Мы издаем целую книгу — гид по аниме! Как она создавалась? | ft. Кинопоиск и Яндекс Книги",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2055,
+    "cost": {
+      "usd": 0.2,
+      "credits": 909,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/75923464-3aa4-4607-8abe-4f3310884cc8.json"
+  },
+  "2f4bfb71-80f5-49b1-b0b7-f40bd1a3a924": {
+    "title": "Порко Россо | За что мы любим Хаяо Миядзаки и как не стать свиньей?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2355,
+    "cost": {
+      "usd": 0.229,
+      "credits": 1041,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/2f4bfb71-80f5-49b1-b0b7-f40bd1a3a924.json"
+  },
+  "85cea6e0-04ef-4763-a3e4-e453eae5357b": {
+    "title": "Терлецкий: Моб Психо 100, переезд в Японию, «Собакистан» и другие истории | Специальный эпизод",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 5670,
+    "cost": {
+      "usd": 0.551,
+      "credits": 2506,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/85cea6e0-04ef-4763-a3e4-e453eae5357b.json"
+  },
+  "6661522b-8b63-4d34-9e4d-5f95b5f8ed76": {
+    "title": "Королевские космические силы — начало студии Gainax | Подкаст",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2410,
+    "cost": {
+      "usd": 0.234,
+      "credits": 1065,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/6661522b-8b63-4d34-9e4d-5f95b5f8ed76.json"
+  },
+  "66f01023-50fc-45c3-87b8-5dae3b52ff86": {
+    "title": "Как K-On изменил аниме-индустрию? | Подкаст",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 1685,
+    "cost": {
+      "usd": 0.164,
+      "credits": 745,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/66f01023-50fc-45c3-87b8-5dae3b52ff86.json"
+  },
+  "887d5511-aecc-407b-bc00-8fcb69587a64": {
+    "title": "Это главная премьера лета? | Хранитель камфорного дерева | Подкаст",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 1888,
+    "cost": {
+      "usd": 0.184,
+      "credits": 835,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/887d5511-aecc-407b-bc00-8fcb69587a64.json"
+  },
+  "e390dc5a-d3b3-4913-b606-cc943f38557d": {
+    "title": "Как «Баракамон» согревает душу | Подкаст",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 1512,
+    "cost": {
+      "usd": 0.147,
+      "credits": 669,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/e390dc5a-d3b3-4913-b606-cc943f38557d.json"
+  },
+  "a02fbc68-33dd-4009-adf9-b243ddd53358": {
+    "title": "Трогательный комплекс — забытая романтика нулевых | Подкаст",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 1393,
+    "cost": {
+      "usd": 0.135,
+      "credits": 616,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/a02fbc68-33dd-4009-adf9-b243ddd53358.json"
+  },
+  "59630488-5f8e-4299-8397-79d200f33d60": {
+    "title": "«Бездомный бог» заслуживает большего? | Подкаст",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 1645,
+    "cost": {
+      "usd": 0.16,
+      "credits": 728,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/59630488-5f8e-4299-8397-79d200f33d60.json"
+  },
+  "9cc7841e-e75f-4978-aa11-7ccce169f739": {
+    "title": "Акира — аниме, изменившее все | Подкаст",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2122,
+    "cost": {
+      "usd": 0.206,
+      "credits": 938,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/9cc7841e-e75f-4978-aa11-7ccce169f739.json"
+  },
+  "4383a253-e798-491d-8194-9d79ea3448d9": {
+    "title": "Каким получился этот аниме-год | Лучшие аниме 2025",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 1046,
+    "cost": {
+      "usd": 0.102,
+      "credits": 463,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/4383a253-e798-491d-8194-9d79ea3448d9.json"
+  },
+  "c0de3508-120b-4ea4-8399-c3e86026ace4": {
+    "title": "«Девочка, покорившая время». Легендарное сай-фай-аниме про подростков, взросление и первую любовь | ft. «Крупным планом»",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2476,
+    "cost": {
+      "usd": 0.241,
+      "credits": 1095,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/c0de3508-120b-4ea4-8399-c3e86026ace4.json"
+  },
+  "23238226-596d-4c5e-92ad-38a0911750d1": {
+    "title": "Как стать лучше? Секретный способ, которому учит аниме | Сага о Винланде, Бродяга, Евангелион",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 1449,
+    "cost": {
+      "usd": 0.141,
+      "credits": 641,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/23238226-596d-4c5e-92ad-38a0911750d1.json"
+  },
+  "b6114366-db66-45ed-9a3d-87abc00e9d70": {
+    "title": "Когда «Наруто» становится серьезным? Арка о доблестном Джирайе",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2454,
+    "cost": {
+      "usd": 0.239,
+      "credits": 1085,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/b6114366-db66-45ed-9a3d-87abc00e9d70.json"
+  },
+  "793cd7b4-42ab-403e-a794-1acddab258a8": {
+    "title": "Лучшие аниме года 2024 | Бака Anime Awards",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2699,
+    "cost": {
+      "usd": 0.262,
+      "credits": 1193,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/793cd7b4-42ab-403e-a794-1acddab258a8.json"
+  },
+  "5fe5f5ea-26ea-4498-a10c-71ea54867545": {
+    "title": "Что смотреть в Новый год? Советуем праздничные аниме!",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2056,
+    "cost": {
+      "usd": 0.2,
+      "credits": 909,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/5fe5f5ea-26ea-4498-a10c-71ea54867545.json"
+  },
+  "aaf425f3-3e1e-4238-8d2c-65009d72995d": {
+    "title": "Как создается аниме? | Интервью с Evakoi, аниматором «Магической битвы», «Саги о Винланде» и других сериалов",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 4989,
+    "cost": {
+      "usd": 0.485,
+      "credits": 2205,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/aaf425f3-3e1e-4238-8d2c-65009d72995d.json"
+  },
+  "c0be410b-f9ec-4526-8c8f-626a578c69fc": {
+    "title": "Бакемоногатари — это несложно (почти)",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 3048,
+    "cost": {
+      "usd": 0.296,
+      "credits": 1348,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/c0be410b-f9ec-4526-8c8f-626a578c69fc.json"
+  },
+  "9e77c68c-773b-403c-8f2a-2b0ab9e7bc2c": {
+    "title": "Самые недооцененные аниме | Вампиры, исекаи и фильм от Ghibli",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2175,
+    "cost": {
+      "usd": 0.211,
+      "credits": 962,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/9e77c68c-773b-403c-8f2a-2b0ab9e7bc2c.json"
+  },
+  "ba2c00c1-ee98-4c00-891a-16c25ec9d8a5": {
+    "title": "«О моем перерождении в слизь» — это образцовый исекай?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2131,
+    "cost": {
+      "usd": 0.207,
+      "credits": 942,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/ba2c00c1-ee98-4c00-891a-16c25ec9d8a5.json"
+  },
+  "ae034a9e-4a21-4ab2-97c7-af6346ee1389": {
+    "title": "Как «Монолог фармацевта» обманывает зрителя?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 3242,
+    "cost": {
+      "usd": 0.315,
+      "credits": 1433,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/ae034a9e-4a21-4ab2-97c7-af6346ee1389.json"
+  },
+  "7f1cee69-551d-4915-9b52-d6af624bd3da": {
+    "title": "Чего не хватает «Кайдзю № 8»?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2740,
+    "cost": {
+      "usd": 0.266,
+      "credits": 1211,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/7f1cee69-551d-4915-9b52-d6af624bd3da.json"
+  },
+  "6d545389-3cc5-4001-8481-6f0ad3866730": {
+    "title": "Гениальная банальность «Подземелья вкусностей»",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2283,
+    "cost": {
+      "usd": 0.222,
+      "credits": 1010,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/6d545389-3cc5-4001-8481-6f0ad3866730.json"
+  },
+  "6ecc19e6-9cb4-4d8d-a29e-e1500d1df944": {
+    "title": "Любовь с кончиков пальцев | Аниме, о котором мечтали все его создатели",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2674,
+    "cost": {
+      "usd": 0.26,
+      "credits": 1182,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/6ecc19e6-9cb4-4d8d-a29e-e1500d1df944.json"
+  },
+  "d4261e8c-4f91-4b12-98fa-7f5085a833a9": {
+    "title": "Фрирен — лучшее аниме в истории?",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 3935,
+    "cost": {
+      "usd": 0.383,
+      "credits": 1740,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/d4261e8c-4f91-4b12-98fa-7f5085a833a9.json"
+  },
+  "a0cb56a2-2d7c-4472-9191-25e8e15f1b43": {
+    "title": "Аниме про то, как создается аниме | Shirobako (Белая коробка)",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 2597,
+    "cost": {
+      "usd": 0.252,
+      "credits": 1148,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/a0cb56a2-2d7c-4472-9191-25e8e15f1b43.json"
+  },
+  "c8b68e5c-05c4-4689-a1c5-8ac2202487ee": {
+    "title": "Лучший детектив без интриги? | Город, в котором меня нет",
+    "status": "done",
+    "provider": "elevenlabs",
+    "audioSeconds": 3354,
+    "cost": {
+      "usd": 0.326,
+      "credits": 1483,
+      "note": "по цене плана Creator, $0.35/час"
+    },
+    "transcriptFile": "/root/baki-transcripts/output/c8b68e5c-05c4-4689-a1c5-8ac2202487ee.json"
+  }
+}
