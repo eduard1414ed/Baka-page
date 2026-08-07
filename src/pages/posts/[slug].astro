@@ -11,6 +11,9 @@ import AnimeBadge from '../../components/AnimeBadge.astro';
 import EpisodePlayer from '../../components/EpisodePlayer.astro';
 import Transcript from '../../components/Transcript.astro';
 import { hasUsableTimecodes } from '../../lib/transcript.mjs';
+import { buildAnimeMatcher } from '../../lib/animeMentions.mjs';
+import { makeExceptionFilter } from '../../lib/mentionExceptions.mjs';
+import { animeMentionedIn } from '../../lib/animeMentionIndex.mjs';
 import { resolveEpisodeCover } from '../../lib/episodeCover.mjs';
 import { isPublished } from '../../lib/publishing.mjs';
 
@@ -55,10 +58,27 @@ const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 
 
 const youtubeEmbed = youtube ? getYoutubeEmbedUrl(youtube) : null;
 
+// Плашки тайтлов под текстом. Показываем и то, что стоит в поле `anime` поста
+// (разметка в тексте, тз/03), и то, что прозвучало в расшифровке (тз/05, шаг 5):
+// без второго выходила несогласица — на странице тайтла выпуск есть,
+// а на странице выпуска тайтла нет.
+//
+// Порядок: сначала тайтлы поста, потом найденные в расшифровке, по первому
+// упоминанию. Повторы убираем.
+//
 // Тайтл может быть размечен в тексте до того, как робот донабрал его в справочник
 // (см. тз/03-тайтлы.md) — тогда ссылки ещё нет, getEntry вернёт undefined,
 // такие просто не показываем в плашках, не ломая страницу.
-const animeEntries = anime ? (await Promise.all(anime.map((ref) => getEntry(ref)))).filter(Boolean) : [];
+const mentionedInTranscript = showTranscript
+	? animeMentionedIn(
+			transcript.data,
+			buildAnimeMatcher(await getCollection('anime')),
+			makeExceptionFilter((await getEntry('mentionExceptions', transcriptId!))?.data),
+		)
+	: [];
+
+const animeIds = [...new Set([...(anime ?? []).map((ref: { id: string }) => ref.id), ...mentionedInTranscript])];
+const animeEntries = (await Promise.all(animeIds.map((id) => getEntry('anime', id)))).filter(Boolean);
 ---
 
 <Layout title={`${title} — Бака!`}>

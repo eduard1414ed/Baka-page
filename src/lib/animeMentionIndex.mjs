@@ -65,6 +65,20 @@ export function buildMentionIndex({ posts, transcripts, animeList, exceptions = 
 }
 
 /**
+ * Какие тайтлы прозвучали в одной расшифровке — в порядке первого упоминания.
+ * Нужно странице выпуска: плашки тайтлов под текстом должны показывать и то,
+ * что нашлось в расшифровке, иначе выходит несогласица — на странице тайтла
+ * выпуск есть, а на странице выпуска тайтла нет.
+ *
+ * Отсев тот же, что у указателя (`hasUsableTimecodes` и исключения), чтобы
+ * обе стороны связи видели одно и то же.
+ */
+export function animeMentionedIn(transcriptData, matcher, exceptions) {
+	if (!hasUsableTimecodes(transcriptData)) return [];
+	return [...collectMentions(groupReplicas(transcriptData), matcher, exceptions).keys()];
+}
+
+/**
  * Посты, где тайтл упомянут: и те, у кого он стоит в поле `anime` (разметка
  * в тексте поста, тз/03), и те, где он прозвучал в расшифровке.
  *
