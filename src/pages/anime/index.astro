@@ -2,16 +2,21 @@
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import AnimeCard from '../../components/AnimeCard.astro';
+import { buildMentionIndex, postsForAnime } from '../../lib/animeMentionIndex.mjs';
+import { isPublished } from '../../lib/publishing.mjs';
 
-const posts = await getCollection('posts', ({ data }) => !data.draft);
+const posts = await getCollection('posts', ({ data }) => isPublished(data));
 const animeList = await getCollection('anime');
+const transcripts = await getCollection('transcripts');
 
-const mentionCounts = new Map<string, number>();
-for (const post of posts) {
-	for (const ref of post.data.anime ?? []) {
-		mentionCounts.set(ref.id, (mentionCounts.get(ref.id) ?? 0) + 1);
-	}
-}
+// Счётчик считаем ровно тем же кодом, что и список на самой странице тайтла
+// (src/pages/anime/[slug].astro) — иначе тут было бы «1 упоминание», а внутри
+// три карточки: с этого шага упоминанием считается и название, прозвучавшее
+// в расшифровке выпуска, а не только проставленное в поле `anime` поста.
+const index = buildMentionIndex({ posts, transcripts, animeList });
+const mentionCounts = new Map<string, number>(
+	animeList.map((entry) => [entry.id, postsForAnime(entry.id, posts, index).length]),
+);
 
 function displayTitle(entry: (typeof animeList)[number]) {
 	return entry.data.titleRu || entry.data.titleOriginal;

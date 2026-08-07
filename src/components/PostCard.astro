@@ -29,44 +29,54 @@ const youtubeThumbnail = youtube ? getYoutubeThumbnailUrl(youtube) : null;
 const isVideo = Boolean(youtubeThumbnail || video);
 ---
 
-<a class="card" href={`/posts/${post.id}/`}>
-	{
-		cover ? (
-			<Image
-				class="media"
-				src={cover}
-				alt=""
-				widths={[400, 800]}
-				sizes="(max-width: 700px) 100vw, 400px"
-				width={800}
-				height={Math.round(800 * (cover.height / cover.width))}
-			/>
-		) : youtubeThumbnail ? (
-			<span class="media-wrap">
-				<img class="media" src={youtubeThumbnail} alt="" loading="lazy" width="480" height="360" />
-				<span class="play" aria-hidden="true">
-					▶
+{/*
+	Карточка — <article> со ссылкой внутри, а не одна большая ссылка, как было
+	раньше. Причина: странице тайтла нужно дописать в карточку выпуска строку
+	«обсуждали в выпуске на 12:04, 34:20» с кликабельными таймкодами (тз/05,
+	шаг 5), а вложить ссылку в ссылку нельзя — браузер такую разметку чинит
+	по-своему и часть ссылок просто перестаёт работать. Всё, что кликается
+	отдельно, уходит в <slot /> за пределы ссылки на пост.
+*/}
+<article class="card">
+	<a class="card-link" href={`/posts/${post.id}/`}>
+		{
+			cover ? (
+				<Image
+					class="media"
+					src={cover}
+					alt=""
+					widths={[400, 800]}
+					sizes="(max-width: 700px) 100vw, 400px"
+					width={800}
+					height={Math.round(800 * (cover.height / cover.width))}
+				/>
+			) : youtubeThumbnail ? (
+				<span class="media-wrap">
+					<img class="media" src={youtubeThumbnail} alt="" loading="lazy" width="480" height="360" />
+					<span class="play" aria-hidden="true">
+						▶
+					</span>
 				</span>
-			</span>
-		) : video ? (
-			<span class="media video-placeholder" aria-hidden="true">
-				▶ Видео
-			</span>
-		) : null
-	}
-	<div class="body">
-		<span class="category">{categoryLabel}</span>
-		<h3 class="title">{title}</h3>
-		<span class="date">{dateFormatter.format(date)}</span>
-		{!cover && !isVideo && <p class="excerpt">{excerpt(post.body)}</p>}
-	</div>
-</a>
+			) : video ? (
+				<span class="media video-placeholder" aria-hidden="true">
+					▶ Видео
+				</span>
+			) : null
+		}
+		<div class="body">
+			<span class="category">{categoryLabel}</span>
+			<h3 class="title">{title}</h3>
+			<span class="date">{dateFormatter.format(date)}</span>
+			{!cover && !isVideo && <p class="excerpt">{excerpt(post.body)}</p>}
+		</div>
+	</a>
+	<slot />
+</article>
 
 <style>
 	.card {
 		display: flex;
 		flex-direction: column;
-		color: var(--color-text);
 		background: var(--color-bg-elevated);
 		border-radius: var(--radius-md);
 		overflow: hidden;
@@ -74,9 +84,21 @@ const isVideo = Boolean(youtubeThumbnail || video);
 		transition: border-color var(--transition-fast);
 	}
 
+	/* focus-within, а не focus-visible: рамку теперь носит <article>,
+	   а фокус попадает на ссылку внутри него. */
 	.card:hover,
-	.card:focus-visible {
+	.card:focus-within {
 		border-color: var(--color-accent);
+	}
+
+	.card-link {
+		display: flex;
+		flex-direction: column;
+		color: var(--color-text);
+	}
+
+	.card-link:hover,
+	.card-link:focus-visible {
 		color: var(--color-text);
 	}
 

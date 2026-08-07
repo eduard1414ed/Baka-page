@@ -3,25 +3,42 @@ import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import PostCard from '../../components/PostCard.astro';
 import { getAnimePosterSrcs } from '../../lib/animePoster.mjs';
+import { buildMentionIndex, postsForAnime } from '../../lib/animeMentionIndex.mjs';
+import { formatTimecode } from '../../lib/transcript.mjs';
+import { isPublished } from '../../lib/publishing.mjs';
 
 export async function getStaticPaths() {
 	const animeList = await getCollection('anime');
-	return animeList.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+	// isPublished, а не просто !data.draft: у поста может стоять отложенная
+	// публикация (тз/09), и до её срока своей страницы у него нет — карточка
+	// вела бы в никуда.
+	const posts = await getCollection('posts', ({ data }) => isPublished(data));
+	const transcripts = await getCollection('transcripts');
+
+	// Указатель «тайтл → выпуск → минуты» считаем ОДИН раз на всю сборку,
+	// а не заново на каждой странице тайтла: расшифровок 107, страниц тайтлов
+	// со временем станут сотни, и перечитывать одно другим вышло бы дорого.
+	const index = buildMentionIndex({ posts, transcripts, animeList });
+
+	return animeList.map((entry) => ({
+		params: { slug: entry.id },
+		props: { entry, mentions: postsForAnime(entry.id, posts, index) },
+	}));
 }
 
-const { entry } = Astro.props;
+const { entry, mentions } = Astro.props;
 const { titleRu, titleOriginal, year, studio, poster, synopsis, url, source } = entry.data;
 const posterSrcs = getAnimePosterSrcs(poster);
 const displayTitle = titleRu || titleOriginal;
 const needsTranslation = !titleRu;
 const sourceLabel = source === 'anilist' ? 'AniList' : 'Shikimori';
 
-const posts = (
-	await getCollection(
-		'posts',
-		({ data }) => !data.draft && (data.anime ?? []).some((ref: { id: string }) => ref.id === entry.id),
-	)
-).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+// Сколько минут показываем в карточке выпуска. Замер по архиву: у «Наруто»
+// 70 выпусков и 547 упоминаний, в медианном выпуске их 2, но в худшем — 45.
+// Сорок пять цифр подряд в карточке читать невозможно, поэтому хвост
+// сворачивается в ссылку «и ещё N» — она открывает выпуск, подсвечивает
+// все упоминания и даёт стрелки, чтобы листать их по одному.
+const MAX_TIMES = 8;
 ---
 
 <Layout title={`${displayTitle} — Бака!`} description={synopsis?.slice(0, 160)}>
@@ -65,14 +82,39 @@ const posts = (
 			</div>
 		</div>
 
-		<h2 class="mentions-title">Упоминания{posts.length > 0 && ` (${posts.length})`}</h2>
+		<h2 class="mentions-title">Упоминания{mentions.length > 0 && ` (${mentions.length})`}</h2>
 		{
-			posts.length === 0 ? (
+			mentions.length === 0 ? (
 				<p class="empty">Пока нет постов с этим тайтлом.</p>
 			) : (
 				<div class="grid">
-					{posts.map((post) => (
-						<PostCard post={post} />
+					{mentions.map(({ post, times }: { post: any; times: number[] }) => (
+						<PostCard post={post}>
+							{/* Отдельного блока для выпусков нет — выпуск идёт обычной
+							    карточкой, наравне с постами, а минуты разговора уходят
+							    в её краткое описание (тз/05, шаг 5). Ссылка ведёт на
+							    страницу выпуска и там подсвечивает все упоминания —
+							    разбирает её src/components/Transcript.astro. */}
+							{times.length > 0 && (
+								<p class="episode-times">
+									обсуждали в выпуске на{' '}
+									{times.slice(0, MAX_TIMES).map((seconds, i) => (
+										<Fragment>
+											{i > 0 && ', '}
+											<a href={`/posts/${post.id}/#anime=${entry.id}&t=${Math.floor(seconds)}`}>
+												{formatTimecode(seconds)}
+											</a>
+										</Fragment>
+									))}
+									{times.length > MAX_TIMES && (
+										<Fragment>
+											{' и '}
+											<a href={`/posts/${post.id}/#anime=${entry.id}`}>ещё {times.length - MAX_TIMES}</a>
+										</Fragment>
+									)}
+								</p>
+							)}
+						</PostCard>
 					))}
 				</div>
 			)
@@ -175,6 +217,25 @@ const posts = (
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
 		gap: var(--space-3);
+	}
+
+	/* Строка живёт внутри карточки поста (<slot /> в PostCard.astro), поэтому
+	   отступы повторяют отступы её тела. */
+	.episode-times {
+		margin: 0;
+		padding: 0 var(--space-2) var(--space-2);
+		color: var(--color-text-muted);
+		font-size: var(--font-size-sm);
+	}
+
+	.episode-times a {
+		color: var(--color-accent);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.episode-times a:hover,
+	.episode-times a:focus-visible {
+		color: var(--color-accent-hover);
 	}
 
 	@media (max-width: 600px) {

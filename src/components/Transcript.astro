@@ -6,13 +6,15 @@
 // Текст отдаётся целиком в HTML, без подгрузки по частям. Померено на архиве:
 // самая тяжёлая страница — 186 КБ сырого HTML, но Cloudflare сжимает на лету,
 // и до браузера доходит 37 КБ. Это меньше одной картинки в посте, дробить
-// нечего. Заодно «слежение за плеером» (вторая сессия) увидит все реплики
-// в DOM сразу, а не будет спотыкаться на границе подгруженного.
+// нечего. Заодно «слежение за плеером» видит все реплики в DOM сразу,
+// а не спотыкается на границе подгруженного.
 //
 // Свёрнутый вид — окно фиксированной высоты со своей полосой прокрутки
 // (как на референсе), чистый CSS. Это удобство чтения, чтобы транскрипт не
 // отодвигал подвал на два экрана, а не экономия трафика.
+import { getCollection } from 'astro:content';
 import { groupReplicas, formatTimecode } from '../lib/transcript.mjs';
+import { buildAnimeMatcher, splitByMentions } from '../lib/animeMentions.mjs';
 
 interface Props {
 	transcript: {
@@ -22,7 +24,32 @@ interface Props {
 }
 
 const { transcript } = Astro.props;
-const blocks = groupReplicas(transcript);
+
+// Разметка названий тайтлов внутри расшифровки (тз/05, шаг 5).
+//
+// ДВА РАЗНЫХ ПРАВИЛА, их легко перепутать:
+//   1. ССЫЛКОЙ становится только ПЕРВОЕ упоминание тайтла в выпуске — иначе
+//      в выпуске про «K-On!», где название звучит 17 раз, текст превратился бы
+//      в синее месиво. Так же ведёт себя разметка в постах (remark-anime.mjs).
+//   2. Помечены при этом ВСЕ упоминания до единого (класс .tr-anime): по ним
+//      считаются таймкоды для страницы тайтла и по ним же листают стрелки,
+//      когда на выпуск пришли по ссылке «обсуждали на 12:04».
+const animeList = await getCollection('anime');
+const matcher = buildAnimeMatcher(animeList);
+const linked = new Set<string>();
+
+const blocks = groupReplicas(transcript).map((block: any) => ({
+	...block,
+	// data-seconds у упоминания — начало блока, то же число, что на плашке
+	// рядом. По нему ссылка со страницы тайтла находит нужное упоминание.
+	seconds: Math.floor(block.start),
+	segments: splitByMentions(block.text, matcher).map((segment: any) => {
+		if (!segment.animeId) return segment;
+		const isFirst = !linked.has(segment.animeId);
+		linked.add(segment.animeId);
+		return { ...segment, isFirst };
+	}),
+}));
 ---
 
 <section class="transcript" aria-labelledby="transcript-title">
@@ -40,12 +67,19 @@ const blocks = groupReplicas(transcript);
 		<button class="tr-step" type="button" data-dir="-1" aria-label="Предыдущее совпадение" disabled>↑</button>
 		<button class="tr-step" type="button" data-dir="1" aria-label="Следующее совпадение" disabled>↓</button>
 		<span class="tr-count" role="status" aria-live="polite"></span>
+		<button class="tr-follow" type="button" aria-pressed="false" hidden>Следить за плеером</button>
 	</div>
+
+	{/* Появляется, когда на страницу пришли по ссылке «обсуждали в выпуске на 12:04». */}
+	<p class="tr-hits" hidden>
+		<span>Упоминания: <b class="tr-hits-name"></b></span>
+		<button class="tr-hits-off" type="button">✕ сбросить</button>
+	</p>
 
 	<div class="tr-body">
 		{
-			blocks.map((block) => (
-				<div class="tr-block">
+			blocks.map((block: any) => (
+				<div class="tr-block" data-start={block.start} data-end={block.end}>
 					<div class="tr-side">
 						{/* У блока, оторвавшегося от предыдущего по порогу длины, имя
 						    не повторяем — это та же речь, просто с новым таймкодом. */}
@@ -54,7 +88,24 @@ const blocks = groupReplicas(transcript);
 							{formatTimecode(block.start)}
 						</button>
 					</div>
-					<p class="tr-text">{block.text}</p>
+					<p class="tr-text">{block.segments.map((segment: any) =>
+						!segment.animeId ? (
+							segment.text
+						) : segment.isFirst ? (
+							<a
+								class="anime-mention tr-anime"
+								href={`/anime/${segment.animeId}`}
+								data-anime={segment.animeId}
+								data-seconds={block.seconds}
+							>
+								{segment.text}
+							</a>
+						) : (
+							<span class="tr-anime" data-anime={segment.animeId} data-seconds={block.seconds}>
+								{segment.text}
+							</span>
+						),
+					)}</p>
 				</div>
 			))
 		}
@@ -67,10 +118,17 @@ const blocks = groupReplicas(transcript);
 	// Ищем без учёта регистра и без разницы между «е» и «ё»: распознавание
 	// сплошь пишет «Унесенные» там, где в названии «Унесённые», и поиск по
 	// правильному написанию иначе ничего бы не находил. Замена один символ
-	// на один, поэтому позиции найденного не сбиваются.
+	// на один, поэтому позиции найденного не сбиваются. То же правило в
+	// src/lib/animeMentions.mjs, где по названиям ищут при сборке.
 	function fold(text: string): string {
 		return text.toLowerCase().replace(/ё/g, 'е');
 	}
+
+	type PlayerApi = {
+		load: (data: DOMStringMap, seekSeconds?: number) => void;
+		audio: HTMLAudioElement;
+		getGuid: () => string | null;
+	};
 
 	function initTranscript(section: HTMLElement) {
 		const input = section.querySelector<HTMLInputElement>('.tr-search');
@@ -78,36 +136,59 @@ const blocks = groupReplicas(transcript);
 		const counter = section.querySelector<HTMLElement>('.tr-count');
 		const body = section.querySelector<HTMLElement>('.tr-body');
 		const expand = section.querySelector<HTMLButtonElement>('.tr-expand');
-		if (!input || !counter || !body || !expand) return;
+		const follow = section.querySelector<HTMLButtonElement>('.tr-follow');
+		const hits = section.querySelector<HTMLElement>('.tr-hits');
+		const hitsName = section.querySelector<HTMLElement>('.tr-hits-name');
+		const hitsOff = section.querySelector<HTMLButtonElement>('.tr-hits-off');
+		if (!input || !counter || !body || !expand || !follow || !hits || !hitsName || !hitsOff) return;
 
 		const paragraphs = Array.from(section.querySelectorAll<HTMLElement>('.tr-text'));
-		// Исходный текст запоминаем один раз: подсветка перебирает содержимое
-		// абзаца, и без копии восстановить его после следующего запроса нечем.
-		const originals = new Map(paragraphs.map((p) => [p, p.textContent ?? '']));
+		// Текст абзаца при подсветке не меняется (меняется только обёртка <mark>),
+		// поэтому свёрнутый вид можно посчитать один раз и потом только читать —
+		// вместо fold() на 477 абзацах при каждом нажатии клавиши.
+		const folded = new Map(paragraphs.map((p) => [p, fold(p.textContent ?? '')]));
 
+		// Общий механизм «перебор найденного стрелками» — им пользуются оба режима:
+		// текстовый поиск (совпадения — созданные скриптом <mark>) и режим
+		// упоминаний тайтла (совпадения — размеченные при сборке .tr-anime).
 		let matches: HTMLElement[] = [];
 		let current = -1;
 		// Только те абзацы, в которых подсветка реально что-то поменяла —
 		// чтобы не перебирать все 477 при каждом нажатии клавиши.
 		let touched: HTMLElement[] = [];
 
-		function clearMarks() {
-			for (const p of touched) p.textContent = originals.get(p) ?? '';
+		function clearHighlights() {
+			// <mark> убираем распаковкой, а НЕ переписыванием textContent абзаца:
+			// внутри абзаца теперь живут размеченные названия тайтлов (.tr-anime),
+			// и переписывание текста стёрло бы их вместе с подсветкой.
+			for (const p of touched) {
+				p.querySelectorAll('mark').forEach((mark) => mark.replaceWith(...mark.childNodes));
+				// Соседние текстовые узлы после распаковки склеиваем обратно в один,
+				// иначе следующий поиск не найдёт слово, разорванное прошлой подсветкой.
+				p.normalize();
+			}
 			touched = [];
+
+			section.querySelectorAll('.tr-anime.is-hit').forEach((el) => el.classList.remove('is-hit'));
+			section.querySelectorAll('.is-current').forEach((el) => el.classList.remove('is-current'));
+			hits.hidden = true;
+
 			matches = [];
 			current = -1;
+			counter.textContent = '';
+			steps.forEach((step) => (step.disabled = true));
 		}
 
 		// Показать совпадение. Пока транскрипт свёрнут, у блока своя полоса
 		// прокрутки — двигаем её, страницу не трогаем совсем (иначе при каждом
 		// переходе к следующему совпадению страница прыгала бы под руками).
-		function reveal(mark: HTMLElement) {
+		function reveal(element: HTMLElement, smooth = true) {
 			if (body!.scrollHeight > body!.clientHeight) {
-				const markRect = mark.getBoundingClientRect();
+				const rect = element.getBoundingClientRect();
 				const bodyRect = body!.getBoundingClientRect();
-				body!.scrollTop += markRect.top - bodyRect.top - body!.clientHeight / 2;
+				body!.scrollTop += rect.top - bodyRect.top - body!.clientHeight / 2;
 			} else {
-				mark.scrollIntoView({ block: 'center', behavior: 'smooth' });
+				element.scrollIntoView({ block: 'center', behavior: smooth ? 'smooth' : 'auto' });
 			}
 		}
 
@@ -120,44 +201,57 @@ const blocks = groupReplicas(transcript);
 			reveal(matches[current]);
 		}
 
+		// Подсветка внутри одного текстового узла. Работаем именно по узлам,
+		// а не по абзацу целиком, чтобы не задеть размеченные названия тайтлов.
+		// Цена решения: совпадение, попавшее наполовину внутрь названия
+		// («в Наруто», где «Наруто» — ссылка), не найдётся. Это редкий случай.
+		function highlightNode(node: Text, needle: string) {
+			const text = node.data;
+			const haystack = fold(text);
+			let at = haystack.indexOf(needle);
+			if (at === -1) return false;
+
+			const fragment = document.createDocumentFragment();
+			let cursor = 0;
+
+			while (at !== -1) {
+				if (at > cursor) fragment.append(text.slice(cursor, at));
+				const mark = document.createElement('mark');
+				// Из исходного текста, а не из запроса — сохраняем регистр и «ё».
+				mark.textContent = text.slice(at, at + needle.length);
+				fragment.append(mark);
+				matches.push(mark);
+				cursor = at + needle.length;
+				at = haystack.indexOf(needle, cursor);
+			}
+
+			if (cursor < text.length) fragment.append(text.slice(cursor));
+			node.replaceWith(fragment);
+			return true;
+		}
+
 		function search(query: string) {
-			clearMarks();
+			clearHighlights();
 
 			const needle = fold(query.trim());
 			// Один символ подсветил бы пол-транскрипта — ждём, пока наберут два.
-			if (needle.length < 2) {
-				counter!.textContent = '';
-				steps.forEach((s) => (s.disabled = true));
-				return;
-			}
+			if (needle.length < 2) return;
 
 			for (const paragraph of paragraphs) {
-				const text = originals.get(paragraph) ?? '';
-				const haystack = fold(text);
-				if (!haystack.includes(needle)) continue;
+				if (!(folded.get(paragraph) ?? '').includes(needle)) continue;
 
-				const fragment = document.createDocumentFragment();
-				let cursor = 0;
-				let at = haystack.indexOf(needle);
+				// Список узлов собираем ДО правок: highlightNode заменяет узел,
+				// и обход на ходу пропустил бы часть абзаца.
+				const walker = document.createTreeWalker(paragraph, NodeFilter.SHOW_TEXT);
+				const nodes: Text[] = [];
+				for (let node = walker.nextNode(); node; node = walker.nextNode()) nodes.push(node as Text);
 
-				while (at !== -1) {
-					if (at > cursor) fragment.append(text.slice(cursor, at));
-					const mark = document.createElement('mark');
-					// Из исходного текста, а не из запроса — сохраняем регистр и «ё».
-					mark.textContent = text.slice(at, at + needle.length);
-					fragment.append(mark);
-					matches.push(mark);
-					cursor = at + needle.length;
-					at = haystack.indexOf(needle, cursor);
-				}
-
-				if (cursor < text.length) fragment.append(text.slice(cursor));
-				paragraph.textContent = '';
-				paragraph.append(fragment);
-				touched.push(paragraph);
+				let hit = false;
+				for (const node of nodes) hit = highlightNode(node, needle) || hit;
+				if (hit) touched.push(paragraph);
 			}
 
-			steps.forEach((s) => (s.disabled = matches.length === 0));
+			steps.forEach((step) => (step.disabled = matches.length === 0));
 			if (matches.length === 0) {
 				counter!.textContent = 'ничего не найдено';
 				return;
@@ -187,32 +281,172 @@ const blocks = groupReplicas(transcript);
 			expand.textContent = opened ? 'Свернуть транскрипт' : 'Развернуть транскрипт целиком';
 		});
 
-		// Клик по плашке таймкода перематывает плеер. Через делегирование, а не
-		// слушателем на каждой из сотен плашек. Свой класс .tr-time, а НЕ .timecode
-		// из remark-timecode.mjs: те PlayerBar.astro ловит сам, и на общем классе
-		// клик обработался бы дважды.
+		hitsOff.addEventListener('click', () => clearHighlights());
+
+		// Режим упоминаний тайтла: пришли со страницы /anime/<slug> по ссылке
+		// вида /posts/ep-102/#anime=naruto&t=716 — подсвечиваем ВСЕ упоминания
+		// этого тайтла и даём те же стрелки, что у поиска.
 		//
+		// Листаем именно по размеченным упоминаниям, а не по текстовому поиску:
+		// распознавание пишет «Фринен» вместо «Фрирен», текстовое совпадение такие
+		// места пропустит, а разметка по справочнику — нет (тз/05, шаг 5).
+		function showMentions(animeId: string, seconds: number) {
+			clearHighlights();
+			input.value = '';
+
+			const found = Array.from(section.querySelectorAll<HTMLElement>('.tr-anime')).filter(
+				(el) => el.dataset.anime === animeId,
+			);
+			if (found.length === 0) return;
+
+			matches = found;
+			found.forEach((el) => el.classList.add('is-hit'));
+			hitsName!.textContent = found[0].textContent ?? '';
+			hits!.hidden = false;
+			steps.forEach((step) => (step.disabled = false));
+
+			// Сначала подводим к транскрипту саму страницу, потом внутри блока —
+			// к нужному упоминанию (или к первому, если таймкод не совпал).
+			section.scrollIntoView({ block: 'start' });
+			const at = Number.isFinite(seconds) ? found.findIndex((el) => Number(el.dataset.seconds) === seconds) : -1;
+			setCurrent(at === -1 ? 0 : at);
+		}
+
 		// Плеера на странице может не быть вовсе — например, если фид подкаста
 		// в момент сборки не ответил (см. getStaticPaths в pages/posts/[slug].astro).
 		// Тогда плашки не притворяются кликабельными, а текст остаётся на месте:
 		// читать расшифровку можно и без звука.
 		const playerCard = document.querySelector<HTMLElement>('.episode-player');
-		if (!playerCard) {
+		const api = (window as any).__bakaPlayer as PlayerApi | undefined;
+
+		if (!playerCard || !api) {
 			section.querySelectorAll<HTMLButtonElement>('.tr-time').forEach((button) => {
 				button.disabled = true;
 			});
-			return;
+		} else {
+			// Клик по плашке таймкода перематывает плеер. Через делегирование, а не
+			// слушателем на каждой из сотен плашек. Свой класс .tr-time, а НЕ .timecode
+			// из remark-timecode.mjs: те PlayerBar.astro ловит сам, и на общем классе
+			// клик обработался бы дважды.
+			section.addEventListener('click', (event) => {
+				const button = (event.target as HTMLElement).closest<HTMLButtonElement>('.tr-time');
+				if (!button) return;
+				api.load(playerCard.dataset, Number(button.dataset.seconds));
+			});
+
+			bindFollow(section, body, follow, api, playerCard, reveal);
 		}
 
-		section.addEventListener('click', (event) => {
-			const button = (event.target as HTMLElement).closest<HTMLButtonElement>('.tr-time');
-			if (!button) return;
-			const api = (window as any).__bakaPlayer as
-				| { load: (data: DOMStringMap, seekSeconds?: number) => void }
-				| undefined;
-			if (!api) return;
-			api.load(playerCard.dataset, Number(button.dataset.seconds));
-		});
+		// Ссылка со страницы тайтла. Разбираем после того, как плеер уже привязан:
+		// переход должен и подсветить упоминания, и завести выпуск с этой минуты.
+		const link = location.hash.match(/^#anime=([^&\s]+)(?:&t=(\d+))?$/);
+		if (link) {
+			const animeId = decodeURIComponent(link[1]);
+			const seconds = Number(link[2]);
+			showMentions(animeId, seconds);
+			// Клик по ссылке — действие пользователя, а переход между страницами
+			// сайта идёт без перезагрузки (<ClientRouter />), поэтому браузер обычно
+			// разрешает звук. Если всё же заблокирует — транскрипт всё равно
+			// прокручен и подсвечен, останется нажать play.
+			if (playerCard && api && Number.isFinite(seconds)) api.load(playerCard.dataset, seconds);
+		}
+	}
+
+	// Режим «Следить за плеером»: подсветка звучащего сейчас блока и автопрокрутка
+	// за ним (тз/05, шаг 5). Все реплики уже в DOM, подгрузки частями нет —
+	// поэтому искать нужный блок можно прямо по разметке.
+	function bindFollow(
+		section: HTMLElement,
+		body: HTMLElement,
+		follow: HTMLButtonElement,
+		api: PlayerApi,
+		playerCard: HTMLElement,
+		reveal: (element: HTMLElement, smooth?: boolean) => void,
+	) {
+		const guid = playerCard.dataset.guid;
+		const blocks = Array.from(section.querySelectorAll<HTMLElement>('.tr-block'));
+		if (!guid || blocks.length === 0) return;
+
+		const starts = blocks.map((block) => Number(block.dataset.start));
+		follow.hidden = false;
+
+		let following = false;
+		let playing = -1;
+
+		// Двоичный поиск: последний блок, который начался не позже текущей секунды.
+		// Линейный перебор на 500 блоках четыре раза в секунду тоже не заметен,
+		// но у самого длинного выпуска блоков 192, а транскриптов ещё будет сотня.
+		function blockAt(seconds: number) {
+			let low = 0;
+			let high = starts.length - 1;
+			let found = -1;
+			while (low <= high) {
+				const middle = (low + high) >> 1;
+				if (starts[middle] <= seconds) {
+					found = middle;
+					low = middle + 1;
+				} else {
+					high = middle - 1;
+				}
+			}
+			return found;
+		}
+
+		function setPlaying(index: number) {
+			if (index === playing) return;
+			blocks[playing]?.classList.remove('is-playing');
+			playing = index;
+			if (index < 0) return;
+			blocks[index].classList.add('is-playing');
+			if (following) reveal(blocks[index]);
+		}
+
+		function setFollowing(on: boolean) {
+			following = on;
+			follow.setAttribute('aria-pressed', String(on));
+			follow.classList.toggle('is-on', on);
+			follow.textContent = on ? 'Слежу за плеером' : 'Следить за плеером';
+
+			if (!on) {
+				setPlaying(-1);
+				return;
+			}
+			// Включили на ходу — сразу прыгаем к тому месту, где сейчас звук.
+			// Если играет другой выпуск (или ничего), просто ждём: как только
+			// запустят этот, подсветка поедет сама.
+			if (api.getGuid() === guid) {
+				const index = blockAt(api.audio.currentTime);
+				playing = -1;
+				setPlaying(index);
+			}
+		}
+
+		follow.addEventListener('click', () => setFollowing(!following));
+
+		// Прокрутил колесом или пальцем — слежение выключается, чтобы текст
+		// не выдёргивало обратно. Ловим именно wheel/touchmove, а не scroll:
+		// scroll срабатывает и от нашей собственной автопрокрутки, и слежение
+		// выключало бы само себя на первом же шаге.
+		const stop = () => {
+			if (following) setFollowing(false);
+		};
+		body.addEventListener('wheel', stop, { passive: true });
+		body.addEventListener('touchmove', stop, { passive: true });
+
+		// Слушатель висит на общем <audio> (он переживает переходы между
+		// страницами), а транскрипт при переходе исчезает вместе с DOM —
+		// снимаем слушатель сами, как только заметим, что нас больше нет
+		// на странице. Тот же приём, что у карточек плеера в PlayerBar.astro.
+		const onTime = () => {
+			if (!document.body.contains(section)) {
+				api.audio.removeEventListener('timeupdate', onTime);
+				return;
+			}
+			if (!following || api.getGuid() !== guid) return;
+			setPlaying(blockAt(api.audio.currentTime));
+		};
+
+		api.audio.addEventListener('timeupdate', onTime);
 	}
 
 	// Как и в pages/posts/[slug].astro: из-за <ClientRouter /> переходы идут без
@@ -239,13 +473,14 @@ const blocks = groupReplicas(transcript);
 
 	.tr-tools {
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
 		gap: var(--space-1);
 		margin: var(--space-2) 0;
 	}
 
 	.tr-search {
-		flex: 1 1 auto;
+		flex: 1 1 12rem;
 		min-width: 0;
 		padding: var(--space-1) var(--space-2);
 		background: var(--color-bg-elevated);
@@ -296,6 +531,65 @@ const blocks = groupReplicas(transcript);
 		font-variant-numeric: tabular-nums;
 	}
 
+	.tr-follow {
+		flex-shrink: 0;
+		margin-left: auto;
+		padding: var(--space-1) var(--space-2);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		background: transparent;
+		color: var(--color-text);
+		font: inherit;
+		font-size: var(--font-size-sm);
+		cursor: pointer;
+		transition:
+			border-color var(--transition-fast),
+			background-color var(--transition-fast),
+			color var(--transition-fast);
+	}
+
+	.tr-follow:hover,
+	.tr-follow:focus-visible {
+		border-color: var(--color-accent);
+		color: var(--color-accent);
+	}
+
+	/* Включённое слежение видно с одного взгляда — иначе непонятно, почему
+	   текст едет сам. */
+	.tr-follow.is-on {
+		background: var(--color-accent);
+		border-color: var(--color-accent);
+		color: var(--color-bg);
+	}
+
+	.tr-follow[hidden] {
+		display: none;
+	}
+
+	.tr-hits {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--space-1);
+		margin: 0 0 var(--space-2);
+		color: var(--color-text-muted);
+		font-size: var(--font-size-sm);
+	}
+
+	.tr-hits[hidden] {
+		display: none;
+	}
+
+	.tr-hits-off {
+		border: none;
+		background: transparent;
+		padding: 0;
+		color: var(--color-accent);
+		font: inherit;
+		font-size: var(--font-size-sm);
+		cursor: pointer;
+	}
+
 	/* Свёрнутый вид: окно фиксированной высоты со своей прокруткой.
 	   Развёрнутый — обычный поток страницы, ограничение снимается. */
 	.tr-body {
@@ -318,6 +612,12 @@ const blocks = groupReplicas(transcript);
 
 	.tr-block + .tr-block {
 		border-top: 1px solid var(--color-border);
+	}
+
+	/* Блок, который звучит прямо сейчас (режим «Следить за плеером»). Полоска
+	   слева, а не заливка всего блока: заливка на пол-экрана текста мешает читать. */
+	.tr-block.is-playing {
+		box-shadow: inset 3px 0 0 var(--color-accent);
 	}
 
 	.tr-side {
@@ -374,6 +674,22 @@ const blocks = groupReplicas(transcript);
 
 	.tr-text :global(mark.is-current) {
 		background: var(--color-accent);
+	}
+
+	/* Упоминания тайтлов. Ссылка только у первого в выпуске — повторные лежат
+	   в <span> и выглядят как обычный текст, иначе выпуск про «K-On!», где
+	   название звучит 17 раз, стал бы синим месивом.
+	   :global тут НЕ нужен: сами элементы созданы при сборке, атрибут Astro
+	   на них есть, скрипт только добавляет классы. */
+	.tr-anime.is-hit {
+		background: var(--color-accent-2);
+		color: var(--color-bg);
+		border-radius: 3px;
+	}
+
+	.tr-anime.is-current {
+		background: var(--color-accent);
+		color: var(--color-bg);
 	}
 
 	.tr-expand {
