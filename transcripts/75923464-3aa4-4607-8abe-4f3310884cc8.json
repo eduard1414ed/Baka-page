@@ -5,8 +5,8 @@
   "episodeTitle": "Мы издаем целую книгу — гид по аниме! Как она создавалась? | ft. Кинопоиск и Яндекс Книги",
   "speakers": {
     "speaker_0": "Эд",
-    "speaker_1": "Ксюша?",
-    "speaker_2": "Гость",
+    "speaker_1": "Татьяна Симакова",
+    "speaker_2": "Лена Николаева",
     "speaker_3": "Гость 2",
     "speaker_4": "Гость 3",
     "speaker_5": "Гость 4",
@@ -25,14 +25,16 @@
       "detectedBy": "pitch",
       "pitchHz": 193,
       "speechSeconds": 355.4,
-      "needsName": true
+      "needsName": false,
+      "manual": true
     },
     "speaker_2": {
       "role": "guest",
       "detectedBy": "order",
       "pitchHz": 174,
       "speechSeconds": 335.9,
-      "needsName": true
+      "needsName": false,
+      "manual": true
     },
     "speaker_3": {
       "role": "guest",

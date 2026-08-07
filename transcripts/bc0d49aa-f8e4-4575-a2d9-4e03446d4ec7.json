@@ -5,9 +5,9 @@
   "episodeTitle": "Шаман Кинг | Почему это плохая экранизация и за что мы ее любим?",
   "speakers": {
     "speaker_0": "Эд",
-    "speaker_1": "Ксюша?",
-    "speaker_2": "Гость",
-    "speaker_3": "Гость 2",
+    "speaker_1": "Гость",
+    "speaker_2": "Гость 2",
+    "speaker_3": "Ксюша",
     "speaker_4": "Гость 3",
     "speaker_5": "Гость 4"
   },
@@ -24,21 +24,24 @@
       "detectedBy": "pitch",
       "pitchHz": 211,
       "speechSeconds": 534.8,
-      "needsName": true
+      "needsName": false,
+      "manual": true
     },
     "speaker_2": {
       "role": "guest",
       "detectedBy": "order",
       "pitchHz": 222,
       "speechSeconds": 495.4,
-      "needsName": true
+      "needsName": false,
+      "manual": true
     },
     "speaker_3": {
       "role": "guest",
       "detectedBy": "order",
       "pitchHz": 190,
       "speechSeconds": 205.0,
-      "needsName": true
+      "needsName": false,
+      "manual": true
     },
     "speaker_4": {
       "role": "guest",

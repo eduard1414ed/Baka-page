@@ -870,7 +870,9 @@ def recheck_speakers():
 	(HOST_MALE_HZ, HOST_FEMALE_HZ и их HOST_*_TOLERANCE_HZ) и переразложить
 	имена можно когда угодно, не платя за распознавание второй раз.
 
-	Имена, вписанные руками, при этом затрутся — на то и команда.
+	Выпуски, где имена правили руками, пропускаются: у них в `speakerInfo`
+	стоит `"manual": true`. Иначе команда затёрла бы ручную работу — а именно
+	руками разбираются самые трудные случаи, где голос подвёл.
 	"""
 	files = [
 		f for f in sorted(OUTPUT_DIR.glob("*.json"))
@@ -889,12 +891,17 @@ def recheck_speakers():
 	print(f"Транскриптов: {len(files)}")
 	print()
 
-	changed = 0
+	changed = protected = 0
 	for f in files:
 		data = json.loads(f.read_text())
 		old_info = data.get("speakerInfo")
 		if not old_info:
 			print(f"  {f.name}: нет блока speakerInfo, пропускаю (старый формат)")
+			continue
+		if any(v.get("manual") for v in old_info.values()):
+			protected += 1
+			title = data.get("episodeTitle", f.stem)[:45]
+			print(f"  {title:<45} имена правили руками — не трогаю")
 			continue
 
 		pitches = {sid: v.get("pitchHz") for sid, v in old_info.items()}
@@ -918,7 +925,8 @@ def recheck_speakers():
 			print(f"  {title:<45} без изменений")
 
 	print()
-	print(f"Изменено выпусков: {changed} из {len(files)}")
+	print(f"Изменено выпусков: {changed} из {len(files)}"
+	      + (f", защищено ручной правкой: {protected}" if protected else ""))
 
 
 def recheck_names(min_ratio=0.72):

@@ -4,9 +4,9 @@
   "episodeGuid": "c0de3508-120b-4ea4-8399-c3e86026ace4",
   "episodeTitle": "«Девочка, покорившая время». Легендарное сай-фай-аниме про подростков, взросление и первую любовь | ft. «Крупным планом»",
   "speakers": {
-    "speaker_0": "Эд?",
+    "speaker_0": "Эд",
     "speaker_2": "Ксюша",
-    "speaker_1": "Гость",
+    "speaker_1": "Даулет Жинайдаров",
     "speaker_3": "Гость 2"
   },
   "speakerInfo": {
@@ -15,21 +15,24 @@
       "detectedBy": "pitch",
       "pitchHz": 130,
       "speechSeconds": 773.4,
-      "needsName": true
+      "needsName": false,
+      "manual": true
     },
     "speaker_1": {
       "role": "guest",
       "detectedBy": "order",
       "pitchHz": 118,
       "speechSeconds": 673.2,
-      "needsName": true
+      "needsName": false,
+      "manual": true
     },
     "speaker_2": {
       "role": "host",
       "detectedBy": "pitch",
       "pitchHz": 193,
       "speechSeconds": 570.3,
-      "needsName": false
+      "needsName": false,
+      "manual": true
     },
     "speaker_3": {
       "role": "guest",

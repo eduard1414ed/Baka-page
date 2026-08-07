@@ -4,7 +4,7 @@
   "episodeGuid": "603a4812-9514-435b-a148-49c43383e42f",
   "episodeTitle": "Пожиратель душ — самый недооцененный сёнен? | Хеллоуинский спешал",
   "speakers": {
-    "speaker_0": "Эд?",
+    "speaker_0": "Эд",
     "speaker_1": "Ксюша",
     "speaker_2": "Гость"
   },
@@ -14,7 +14,8 @@
       "detectedBy": "pitch",
       "pitchHz": 133,
       "speechSeconds": 2848.6,
-      "needsName": true
+      "needsName": false,
+      "manual": true
     },
     "speaker_1": {
       "role": "host",

@@ -4,8 +4,8 @@
   "episodeGuid": "0114d7c3-c36d-4d06-bde1-8e447cf68e04",
   "episodeTitle": "Интервью с переводчиком «Скотта Пилигрима» | Специальный эпизод",
   "speakers": {
-    "speaker_0": "Эд?",
-    "speaker_1": "Гость"
+    "speaker_0": "Гость",
+    "speaker_1": "Эд"
   },
   "speakerInfo": {
     "speaker_0": {
@@ -13,14 +13,16 @@
       "detectedBy": "pitch",
       "pitchHz": 140,
       "speechSeconds": 1085.2,
-      "needsName": true
+      "needsName": false,
+      "manual": true
     },
     "speaker_1": {
       "role": "guest",
       "detectedBy": "order",
       "pitchHz": 132,
       "speechSeconds": 403.3,
-      "needsName": true
+      "needsName": false,
+      "manual": true
     }
   },
   "replicas": [
