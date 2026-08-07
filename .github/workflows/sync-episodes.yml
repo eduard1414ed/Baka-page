@@ -41,10 +41,10 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           # public/episodes — сжатые обложки новых выпусков, их скрипт кладёт
           # рядом с черновиком (см. scripts/episode-cover-lib.mjs).
-          # src/data/episodeCovers.json — список скачанных обложек, его читает
+          # src/data/episodeCovers.mjs — список скачанных обложек, его читает
           # сборка сайта. Без этих строк и то и другое осталось бы
           # незакоммиченным, и обложка нового выпуска приехала бы мегабайтом.
-          git add src/content/posts public/episodes src/data/episodeCovers.json
+          git add src/content/posts public/episodes src/data/episodeCovers.mjs
           if git diff --cached --quiet; then
             echo "Новых выпусков нет."
           else
