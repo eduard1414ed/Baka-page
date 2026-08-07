@@ -9,6 +9,8 @@ import { findEpisodeByGuid } from '../../lib/podcastFeed.mjs';
 import PlatformIcon from '../../components/PlatformIcon.astro';
 import AnimeBadge from '../../components/AnimeBadge.astro';
 import EpisodePlayer from '../../components/EpisodePlayer.astro';
+import Transcript from '../../components/Transcript.astro';
+import { hasUsableTimecodes } from '../../lib/transcript.mjs';
 import { isPublished } from '../../lib/publishing.mjs';
 
 export async function getStaticPaths() {
@@ -29,6 +31,18 @@ const { post, episode } = Astro.props;
 const { Content } = await render(post);
 
 const { title, date, category, cover, youtube, video, buttons, anime } = post.data;
+
+// Расшифровка (тз/05, шаг 5). Ищем сначала по полю `transcript`, если автор его
+// заполнил, иначе по audioGuid — у выпусков подкаста файл расшифровки называется
+// тем же guid, что и запись в RSS, поэтому вести поле руками не нужно.
+// Поле нужно там, где audioGuid нет вовсе (видеоэссе с YouTube в фиде нет).
+//
+// getEntry вернёт undefined, если расшифровки для этого выпуска ещё нет —
+// таких сейчас 36 (эссе и «Врата аниме», их не распознавали, у них свой путь
+// через выравнивание сценария по звуку). Страница просто останется без блока.
+const transcriptId = post.data.transcript ?? post.data.audioGuid;
+const transcript = transcriptId ? await getEntry('transcripts', transcriptId) : undefined;
+const showTranscript = transcript && hasUsableTimecodes(transcript.data);
 const categoryLabel = categories.find((c) => c.id === category)?.label ?? category;
 const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -105,6 +119,8 @@ const animeEntries = anime ? (await Promise.all(anime.map((ref) => getEntry(ref)
 		<div class="content">
 			<Content />
 		</div>
+
+		{showTranscript && <Transcript transcript={transcript.data} />}
 
 		{
 			animeEntries.length > 0 && (

@@ -1,0 +1,410 @@
+---
+// Расшифровка выпуска на странице поста (тз/05, шаг 5).
+// Структура и поведение — по референсу из сессии; цвета, шрифты и отступы
+// только из src/styles/tokens.css, чужой дизайн не копируем. Отделка — этап 8.
+//
+// Текст отдаётся целиком в HTML, без подгрузки по частям. Померено на архиве:
+// самая тяжёлая страница — 186 КБ сырого HTML, но Cloudflare сжимает на лету,
+// и до браузера доходит 37 КБ. Это меньше одной картинки в посте, дробить
+// нечего. Заодно «слежение за плеером» (вторая сессия) увидит все реплики
+// в DOM сразу, а не будет спотыкаться на границе подгруженного.
+//
+// Свёрнутый вид — окно фиксированной высоты со своей полосой прокрутки
+// (как на референсе), чистый CSS. Это удобство чтения, чтобы транскрипт не
+// отодвигал подвал на два экрана, а не экономия трафика.
+import { groupReplicas, formatTimecode } from '../lib/transcript.mjs';
+
+interface Props {
+	transcript: {
+		speakers: Record<string, string>;
+		replicas: { start: number; end: number; speaker: string; text: string }[];
+	};
+}
+
+const { transcript } = Astro.props;
+const blocks = groupReplicas(transcript);
+---
+
+<section class="transcript" aria-labelledby="transcript-title">
+	<h2 id="transcript-title">Транскрипт</h2>
+	<p class="tr-note">расшифровано автоматически, ошибки возможны</p>
+
+	<div class="tr-tools">
+		<input
+			class="tr-search"
+			type="search"
+			placeholder="Поиск по транскрипту"
+			autocomplete="off"
+			aria-label="Поиск по транскрипту"
+		/>
+		<button class="tr-step" type="button" data-dir="-1" aria-label="Предыдущее совпадение" disabled>↑</button>
+		<button class="tr-step" type="button" data-dir="1" aria-label="Следующее совпадение" disabled>↓</button>
+		<span class="tr-count" role="status" aria-live="polite"></span>
+	</div>
+
+	<div class="tr-body">
+		{
+			blocks.map((block) => (
+				<div class="tr-block">
+					<div class="tr-side">
+						{/* У блока, оторвавшегося от предыдущего по порогу длины, имя
+						    не повторяем — это та же речь, просто с новым таймкодом. */}
+						{!block.continues && <span class="tr-name">{block.name}</span>}
+						<button type="button" class="tr-time" data-seconds={block.start}>
+							{formatTimecode(block.start)}
+						</button>
+					</div>
+					<p class="tr-text">{block.text}</p>
+				</div>
+			))
+		}
+	</div>
+
+	<button class="tr-expand" type="button" aria-expanded="false">Развернуть транскрипт целиком</button>
+</section>
+
+<script>
+	// Ищем без учёта регистра и без разницы между «е» и «ё»: распознавание
+	// сплошь пишет «Унесенные» там, где в названии «Унесённые», и поиск по
+	// правильному написанию иначе ничего бы не находил. Замена один символ
+	// на один, поэтому позиции найденного не сбиваются.
+	function fold(text: string): string {
+		return text.toLowerCase().replace(/ё/g, 'е');
+	}
+
+	function initTranscript(section: HTMLElement) {
+		const input = section.querySelector<HTMLInputElement>('.tr-search');
+		const steps = section.querySelectorAll<HTMLButtonElement>('.tr-step');
+		const counter = section.querySelector<HTMLElement>('.tr-count');
+		const body = section.querySelector<HTMLElement>('.tr-body');
+		const expand = section.querySelector<HTMLButtonElement>('.tr-expand');
+		if (!input || !counter || !body || !expand) return;
+
+		const paragraphs = Array.from(section.querySelectorAll<HTMLElement>('.tr-text'));
+		// Исходный текст запоминаем один раз: подсветка перебирает содержимое
+		// абзаца, и без копии восстановить его после следующего запроса нечем.
+		const originals = new Map(paragraphs.map((p) => [p, p.textContent ?? '']));
+
+		let matches: HTMLElement[] = [];
+		let current = -1;
+		// Только те абзацы, в которых подсветка реально что-то поменяла —
+		// чтобы не перебирать все 477 при каждом нажатии клавиши.
+		let touched: HTMLElement[] = [];
+
+		function clearMarks() {
+			for (const p of touched) p.textContent = originals.get(p) ?? '';
+			touched = [];
+			matches = [];
+			current = -1;
+		}
+
+		// Показать совпадение. Пока транскрипт свёрнут, у блока своя полоса
+		// прокрутки — двигаем её, страницу не трогаем совсем (иначе при каждом
+		// переходе к следующему совпадению страница прыгала бы под руками).
+		function reveal(mark: HTMLElement) {
+			if (body!.scrollHeight > body!.clientHeight) {
+				const markRect = mark.getBoundingClientRect();
+				const bodyRect = body!.getBoundingClientRect();
+				body!.scrollTop += markRect.top - bodyRect.top - body!.clientHeight / 2;
+			} else {
+				mark.scrollIntoView({ block: 'center', behavior: 'smooth' });
+			}
+		}
+
+		function setCurrent(index: number) {
+			if (matches.length === 0) return;
+			matches[current]?.classList.remove('is-current');
+			current = (index + matches.length) % matches.length;
+			matches[current].classList.add('is-current');
+			counter!.textContent = `${current + 1} из ${matches.length}`;
+			reveal(matches[current]);
+		}
+
+		function search(query: string) {
+			clearMarks();
+
+			const needle = fold(query.trim());
+			// Один символ подсветил бы пол-транскрипта — ждём, пока наберут два.
+			if (needle.length < 2) {
+				counter!.textContent = '';
+				steps.forEach((s) => (s.disabled = true));
+				return;
+			}
+
+			for (const paragraph of paragraphs) {
+				const text = originals.get(paragraph) ?? '';
+				const haystack = fold(text);
+				if (!haystack.includes(needle)) continue;
+
+				const fragment = document.createDocumentFragment();
+				let cursor = 0;
+				let at = haystack.indexOf(needle);
+
+				while (at !== -1) {
+					if (at > cursor) fragment.append(text.slice(cursor, at));
+					const mark = document.createElement('mark');
+					// Из исходного текста, а не из запроса — сохраняем регистр и «ё».
+					mark.textContent = text.slice(at, at + needle.length);
+					fragment.append(mark);
+					matches.push(mark);
+					cursor = at + needle.length;
+					at = haystack.indexOf(needle, cursor);
+				}
+
+				if (cursor < text.length) fragment.append(text.slice(cursor));
+				paragraph.textContent = '';
+				paragraph.append(fragment);
+				touched.push(paragraph);
+			}
+
+			steps.forEach((s) => (s.disabled = matches.length === 0));
+			if (matches.length === 0) {
+				counter!.textContent = 'ничего не найдено';
+				return;
+			}
+			setCurrent(0);
+		}
+
+		input.addEventListener('input', () => search(input.value));
+
+		// Enter — к следующему совпадению, Shift+Enter — к предыдущему,
+		// не отрывая рук от клавиатуры.
+		input.addEventListener('keydown', (event) => {
+			if (event.key !== 'Enter') return;
+			event.preventDefault();
+			if (matches.length > 0) setCurrent(current + (event.shiftKey ? -1 : 1));
+		});
+
+		steps.forEach((step) => {
+			step.addEventListener('click', () => {
+				if (matches.length > 0) setCurrent(current + Number(step.dataset.dir));
+			});
+		});
+
+		expand.addEventListener('click', () => {
+			const opened = section.classList.toggle('is-expanded');
+			expand.setAttribute('aria-expanded', String(opened));
+			expand.textContent = opened ? 'Свернуть транскрипт' : 'Развернуть транскрипт целиком';
+		});
+
+		// Клик по плашке таймкода перематывает плеер. Через делегирование, а не
+		// слушателем на каждой из сотен плашек. Свой класс .tr-time, а НЕ .timecode
+		// из remark-timecode.mjs: те PlayerBar.astro ловит сам, и на общем классе
+		// клик обработался бы дважды.
+		//
+		// Плеера на странице может не быть вовсе — например, если фид подкаста
+		// в момент сборки не ответил (см. getStaticPaths в pages/posts/[slug].astro).
+		// Тогда плашки не притворяются кликабельными, а текст остаётся на месте:
+		// читать расшифровку можно и без звука.
+		const playerCard = document.querySelector<HTMLElement>('.episode-player');
+		if (!playerCard) {
+			section.querySelectorAll<HTMLButtonElement>('.tr-time').forEach((button) => {
+				button.disabled = true;
+			});
+			return;
+		}
+
+		section.addEventListener('click', (event) => {
+			const button = (event.target as HTMLElement).closest<HTMLButtonElement>('.tr-time');
+			if (!button) return;
+			const api = (window as any).__bakaPlayer as
+				| { load: (data: DOMStringMap, seekSeconds?: number) => void }
+				| undefined;
+			if (!api) return;
+			api.load(playerCard.dataset, Number(button.dataset.seconds));
+		});
+	}
+
+	// Как и в pages/posts/[slug].astro: из-за <ClientRouter /> переходы идут без
+	// перезагрузки, собранный скрипт браузер выполняет один раз за сессию —
+	// поэтому навешиваемся на astro:page-load, оно срабатывает и при первой
+	// загрузке, и после каждого перехода.
+	document.addEventListener('astro:page-load', () => {
+		document.querySelectorAll<HTMLElement>('.transcript').forEach(initTranscript);
+	});
+</script>
+
+<style>
+	.transcript {
+		margin-top: var(--space-4);
+		padding-top: var(--space-3);
+		border-top: 1px solid var(--color-border);
+	}
+
+	.tr-note {
+		margin-top: var(--space-1);
+		color: var(--color-text-muted);
+		font-size: var(--font-size-sm);
+	}
+
+	.tr-tools {
+		display: flex;
+		align-items: center;
+		gap: var(--space-1);
+		margin: var(--space-2) 0;
+	}
+
+	.tr-search {
+		flex: 1 1 auto;
+		min-width: 0;
+		padding: var(--space-1) var(--space-2);
+		background: var(--color-bg-elevated);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		color: var(--color-text);
+		font: inherit;
+		font-size: var(--font-size-base);
+	}
+
+	.tr-search:focus-visible {
+		outline: none;
+		border-color: var(--color-accent);
+	}
+
+	.tr-step {
+		flex-shrink: 0;
+		width: 2.25rem;
+		height: 2.25rem;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		background: transparent;
+		color: var(--color-text);
+		font-size: var(--font-size-base);
+		line-height: 1;
+		cursor: pointer;
+		transition:
+			border-color var(--transition-fast),
+			color var(--transition-fast);
+	}
+
+	.tr-step:hover:not(:disabled),
+	.tr-step:focus-visible:not(:disabled) {
+		border-color: var(--color-accent);
+		color: var(--color-accent);
+	}
+
+	.tr-step:disabled {
+		opacity: 0.4;
+		cursor: default;
+	}
+
+	.tr-count {
+		flex-shrink: 0;
+		min-width: 6.5rem;
+		color: var(--color-text-muted);
+		font-size: var(--font-size-sm);
+		font-variant-numeric: tabular-nums;
+	}
+
+	/* Свёрнутый вид: окно фиксированной высоты со своей прокруткой.
+	   Развёрнутый — обычный поток страницы, ограничение снимается. */
+	.tr-body {
+		max-height: 32rem;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+	}
+
+	.transcript.is-expanded .tr-body {
+		max-height: none;
+		overflow-y: visible;
+	}
+
+	.tr-block {
+		display: grid;
+		grid-template-columns: 9rem minmax(0, 1fr);
+		gap: var(--space-2);
+		padding: var(--space-2) 0;
+	}
+
+	.tr-block + .tr-block {
+		border-top: 1px solid var(--color-border);
+	}
+
+	.tr-side {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--space-1);
+	}
+
+	.tr-name {
+		font-size: var(--font-size-sm);
+		font-weight: 600;
+		line-height: 1.3;
+	}
+
+	.tr-time {
+		padding: 0.15rem var(--space-1);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		background: transparent;
+		color: var(--color-accent);
+		font: inherit;
+		font-size: var(--font-size-sm);
+		font-variant-numeric: tabular-nums;
+		line-height: 1.4;
+		cursor: pointer;
+		transition: border-color var(--transition-fast);
+	}
+
+	.tr-time:hover:not(:disabled),
+	.tr-time:focus-visible:not(:disabled) {
+		border-color: var(--color-accent);
+	}
+
+	/* Плеера на странице нет — плашка остаётся видна как метка времени,
+	   но не выглядит кнопкой, которая ничего не делает. */
+	.tr-time:disabled {
+		color: var(--color-text-muted);
+		cursor: default;
+	}
+
+	.tr-text {
+		margin: 0;
+	}
+
+	/* :global обязательно — <mark> создаёт скрипт во время работы страницы,
+	   и на него не попадает атрибут, по которому Astro ограничивает стили
+	   этим компонентом. Без :global подсветка не покрасилась бы вообще. */
+	.tr-text :global(mark) {
+		background: var(--color-accent-2);
+		color: var(--color-bg);
+		border-radius: 3px;
+	}
+
+	.tr-text :global(mark.is-current) {
+		background: var(--color-accent);
+	}
+
+	.tr-expand {
+		margin-top: var(--space-2);
+		padding: var(--space-1) var(--space-2);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		background: var(--color-bg-elevated);
+		color: var(--color-accent);
+		font: inherit;
+		font-size: var(--font-size-sm);
+		cursor: pointer;
+		transition: border-color var(--transition-fast);
+	}
+
+	.tr-expand:hover,
+	.tr-expand:focus-visible {
+		border-color: var(--color-accent);
+	}
+
+	/* На телефоне двух колонок нет: имя и таймкод уезжают над текстом реплики. */
+	@media (max-width: 640px) {
+		.tr-block {
+			grid-template-columns: 1fr;
+			gap: var(--space-1);
+		}
+
+		.tr-side {
+			flex-direction: row;
+			align-items: center;
+			gap: var(--space-1);
+		}
+	}
+</style>
