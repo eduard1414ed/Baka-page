@@ -62,6 +62,11 @@ export function hasUsableTimecodes(transcript) {
 //   start    — таймкод начала в секундах, на нём стоит кликабельная плашка
 //   end      — таймкод конца, понадобится «слежению за плеером» (вторая сессия)
 //   text     — склеенный текст реплик блока
+//   parts    — из каких реплик блок склеен: { index, text }. index — место
+//              реплики в исходном массиве, он же якорь для исключений
+//              упоминаний (см. src/lib/mentionExceptions.mjs). Разметка
+//              названий тоже идёт по репликам, а не по склейке: иначе
+//              «вхождение № 2 в реплике» было бы не от чего считать
 //   continues — true, если предыдущий блок был того же голоса (значит блок
 //               оторвался по порогу, а не потому что заговорил другой человек).
 //               По этому флагу имя во втором и дальше блоке не повторяется —
@@ -72,7 +77,7 @@ export function groupReplicas(transcript, maxBlockSec = MAX_BLOCK_SEC) {
 	const speakers = transcript?.speakers ?? {};
 	const blocks = [];
 
-	for (const replica of replicas) {
+	for (const [index, replica] of replicas.entries()) {
 		const last = blocks[blocks.length - 1];
 		const sameSpeaker = last && last.speaker === replica.speaker;
 		const fitsInBlock = last && replica.end - last.start <= maxBlockSec;
@@ -80,6 +85,7 @@ export function groupReplicas(transcript, maxBlockSec = MAX_BLOCK_SEC) {
 		if (sameSpeaker && fitsInBlock) {
 			last.end = replica.end;
 			last.text += ` ${replica.text}`;
+			last.parts.push({ index, text: replica.text });
 			continue;
 		}
 
@@ -89,6 +95,7 @@ export function groupReplicas(transcript, maxBlockSec = MAX_BLOCK_SEC) {
 			start: replica.start,
 			end: replica.end,
 			text: replica.text,
+			parts: [{ index, text: replica.text }],
 			continues: Boolean(sameSpeaker),
 		});
 	}

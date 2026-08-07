@@ -127,7 +127,7 @@ const animeEntries = anime ? (await Promise.all(anime.map((ref) => getEntry(ref)
 			<Content />
 		</div>
 
-		{showTranscript && <Transcript transcript={transcript.data} />}
+		{showTranscript && <Transcript transcript={transcript.data} transcriptId={transcript.id} />}
 
 		{
 			animeEntries.length > 0 && (

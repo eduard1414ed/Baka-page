@@ -12,18 +12,21 @@
 // Свёрнутый вид — окно фиксированной высоты со своей полосой прокрутки
 // (как на референсе), чистый CSS. Это удобство чтения, чтобы транскрипт не
 // отодвигал подвал на два экрана, а не экономия трафика.
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import { groupReplicas, formatTimecode } from '../lib/transcript.mjs';
 import { buildAnimeMatcher, splitByMentions } from '../lib/animeMentions.mjs';
+import { makeExceptionFilter } from '../lib/mentionExceptions.mjs';
 
 interface Props {
 	transcript: {
 		speakers: Record<string, string>;
 		replicas: { start: number; end: number; speaker: string; text: string }[];
 	};
+	// Имя файла расшифровки — по нему же ищется файл исключений упоминаний.
+	transcriptId: string;
 }
 
-const { transcript } = Astro.props;
+const { transcript, transcriptId } = Astro.props;
 
 // Разметка названий тайтлов внутри расшифровки (тз/05, шаг 5).
 //
@@ -34,21 +37,30 @@ const { transcript } = Astro.props;
 //   2. Помечены при этом ВСЕ упоминания до единого (класс .tr-anime): по ним
 //      считаются таймкоды для страницы тайтла и по ним же листают стрелки,
 //      когда на выпуск пришли по ссылке «обсуждали на 12:04».
+//
+// Убранное руками (src/content/mention-exceptions/) сюда не попадает вовсе —
+// остаётся обычным текстом. Ссылкой становится первое ВИДИМОЕ упоминание.
 const animeList = await getCollection('anime');
 const matcher = buildAnimeMatcher(animeList);
+const exceptions = makeExceptionFilter((await getEntry('mentionExceptions', transcriptId))?.data);
 const linked = new Set<string>();
 
+// Разметку ищем по репликам (block.parts), а не по склеенному тексту блока:
+// номер вхождения в реплике — половина якоря для исключений.
 const blocks = groupReplicas(transcript).map((block: any) => ({
 	...block,
 	// data-seconds у упоминания — начало блока, то же число, что на плашке
 	// рядом. По нему ссылка со страницы тайтла находит нужное упоминание.
 	seconds: Math.floor(block.start),
-	segments: splitByMentions(block.text, matcher).map((segment: any) => {
-		if (!segment.animeId) return segment;
-		const isFirst = !linked.has(segment.animeId);
-		linked.add(segment.animeId);
-		return { ...segment, isFirst };
-	}),
+	parts: block.parts.map((part: any) => ({
+		...part,
+		segments: splitByMentions(part.text, matcher, part.index, exceptions).map((segment: any) => {
+			if (!segment.animeId) return segment;
+			const isFirst = !linked.has(segment.animeId);
+			linked.add(segment.animeId);
+			return { ...segment, isFirst };
+		}),
+	})),
 }));
 ---
 
@@ -88,24 +100,38 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 							{formatTimecode(block.start)}
 						</button>
 					</div>
-					<p class="tr-text">{block.segments.map((segment: any) =>
-						!segment.animeId ? (
-							segment.text
-						) : segment.isFirst ? (
-							<a
-								class="anime-mention tr-anime"
-								href={`/anime/${segment.animeId}`}
-								data-anime={segment.animeId}
-								data-seconds={block.seconds}
-							>
-								{segment.text}
-							</a>
-						) : (
-							<span class="tr-anime" data-anime={segment.animeId} data-seconds={block.seconds}>
-								{segment.text}
-							</span>
-						),
-					)}</p>
+					<p class="tr-text">{block.parts.map((part: any, partIndex: number) => (
+						<Fragment>
+							{/* Реплики склеены пробелом — ровно как в block.text. */}
+							{partIndex > 0 && ' '}
+							{part.segments.map((segment: any) =>
+								!segment.animeId ? (
+									segment.text
+								) : segment.isFirst ? (
+									<a
+										class="anime-mention tr-anime"
+										href={`/anime/${segment.animeId}`}
+										data-anime={segment.animeId}
+										data-seconds={block.seconds}
+										data-replica={part.index}
+										data-occurrence={segment.occurrence}
+									>
+										{segment.text}
+									</a>
+								) : (
+									<span
+										class="tr-anime"
+										data-anime={segment.animeId}
+										data-seconds={block.seconds}
+										data-replica={part.index}
+										data-occurrence={segment.occurrence}
+									>
+										{segment.text}
+									</span>
+								),
+							)}
+						</Fragment>
+					))}</p>
 				</div>
 			))
 		}

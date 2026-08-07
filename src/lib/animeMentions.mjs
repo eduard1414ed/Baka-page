@@ -86,7 +86,11 @@ export function buildAnimeMatcher(entries) {
 
 /**
  * Все упоминания названий в одном куске текста.
- * Возвращает список { id, start, end } по возрастанию позиции, без наложений.
+ * Возвращает список { id, start, end, occurrence } по возрастанию позиции,
+ * без наложений. `occurrence` — какое это по счёту вхождение ЭТОГО тайтла
+ * в ЭТОМ куске, с нуля: вместе с номером реплики это якорь для исключений
+ * (см. src/lib/mentionExceptions.mjs), и потому искать надо по реплике,
+ * а не по склеенному тексту блока.
  */
 export function findMentions(text, matcher) {
 	if (!text || matcher.length === 0) return [];
@@ -114,15 +118,36 @@ export function findMentions(text, matcher) {
 		}
 	}
 
-	return found.sort((a, b) => a.start - b.start);
+	found.sort((a, b) => a.start - b.start);
+
+	// Нумеруем уже после сортировки: длинные названия ищутся первыми, и в порядке
+	// нахождения номера вышли бы не такими, как их видит человек в тексте.
+	const counts = new Map();
+	for (const mention of found) {
+		const seen = counts.get(mention.id) ?? 0;
+		mention.occurrence = seen;
+		counts.set(mention.id, seen + 1);
+	}
+
+	return found;
 }
 
+// Убранные руками упоминания (см. src/lib/mentionExceptions.mjs) на страницу
+// не попадают вовсе и в индекс не идут. По умолчанию не убрано ничего.
+const KEEP_ALL = { isHidden: () => false };
+
 /**
- * Текст → куски для вывода: обычный текст и упоминания.
- * Каждый кусок — { text } или { text, animeId }.
+ * Текст ОДНОЙ реплики → куски для вывода: обычный текст и упоминания.
+ * Каждый кусок — { text } или { text, animeId, occurrence }.
+ * Убранные руками упоминания возвращаются обычным текстом.
+ *
+ * @param {number} replicaIndex — место реплики в исходном массиве, якорь исключений
  */
-export function splitByMentions(text, matcher) {
-	const mentions = findMentions(text, matcher);
+export function splitByMentions(text, matcher, replicaIndex = -1, exceptions = KEEP_ALL) {
+	const mentions = findMentions(text, matcher).filter(
+		(mention) =>
+			!exceptions.isHidden(mention.id, replicaIndex, mention.occurrence, text.slice(mention.start, mention.end)),
+	);
 	if (mentions.length === 0) return [{ text }];
 
 	const parts = [];
@@ -130,7 +155,11 @@ export function splitByMentions(text, matcher) {
 
 	for (const mention of mentions) {
 		if (mention.start > cursor) parts.push({ text: text.slice(cursor, mention.start) });
-		parts.push({ text: text.slice(mention.start, mention.end), animeId: mention.id });
+		parts.push({
+			text: text.slice(mention.start, mention.end),
+			animeId: mention.id,
+			occurrence: mention.occurrence,
+		});
 		cursor = mention.end;
 	}
 
@@ -148,21 +177,29 @@ export function splitByMentions(text, matcher) {
  * транскрипте, и список не превращается в «11:57, 11:57, 12:10, 12:10» —
  * в ep-102 «Наруто» звучит четыре раза внутри двух блоков.
  *
- * @param {{ start: number, text: string }[]} blocks — результат groupReplicas()
+ * Ищем при этом ПО РЕПЛИКАМ (block.parts), а не по склеенному тексту блока:
+ * номер вхождения в реплике — половина якоря для исключений, и по склейке его
+ * не посчитать.
+ *
+ * @param {{ start: number, parts: { index: number, text: string }[] }[]} blocks — результат groupReplicas()
  */
-export function collectBlockMentions(blocks, matcher) {
+export function collectMentions(blocks, matcher, exceptions = KEEP_ALL) {
 	const byAnime = new Map();
 
 	for (const block of blocks) {
 		const seenHere = new Set();
 
-		for (const { id } of findMentions(block.text, matcher)) {
-			if (seenHere.has(id)) continue;
-			seenHere.add(id);
+		for (const part of block.parts) {
+			for (const mention of findMentions(part.text, matcher)) {
+				const text = part.text.slice(mention.start, mention.end);
+				if (exceptions.isHidden(mention.id, part.index, mention.occurrence, text)) continue;
+				if (seenHere.has(mention.id)) continue;
+				seenHere.add(mention.id);
 
-			const times = byAnime.get(id) ?? [];
-			times.push(block.start);
-			byAnime.set(id, times);
+				const times = byAnime.get(mention.id) ?? [];
+				times.push(block.start);
+				byAnime.set(mention.id, times);
+			}
 		}
 	}
 

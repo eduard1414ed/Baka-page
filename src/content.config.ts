@@ -129,4 +129,37 @@ const transcripts = defineCollection({
 	}),
 });
 
-export const collections = { posts, anime, transcripts };
+// Что убрать из упоминаний руками (тз/05, шаг 5). Файл на выпуск, имя — то же,
+// что у расшифровки. Отдельно от транскрипта специально: CMS при сохранении
+// переписывает файл целиком, и в массив из трёхсот оплаченных реплик её лучше
+// не пускать — та же причина, по которой отдельно живёт карта имён спикеров.
+// Подробности и правила — src/lib/mentionExceptions.mjs.
+const mentionExceptions = defineCollection({
+	loader: glob({ pattern: '*.json', base: './src/content/mention-exceptions' }),
+	schema: z.object({
+		episodeGuid: z.string(),
+		// Тайтл убран из выпуска целиком.
+		hiddenAnime: z.array(z.string()).default([]),
+		// Убрано одно конкретное упоминание.
+		hiddenMentions: z
+			.array(
+				z.object({
+					anime: z.string(),
+					// Место реплики в массиве `replicas` расшифровки. ИМЕННО номер
+					// реплики, а не таймкод: впереди выравнивание сценариев по звуку
+					// (шаг 2), после него таймкоды сдвинутся.
+					replica: z.number().int().nonnegative(),
+					// Какое это по счёту вхождение этого тайтла в этой реплике, с нуля.
+					occurrence: z.number().int().nonnegative().default(0),
+					// Что там написано — сверка якоря. Не совпало = привязка потерялась,
+					// и упоминание ОСТАЁТСЯ на странице (лучше лишнее, чем тихо пропавшее).
+					text: z.string().optional(),
+					// Для человека: почему убрано.
+					note: z.string().optional(),
+				}),
+			)
+			.default([]),
+	}),
+});
+
+export const collections = { posts, anime, transcripts, mentionExceptions };

@@ -6,21 +6,40 @@
 // Если бы каждая считала сама, числа на них разъехались бы.
 
 import { groupReplicas, hasUsableTimecodes } from './transcript.mjs';
-import { buildAnimeMatcher, collectBlockMentions } from './animeMentions.mjs';
+import { buildAnimeMatcher, collectMentions } from './animeMentions.mjs';
+import { makeExceptionFilter } from './mentionExceptions.mjs';
 
 // Как страница поста находит свою расшифровку: сначала по полю `transcript`,
 // если автор его заполнил, иначе по audioGuid — файл расшифровки называется тем
-// же guid, что запись в RSS (см. src/pages/posts/[slug].astro).
+// же guid, что запись в RSS (см. src/pages/posts/[slug].astro). Тем же именем
+// называется и файл исключений в src/content/mention-exceptions/.
 export function transcriptIdFor(post) {
 	return post.data.transcript ?? post.data.audioGuid ?? null;
 }
 
+// Про какие потерянные исключения уже сказали: указатель строится дважды
+// за сборку (страница списка тайтлов и страницы самих тайтлов), а ругаться
+// на одно и то же дважды незачем.
+const warned = new Set();
+
+function warnAboutLost(id, lost) {
+	if (lost.length === 0 || warned.has(id)) return;
+	warned.add(id);
+	console.warn(
+		`[упоминания] ${id}: исключение не сработало — привязка потерялась, ` +
+			`упоминание осталось на странице (${lost.join('; ')}). ` +
+			`Поправьте src/content/mention-exceptions/${id}.json`,
+	);
+}
+
 /**
+ * @param {object[]} exceptions — коллекция mentionExceptions (может быть пустой)
  * @returns {Map<string, Map<string, number[]>>} id тайтла → (id поста → таймкоды)
  */
-export function buildMentionIndex({ posts, transcripts, animeList }) {
+export function buildMentionIndex({ posts, transcripts, animeList, exceptions = [] }) {
 	const matcher = buildAnimeMatcher(animeList);
 	const byTranscriptId = new Map(transcripts.map((entry) => [entry.id, entry]));
+	const byExceptionId = new Map(exceptions.map((entry) => [entry.id, entry]));
 	const index = new Map();
 
 	for (const post of posts) {
@@ -31,11 +50,15 @@ export function buildMentionIndex({ posts, transcripts, animeList }) {
 		// и ссылаться на минуту внутри них не на что.
 		if (!transcript || !hasUsableTimecodes(transcript.data)) continue;
 
-		for (const [animeId, times] of collectBlockMentions(groupReplicas(transcript.data), matcher)) {
+		const filter = makeExceptionFilter(byExceptionId.get(transcriptId)?.data);
+
+		for (const [animeId, times] of collectMentions(groupReplicas(transcript.data), matcher, filter)) {
 			const perPost = index.get(animeId) ?? new Map();
 			perPost.set(post.id, times);
 			index.set(animeId, perPost);
 		}
+
+		warnAboutLost(transcriptId, filter.lost());
 	}
 
 	return index;
