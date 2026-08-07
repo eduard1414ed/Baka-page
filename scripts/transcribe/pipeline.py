@@ -10,20 +10,36 @@ providers/ (форма модуля описана в providers/__init__.py). В
 
 Использование:
   python3 pipeline.py --list                  показать выпуски и статус обработки
+  python3 pipeline.py --estimate-archive --of 4
+                                              смета и разбивка архива на 4 части
+  python3 pipeline.py --run --part 1 --of 4   прогнать первую часть архива
   python3 pipeline.py --guid <guid>           обработать один выпуск
   python3 pipeline.py --guid <guid> --dry-run посчитать стоимость, ничего не отправлять
-  python3 pipeline.py --estimate-archive      смета на весь архив, ничего не отправлять
+  python3 pipeline.py --export транскрипты.tar.gz
+                                              упаковать готовое, чтобы забрать с сервера
   python3 pipeline.py --guid <guid> --provider soniox --out-suffix soniox
                                               прогнать другим сервисом, не затирая
                                               уже готовый транскрипт
+
+Долгий прогон надо запускать так, чтобы он пережил закрытие ноутбука:
+
+  nohup python3 pipeline.py --run --part 1 --of 4 --yes > part1.log 2>&1 &
+
+После этого можно спокойно отключаться, а смотреть, как идёт дело:
+  tail -f part1.log
 """
 
 import argparse
 import json
 import re
+import shutil
 import subprocess
 import sys
+import tarfile
+import time
+import traceback
 import wave
+from datetime import datetime
 from difflib import SequenceMatcher
 from pathlib import Path
 from urllib.request import Request, urlopen
@@ -56,7 +72,20 @@ HOST_FEMALE = "Ксюша"
 # «врата аниме» — обязательно целой фразой. По одному слову «врата» под нож
 # попал бы выпуск «Врата Штейна | Как разделить сериал на две части…» — это
 # разбор аниме Steins;Gate, а не рубрика, и распознавать его надо.
-EXCLUDE_TITLE_PARTS = ["эссе", "врата аниме"]
+EXCLUDE_TITLE_PARTS = ["эссе", "врата аниме", "трейлер подкаста"]
+
+# Отдельный список — для названий, которые надо сверять целиком, а не куском.
+# «Опенинг» — служебная запись в RSS на 18 секунд, речи там нет. Куском это
+# слово брать нельзя: под нож попал бы, например, будущий выпуск
+# «Опенинги. Зачем в аниме нужны музыкальные заставки?».
+EXCLUDE_EXACT_TITLES = ["опенинг"]
+
+
+def is_excluded(title):
+	low = title.strip().lower()
+	if low in EXCLUDE_EXACT_TITLES:
+		return True
+	return any(part in low for part in EXCLUDE_TITLE_PARTS)
 
 # Граница между мужским и женским голосом, Гц. Мужской обычно 85–180,
 # женский 165–255 — диапазоны почти не пересекаются, что и делает способ
@@ -65,11 +94,6 @@ EXCLUDE_TITLE_PARTS = ["эссе", "врата аниме"]
 # в «ведущие» по объёму речи пролез гость: если оба главных голоса оказались
 # по одну сторону границы, пара подозрительная.
 VOICE_SPLIT_HZ = 165
-
-
-def is_excluded(title):
-	low = title.lower()
-	return any(part in low for part in EXCLUDE_TITLE_PARTS)
 
 
 def load_env(path):
@@ -129,12 +153,50 @@ def save_state(state):
 	STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2))
 
 
-def download_audio(url, dest):
-	with requests.get(url, stream=True, timeout=120) as response:
-		response.raise_for_status()
-		with open(dest, "wb") as f:
-			for chunk in response.iter_content(chunk_size=1 << 20):
-				f.write(chunk)
+def download_audio(url, dest, attempts=3):
+	"""Скачать аудио, пережив короткий обрыв связи.
+
+	Файлы по 40–90 МБ, а прогон идёт часами — рано или поздно сеть моргнёт.
+	Без повторов один такой обрыв ронял бы весь выпуск.
+	"""
+	for attempt in range(1, attempts + 1):
+		try:
+			with requests.get(url, stream=True, timeout=120) as response:
+				response.raise_for_status()
+				with open(dest, "wb") as f:
+					for chunk in response.iter_content(chunk_size=1 << 20):
+						f.write(chunk)
+			return
+		except Exception as exc:
+			if dest.exists():
+				dest.unlink()
+			if attempt == attempts:
+				raise
+			pause = 5 * attempt
+			print(f"  не скачалось ({exc}); повтор {attempt + 1} из {attempts} через {pause} сек")
+			time.sleep(pause)
+
+
+def check_disk_space(episodes, min_free_mb=1500):
+	"""Хватит ли места на диске. Требование из CLAUDE.md — на сервере всего 40 ГБ.
+
+	Одновременно на диске лежит только один выпуск: mp3 (~2 МБ на минуту)
+	и его копия в wav 16 кГц моно для замера голоса (~1.9 МБ на минуту).
+	Считаем по самому длинному выпуску в списке.
+	"""
+	longest_min = max(e["duration_sec"] for e in episodes) / 60
+	need_mb = longest_min * 4
+	free_mb = shutil.disk_usage(WORK_DIR).free / (1024 * 1024)
+	print(
+		f"Место на диске: свободно {free_mb/1024:.1f} ГБ, "
+		f"самый длинный выпуск потребует ~{need_mb:.0f} МБ (mp3 + копия для замера голоса)"
+	)
+	if free_mb < max(need_mb * 2, min_free_mb):
+		raise RuntimeError(
+			f"Мало места на диске: свободно {free_mb:.0f} МБ, "
+			f"нужно хотя бы {max(need_mb * 2, min_free_mb):.0f} МБ. "
+			"Освободите место и запустите снова."
+		)
 
 
 # --- Сборка реплик из слов ---------------------------------------------
@@ -344,6 +406,22 @@ def fetch_anime_index():
 
 
 def find_anime_corrections(replicas, anime_index, min_ratio=0.72, max_ratio=0.97):
+	"""Найти в тексте искажённые названия тайтлов.
+
+	Ничего не исправляет — только складывает предложения, решение за автором
+	(так требует ТЗ, шаг 2).
+
+	Сравнение нечёткое и поэтому дорогое: каждое название прикладывается к
+	каждому куску каждой реплики. Чтобы это не превратилось в часы на архиве,
+	когда в справочнике станет много тайтлов, здесь три ускорения:
+	  * названия переводятся в нижний регистр один раз, а не на каждое сравнение;
+	  * SequenceMatcher создаётся один на название — он кэширует разбор второй
+	    строки, и менять достаточно только первую;
+	  * до точного сравнения отсекаем заведомо непохожее по длине и по дешёвой
+	    оценке сверху (real_quick_ratio/quick_ratio никогда не занижают ответ,
+	    поэтому если уж они меньше порога — точный расчёт тем более не пройдёт).
+	Результат при этом ровно тот же, что и у прямого перебора.
+	"""
 	titles = []
 	for entry in anime_index:
 		for key in ("titleRu", "titleOriginal"):
@@ -351,19 +429,35 @@ def find_anime_corrections(replicas, anime_index, min_ratio=0.72, max_ratio=0.97
 			if value:
 				titles.append(value)
 
+	prepared = []
+	for title in titles:
+		low = title.lower()
+		matcher = SequenceMatcher(None, "", low, autojunk=False)
+		# Если длины отличаются сильнее, чем на эту величину, отношение
+		# заведомо ниже порога — считать точно уже незачем.
+		max_len_gap = len(low) * (1 - min_ratio) / min_ratio + 1
+		prepared.append((title, low, len(low.split()), matcher, max_len_gap))
+
 	suggestions = []
 	for idx, replica in enumerate(replicas):
 		words = re.findall(r"[А-Яа-яЁёA-Za-z0-9\-]+", replica["text"])
-		for title in titles:
-			title_word_count = len(title.split())
-			for i in range(len(words) - title_word_count + 1):
-				window = " ".join(words[i : i + title_word_count])
-				ratio = SequenceMatcher(None, window.lower(), title.lower()).ratio()
+		lowered = [w.lower() for w in words]
+		for title, low, word_count, matcher, max_len_gap in prepared:
+			for i in range(len(words) - word_count + 1):
+				window = " ".join(lowered[i : i + word_count])
+				if abs(len(window) - len(low)) > max_len_gap:
+					continue
+				matcher.set_seq1(window)
+				if matcher.real_quick_ratio() < min_ratio:
+					continue
+				if matcher.quick_ratio() < min_ratio:
+					continue
+				ratio = matcher.ratio()
 				if min_ratio <= ratio < max_ratio:
 					suggestions.append(
 						{
 							"replica_index": idx,
-							"found": window,
+							"found": " ".join(words[i : i + word_count]),
 							"suggested": title,
 							"similarity": round(ratio, 2),
 						}
@@ -414,6 +508,15 @@ def process_episode(episode, provider, api_key, dry_run=False, out_suffix=None):
 		wav_samples, sr = load_wav_mono16(wav_path)
 
 		replicas = build_replicas(result["words"])
+		# Пустой ответ — это сбой, а не результат. Раньше такой выпуск молча
+		# сохранялся с нулём реплик и помечался сделанным: повторный запуск
+		# его пропускал, и пропажа обнаруживалась только глазами.
+		if not replicas:
+			raise RuntimeError(
+				"сервис вернул пустой результат — ни одного слова. "
+				"Возможно, в файле нет речи или он не скачался целиком."
+			)
+
 		slug, speaker_names, speaker_info, notes = assign_speaker_names(replicas, wav_samples, sr)
 
 		print("Ищу известные тайтлы для проверки названий...")
@@ -491,11 +594,151 @@ def process_episode(episode, provider, api_key, dry_run=False, out_suffix=None):
 				p.unlink()
 
 
-def estimate_archive(episodes, provider, state):
+def work_list(episodes):
+	"""Выпуски, которые вообще подлежат распознаванию, в порядке из RSS."""
+	return [e for e in episodes if not is_excluded(e["title"])]
+
+
+def split_into_parts(work, parts):
+	"""Разбить список на части примерно равные ПО ДЛИТЕЛЬНОСТИ, не по числу.
+
+	Считаем по длительности, потому что деньги берут за часы аудио: так каждая
+	часть стоит примерно одинаково, даже если выпуски очень разной длины
+	(в архиве есть и 8 минут, и 94).
+
+	Делим всегда весь список работ, а не только необработанное. Поэтому
+	«часть 2» — это всегда одни и те же выпуски, сколько бы вы уже ни прогнали.
+	Иначе после первого прогона границы частей поехали бы.
+	"""
+	total = sum(e["duration_sec"] for e in work)
+	if total <= 0 or parts <= 1:
+		return [list(work)]
+	target = total / parts
+	chunks = [[] for _ in range(parts)]
+	acc = 0.0
+	for ep in work:
+		idx = min(int(acc / target), parts - 1)
+		chunks[idx].append(ep)
+		acc += ep["duration_sec"]
+	return chunks
+
+
+def select_part(episodes, part, of):
+	work = work_list(episodes)
+	if not of:
+		return work
+	if not 1 <= part <= of:
+		raise ValueError(f"--part должен быть от 1 до {of}")
+	return split_into_parts(work, of)[part - 1]
+
+
+def run_archive(episodes, provider, api_key, state, part=None, of=None, assume_yes=False):
+	"""Прогнать пачку выпусков подряд, продолжая с места обрыва."""
+	selected = select_part(episodes, part, of)
+	pending = [e for e in selected if state.get(e["guid"], {}).get("status") != "done"]
+	done_already = len(selected) - len(pending)
+
+	where = f"часть {part} из {of}" if of else "весь архив"
+	print(f"Сервис: {provider.label}")
+	print(f"Задание: {where}")
+	print(f"Выпусков в задании: {len(selected)}, уже сделано: {done_already}")
+
+	if not pending:
+		print("Всё из этого задания уже обработано, делать нечего.")
+		return
+
+	pending_sec = sum(e["duration_sec"] for e in pending)
+	print(f"К обработке сейчас: {len(pending)}, суммарно {pending_sec/3600:.1f} ч аудио")
+	print(f"Ориентировочная стоимость: {format_estimate(provider.estimate(pending_sec))}")
+	print()
+	check_disk_space(pending)
+	print()
+
+	if not assume_yes:
+		if not sys.stdin.isatty():
+			print(
+				"Запуск не из терминала (например, через nohup), а подтверждения нет.\n"
+				"Добавьте --yes, если действительно хотите запустить и потратить деньги.",
+				file=sys.stderr,
+			)
+			sys.exit(1)
+		answer = input("Запускаем? Это тратит деньги. [y/N] ").strip().lower()
+		if answer not in ("y", "yes", "д", "да"):
+			print("Отменено, ничего не потрачено.")
+			return
+
+	started = time.time()
+	ok, failed = [], []
+	for i, episode in enumerate(pending, start=1):
+		print()
+		print("=" * 70)
+		print(f"[{i} из {len(pending)}]  {datetime.now():%H:%M:%S}")
+		try:
+			process_episode(episode, provider, api_key)
+			ok.append(episode)
+		except KeyboardInterrupt:
+			print("\nОстановлено вручную. Сделанное сохранено, продолжить можно тем же запуском.")
+			break
+		except Exception as exc:
+			# Один сбойный выпуск не должен ронять весь прогон: помечаем его
+			# и идём дальше. При следующем запуске он попадёт в очередь снова.
+			failed.append((episode, exc))
+			print(f"  ОШИБКА на этом выпуске: {exc}")
+			traceback.print_exc(file=sys.stdout)
+			state = load_state()
+			state[episode["guid"]] = {
+				"title": episode["title"],
+				"status": "failed",
+				"provider": provider.id,
+				"error": str(exc)[:300],
+				"failedAt": datetime.now().isoformat(timespec="seconds"),
+			}
+			save_state(state)
+
+	spent_sec = sum(e["duration_sec"] for e in ok)
+	print()
+	print("=" * 70)
+	print(f"ИТОГ ЗАДАНИЯ ({where})")
+	print(f"Готово: {len(ok)}, с ошибкой: {len(failed)}")
+	print(f"Обработано аудио: {spent_sec/3600:.1f} ч")
+	print(f"Потрачено ориентировочно: {format_estimate(provider.estimate(spent_sec))}")
+	print(f"Заняло времени: {(time.time() - started)/60:.0f} мин")
+	if failed:
+		print()
+		print("Не получилось (попадут в очередь при следующем запуске):")
+		for episode, exc in failed:
+			print(f"  {episode['title']} — {exc}")
+
+
+def export_transcripts(dest):
+	"""Упаковать готовые транскрипты в один архив, чтобы забрать с сервера.
+
+	Результат прогона существует в единственном экземпляре на сервере,
+	а за него заплачено — копию надо снимать сразу.
+	"""
+	files = sorted(OUTPUT_DIR.glob("*.json")) if OUTPUT_DIR.exists() else []
+	if not files:
+		print("В папке результатов пусто — нечего упаковывать.", file=sys.stderr)
+		sys.exit(1)
+	dest = Path(dest)
+	dest.parent.mkdir(parents=True, exist_ok=True)
+	with tarfile.open(dest, "w:gz") as tar:
+		for f in files:
+			tar.add(f, arcname=f.name)
+		if STATE_FILE.exists():
+			tar.add(STATE_FILE, arcname=STATE_FILE.name)
+	size_mb = dest.stat().st_size / (1024 * 1024)
+	print(f"Упаковано файлов: {len(files)} (плюс state.json)")
+	print(f"Архив: {dest}  ({size_mb:.1f} МБ)")
+	print("Заберите его с сервера, например:")
+	print(f"  scp root@СЕРВЕР:{dest} .")
+
+
+def estimate_archive(episodes, provider, state, of=None):
 	"""Смета на весь архив. В сеть не ходит, ничего не отправляет."""
 	all_sec = sum(e["duration_sec"] for e in episodes)
 	excluded = [e for e in episodes if is_excluded(e["title"])]
-	work = [e for e in episodes if not is_excluded(e["title"])]
+	work = work_list(episodes)
 	pending = [e for e in work if state.get(e["guid"], {}).get("status") != "done"]
 
 	excluded_sec = sum(e["duration_sec"] for e in excluded)
@@ -529,6 +772,21 @@ def estimate_archive(episodes, provider, state):
 			print()
 			print(f"  {pocket['warning']}")
 
+	if of:
+		print()
+		print(f"Разбивка на {of} части (запускать по одной, в любом порядке):")
+		for n, chunk in enumerate(split_into_parts(work, of), start=1):
+			chunk_sec = sum(e["duration_sec"] for e in chunk)
+			left = [e for e in chunk if state.get(e["guid"], {}).get("status") != "done"]
+			left_sec = sum(e["duration_sec"] for e in left)
+			mark = "готово" if not left else f"осталось {len(left)}"
+			print(
+				f"  часть {n}: {len(chunk):>3} выпусков, {chunk_sec/3600:.1f} ч, "
+				f"{format_estimate(provider.estimate(chunk_sec))} — {mark}"
+			)
+			if left and left_sec != chunk_sec:
+				print(f"            к обработке сейчас {left_sec/3600:.1f} ч")
+
 
 def main():
 	parser = argparse.ArgumentParser()
@@ -553,11 +811,27 @@ def main():
 		action="store_true",
 		help="распознать выпуск, даже если он исключён (есть готовый сценарий)",
 	)
+	parser.add_argument("--run", action="store_true", help="прогнать пачку выпусков подряд")
+	parser.add_argument("--part", type=int, help="какую часть архива прогнать (с --of)")
+	parser.add_argument("--of", type=int, help="на сколько частей разбить архив")
+	parser.add_argument(
+		"--yes", action="store_true", help="не спрашивать подтверждения (нужно для nohup)"
+	)
+	parser.add_argument("--export", metavar="ФАЙЛ", help="упаковать готовые транскрипты в tar.gz")
 	args = parser.parse_args()
+
+	if args.part and not args.of:
+		parser.error("--part без --of не имеет смысла: укажите, на сколько частей делим")
+	if args.run and args.of and not args.part:
+		parser.error("укажите --part: какую именно часть прогонять")
 
 	provider = providers.get(args.provider)
 	env = load_env(WORK_DIR / ".env")
 	api_key = env.get(provider.env_key)
+
+	if args.export:
+		export_transcripts(args.export)
+		return
 
 	episodes = fetch_feed_items()
 	state = load_state()
@@ -572,11 +846,24 @@ def main():
 		return
 
 	if args.estimate_archive:
-		estimate_archive(episodes, provider, state)
+		estimate_archive(episodes, provider, state, of=args.of)
+		return
+
+	if args.run:
+		if not api_key:
+			print(f"Не найден {provider.env_key} в .env", file=sys.stderr)
+			sys.exit(1)
+		run_archive(
+			episodes, provider, api_key, state,
+			part=args.part, of=args.of, assume_yes=args.yes,
+		)
 		return
 
 	if not args.guid:
-		print("Укажите --guid, --list или --estimate-archive", file=sys.stderr)
+		print(
+			"Укажите, что делать: --list, --estimate-archive, --run или --guid",
+			file=sys.stderr,
+		)
 		sys.exit(1)
 
 	episode = next((e for e in episodes if e["guid"] == args.guid), None)

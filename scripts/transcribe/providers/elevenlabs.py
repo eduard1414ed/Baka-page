@@ -77,7 +77,9 @@ def transcribe(audio_path, api_key, language="ru"):
 			headers={"xi-api-key": api_key},
 			files=files,
 			data=data,
-			timeout=1800,
+			# Час: самый длинный выпуск в архиве — 94 минуты, а прошлый лимит
+			# в 30 минут на таком мог не дожить до ответа.
+			timeout=3600,
 		)
 	if response.status_code != 200:
 		raise RuntimeError(f"ElevenLabs ответил {response.status_code}: {response.text[:500]}")
