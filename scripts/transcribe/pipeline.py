@@ -15,6 +15,8 @@ providers/ (форма модуля описана в providers/__init__.py). В
   python3 pipeline.py --run --part 1 --of 4   прогнать первую часть архива
   python3 pipeline.py --guid <guid>           обработать один выпуск
   python3 pipeline.py --guid <guid> --dry-run посчитать стоимость, ничего не отправлять
+  python3 pipeline.py --recheck-names         заново сверить названия аниме по готовым
+                                              транскриптам — бесплатно, без распознавания
   python3 pipeline.py --export транскрипты.tar.gz
                                               упаковать готовое, чтобы забрать с сервера
   python3 pipeline.py --guid <guid> --provider soniox --out-suffix soniox
@@ -710,6 +712,49 @@ def run_archive(episodes, provider, api_key, state, part=None, of=None, assume_y
 			print(f"  {episode['title']} — {exc}")
 
 
+def recheck_names(min_ratio=0.72):
+	"""Заново сверить названия аниме по уже сохранённым транскриптам.
+
+	Отдельная команда, потому что сверка и распознавание не связаны:
+	распознавание стоит денег и делается один раз, а сверка бесплатная
+	и работает по готовым файлам. Значит справочник тайтлов можно пополнять
+	сколько угодно и когда угодно, а потом просто перепроверить всё заново —
+	не переплачивая за повторное распознавание.
+	"""
+	files = [
+		f for f in sorted(OUTPUT_DIR.glob("*.json"))
+		if not f.name.endswith(".corrections.json")
+	] if OUTPUT_DIR.exists() else []
+	if not files:
+		print("В папке результатов нет транскриптов.", file=sys.stderr)
+		sys.exit(1)
+
+	print("Беру свежий список тайтлов с сайта...")
+	anime_index = fetch_anime_index()
+	print(f"Тайтлов в справочнике: {len(anime_index)}")
+	print(f"Транскриптов к проверке: {len(files)}")
+	print(f"Порог похожести: {min_ratio}")
+	print()
+
+	total = 0
+	for f in files:
+		data = json.loads(f.read_text())
+		replicas = data.get("replicas", [])
+		suggestions = find_anime_corrections(replicas, anime_index, min_ratio=min_ratio)
+		out = f.with_suffix(".corrections.json")
+		out.write_text(json.dumps(suggestions, ensure_ascii=False, indent=2))
+		total += len(suggestions)
+		print(f"  {data.get('episodeTitle', f.stem)[:55]:<55} {len(suggestions):>4} предложений")
+
+	print()
+	print(f"Всего предложений: {total}")
+	print(
+		"Ничего в транскриптах не изменено — это только список на ваше решение.\n"
+		"Если предложений слишком много и среди них мусор (падежи, похожие "
+		"названия), поднимите порог: --min-similarity 0.85"
+	)
+
+
 def export_transcripts(dest):
 	"""Упаковать готовые транскрипты в один архив, чтобы забрать с сервера.
 
@@ -818,6 +863,17 @@ def main():
 		"--yes", action="store_true", help="не спрашивать подтверждения (нужно для nohup)"
 	)
 	parser.add_argument("--export", metavar="ФАЙЛ", help="упаковать готовые транскрипты в tar.gz")
+	parser.add_argument(
+		"--recheck-names",
+		action="store_true",
+		help="заново сверить названия аниме по готовым транскриптам (бесплатно)",
+	)
+	parser.add_argument(
+		"--min-similarity",
+		type=float,
+		default=0.72,
+		help="порог похожести при сверке названий (0.72 по умолчанию, выше — меньше мусора)",
+	)
 	args = parser.parse_args()
 
 	if args.part and not args.of:
@@ -831,6 +887,10 @@ def main():
 
 	if args.export:
 		export_transcripts(args.export)
+		return
+
+	if args.recheck_names:
+		recheck_names(min_ratio=args.min_similarity)
 		return
 
 	episodes = fetch_feed_items()
