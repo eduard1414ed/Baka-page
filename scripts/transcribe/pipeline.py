@@ -89,18 +89,25 @@ def is_excluded(title):
 		return True
 	return any(part in low for part in EXCLUDE_TITLE_PARTS)
 
-# Эталонная высота голоса ведущих, Гц. Не выдумана — намерена на живых выпусках
-# (Эд: 138, 136, 134, 132, 130; Ксюша: 193, 193, 190, 186). Разброс у каждого
-# около 8 Гц, диапазоны не пересекаются и близко.
+# Эталонная высота голоса ведущих и допуск, Гц. Откалибровано по 29 живым
+# выпускам, а не на глаз:
+#   Эд    — 127…142 Гц (29 замеров), допуск 122…146
+#   Ксюша — 178…222 Гц (25 замеров), допуск 172…228
+#
+# Допуски РАЗНЫЕ, и это не небрежность. Голос Эда держится в пределах 15 Гц,
+# у Ксюши разброс втрое шире — 44 Гц. Первая калибровка делалась по четырём
+# замерам Ксюши (186…193) и дала допуск ±12, из-за чего в 5 выпусках из 24
+# она не узнавалась и записывалась «Гостем»: её настоящие 203, 213 и 222 Гц
+# в такой коридор не влезали.
+#
+# Диапазоны не перекрываются (146 < 172), поэтому перепутать ведущих нельзя.
+# Мужской допуск специально не шире 12 Гц: иначе в него попадёт гость
+# на 119 Гц (интервью с Evakoi), который наговорил 68 минут и отобрал бы
+# имя у Эда.
 HOST_MALE_HZ = 134
-HOST_FEMALE_HZ = 190
-
-# Насколько голос может отклониться от эталона и всё ещё считаться ведущим.
-# 12 Гц подобрано по этим же замерам: покрывает весь наблюдавшийся разброс
-# и при этом отсекает гостей (Терлецкий 115 Гц — в 19 Гц от Эда, не попадает).
-# Если однажды ведущего перестанет узнавать (простуда, другой микрофон) —
-# крутить эту цифру, а не эталоны.
-HOST_PITCH_TOLERANCE_HZ = 12
+HOST_MALE_TOLERANCE_HZ = 12
+HOST_FEMALE_HZ = 200
+HOST_FEMALE_TOLERANCE_HZ = 28
 
 # Когда на роль ведущего по голосу подходит несколько человек, имя помечается
 # знаком «?» как требующее проверки. Но если соперник говорил совсем мало,
@@ -365,15 +372,20 @@ def name_speakers(pitches, durations):
 		# Разговорчивость осталась, но только как тай-брейк между теми, кто
 		# и так подошёл по голосу.
 		taken = set()
-		for ref_hz, host_name in ((HOST_MALE_HZ, HOST_MALE), (HOST_FEMALE_HZ, HOST_FEMALE)):
+		hosts = (
+			(HOST_MALE_HZ, HOST_MALE_TOLERANCE_HZ, HOST_MALE),
+			(HOST_FEMALE_HZ, HOST_FEMALE_TOLERANCE_HZ, HOST_FEMALE),
+		)
+		for ref_hz, tolerance, host_name in hosts:
 			candidates = [
 				sid for sid in measured
-				if sid not in taken and abs(pitches[sid] - ref_hz) <= HOST_PITCH_TOLERANCE_HZ
+				if sid not in taken and abs(pitches[sid] - ref_hz) <= tolerance
 			]
 			if not candidates:
 				notes.append(
 					f"{host_name} в этом выпуске не найден(а): нет голоса с высотой "
-					f"около {ref_hz} Гц. Так и должно быть, если {host_name} не участвовал(а)."
+					f"{ref_hz - tolerance}–{ref_hz + tolerance} Гц. "
+					f"Так и должно быть, если {host_name} не участвовал(а)."
 				)
 				continue
 			winner = max(candidates, key=lambda sid: durations[sid])
@@ -764,9 +776,9 @@ def recheck_speakers():
 	"""Пересчитать имена ведущих по уже сохранённым транскриптам. Бесплатно.
 
 	Высота голоса и время речи уже лежат в блоке speakerInfo, а больше для
-	раскладки имён ничего не нужно — значит подкрутить эталоны (HOST_MALE_HZ,
-	HOST_FEMALE_HZ, HOST_PITCH_TOLERANCE_HZ) и переразложить имена можно
-	когда угодно, не платя за распознавание второй раз.
+	раскладки имён ничего не нужно — значит подкрутить эталоны и допуски
+	(HOST_MALE_HZ, HOST_FEMALE_HZ и их HOST_*_TOLERANCE_HZ) и переразложить
+	имена можно когда угодно, не платя за распознавание второй раз.
 
 	Имена, вписанные руками, при этом затрутся — на то и команда.
 	"""
@@ -778,8 +790,12 @@ def recheck_speakers():
 		print("В папке результатов нет транскриптов.", file=sys.stderr)
 		sys.exit(1)
 
-	print(f"Эталоны: {HOST_MALE} {HOST_MALE_HZ} Гц, {HOST_FEMALE} {HOST_FEMALE_HZ} Гц, "
-	      f"допуск ±{HOST_PITCH_TOLERANCE_HZ} Гц")
+	print(
+		f"Эталоны: {HOST_MALE} {HOST_MALE_HZ}±{HOST_MALE_TOLERANCE_HZ} Гц "
+		f"({HOST_MALE_HZ - HOST_MALE_TOLERANCE_HZ}–{HOST_MALE_HZ + HOST_MALE_TOLERANCE_HZ}), "
+		f"{HOST_FEMALE} {HOST_FEMALE_HZ}±{HOST_FEMALE_TOLERANCE_HZ} Гц "
+		f"({HOST_FEMALE_HZ - HOST_FEMALE_TOLERANCE_HZ}–{HOST_FEMALE_HZ + HOST_FEMALE_TOLERANCE_HZ})"
+	)
 	print(f"Транскриптов: {len(files)}")
 	print()
 
