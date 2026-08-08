@@ -1,0 +1,269 @@
+---
+// Страница «О подкасте» (тз/06, шаг 5).
+//
+// ТЕКСТЫ ЗДЕСЬ — ЗАГЛУШКИ, их пишет заказчик. Всё, что нужно переписать,
+// собрано в одном месте — в объекте ABOUT сразу под импортами, лезть
+// в разметку ниже не надо. Каждая заглушка помечена «⚠️ ЗАГЛУШКА».
+//
+// Почему обычная страница, а не пост в админке: «О подкасте» это не материал
+// в ленте — у неё нет даты, она не должна попадать в ленту, в RSS и в поиск
+// наравне с выпусками. Понадобится править её из админки — заведём отдельную
+// коллекцию, но это лишняя сложность ради страницы, которую меняют раз в год.
+import Layout from '../layouts/Layout.astro';
+import JsonLd from '../components/JsonLd.astro';
+import PlatformIcon from '../components/PlatformIcon.astro';
+import { platformsOfKind } from '../data/platforms.js';
+import { getLinkIcon } from '../lib/linkIcon.mjs';
+import { breadcrumbsSchema } from '../lib/schema.mjs';
+import { SITE_NAME } from '../lib/site.mjs';
+
+const ABOUT = {
+	// ⚠️ ЗАГЛУШКА. Абзацы про подкаст: о чём он и для кого. Первый абзац
+	// покажется в поиске и в превью — пишите его как ответ на вопрос
+	// «что это за подкаст», без разгона.
+	intro: [
+		'«Бака!» — подкаст об аниме и о том, что скрывается между кадрами. Мы разбираем ' +
+			'сериалы и фильмы, говорим со студиями и авторами и пытаемся понять, почему ' +
+			'аниме устроено именно так.',
+		'⚠️ ЗАГЛУШКА: второй абзац — как давно выходит подкаст, как часто и чем он ' +
+			'отличается от остальных. Замените этот текст своим.',
+	],
+
+	// ⚠️ ЗАГЛУШКА. Ведущие. Добавляйте или убирайте людей — вёрстка подстроится.
+	// `photo` — путь к картинке в public/images/, например '/images/ed.jpg'.
+	// Пока стоит null: показывается кружок с первой буквой имени.
+	hosts: [
+		{ name: 'Эд', role: '⚠️ ЗАГЛУШКА: кто он и что делает в подкасте', photo: null, url: null },
+		{ name: 'Ксюша', role: '⚠️ ЗАГЛУШКА: кто она и что делает в подкасте', photo: null, url: null },
+	],
+
+	// ⚠️ ЗАГЛУШКА. Подпись под блоком «Поддержать» — за что и что человек получит.
+	supportNote:
+		'⚠️ ЗАГЛУШКА: за что вы просите поддержки и что получают подписчики — ' +
+		'бонусные выпуски, ранний доступ, что-то ещё.',
+
+	// ⚠️ ЗАГЛУШКА. Для связи: письмо, реклама, предложить тему.
+	// Уберите строку целиком, если адрес не нужен.
+	contactEmail: 'hello@bakapodcast.com',
+};
+
+const listen = platformsOfKind('listen');
+const social = platformsOfKind('social');
+const support = platformsOfKind('support');
+
+const description = ABOUT.intro[0];
+---
+
+<Layout title="О подкасте" description={description}>
+	<JsonLd slot="head" data={breadcrumbsSchema([{ name: 'О подкасте', path: '/about/' }])} />
+
+	<article class="about">
+		<h1>О подкасте</h1>
+
+		<div class="intro">
+			{ABOUT.intro.map((paragraph) => <p>{paragraph}</p>)}
+		</div>
+
+		<section class="block">
+			<h2>Ведущие</h2>
+			<ul class="hosts">
+				{
+					ABOUT.hosts.map((host) => (
+						<li class="host">
+							{/* Фото пока нет — кружок с первой буквой имени. Так блок
+							    не разъезжается и не выглядит недоделанным. */}
+							{host.photo ? (
+								<img class="host-photo" src={host.photo} alt={host.name} width="72" height="72" loading="lazy" />
+							) : (
+								<span class="host-photo host-letter" aria-hidden="true">
+									{host.name.slice(0, 1)}
+								</span>
+							)}
+							<div>
+								<p class="host-name">
+									{host.url ? (
+										<a href={host.url} target="_blank" rel="noopener noreferrer">
+											{host.name}
+										</a>
+									) : (
+										host.name
+									)}
+								</p>
+								<p class="host-role">{host.role}</p>
+							</div>
+						</li>
+					))
+				}
+			</ul>
+		</section>
+
+		<section class="block">
+			<h2>Где слушать</h2>
+			<div class="links">
+				{
+					listen.map((platform) => (
+						<a class="link" href={platform.url} target="_blank" rel="noopener noreferrer">
+							<PlatformIcon name={getLinkIcon(platform.url)} />
+							{platform.label}
+						</a>
+					))
+				}
+			</div>
+			<p class="note">
+				Ещё есть <a href="/rss.xml">лента сайта</a> — в неё попадает всё, что здесь выходит: выпуски, статьи и заметки.
+			</p>
+		</section>
+
+		{
+			social.length > 0 && (
+				<section class="block">
+					<h2>Где общаемся</h2>
+					<div class="links">
+						{social.map((platform) => (
+							<a class="link" href={platform.url} target="_blank" rel="noopener noreferrer">
+								<PlatformIcon name={getLinkIcon(platform.url)} />
+								{platform.label}
+							</a>
+						))}
+					</div>
+				</section>
+			)
+		}
+
+		<section class="block">
+			<h2>Поддержать</h2>
+			<p class="note">{ABOUT.supportNote}</p>
+			<div class="links">
+				{
+					support.map((platform) => (
+						<a class="link link-accent" href={platform.url} target="_blank" rel="noopener noreferrer">
+							<PlatformIcon name={getLinkIcon(platform.url)} />
+							{platform.label}
+						</a>
+					))
+				}
+			</div>
+		</section>
+
+		{
+			ABOUT.contactEmail && (
+				<section class="block">
+					<h2>Написать нам</h2>
+					<p class="note">
+						<a href={`mailto:${ABOUT.contactEmail}`}>{ABOUT.contactEmail}</a> — предложить тему, позвать в гости или
+						договориться о рекламе.
+					</p>
+				</section>
+			)
+		}
+	</article>
+</Layout>
+
+<style>
+	.about {
+		max-width: var(--content-width);
+		margin: 0 auto;
+		padding: var(--space-4) var(--space-3);
+	}
+
+	.intro p {
+		font-size: var(--font-size-lg);
+		color: var(--color-text);
+		margin: 0 0 var(--space-2);
+	}
+
+	.block {
+		margin-top: var(--space-4);
+		padding-top: var(--space-3);
+		border-top: 1px solid var(--color-border);
+	}
+
+	.block h2 {
+		font-size: var(--font-size-xl);
+	}
+
+	.note {
+		color: var(--color-text-muted);
+		margin: 0 0 var(--space-2);
+	}
+
+	.hosts {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: var(--space-3);
+	}
+
+	.host {
+		display: flex;
+		align-items: center;
+		gap: var(--space-2);
+	}
+
+	.host-photo {
+		width: 72px;
+		height: 72px;
+		flex-shrink: 0;
+		border-radius: var(--radius-full);
+		object-fit: cover;
+	}
+
+	.host-letter {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: var(--color-bg-elevated);
+		border: 1px solid var(--color-border);
+		color: var(--color-accent);
+		font-family: var(--font-heading);
+		font-size: var(--font-size-xl);
+	}
+
+	.host-name {
+		margin: 0;
+		font-weight: 600;
+	}
+
+	.host-role {
+		margin: 0;
+		color: var(--color-text-muted);
+		font-size: var(--font-size-sm);
+	}
+
+	.links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-1);
+	}
+
+	.link {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-1);
+		padding: var(--space-1) var(--space-2);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-full);
+		color: var(--color-text);
+		font-size: var(--font-size-sm);
+		transition:
+			border-color var(--transition-fast),
+			color var(--transition-fast);
+	}
+
+	.link:hover,
+	.link:focus-visible {
+		border-color: var(--color-accent);
+		color: var(--color-accent-hover);
+	}
+
+	.link :global(svg) {
+		width: 1.1em;
+		height: 1.1em;
+	}
+
+	.link-accent {
+		border-color: var(--color-accent);
+		color: var(--color-accent);
+	}
+</style>

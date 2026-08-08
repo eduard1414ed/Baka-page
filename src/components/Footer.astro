@@ -14,6 +14,14 @@ const year = new Date().getFullYear();
 			))
 		}
 	</nav>
+	{/* Свои страницы отдельной строкой от площадок: те ведут наружу, эти —
+	    внутрь сайта, и путать их в одном ряду не стоит. */}
+	<nav class="links links-site" aria-label="Разделы сайта">
+		<a href="/about/">О подкасте</a>
+		<a href="/anime/">Тайтлы</a>
+		<a href="/search/">Поиск</a>
+		<a href="/rss.xml">RSS</a>
+	</nav>
 	<p class="copyright">© {year} Бака! Подкаст об аниме</p>
 </footer>
 
