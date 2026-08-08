@@ -25,6 +25,23 @@ async function request(path) {
 	return response.json();
 }
 
+// Альтернативные названия из раздела Shikimori «Альтернативные названия».
+// Идут в подсказки к полю «Варианты написания» в админке — не в само поле:
+// плохой вариант даёт ложные упоминания сразу по всему архиву и молча,
+// поэтому добавляет их человек кнопкой (тз/05, шаг 6).
+//
+// Поле `japanese` не берём вовсе: иероглифы в русской расшифровке не прозвучат
+// никогда. `english` берём — ведущие иногда называют тайтл по-английски.
+// Полезнее всего `synonyms`: там попадаются русские варианты перевода,
+// например «Клуб лёгкой музыки» у «Кэйон!».
+function sourceAliases(data) {
+	const known = new Set([data.name, data.russian].filter(Boolean));
+
+	return [...(data.synonyms ?? []), ...(data.english ?? [])]
+		.map((name) => String(name).trim())
+		.filter((name) => name && !known.has(name));
+}
+
 function toEntry(data) {
 	const year = data.aired_on ? Number(data.aired_on.slice(0, 4)) : undefined;
 	const studio = data.studios?.[0]?.name;
@@ -42,6 +59,7 @@ function toEntry(data) {
 		posterUrl: hasRealPoster ? `${BASE}${posterPath}` : undefined,
 		synopsis: cleanDescription(data.description),
 		url: data.url ? `${BASE}${data.url}` : undefined,
+		sourceAliases: sourceAliases(data),
 	};
 }
 

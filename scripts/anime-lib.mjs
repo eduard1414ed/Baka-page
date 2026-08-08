@@ -88,6 +88,10 @@ export async function writeAnimeEntry(slug, source, result) {
 		// существуют — они живут только у нас, поэтому переносятся из прежнего
 		// файла как есть, без всяких условий.
 		...(previous?.aliases?.length && { aliases: previous.aliases }),
+		// А альтернативные названия, наоборот, целиком приходят из источника
+		// и обновляются вместе с остальными данными: в поиск они не идут,
+		// портить ими нечего.
+		...(result.sourceAliases?.length && { sourceAliases: result.sourceAliases }),
 		...(manual.length && { manual }),
 	};
 

@@ -9,6 +9,11 @@
 //
 // Запуск: node scripts/sync-anime.mjs — руками не нужен, но можно и вручную,
 // например чтобы сразу проверить, что робот всё нашёл правильно.
+//
+// Запуск с флагом --refresh перечитывает из источника ТАЙТЛЫ, КОТОРЫЕ УЖЕ ЕСТЬ
+// в справочнике: нужен, когда в данных появилось новое поле (так добирались
+// альтернативные названия) или когда у тайтла обновилась обложка. Правленое
+// руками при этом не затирается — см. `manual` в scripts/anime-lib.mjs.
 
 import { readdir, readFile, access } from 'node:fs/promises';
 import * as shikimori from './anime-sources/shikimori.mjs';
@@ -46,22 +51,42 @@ async function hasEntry(id) {
 	}
 }
 
-async function main() {
-	const markers = await collectMarkers();
-	const missing = [];
-	for (const marker of markers) {
-		if (!(await hasEntry(marker.id))) missing.push(marker);
+// Тайтлы, которые уже лежат в справочнике: id и то, откуда они взяты.
+// Источник спрашиваем строго по source+sourceId из самого файла, без поиска
+// по названию — иначе на обновлении можно подменить тайтл похожим.
+async function collectExisting() {
+	const files = (await readdir(ANIME_CONTENT_DIR)).filter((name) => name.endsWith('.json'));
+	const found = [];
+
+	for (const file of files) {
+		const data = JSON.parse(await readFile(new URL(file, ANIME_CONTENT_DIR), 'utf8'));
+		if (data.source && data.sourceId) found.push({ id: data.id, source: data.source, sourceId: data.sourceId });
 	}
 
-	if (missing.length === 0) {
-		console.log('Все размеченные тайтлы уже есть в справочнике.');
+	return found;
+}
+
+async function main() {
+	const refresh = process.argv.includes('--refresh');
+
+	const targets = refresh ? await collectExisting() : [];
+
+	if (!refresh) {
+		const markers = await collectMarkers();
+		for (const marker of markers) {
+			if (!(await hasEntry(marker.id))) targets.push(marker);
+		}
+	}
+
+	if (targets.length === 0) {
+		console.log(refresh ? 'Справочник пуст — обновлять нечего.' : 'Все размеченные тайтлы уже есть в справочнике.');
 		return;
 	}
 
-	console.log(`Новых меток без справочника: ${missing.length}.`);
+	console.log(refresh ? `Перечитываю из источника: ${targets.length}.` : `Новых меток без справочника: ${targets.length}.`);
 
-	for (let i = 0; i < missing.length; i++) {
-		const { id, source, sourceId } = missing[i];
+	for (let i = 0; i < targets.length; i++) {
+		const { id, source, sourceId } = targets[i];
 		const sourceModule = SOURCES_BY_ID[source];
 
 		if (!sourceModule) {
@@ -69,7 +94,7 @@ async function main() {
 			continue;
 		}
 
-		console.log(`→ ${id}: добираю данные из ${sourceModule.label} (id ${sourceId})…`);
+		console.log(`→ ${id}: ${refresh ? 'перечитываю' : 'добираю'} данные из ${sourceModule.label} (id ${sourceId})…`);
 		try {
 			const result = await sourceModule.findById(sourceId);
 			if (!result) {
@@ -82,7 +107,7 @@ async function main() {
 			console.error(`  ошибка: ${error.message}`);
 		}
 
-		if (i < missing.length - 1) await sleep(PAUSE_MS);
+		if (i < targets.length - 1) await sleep(PAUSE_MS);
 	}
 
 	console.log('Готово.');

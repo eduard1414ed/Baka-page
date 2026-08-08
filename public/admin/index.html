@@ -1187,6 +1187,166 @@
 
 			CMS.registerFieldType('mention-exceptions', MentionExceptionsControl, MentionExceptionsPreview);
 
+			// Поле «Варианты написания» в разделе «Аниме» (тз/05, шаг 6).
+			// Хранит обычный список строк — ровно то же, что хранило штатное поле
+			// до появления подсказок. Свой компонент нужен только ради кнопок
+			// «добавить»: сами данные не усложнились, и если компонент когда-нибудь
+			// подведёт, файл справочника читается и обычным полем.
+			//
+			// ПОДСКАЗКИ НИЧЕГО НЕ ДОБАВЛЯЮТ САМИ. Вариант ищется по 22 575
+			// репликам живой речи, и плохой даёт ложные упоминания сразу по всему
+			// архиву и молча. Что предлагается и почему — src/lib/aliasHints.mjs.
+			function getAliasHints() {
+				if (!window.__aliasHintsPromise) {
+					window.__aliasHintsPromise = fetch('/anime-alias-hints.json')
+						.then((res) => (res.ok ? res.json() : {}))
+						.catch(() => ({}));
+				}
+				return window.__aliasHintsPromise;
+			}
+
+			// Сравниваем так же, как ищем упоминания: без учёта регистра
+			// и без разницы между «е» и «ё» (src/lib/animeMentions.mjs).
+			function foldName(value) {
+				return String(value ?? '')
+					.toLowerCase()
+					.replace(/ё/g, 'е')
+					.trim();
+			}
+
+			const AliasListControl = createClass({
+				getInitialState() {
+					return { hints: null, draft: '' };
+				},
+				componentDidMount() {
+					const id = String(this.props.entry?.get('data')?.get('id') ?? '');
+					getAliasHints().then((all) => this.setState({ hints: all[id] ?? { archive: [], source: [] } }));
+				},
+				items() {
+					return toPlainArray(this.props.value).map((item) => String(item));
+				},
+				add(value) {
+					const name = String(value).trim();
+					if (!name) return;
+
+					const items = this.items();
+					if (items.some((item) => foldName(item) === foldName(name))) return;
+					this.props.onChange([...items, name]);
+				},
+				remove(name) {
+					this.props.onChange(this.items().filter((item) => item !== name));
+				},
+				handleKeyDown(e) {
+					if (e.key !== 'Enter') return;
+					// Иначе Enter отправил бы всю форму записи.
+					e.preventDefault();
+					this.add(this.state.draft);
+					this.setState({ draft: '' });
+				},
+				renderSuggestions(title, list, keyPrefix) {
+					if (list.length === 0) return null;
+
+					return h(
+						'div',
+						{ key: keyPrefix, style: { marginTop: '8px' } },
+						h('div', { key: 'title', style: { fontSize: '13px', opacity: 0.7, marginBottom: '4px' } }, title),
+						h(
+							'div',
+							{ key: 'list', style: { display: 'flex', flexWrap: 'wrap', gap: '6px' } },
+							list.map((item) =>
+								h(
+									'button',
+									{
+										key: item.label,
+										type: 'button',
+										onClick: () => this.add(item.value),
+										style: { fontSize: '13px', cursor: 'pointer', maxWidth: '100%', whiteSpace: 'normal', textAlign: 'left' },
+									},
+									`+ ${item.label}`,
+								),
+							),
+						),
+					);
+				},
+				render() {
+					const { hints, draft } = this.state;
+					const items = this.items();
+					const taken = new Set(items.map(foldName));
+
+					const chips = items.map((name) =>
+						h(
+							'span',
+							{
+								key: name,
+								style: {
+									display: 'inline-flex',
+									alignItems: 'center',
+									gap: '4px',
+									padding: '2px 6px',
+									marginRight: '6px',
+									marginBottom: '6px',
+									background: '#eef2f7',
+									borderRadius: '4px',
+									fontSize: '13px',
+									color: '#1a1a1a',
+									maxWidth: '100%',
+									wordBreak: 'break-word',
+								},
+							},
+							name,
+							h(
+								'button',
+								{ key: 'x', type: 'button', onClick: () => this.remove(name), 'aria-label': `Убрать ${name}`, style: { cursor: 'pointer' } },
+								'×',
+							),
+						),
+					);
+
+					const archive = (hints?.archive ?? [])
+						.filter((item) => !taken.has(foldName(item.form)))
+						.map((item) => ({
+							value: item.form,
+							label: `${item.form} · ${item.count} ${plural(item.count, 'раз', 'раза', 'раз')}`,
+						}));
+
+					const source = (hints?.source ?? [])
+						.filter((name) => !taken.has(foldName(name)))
+						.map((name) => ({ value: name, label: name }));
+
+					return h(
+						'div',
+						{},
+						chips.length > 0 ? h('div', { key: 'chips', style: { marginBottom: '4px' } }, chips) : null,
+						h('input', {
+							key: 'draft',
+							id: this.props.forID,
+							className: this.props.classNameWrapper,
+							type: 'text',
+							placeholder: 'Ещё вариант — впишите и нажмите Enter',
+							value: draft,
+							onChange: (e) => this.setState({ draft: e.target.value }),
+							onKeyDown: this.handleKeyDown,
+							onBlur: () => {
+								this.add(draft);
+								this.setState({ draft: '' });
+							},
+							style: { width: '100%', boxSizing: 'border-box' },
+						}),
+						hints === null ? h('div', { key: 'loading', style: hintStyle }, 'Ищу подсказки…') : null,
+						this.renderSuggestions('В архиве звучит так — но пока не ищется:', archive, 'archive'),
+						this.renderSuggestions('Shikimori знает такие названия:', source, 'source'),
+					);
+				},
+			});
+
+			const AliasListPreview = createClass({
+				render() {
+					return h('span', {}, toPlainArray(this.props.value).join(', '));
+				},
+			});
+
+			CMS.registerFieldType('alias-list', AliasListControl, AliasListPreview);
+
 			function extractAnimeIdsFromBody(body) {
 				const ids = [];
 				const re = /:anime\[[^\]]*\]\{id="([^"]+)"/g;

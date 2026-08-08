@@ -14,7 +14,9 @@ const FIELDS = `
 	id
 	title {
 		romaji
+		english
 	}
+	synonyms
 	startDate {
 		year
 	}
@@ -44,6 +46,17 @@ function stripHtml(text) {
 	);
 }
 
+// Альтернативные названия — в подсказки к полю «Варианты написания»
+// (см. тот же комментарий в shikimori.mjs). `native` не берём: это иероглифы,
+// в русской расшифровке они не прозвучат.
+function sourceAliases(data) {
+	const known = new Set([data.title?.romaji].filter(Boolean));
+
+	return [...(data.synonyms ?? []), data.title?.english]
+		.map((name) => String(name ?? '').trim())
+		.filter((name) => name && !known.has(name));
+}
+
 function toEntry(data) {
 	return {
 		sourceId: data.id,
@@ -55,6 +68,7 @@ function toEntry(data) {
 		posterUrl: data.coverImage?.extraLarge || data.coverImage?.large,
 		synopsis: stripHtml(data.description),
 		url: data.siteUrl,
+		sourceAliases: sourceAliases(data),
 	};
 }
 
