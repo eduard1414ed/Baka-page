@@ -1,6 +1,6 @@
 ---
 import PostCard from './PostCard.astro';
-import { categories } from '../content.config';
+import { visibleCategories } from '../content.config';
 
 interface Props {
 	posts: Array<{ id: string; body?: string; data: Record<string, any> }>;
@@ -15,7 +15,7 @@ const { posts, activeCategory } = Astro.props;
 		Все
 	</a>
 	{
-		categories.map((c) => (
+		visibleCategories.map((c) => (
 			<a href={`/category/${c.id}/`} class:list={['tab', { active: c.id === activeCategory }]}>
 				{c.label}
 			</a>

@@ -45,7 +45,9 @@ collections:
           - { label: Подкаст, value: podcast }
           - { label: Видеоэссе, value: videoessay }
           - { label: Заметка, value: note }
-          - { label: Обзор, value: review }
+          - { label: Статья, value: article }
+          # Бонус остаётся в списке, хотя своего раздела на сайте у него нет:
+          # такие посты показываются вместе с выпусками (см. content.config.ts).
           - { label: Бонус, value: bonus }
       - { label: Черновик, name: draft, widget: boolean, default: true }
       - label: Когда опубликовать

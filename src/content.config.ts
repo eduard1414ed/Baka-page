@@ -2,15 +2,56 @@ import { defineCollection, reference, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
 // Категории поста. Одна категория на пост.
+//
+// Два необязательных признака у категории:
+//   hidden   — нет вкладки в ленте и нет своей страницы /category/…/.
+//              Категория при этом живёт: её можно поставить посту в админке,
+//              она лежит в файле поста, по ней можно будет отличать такие
+//              посты в дизайне.
+//   feedWith — в чьём разделе показывать её посты. Без него посты скрытой
+//              категории видны только в общей ленте на главной.
+//
+// «Бонус» — указатель на материал, который лежит на Patreon и Boosty, а не
+// здесь: обложка, название, описание, а дальше пост будет закрыт всплывающим
+// окном с призывом подписаться (это ещё не сделано, дизайн отдельно).
+// Своего раздела ему не надо, а рядом с выпусками он на месте.
 export const categories = [
 	{ id: 'podcast', label: 'Подкаст' },
 	{ id: 'videoessay', label: 'Видеоэссе' },
 	{ id: 'note', label: 'Заметки' },
-	{ id: 'review', label: 'Обзоры' },
-	{ id: 'bonus', label: 'Бонусы' },
+	{ id: 'article', label: 'Статьи' },
+	{ id: 'bonus', label: 'Бонус', hidden: true, feedWith: 'podcast' },
 ] as const;
 
 const categoryIds = categories.map((c) => c.id) as [string, ...string[]];
+
+type Category = (typeof categories)[number];
+
+/** Категории со своим разделом: вкладки в ленте и страницы /category/…/. */
+export const visibleCategories = categories.filter((c) => !('hidden' in c && c.hidden)) as readonly Category[];
+
+/**
+ * Какие категории показывать в разделе `id` — сам раздел плюс всё, что
+ * приписано к нему через `feedWith`. Раздел «Подкаст» так собирает и выпуски,
+ * и бонусы.
+ */
+export function categoriesShownIn(id: string): string[] {
+	const attached = categories.filter((c) => 'feedWith' in c && c.feedWith === id).map((c) => c.id);
+	return [id, ...attached];
+}
+
+/**
+ * Куда ведёт ссылка «← назад» с поста и в чьём разделе он лежит. У скрытой
+ * категории это чужой раздел, у обычной — свой собственный.
+ *
+ * Подпись при этом остаётся своя: у бонуса на карточке и в ссылке написано
+ * «Бонус», а ведёт она в «Подкаст». Так и задумано — читателю видно, что это
+ * за материал, но отдельного раздела под него нет.
+ */
+export function sectionOf(id: string): string {
+	const category = categories.find((c) => c.id === id);
+	return category && 'feedWith' in category ? category.feedWith : id;
+}
 
 // Необязательная дата, которая переживает пустое поле из админки.
 //

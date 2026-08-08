@@ -2,11 +2,13 @@
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import PostFeed from '../../components/PostFeed.astro';
-import { categories } from '../../content.config';
+import { visibleCategories, categoriesShownIn } from '../../content.config';
 import { isPublished } from '../../lib/publishing.mjs';
 
+// Только категории со своим разделом. У скрытых (сейчас это «Бонус») страницы
+// нет вовсе — их посты показываются в чужом разделе, см. content.config.ts.
 export function getStaticPaths() {
-	return categories.map((category) => ({
+	return visibleCategories.map((category) => ({
 		params: { category: category.id },
 		props: { category },
 	}));
@@ -14,7 +16,11 @@ export function getStaticPaths() {
 
 const { category } = Astro.props;
 
-const posts = (await getCollection('posts', ({ data }) => isPublished(data) && data.category === category.id)).sort(
+// Не `data.category === category.id`, а список: раздел «Подкаст» показывает
+// и выпуски, и приписанные к нему бонусы — вперемешку, по дате.
+const shown = categoriesShownIn(category.id);
+
+const posts = (await getCollection('posts', ({ data }) => isPublished(data) && shown.includes(data.category))).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 ---

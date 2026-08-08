@@ -67,7 +67,7 @@ import Layout from '../layouts/Layout.astro';
 	// а «Посты, Выпуски, Тайтлы» человеку понятнее алфавита.
 	const FILTER_ORDER: Record<string, string[]> = {
 		type: ['Выпуски', 'Посты', 'Тайтлы'],
-		category: ['Подкаст', 'Видеоэссе', 'Заметки', 'Обзоры', 'Бонусы'],
+		category: ['Подкаст', 'Видеоэссе', 'Заметки', 'Статьи', 'Бонус'],
 	};
 
 	type PagefindResult = { id: string; data: () => Promise<any> };
