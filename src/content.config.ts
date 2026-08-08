@@ -126,6 +126,17 @@ const posts = defineCollection({
 			youtube: optionalUrl,
 			video: z.string().optional(),
 			audioGuid: z.string().optional(),
+			// Пост-ссылка на чужой сайт (тз/10, задача 2). ПРИЗНАК, А НЕ КАТЕГОРИЯ:
+			// работает поверх любой, обычно поверх «Статьи».
+			//
+			// Заполнено — своей страницы у поста НЕ СОЗДАЁТСЯ вовсе, карточка
+			// в ленте ведёт наружу. Правила и разбор — src/lib/externalPost.mjs,
+			// там же объяснено, почему отдельной галочки «это внешний пост» нет.
+			externalUrl: optionalUrl,
+			// Как подписать площадку: «Кинопоиск». Пусто — подставится по домену
+			// (см. externalSourceName). Поле нужно ровно для тех случаев, когда
+			// домен подсказывает не то или площадки нет в списке.
+			externalSource: z.preprocess(emptyToUndefined, z.string().optional()),
 			buttons: z
 				.array(
 					z.object({

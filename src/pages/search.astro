@@ -204,6 +204,19 @@ import Layout from '../layouts/Layout.astro';
 			title.className = 's-title';
 			title.href = data.url;
 			title.textContent = data.meta?.title ?? data.url;
+			// Пост-ссылка на чужой сайт (тз/10, задача 2). У него нет своей
+			// страницы, и в индексе лежит сразу чужой адрес — значит адрес
+			// абсолютный, а у всех наших результатов он начинается со слэша.
+			// Ведём себя как карточка в ленте: новая вкладка и значок ↗,
+			// чтобы уход с сайта не был неожиданностью.
+			if (/^https?:\/\//.test(data.url)) {
+				title.target = '_blank';
+				title.rel = 'noopener noreferrer';
+				const mark = document.createElement('span');
+				mark.className = 's-external';
+				mark.textContent = ' ↗';
+				title.append(mark);
+			}
 			item.append(title);
 
 			const excerpt = document.createElement('p');
@@ -511,6 +524,13 @@ import Layout from '../layouts/Layout.astro';
 
 	.s-title:hover {
 		color: var(--color-accent);
+	}
+
+	/* Стрелку дописывает скрипт уже во время работы страницы, поэтому нужен
+	   :global() — те же грабли, что с подсветкой ниже. */
+	.s-title :global(.s-external) {
+		color: var(--color-accent);
+		font-size: var(--font-size-sm);
 	}
 
 	.s-excerpt {

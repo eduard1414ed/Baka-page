@@ -3,6 +3,7 @@ import { categories } from '../content.config';
 import { getYoutubeThumbnailUrl } from '../lib/youtube.mjs';
 import { getPostTiming } from '../lib/postTiming.mjs';
 import { coverSrcs } from '../lib/postImage.mjs';
+import { isExternalPost, postHref } from '../lib/externalPost.mjs';
 
 interface Props {
 	post: { id: string; body?: string; data: Record<string, any> };
@@ -37,7 +38,15 @@ const isVideo = Boolean(youtubeThumbnail || (video && !noCover));
 // «Сколько это займёт» — время чтения у постов, длительность у выпусков
 // и видеоэссе. Что именно, решает src/lib/postTiming.mjs, тот же файл зовёт
 // и страница поста. null = показывать нечего, причины перечислены там же.
+// У поста-ссылки на чужой сайт здесь будет не время, а название площадки.
 const timing = await getPostTiming(post);
+
+// Пост-ссылка на чужой сайт (тз/10, задача 2): своей страницы у него нет,
+// карточка ведёт сразу наружу и открывается в новой вкладке. Адрес собирает
+// postHref — руками здесь его строить нельзя, иначе однажды разъедется
+// с лентой RSS (см. src/lib/externalPost.mjs).
+const isExternal = isExternalPost(post.data);
+const href = postHref(post);
 ---
 
 {/*
@@ -49,7 +58,12 @@ const timing = await getPostTiming(post);
 	отдельно, уходит в <slot /> за пределы ссылки на пост.
 */}
 <article class="card">
-	<a class="card-link" href={`/posts/${post.id}/`}>
+	<a
+		class="card-link"
+		href={href}
+		target={isExternal ? '_blank' : undefined}
+		rel={isExternal ? 'noopener noreferrer' : undefined}
+	>
 		{
 			coverImage ? (
 				<img
@@ -77,7 +91,14 @@ const timing = await getPostTiming(post);
 		}
 		<div class="body">
 			<span class="category">{categoryLabel}</span>
-			<h3 class="title">{title}</h3>
+			{/* Значок внешней ссылки стоит прямо у заголовка, а не где-нибудь
+			    в углу карточки: он предупреждает, что клик уведёт с сайта,
+			    и должен читаться вместе с тем, по чему кликают. Название
+			    площадки видно ниже, в строке даты. */}
+			<h3 class="title">
+				{title}
+				{isExternal && <span class="external" aria-label="откроется на другом сайте">↗</span>}
+			</h3>
 			<span class="date">
 				{dateFormatter.format(date)}
 				{timing && <span class="timing">{timing.label}</span>}
@@ -165,6 +186,15 @@ const timing = await getPostTiming(post);
 	.title {
 		margin: 0;
 		font-size: var(--font-size-lg);
+	}
+
+	.external {
+		display: inline-block;
+		margin-left: 0.35em;
+		color: var(--color-accent);
+		font-size: var(--font-size-sm);
+		/* Стрелка не должна тянуть вниз строку заголовка. */
+		vertical-align: 0.15em;
 	}
 
 	.date {

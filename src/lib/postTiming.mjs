@@ -9,6 +9,7 @@
 
 import { getReadingMinutes } from './readingTime.mjs';
 import { findEpisodeByGuid } from './podcastFeed.mjs';
+import { isExternalPost, externalSourceName } from './externalPost.mjs';
 
 // Категории, у которых своя длительность и время чтения не имеет смысла:
 // у выпуска подкаста — длительность аудио, у видеоэссе — длина ролика с его
@@ -48,7 +49,7 @@ export function formatDuration(seconds) {
 }
 
 /**
- * @typedef {{ kind: 'duration' | 'reading', label: string }} PostTiming
+ * @typedef {{ kind: 'duration' | 'reading' | 'source', label: string }} PostTiming
  */
 
 /**
@@ -73,6 +74,19 @@ export function formatDuration(seconds) {
  * @returns {Promise<PostTiming | null>}
  */
 export async function getPostTiming(post) {
+	// Пост-ссылка на чужой сайт: вместо «сколько это займёт» — где это лежит,
+	// «8 августа 2026 · Кинопоиск» (тз/10, задача 2). Время чтения тут посчитать
+	// НЕ ИЗ ЧЕГО и нельзя даже пытаться: в теле поста лежит короткое описание,
+	// а сам текст — на чужом сайте. Посчитанные по описанию «1 мин читать»
+	// были бы прямой ложью.
+	//
+	// Проверка стоит первой и перебивает категорию: признак работает поверх
+	// любой, в том числе поверх «Подкаста» с его длительностью из RSS.
+	if (isExternalPost(post.data)) {
+		const source = externalSourceName(post.data);
+		return source ? { kind: 'source', label: source } : null;
+	}
+
 	if (CATEGORIES_WITHOUT_TIMING.includes(post.data.category)) return null;
 
 	if (CATEGORIES_WITH_OWN_DURATION.includes(post.data.category)) {

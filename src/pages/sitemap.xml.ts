@@ -14,6 +14,7 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { isPublished } from '../lib/publishing.mjs';
+import { isExternalPost } from '../lib/externalPost.mjs';
 import { visibleCategories } from '../content.config';
 import { absoluteUrl } from '../lib/site.mjs';
 
@@ -27,10 +28,15 @@ function urlEntry(path: string, lastmod?: Date): string {
 }
 
 export const GET: APIRoute = async () => {
-	// Та же проверка, что решает, будет ли у поста своя страница
-	// (src/pages/posts/[slug].astro). Одна функция на оба места — иначе карта
+	// Те же две проверки, что решают, будет ли у поста своя страница
+	// (src/pages/posts/[slug].astro). Одни функции на оба места — иначе карта
 	// однажды разошлась бы с сайтом молча.
-	const posts = await getCollection('posts', ({ data }) => isPublished(data));
+	//
+	// isExternalPost — про посты-ссылки на чужие сайты (тз/10, задача 2):
+	// своей страницы у них нет вовсе, и звать на неё поисковика значит обещать
+	// ему 404. Чужой адрес в свою карту сайта тоже не кладут: карта заявляет
+	// страницы этого домена.
+	const posts = await getCollection('posts', ({ data }) => isPublished(data) && !isExternalPost(data));
 	const animeList = await getCollection('anime');
 
 	const entries = [

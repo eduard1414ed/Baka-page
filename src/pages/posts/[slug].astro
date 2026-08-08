@@ -22,9 +22,19 @@ import { animeMentionedIn } from '../../lib/animeMentionIndex.mjs';
 import { resolveEpisodeCover, getEpisodeCoverOgSrc } from '../../lib/episodeCover.mjs';
 import { isPublished } from '../../lib/publishing.mjs';
 import { getPostTiming } from '../../lib/postTiming.mjs';
+import { isExternalPost } from '../../lib/externalPost.mjs';
+import BonusPaywall from '../../components/BonusPaywall.astro';
 
 export async function getStaticPaths() {
-	const posts = await getCollection('posts', ({ data }) => isPublished(data));
+	// Внешние посты (тз/10, задача 2) сюда НЕ ПОПАДАЮТ, и это главное правило
+	// всей задачи: статья лежит на Кинопоиске, показывать нам нечего, а страница
+	// вышла бы пустой — заголовок и одна кнопка «читать там». Десятки таких
+	// страниц не оценит ни читатель, ни поисковик. Карточка в ленте ведёт сразу
+	// наружу (src/components/PostCard.astro), прямой адрес отдаёт 404.
+	//
+	// Отсюда же растёт их отсутствие в карте сайта: src/pages/sitemap.xml.ts
+	// делает ровно ту же проверку, и там написано, почему это не случайность.
+	const posts = await getCollection('posts', ({ data }) => isPublished(data) && !isExternalPost(data));
 	return Promise.all(
 		posts.map(async (post) => ({
 			params: { slug: post.id },
@@ -74,6 +84,13 @@ const isEpisode = sectionId === 'podcast';
 const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
 
 const youtubeEmbed = youtube ? getYoutubeEmbedUrl(youtube) : null;
+
+// Бонус — материал за платной подпиской (тз/10, задача 1). Плашка появляется
+// сама у любого поста этой категории, отдельного переключателя нет.
+// Кнопки площадок при этом уезжают ВНУТРЬ плашки и обычным рядом над текстом
+// уже не показываются: два одинаковых набора ссылок на одной странице —
+// это не «подстраховались», а «не решили, где они должны быть».
+const isBonus = category === 'bonus';
 
 // «Сколько это займёт» — та же функция, что зовёт карточка в ленте
 // (src/components/PostCard.astro), поэтому числа на карточке и на странице
@@ -242,7 +259,7 @@ const crumbs = breadcrumbsSchema([
 		}
 
 		{
-			buttons && buttons.length > 0 && (
+			!isBonus && buttons && buttons.length > 0 && (
 				<div class="buttons">
 					{buttons.map((button: { label: string; url: string; style: 'primary' | 'secondary' }) => (
 						<a class={`button button-${button.style}`} href={button.url} target="_blank" rel="noopener noreferrer">
@@ -257,6 +274,12 @@ const crumbs = breadcrumbsSchema([
 		<div class="content">
 			<Content />
 		</div>
+
+		{/* Плашка подписки — сразу за текстом, как в макете: текст выше это
+		    тизер, он открыт всем и попадает в поиск, а дальше начинается
+		    платное. Плашки тайтлов ниже остаются на своём обычном месте,
+		    в самом низу страницы, как у всех постов. */}
+		{isBonus && <BonusPaywall buttons={buttons} />}
 
 		{showTranscript && <Transcript transcript={transcriptData} transcriptId={transcript.id} mentionsHidden={post.data.mentionsHidden} />}
 

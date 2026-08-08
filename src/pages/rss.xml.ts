@@ -10,6 +10,7 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { isPublished } from '../lib/publishing.mjs';
+import { postHref } from '../lib/externalPost.mjs';
 import { excerptFromBody } from '../lib/excerpt.mjs';
 import { SITE_URL, SITE_NAME, SITE_TITLE, SITE_DESCRIPTION, absoluteUrl } from '../lib/site.mjs';
 
@@ -46,7 +47,15 @@ export const GET: APIRoute = async () => {
 
 	const items = posts
 		.map(({ post, feedDate }) => {
-			const url = absoluteUrl(`/posts/${post.id}/`);
+			// У поста-ссылки на чужой сайт (тз/10, задача 2) это адрес чужой
+			// статьи: в ленту такие посты идут, а вот страницы у нас для них нет.
+			// В отличие от карты сайта, где чужому адресу не место, читалке
+			// внешняя ссылка совершенно нормальна — она ведёт туда, где текст.
+			//
+			// guid остаётся тем же адресом: читалка по нему отличает новый
+			// элемент от уже показанного, и адрес статьи для этого годится —
+			// он у неё один и не меняется.
+			const url = absoluteUrl(postHref(post));
 			const description = excerptFromBody(post.body ?? '', SITE_DESCRIPTION);
 
 			return `		<item>
