@@ -99,12 +99,30 @@ const optionalUrl = z.preprocess(emptyToUndefined, z.string().url().optional());
 
 const posts = defineCollection({
 	loader: glob({ pattern: '**/*.md', base: './src/content/posts' }),
-	schema: ({ image }) =>
+	schema: () =>
 		z.object({
 			title: z.string(),
 			date: z.coerce.date(),
 			category: z.enum(categoryIds),
-			cover: image().optional(),
+			// Обложка для ЛЕНТЫ И СОЦСЕТЕЙ — на самой странице поста она
+			// не показывается. Во всех живых случаях картинка на странице уже
+			// есть (обложка выпуска в тексте, кадр в статье, плеер ютюба
+			// у видеоэссе), и обложка дублировала бы её.
+			//
+			// Путь к загруженной картинке ('/images/uploads/foo.jpg') СТРОКОЙ,
+			// а не image() Astro. Здесь стоял image(), и это была мина: админка
+			// кладёт файлы в public/, а image() их не видит — проверено, сборка
+			// падает целиком с ImageNotFound. Поля в админке не было, поэтому
+			// мина не сработала; стоило его добавить — сработала бы с первого
+			// сохранения. Сжатие делает наша интеграция, та же, что для картинок
+			// в тексте (src/plugins/optimize-uploads-integration.mjs).
+			cover: z.preprocess(emptyToUndefined, z.string().optional()),
+			// «Обложки нет намеренно» — не то же самое, что «обложка не задана».
+			// Без флага короткая заметка неотличима от поста, которому обложку
+			// просто забыли поставить. Нужен ленте: заметка должна выглядеть
+			// заголовком в строку, а не карточкой с дырой на месте картинки
+			// (окончательный вид — этап дизайна).
+			noCover: z.boolean().default(false),
 			youtube: optionalUrl,
 			video: z.string().optional(),
 			audioGuid: z.string().optional(),

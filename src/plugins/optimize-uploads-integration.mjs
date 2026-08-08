@@ -1,4 +1,5 @@
 import { readdir, readFile, unlink } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import sharp from 'sharp';
@@ -99,6 +100,21 @@ export default function optimizeUploadsIntegration() {
 				if (converted > 0) {
 					const tail = ogCopies > 0 ? `, из них ${ogCopies} с jpeg-копией для превью` : '';
 					logger.info(`Сжал ${converted} картинок из ${UPLOADS_DIR} в webp (по 2 размера)${tail}`);
+				}
+
+				// Ссылка на картинку, которой нет. Так бывает, если файл удалили
+				// из медиатеки, а пост на него ещё ссылается, или если путь
+				// правили руками. Сборку не роняем — но и молчать нельзя: в ленте
+				// это дыра на месте обложки, и заметить её можно только глазами.
+				// (CLAUDE.md: ломаться громко лучше, чем тихо врать.)
+				const missing = new Set();
+				for (const match of builtHtml.matchAll(/\/images\/uploads\/([^"'\s>]+?\.(?:webp|jpg))/g)) {
+					const name = decodeURIComponent(match[1]);
+					if (!existsSync(fileURLToPath(new URL(name, uploadsUrl)))) missing.add(name);
+				}
+
+				for (const name of missing) {
+					logger.warn(`Пост ссылается на картинку, которой нет: ${UPLOADS_DIR}/${name}`);
 				}
 			},
 		},

@@ -1,15 +1,15 @@
 ---
-import { Image } from 'astro:assets';
 import { categories } from '../content.config';
 import { getYoutubeThumbnailUrl } from '../lib/youtube.mjs';
 import { getPostTiming } from '../lib/postTiming.mjs';
+import { coverSrcs } from '../lib/postImage.mjs';
 
 interface Props {
 	post: { id: string; body?: string; data: Record<string, any> };
 }
 
 const { post } = Astro.props;
-const { title, date, category, cover, youtube, video } = post.data;
+const { title, date, category, cover, noCover, youtube, video } = post.data;
 
 const categoryLabel = categories.find((c) => c.id === category)?.label ?? category;
 
@@ -26,8 +26,13 @@ function excerpt(text: string | undefined, length = 140) {
 	return plain.length > length ? `${plain.slice(0, length).trim()}…` : plain;
 }
 
-const youtubeThumbnail = youtube ? getYoutubeThumbnailUrl(youtube) : null;
-const isVideo = Boolean(youtubeThumbnail || video);
+// Галочка «Без обложки» перебивает всё: и саму обложку, и кадр с ютюба.
+// Это осознанный выбор автора — короткая заметка должна выглядеть заголовком
+// в строку, а не карточкой с картинкой. Отличается от «обложка не задана»:
+// там картинку просто не выбрали, и кадр с ютюба остаётся уместным.
+const coverImage = noCover ? null : coverSrcs(cover);
+const youtubeThumbnail = !noCover && youtube ? getYoutubeThumbnailUrl(youtube) : null;
+const isVideo = Boolean(youtubeThumbnail || (video && !noCover));
 
 // «Сколько это займёт» — время чтения у постов, длительность у выпусков
 // и видеоэссе. Что именно, решает src/lib/postTiming.mjs, тот же файл зовёт
@@ -46,15 +51,16 @@ const timing = await getPostTiming(post);
 <article class="card">
 	<a class="card-link" href={`/posts/${post.id}/`}>
 		{
-			cover ? (
-				<Image
+			coverImage ? (
+				<img
 					class="media"
-					src={cover}
-					alt=""
-					widths={[400, 800]}
+					src={coverImage.src}
+					srcset={coverImage.srcset}
 					sizes="(max-width: 700px) 100vw, 400px"
-					width={800}
-					height={Math.round(800 * (cover.height / cover.width))}
+					alt=""
+					loading="lazy"
+					width="800"
+					height="450"
 				/>
 			) : youtubeThumbnail ? (
 				<span class="media-wrap">
@@ -76,7 +82,7 @@ const timing = await getPostTiming(post);
 				{dateFormatter.format(date)}
 				{timing && <span class="timing">{timing.label}</span>}
 			</span>
-			{!cover && !isVideo && <p class="excerpt">{excerpt(post.body)}</p>}
+			{!coverImage && !isVideo && <p class="excerpt">{excerpt(post.body)}</p>}
 		</div>
 	</a>
 	<slot />

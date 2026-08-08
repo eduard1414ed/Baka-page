@@ -7,7 +7,7 @@
 // Понадобилось, когда выяснилось, что у статьи в телеграме разворачивался
 // баннер сайта вместо её собственного кадра.
 
-import { getOgVariantSrc } from './imageVariants.mjs';
+import { getOgVariantSrc, getImageVariantSrcs, isOptimizableImage } from './imageVariants.mjs';
 
 /** Свой блок картинки из редактора админки: ::image{src="…" alt="…"}. */
 const DIRECTIVE_RE = /^::image\{[^}]*\bsrc="([^"]+)"/m;
@@ -36,6 +36,31 @@ export function firstImageInBody(body) {
 
 	if (candidates.length === 0) return null;
 	return candidates.sort((a, b) => a.at - b.at)[0].src;
+}
+
+/**
+ * Обложка поста для показа в ленте: сжатые копии, если картинка наша.
+ *
+ * Отдельно от превью в соцсетях: там нужен jpeg (телеграм не любит webp),
+ * а на странице наоборот webp — он легче. Один и тот же файл обложки,
+ * два разных набора копий, и делает их одна и та же сборка.
+ *
+ * @returns {{src: string, srcset: string|null} | null}
+ */
+export function coverSrcs(cover) {
+	if (!cover) return null;
+	// Картинка с чужого сервера или формат, который мы не жмём (svg, gif) —
+	// как есть, лишь бы не битая ссылка.
+	if (/^https?:\/\//.test(cover) || !isOptimizableImage(cover)) {
+		return { src: cover, srcset: null };
+	}
+
+	const variants = getImageVariantSrcs(cover);
+	return {
+		// В src самый маленький — его берут браузеры, не понимающие srcset.
+		src: variants[0].src,
+		srcset: variants.map((v) => `${v.src} ${v.width}w`).join(', '),
+	};
 }
 
 /**

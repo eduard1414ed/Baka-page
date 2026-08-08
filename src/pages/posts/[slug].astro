@@ -1,6 +1,5 @@
 ---
 import { getCollection, getEntry, render } from 'astro:content';
-import { Image, getImage } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
 import JsonLd from '../../components/JsonLd.astro';
 import { excerptFromBody } from '../../lib/excerpt.mjs';
@@ -129,12 +128,14 @@ const pageDescription = excerptFromBody(post.body, undefined);
 // Оригинал это jpg или png на 1–1,5 МБ, лежит на чужом сервере, нашей сборке
 // не стоит ничего.
 //
-// Своя обложка поста проходит через getImage с format: 'jpeg' по той же
-// причине: обычный <Image> ниже отдаёт webp, для страницы это правильно,
-// для превью — нет. Картинка из текста получает отдельную jpeg-копию,
-// см. src/lib/postImage.mjs.
-const postCoverOg = cover ? await getImage({ src: cover, width: 1200, format: 'jpeg' }) : null;
-const ogImage = postCoverOg?.src ?? episode?.imageUrl ?? toSocialImage(firstImageInBody(post.body)) ?? null;
+// Обложка и картинка из текста получают отдельную jpeg-копию, см.
+// src/lib/postImage.mjs — на сайт наши картинки уезжают только в webp.
+//
+// Галочка «Без обложки» на превью НЕ влияет: она про то, как пост выглядит
+// в ленте, а ссылка в чате совсем без картинки выглядит сломанной. Такому посту
+// достанется картинка из текста, а если её нет — общий баннер сайта.
+const ogImage =
+	toSocialImage(cover) ?? episode?.imageUrl ?? toSocialImage(firstImageInBody(post.body)) ?? null;
 
 const pageUrl = absoluteUrl(`/posts/${post.id}/`);
 const ogImageAbsolute = absoluteUrl(ogImage);
@@ -197,19 +198,9 @@ const crumbs = breadcrumbsSchema([
 			{timing && <span class="timing">{timing.label}</span>}
 		</p>
 
-		{
-			cover && (
-				<Image
-					class="cover"
-					src={cover}
-					alt=""
-					widths={[600, 1200]}
-					sizes="(max-width: 700px) 100vw, 700px"
-					width={1200}
-					height={Math.round(1200 * (cover.height / cover.width))}
-				/>
-			)
-		}
+		{/* Обложки здесь нет намеренно: она для ленты и соцсетей. На странице
+		    картинка и так есть — обложка выпуска в тексте, кадр в статье,
+		    плеер ютюба у видеоэссе, — и обложка её бы дублировала. */}
 
 		{
 			youtubeEmbed && (
@@ -423,12 +414,6 @@ const crumbs = breadcrumbsSchema([
 	.timing::before {
 		content: '·';
 		margin: 0 0.35em;
-	}
-
-	.cover {
-		width: 100%;
-		border-radius: var(--radius-md);
-		margin-bottom: var(--space-3);
 	}
 
 	.video-wrap {
