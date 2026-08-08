@@ -1,0 +1,565 @@
+---
+// Поиск по всему сайту (тз/06, шаги 2–5).
+//
+// Индекс делает Pagefind — он проходит по УЖЕ СОБРАННЫМ страницам в dist/
+// (команда `pagefind --site dist` в package.json, сразу после `astro build`).
+// Из-за этого поиск бесплатно получает то, ради чего иначе пришлось бы писать
+// отдельный сборщик индекса: расшифровка на странице выпуска уже пропущена
+// через src/lib/transcriptOverrides.mjs, то есть поиск видит переименованных
+// спикеров и подтверждённые исправления названий. Второго пути к расшифровкам
+// не существует, а значит и разъезжаться нечему.
+//
+// Скрытые исключениями упоминания из поиска НЕ выпадают: исключение снимает
+// с названия разметку тайтла, но слова из расшифровки остаются в тексте
+// страницы, а Pagefind индексирует именно текст.
+//
+// Сама эта страница в индекс не попадает: на ней нет data-pagefind-body.
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Поиск — Бака!" description="Поиск по постам, выпускам и расшифровкам подкаста «Бака!»">
+	<section class="search-page">
+		<h1>Поиск</h1>
+		<p class="lead">По постам, выпускам, тайтлам и расшифровкам разговоров.</p>
+
+		<form class="s-form" role="search" onsubmit="return false">
+			<input
+				class="s-input"
+				type="search"
+				name="q"
+				placeholder="Например: Хоннеамиз"
+				autocomplete="off"
+				aria-label="Что искать"
+			/>
+		</form>
+
+		<div class="s-filters" hidden>
+			<div class="s-group" data-filter="type">
+				<span class="s-group-label">Что искать</span>
+				<div class="s-chips"></div>
+			</div>
+			<div class="s-group" data-filter="category">
+				<span class="s-group-label">Категория</span>
+				<div class="s-chips"></div>
+			</div>
+			<button class="s-reset" type="button" hidden>Сбросить фильтры</button>
+		</div>
+
+		<p class="s-status" role="status" aria-live="polite"></p>
+
+		<ol class="s-results"></ol>
+
+		<button class="s-more" type="button" hidden>Показать ещё</button>
+	</section>
+</Layout>
+
+<script>
+	// Сколько результатов показываем сразу. Число не косметическое: на каждый
+	// показанный результат Pagefind скачивает свой файл-фрагмент (у выпуска
+	// с длинной расшифровкой это до 38 КБ), поэтому «показать всё сразу»
+	// означало бы мегабайты на один запрос. Остальное — по кнопке.
+	const PAGE_SIZE = 8;
+	// Сколько мест в расшифровке показываем у одного выпуска. Слово вроде
+	// «Наруто» встречается в выпуске и по сорок раз — столько таймкодов
+	// в карточке читать невозможно, ровно как и на странице тайтла (тз/05).
+	const MOMENTS = 3;
+	// Порядок фильтров задаём руками: Pagefind отдаёт значения по алфавиту,
+	// а «Посты, Выпуски, Тайтлы» человеку понятнее алфавита.
+	const FILTER_ORDER: Record<string, string[]> = {
+		type: ['Выпуски', 'Посты', 'Тайтлы'],
+		category: ['Подкаст', 'Видеоэссе', 'Заметки', 'Обзоры', 'Бонусы'],
+	};
+
+	type PagefindResult = { id: string; data: () => Promise<any> };
+
+	function setup() {
+		const page = document.querySelector<HTMLElement>('.search-page');
+		if (!page) return;
+
+		const input = page.querySelector<HTMLInputElement>('.s-input');
+		const filtersBox = page.querySelector<HTMLElement>('.s-filters');
+		const status = page.querySelector<HTMLElement>('.s-status');
+		const list = page.querySelector<HTMLOListElement>('.s-results');
+		const more = page.querySelector<HTMLButtonElement>('.s-more');
+		const reset = page.querySelector<HTMLButtonElement>('.s-reset');
+		if (!input || !filtersBox || !status || !list || !more || !reset) return;
+
+		let pagefind: any = null;
+		let results: PagefindResult[] = [];
+		let shown = 0;
+		let query = '';
+		const chosen: Record<string, Set<string>> = { type: new Set(), category: new Set() };
+
+		// Pagefind грузим по требованию, а НЕ на каждой странице сайта: файлы
+		// поиска лежат в /pagefind/ и весят под сотню килобайт вместе с wasm.
+		// Заход на главную не должен стоить ни байта из них — это отдельное
+		// требование заказчика к этому этапу.
+		//
+		// Путь лежит в переменной и помечен @vite-ignore нарочно: иначе сборщик
+		// Astro попытается найти этот файл во время сборки сайта и упадёт —
+		// его на тот момент ещё не существует, его создаёт Pagefind ПОСЛЕ.
+		async function load() {
+			if (pagefind) return pagefind;
+			const path = '/pagefind/pagefind.js';
+			try {
+				pagefind = await import(/* @vite-ignore */ path);
+				await pagefind.options({ excerptLength: 25 });
+				await pagefind.init();
+			} catch {
+				pagefind = null;
+				// В `astro dev` индекса нет вовсе — его делает только сборка.
+				status!.textContent =
+					'Поиск собирается вместе с сайтом. Если вы смотрите локально — соберите сайт (npm run build) и откройте npm run preview.';
+			}
+			return pagefind;
+		}
+
+		function timecode(seconds: number) {
+			const s = Math.max(0, Math.floor(seconds));
+			const mm = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+			const ss = String(s % 60).padStart(2, '0');
+			return s >= 3600 ? `${Math.floor(s / 3600)}:${mm}:${ss}` : `${Number(mm)}:${ss}`;
+		}
+
+		function escape(text: string) {
+			const div = document.createElement('div');
+			div.textContent = text;
+			return div.innerHTML;
+		}
+
+		// Куски расшифровки, в которых нашлось искомое.
+		//
+		// Своего индекса по репликам мы не заводили: Pagefind и так запоминает
+		// каждый элемент с `id` и его позицию в тексте страницы, а у каждого
+		// блока транскрипта такой id есть (`t<секунды>`, ставится в
+		// src/components/Transcript.astro). Значит место совпадения достаточно
+		// сопоставить с ближайшим якорем СЛЕВА — и мы знаем и блок, и минуту.
+		//
+		// Отдельный индекс по 24 900 репликам был бы 24 900 файлов в сборке,
+		// а у Cloudflare лимит 20 000 (см. CLAUDE.md).
+		function moments(data: any) {
+			const anchors = (data.anchors || []).filter((a: any) => /^t(\d+|end)/.test(a.id));
+			if (anchors.length === 0) return [];
+
+			const words: string[] = data.content.split(/\s+/);
+			const found: { seconds: number; text: string }[] = [];
+			const seen = new Set<number>();
+
+			for (const at of data.locations || []) {
+				// Ближайший якорь слева. Их у длинного выпуска под две сотни,
+				// но и совпадений мы разбираем всего несколько — перебора хватает.
+				let block: any = null;
+				for (const anchor of anchors) {
+					if (anchor.location > at) break;
+					block = anchor;
+				}
+				// Совпадение до начала расшифровки (в тексте поста) или после её
+				// конца (в плашках тайтлов) — это не разговор, минуты у него нет.
+				if (!block || block.id === 'tend') continue;
+
+				const seconds = Number(block.id.slice(1).split('-')[0]);
+				if (seen.has(seconds)) continue;
+				seen.add(seconds);
+
+				const from = Math.max(0, at - 9);
+				const to = Math.min(words.length, at + 10);
+				const before = words.slice(from, at).join(' ');
+				const hit = words[at] ?? '';
+				const after = words.slice(at + 1, to).join(' ');
+				found.push({
+					seconds,
+					text:
+						(from > 0 ? '… ' : '') +
+						`${escape(before)} <mark>${escape(hit)}</mark> ${escape(after)}` +
+						(to < words.length ? ' …' : ''),
+				});
+				if (found.length >= MOMENTS) break;
+			}
+			return found;
+		}
+
+		function render(data: any, result: PagefindResult) {
+			const item = document.createElement('li');
+			item.className = 's-item';
+
+			const kind = data.meta?.type ?? 'post';
+			const label = kind === 'episode' ? 'Выпуск' : kind === 'anime' ? 'Тайтл' : (data.meta?.category ?? 'Пост');
+
+			const head = document.createElement('div');
+			head.className = 's-head';
+			head.innerHTML =
+				`<span class="s-kind s-kind-${kind}">${escape(label)}</span>` +
+				(data.meta?.date ? `<span class="s-date">${escape(data.meta.date)}</span>` : '');
+			item.append(head);
+
+			const title = document.createElement('a');
+			title.className = 's-title';
+			title.href = data.url;
+			title.textContent = data.meta?.title ?? data.url;
+			item.append(title);
+
+			const excerpt = document.createElement('p');
+			excerpt.className = 's-excerpt';
+			excerpt.innerHTML = data.excerpt;
+			item.append(excerpt);
+
+			// Места в разговоре — с таймкодом и ссылкой прямо на минуту.
+			// Адрес вида #t=730&q=слово разбирает src/components/Transcript.astro
+			// тем же кодом, что и переход со страницы тайтла: прокрутка,
+			// подсветка, стрелки ↑↓ и перемотка плеера уже написаны там,
+			// второй такой механики мы не заводили (тз/06, шаг 4).
+			const found = moments(data);
+			if (found.length > 0) {
+				const box = document.createElement('ul');
+				box.className = 's-moments';
+				for (const moment of found) {
+					const row = document.createElement('li');
+					row.innerHTML =
+						`<a class="s-time" href="${data.url}#t=${moment.seconds}&q=${encodeURIComponent(query)}">` +
+						`${timecode(moment.seconds)}</a> <span class="s-quote">${moment.text}</span>`;
+					box.append(row);
+				}
+				item.append(box);
+			}
+
+			list!.append(item);
+			void result;
+		}
+
+		async function showMore() {
+			const slice = results.slice(shown, shown + PAGE_SIZE);
+			shown += slice.length;
+			const loaded = await Promise.all(slice.map((r) => r.data()));
+			for (let i = 0; i < loaded.length; i += 1) render(loaded[i], slice[i]);
+			more!.hidden = shown >= results.length;
+			more!.textContent = `Показать ещё (${results.length - shown})`;
+		}
+
+		function renderChips(counts: Record<string, Record<string, number>>) {
+			filtersBox!.hidden = false;
+			for (const group of filtersBox!.querySelectorAll<HTMLElement>('.s-group')) {
+				const name = group.dataset.filter!;
+				const box = group.querySelector<HTMLElement>('.s-chips')!;
+				const values = counts[name] ?? {};
+				const order = FILTER_ORDER[name] ?? [];
+				const names = Object.keys(values).sort((a, b) => {
+					const ai = order.indexOf(a);
+					const bi = order.indexOf(b);
+					return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+				});
+
+				box.textContent = '';
+				for (const value of names) {
+					const count = values[value] ?? 0;
+					const chip = document.createElement('button');
+					chip.type = 'button';
+					chip.className = 's-chip';
+					chip.dataset.group = name;
+					chip.dataset.value = value;
+					const active = chosen[name].has(value);
+					chip.setAttribute('aria-pressed', String(active));
+					// Пустую группу не прячем, а гасим: исчезающие на ходу кнопки
+					// сбивают — человек не понимает, куда делся фильтр.
+					chip.disabled = count === 0 && !active;
+					chip.innerHTML = `${escape(value)} <span class="s-count">${count}</span>`;
+					box.append(chip);
+				}
+			}
+			reset!.hidden = chosen.type.size === 0 && chosen.category.size === 0;
+		}
+
+		function filterArgs() {
+			const args: Record<string, string[]> = {};
+			for (const name of Object.keys(chosen)) if (chosen[name].size > 0) args[name] = [...chosen[name]];
+			return args;
+		}
+
+		async function run() {
+			const api = await load();
+			if (!api) return;
+
+			const filters = filterArgs();
+			const empty = query.trim().length === 0;
+			// Пустой запрос с выбранным фильтром — это «покажи всё в категории».
+			// Pagefind понимает под этим null, а не пустую строку.
+			if (empty && Object.keys(filters).length === 0) {
+				list!.textContent = '';
+				more!.hidden = true;
+				status!.textContent = '';
+				renderChips(await api.filters());
+				return;
+			}
+
+			status!.textContent = 'Ищем…';
+			const search = await api.debouncedSearch(empty ? null : query, { filters }, 200);
+			// null означает, что за это время набрали ещё символ — этот запрос
+			// уже неактуален, рисовать его результаты нельзя.
+			if (search === null) return;
+
+			results = search.results;
+			shown = 0;
+			list!.textContent = '';
+			renderChips(search.filters);
+
+			if (results.length === 0) {
+				status!.textContent = empty ? 'В этой категории пока ничего нет.' : `Ничего не нашлось по запросу «${query}».`;
+				more!.hidden = true;
+				return;
+			}
+
+			status!.textContent = `Нашлось: ${results.length}`;
+			await showMore();
+		}
+
+		// Адрес страницы держим в ногу с запросом: ссылкой на поиск можно
+		// поделиться, а «назад» в браузере возвращает к прошлому запросу.
+		function syncUrl() {
+			const url = new URL(location.href);
+			if (query.trim()) url.searchParams.set('q', query);
+			else url.searchParams.delete('q');
+			history.replaceState(null, '', url);
+		}
+
+		input.addEventListener('input', () => {
+			query = input.value;
+			syncUrl();
+			void run();
+		});
+
+		filtersBox.addEventListener('click', (event) => {
+			const chip = (event.target as HTMLElement).closest<HTMLButtonElement>('.s-chip');
+			if (!chip) return;
+			const group = chip.dataset.group!;
+			const value = chip.dataset.value!;
+			if (chosen[group].has(value)) chosen[group].delete(value);
+			else chosen[group].add(value);
+			void run();
+		});
+
+		reset.addEventListener('click', () => {
+			chosen.type.clear();
+			chosen.category.clear();
+			void run();
+		});
+
+		more.addEventListener('click', () => void showMore());
+
+		// Пришли по ссылке вида /search?q=… — сразу ищем.
+		const initial = new URL(location.href).searchParams.get('q');
+		if (initial) {
+			input.value = initial;
+			query = initial;
+		}
+		input.focus();
+		void run();
+	}
+
+	// Переходы между страницами идут без перезагрузки (<ClientRouter />
+	// в Layout.astro, нужен закреплённому плееру), поэтому подписываемся
+	// на событие Astro, а не выполняем код один раз при загрузке файла.
+	document.addEventListener('astro:page-load', setup);
+</script>
+
+<style>
+	.search-page {
+		max-width: var(--content-width);
+		margin: 0 auto;
+		padding: var(--space-3);
+	}
+
+	h1 {
+		font-family: var(--font-heading);
+		font-size: var(--font-size-2xl);
+		margin: 0 0 var(--space-1);
+	}
+
+	.lead {
+		color: var(--color-text-muted);
+		margin: 0 0 var(--space-3);
+	}
+
+	.s-input {
+		width: 100%;
+		box-sizing: border-box;
+		padding: var(--space-2);
+		font-size: var(--font-size-lg);
+		font-family: var(--font-body);
+		color: var(--color-text);
+		background: var(--color-bg-elevated);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+	}
+
+	.s-input:focus-visible {
+		outline: 2px solid var(--color-accent);
+		outline-offset: 2px;
+	}
+
+	.s-filters {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--space-2);
+		margin-top: var(--space-2);
+	}
+
+	.s-group {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: var(--space-1);
+	}
+
+	.s-group-label {
+		font-size: var(--font-size-sm);
+		color: var(--color-text-muted);
+	}
+
+	.s-chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-1);
+	}
+
+	.s-chip {
+		font: inherit;
+		font-size: var(--font-size-sm);
+		color: var(--color-text);
+		background: var(--color-bg-elevated);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-full);
+		padding: 0.3rem 0.75rem;
+		cursor: pointer;
+		transition: border-color var(--transition-fast);
+	}
+
+	.s-chip:hover:not(:disabled) {
+		border-color: var(--color-accent);
+	}
+
+	.s-chip[aria-pressed='true'] {
+		border-color: var(--color-accent);
+		color: var(--color-accent);
+	}
+
+	.s-chip:disabled {
+		opacity: 0.4;
+		cursor: default;
+	}
+
+	.s-count {
+		color: var(--color-text-muted);
+	}
+
+	.s-reset {
+		font: inherit;
+		font-size: var(--font-size-sm);
+		color: var(--color-text-muted);
+		background: none;
+		border: none;
+		cursor: pointer;
+		text-decoration: underline;
+	}
+
+	.s-status {
+		color: var(--color-text-muted);
+		font-size: var(--font-size-sm);
+		margin: var(--space-3) 0 var(--space-2);
+	}
+
+	.s-results {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: var(--space-3);
+	}
+
+	.s-item {
+		border-top: 1px solid var(--color-border);
+		padding-top: var(--space-2);
+	}
+
+	.s-head {
+		display: flex;
+		gap: var(--space-1);
+		align-items: baseline;
+		font-size: var(--font-size-sm);
+		color: var(--color-text-muted);
+	}
+
+	.s-kind {
+		color: var(--color-accent-2);
+	}
+
+	.s-title {
+		display: block;
+		font-family: var(--font-heading);
+		font-size: var(--font-size-lg);
+		color: var(--color-text);
+		text-decoration: none;
+		margin: 0.15rem 0;
+	}
+
+	.s-title:hover {
+		color: var(--color-accent);
+	}
+
+	.s-excerpt {
+		margin: 0;
+		color: var(--color-text-muted);
+		font-size: var(--font-size-sm);
+		line-height: 1.5;
+	}
+
+	.s-moments {
+		list-style: none;
+		margin: var(--space-1) 0 0;
+		padding: 0 0 0 var(--space-2);
+		border-left: 2px solid var(--color-border);
+		display: grid;
+		gap: 0.35rem;
+		font-size: var(--font-size-sm);
+	}
+
+	.s-time {
+		color: var(--color-accent);
+		font-variant-numeric: tabular-nums;
+		text-decoration: none;
+		white-space: nowrap;
+	}
+
+	.s-time:hover {
+		text-decoration: underline;
+	}
+
+	.s-quote {
+		color: var(--color-text-muted);
+	}
+
+	/* Подсветку рисует скрипт уже во время работы страницы, поэтому на неё
+	   не попадает атрибут, которым Astro ограничивает стили компонентом —
+	   без :global() она осталась бы некрашеной. Те же грабли, что
+	   в src/components/Transcript.astro. */
+	.s-excerpt :global(mark),
+	.s-quote :global(mark) {
+		background: none;
+		color: var(--color-accent-2);
+		font-weight: 600;
+	}
+
+	.s-more {
+		font: inherit;
+		margin-top: var(--space-3);
+		padding: var(--space-1) var(--space-2);
+		color: var(--color-text);
+		background: var(--color-bg-elevated);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		cursor: pointer;
+	}
+
+	.s-more:hover {
+		border-color: var(--color-accent);
+	}
+</style>

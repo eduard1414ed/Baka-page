@@ -88,10 +88,32 @@ const animeEntries = (await Promise.all(animeIds.map((id) => getEntry('anime', i
 ---
 
 <Layout title={`${title} — Бака!`}>
-	<article class="post">
-		<a class="back" href={`/category/${category}/`}>← {categoryLabel}</a>
-		<h1>{title}</h1>
-		<p class="date">{dateFormatter.format(date)}</p>
+	{/* data-pagefind-body — что берёт в поиск Pagefind (тз/06, шаг 1). Стоит
+	    на <article>, поэтому шапка, подвал и закреплённый плеер из Layout.astro
+	    в индекс не попадают вовсе: они на каждой странице одинаковые и в выдаче
+	    были бы шумом. Страницы БЕЗ этого атрибута (главная, категории, /admin)
+	    Pagefind не индексирует совсем — так работает его правило «если атрибут
+	    встретился хоть где-то, индексируем только помеченное».
+
+	    Тип и категория — фильтры выдачи (тз/06, шаг 5). «Выпуски» это не
+	    отдельная сущность, а категория `podcast`, поэтому тип выводится
+	    из категории, а не хранится отдельно. */}
+	<article
+		class="post"
+		data-pagefind-body
+		data-pagefind-filter={`type:${category === 'podcast' ? 'Выпуски' : 'Посты'}`}
+		data-pagefind-meta={`type:${category === 'podcast' ? 'episode' : 'post'}`}
+	>
+		{/* Один фильтр и одна метка на элемент — перечислить их через запятую
+		    в одном атрибуте НЕЛЬЗЯ, Pagefind примет всю строку за одно значение.
+		    Проверено на живом индексе: `type:Выпуски, category:Подкаст` дало
+		    фильтр «Выпуски, category:Подкаст». Поэтому лишнее висит на пустых
+		    span'ах — они ничего не показывают и в текст страницы не попадают. */}
+		<span data-pagefind-filter={`category:${categoryLabel}`} data-pagefind-meta={`category:${categoryLabel}`}></span>
+		<span data-pagefind-meta={`date:${dateFormatter.format(date)}`}></span>
+		<a class="back" href={`/category/${category}/`} data-pagefind-ignore>← {categoryLabel}</a>
+		<h1 data-pagefind-meta="title">{title}</h1>
+		<p class="date" data-pagefind-ignore>{dateFormatter.format(date)}</p>
 
 		{
 			cover && (

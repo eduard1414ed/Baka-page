@@ -17,8 +17,13 @@ interface Props {
 const { guid, audioUrl, title, cover, link, durationSec } = Astro.props;
 ---
 
+{/* data-pagefind-ignore — плеер в поиск не берём (тз/06, шаг 1). Иначе в текст
+    страницы попадали бы кнопки скоростей и счётчик времени, и в выдаче
+    вылезало бы «−150.75×1×1.25×1.5×1.75×2×+15  0:00 / 0:00». Проверено
+    на первом же пробном индексе — ровно это и вылезло. */}
 <div
 	class="episode-player"
+	data-pagefind-ignore
 	data-guid={guid}
 	data-audio={audioUrl}
 	data-title={title}

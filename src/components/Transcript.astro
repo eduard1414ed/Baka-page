@@ -50,8 +50,25 @@ const linked = new Set<string>();
 
 // Разметку ищем по репликам (block.parts), а не по склеенному тексту блока:
 // номер вхождения в реплике — половина якоря для исключений.
+// Якорь для поиска по сайту (тз/06, шаг 4). Pagefind запоминает КАЖДЫЙ элемент
+// с `id` и его позицию в тексте страницы — значит по найденному слову можно
+// вычислить, в каком блоке оно стоит, и достать таймкод. Отдельный индекс
+// по репликам поэтому не нужен вовсе: 24 900 записей превратились бы
+// в 24 900 файлов в сборке, а у Cloudflare лимит 20 000 (см. CLAUDE.md).
+//
+// Секунды прячем прямо в id, чтобы /search не пришлось скачивать ничего
+// сверх того, что Pagefind и так отдаёт. Совпадения возможны (два блока
+// в одну и ту же секунду) — id обязан быть уникальным, поэтому дубли
+// получают приписку; разбор на стороне поиска берёт только цифры до дефиса.
+const seenAnchors = new Set<string>();
 const blocks = groupReplicas(transcript).map((block: any) => ({
 	...block,
+	anchorId: ((base) => {
+		let id = base;
+		for (let n = 2; seenAnchors.has(id); n += 1) id = `${base}-${n}`;
+		seenAnchors.add(id);
+		return id;
+	})(`t${Math.floor(block.start)}`),
 	// data-seconds у упоминания — начало блока, то же число, что на плашке
 	// рядом. По нему ссылка со страницы тайтла находит нужное упоминание.
 	seconds: Math.floor(block.start),
@@ -69,9 +86,11 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 
 <section class="transcript" aria-labelledby="transcript-title">
 	<h2 id="transcript-title">Транскрипт</h2>
-	<p class="tr-note">расшифровано автоматически, ошибки возможны</p>
+	{/* Приписка в поиск не идёт: иначе по запросу «ошибки» находился бы весь
+	    архив разом. Референс («Запуск завтра») помечает её ровно так же. */}
+	<p class="tr-note" data-pagefind-ignore>расшифровано автоматически, ошибки возможны</p>
 
-	<div class="tr-tools">
+	<div class="tr-tools" data-pagefind-ignore>
 		<input
 			class="tr-search"
 			type="search"
@@ -89,7 +108,7 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 	    Само название тайтла при этом вписывается в поле поиска выше — чтобы
 	    сразу было видно, что стрелки живые и есть что листать. Здесь его
 	    поэтому не повторяем, а объясняем, чем этот режим отличается от поиска. */}
-	<p class="tr-hits" hidden>
+	<p class="tr-hits" hidden data-pagefind-ignore>
 		<span>Показаны все упоминания тайтла — листайте стрелками ↑↓</span>
 		<button class="tr-hits-off" type="button">✕ обычный поиск</button>
 	</p>
@@ -97,12 +116,15 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 	<div class="tr-body">
 		{
 			blocks.map((block: any) => (
-				<div class="tr-block" data-start={block.start} data-end={block.end}>
+				<div class="tr-block" id={block.anchorId} data-start={block.start} data-end={block.end}>
 					<div class="tr-side">
 						{/* У блока, оторвавшегося от предыдущего по порогу длины, имя
 						    не повторяем — это та же речь, просто с новым таймкодом. */}
 						{!block.continues && <span class="tr-name">{block.name}</span>}
-						<button type="button" class="tr-time" data-seconds={block.start}>
+						{/* Сама плашка в поиск не идёт: иначе текст страницы был бы
+						    прошит сотнями «12:04», и они лезли бы в выдачу. Таймкод
+						    от этого не теряется — он в id блока выше. */}
+						<button type="button" class="tr-time" data-seconds={block.start} data-pagefind-ignore>
 							{formatTimecode(block.start)}
 						</button>
 					</div>
@@ -143,7 +165,15 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 		}
 	</div>
 
-	<button class="tr-expand" type="button" aria-expanded="false">Развернуть транскрипт целиком</button>
+	{/* Метка конца расшифровки — пустая, на странице её не видно. Нужна
+	    поиску по сайту: якорь блока говорит, где расшифровка НАЧАЛАСЬ, а без
+	    этой метки слово, найденное в плашках тайтлов под транскриптом, поиск
+	    приписал бы последнему блоку и позвал бы человека на чужую минуту. */}
+	<span id="tend"></span>
+
+	<button class="tr-expand" type="button" aria-expanded="false" data-pagefind-ignore>
+		Развернуть транскрипт целиком
+	</button>
 </section>
 
 <script>
@@ -397,6 +427,43 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 			// разрешает звук. Если всё же заблокирует — транскрипт всё равно
 			// прокручен и подсвечен, останется нажать play.
 			if (playerCard && api && Number.isFinite(seconds)) api.load(playerCard.dataset, seconds);
+		}
+
+		// Ссылка из поиска по сайту: /posts/ep-102/#t=730&q=слово (тз/06, шаг 4).
+		//
+		// СВОЕЙ МЕХАНИКИ ПЕРЕХОДА ЗДЕСЬ НЕТ — вся работа делается тем же кодом,
+		// что и раньше: подсветку и стрелки даёт search() (поиск внутри выпуска,
+		// тз/05), прокрутку — reveal(), перемотку — api.load(). Вторая копия
+		// этих правил разъехалась бы с первой, как уже бывало в этом проекте.
+		const fromSearch = location.hash.match(/^#t=(\d+)(?:&q=(.*))?$/);
+		if (fromSearch) {
+			const seconds = Number(fromSearch[1]);
+			const query = fromSearch[2] ? decodeURIComponent(fromSearch[2]) : '';
+
+			// Блок ищем по id (он же якорь Pagefind), а если таймкод сдвинулся
+			// после пересчёта расшифровки — по ближайшему data-start. Не нашли
+			// вовсе — не беда: подсветка и звук всё равно отработают.
+			const target =
+				document.getElementById(`t${seconds}`) ??
+				Array.from(section.querySelectorAll<HTMLElement>('.tr-block')).find(
+					(block) => Math.floor(Number(block.dataset.start)) === seconds,
+				) ??
+				null;
+
+			section.scrollIntoView({ block: 'start' });
+
+			if (query) {
+				input.value = query;
+				search(query);
+			}
+
+			// Совпадений на странице может быть много; встаём на то, что внутри
+			// нужного блока, а не на первое сверху — за ним человек и пришёл.
+			const at = target ? matches.findIndex((mark) => target.contains(mark)) : -1;
+			if (at !== -1) setCurrent(at);
+			else if (target) reveal(target, false);
+
+			if (playerCard && api) api.load(playerCard.dataset, seconds);
 		}
 	}
 

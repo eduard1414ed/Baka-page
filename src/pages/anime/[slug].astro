@@ -42,8 +42,18 @@ const MAX_TIMES = 8;
 ---
 
 <Layout title={`${displayTitle} — Бака!`} description={synopsis?.slice(0, 160)}>
-	<section class="anime-page">
-		<a class="back" href="/anime/">← Все тайтлы</a>
+	{/* Что берёт в поиск Pagefind — см. пояснение в src/pages/posts/[slug].astro.
+	    У тайтла в индекс идёт название, оригинальное название и описание;
+	    список упоминаний ниже помечен data-pagefind-ignore, иначе заголовки
+	    выпусков попали бы ещё и в карточку тайтла и по запросу «Наруто»
+	    выдача дублировалась бы сама с собой. */}
+	<section
+		class="anime-page"
+		data-pagefind-body
+		data-pagefind-filter="type:Тайтлы"
+		data-pagefind-meta="type:anime"
+	>
+		<a class="back" href="/anime/" data-pagefind-ignore>← Все тайтлы</a>
 
 		<div class="header">
 			{
@@ -82,7 +92,8 @@ const MAX_TIMES = 8;
 			</div>
 		</div>
 
-		<h2 class="mentions-title">Упоминания{mentions.length > 0 && ` (${mentions.length})`}</h2>
+		<h2 class="mentions-title" data-pagefind-ignore>Упоминания{mentions.length > 0 && ` (${mentions.length})`}</h2>
+		<div data-pagefind-ignore>
 		{
 			mentions.length === 0 ? (
 				<p class="empty">Пока нет постов с этим тайтлом.</p>
@@ -119,6 +130,7 @@ const MAX_TIMES = 8;
 				</div>
 			)
 		}
+		</div>
 	</section>
 </Layout>
 
