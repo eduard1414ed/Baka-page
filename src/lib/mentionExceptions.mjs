@@ -10,21 +10,30 @@
 //   1. Одно конкретное упоминание — ложное срабатывание в конкретном месте.
 //   2. Тайтл целиком из выпуска — если разговор вообще не о нём.
 //
-// ЯКОРЬ — НОМЕР РЕПЛИКИ И НОМЕР ВХОЖДЕНИЯ В НЕЙ, А НЕ ТАЙМКОД. Впереди
-// выравнивание готовых сценариев по звуку для 36 выпусков (шаг 2 тз/05) —
-// после него таймкоды сдвинутся, и привязка по времени рассыпалась бы вся
-// разом. Номер реплики переживает пересчёт времени.
+// ЯКОРЬ — НОМЕР РЕПЛИКИ И ПОЗИЦИЯ В НЕЙ, А НЕ ТАЙМКОД. Впереди выравнивание
+// готовых сценариев по звуку для 36 выпусков (шаг 2 тз/05) — после него
+// таймкоды сдвинутся, и привязка по времени рассыпалась бы вся разом.
+// Номер реплики пересчёт времени переживает.
 //
-// ПРАВИЛО ПРИ ПОТЕРЕ ПРИВЯЗКИ — ПОКАЗЫВАТЬ, А НЕ ПРЯТАТЬ. Если реплики
-// с таким номером больше нет или в ней нет такого вхождения — упоминание
-// остаётся на странице, а сборка пишет предупреждение. Лишнее в выдаче
-// заметно и чинится; тихо пропавшее не заметит никто.
+// ПОЗИЦИЯ, А НЕ «КАКОЕ ПО СЧЁТУ». Сначала второй половиной якоря был номер
+// вхождения тайтла в реплике, и это оказалось хрупко: стоит вписать вариант
+// написания в поле «Варианты написания» у тайтла — и в реплике, где звучат
+// и название, и вариант, нумерация сдвигается. Старая галочка при этом молча
+// начинает прятать СОСЕДНЕЕ упоминание, и предупреждения не будет: правило-то
+// сработало. Позиция в тексте от появления других совпадений не меняется
+// вовсе, а если текст всё-таки правили, якорь просто не найдётся, и сборка
+// скажет об этом вслух. Ломаться громко лучше, чем тихо врать.
+//
+// ПРАВИЛО ПРИ ПОТЕРЕ ПРИВЯЗКИ — ПОКАЗЫВАТЬ, А НЕ ПРЯТАТЬ. Если реплики с таким
+// номером больше нет или упоминание на этом месте не начинается — упоминание
+// остаётся на странице, а сборка пишет предупреждение. Лишнее в выдаче заметно
+// и чинится; тихо пропавшее не заметит никто.
 //
 // ГДЕ ЛЕЖИТ: одной строкой в поле `mentionsHidden` самого поста, например
-//   mentionsHidden: 'monster:* k-on:12,45.1'
+//   mentionsHidden: 'monster:* k-on:12,45.83'
 // Читается так: «monster убран из выпуска целиком; у k-on убраны упоминание
-// в реплике 12 и второе вхождение в реплике 45». Номер вхождения считается
-// с нуля и, когда он нулевой, не пишется.
+// в самом начале реплики 12 и упоминание с 83-го символа реплики 45».
+// Позиция считается с нуля и, когда упоминание начинает реплику, не пишется.
 //
 // Почему строкой в посте, а не отдельным файлом, хотя раньше был файл.
 // Поле стоит в редакторе поста, а CMS умеет сохранять только свою же запись:
@@ -34,11 +43,10 @@
 // и портила). Ровно так это и было задумано в ТЗ.
 //
 // Чем за это заплатили. В прежнем файле у исключения хранился ещё и сам текст
-// под якорем — вторая страховка на случай, если реплики перенумеруются.
-// В строку он не влезает, не превращая её в кашу. Защита при этом не исчезла:
-// если в реплике под тем же номером этого тайтла больше нет, правило просто
-// не сработает и сборка о нём предупредит. Остаётся узкий случай — когда
-// в той же реплике окажется другое упоминание того же самого тайтла.
+// под якорем — страховка на случай, если реплики перенумеруются. В строку он
+// не влезает, не превращая её в кашу. Защита при этом не исчезла: если на этом
+// месте реплики упоминание не начинается, правило не сработает и сборка о нём
+// предупредит.
 
 const ENTRY_SEPARATOR = /\s+/;
 const ANCHOR_SEPARATOR = ',';
@@ -50,7 +58,7 @@ const ALLOW_ALL = {
 };
 
 /**
- * Строка из поста → { hiddenAnime: string[], hiddenMentions: [{anime, replica, occurrence}] }.
+ * Строка из поста → { hiddenAnime: string[], hiddenMentions: [{anime, replica, offset}] }.
  * Мусор молча пропускается: половина исключений лучше, чем упавшая сборка.
  */
 export function parseMentionExceptions(value) {
@@ -70,9 +78,9 @@ export function parseMentionExceptions(value) {
 		}
 
 		for (const anchor of anchors.split(ANCHOR_SEPARATOR)) {
-			const [replica, occurrence = '0'] = anchor.split('.');
-			if (!/^\d+$/.test(replica) || !/^\d+$/.test(occurrence)) continue;
-			hiddenMentions.push({ anime, replica: Number(replica), occurrence: Number(occurrence) });
+			const [replica, offset = '0'] = anchor.split('.');
+			if (!/^\d+$/.test(replica) || !/^\d+$/.test(offset)) continue;
+			hiddenMentions.push({ anime, replica: Number(replica), offset: Number(offset) });
 		}
 	}
 
@@ -88,11 +96,11 @@ export function serializeMentionExceptions({ hiddenAnime = [], hiddenMentions = 
 	const whole = new Set(hiddenAnime);
 	const byAnime = new Map();
 
-	for (const { anime, replica, occurrence = 0 } of hiddenMentions) {
+	for (const { anime, replica, offset = 0 } of hiddenMentions) {
 		// Тайтл убран целиком — перечислять его отдельные упоминания незачем.
 		if (whole.has(anime)) continue;
-		const anchor = occurrence > 0 ? `${replica}.${occurrence}` : String(replica);
-		byAnime.set(anime, [...(byAnime.get(anime) ?? []), { replica, occurrence, anchor }]);
+		const anchor = offset > 0 ? `${replica}.${offset}` : String(replica);
+		byAnime.set(anime, [...(byAnime.get(anime) ?? []), { replica, offset, anchor }]);
 	}
 
 	const parts = [...whole].sort().map((anime) => `${anime}:${WHOLE_TITLE}`);
@@ -100,7 +108,7 @@ export function serializeMentionExceptions({ hiddenAnime = [], hiddenMentions = 
 	for (const anime of [...byAnime.keys()].sort()) {
 		const anchors = byAnime
 			.get(anime)
-			.sort((a, b) => a.replica - b.replica || a.occurrence - b.occurrence)
+			.sort((a, b) => a.replica - b.replica || a.offset - b.offset)
 			.map((item) => item.anchor);
 		parts.push(`${anime}:${anchors.join(ANCHOR_SEPARATOR)}`);
 	}
@@ -118,7 +126,7 @@ export function makeExceptionFilter(value) {
 	const rules = new Map();
 
 	for (const rule of hiddenMentions) {
-		rules.set(`${rule.anime} ${rule.replica} ${rule.occurrence}`, { rule, used: false });
+		rules.set(`${rule.anime} ${rule.replica} ${rule.offset}`, { rule, used: false });
 	}
 
 	if (hiddenAnime.size === 0 && rules.size === 0) return ALLOW_ALL;
@@ -129,15 +137,15 @@ export function makeExceptionFilter(value) {
 		/**
 		 * @param {string} animeId
 		 * @param {number} replicaIndex — место реплики в исходном массиве
-		 * @param {number} occurrence — какое это по счёту вхождение ЭТОГО тайтла в ЭТОЙ реплике, с нуля
+		 * @param {number} offset — с какого символа реплики начинается упоминание
 		 */
-		isHidden(animeId, replicaIndex, occurrence) {
+		isHidden(animeId, replicaIndex, offset) {
 			if (hiddenAnime.has(animeId)) {
 				usedAnime.add(animeId);
 				return true;
 			}
 
-			const found = rules.get(`${animeId} ${replicaIndex} ${occurrence}`);
+			const found = rules.get(`${animeId} ${replicaIndex} ${offset}`);
 			if (!found) return false;
 
 			found.used = true;
@@ -153,7 +161,7 @@ export function makeExceptionFilter(value) {
 				if (!usedAnime.has(animeId)) out.push(`тайтл целиком: ${animeId}`);
 			}
 			for (const { rule, used } of rules.values()) {
-				if (!used) out.push(`${rule.anime}, реплика ${rule.replica}, вхождение ${rule.occurrence}`);
+				if (!used) out.push(`${rule.anime}, реплика ${rule.replica}, позиция ${rule.offset}`);
 			}
 			return out;
 		},

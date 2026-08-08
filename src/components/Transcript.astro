@@ -120,7 +120,7 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 										data-anime={segment.animeId}
 										data-seconds={block.seconds}
 										data-replica={part.index}
-										data-occurrence={segment.occurrence}
+										data-offset={segment.offset}
 									>
 										{segment.text}
 									</a>
@@ -130,7 +130,7 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 										data-anime={segment.animeId}
 										data-seconds={block.seconds}
 										data-replica={part.index}
-										data-occurrence={segment.occurrence}
+										data-offset={segment.offset}
 									>
 										{segment.text}
 									</span>

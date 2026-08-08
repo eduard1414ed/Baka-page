@@ -954,8 +954,11 @@
 			// убирает тайтл из выпуска целиком. Убранное НЕ ИСЧЕЗАЕТ из списка,
 			// а бледнеет — вернуть можно всегда.
 			//
-			// Хранится строкой 'monster:* k-on:12,45.1'. Разбор и сборка — копия
-			// src/lib/mentionExceptions.mjs, меняете тут — поправьте и там.
+			// Хранится строкой 'monster:* k-on:12,45.83': номер реплики и позиция
+			// упоминания в ней. Именно позиция, а не «какое по счёту» — иначе
+			// добавленный вариант написания молча сдвигал бы чужие галочки
+			// (подробно в src/lib/mentionExceptions.mjs). Разбор и сборка — копия
+			// оттуда же, меняете тут — поправьте и там.
 			function parseMentionExceptions(value) {
 				const hiddenAnime = [];
 				const hiddenMentions = [];
@@ -973,9 +976,9 @@
 					}
 
 					for (const anchor of anchors.split(',')) {
-						const [replica, occurrence = '0'] = anchor.split('.');
-						if (!/^\d+$/.test(replica) || !/^\d+$/.test(occurrence)) continue;
-						hiddenMentions.push({ anime, replica: Number(replica), occurrence: Number(occurrence) });
+						const [replica, offset = '0'] = anchor.split('.');
+						if (!/^\d+$/.test(replica) || !/^\d+$/.test(offset)) continue;
+						hiddenMentions.push({ anime, replica: Number(replica), offset: Number(offset) });
 					}
 				}
 
@@ -986,10 +989,10 @@
 				const whole = new Set(hiddenAnime);
 				const byAnime = new Map();
 
-				for (const { anime, replica, occurrence = 0 } of hiddenMentions) {
+				for (const { anime, replica, offset = 0 } of hiddenMentions) {
 					if (whole.has(anime)) continue;
-					const anchor = occurrence > 0 ? `${replica}.${occurrence}` : String(replica);
-					byAnime.set(anime, [...(byAnime.get(anime) ?? []), { replica, occurrence, anchor }]);
+					const anchor = offset > 0 ? `${replica}.${offset}` : String(replica);
+					byAnime.set(anime, [...(byAnime.get(anime) ?? []), { replica, offset, anchor }]);
 				}
 
 				const parts = [...whole].sort().map((anime) => `${anime}:*`);
@@ -997,7 +1000,7 @@
 				for (const anime of [...byAnime.keys()].sort()) {
 					const anchors = byAnime
 						.get(anime)
-						.sort((a, b) => a.replica - b.replica || a.occurrence - b.occurrence)
+						.sort((a, b) => a.replica - b.replica || a.offset - b.offset)
 						.map((item) => item.anchor);
 					parts.push(`${anime}:${anchors.join(',')}`);
 				}
@@ -1006,7 +1009,7 @@
 			}
 
 			function sameMention(rule, animeId, mention) {
-				return rule.anime === animeId && rule.replica === mention.replica && rule.occurrence === mention.occurrence;
+				return rule.anime === animeId && rule.replica === mention.replica && rule.offset === mention.offset;
 			}
 
 			// Русское склонение к числу: 1 упоминание, 2 упоминания, 5 упоминаний.
@@ -1039,7 +1042,7 @@
 						hiddenAnime,
 						hiddenMentions: already
 							? hiddenMentions.filter((rule) => !sameMention(rule, animeId, mention))
-							: [...hiddenMentions, { anime: animeId, replica: mention.replica, occurrence: mention.occurrence }],
+							: [...hiddenMentions, { anime: animeId, replica: mention.replica, offset: mention.offset }],
 					});
 				},
 				hideWholeTitle(animeId) {
@@ -1066,7 +1069,7 @@
 					return h(
 						'label',
 						{
-							key: `${mention.replica}.${mention.occurrence}`,
+							key: `${mention.replica}.${mention.offset}`,
 							style: {
 								display: 'flex',
 								gap: '8px',

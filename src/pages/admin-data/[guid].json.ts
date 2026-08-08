@@ -45,8 +45,8 @@ export async function getStaticPaths() {
  * побледнеть, чтобы его всегда можно было вернуть (тз/05, шаг 6). Что именно
  * убрано, админка знает из самого поля и решает сама.
  *
- * Ищем по репликам, а не по склеенному тексту: номер вхождения в реплике —
- * половина якоря исключения, по склейке его не посчитать.
+ * Ищем по репликам, а не по склеенному тексту: позиция внутри реплики —
+ * половина якоря исключения, в склейке она была бы чужой.
  */
 function collectAllMentions(replicas: { start: number; text: string }[], matcher: any, titles: Record<string, string>) {
 	const byAnime = new Map<string, any[]>();
@@ -56,7 +56,7 @@ function collectAllMentions(replicas: { start: number; text: string }[], matcher
 			const list = byAnime.get(mention.id) ?? [];
 			list.push({
 				replica: index,
-				occurrence: mention.occurrence,
+				offset: mention.start,
 				seconds: Math.floor(replica.start),
 				timecode: formatTimecode(replica.start),
 				context: mentionContext(replica.text, mention.start, mention.end),

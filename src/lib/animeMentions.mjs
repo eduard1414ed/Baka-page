@@ -88,11 +88,12 @@ export function buildAnimeMatcher(entries) {
 
 /**
  * Все упоминания названий в одном куске текста.
- * Возвращает список { id, start, end, occurrence } по возрастанию позиции,
- * без наложений. `occurrence` — какое это по счёту вхождение ЭТОГО тайтла
- * в ЭТОМ куске, с нуля: вместе с номером реплики это якорь для исключений
- * (см. src/lib/mentionExceptions.mjs), и потому искать надо по реплике,
- * а не по склеенному тексту блока.
+ * Возвращает список { id, start, end } по возрастанию позиции, без наложений.
+ *
+ * `start` — не только место для нарезки текста, но и половина якоря
+ * для исключений упоминаний (вторая половина — номер реплики,
+ * см. src/lib/mentionExceptions.mjs). Поэтому искать надо по реплике,
+ * а не по склеенному тексту блока: в склейке позиции были бы чужие.
  */
 export function findMentions(text, matcher) {
 	if (!text || matcher.length === 0) return [];
@@ -121,16 +122,6 @@ export function findMentions(text, matcher) {
 	}
 
 	found.sort((a, b) => a.start - b.start);
-
-	// Нумеруем уже после сортировки: длинные названия ищутся первыми, и в порядке
-	// нахождения номера вышли бы не такими, как их видит человек в тексте.
-	const counts = new Map();
-	for (const mention of found) {
-		const seen = counts.get(mention.id) ?? 0;
-		mention.occurrence = seen;
-		counts.set(mention.id, seen + 1);
-	}
-
 	return found;
 }
 
@@ -140,14 +131,14 @@ const KEEP_ALL = { isHidden: () => false };
 
 /**
  * Текст ОДНОЙ реплики → куски для вывода: обычный текст и упоминания.
- * Каждый кусок — { text } или { text, animeId, occurrence }.
+ * Каждый кусок — { text } или { text, animeId, offset }.
  * Убранные руками упоминания возвращаются обычным текстом.
  *
  * @param {number} replicaIndex — место реплики в исходном массиве, якорь исключений
  */
 export function splitByMentions(text, matcher, replicaIndex = -1, exceptions = KEEP_ALL) {
 	const mentions = findMentions(text, matcher).filter(
-		(mention) => !exceptions.isHidden(mention.id, replicaIndex, mention.occurrence),
+		(mention) => !exceptions.isHidden(mention.id, replicaIndex, mention.start),
 	);
 	if (mentions.length === 0) return [{ text }];
 
@@ -159,7 +150,7 @@ export function splitByMentions(text, matcher, replicaIndex = -1, exceptions = K
 		parts.push({
 			text: text.slice(mention.start, mention.end),
 			animeId: mention.id,
-			occurrence: mention.occurrence,
+			offset: mention.start,
 		});
 		cursor = mention.end;
 	}
@@ -179,8 +170,8 @@ export function splitByMentions(text, matcher, replicaIndex = -1, exceptions = K
  * в ep-102 «Наруто» звучит четыре раза внутри двух блоков.
  *
  * Ищем при этом ПО РЕПЛИКАМ (block.parts), а не по склеенному тексту блока:
- * номер вхождения в реплике — половина якоря для исключений, и по склейке его
- * не посчитать.
+ * позиция внутри реплики — половина якоря для исключений, и в склейке она
+ * оказалась бы чужой.
  *
  * @param {{ start: number, parts: { index: number, text: string }[] }[]} blocks — результат groupReplicas()
  */
@@ -192,7 +183,7 @@ export function collectMentions(blocks, matcher, exceptions = KEEP_ALL) {
 
 		for (const part of block.parts) {
 			for (const mention of findMentions(part.text, matcher)) {
-				if (exceptions.isHidden(mention.id, part.index, mention.occurrence)) continue;
+				if (exceptions.isHidden(mention.id, part.index, mention.start)) continue;
 				if (seenHere.has(mention.id)) continue;
 				seenHere.add(mention.id);
 
