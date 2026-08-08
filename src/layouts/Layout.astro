@@ -16,8 +16,6 @@ interface Props {
 	/** Картинка превью в соцсетях. Путь от корня сайта или полный адрес. */
 	image?: string | null;
 	imageAlt?: string;
-	/** Картинка квадратная (обложка выпуска) — твиттеру нужна другая карточка. */
-	squareImage?: boolean;
 	/** article у поста, website у всего остального. */
 	type?: 'website' | 'article';
 	/** Закрыть страницу от поисковиков. */
@@ -31,7 +29,6 @@ const {
 	description = SITE_DESCRIPTION,
 	image = null,
 	imageAlt = '',
-	squareImage = false,
 	type = 'website',
 	noindex = false,
 } = Astro.props;
@@ -78,9 +75,14 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 		<meta property="og:image" content={ogImage} />
 		{imageAlt && <meta property="og:image:alt" content={imageAlt} />}
 
-		{/* Квадратной обложке выпуска нужна карточка `summary`: `summary_large_image`
-		    растянула бы квадрат на широкую полосу и срезала бы верх и низ. */}
-		<meta name="twitter:card" content={squareImage ? 'summary' : 'summary_large_image'} />
+		{/* ВСЕГДА `summary_large_image`, в том числе у квадратных обложек выпусков.
+		    Здесь стояло `summary` — казалось, что широкая карточка срежет квадрату
+		    верх и низ. На деле вышло хуже: ТЕЛЕГРАМ ПО ЭТОМУ ТЕГУ РЕШАЕТ, ПОКАЗЫВАТЬ
+		    ЛИ КАРТИНКУ ВООБЩЕ, и при `summary` не показал никакой. Проверено
+		    на живых ссылках: у выпуска картинки не было, у статьи с
+		    `summary_large_image` — была. Телеграм для нас главная площадка,
+		    и он показывает картинку как есть, не обрезая её до полосы. */}
+		<meta name="twitter:card" content="summary_large_image" />
 
 		<link rel="alternate" type="application/rss+xml" title={`${SITE_NAME} — лента постов`} href="/rss.xml" />
 
