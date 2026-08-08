@@ -19,7 +19,7 @@ import { applyPostOverrides } from '../../lib/transcriptOverrides.mjs';
 import { buildAnimeMatcher } from '../../lib/animeMentions.mjs';
 import { makeExceptionFilter } from '../../lib/mentionExceptions.mjs';
 import { animeMentionedIn } from '../../lib/animeMentionIndex.mjs';
-import { resolveEpisodeCover } from '../../lib/episodeCover.mjs';
+import { resolveEpisodeCover, getEpisodeCoverOgSrc } from '../../lib/episodeCover.mjs';
 import { isPublished } from '../../lib/publishing.mjs';
 import { getPostTiming } from '../../lib/postTiming.mjs';
 
@@ -134,8 +134,18 @@ const pageDescription = excerptFromBody(post.body, undefined);
 // Галочка «Без обложки» на превью НЕ влияет: она про то, как пост выглядит
 // в ленте, а ссылка в чате совсем без картинки выглядит сломанной. Такому посту
 // достанется картинка из текста, а если её нет — общий баннер сайта.
+//
+// У выпуска берём СВОЮ jpeg-копию обложки, а не ссылку на хостинг подкаста.
+// Ссылка на хостинг тут стояла, и телеграм по ней картинку не показывал —
+// подробности в src/lib/episodeCover.mjs. Своей копии может не быть у совсем
+// свежего выпуска (робот ещё не скачал обложку) — тогда честно отдаём ссылку
+// на хостинг: хуже, чем своя копия, но лучше, чем баннер сайта.
+const episodeOgCover = episode?.imageUrl
+	? (getEpisodeCoverOgSrc(episode.imageUrl) ?? episode.imageUrl)
+	: null;
+
 const ogImage =
-	toSocialImage(cover) ?? episode?.imageUrl ?? toSocialImage(firstImageInBody(post.body)) ?? null;
+	toSocialImage(cover) ?? episodeOgCover ?? toSocialImage(firstImageInBody(post.body)) ?? null;
 
 const pageUrl = absoluteUrl(`/posts/${post.id}/`);
 const ogImageAbsolute = absoluteUrl(ogImage);

@@ -102,6 +102,43 @@ export default function optimizeUploadsIntegration() {
 					logger.info(`Сжал ${converted} картинок из ${UPLOADS_DIR} в webp (по 2 размера)${tail}`);
 				}
 
+				// Обложки выпусков: jpeg-копия для превью в соцсетях.
+				//
+				// Делается из УЖЕ СКАЧАННОЙ webp-копии в public/episodes/ —
+				// с хостинга подкаста заново ничего не тянется. Только для тех
+				// выпусков, чьи страницы реально собрались (то есть опубликованных):
+				// у архива под полторы сотни обложек, и копия каждой была бы
+				// полутора сотнями файлов впустую.
+				//
+				// Зачем вообще своя копия, если на хостинге лежит jpeg, —
+				// см. getEpisodeCoverOgSrc в src/lib/episodeCover.mjs.
+				const episodesUrl = new URL('episodes/', dir);
+				let episodeOg = 0;
+
+				for (const match of builtHtml.matchAll(/\/episodes\/([\w-]+)-og\.jpg/g)) {
+					const id = match[1];
+					const outPath = fileURLToPath(new URL(`${id}-og.jpg`, episodesUrl));
+					if (existsSync(outPath)) continue; // уже сделали на этой сборке
+
+					// Берём копию покрупнее: 1280 px, из неё 1200 получится без
+					// растягивания.
+					const sourcePath = fileURLToPath(new URL(`${id}-1280w.webp`, episodesUrl));
+					if (!existsSync(sourcePath)) {
+						logger.warn(`Обложка выпуска для превью не собрана, нет файла: episodes/${id}-1280w.webp`);
+						continue;
+					}
+
+					await sharp(await readFile(sourcePath))
+						.resize({ width: OG_WIDTH, withoutEnlargement: true })
+						.jpeg({ quality: 82 })
+						.toFile(outPath);
+					episodeOg += 1;
+				}
+
+				if (episodeOg > 0) {
+					logger.info(`Сделал ${episodeOg} jpeg-обложек выпусков для превью в соцсетях`);
+				}
+
 				// Ссылка на картинку, которой нет. Так бывает, если файл удалили
 				// из медиатеки, а пост на него ещё ссылается, или если путь
 				// правили руками. Сборку не роняем — но и молчать нельзя: в ленте
