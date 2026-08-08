@@ -8,6 +8,7 @@ import remarkVideo from './src/plugins/remark-video.mjs';
 import remarkAnime from './src/plugins/remark-anime.mjs';
 import remarkTimecode from './src/plugins/remark-timecode.mjs';
 import optimizeUploadsIntegration from './src/plugins/optimize-uploads-integration.mjs';
+import ogImagesIntegration from './src/plugins/og-images-integration.mjs';
 import { SITE_URL } from './src/lib/site.mjs';
 
 // https://astro.build/config
@@ -17,7 +18,10 @@ export default defineConfig({
 	// в canonical, og:image, карте сайта и RSS: относительный путь там
 	// не понимают ни поисковик, ни телеграм.
 	site: SITE_URL,
-	integrations: [optimizeUploadsIntegration()],
+	// ПОРЯДОК ВАЖЕН: Astro выполняет хуки сборки по очереди, а картинки превью
+	// рисуются в том числе из jpeg-копий, которые создаёт первый шаг.
+	// Поменяете местами — превью выпусков останутся без исходников.
+	integrations: [optimizeUploadsIntegration(), ogImagesIntegration()],
 	markdown: {
 		// Порядок важен: спойлер должен видеть уже сгруппированные картинки/галереи.
 		remarkPlugins: [

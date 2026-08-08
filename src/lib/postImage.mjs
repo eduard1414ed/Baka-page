@@ -8,6 +8,7 @@
 // баннер сайта вместо её собственного кадра.
 
 import { getOgVariantSrc, getImageVariantSrcs, isOptimizableImage } from './imageVariants.mjs';
+import { getEpisodeCoverOgSrc } from './episodeCover.mjs';
 
 /** Свой блок картинки из редактора админки: ::image{src="…" alt="…"}. */
 const DIRECTIVE_RE = /^::image\{[^}]*\bsrc="([^"]+)"/m;
@@ -82,4 +83,35 @@ export function toSocialImage(src) {
 	if (src.startsWith('/images/uploads/')) return getOgVariantSrc(src);
 	// Что-то ещё из public/ — отдаём как есть, если это не webp.
 	return /\.webp$/i.test(src) ? null : src;
+}
+
+/**
+ * ИЗ ЧЕГО делается картинка превью поста для соцсетей.
+ *
+ * Не сама картинка превью, а её исходник: готовое превью 1200×630 рисует
+ * сборка (src/plugins/og-images-integration.mjs), и вот из этого файла.
+ *
+ * Порядок — от самого точного к самому общему:
+ *   1) обложка поста, если заказчик её задал;
+ *   2) обложка выпуска: СВОЯ jpeg-копия, а не ссылка на хостинг подкаста
+ *      (почему — в src/lib/episodeCover.mjs). Своей копии может не быть
+ *      у совсем свежего выпуска, тогда честно отдаём ссылку на хостинг;
+ *   3) первая картинка в тексте — у статьи это её большой кадр сверху;
+ *   4) ничего. Такой пост получит общую картинку сайта.
+ *
+ * Галочка «Без обложки» здесь НЕ учитывается: она про то, как пост выглядит
+ * в ленте, а ссылка в чате совсем без картинки выглядит сломанной.
+ *
+ * Считается в одном месте намеренно. Это же нужно знать двоим: странице поста
+ * (она ставит теги) и сборке (она рисует файл). Две копии правила разошлись бы
+ * молча, и превью стало бы показывать не то, на что ссылается страница.
+ *
+ * @returns {string | null}
+ */
+export function socialSource({ cover, episodeImageUrl = null, body = '' }) {
+	const episodeCover = episodeImageUrl
+		? (getEpisodeCoverOgSrc(episodeImageUrl) ?? episodeImageUrl)
+		: null;
+
+	return toSocialImage(cover) ?? episodeCover ?? toSocialImage(firstImageInBody(body)) ?? null;
 }

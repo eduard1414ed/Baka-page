@@ -1,11 +1,10 @@
 ---
 import { ClientRouter } from 'astro:transitions';
-import { getImage } from 'astro:assets';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import PlayerBar from '../components/PlayerBar.astro';
-import banner from '../assets/images/banner.png';
 import { SITE_NAME, SITE_DESCRIPTION, SITE_LANG, SITE_LOCALE, pageTitle, absoluteUrl } from '../lib/site.mjs';
+import { OG_WIDTH, OG_HEIGHT, OG_DEFAULT, ogUrlForPost } from '../lib/ogImage.mjs';
 import '../styles/global.css';
 
 interface Props {
@@ -13,8 +12,9 @@ interface Props {
 	    Не задано — берётся заголовок сайта целиком (так у главной). */
 	title?: string;
 	description?: string;
-	/** Картинка превью в соцсетях. Путь от корня сайта или полный адрес. */
-	image?: string | null;
+	/** Имя материала, если у него есть своя картинка превью. Не задано —
+	    страница получает общую картинку сайта. */
+	ogSlug?: string | null;
 	imageAlt?: string;
 	/** article у поста, website у всего остального. */
 	type?: 'website' | 'article';
@@ -27,7 +27,7 @@ interface Props {
 const {
 	title,
 	description = SITE_DESCRIPTION,
-	image = null,
+	ogSlug = null,
 	imageAlt = '',
 	type = 'website',
 	noindex = false,
@@ -35,16 +35,15 @@ const {
 
 const documentTitle = pageTitle(title);
 
-// Картинка превью по умолчанию — тот же баннер, что на главной. Отдельную
-// картинку под соцсети не заводим и не генерируем (решение заказчика).
+// Картинка превью — полоса ровно 1200×630, её рисует сборка
+// (src/plugins/og-images-integration.mjs). Своя у материалов с обложкой,
+// у остальных общая: логотип на бумаге.
 //
 // ФОРМАТ ОБЯЗАТЕЛЬНО JPEG, а не webp, в который Astro пережимает картинки
 // по умолчанию: телеграм webp-превью разворачивает ненадёжно, а телеграм —
 // главная площадка подкаста. Проверено по документации и баг-репортам,
 // см. статус/этап-6-seo.md.
-const defaultOg = await getImage({ src: banner, width: 1200, height: 675, format: 'jpeg' });
-
-const ogImage = absoluteUrl(image) ?? absoluteUrl(defaultOg.src);
+const ogImage = absoluteUrl(ogSlug ? ogUrlForPost(ogSlug) : OG_DEFAULT);
 
 // Канонический адрес: «вот настоящий адрес этой страницы, остальные — копии».
 // Закрывает сразу два случая: www.bakapodcast.com, который показывает тот же
@@ -82,11 +81,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 		<meta property="og:title" content={documentTitle} />
 		<meta property="og:description" content={description} />
 		<meta property="og:image" content={ogImage} />
-		{/* og:image:width и og:image:height здесь НЕ стоят намеренно. По разделу 8.1
-		    там должно быть 1200×630, но своих картинок такого размера у нас пока нет:
-		    в превью уходят обложки как есть, у выпуска это квадрат 1200×1200.
-		    Написать «630» под квадратной картинкой — соврать разворачивателю ссылок.
-		    Оба тега появятся вместе с генерацией /og/{slug}.jpg. */}
+		{/* Размер называем честно: сборка рисует ровно такую полосу, ни одна
+		    картинка превью не приходит «как есть». */}
+		<meta property="og:image:width" content={String(OG_WIDTH)} />
+		<meta property="og:image:height" content={String(OG_HEIGHT)} />
 		{imageAlt && <meta property="og:image:alt" content={imageAlt} />}
 
 		{/* ВСЕГДА `summary_large_image`, в том числе у квадратных обложек выпусков.

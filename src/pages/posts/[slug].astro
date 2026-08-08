@@ -3,7 +3,7 @@ import { getCollection, getEntry, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import JsonLd from '../../components/JsonLd.astro';
 import { excerptFromBody } from '../../lib/excerpt.mjs';
-import { firstImageInBody, toSocialImage } from '../../lib/postImage.mjs';
+import { socialSource } from '../../lib/postImage.mjs';
 import { absoluteUrl } from '../../lib/site.mjs';
 import { podcastEpisodeSchema, articleSchema, breadcrumbsSchema } from '../../lib/schema.mjs';
 import { categories, sectionOf } from '../../content.config';
@@ -19,7 +19,7 @@ import { applyPostOverrides } from '../../lib/transcriptOverrides.mjs';
 import { buildAnimeMatcher } from '../../lib/animeMentions.mjs';
 import { makeExceptionFilter } from '../../lib/mentionExceptions.mjs';
 import { animeMentionedIn } from '../../lib/animeMentionIndex.mjs';
-import { resolveEpisodeCover, getEpisodeCoverOgSrc } from '../../lib/episodeCover.mjs';
+import { resolveEpisodeCover } from '../../lib/episodeCover.mjs';
 import { isPublished } from '../../lib/publishing.mjs';
 import { getPostTiming } from '../../lib/postTiming.mjs';
 import { isExternalPost } from '../../lib/externalPost.mjs';
@@ -132,37 +132,18 @@ const animeEntries = (await Promise.all(animeIds.map((id) => getEntry('anime', i
 // см. src/lib/excerpt.mjs.
 const pageDescription = excerptFromBody(post.body, undefined);
 
-// Картинка превью. Порядок: своя обложка поста → обложка выпуска из RSS →
-// ПЕРВАЯ КАРТИНКА В ТЕКСТЕ → общая картинка сайта (её подставит сам макет).
+// Из чего сделать превью для соцсетей: своя обложка поста → обложка выпуска
+// из RSS → первая картинка в тексте → ничего (тогда достанется общая картинка
+// сайта). Порядок и все оговорки — в socialSource, src/lib/postImage.mjs.
 //
-// Третья ступень появилась после проверки в телеграме: у статьи своего поля
-// «обложка» нет, зато сверху стоит большой кадр — заказчик его и считает
-// обложкой, а разворачивался вместо него баннер сайта.
-//
-// У обложки выпуска берём ОРИГИНАЛ С ХОСТИНГА ПОДКАСТА, а не нашу сжатую копию
-// из public/episodes/. Копии там только в webp, а телеграм webp-превью
-// разворачивает ненадёжно — см. пояснение в src/layouts/Layout.astro.
-// Оригинал это jpg или png на 1–1,5 МБ, лежит на чужом сервере, нашей сборке
-// не стоит ничего.
-//
-// Обложка и картинка из текста получают отдельную jpeg-копию, см.
-// src/lib/postImage.mjs — на сайт наши картинки уезжают только в webp.
-//
-// Галочка «Без обложки» на превью НЕ влияет: она про то, как пост выглядит
-// в ленте, а ссылка в чате совсем без картинки выглядит сломанной. Такому посту
-// достанется картинка из текста, а если её нет — общий баннер сайта.
-//
-// У выпуска берём СВОЮ jpeg-копию обложки, а не ссылку на хостинг подкаста.
-// Ссылка на хостинг тут стояла, и телеграм по ней картинку не показывал —
-// подробности в src/lib/episodeCover.mjs. Своей копии может не быть у совсем
-// свежего выпуска (робот ещё не скачал обложку) — тогда честно отдаём ссылку
-// на хостинг: хуже, чем своя копия, но лучше, чем баннер сайта.
-const episodeOgCover = episode?.imageUrl
-	? (getEpisodeCoverOgSrc(episode.imageUrl) ?? episode.imageUrl)
-	: null;
-
-const ogImage =
-	toSocialImage(cover) ?? episodeOgCover ?? toSocialImage(firstImageInBody(post.body)) ?? null;
+// Правило считается там, а не здесь, потому что его нужно знать двоим: этой
+// странице (она ставит теги) и сборке, которая рисует сам файл 1200×630
+// (src/pages/og-sources.json.ts → src/plugins/og-images-integration.mjs).
+const ogImage = socialSource({
+	cover,
+	episodeImageUrl: episode?.imageUrl ?? null,
+	body: post.body,
+});
 
 const pageUrl = absoluteUrl(`/posts/${post.id}/`);
 const ogImageAbsolute = absoluteUrl(ogImage);
@@ -184,7 +165,7 @@ const crumbs = breadcrumbsSchema([
 <Layout
 	title={title}
 	description={pageDescription}
-	image={ogImage}
+	ogSlug={ogImage ? post.id : null}
 	imageAlt={`Обложка: ${title}`}
 	type="article"
 >
