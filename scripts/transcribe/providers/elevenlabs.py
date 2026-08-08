@@ -84,12 +84,19 @@ def estimate_out_of_pocket(duration_sec, already_used_sec=0, used_credits=None):
 	}
 
 
-def transcribe(audio_path, api_key, language="ru"):
+def transcribe(audio_path, api_key, language="ru", diarize=True):
+	"""Распознать файл.
+
+	`diarize=False` — для выпусков, где голос заведомо один (видеоэссе,
+	шаг 2 в тз/05-транскрипты.md). Разделение голосов там не нужно, а включённое
+	оно иногда дробит монолог на несуществующих «собеседников» из-за смены
+	интонации. На цену это не влияет — платят за длительность аудио.
+	"""
 	with open(audio_path, "rb") as f:
 		files = {"file": (audio_path.name, f, "audio/mpeg")}
 		data = {
 			"model_id": MODEL_ID,
-			"diarize": "true",
+			"diarize": "true" if diarize else "false",
 			"timestamps_granularity": "word",
 			"language_code": language,
 		}

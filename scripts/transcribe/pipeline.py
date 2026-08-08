@@ -555,7 +555,10 @@ def format_estimate(est):
 	return line
 
 
-def process_episode(episode, provider, api_key, dry_run=False, out_suffix=None, with_names=False):
+def process_episode(
+	episode, provider, api_key, dry_run=False, out_suffix=None, with_names=False,
+	single_speaker=False,
+):
 	est = provider.estimate(episode["duration_sec"])
 
 	print(f"Выпуск: {episode['title']}")
@@ -577,11 +580,19 @@ def process_episode(episode, provider, api_key, dry_run=False, out_suffix=None, 
 		download_audio(episode["audio_url"], mp3_path)
 
 		print(f"Отправляю на распознавание в {provider.label} (может занять несколько минут)...")
-		result = provider.transcribe(mp3_path, api_key)
+		result = provider.transcribe(mp3_path, api_key, diarize=not single_speaker)
 
-		print("Готовлю копию для измерения высоты голоса...")
-		convert_to_wav16k(mp3_path, wav_path)
-		wav_samples, sr = load_wav_mono16(wav_path)
+		if single_speaker:
+			# Видеоэссе: голос заведомо один (шаг 2 ТЗ). Ни разделять голоса,
+			# ни мерить их высоту не нужно — а значит не нужна и копия в wav,
+			# самая долгая часть обработки после самого распознавания.
+			for word in result["words"]:
+				word["speaker"] = "speaker_0"
+			wav_samples, sr = None, None
+		else:
+			print("Готовлю копию для измерения высоты голоса...")
+			convert_to_wav16k(mp3_path, wav_path)
+			wav_samples, sr = load_wav_mono16(wav_path)
 
 		replicas = build_replicas(result["words"])
 		# Пустой ответ — это сбой, а не результат. Раньше такой выпуск молча
@@ -593,7 +604,23 @@ def process_episode(episode, provider, api_key, dry_run=False, out_suffix=None, 
 				"Возможно, в файле нет речи или он не скачался целиком."
 			)
 
-		slug, speaker_names, speaker_info, notes = assign_speaker_names(replicas, wav_samples, sr)
+		if single_speaker:
+			slug = {"speaker_0": "speaker_0"}
+			speaker_names = {"speaker_0": HOST_MALE}
+			speaker_info = {
+				"speaker_0": {
+					"role": "host",
+					# Поле обязательное по схеме сайта (src/content.config.ts):
+					# без него сборка Astro падает на проверке транскрипта.
+					"detectedBy": "single-speaker",
+					"pitchHz": None,
+					"speechSeconds": round(sum(r["end"] - r["start"] for r in replicas), 1),
+					"needsName": False,
+				}
+			}
+			notes = ["Один голос задан настройкой (--single-speaker), не определялся по звуку."]
+		else:
+			slug, speaker_names, speaker_info, notes = assign_speaker_names(replicas, wav_samples, sr)
 
 		# Имя спикера в реплики НЕ вписываем — только номер голоса. Имена лежат
 		# отдельной картой speakers, поэтому переименовать гостя (или поменять
@@ -1130,6 +1157,20 @@ def main():
 		help="порог похожести при сверке названий (0.72 по умолчанию, выше — меньше мусора)",
 	)
 	parser.add_argument(
+		"--redo",
+		action="store_true",
+		help="распознать заново, даже если выпуск уже помечен сделанным. Нужно там, "
+		"где старый результат негоден: ep-121 и ep-128 распознавались до того, "
+		"как пайплайн научился сохранять пословные данные, и без них подстановка "
+		"сценария невозможна. ЭТО ПЛАТНО — деньги за выпуск спишутся второй раз",
+	)
+	parser.add_argument(
+		"--single-speaker",
+		action="store_true",
+		help="голос в выпуске один: не разделять спикеров и не мерить высоту голоса "
+		"(для видеоэссе со сценарием, шаг 2 ТЗ)",
+	)
+	parser.add_argument(
 		"--with-names",
 		action="store_true",
 		help="сверять названия аниме прямо во время распознавания (по умолчанию нет — "
@@ -1212,7 +1253,7 @@ def main():
 	# Повторно за уже сделанное не платим. Но если явно просят другой сервис
 	# или другое имя файла — это осознанное сравнение, пропускать не надо.
 	already = state.get(episode["guid"], {})
-	repeat_on_purpose = args.out_suffix or (
+	repeat_on_purpose = args.redo or args.out_suffix or (
 		already.get("provider") and already["provider"] != provider.id
 	)
 	if already.get("status") == "done" and not args.dry_run and not repeat_on_purpose:
@@ -1225,7 +1266,7 @@ def main():
 
 	process_episode(
 		episode, provider, api_key, dry_run=args.dry_run, out_suffix=args.out_suffix,
-		with_names=args.with_names,
+		with_names=args.with_names, single_speaker=args.single_speaker,
 	)
 
 
