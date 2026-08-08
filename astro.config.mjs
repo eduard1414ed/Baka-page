@@ -8,9 +8,15 @@ import remarkVideo from './src/plugins/remark-video.mjs';
 import remarkAnime from './src/plugins/remark-anime.mjs';
 import remarkTimecode from './src/plugins/remark-timecode.mjs';
 import optimizeUploadsIntegration from './src/plugins/optimize-uploads-integration.mjs';
+import { SITE_URL } from './src/lib/site.mjs';
 
 // https://astro.build/config
 export default defineConfig({
+	// Главный адрес сайта. Без него Astro не знает, на каком домене живёт сайт,
+	// и не из чего было бы построить абсолютные ссылки — а они обязательны
+	// в canonical, og:image, карте сайта и RSS: относительный путь там
+	// не понимают ни поисковик, ни телеграм.
+	site: SITE_URL,
 	integrations: [optimizeUploadsIntegration()],
 	markdown: {
 		// Порядок важен: спойлер должен видеть уже сгруппированные картинки/галереи.
