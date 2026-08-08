@@ -4,7 +4,7 @@ backend:
   branch: main
   base_url: https://baki-cms-auth.eduard1414ed.workers.dev
 
-site_url: https://baka-page.eduard1414ed.workers.dev
+site_url: https://bakapodcast.com
 
 # Обязательное поле для CMS — куда класть загруженные картинки.
 # Кладём в public, чтобы обычная картинка в тексте (![]()) сразу была

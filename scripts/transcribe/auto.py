@@ -62,7 +62,7 @@ WORDS_DIR = ROOT / "transcripts" / "words"
 # расшифровки, дублировать его отдельной записью незачем — разъедутся.
 STATE_FILE = ROOT / "transcripts" / "auto-state.json"
 
-ADMIN_ENTRY_URL = "https://baka-page.eduard1414ed.workers.dev/admin/#/collections/posts/entries/"
+ADMIN_ENTRY_URL = "https://bakapodcast.com/admin/#/collections/posts/entries/"
 
 # Сколько выпусков за один прогон. Защита из ТЗ: сбой не должен съесть месячную
 # квоту разом. Выходит примерно выпуск в месяц, так что двух хватает с запасом

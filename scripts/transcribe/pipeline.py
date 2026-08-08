@@ -53,7 +53,7 @@ import requests
 import providers
 
 FEED_URL = "https://cloud.mave.digital/33503"
-ANIME_INDEX_URL = "https://baka-page.eduard1414ed.workers.dev/anime-index.json"
+ANIME_INDEX_URL = "https://bakapodcast.com/anime-index.json"
 
 WORK_DIR = Path(__file__).resolve().parent
 STATE_FILE = WORK_DIR / "state.json"

@@ -94,7 +94,7 @@ async function publishOne(path, env) {
  */
 async function run(env) {
 	// Через Service Binding, а не публичный workers.dev-адрес — см. wrangler.jsonc.
-	const queueRes = await env.SITE.fetch('https://baka-page.eduard1414ed.workers.dev/publish-queue.json');
+	const queueRes = await env.SITE.fetch('https://bakapodcast.com/publish-queue.json');
 
 	if (!queueRes.ok) {
 		throw new Error(`Не смог получить publish-queue.json: ${queueRes.status}`);
