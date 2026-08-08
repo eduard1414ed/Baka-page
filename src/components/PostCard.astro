@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import { categories } from '../content.config';
 import { getYoutubeThumbnailUrl } from '../lib/youtube.mjs';
+import { getPostTiming } from '../lib/postTiming.mjs';
 
 interface Props {
 	post: { id: string; body?: string; data: Record<string, any> };
@@ -27,6 +28,11 @@ function excerpt(text: string | undefined, length = 140) {
 
 const youtubeThumbnail = youtube ? getYoutubeThumbnailUrl(youtube) : null;
 const isVideo = Boolean(youtubeThumbnail || video);
+
+// «Сколько это займёт» — время чтения у постов, длительность у выпусков
+// и видеоэссе. Что именно, решает src/lib/postTiming.mjs, тот же файл зовёт
+// и страница поста. null = показывать нечего, причины перечислены там же.
+const timing = await getPostTiming(post);
 ---
 
 {/*
@@ -66,7 +72,10 @@ const isVideo = Boolean(youtubeThumbnail || video);
 		<div class="body">
 			<span class="category">{categoryLabel}</span>
 			<h3 class="title">{title}</h3>
-			<span class="date">{dateFormatter.format(date)}</span>
+			<span class="date">
+				{dateFormatter.format(date)}
+				{timing && <span class="timing">{timing.label}</span>}
+			</span>
 			{!cover && !isVideo && <p class="excerpt">{excerpt(post.body)}</p>}
 		</div>
 	</a>
@@ -155,6 +164,14 @@ const isVideo = Boolean(youtubeThumbnail || video);
 	.date {
 		color: var(--color-text-muted);
 		font-size: var(--font-size-sm);
+	}
+
+	/* Точка-разделитель нарисована псевдоэлементом, а не вписана в текст:
+	   у коротких постов и у видеоэссе без аудиоверсии метки нет, и висящая
+	   точка после даты выглядела бы опечаткой. */
+	.timing::before {
+		content: '·';
+		margin: 0 0.35em;
 	}
 
 	.excerpt {

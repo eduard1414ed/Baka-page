@@ -17,6 +17,7 @@ import { makeExceptionFilter } from '../../lib/mentionExceptions.mjs';
 import { animeMentionedIn } from '../../lib/animeMentionIndex.mjs';
 import { resolveEpisodeCover } from '../../lib/episodeCover.mjs';
 import { isPublished } from '../../lib/publishing.mjs';
+import { getPostTiming } from '../../lib/postTiming.mjs';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('posts', ({ data }) => isPublished(data));
@@ -63,6 +64,16 @@ const categoryLabel = categories.find((c) => c.id === category)?.label ?? catego
 const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
 
 const youtubeEmbed = youtube ? getYoutubeEmbedUrl(youtube) : null;
+
+// «Сколько это займёт» — та же функция, что зовёт карточка в ленте
+// (src/components/PostCard.astro), поэтому числа на карточке и на странице
+// разойтись не могут. У выпуска тут будет длительность из RSS, у заметки —
+// время чтения, и никогда не оба сразу.
+//
+// Длительность выпуска показана и в плеере ниже («0:00 / 42:15»), но это разные
+// вещи: там бегущий счётчик воспроизведения, здесь — ответ на вопрос
+// «сколько это займёт», который читают до того, как нажать play.
+const timing = await getPostTiming(post);
 
 // Плашки тайтлов под текстом. Показываем и то, что стоит в поле `anime` поста
 // (разметка в тексте, тз/03), и то, что прозвучало в расшифровке (тз/05, шаг 5):
@@ -113,7 +124,15 @@ const animeEntries = (await Promise.all(animeIds.map((id) => getEntry('anime', i
 		<span data-pagefind-meta={`date:${dateFormatter.format(date)}`}></span>
 		<a class="back" href={`/category/${category}/`} data-pagefind-ignore>← {categoryLabel}</a>
 		<h1 data-pagefind-meta="title">{title}</h1>
-		<p class="date" data-pagefind-ignore>{dateFormatter.format(date)}</p>
+		{/* data-pagefind-ignore на всём абзаце уже стоял ради даты — метка времени
+		    попадает под него заодно, отдельного атрибута не нужно. Это важно:
+		    без него «42 мин слушать» стало бы обычным текстом страницы и вылезало
+		    бы в выдаче поиска обрывком вроде «…42 мин слушать Вместе с Кинопоиском
+		    мы сделали…». */}
+		<p class="date" data-pagefind-ignore>
+			{dateFormatter.format(date)}
+			{timing && <span class="timing">{timing.label}</span>}
+		</p>
 
 		{
 			cover && (
@@ -333,6 +352,14 @@ const animeEntries = (await Promise.all(animeIds.map((id) => getEntry('anime', i
 		color: var(--color-text-muted);
 		font-size: var(--font-size-sm);
 		margin-bottom: var(--space-3);
+	}
+
+	/* Точка-разделитель псевдоэлементом — как в карточке ленты
+	   (src/components/PostCard.astro): когда метки нет, не остаётся
+	   висящей точки после даты. */
+	.timing::before {
+		content: '·';
+		margin: 0 0.35em;
 	}
 
 	.cover {
