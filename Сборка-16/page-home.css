@@ -1,0 +1,223 @@
+/* =========================================================================
+   Композиция главной страницы. Общие компоненты — в baka.css.
+   ========================================================================= */
+
+/* --- Общее для карточек ленты --- */
+
+.deck{ font-size:var(--body-sm); line-height:1.5; color:var(--muted); margin:0 }
+.meta{
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.image,.cover{ overflow:hidden; background:var(--line-soft) }
+.image img,.cover img{ width:100%; height:100%; object-fit:cover; display:block }
+
+/* Редакционный приоритет главной. Два размера вне общей шкалы — они кодируют
+   вес материала в номере, а не новый уровень заголовка. */
+.title-lg{ font-family:var(--font-display); font-size:36px; line-height:1.05; margin:0 0 var(--space-3) }
+.title-md{ font-family:var(--font-display); font-size:27px; line-height:1.10; margin:0 0 var(--space-3) }
+.side-title{ font-family:var(--font-display); font-size:var(--card-title); line-height:1.15; margin:7px 0 var(--space-3) }
+@media (min-width:761px){
+  .title-lg{ font-size:46px; line-height:1.02 }
+  .title-md{ font-size:31px; line-height:1.08 }
+}
+
+/* Переносятся, никогда не скроллятся. */
+.filters{ border-bottom:1px solid var(--line) }
+.filters-inner{
+  min-height:56px;
+  display:flex; flex-wrap:wrap; align-items:center;
+  gap:0 var(--space-6);
+  padding:var(--space-2) 0;
+}
+.filters-label{
+  display:flex; align-items:center;
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.filter-group{ display:flex; flex-wrap:wrap; gap:0 18px }
+.filter-btn{
+  position:relative;
+  min-height:44px;
+  padding:0;
+  border:0; background:transparent;
+  font-size:var(--caption);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  white-space:normal;
+}
+.filter-btn.active{ font-weight:600 }
+.filter-btn.active::after{
+  content:""; position:absolute; left:0; right:0; bottom:8px;
+  height:1.5px; background:var(--ink);
+}
+@media (min-width:821px){
+  .filters-inner{ flex-wrap:nowrap; gap:var(--space-6) }
+  .filters-label{
+    padding-right:var(--space-6);
+    border-right:1px solid var(--line);
+  }
+  .filter-group{ gap:var(--space-8); flex-wrap:nowrap }
+}
+
+/* --- Режим «Все»: три редакционных ряда --- */
+
+.all-layout{ padding-top:var(--space-6) }
+
+/* Линию рисует начало следующего ряда — так между рядами всегда одна. */
+.lead-grid,.feature-row,.third-row{ display:grid; gap:var(--space-6); padding:28px 0 }
+.feature-row,.third-row{ border-top:1px solid var(--line) }
+
+.hero-material .image{ aspect-ratio:16/9 }
+.hero-copy{ display:grid; gap:var(--space-3); padding-top:18px }
+
+.sidebar{ display:grid }
+.side-item{
+  display:grid; grid-template-columns:minmax(0,1fr) 112px;
+  gap:18px;
+  padding:22px 0;
+  border-top:1px solid var(--line);
+}
+.side-item.no-image{ grid-template-columns:minmax(0,1fr) }
+.side-thumb{ width:112px; aspect-ratio:16/9; overflow:hidden; background:var(--line-soft) }
+.side-thumb.square{ aspect-ratio:1 }
+.side-thumb img{ width:100%; height:100%; object-fit:cover; display:block }
+
+.podcast-feature .cover{ aspect-ratio:1; max-width:390px }
+.article-feature{ display:grid; gap:var(--space-6) }
+.article-feature .image{ aspect-ratio:16/9 }
+
+.video-feature{ display:grid; gap:var(--space-6) }
+.video-feature .image{ aspect-ratio:16/9 }
+
+.notes-index{ display:grid }
+.notes-head{
+  display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline;
+  gap:var(--space-2);
+  margin-bottom:9px;
+}
+.note-row{
+  display:grid; grid-template-columns:minmax(0,1fr) auto;
+  gap:20px;
+  padding:14px 0;
+  border-top:1px solid var(--line);
+}
+.note-row:first-of-type{ border-top:0 }
+.note-row a{
+  text-decoration:none;
+  font-family:var(--font-display);
+  font-size:var(--body-lg);
+  line-height:1.2;
+}
+.note-row a:hover{ color:var(--accent-text) }
+
+/* До 761 три редакционных ряда — один поток. Вертикальные линии
+   превращаются в горизонтальные, боковые отступы обнуляются:
+   иначе колонки выглядят обрезками десктопной сетки. */
+@media (max-width:760px){
+  .sidebar,.article-feature,.notes-index{
+    border-left:0; padding-left:0;
+    border-top:1px solid var(--line);
+    padding-top:var(--space-6);
+    margin-top:var(--space-6);
+  }
+  .side-item{ grid-template-columns:minmax(0,1fr) 96px; gap:var(--space-4) }
+  .side-thumb{ width:96px }
+  .hero-copy{ padding-top:var(--space-3) }
+  .podcast-feature .cover{ max-width:none }
+}
+
+@media (min-width:761px){
+  .lead-grid,.feature-row,.third-row{
+    grid-template-columns:repeat(12,minmax(0,1fr));
+    column-gap:var(--grid-gap);
+    align-items:start;
+    padding:42px 0;
+  }
+  .hero-material{ grid-column:1/9 }
+  .hero-copy{ grid-template-columns:2fr 1fr; column-gap:var(--grid-gap) }
+
+/* Колонки с линией тянутся на высоту ряда: иначе линия обрывается
+     по низкой колонке, а не идёт вдоль высокой. */
+  .sidebar,.article-feature,.notes-index{ align-self:stretch }
+  .sidebar{ grid-column:9/13; border-left:1px solid var(--line); padding-left:22px }
+  .side-item:first-child{ border-top:0; padding-top:0 }
+
+  .podcast-feature{ grid-column:1/5; padding-right:var(--space-1) }
+  .article-feature{
+    grid-column:5/13;
+    grid-template-columns:4fr 5fr;
+    align-items:center;
+    border-left:1px solid var(--line);
+    padding-left:28px;
+  }
+
+  .video-feature{ grid-column:1/8; grid-template-columns:1.15fr .85fr; align-items:center }
+  .notes-index{ grid-column:8/13; border-left:1px solid var(--line); padding-left:28px }
+}
+
+/* Каждый режим меняет сетку и обработку медиа, а не только видимость.
+   ВАЖНО: селектор режима отвечает только за видимость карточки. Раскладку
+   задаёт тип карточки — иначе вес правила режима перебивает раскладку
+   и она молча не применяется (см. §2.1 системы). */
+.filtered-layout{ display:none; padding:42px 0 18px }
+.filtered-layout.visible{ display:block }
+
+.filtered-layout[data-mode="podcast"] .archive-card[data-type="podcast"],
+.filtered-layout[data-mode="videoessay"] .archive-card[data-type="videoessay"],
+.filtered-layout[data-mode="article"] .archive-card[data-type="article"],
+.filtered-layout[data-mode="note"] .archive-card[data-type="note"]{ display:block }
+
+/* Заметка не обязана иметь обложку. Без неё карточка остаётся текстовой,
+   с ней — получает небольшую миниатюру справа: она уточняет материал,
+   но не претендует на роль главного изображения.
+   Соотношение 16:9 — как у карточек статей и видео: обложка заметки
+   такой и снята, и обрезать её до квадрата значит терять края кадра
+   ради формы, которой в системе больше нигде нет. */
+.filtered-layout .archive-card[data-type="note"].has-cover{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 116px;
+  column-gap:var(--space-4);
+  align-items:start;
+}
+
+/* Техстрока идёт над всем блоком во всю ширину, а обложка начинается
+   на уровне заголовка — со смещением вниз на одну строку. Если поставить
+   её выше, она встаёт вровень с метастрокой и спорит с ней за начало
+   карточки. */
+@media (min-width:761px){
+  .archive-grid{ grid-template-columns:repeat(12,minmax(0,1fr)) }
+
+/* В три колонки места меньше: миниатюра ужимается, чтобы тексту
+     оставалось не меньше своей минимальной ширины. */
+  .filtered-layout .archive-card[data-type="note"].has-cover{ grid-template-columns:minmax(0,1fr) 96px }
+  .archive-card[data-type="note"].has-cover .note-cover{ width:96px }
+  .filtered-layout[data-mode="podcast"] .archive-card,
+  .filtered-layout[data-mode="videoessay"] .archive-card,
+  .filtered-layout[data-mode="article"] .archive-card{ grid-column:span 6 }
+  .filtered-layout[data-mode="note"] .archive-card{ grid-column:span 4 }
+}
+@media (min-width:1101px){
+  .filtered-layout[data-mode="podcast"] .archive-card{ grid-column:span 4 }
+  .filtered-layout .archive-card[data-type="note"].has-cover{ grid-template-columns:minmax(0,1fr) 116px }
+  .archive-card[data-type="note"].has-cover .note-cover{ width:116px }
+}
+
+/* --- Подборка «Из архива» --- */
+
+.older-materials{ padding:34px 0 10px }
+.older-materials[data-mode="podcast"] .list-card:not([data-type="podcast"]),
+.older-materials[data-mode="videoessay"] .list-card:not([data-type="videoessay"]),
+.older-materials[data-mode="article"] .list-card:not([data-type="article"]),
+.older-materials[data-mode="note"] .list-card:not([data-type="note"]){ display:none }
+
+/* --- Тизер каталога --- */
+
+.catalog{ padding:46px 0 50px; border-top:1px solid var(--line) }

@@ -1,0 +1,35 @@
+/* =========================================================================
+   Композиция страницы выпуска. Общие компоненты — в baka.css.
+   ========================================================================= */
+
+/* Плеер прижимается к низу колонки, а не растягивается фиксированной высотой. */
+.episode-copy .player{
+  margin-top:var(--space-8);
+  border-top:1px solid var(--ink);
+  border-bottom:1px solid var(--ink);
+}
+@media (min-width:821px){
+  .episode-copy .player{ margin-top:auto }
+}
+
+/* Врезка внутри текста: закрывается линией с обеих сторон.
+   Это не стык двух секций, а вставка, после которой текст продолжается,
+   поэтому правило «одна линия между секциями» здесь не применяется. */
+.platform-list{
+  margin:34px 0;
+  padding:18px 0;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  display:grid; gap:var(--space-3);
+}
+.platform-row{ display:grid; gap:var(--space-1); font-size:var(--body-sm); line-height:1.45 }
+.platform-row strong{
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+@media (min-width:621px){
+  .platform-row{ grid-template-columns:118px minmax(0,1fr); gap:20px }
+}

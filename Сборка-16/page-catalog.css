@@ -1,0 +1,190 @@
+/* =========================================================================
+   Композиция каталога аниме. Общие компоненты — в baka.css.
+   ========================================================================= */
+
+/* --- Шапка раздела --- */
+
+.catalog-head{
+  display:grid; gap:var(--space-4);
+  padding:var(--space-12) 0 var(--space-8);
+  border-bottom:1px solid var(--line);
+}
+.catalog-intro{ font-size:var(--body-lg); line-height:1.65; color:var(--text); margin:0 }
+.catalog-count{
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+@media (min-width:821px){
+  .catalog-head{
+    grid-template-columns:repeat(12,minmax(0,1fr));
+    column-gap:var(--grid-gap);
+    align-items:end;
+    padding:66px 0 var(--space-8);
+  }
+  .catalog-head h1{ grid-column:1/8 }
+  .catalog-intro{ grid-column:8/13 }
+  .catalog-count{ grid-column:1/13 }
+}
+
+/* --- Поиск и сортировка --- */
+
+/* Каталог растёт: при сотне тайтлов сетка без поиска превращается
+   в свалку. Фильтров по параметрам нет намеренно — у аниме их слишком
+   много, и любой набор окажется произвольным.
+
+   Линию рисует шапка раздела, панель стоит под ней: сначала читатель
+   понимает, где он, и только потом получает инструменты. */
+
+.catalog-tools{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
+  gap:var(--space-4) var(--space-6);
+  min-height:56px;
+  padding:var(--space-6) 0 var(--space-2);
+}
+
+/* Поле не тянется во всю ширину: запрос в каталог короткий, а поле
+   на 1300 пикселей выглядит как форма, а не как фильтр. */
+.catalog-search{ flex:1 1 320px; max-width:420px }
+.catalog-search .search-box{ width:100% }
+
+.catalog-sort{ flex:0 0 auto; display:flex; align-items:center; gap:var(--space-3) }
+.catalog-sort-label{ color:var(--muted); white-space:nowrap }
+/* На узком экране подпись съедает строку, а сам контрол и так говорит
+   за себя. Для скринридера она остаётся: label связан с select. */
+@media (max-width:520px){
+  .catalog-sort-label{
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip-path:inset(50%); white-space:nowrap;
+  }
+  .catalog-sort{ width:100% }
+  .catalog-sort-control{ width:100% }
+  .catalog-sort-control .speed-face{ width:100%; place-items:center start }
+}
+/* Ширина по содержимому: подписи вариантов разной длины. */
+/* Ширина по содержимому: подписи вариантов разной длины. Плюс стрелка,
+   чтобы контрол читался как выбор, а не как плашка. */
+.catalog-sort-control .speed-face{ white-space:nowrap; padding-right:30px }
+.catalog-sort-control::after{
+  content:"▾";
+  position:absolute; right:11px; top:50%;
+  transform:translateY(-50%);
+  font-size:11px; line-height:1;
+  color:var(--muted);
+  pointer-events:none;
+}
+
+/* Ничего не нашлось */
+.catalog-empty[hidden]{ display:none }
+.catalog-empty{ padding:var(--space-12) 0 0 }
+
+/* auto-fill: при малом числе тайтлов карточки сохраняют размер,
+   а не растягиваются на всю строку. */
+.catalog-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:24px 12px;
+  padding:var(--space-8) 0 var(--space-16);
+}
+@media (min-width:621px){
+  .catalog-grid{ grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px 16px }
+}
+@media (min-width:821px){
+  .catalog-grid{ grid-template-columns:repeat(4,minmax(0,1fr)); gap:28px 20px }
+}
+@media (min-width:1101px){
+  .catalog-grid{ grid-template-columns:repeat(6,minmax(0,1fr)) }
+}
+
+/* --- Вертикальная марка --- */
+
+.stamp{
+  --stamp:#EEF0E8;
+  position:relative;
+  display:block;
+  min-width:0;
+  background:var(--stamp);
+  text-decoration:none;
+  color:var(--ink);
+  transition:transform .16s ease;
+}
+.stamp:hover{ transform:translateY(-3px) }
+
+/* Перфорация по всем четырём сторонам — та же конструкция,
+   что у горизонтальной марки, только по вертикали карточки. */
+.stamp::before,.stamp::after{
+  content:""; position:absolute; z-index:3; left:0; right:0; height:12px;
+  pointer-events:none;
+  background:radial-gradient(circle at 6px 0,var(--paper) 5px,transparent 5.5px) 0 0/18px 12px repeat-x;
+}
+.stamp::before{ top:-1px }
+.stamp::after{ bottom:-1px; transform:rotate(180deg) }
+
+.stamp-inner{ position:relative; min-height:100%; overflow:hidden }
+.stamp-inner::before,.stamp-inner::after{
+  content:""; position:absolute; z-index:3; top:0; bottom:0; width:12px;
+  pointer-events:none;
+  background:radial-gradient(circle at 0 6px,var(--paper) 5px,transparent 5.5px) 0 0/12px 18px repeat-y;
+}
+.stamp-inner::before{ left:-1px }
+.stamp-inner::after{ right:-1px; transform:rotate(180deg) }
+
+/* Постер не обрезается: поля внутри рамки 2:3 заливаются цветом марки. */
+.stamp-poster{
+  aspect-ratio:2/3;
+  display:grid; place-items:center;
+  overflow:hidden;
+  background:var(--stamp);
+}
+.stamp-poster img{
+  width:100%; height:100%;
+  object-fit:contain; object-position:center;
+  display:block;
+}
+
+.stamp-copy{
+  min-height:144px;
+  padding:16px 16px 26px;
+  background:var(--stamp);
+}
+.stamp-code{
+  margin-bottom:10px;
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.stamp h2{
+  margin:0 0 var(--space-2);
+  font-family:var(--font-display);
+  font-size:var(--card-title);
+  line-height:1.15;
+  font-weight:400;
+  letter-spacing:0;
+  overflow-wrap:anywhere;
+}
+.stamp-original{
+  margin-bottom:11px;
+  font-size:var(--caption);
+  line-height:1.3;
+  font-style:italic;
+  color:var(--muted);
+}
+.stamp-meta{
+  display:grid; gap:2px;
+  font-size:var(--caption);
+  line-height:1.45;
+  color:var(--muted);
+}
+.stamp-arrow{
+  position:absolute; right:12px; bottom:8px;
+  font-size:20px; line-height:1;
+  color:var(--accent-text);
+}
+
+/* Кнопка «Показать ещё» — общий компонент из baka.css,
+   такой же, как на главной. Своего варианта у каталога нет. */
+.load-more-wrap{ margin-bottom:var(--space-18) }

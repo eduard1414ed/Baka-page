@@ -1,0 +1,38 @@
+/* =========================================================================
+   Композиция страницы 404. Общие компоненты — в baka.css.
+   ========================================================================= */
+
+/* Персонаж вместо огромной цифры «404»: цифра ничего не объясняет,
+   а рисунок задаёт тон и говорит, что сайт живой, просто страница не та. */
+
+.notfound{
+  display:grid; gap:var(--space-8);
+  align-items:center;
+  padding:var(--space-12) 0 var(--space-18);
+}
+
+.notfound-art{ justify-self:center; max-width:320px }
+.notfound-art img{ width:100%; height:auto; display:block }
+
+.notfound-copy{ max-width:52ch }
+.notfound-copy h1{ margin:0 0 var(--space-4) }
+.notfound-copy p{
+  margin:0 0 var(--space-8);
+  font-size:var(--body-lg);
+  line-height:1.65;
+  color:var(--text);
+}
+
+.notfound-actions{ display:grid; grid-template-columns:1fr; gap:10px }
+@media (min-width:621px){
+  .notfound-actions{ grid-template-columns:repeat(2,minmax(0,240px)) }
+}
+
+@media (min-width:821px){
+  .notfound{
+    grid-template-columns:minmax(0,420px) minmax(0,1fr);
+    gap:var(--space-16);
+    padding:var(--space-16) 0 var(--space-18);
+  }
+  .notfound-art{ max-width:420px; justify-self:start }
+}

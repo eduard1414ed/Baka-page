@@ -1,0 +1,295 @@
+/* =========================================================================
+   Композиция поиска. Один файл на обе страницы: пустую и с результатами —
+   у них общие поле, области и группы, различается только содержимое.
+   ========================================================================= */
+
+.search-page{ width:100%; max-width:var(--wide); margin-inline:auto; padding:var(--space-12) 0 var(--space-16) }
+
+/* --- Шапка --- */
+
+.search-heading{ display:grid; gap:var(--space-4); margin-bottom:34px }
+.search-heading h1{ margin:0 }
+.search-heading-copy{
+  font-size:var(--body-sm);
+  line-height:1.55;
+  color:var(--muted);
+  max-width:580px;
+}
+
+@media (min-width:821px){
+  .search-heading{
+    grid-template-columns:repeat(12,minmax(0,1fr));
+    column-gap:var(--grid-gap);
+    align-items:start;
+  }
+  .search-heading-main{ grid-column:1/5 }
+  .search-heading-copy{ grid-column:6/11; padding-top:3px }
+}
+
+/* --- Поле --- */
+
+.search-box{ position:relative; margin-bottom:18px }
+
+/* У input[type="search"] в Safari своё системное оформление: оно рисует
+   вторую рамку внутри нашей и добавляет собственную кнопку очистки.
+   Отключаем нативный вид, иначе поле выглядит как поле в поле. */
+.search-box input{
+  appearance:none;
+  -webkit-appearance:none;
+  width:100%;
+  height:64px;
+  padding:0 56px 0 16px;
+  border:1px solid var(--line-strong);
+  background:transparent;
+  font-family:var(--font-body);
+  font-size:var(--body-md);
+  outline:none;
+}
+.search-box input:focus{ border-color:var(--accent-text); box-shadow:inset 0 0 0 1px var(--accent-text) }
+.search-box input::placeholder{ color:var(--muted) }
+.search-box input::-webkit-search-decoration,
+.search-box input::-webkit-search-cancel-button,
+.search-box input::-webkit-search-results-button{ -webkit-appearance:none }
+.search-box svg{
+  position:absolute; right:19px; top:50%;
+  transform:translateY(-50%);
+  width:23px; height:23px;
+  fill:none; stroke:var(--muted); stroke-width:1.5;
+  pointer-events:none;
+}
+
+/* Переносятся, не скроллятся. */
+.scope-row{
+  display:flex; flex-wrap:wrap; align-items:center;
+  gap:0 var(--space-6);
+  padding-top:var(--space-1);
+}
+.scope-label{
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-right:3px;
+}
+.scope-option{
+  position:relative;
+  min-height:44px;
+  padding:0;
+  border:0; background:transparent;
+  font-size:var(--caption);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  white-space:normal;
+}
+.scope-option .count{
+  margin-left:5px;
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  color:var(--muted);
+}
+.scope-option:hover{ color:var(--accent-text) }
+.scope-option.active{ color:var(--accent-text) }
+.scope-option.active::after{
+  content:""; position:absolute; left:0; right:0; bottom:8px;
+  height:1.5px; background:var(--accent-text);
+}
+
+/* --- Подсказка на пустой странице --- */
+
+.helper{ margin-top:58px; padding-top:30px; border-top:1px solid var(--line) }
+.helper-head{ display:grid; gap:var(--space-4); margin-bottom:var(--space-6) }
+.helper-title h2{ margin:0 }
+.helper-copy{ margin:0; font-size:var(--body-sm); line-height:1.55; color:var(--muted) }
+
+.helper-grid{ display:grid; grid-template-columns:1fr; gap:var(--space-6) }
+.helper-item{ padding-top:15px; border-top:1px solid var(--line) }
+.helper-code{
+  margin-bottom:var(--space-2);
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  letter-spacing:.08em;
+  color:var(--accent-text);
+}
+.helper-item h3{ margin:0 0 var(--space-2); font-size:var(--card-title) }
+.helper-item p{ margin:0; font-size:var(--body-sm); line-height:1.5; color:var(--muted) }
+
+@media (min-width:621px){
+  .helper-grid{ grid-template-columns:1fr 1fr }
+}
+@media (min-width:821px){
+  .helper-head{ grid-template-columns:repeat(12,minmax(0,1fr)); column-gap:var(--grid-gap) }
+  .helper-title{ grid-column:1/5 }
+  .helper-copy{ grid-column:6/11 }
+}
+@media (min-width:1101px){
+  .helper-grid{ grid-template-columns:repeat(4,minmax(0,1fr)) }
+}
+
+/* --- Сводка по результатам --- */
+
+.results-meta{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
+  gap:var(--space-2) 20px;
+  margin-top:30px;
+  padding-top:18px;
+  border-top:1px solid var(--line);
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.results-meta strong{ color:var(--ink); font-weight:400 }
+
+/* --- Группы результатов --- */
+
+.result-group{ padding:38px 0 0 }
+.group-head{
+  display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline;
+  gap:var(--space-2) 20px;
+  margin-bottom:18px;
+}
+.group-head h2{ margin:0 }
+.group-count{
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.group-list{ border-top:1px solid var(--line) }
+
+/* Найденное отличается не только цветом. */
+mark{
+  background:transparent;
+  color:var(--accent-text);
+  font-weight:600;
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+
+/* Постер той же геометрии, что в горизонтальной марке: 2:3, без обрезки. */
+.anime-result{
+  display:grid; grid-template-columns:88px minmax(0,1fr);
+  gap:var(--space-4);
+  align-items:center;
+  padding:20px 0;
+  border-bottom:1px solid var(--line);
+  text-decoration:none;
+}
+.anime-stamp{
+  --stamp:#EEF0E8;
+  position:relative;
+  width:88px;
+  background:var(--stamp);
+  overflow:hidden;
+}
+.anime-stamp::before,.anime-stamp::after{
+  content:""; position:absolute; z-index:3; left:0; right:0; height:8px;
+  pointer-events:none;
+  background:radial-gradient(circle at 4px 0,var(--paper) 3px,transparent 3.4px) 0 0/12px 8px repeat-x;
+}
+.anime-stamp::before{ top:-1px }
+.anime-stamp::after{ bottom:-1px; transform:rotate(180deg) }
+.anime-stamp img{
+  display:block; width:100%; aspect-ratio:2/3;
+  object-fit:contain; object-position:center;
+}
+.anime-copy{ min-width:0 }
+.anime-copy h3{ margin:0 0 var(--space-1); font-size:var(--card-title) }
+.anime-original{
+  margin-bottom:var(--space-2);
+  font-family:var(--font-display);
+  font-size:var(--caption);
+  font-style:italic;
+  color:var(--muted);
+}
+.anime-meta{
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.result-arrow{ font-size:20px; color:var(--accent-text) }
+
+/* --- Результат: материал --- */
+
+.material-result{
+  display:grid; grid-template-columns:minmax(0,1fr);
+  gap:var(--space-3);
+  padding:20px 0;
+  border-bottom:1px solid var(--line);
+  text-decoration:none;
+}
+.material-thumb{ width:100%; aspect-ratio:16/9; overflow:hidden; background:var(--line-soft) }
+.material-thumb.square{ aspect-ratio:1; width:120px }
+.material-thumb img{ width:100%; height:100%; display:block; object-fit:cover }
+.material-kicker{
+  margin-bottom:7px;
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--accent-text);
+}
+.material-result h3{ margin:0 0 var(--space-2); font-size:var(--card-title) }
+.material-result p{ margin:0; font-size:var(--body-sm); line-height:1.5; color:var(--muted); max-width:650px }
+
+/* --- Результат: упоминание в транскрипте --- */
+
+.transcript-result{
+  display:grid; grid-template-columns:minmax(0,1fr);
+  gap:var(--space-2);
+  padding:16px 0;
+  border-bottom:1px solid var(--line);
+  text-decoration:none;
+}
+.transcript-episode{ font-size:var(--body-sm); line-height:1.4; color:var(--muted) }
+.transcript-episode strong{
+  display:block;
+  margin-bottom:var(--space-1);
+  font-family:var(--font-display);
+  font-size:var(--card-title);
+  line-height:1.15;
+  font-weight:400;
+  color:var(--ink);
+}
+.transcript-speaker{
+  margin-bottom:5px;
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.transcript-time{
+  display:inline-flex; align-items:center;
+  min-height:44px;
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  letter-spacing:.04em;
+  color:var(--accent-text);
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+.transcript-quote{ font-size:var(--body-md); line-height:1.55; color:var(--text) }
+
+@media (min-width:621px){
+  .anime-result{ grid-template-columns:112px minmax(0,1fr) auto; gap:var(--space-6) }
+  .anime-stamp{ width:112px }
+
+  .material-result{ grid-template-columns:120px minmax(0,1fr); gap:var(--space-6); align-items:start }
+  .material-thumb{ width:120px; aspect-ratio:16/9 }
+
+  .transcript-result{
+    grid-template-columns:170px 100px minmax(0,1fr);
+    gap:20px;
+    align-items:start;
+  }
+}
+@media (min-width:1101px){
+  .material-result{ grid-template-columns:120px minmax(0,1fr) auto }
+  .transcript-result{ grid-template-columns:170px 100px minmax(0,1fr) auto }
+}

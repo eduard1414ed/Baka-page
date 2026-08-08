@@ -1,0 +1,62 @@
+/* =========================================================================
+   Композиция архива. Карточка и сетка материалов — общие, из baka.css.
+   ========================================================================= */
+
+/* Архив принимает на себя всё, чего не должно быть на главной: полный
+   список, переключение по типу и листание страницами. Главная остаётся
+   витриной и ведёт сюда одной кнопкой. */
+
+.archive-head{
+  display:grid; gap:var(--space-4);
+  padding:var(--space-12) 0 var(--space-8);
+  border-bottom:1px solid var(--line);
+}
+.archive-intro{ font-size:var(--body-lg); line-height:1.65; color:var(--text); margin:0 }
+.archive-intro p{ margin:0 0 var(--space-4) }
+.archive-count{ color:var(--muted) }
+
+@media (min-width:821px){
+  .archive-head{
+    grid-template-columns:repeat(12,minmax(0,1fr));
+    column-gap:var(--grid-gap);
+    align-items:end;
+    padding:66px 0 var(--space-8);
+  }
+  .archive-head > div:first-child{ grid-column:1/8 }
+  .archive-intro{ grid-column:8/13 }
+}
+
+/* --- Переключение по типу --- */
+
+/* Те же вкладки, что фильтры на главной, но здесь это ссылки на разделы,
+   а не переключатели видимости: у каждого типа свой адрес.
+
+   Своей линии снизу у вкладок нет: её рисует верхняя граница первого ряда
+   карточек. Иначе две линии в тридцати пикселях друг от друга. */
+.archive-tabs{
+  display:flex; flex-wrap:wrap;
+  gap:0 var(--space-6);
+  padding:var(--space-2) 0;
+  font-size:var(--caption);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.archive-tab{
+  position:relative;
+  min-height:44px;
+  display:inline-flex; align-items:center;
+  color:var(--ink);
+  text-decoration:none;
+}
+.archive-tab:hover{ color:var(--accent-text) }
+.archive-tab[aria-current="page"]{ font-weight:600 }
+.archive-tab[aria-current="page"]::after{
+  content:""; position:absolute; left:0; right:0; bottom:8px;
+  height:1.5px; background:var(--ink);
+}
+
+/* --- Лента --- */
+
+/* Сетка и карточка — общие (.list-grid / .list-card в baka.css).
+   Странице остаётся только вертикальный ритм. */
+.archive-list{ padding:var(--space-6) 0 var(--space-12) }

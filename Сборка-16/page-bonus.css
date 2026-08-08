@@ -1,0 +1,68 @@
+/* =========================================================================
+   Композиция бонусного выпуска. Общие компоненты — в baka.css.
+   ========================================================================= */
+
+/* --- Paywall --- */
+
+.paywall{
+  position:relative;
+  width:100%; max-width:var(--full); margin-inline:auto;
+  padding-top:var(--space-4);
+}
+
+/* Подпись разрывает верхнюю границу рамки. */
+.paywall-hook{
+  position:absolute; z-index:2; top:0; left:50%;
+  transform:translateX(-50%);
+  padding:0 18px;
+  background:var(--paper);
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--accent-text);
+  white-space:nowrap;
+}
+.paywall-frame{
+  min-height:400px;
+  display:flex; flex-direction:column; justify-content:space-between;
+  gap:var(--space-8);
+  padding:var(--space-6);
+  border:1px solid var(--accent-text);
+  background:var(--accent-soft);
+}
+.paywall-copy{ max-width:760px }
+.paywall h2{ margin:0 0 18px }
+.paywall p{ margin:0; font-size:var(--body-lg); line-height:1.6; color:var(--text); max-width:680px }
+.paywall-note{
+  margin-top:20px;
+  font-size:var(--caption);
+  line-height:1.5;
+  color:var(--muted);
+  max-width:620px;
+}
+
+.paywall-actions{ display:grid; grid-template-columns:1fr; gap:10px }
+.paywall-actions a{
+  height:56px;
+  display:flex; align-items:center; justify-content:space-between; gap:20px;
+  padding:0 16px;
+  border:1px solid var(--line-strong);
+  background:var(--paper);
+  text-decoration:none;
+  font-size:var(--caption);
+  font-weight:600;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  transition:border-color .15s ease,color .15s ease;
+}
+.paywall-actions a:hover{ border-color:var(--accent-text); color:var(--accent-text) }
+.paywall-actions span{ color:var(--accent-text); font-size:17px; font-weight:400 }
+
+@media (min-width:621px){
+  .paywall-actions{ grid-template-columns:1fr 1fr }
+}
+@media (min-width:1101px){
+  .paywall-frame{ padding:var(--space-12) }
+  .paywall-actions{ grid-template-columns:repeat(4,minmax(0,1fr)) }
+}

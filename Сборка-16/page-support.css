@@ -1,0 +1,99 @@
+/* =========================================================================
+   Композиция «Поддержать». SocialStrip на этой странице не выводится:
+   человек уже пришёл поддержать, уводить его в соцсети незачем.
+   ========================================================================= */
+
+.support-hero{ display:grid; gap:var(--space-6); padding:var(--space-12) 0 }
+.hero-title h1{ margin:0 }
+/* Имя .hero-copy занято на главной под другой блок: одно имя для двух
+   разных вещей однажды столкнётся в общем CSS. */
+.hero-lead{ max-width:730px }
+.hero-lead p{ font-size:var(--body-lg); line-height:1.65; color:var(--text); margin:0 0 var(--space-6) }
+.hero-lead .lead{ font-family:var(--font-display); font-size:var(--h3); line-height:1.35 }
+
+/* --- Кнопки площадок: принадлежат hero, своего заголовка не имеют --- */
+
+.support-buttons{ display:grid; grid-template-columns:1fr; gap:10px }
+.support-buttons a{
+  height:56px;
+  display:flex; align-items:center; justify-content:space-between; gap:20px;
+  padding:0 16px;
+  border:1px solid var(--line-strong);
+  text-decoration:none;
+  font-size:var(--caption);
+  font-weight:600;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  transition:border-color .15s ease,color .15s ease;
+}
+.support-buttons a:hover{ border-color:var(--accent-text); color:var(--accent-text) }
+.support-buttons span{ color:var(--accent-text); font-size:17px; font-weight:400 }
+@media (min-width:621px){
+  .support-buttons{ grid-template-columns:1fr 1fr }
+}
+
+/* Секция — обычный блок. Колонки задают вложенные блоки: шапка секции
+   и список. Если сделать сеткой и секцию, и её содержимое, колонки
+   вложенной сетки схлопнутся в одну дорожку внешней. */
+.benefits,.alt-support{
+  padding:var(--space-12) 0;
+  border-top:1px solid var(--line);
+}
+.section-head-copy{
+  margin:0;
+  font-size:var(--body-sm);
+  line-height:1.55;
+  color:var(--muted);
+  max-width:640px;
+}
+
+/* Между пунктами разделителей нет: это перечисление, а не список строк. */
+.benefit-list{ display:grid; grid-template-columns:1fr; gap:var(--space-8) }
+.benefit-item{ min-width:0 }
+.benefit-item{ display:grid; grid-template-columns:auto minmax(0,1fr); gap:var(--space-4); align-items:start }
+.benefit-mark{
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  letter-spacing:.08em;
+  color:var(--accent-text);
+  padding-top:var(--space-1);
+}
+.benefit-item p{ margin:0; font-size:var(--body-lg); line-height:1.6; color:var(--text) }
+
+/* --- Другие способы --- */
+
+.alt-copy{ max-width:700px }
+.alt-copy p{ margin:0 0 var(--space-4); font-size:var(--body-lg); line-height:1.6; color:var(--text) }
+.alt-links{
+  display:flex; flex-wrap:wrap; gap:var(--space-2) var(--space-6);
+  font-size:var(--caption);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.alt-links a{ padding-block:12px; text-decoration:none }
+.alt-links a:hover{ color:var(--accent-text); text-decoration:underline; text-underline-offset:3px }
+
+/* --- Раскладка на широких экранах --- */
+
+@media (min-width:821px){
+  /* Колонки задаёт секция; шапка секции занимает все двенадцать дорожек
+     и повторяет ту же сетку внутри себя. */
+  .support-hero,.benefits,.alt-support,.benefit-list{
+    display:grid;
+    grid-template-columns:repeat(12,minmax(0,1fr));
+    column-gap:var(--grid-gap);
+    align-items:start;
+  }
+  .benefit-list{ grid-column:1/-1 }
+  .support-hero{ padding:68px 0 62px }
+  .hero-title{ grid-column:1/5 }
+  .hero-lead{ grid-column:6/12 }
+  .support-buttons{ grid-column:6/12 }
+
+  .section-head-main,.alt-head{ grid-column:1/5 }
+  .section-head-copy{ grid-column:6/11 }
+  .benefit-list{ row-gap:var(--space-8) }
+  .benefit-item:nth-child(odd){ grid-column:6/9 }
+  .benefit-item:nth-child(even){ grid-column:10/13 }
+  .alt-copy{ grid-column:6/12 }
+}

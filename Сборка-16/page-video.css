@@ -1,0 +1,91 @@
+/* =========================================================================
+   Композиция страницы видеоэссе. Общие компоненты — в baka.css.
+   ========================================================================= */
+
+/* --- Плеер YouTube --- */
+
+.youtube-wrap{ width:100%; max-width:var(--wide); margin:0 auto var(--space-12) }
+
+.youtube-player{
+  position:relative;
+  aspect-ratio:16/9;
+  overflow:hidden;
+  background:var(--ink);
+}
+.youtube-player img{ width:100%; height:100%; object-fit:cover; display:block }
+.youtube-shade{
+  position:absolute; inset:0;
+  background:linear-gradient(to bottom,rgba(21,21,21,.28) 0%,rgba(21,21,21,0) 34%,rgba(21,21,21,.55) 100%);
+}
+.yt-brand{
+  position:absolute; top:14px; left:16px;
+  display:flex; align-items:center; gap:var(--space-2);
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--paper);
+}
+.yt-dot{ width:9px; height:9px; border-radius:50%; background:var(--accent-brand) }
+
+.yt-play{
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  width:68px; height:68px; border-radius:50%;
+  border:0; background:var(--accent-brand);
+  display:grid; place-items:center;
+}
+.yt-play::after{
+  content:""; width:0; height:0; margin-left:5px;
+  border-left:20px solid var(--ink);
+  border-top:12px solid transparent;
+  border-bottom:12px solid transparent;
+}
+.yt-play:hover{ transform:translate(-50%,-50%) scale(1.04) }
+
+.yt-controls{
+  position:absolute; left:0; right:0; bottom:0;
+  display:grid; grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center; gap:var(--space-3);
+  padding:14px 16px;
+  color:var(--paper);
+}
+.yt-control-play{
+  width:0; height:0;
+  border-left:12px solid var(--paper);
+  border-top:7px solid transparent;
+  border-bottom:7px solid transparent;
+}
+.yt-progress{ position:relative; height:3px; background:rgba(248,246,240,.35) }
+.yt-progress-fill{ position:absolute; left:0; top:0; bottom:0; width:0; background:var(--accent-brand) }
+.yt-progress-knob{
+  position:absolute; top:50%; left:0;
+  width:14px; height:14px; border-radius:50%;
+  background:var(--accent-brand);
+  transform:translate(-50%,-50%);
+}
+.yt-time{
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  letter-spacing:.04em;
+  white-space:nowrap;
+}
+
+/* На узком экране видео уходит в край: подпись и текст остаются в полях. */
+@media (max-width:620px){
+  .youtube-wrap{
+    width:100vw; max-width:none;
+    margin-inline:calc(50% - 50vw);
+  }
+}
+
+/* Тот же плеер, что на странице подкаста, без собственной типографики.
+   Границу рисует только плеер: у секции своей линии нет, иначе над блоком
+   оказывались две. */
+.audio-section{
+  width:100%; max-width:var(--reading); margin:var(--space-16) auto 0;
+}
+.audio-title-row{ margin-bottom:var(--space-4) }
+.audio-section .player{
+  border-top:1px solid var(--ink);
+  border-bottom:1px solid var(--ink);
+}

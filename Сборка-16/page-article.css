@@ -1,0 +1,141 @@
+/* =========================================================================
+   Композиция страницы статьи. Общие компоненты — в baka.css.
+   ========================================================================= */
+
+/* --- Текст --- */
+.prose h2{ margin:var(--space-12) 0 var(--space-6) }
+
+/* --- Медиа --- */
+
+.media{ margin:var(--space-12) auto 50px }
+.media-normal{ width:100%; max-width:var(--reading) }
+.media-wide{ width:100%; max-width:var(--wide) }
+.media-full{ width:100%; max-width:var(--full) }
+
+.frame-16x9{ aspect-ratio:16/9; overflow:hidden; background:var(--line-soft) }
+.frame-16x9 img{ display:block; width:100%; height:100%; object-fit:cover }
+
+/* Подпись: технический номер и текст подписи — разные слои. */
+.caption{
+  margin-top:var(--space-2);
+  font-size:var(--caption);
+  line-height:1.5;
+  color:var(--muted);
+}
+.caption b,.caption strong{
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-right:var(--space-2);
+}
+
+/* Галерея, режим «сетка». Так сайт собирает две-четыре картинки,
+   идущие подряд: сетка, одна общая подпись. */
+.gallery-grid{
+  margin:50px auto;
+  display:grid; grid-template-columns:1fr; gap:var(--space-2);
+}
+.gallery-item{ aspect-ratio:16/9; overflow:hidden; background:var(--line-soft) }
+.gallery-item img{ width:100%; height:100%; object-fit:cover; display:block }
+.gallery-grid .caption{ grid-column:1/-1 }
+@media (min-width:621px){
+  .gallery-grid{ grid-template-columns:1fr 1fr }
+}
+
+/* Заглушка видео в теле статьи */
+.video-wrap{ position:relative }
+.video-wrap::after{
+  content:"▶";
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  width:64px; height:64px; border-radius:50%;
+  background:var(--paper);
+  border:1px solid var(--line);
+  display:grid; place-items:center;
+  font-size:22px; padding-left:4px;
+}
+
+/* Галерея, режим «карусель». Так сайт собирает пять и больше картинок:
+   листание вместо длинной сетки. Единственное место на сайте,
+   где разрешён горизонтальный скролл. */
+
+.gallery-carousel{ margin:58px auto var(--space-16) }
+.gallery-head{
+  display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center;
+  gap:var(--space-2) var(--space-4);
+  margin-bottom:var(--space-3);
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.gallery-stage{ position:relative }
+.gallery-btn{
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:44px; height:44px;
+  border:1px solid var(--line-strong);
+  background:var(--paper);
+  font-size:22px; line-height:1;
+}
+.gallery-btn:hover{ border-color:var(--accent-text); color:var(--accent-text) }
+.gallery-btn.prev{ left:var(--space-2) }
+.gallery-btn.next{ right:var(--space-2) }
+@media (min-width:1101px){
+  .gallery-btn.prev{ left:-58px }
+  .gallery-btn.next{ right:-58px }
+}
+
+/* --- Упоминается --- */
+
+.related{
+  width:100%; max-width:var(--full); margin:74px auto 0;
+  padding:33px 0 var(--space-16);
+  border-top:1px solid var(--line);
+}
+.related h3{
+  margin:0 0 23px;
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--ink);
+}
+
+/* --- Соседние материалы --- */
+
+.article-nav{
+  width:100%; max-width:var(--full); margin:0 auto 90px;
+  display:grid;
+  border-top:1px solid var(--line);
+}
+.article-nav a{
+  padding:28px 0;
+  text-decoration:none;
+  font-family:var(--font-display);
+  font-size:var(--h3);
+  line-height:1.2;
+}
+.article-nav a + a{ border-top:1px solid var(--line) }
+.article-nav a:hover{ color:var(--accent-text) }
+.article-nav small{
+  display:block;
+  margin-bottom:9px;
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+@media (min-width:821px){
+  .article-nav{ grid-template-columns:1fr 1fr }
+  .article-nav a + a{
+    border-top:0;
+    border-left:1px solid var(--line);
+    padding-left:34px;
+    text-align:right;
+  }
+}

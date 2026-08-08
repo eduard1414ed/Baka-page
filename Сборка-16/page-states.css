@@ -1,0 +1,103 @@
+/* =========================================================================
+   Справочник состояний. Общие компоненты — в baka.css.
+   Здесь только раскладка самой страницы и те состояния компонентов,
+   которых не было в основных макетах.
+   ========================================================================= */
+
+/* --- Раскладка справочника --- */
+
+.states{ padding-bottom:var(--space-18) }
+.states-intro{ padding:var(--space-12) 0; border-bottom:1px solid var(--line) }
+.states-intro h1{ margin:0 0 var(--space-4) }
+.states-intro p{ margin:0; max-width:62ch; font-size:var(--body-lg); line-height:1.65; color:var(--text) }
+
+.state{ padding:var(--space-12) 0; border-top:1px solid var(--line) }
+.state:first-of-type{ border-top:0 }
+.state-head{ display:grid; grid-template-columns:auto minmax(0,1fr); gap:var(--space-4); margin-bottom:var(--space-8) }
+.state-num{ color:var(--accent-text) }
+.state-head h2{ margin:0 0 var(--space-2) }
+.state-note{ margin:0; max-width:62ch; font-size:var(--body-sm); line-height:1.5; color:var(--muted) }
+
+.state-demo{ display:grid; gap:var(--space-8) }
+.demo-label{
+  color:var(--muted);
+  padding-bottom:var(--space-2);
+  border-bottom:1px solid var(--line-soft);
+  margin-bottom:var(--space-4);
+}
+.demo-grid{ display:grid; grid-template-columns:1fr; gap:var(--space-8) }
+@media (min-width:821px){
+  .demo-grid{ grid-template-columns:repeat(3,minmax(0,1fr)) }
+}
+.demo-poster{ width:112px; aspect-ratio:2/3 }
+.demo-square{ width:min(220px,100%); aspect-ratio:1 }
+.demo-textcard{ border-top:1px solid var(--line); padding-top:14px }
+.demo-textcard h3{ margin:0 0 var(--space-2) }
+
+/* --- Плеер: состояния, которых не было в макетах --- */
+
+.player--playing .play svg rect{ fill:var(--ink) }
+
+/* Загрузка: бегущая полоса вместо заливки. Кнопка остаётся на месте
+   и не подменяется спиннером — иначе при быстрой загрузке она мигает. */
+.player--loading .progress-track{ overflow:hidden }
+.player--loading .progress-fill{
+  width:32%;
+  animation:player-buffer 1.4s ease-in-out infinite;
+}
+@keyframes player-buffer{
+  0%{ transform:translateX(-110%) }
+  100%{ transform:translateX(340%) }
+}
+
+.player--error{
+  display:grid; gap:var(--space-4); justify-items:start;
+  padding:var(--space-6) 0;
+}
+.player-error{
+  margin:0;
+  max-width:52ch;
+  font-size:var(--body-md);
+  line-height:1.6;
+  color:var(--text);
+}
+
+/* --- Поиск: подсказки под полем --- */
+
+.search-hint{
+  font-size:var(--body-sm);
+  line-height:1.5;
+  color:var(--muted);
+}
+.search-hint--loading::after{
+  content:"";
+  display:inline-block;
+  width:1em;
+  text-align:left;
+  animation:hint-dots 1.2s steps(4,end) infinite;
+}
+@keyframes hint-dots{
+  0%{ content:"" } 25%{ content:"·" } 50%{ content:"··" } 75%{ content:"···" }
+}
+
+/* --- Транскрипт: спикер не определён --- */
+
+/* Пишем прямо, без предупреждающих значков: это состояние данных,
+   а не ошибка, которую читатель может исправить. */
+.speaker-name--unknown{
+  color:var(--muted);
+  font-weight:400;
+  font-style:italic;
+}
+
+/* --- Пустое состояние внутри блока --- */
+
+.empty-state--inline{
+  justify-items:start;
+  text-align:left;
+  padding:var(--space-8) 0;
+}
+
+/* --- Демонстрация заголовка тайтла --- */
+
+.title-heading--demo{ display:grid; gap:var(--space-3) }

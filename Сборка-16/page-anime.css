@@ -1,0 +1,194 @@
+/* =========================================================================
+   Композиция страницы тайтла. Марок на этой странице нет: перфорированный
+   постер — часть hero, а «Упоминания» — карточки материалов, а не марки.
+   ========================================================================= */
+
+.breadcrumb{
+  padding:var(--space-8) 0 var(--space-6);
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.breadcrumb a{ text-decoration:none; color:var(--ink) }
+.breadcrumb a:hover{ color:var(--accent-text) }
+
+/* --- Hero --- */
+
+.title-hero{
+  display:grid; gap:var(--space-8);
+  padding-bottom:var(--space-12);
+}
+.title-poster-wrap{ max-width:280px }
+
+.poster-stamp{ --stamp:#EDF0E7; position:relative; display:block; background:var(--stamp) }
+.poster-stamp::before,.poster-stamp::after{
+  content:""; position:absolute; z-index:3; left:0; right:0; height:12px;
+  pointer-events:none;
+  background:radial-gradient(circle at 6px 0,var(--paper) 5px,transparent 5.5px) 0 0/18px 12px repeat-x;
+}
+.poster-stamp::before{ top:-1px }
+.poster-stamp::after{ bottom:-1px; transform:rotate(180deg) }
+.poster-stamp-inner{ position:relative; overflow:hidden }
+.poster-stamp-inner::before,.poster-stamp-inner::after{
+  content:""; position:absolute; z-index:3; top:0; bottom:0; width:12px;
+  pointer-events:none;
+  background:radial-gradient(circle at 0 6px,var(--paper) 5px,transparent 5.5px) 0 0/12px 18px repeat-y;
+}
+.poster-stamp-inner::before{ left:-1px }
+.poster-stamp-inner::after{ right:-1px; transform:rotate(180deg) }
+
+/* Постер не обрезается: поля внутри рамки 2:3 заливаются цветом марки. */
+.poster-stamp img{
+  display:block; width:100%; aspect-ratio:2/3;
+  object-fit:contain; object-position:center;
+}
+
+.title-copy{ min-width:0 }
+.title-heading{ display:grid; gap:var(--space-3); margin-bottom:var(--space-6) }
+.title-copy h1{ margin:0 0 var(--space-3) }
+.title-meta{
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.original-title{
+  font-family:var(--font-display);
+  font-size:var(--card-title);
+  line-height:1.35;
+  font-style:italic;
+  color:var(--muted);
+  margin-bottom:var(--space-2);
+}
+.external-link{
+  display:inline-flex; align-items:center; gap:var(--space-2);
+  padding-block:12px;
+  font-size:var(--caption);
+  color:var(--ink);
+  text-decoration:none;
+}
+.external-link:hover{ color:var(--accent-text); text-decoration:underline; text-underline-offset:3px }
+
+.synopsis p{ font-size:var(--body-lg); line-height:1.65; color:var(--text); margin:0 0 var(--space-4) }
+.synopsis p:last-child{ margin-bottom:0 }
+
+@media (min-width:621px){
+  .title-poster-wrap{ max-width:310px }
+}
+@media (min-width:821px){
+  .title-hero{
+    grid-template-columns:repeat(12,minmax(0,1fr));
+    column-gap:var(--grid-gap);
+    align-items:start;
+    padding-bottom:58px;
+  }
+  .title-poster-wrap{ grid-column:1/5 }
+  .title-copy{ grid-column:5/13 }
+
+/* Две строки, две колонки: название и оригинал стоят на одной базовой
+     линии, техстрока и внешняя ссылка — на следующей. Обёртки растворяются
+     через display:contents, чтобы их дети попали в общую сетку: иначе
+     каждая пара живёт своей жизнью и выравнивать их нечем. */
+  .title-heading{
+    grid-template-columns:minmax(0,1fr) auto;
+    grid-template-rows:auto auto;
+    column-gap:42px;
+    row-gap:var(--space-3);
+    align-items:baseline;
+  }
+  .title-heading-main,.title-heading-aside{ display:contents }
+  .title-copy h1{ grid-column:1; grid-row:1; margin:0 }
+  .original-title{ grid-column:2; grid-row:1; margin:0; text-align:right }
+  .title-meta{ grid-column:1; grid-row:2 }
+  .external-link{ grid-column:2; grid-row:2; justify-self:end; padding-block:0 }
+}
+@media (min-width:1101px){
+  .title-poster-wrap{ max-width:350px }
+}
+
+/* Своей линии у секции нет: её рисует верхняя граница первого ряда
+   карточек, иначе над блоком оказываются две. */
+.mentions-head{
+  display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline;
+  gap:var(--space-3) var(--space-6);
+  margin-bottom:26px;
+}
+.mentions-head h2{ margin:0 }
+.mentions-count{
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+.mentions-grid{ display:grid; grid-template-columns:1fr; column-gap:var(--grid-gap) }
+.mention-card{
+  border-top:1px solid var(--line);
+  padding:16px 0 22px;
+}
+.mention-extra[hidden]{ display:none }
+
+.mention-kicker{
+  margin-bottom:7px;
+  font-family:var(--font-tech);
+  font-size:var(--technical);
+  line-height:1.35;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--accent-text);
+}
+.mention-card h3{
+  margin:0 0 var(--space-2);
+  font-family:var(--font-display);
+  font-size:var(--card-title);
+  line-height:1.15;
+  max-width:18em;
+}
+.mention-card h3 a{ text-decoration:none }
+.mention-card h3 a:hover{ color:var(--accent-text) }
+.mention-card p{
+  margin:0 0 11px;
+  font-size:var(--body-sm);
+  line-height:1.5;
+  color:var(--muted);
+  max-width:30em;
+}
+.mention-media{
+  display:block; aspect-ratio:16/9;
+  overflow:hidden; margin:0 0 13px;
+  background:var(--line-soft);
+}
+.mention-media img{ width:100%; height:100%; object-fit:cover; display:block }
+
+.mention-timecodes{
+  margin:2px 0 0;
+  font-size:var(--body-sm);
+  line-height:1.6;
+  color:var(--muted);
+}
+
+/* Таймкод — часть предложения, поэтому в гарнитуре текста. */
+.timecode{
+  position:relative;
+  color:var(--accent-text);
+  font-weight:600;
+  font-variant-numeric:tabular-nums;
+  text-decoration:underline;
+  text-decoration-thickness:1px;
+  text-underline-offset:3px;
+  white-space:nowrap;
+}
+.timecode::after{ content:""; position:absolute; inset:-12px -6px }
+.timecode:hover{ background:var(--accent-soft) }
+
+@media (min-width:621px){
+  .mentions-grid{ grid-template-columns:repeat(2,minmax(0,1fr)) }
+  .mention-card{ padding-right:10px }
+}
+@media (min-width:1101px){
+  .mentions-grid{ grid-template-columns:repeat(3,minmax(0,1fr)) }
+}
