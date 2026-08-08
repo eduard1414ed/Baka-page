@@ -1,18 +1,34 @@
 name: Добор выпусков из RSS
 
-# Раз в день проверяет RSS подкаста и заводит черновик для каждого выпуска,
-# у которого ещё нет поста (scripts/sync-episodes.mjs), см.
-# тз/04-выпуски-и-плеер.md. Опубликованные посты не трогает никогда —
-# только создаёт новые файлы. Коммитит результат сам, руками запускать
-# не нужно (но можно — кнопкой «Run workflow» на вкладке Actions).
+# Раз в день делает две вещи, см. тз/04-выпуски-и-плеер.md и тз/05-транскрипты.md
+# (шаг 7):
+#
+#   1. Проверяет RSS подкаста и заводит черновик для каждого выпуска, у которого
+#      ещё нет поста (scripts/sync-episodes.mjs).
+#   2. Расшифровывает выпуски без транскрипта и подставляет сценарий там, где
+#      он появился у поста (scripts/transcribe/auto.py).
+#
+# Опубликованные посты не трогает никогда — только создаёт новые файлы.
+# Коммитит результат сам, руками запускать не нужно (но можно — кнопкой
+# «Run workflow» на вкладке Actions).
 
 on:
   schedule:
     - cron: '0 6 * * *'
   workflow_dispatch:
+    inputs:
+      retry_failed:
+        description: 'Повторить сбойные (выпуски, на которых робот уже отступился)'
+        type: boolean
+        default: false
+      limit:
+        description: 'Сколько выпусков расшифровать за прогон'
+        type: string
+        default: '2'
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: sync-episodes
@@ -52,3 +68,61 @@ jobs:
             git pull --rebase origin main
             git push
           fi
+
+      # --- Расшифровка (тз/05, шаг 7) ---------------------------------------
+      #
+      # Живёт здесь, а не на Hetzner: серверный pipeline.py остаётся для
+      # массовых прогонов, а один выпуск в месяц обрабатывается прямо в роботе —
+      # без SSH и без зависимости от того, включён ли сервер.
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Поставить ffmpeg и библиотеки
+        # ffmpeg нужен, чтобы измерить высоту голоса и по ней расставить имена
+        # ведущих (тз/05, шаг 4). Расшифровка полная и одинаковая для всех
+        # выпусков, включая эссе, поэтому обойтись без него нельзя.
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          python3 -m pip install --quiet numpy requests
+
+      - name: Расшифровать новое и подставить сценарии
+        env:
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+        run: |
+          python3 scripts/transcribe/auto.py \
+            --limit "${{ inputs.limit || '2' }}" \
+            ${{ inputs.retry_failed && '--retry-failed' || '' }} \
+            --notify-file notify.md
+
+      - name: Закоммитить расшифровки
+        # always(), чтобы сбой на одном выпуске не потерял уже готовые: за них
+        # заплачено, и второй раз платить нельзя.
+        if: always()
+        run: |
+          git config user.name "baka-episodes-bot"
+          git config user.email "actions@users.noreply.github.com"
+          # -A, а не список файлов: auto-state.json появляется при сбое
+          # и исчезает, когда сбойный выпуск наконец расшифровался.
+          git add -A src/content/transcripts transcripts
+          if git diff --cached --quiet; then
+            echo "Расшифровок не прибавилось."
+          else
+            git commit -m "Расшифровать новые выпуски"
+            git pull --rebase origin main
+            git push
+          fi
+
+      - name: Написать на почту
+        # Задача в репозитории с исполнителем — GitHub сам шлёт письмо тому,
+        # на кого её назначили. Отдельная почтовая служба и пароли не нужны.
+        if: always() && hashFiles('notify.md') != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "$(head -n 1 notify.md)" \
+            --body "$(tail -n +3 notify.md)" \
+            --assignee eduard1414ed
