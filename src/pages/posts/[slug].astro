@@ -1,7 +1,11 @@
 ---
 import { getCollection, getEntry, render } from 'astro:content';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
+import JsonLd from '../../components/JsonLd.astro';
+import { excerptFromBody } from '../../lib/excerpt.mjs';
+import { absoluteUrl } from '../../lib/site.mjs';
+import { podcastEpisodeSchema, articleSchema, breadcrumbsSchema } from '../../lib/schema.mjs';
 import { categories, sectionOf } from '../../content.config';
 import { getYoutubeEmbedUrl } from '../../lib/youtube.mjs';
 import { getLinkIcon } from '../../lib/linkIcon.mjs';
@@ -102,9 +106,60 @@ const mentionedInTranscript = showTranscript
 
 const animeIds = [...new Set([...(anime ?? []).map((ref: { id: string }) => ref.id), ...mentionedInTranscript])];
 const animeEntries = (await Promise.all(animeIds.map((id) => getEntry('anime', id)))).filter(Boolean);
+
+// ——— Что видно в поиске и в превью при отправке ссылки (тз/06, шаги 7–10) ———
+
+// Описание берём из первого осмысленного абзаца текста — своего поля под него
+// у поста нет, заполнять его руками для 143 выпусков архива никто не будет.
+// Как отсеивается служебное сверху (обложка, реклама, столбик ссылок) —
+// см. src/lib/excerpt.mjs.
+const pageDescription = excerptFromBody(post.body, undefined);
+
+// Картинка превью. Порядок: своя обложка поста → обложка выпуска → общая
+// картинка сайта (её подставит сам макет).
+//
+// У обложки выпуска берём ОРИГИНАЛ С ХОСТИНГА ПОДКАСТА, а не нашу сжатую копию
+// из public/episodes/. Копии там только в webp, а телеграм webp-превью
+// разворачивает ненадёжно — см. пояснение в src/layouts/Layout.astro.
+// Оригинал это jpg или png на 1–1,4 МБ, лежит на чужом сервере, нашей сборке
+// не стоит ничего.
+//
+// Своя обложка поста проходит через getImage с format: 'jpeg' по той же
+// причине: обычный <Image> ниже отдаёт webp, для страницы это правильно,
+// для превью — нет.
+const postCoverOg = cover ? await getImage({ src: cover, width: 1200, format: 'jpeg' }) : null;
+const ogImage = postCoverOg?.src ?? episode?.imageUrl ?? null;
+// Обложка выпуска квадратная (2000×2000) — твиттеру нужна карточка `summary`,
+// иначе он растянет квадрат в широкую полосу и срежет верх и низ.
+const ogSquare = !postCoverOg && Boolean(episode?.imageUrl);
+
+const pageUrl = absoluteUrl(`/posts/${post.id}/`);
+const ogImageAbsolute = absoluteUrl(ogImage);
+
+// Выпуск размечаем как PodcastEpisode, всё остальное — как Article.
+// По разделу, а не по категории: бонус лежит в разделе выпусков.
+const schema = isEpisode
+	? podcastEpisodeSchema({ url: pageUrl, title, description: pageDescription, image: ogImageAbsolute, date, episode })
+	: articleSchema({ url: pageUrl, title, description: pageDescription, image: ogImageAbsolute, date });
+
+// Крошки ведут в тот же раздел, что и ссылка «← назад» над заголовком,
+// и подписаны так же — расходиться им нельзя.
+const crumbs = breadcrumbsSchema([
+	{ name: categoryLabel, path: `/category/${sectionId}/` },
+	{ name: title, path: `/posts/${post.id}/` },
+]);
 ---
 
-<Layout title={`${title} — Бака!`}>
+<Layout
+	title={title}
+	description={pageDescription}
+	image={ogImage}
+	imageAlt={`Обложка: ${title}`}
+	squareImage={ogSquare}
+	type="article"
+>
+	<JsonLd slot="head" data={schema} />
+	<JsonLd slot="head" data={crumbs} />
 	{/* data-pagefind-body — что берёт в поиск Pagefind (тз/06, шаг 1). Стоит
 	    на <article>, поэтому шапка, подвал и закреплённый плеер из Layout.astro
 	    в индекс не попадают вовсе: они на каждой странице одинаковые и в выдаче

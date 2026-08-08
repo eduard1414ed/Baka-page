@@ -7,15 +7,21 @@ import banner from '../assets/images/banner.png';
 import cover from '../assets/images/cover.jpeg';
 import { platforms } from '../data/platforms.js';
 import { isPublished } from '../lib/publishing.mjs';
+import JsonLd from '../components/JsonLd.astro';
+import { SITE_DESCRIPTION } from '../lib/site.mjs';
+import { webSiteSchema } from '../lib/schema.mjs';
 
-const description = 'Подкаст об аниме и о том, что скрывается между кадрами';
+const description = SITE_DESCRIPTION;
 
 const posts = (await getCollection('posts', ({ data }) => isPublished(data))).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 ---
 
-<Layout title="Бака! — подкаст об аниме" description={description}>
+{/* Без `title` — у главной заголовок «Бака! — подкаст об аниме» целиком,
+    без приписки «— Бака!» вторым разом (см. pageTitle в src/lib/site.mjs). */}
+<Layout description={description} imageAlt="Бака! — подкаст об аниме">
+	<JsonLd slot="head" data={webSiteSchema()} />
 	<div class="hero-banner">
 		<Image
 			src={banner}

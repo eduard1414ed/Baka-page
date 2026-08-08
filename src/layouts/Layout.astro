@@ -1,28 +1,91 @@
 ---
 import { ClientRouter } from 'astro:transitions';
+import { getImage } from 'astro:assets';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import PlayerBar from '../components/PlayerBar.astro';
+import banner from '../assets/images/banner.png';
+import { SITE_NAME, SITE_DESCRIPTION, SITE_LANG, SITE_LOCALE, pageTitle, absoluteUrl } from '../lib/site.mjs';
 import '../styles/global.css';
 
 interface Props {
-	title: string;
+	/** Название страницы БЕЗ приписки «— Бака!»: её добавляет сам макет.
+	    Не задано — берётся заголовок сайта целиком (так у главной). */
+	title?: string;
 	description?: string;
+	/** Картинка превью в соцсетях. Путь от корня сайта или полный адрес. */
+	image?: string | null;
+	imageAlt?: string;
+	/** Картинка квадратная (обложка выпуска) — твиттеру нужна другая карточка. */
+	squareImage?: boolean;
+	/** article у поста, website у всего остального. */
+	type?: 'website' | 'article';
+	/** Закрыть страницу от поисковиков. */
+	noindex?: boolean;
 }
+// Разметка Schema.org приезжает в <head> через именованный слот `head`,
+// а не через свойство: так страница пишет её обычным <JsonLd slot="head" />.
 
-const { title, description = 'Подкаст об аниме и о том, что скрывается между кадрами' } =
-	Astro.props;
+const {
+	title,
+	description = SITE_DESCRIPTION,
+	image = null,
+	imageAlt = '',
+	squareImage = false,
+	type = 'website',
+	noindex = false,
+} = Astro.props;
+
+const documentTitle = pageTitle(title);
+
+// Картинка превью по умолчанию — тот же баннер, что на главной. Отдельную
+// картинку под соцсети не заводим и не генерируем (решение заказчика).
+//
+// ФОРМАТ ОБЯЗАТЕЛЬНО JPEG, а не webp, в который Astro пережимает картинки
+// по умолчанию: телеграм webp-превью разворачивает ненадёжно, а телеграм —
+// главная площадка подкаста. Проверено по документации и баг-репортам,
+// см. статус/этап-6-seo.md.
+const defaultOg = await getImage({ src: banner, width: 1200, height: 675, format: 'jpeg' });
+
+const ogImage = absoluteUrl(image) ?? absoluteUrl(defaultOg.src);
+
+// Канонический адрес: «вот настоящий адрес этой страницы, остальные — копии».
+// Закрывает сразу два случая: www.bakapodcast.com, который показывает тот же
+// сайт, и адреса с хвостом вроде ?utm_source=telegram или #t=730 из поиска
+// по расшифровке — для поисковика это тоже были бы отдельные страницы.
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <!doctype html>
-<html lang="ru">
+<html lang={SITE_LANG}>
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<title>{documentTitle}</title>
 		<meta name="description" content={description} />
+		<link rel="canonical" href={canonical} />
+		{noindex && <meta name="robots" content="noindex, follow" />}
 		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
+
+		{/* Превью при отправке ссылки в телеграм, вконтакт и прочие мессенджеры. */}
+		<meta property="og:type" content={type} />
+		<meta property="og:site_name" content={SITE_NAME} />
+		<meta property="og:locale" content={SITE_LOCALE} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:title" content={title ?? documentTitle} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={ogImage} />
+		{imageAlt && <meta property="og:image:alt" content={imageAlt} />}
+
+		{/* Квадратной обложке выпуска нужна карточка `summary`: `summary_large_image`
+		    растянула бы квадрат на широкую полосу и срезала бы верх и низ. */}
+		<meta name="twitter:card" content={squareImage ? 'summary' : 'summary_large_image'} />
+
+		<link rel="alternate" type="application/rss+xml" title={`${SITE_NAME} — лента постов`} href="/rss.xml" />
+
+		<slot name="head" />
+
 		<!-- Переходы между страницами без полной перезагрузки — без этого плеер
 		     физически не может пережить переход на другую страницу, см. тз/04. -->
 		<ClientRouter />

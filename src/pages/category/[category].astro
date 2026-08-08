@@ -4,6 +4,8 @@ import Layout from '../../layouts/Layout.astro';
 import PostFeed from '../../components/PostFeed.astro';
 import { visibleCategories, categoriesShownIn } from '../../content.config';
 import { isPublished } from '../../lib/publishing.mjs';
+import JsonLd from '../../components/JsonLd.astro';
+import { breadcrumbsSchema } from '../../lib/schema.mjs';
 
 // Только категории со своим разделом. У скрытых (сейчас это «Бонус») страницы
 // нет вовсе — их посты показываются в чужом разделе, см. content.config.ts.
@@ -23,9 +25,14 @@ const shown = categoriesShownIn(category.id);
 const posts = (await getCollection('posts', ({ data }) => isPublished(data) && shown.includes(data.category))).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
+
+// Своё описание у каждого раздела — оно лежит рядом с подписью категории
+// в content.config.ts (тз/06, шаг 8).
+const crumbs = breadcrumbsSchema([{ name: category.label, path: `/category/${category.id}/` }]);
 ---
 
-<Layout title={`${category.label} — Бака!`}>
+<Layout title={category.label} description={category.description}>
+	<JsonLd slot="head" data={crumbs} />
 	<section class="category">
 		<h1>{category.label}</h1>
 		<PostFeed posts={posts} activeCategory={category.id} />

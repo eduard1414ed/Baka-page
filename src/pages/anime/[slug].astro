@@ -6,6 +6,8 @@ import { getAnimePosterSrcs } from '../../lib/animePoster.mjs';
 import { buildMentionIndex, postsForAnime } from '../../lib/animeMentionIndex.mjs';
 import { formatTimecode } from '../../lib/transcript.mjs';
 import { isPublished } from '../../lib/publishing.mjs';
+import JsonLd from '../../components/JsonLd.astro';
+import { breadcrumbsSchema } from '../../lib/schema.mjs';
 
 export async function getStaticPaths() {
 	const animeList = await getCollection('anime');
@@ -39,9 +41,70 @@ const sourceLabel = source === 'anilist' ? 'AniList' : 'Shikimori';
 // сворачивается в ссылку «и ещё N» — она открывает выпуск, подсвечивает
 // все упоминания и даёт стрелки, чтобы листать их по одному.
 const MAX_TIMES = 8;
+
+// Описание страницы тайтла (тз/06, шаг 8). Первое предложение описания плюс
+// сколько раз тайтл упоминался — упоминания и есть то, ради чего сюда приходят,
+// и в выдаче это отличает нашу страницу от сотни карточек того же аниме
+// на других сайтах.
+//
+// Раньше здесь стоял synopsis.slice(0, 160) — он резал посреди слова.
+function firstSentence(text: string | undefined, max = 130) {
+	if (!text) return null;
+
+	// Разметка Shikimori в описании. Два разных случая, и путать их нельзя:
+	//   [[Хокагэ]]        — ссылка на термин, текст внутри нужен;
+	//   [波風ミナト]       — японский оригинал имени рядом с русским,
+	//                       в строчке выдачи это шум, убираем целиком.
+	// На самой странице тайтла описание показывается как есть — там место
+	// для подробностей; режем только то, что уйдёт в поисковик и в превью.
+	const clean = text
+		.replace(/\[\[([^\]]*)\]\]/g, '$1')
+		.replace(/\[[^\]]*\]/g, '')
+		// После выброшенных скобок остаётся двойной пробел и пробел перед
+		// запятой: «шляпница Софи  ведёт», «Хаула , колдуна».
+		.replace(/\s+([,.;:!?])/g, '$1')
+		.replace(/\s+/g, ' ')
+		.trim();
+
+	if (!clean) return null;
+	if (clean.length <= max) return clean;
+	const cut = clean.slice(0, max);
+	// Режем по концу предложения, если он есть в пределах куска, иначе по слову.
+	const stop = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('! '), cut.lastIndexOf('? '));
+	if (stop > max / 2) return cut.slice(0, stop + 1);
+	const space = cut.lastIndexOf(' ');
+	return `${(space > max / 2 ? cut.slice(0, space) : cut).replace(/[\s,.;:—-]+$/, '')}…`;
+}
+
+// «упоминание / упоминания / упоминаний» — по правилам русского счёта.
+function mentionsWord(n: number) {
+	const mod100 = n % 100;
+	if (mod100 >= 11 && mod100 <= 14) return 'упоминаний';
+	const mod10 = n % 10;
+	if (mod10 === 1) return 'упоминание';
+	if (mod10 >= 2 && mod10 <= 4) return 'упоминания';
+	return 'упоминаний';
+}
+
+const mentionsNote =
+	mentions.length > 0
+		? `${displayTitle} в подкасте «Бака!»: ${mentions.length} ${mentionsWord(mentions.length)} в выпусках и постах.`
+		: `${displayTitle} — карточка тайтла в подкасте «Бака!».`;
+
+const animeDescription = firstSentence(synopsis) ?? mentionsNote;
+
+const crumbs = breadcrumbsSchema([
+	{ name: 'Тайтлы', path: '/anime/' },
+	{ name: displayTitle, path: `/anime/${entry.id}/` },
+]);
 ---
 
-<Layout title={`${displayTitle} — Бака!`} description={synopsis?.slice(0, 160)}>
+{/* Картинка превью не задана нарочно — подставится общая картинка сайта.
+    Обложки тайтлов лежат в public/anime/ только в webp (см. animePoster.mjs),
+    а телеграм webp-превью разворачивает ненадёжно; отдать ему сломанную
+    картинку хуже, чем баннер подкаста. */}
+<Layout title={displayTitle} description={animeDescription}>
+	<JsonLd slot="head" data={crumbs} />
 	{/* Что берёт в поиск Pagefind — см. пояснение в src/pages/posts/[slug].astro.
 	    У тайтла в индекс идёт название, оригинальное название и описание;
 	    список упоминаний ниже помечен data-pagefind-ignore, иначе заголовки

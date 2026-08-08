@@ -4,6 +4,8 @@ import Layout from '../../layouts/Layout.astro';
 import AnimeCard from '../../components/AnimeCard.astro';
 import { buildMentionIndex, postsForAnime } from '../../lib/animeMentionIndex.mjs';
 import { isPublished } from '../../lib/publishing.mjs';
+import JsonLd from '../../components/JsonLd.astro';
+import { breadcrumbsSchema } from '../../lib/schema.mjs';
 
 const posts = await getCollection('posts', ({ data }) => isPublished(data));
 const animeList = await getCollection('anime');
@@ -27,7 +29,11 @@ const sorted = animeList
 	.sort((a, b) => b.count - a.count || displayTitle(a.entry).localeCompare(displayTitle(b.entry), 'ru'));
 ---
 
-<Layout title="Тайтлы — Бака!" description="Все аниме, которые упоминались в подкасте">
+<Layout
+	title="Тайтлы"
+	description={`Все аниме, которые упоминались в подкасте «Бака!» — ${sorted.length} шт. Клик по тайтлу открывает все выпуски и посты с упоминаниями, вплоть до минуты в разговоре.`}
+>
+	<JsonLd slot="head" data={breadcrumbsSchema([{ name: 'Тайтлы', path: '/anime/' }])} />
 	<section class="anime-index">
 		<h1>Тайтлы</h1>
 		{
