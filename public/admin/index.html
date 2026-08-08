@@ -700,10 +700,67 @@
 				return { ids, pending };
 			}
 
+			// Раздел «Аниме»: какие поля заказчик правит руками. Отмеченное здесь
+			// не перезаписывается данными из Shikimori/AniList — признак по каждому
+			// полю отдельно (CLAUDE.md, «Тайтл»), решает scripts/anime-lib.mjs.
+			const MANUAL_ANIME_FIELDS = ['titleRu', 'synopsis', 'poster'];
+
+			// Точная копия src/lib/animeFieldHash.mjs — админка это отдельная
+			// статическая страница, импортировать из src она не может. Меняете
+			// тут — поправьте и там, иначе сравнение перестанет сходиться.
+			function fieldHash(value) {
+				const text = String(value ?? '').trim();
+				let hash = 0x811c9dc5;
+
+				for (let i = 0; i < text.length; i++) {
+					hash ^= text.charCodeAt(i);
+					hash = Math.imul(hash, 0x01000193) >>> 0;
+				}
+
+				return hash.toString(16);
+			}
+
+			function getAnimeFieldHashes() {
+				if (!window.__animeFieldsPromise) {
+					window.__animeFieldsPromise = fetch('/anime-fields.json')
+						.then((res) => (res.ok ? res.json() : {}))
+						.catch(() => ({}));
+				}
+				return window.__animeFieldsPromise;
+			}
+
+			// Галочку «не обновлять из источника» ставим сами, как только поле
+			// поправили: помнить про неё заказчику не нужно, а забытая галочка
+			// означала бы, что робот однажды молча затрёт ручную работу.
+			// Снять галочку по-прежнему можно руками — например, чтобы обложка
+			// снова обновлялась автоматически.
+			async function markManualAnimeFields(data) {
+				const hashes = await getAnimeFieldHashes();
+				const before = hashes[data.get('id')];
+				const manual = new Set(toPlainArray(data.get('manual')));
+
+				// Слепков нет — тайтл появился уже после последней сборки сайта.
+				// Тогда не помечаем ничего: лучше не заметить правку (её отметит
+				// следующее сохранение), чем заморозить поле, которого не касались.
+				for (const field of MANUAL_ANIME_FIELDS) {
+					if (before && before[field] !== fieldHash(data.get(field))) manual.add(field);
+				}
+
+				return data.set('manual', [...manual]);
+			}
+
 			CMS.registerEventListener({
 				name: 'preSave',
 				handler: async ({ entry }) => {
 					const data = entry.get('data');
+
+					// Тайтл справочника отличаем от поста по его собственным полям.
+					// Всё, что ниже, — про посты, и запись справочника через это
+					// гнать нельзя: в JSON тайтла улетело бы чужое поле «anime».
+					if (data.get('sourceId') !== undefined && data.get('titleOriginal') !== undefined) {
+						return await markManualAnimeFields(data);
+					}
+
 					let body = data.get('body') ?? '';
 
 					const unmarked = await findUnmarkedKnownTitles(body);

@@ -51,22 +51,24 @@ function searchNames(title) {
 /**
  * Справочник тайтлов → список названий для поиска.
  *
- * Берём русское и оригинальное название, как remark-anime.mjs. Падежи не ловим:
- * «Ходячего замка» вместо «Ходячий замок» не найдётся — ровно то же ограничение,
- * что и в постах, где на такой случай есть поле «Тайтлы поста» в CMS.
+ * Берём русское и оригинальное название, как remark-anime.mjs, плюс варианты
+ * написания из поля `aliases`. Варианты и закрывают то, чего названия не ловят:
+ * падежи («Ходячего замка»), разговорное произношение («K-On!» вместо «Кэйон!»)
+ * и искажения распознавания («Фринен»). Правила для них те же самые — регистр,
+ * «е»/«ё» и границы слова разбираются ниже одинаково для всех названий.
  *
  * Сортировка по длине от длинного к короткому нужна, чтобы длинное название
  * побеждало короткое, когда одно вложено в другое — в том числе чтобы полное
  * название побеждало свой же кусок до двоеточия.
  *
- * @param {{ id: string, data: { titleRu?: string, titleOriginal: string } }[]} entries
+ * @param {{ id: string, data: { titleRu?: string, titleOriginal: string, aliases?: string[] } }[]} entries
  */
 export function buildAnimeMatcher(entries) {
 	const names = [];
 	const seen = new Set();
 
 	for (const entry of entries) {
-		for (const title of [entry.data?.titleRu, entry.data?.titleOriginal]) {
+		for (const title of [entry.data?.titleRu, entry.data?.titleOriginal, ...(entry.data?.aliases ?? [])]) {
 			if (!title) continue;
 
 			for (const raw of searchNames(title)) {
