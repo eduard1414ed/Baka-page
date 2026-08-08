@@ -48,6 +48,10 @@ const posts = defineCollection({
 			// нормальное состояние — предложения из transcripts/*.corrections.json
 			// применяются только отмеченные. См. src/lib/nameCorrections.mjs.
 			corrections: z.string().optional(),
+			// Что убрано из упоминаний руками, одной строкой:
+			// 'monster:* k-on:12,45.1'. Пусто = не убрано ничего, это обычное
+			// состояние. Разбор и правила — src/lib/mentionExceptions.mjs.
+			mentionsHidden: z.string().optional(),
 			script: z.string().optional(),
 			draft: z.boolean().default(false),
 			// Когда пост должен появиться на сайте — независимая ось от `date`
@@ -152,37 +156,9 @@ const transcripts = defineCollection({
 	}),
 });
 
-// Что убрать из упоминаний руками (тз/05, шаг 5). Файл на выпуск, имя — то же,
-// что у расшифровки. Отдельно от транскрипта специально: CMS при сохранении
-// переписывает файл целиком, и в массив из трёхсот оплаченных реплик её лучше
-// не пускать — та же причина, по которой отдельно живёт карта имён спикеров.
-// Подробности и правила — src/lib/mentionExceptions.mjs.
-const mentionExceptions = defineCollection({
-	loader: glob({ pattern: '*.json', base: './src/content/mention-exceptions' }),
-	schema: z.object({
-		episodeGuid: z.string(),
-		// Тайтл убран из выпуска целиком.
-		hiddenAnime: z.array(z.string()).default([]),
-		// Убрано одно конкретное упоминание.
-		hiddenMentions: z
-			.array(
-				z.object({
-					anime: z.string(),
-					// Место реплики в массиве `replicas` расшифровки. ИМЕННО номер
-					// реплики, а не таймкод: впереди выравнивание сценариев по звуку
-					// (шаг 2), после него таймкоды сдвинутся.
-					replica: z.number().int().nonnegative(),
-					// Какое это по счёту вхождение этого тайтла в этой реплике, с нуля.
-					occurrence: z.number().int().nonnegative().default(0),
-					// Что там написано — сверка якоря. Не совпало = привязка потерялась,
-					// и упоминание ОСТАЁТСЯ на странице (лучше лишнее, чем тихо пропавшее).
-					text: z.string().optional(),
-					// Для человека: почему убрано.
-					note: z.string().optional(),
-				}),
-			)
-			.default([]),
-	}),
-});
+// Отдельной полки для исключений упоминаний больше нет: они живут строкой
+// в поле `mentionsHidden` самого поста (тз/05, шаг 6). Причина — поле стоит
+// в редакторе поста, а CMS умеет сохранять только свою же запись. Подробно
+// расписано в src/lib/mentionExceptions.mjs.
 
-export const collections = { posts, anime, transcripts, mentionExceptions };
+export const collections = { posts, anime, transcripts };

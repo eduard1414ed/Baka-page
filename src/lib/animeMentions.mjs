@@ -147,8 +147,7 @@ const KEEP_ALL = { isHidden: () => false };
  */
 export function splitByMentions(text, matcher, replicaIndex = -1, exceptions = KEEP_ALL) {
 	const mentions = findMentions(text, matcher).filter(
-		(mention) =>
-			!exceptions.isHidden(mention.id, replicaIndex, mention.occurrence, text.slice(mention.start, mention.end)),
+		(mention) => !exceptions.isHidden(mention.id, replicaIndex, mention.occurrence),
 	);
 	if (mentions.length === 0) return [{ text }];
 
@@ -193,8 +192,7 @@ export function collectMentions(blocks, matcher, exceptions = KEEP_ALL) {
 
 		for (const part of block.parts) {
 			for (const mention of findMentions(part.text, matcher)) {
-				const text = part.text.slice(mention.start, mention.end);
-				if (exceptions.isHidden(mention.id, part.index, mention.occurrence, text)) continue;
+				if (exceptions.isHidden(mention.id, part.index, mention.occurrence)) continue;
 				if (seenHere.has(mention.id)) continue;
 				seenHere.add(mention.id);
 

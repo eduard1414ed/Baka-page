@@ -14,13 +14,11 @@ export async function getStaticPaths() {
 	// вела бы в никуда.
 	const posts = await getCollection('posts', ({ data }) => isPublished(data));
 	const transcripts = await getCollection('transcripts');
-	// Что убрано из упоминаний руками (см. src/lib/mentionExceptions.mjs).
-	const exceptions = await getCollection('mentionExceptions');
 
 	// Указатель «тайтл → выпуск → минуты» считаем ОДИН раз на всю сборку,
 	// а не заново на каждой странице тайтла: расшифровок 107, страниц тайтлов
 	// со временем станут сотни, и перечитывать одно другим вышло бы дорого.
-	const index = buildMentionIndex({ posts, transcripts, animeList, exceptions });
+	const index = buildMentionIndex({ posts, transcripts, animeList });
 
 	return animeList.map((entry) => ({
 		params: { slug: entry.id },

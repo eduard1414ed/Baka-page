@@ -884,7 +884,7 @@
 								h('input', { type: 'checkbox', checked: on, onChange: () => this.toggle(fix), style: { marginTop: '3px', flexShrink: 0 } }),
 								h(
 									'span',
-									{ style: { fontSize: '13px', lineHeight: 1.45 } },
+									{ style: { fontSize: '13px', lineHeight: 1.45, minWidth: 0, wordBreak: 'break-word' } },
 									h('span', { key: 'fix', style: { fontWeight: 600 } }, `«${fix.found}» → «${fix.suggested}»`),
 									h(
 										'span',
@@ -914,6 +914,278 @@
 			});
 
 			CMS.registerFieldType('name-corrections', NameCorrectionsControl, NameCorrectionsPreview);
+
+			// Поле «Упоминания в транскрипте» (тз/05, шаг 6). Стоит прямо под
+			// «Тайтлы поста»: сверху заказчик вводит данные, снизу проверяет
+			// автоматику. Объединять их не надо — разная природа.
+			//
+			// Два уровня: снятая галочка убирает одно упоминание, «Скрыть все»
+			// убирает тайтл из выпуска целиком. Убранное НЕ ИСЧЕЗАЕТ из списка,
+			// а бледнеет — вернуть можно всегда.
+			//
+			// Хранится строкой 'monster:* k-on:12,45.1'. Разбор и сборка — копия
+			// src/lib/mentionExceptions.mjs, меняете тут — поправьте и там.
+			function parseMentionExceptions(value) {
+				const hiddenAnime = [];
+				const hiddenMentions = [];
+
+				for (const chunk of String(value ?? '').trim().split(/\s+/)) {
+					const at = chunk.indexOf(':');
+					if (at <= 0) continue;
+
+					const anime = chunk.slice(0, at);
+					const anchors = chunk.slice(at + 1);
+
+					if (anchors === '*') {
+						hiddenAnime.push(anime);
+						continue;
+					}
+
+					for (const anchor of anchors.split(',')) {
+						const [replica, occurrence = '0'] = anchor.split('.');
+						if (!/^\d+$/.test(replica) || !/^\d+$/.test(occurrence)) continue;
+						hiddenMentions.push({ anime, replica: Number(replica), occurrence: Number(occurrence) });
+					}
+				}
+
+				return { hiddenAnime, hiddenMentions };
+			}
+
+			function serializeMentionExceptions({ hiddenAnime = [], hiddenMentions = [] } = {}) {
+				const whole = new Set(hiddenAnime);
+				const byAnime = new Map();
+
+				for (const { anime, replica, occurrence = 0 } of hiddenMentions) {
+					if (whole.has(anime)) continue;
+					const anchor = occurrence > 0 ? `${replica}.${occurrence}` : String(replica);
+					byAnime.set(anime, [...(byAnime.get(anime) ?? []), { replica, occurrence, anchor }]);
+				}
+
+				const parts = [...whole].sort().map((anime) => `${anime}:*`);
+
+				for (const anime of [...byAnime.keys()].sort()) {
+					const anchors = byAnime
+						.get(anime)
+						.sort((a, b) => a.replica - b.replica || a.occurrence - b.occurrence)
+						.map((item) => item.anchor);
+					parts.push(`${anime}:${anchors.join(',')}`);
+				}
+
+				return parts.join(' ');
+			}
+
+			function sameMention(rule, animeId, mention) {
+				return rule.anime === animeId && rule.replica === mention.replica && rule.occurrence === mention.occurrence;
+			}
+
+			// Русское склонение к числу: 1 упоминание, 2 упоминания, 5 упоминаний.
+			function plural(count, one, few, many) {
+				const mod100 = count % 100;
+				const mod10 = count % 10;
+				if (mod100 >= 11 && mod100 <= 14) return many;
+				if (mod10 === 1) return one;
+				if (mod10 >= 2 && mod10 <= 4) return few;
+				return many;
+			}
+
+			const MentionExceptionsControl = createClass({
+				getInitialState() {
+					// Карточки свёрнуты по умолчанию: раскрывают только тот тайтл,
+					// что вызвал сомнение, а не читают весь список подряд.
+					return { data: null, status: 'loading', open: {} };
+				},
+				componentDidMount() {
+					const guid = transcriptIdOf(this.props.entry);
+					if (!guid) {
+						this.setState({ status: 'no-episode' });
+						return;
+					}
+					getEpisodeAdminData(guid).then((data) =>
+						this.setState(data && data.anime ? { data, status: 'ready' } : { status: 'no-transcript' }),
+					);
+				},
+				commit(next) {
+					this.props.onChange(serializeMentionExceptions(next));
+				},
+				toggleMention(animeId, mention) {
+					const { hiddenAnime, hiddenMentions } = parseMentionExceptions(this.props.value);
+					const already = hiddenMentions.some((rule) => sameMention(rule, animeId, mention));
+
+					this.commit({
+						hiddenAnime,
+						hiddenMentions: already
+							? hiddenMentions.filter((rule) => !sameMention(rule, animeId, mention))
+							: [...hiddenMentions, { anime: animeId, replica: mention.replica, occurrence: mention.occurrence }],
+					});
+				},
+				hideWholeTitle(animeId) {
+					const { hiddenAnime, hiddenMentions } = parseMentionExceptions(this.props.value);
+					// Отдельные якоря этого тайтла больше не нужны — тайтл убран целиком.
+					this.commit({
+						hiddenAnime: [...hiddenAnime, animeId],
+						hiddenMentions: hiddenMentions.filter((rule) => rule.anime !== animeId),
+					});
+				},
+				restoreTitle(animeId) {
+					const { hiddenAnime, hiddenMentions } = parseMentionExceptions(this.props.value);
+					this.commit({
+						hiddenAnime: hiddenAnime.filter((id) => id !== animeId),
+						hiddenMentions: hiddenMentions.filter((rule) => rule.anime !== animeId),
+					});
+				},
+				toggleOpen(animeId) {
+					this.setState({ open: { ...this.state.open, [animeId]: !this.state.open[animeId] } });
+				},
+				renderMention(animeId, mention, disabled, hidden) {
+					const { context } = mention;
+
+					return h(
+						'label',
+						{
+							key: `${mention.replica}.${mention.occurrence}`,
+							style: {
+								display: 'flex',
+								gap: '8px',
+								alignItems: 'flex-start',
+								padding: '5px 0',
+								cursor: disabled ? 'default' : 'pointer',
+								// Скрытое бледнеет, но остаётся в списке — вернуть можно всегда.
+								opacity: hidden ? 0.45 : 1,
+							},
+						},
+						h('input', {
+							type: 'checkbox',
+							checked: !hidden,
+							disabled,
+							onChange: () => this.toggleMention(animeId, mention),
+							style: { marginTop: '3px', flexShrink: 0 },
+						}),
+						h(
+							'span',
+							{ style: { fontSize: '13px', lineHeight: 1.45, minWidth: 0, wordBreak: 'break-word' } },
+							h('span', { key: 'time', style: { fontFamily: 'monospace', marginRight: '6px' } }, mention.timecode),
+							`${context.cutLeft ? '…' : ''}${context.before} `,
+							h('mark', { key: 'match' }, context.match),
+							` ${context.after}${context.cutRight ? '…' : ''}`,
+						),
+					);
+				},
+				render() {
+					const { data, status, open } = this.state;
+
+					if (status === 'loading') return h('div', { style: hintStyle }, 'Считаю упоминания…');
+					if (status === 'no-episode') return h('div', { style: hintStyle }, 'Только для выпусков с расшифровкой.');
+					if (status === 'no-transcript') return h('div', { style: hintStyle }, 'Расшифровки у этого выпуска пока нет.');
+					if (data.anime.length === 0)
+						return h('div', { style: hintStyle }, 'В расшифровке не прозвучало ни одного тайтла из справочника.');
+
+					const { hiddenAnime, hiddenMentions } = parseMentionExceptions(this.props.value);
+					const wholeHidden = new Set(hiddenAnime);
+
+					const total = data.anime.reduce((sum, item) => sum + item.mentions.length, 0);
+					const hiddenCount = data.anime.reduce(
+						(sum, item) =>
+							sum +
+							(wholeHidden.has(item.id)
+								? item.mentions.length
+								: item.mentions.filter((mention) => hiddenMentions.some((rule) => sameMention(rule, item.id, mention))).length),
+						0,
+					);
+
+					const summary =
+						`Найдено ${total} ${plural(total, 'упоминание', 'упоминания', 'упоминаний')} ` +
+						`в ${data.anime.length} ${plural(data.anime.length, 'тайтле', 'тайтлах', 'тайтлах')}` +
+						(hiddenCount > 0 ? ` · ${hiddenCount} скрыто` : '') +
+						'. Снимите галочку, если название поймалось по ошибке.';
+
+					return h(
+						'div',
+						{ id: this.props.forID },
+						h('div', { key: 'summary', style: { fontSize: '13px', opacity: 0.75, marginBottom: '8px' } }, summary),
+						data.anime.map((item) => {
+							const whole = wholeHidden.has(item.id);
+							const isOpen = Boolean(open[item.id]);
+
+							return h(
+								'div',
+								{
+									key: item.id,
+									style: {
+										border: '1px solid #ddd',
+										borderRadius: '6px',
+										padding: '8px 10px',
+										marginBottom: '8px',
+										opacity: whole ? 0.55 : 1,
+									},
+								},
+								h(
+									'div',
+									{ key: 'head', style: { display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' } },
+									h(
+										'button',
+										{
+											key: 'toggle',
+											type: 'button',
+											onClick: () => this.toggleOpen(item.id),
+											'aria-expanded': isOpen,
+											style: {
+												flex: '1 1 auto',
+												minWidth: 0,
+												textAlign: 'left',
+												background: 'none',
+												border: 'none',
+												padding: 0,
+												cursor: 'pointer',
+												font: 'inherit',
+												fontWeight: 600,
+												// На телефоне длинное название должно переноситься,
+												// а не вылезать за край карточки.
+												whiteSpace: 'normal',
+												wordBreak: 'break-word',
+											},
+										},
+										`${isOpen ? '▾' : '▸'} ${item.title} · ${item.mentions.length}${whole ? ' — скрыт целиком' : ''}`,
+									),
+									h(
+										'button',
+										{
+											key: 'whole',
+											type: 'button',
+											onClick: () => (whole ? this.restoreTitle(item.id) : this.hideWholeTitle(item.id)),
+											style: { flexShrink: 0 },
+										},
+										whole ? 'Вернуть' : 'Скрыть все',
+									),
+								),
+								isOpen
+									? h(
+											'div',
+											{ key: 'list', style: { marginTop: '6px', borderTop: '1px solid #eee', paddingTop: '4px' } },
+											item.mentions.map((mention) =>
+												this.renderMention(
+													item.id,
+													mention,
+													whole,
+													whole || hiddenMentions.some((rule) => sameMention(rule, item.id, mention)),
+												),
+											),
+										)
+									: null,
+							);
+						}),
+					);
+				},
+			});
+
+			const MentionExceptionsPreview = createClass({
+				render() {
+					const { hiddenAnime, hiddenMentions } = parseMentionExceptions(this.props.value);
+					const count = hiddenAnime.length + hiddenMentions.length;
+					return h('span', {}, count > 0 ? `скрыто упоминаний: ${count}` : '');
+				},
+			});
+
+			CMS.registerFieldType('mention-exceptions', MentionExceptionsControl, MentionExceptionsPreview);
 
 			function extractAnimeIdsFromBody(body) {
 				const ids = [];

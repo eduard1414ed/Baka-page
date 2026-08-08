@@ -12,7 +12,7 @@
 // Свёрнутый вид — окно фиксированной высоты со своей полосой прокрутки
 // (как на референсе), чистый CSS. Это удобство чтения, чтобы транскрипт не
 // отодвигал подвал на два экрана, а не экономия трафика.
-import { getCollection, getEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
 import { groupReplicas, formatTimecode } from '../lib/transcript.mjs';
 import { buildAnimeMatcher, splitByMentions } from '../lib/animeMentions.mjs';
 import { makeExceptionFilter } from '../lib/mentionExceptions.mjs';
@@ -22,11 +22,14 @@ interface Props {
 		speakers: Record<string, string>;
 		replicas: { start: number; end: number; speaker: string; text: string }[];
 	};
-	// Имя файла расшифровки — по нему же ищется файл исключений упоминаний.
+	// Имя файла расшифровки: нужно для якорей и ссылок на минуты.
 	transcriptId: string;
+	// Что убрано из упоминаний руками — строка из поля поста
+	// (см. src/lib/mentionExceptions.mjs).
+	mentionsHidden?: string;
 }
 
-const { transcript, transcriptId } = Astro.props;
+const { transcript, transcriptId, mentionsHidden } = Astro.props;
 
 // Разметка названий тайтлов внутри расшифровки (тз/05, шаг 5).
 //
@@ -38,11 +41,11 @@ const { transcript, transcriptId } = Astro.props;
 //      считаются таймкоды для страницы тайтла и по ним же листают стрелки,
 //      когда на выпуск пришли по ссылке «обсуждали на 12:04».
 //
-// Убранное руками (src/content/mention-exceptions/) сюда не попадает вовсе —
-// остаётся обычным текстом. Ссылкой становится первое ВИДИМОЕ упоминание.
+// Убранное руками в админке сюда не попадает вовсе — остаётся обычным текстом.
+// Ссылкой становится первое ВИДИМОЕ упоминание.
 const animeList = await getCollection('anime');
 const matcher = buildAnimeMatcher(animeList);
-const exceptions = makeExceptionFilter((await getEntry('mentionExceptions', transcriptId))?.data);
+const exceptions = makeExceptionFilter(mentionsHidden);
 const linked = new Set<string>();
 
 // Разметку ищем по репликам (block.parts), а не по склеенному тексту блока:

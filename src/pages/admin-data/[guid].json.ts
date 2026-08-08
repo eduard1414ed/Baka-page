@@ -2,11 +2,14 @@ import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { readFile } from 'node:fs/promises';
 import { mentionContext } from '../../lib/mentionContext.mjs';
-import { fold } from '../../lib/animeMentions.mjs';
+import { fold, buildAnimeMatcher, findMentions } from '../../lib/animeMentions.mjs';
+import { formatTimecode } from '../../lib/transcript.mjs';
+import { postForTranscript } from '../../lib/animeMentionIndex.mjs';
+import { applyPostOverrides } from '../../lib/transcriptOverrides.mjs';
 
 // Данные о выпуске для админки (тз/05, шаг 6): один маленький файл на выпуск,
-// имя — guid расшифровки. Отсюда виджет правки имён спикеров берёт список
-// голосов и подсказки к ним.
+// имя — guid расшифровки. Отсюда виджеты правки имён спикеров, исправлений
+// названий и исключений упоминаний берут всё, что показывают.
 //
 // ЗАЧЕМ ОТДЕЛЬНЫЕ ФАЙЛЫ, А НЕ ОДИН ОБЩИЙ. Выпусков с расшифровкой 107, и общий
 // файл пришлось бы скачивать целиком при правке любого поста. Здесь же админка
@@ -17,8 +20,60 @@ import { fold } from '../../lib/animeMentions.mjs';
 export const prerender = true;
 
 export async function getStaticPaths() {
-	const transcripts = await getCollection('transcripts');
-	return transcripts.map((entry) => ({ params: { guid: entry.id }, props: { entry } }));
+	// Посты берём ВСЕ, вместе с черновиками: в админке правят и неопубликованное.
+	const [transcripts, posts, animeList] = await Promise.all([
+		getCollection('transcripts'),
+		getCollection('posts'),
+		getCollection('anime'),
+	]);
+
+	// Матчер и названия считаем один раз на всю сборку, а не по разу на каждый
+	// из 107 выпусков: справочник у всех один и тот же.
+	const matcher = buildAnimeMatcher(animeList);
+	const titles = Object.fromEntries(animeList.map((item) => [item.id, item.data.titleRu || item.data.titleOriginal]));
+
+	return transcripts.map((entry) => ({
+		params: { guid: entry.id },
+		props: { entry, post: postForTranscript(posts, entry.id), matcher, titles },
+	}));
+}
+
+/**
+ * Все упоминания тайтлов в выпуске, сгруппированные по тайтлу.
+ *
+ * БЕЗ ОТСЕВА ПО ИСКЛЮЧЕНИЯМ: убранное руками должно остаться в списке и просто
+ * побледнеть, чтобы его всегда можно было вернуть (тз/05, шаг 6). Что именно
+ * убрано, админка знает из самого поля и решает сама.
+ *
+ * Ищем по репликам, а не по склеенному тексту: номер вхождения в реплике —
+ * половина якоря исключения, по склейке его не посчитать.
+ */
+function collectAllMentions(replicas: { start: number; text: string }[], matcher: any, titles: Record<string, string>) {
+	const byAnime = new Map<string, any[]>();
+
+	for (const [index, replica] of replicas.entries()) {
+		for (const mention of findMentions(replica.text, matcher)) {
+			const list = byAnime.get(mention.id) ?? [];
+			list.push({
+				replica: index,
+				occurrence: mention.occurrence,
+				seconds: Math.floor(replica.start),
+				timecode: formatTimecode(replica.start),
+				context: mentionContext(replica.text, mention.start, mention.end),
+			});
+			byAnime.set(mention.id, list);
+		}
+	}
+
+	// Порядок групп — по первому упоминанию: так карточки в админке идут в том
+	// же порядке, в каком тайтлы звучат в выпуске.
+	return [...byAnime.entries()].map(([id, mentions]) => ({
+		id,
+		// Тайтла может не быть в справочнике, если его файл ещё не донабрал
+		// робот — тогда показываем хотя бы id, а не пустую карточку.
+		title: titles[id] ?? id,
+		mentions,
+	}));
 }
 
 // speaker_2 должен идти после speaker_10 не по алфавиту, а по числу.
@@ -64,7 +119,7 @@ async function readSuggestions(guid: string, replicas: { text: string }[]) {
 }
 
 export const GET: APIRoute = async ({ props }) => {
-	const { entry } = props as { entry: any };
+	const { entry, post, matcher, titles } = props as { entry: any; post: any; matcher: any; titles: Record<string, string> };
 	const info = entry.data.speakerInfo ?? {};
 
 	const speakers = Object.keys(entry.data.speakers)
@@ -81,10 +136,14 @@ export const GET: APIRoute = async ({ props }) => {
 			speechSeconds: info[id]?.speechSeconds ?? null,
 		}));
 
+	// Предложения по названиям читаем по ИСХОДНОМУ тексту, а упоминания — по
+	// исправленному. Иначе уже применённое исправление пропало бы из списка,
+	// и снять с него галочку стало бы нечем.
 	const corrections = await readSuggestions(entry.id, entry.data.replicas);
+	const anime = collectAllMentions(applyPostOverrides(entry.data, post?.data).replicas, matcher, titles);
 
 	return new Response(
-		JSON.stringify({ guid: entry.id, episodeTitle: entry.data.episodeTitle ?? null, speakers, corrections }),
+		JSON.stringify({ guid: entry.id, episodeTitle: entry.data.episodeTitle ?? null, speakers, corrections, anime }),
 		{ headers: { 'Content-Type': 'application/json' } },
 	);
 };

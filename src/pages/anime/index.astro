@@ -8,13 +8,12 @@ import { isPublished } from '../../lib/publishing.mjs';
 const posts = await getCollection('posts', ({ data }) => isPublished(data));
 const animeList = await getCollection('anime');
 const transcripts = await getCollection('transcripts');
-const exceptions = await getCollection('mentionExceptions');
 
 // Счётчик считаем ровно тем же кодом, что и список на самой странице тайтла
 // (src/pages/anime/[slug].astro) — иначе тут было бы «1 упоминание», а внутри
 // три карточки: с этого шага упоминанием считается и название, прозвучавшее
 // в расшифровке выпуска, а не только проставленное в поле `anime` поста.
-const index = buildMentionIndex({ posts, transcripts, animeList, exceptions });
+const index = buildMentionIndex({ posts, transcripts, animeList });
 const mentionCounts = new Map<string, number>(
 	animeList.map((entry) => [entry.id, postsForAnime(entry.id, posts, index).length]),
 );

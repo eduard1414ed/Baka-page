@@ -79,7 +79,7 @@ const mentionedInTranscript = showTranscript
 	? animeMentionedIn(
 			transcriptData,
 			buildAnimeMatcher(await getCollection('anime')),
-			makeExceptionFilter((await getEntry('mentionExceptions', transcriptId!))?.data),
+			makeExceptionFilter(post.data.mentionsHidden),
 		)
 	: [];
 
@@ -153,7 +153,7 @@ const animeEntries = (await Promise.all(animeIds.map((id) => getEntry('anime', i
 			<Content />
 		</div>
 
-		{showTranscript && <Transcript transcript={transcriptData} transcriptId={transcript.id} />}
+		{showTranscript && <Transcript transcript={transcriptData} transcriptId={transcript.id} mentionsHidden={post.data.mentionsHidden} />}
 
 		{
 			animeEntries.length > 0 && (

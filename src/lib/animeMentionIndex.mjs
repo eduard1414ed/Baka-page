@@ -12,10 +12,16 @@ import { applyPostOverrides } from './transcriptOverrides.mjs';
 
 // Как страница поста находит свою расшифровку: сначала по полю `transcript`,
 // если автор его заполнил, иначе по audioGuid — файл расшифровки называется тем
-// же guid, что запись в RSS (см. src/pages/posts/[slug].astro). Тем же именем
-// называется и файл исключений в src/content/mention-exceptions/.
+// же guid, что запись в RSS (см. src/pages/posts/[slug].astro).
 export function transcriptIdFor(post) {
 	return post.data.transcript ?? post.data.audioGuid ?? null;
+}
+
+// Обратный поиск: чей это выпуск. Нужен там, где на руках расшифровка, а правки
+// к ней (имена, исправления, исключения) лежат в посте — например при сборке
+// данных для админки, src/pages/admin-data/[guid].json.ts.
+export function postForTranscript(posts, transcriptId) {
+	return posts.find((post) => transcriptIdFor(post) === transcriptId) ?? null;
 }
 
 // Про какие потерянные исключения уже сказали: указатель строится дважды
@@ -29,18 +35,16 @@ function warnAboutLost(id, lost) {
 	console.warn(
 		`[упоминания] ${id}: исключение не сработало — привязка потерялась, ` +
 			`упоминание осталось на странице (${lost.join('; ')}). ` +
-			`Поправьте src/content/mention-exceptions/${id}.json`,
+			`Проверьте блок «Упоминания в транскрипте» у этого поста в админке.`,
 	);
 }
 
 /**
- * @param {object[]} exceptions — коллекция mentionExceptions (может быть пустой)
  * @returns {Map<string, Map<string, number[]>>} id тайтла → (id поста → таймкоды)
  */
-export function buildMentionIndex({ posts, transcripts, animeList, exceptions = [] }) {
+export function buildMentionIndex({ posts, transcripts, animeList }) {
 	const matcher = buildAnimeMatcher(animeList);
 	const byTranscriptId = new Map(transcripts.map((entry) => [entry.id, entry]));
-	const byExceptionId = new Map(exceptions.map((entry) => [entry.id, entry]));
 	const index = new Map();
 
 	for (const post of posts) {
@@ -51,7 +55,7 @@ export function buildMentionIndex({ posts, transcripts, animeList, exceptions = 
 		// и ссылаться на минуту внутри них не на что.
 		if (!transcript || !hasUsableTimecodes(transcript.data)) continue;
 
-		const filter = makeExceptionFilter(byExceptionId.get(transcriptId)?.data);
+		const filter = makeExceptionFilter(post.data.mentionsHidden);
 		// Подтверждённые исправления названий меняют текст, а значит и то, что
 		// в нём находится. Считать по неисправленному нельзя: тайтл нашёлся бы
 		// на странице выпуска, но не на своей собственной.
