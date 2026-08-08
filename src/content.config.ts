@@ -251,9 +251,38 @@ const transcripts = defineCollection({
 	}),
 });
 
+// Отдельные страницы сайта, которые правятся в админке. Сейчас там одна —
+// «О подкасте». Не пост: у неё нет даты, и в ленту, RSS и поиск она попадать
+// не должна.
+//
+// СХЕМА ЗДЕСЬ НАРОЧНО МАКСИМАЛЬНО СНИСХОДИТЕЛЬНАЯ: обязательных полей нет
+// ни одного, всё переживает пустую строку. Причина в CLAUDE.md — падение
+// схемы роняет сборку ВСЕГО сайта, и однажды обычное сохранение поста
+// из админки так и положило сайт. Ради страницы, которую правят раз в год,
+// такой риск брать незачем: пусть лучше блок не покажется, чем упадёт сборка.
+const pages = defineCollection({
+	loader: glob({ pattern: '*.md', base: './src/content/pages' }),
+	schema: z.object({
+		hosts: z
+			.array(
+				z.object({
+					name: z.string().optional(),
+					role: z.string().optional(),
+					// Путь к загруженной картинке: '/images/uploads/ed.jpg'.
+					// Сжатые копии делает сборка, см. src/lib/imageVariants.mjs.
+					photo: z.preprocess(emptyToUndefined, z.string().optional()),
+					url: z.preprocess(emptyToUndefined, z.string().optional()),
+				}),
+			)
+			.default([]),
+		supportNote: z.string().optional(),
+		contactEmail: z.preprocess(emptyToUndefined, z.string().optional()),
+	}),
+});
+
 // Отдельной полки для исключений упоминаний больше нет: они живут строкой
 // в поле `mentionsHidden` самого поста (тз/05, шаг 6). Причина — поле стоит
 // в редакторе поста, а CMS умеет сохранять только свою же запись. Подробно
 // расписано в src/lib/mentionExceptions.mjs.
 
-export const collections = { posts, anime, transcripts };
+export const collections = { posts, anime, transcripts, pages };

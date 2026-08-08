@@ -1,57 +1,67 @@
 ---
 // Страница «О подкасте» (тз/06, шаг 5).
 //
-// ТЕКСТЫ ЗДЕСЬ — ЗАГЛУШКИ, их пишет заказчик. Всё, что нужно переписать,
-// собрано в одном месте — в объекте ABOUT сразу под импортами, лезть
-// в разметку ниже не надо. Каждая заглушка помечена «⚠️ ЗАГЛУШКА».
+// ТЕКСТЫ ЛЕЖАТ НЕ ЗДЕСЬ, а в src/content/pages/about.md — и правятся
+// в админке, раздел «Страницы» → «О подкасте». В этом файле только вёрстка.
 //
-// Почему обычная страница, а не пост в админке: «О подкасте» это не материал
-// в ленте — у неё нет даты, она не должна попадать в ленту, в RSS и в поиск
-// наравне с выпусками. Понадобится править её из админки — заведём отдельную
-// коллекцию, но это лишняя сложность ради страницы, которую меняют раз в год.
+// Почему не пост: «О подкасте» не материал в ленте — у неё нет даты,
+// и попадать в ленту, RSS и поиск наравне с выпусками она не должна.
+// Поэтому отдельная полка `pages`, а в админке — файловая коллекция
+// (запись одна и заранее известна, создавать и удалять нечего).
+//
+// Ссылки на площадки сюда НЕ переехали: они лежат в src/data/platforms.js
+// и выводятся ещё на главной и в подвале. Через админку правится текст,
+// а не устройство сайта.
+import { getEntry, render } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import JsonLd from '../components/JsonLd.astro';
 import PlatformIcon from '../components/PlatformIcon.astro';
 import { platformsOfKind } from '../data/platforms.js';
 import { getLinkIcon } from '../lib/linkIcon.mjs';
 import { breadcrumbsSchema } from '../lib/schema.mjs';
-import { SITE_NAME } from '../lib/site.mjs';
+import { excerptFromBody } from '../lib/excerpt.mjs';
+import { getImageVariantSrcs, isOptimizableImage } from '../lib/imageVariants.mjs';
+import { SITE_DESCRIPTION } from '../lib/site.mjs';
 
-const ABOUT = {
-	// ⚠️ ЗАГЛУШКА. Абзацы про подкаст: о чём он и для кого. Первый абзац
-	// покажется в поиске и в превью — пишите его как ответ на вопрос
-	// «что это за подкаст», без разгона.
-	intro: [
-		'«Бака!» — подкаст об аниме и о том, что скрывается между кадрами. Мы разбираем ' +
-			'сериалы и фильмы, говорим со студиями и авторами и пытаемся понять, почему ' +
-			'аниме устроено именно так.',
-		'⚠️ ЗАГЛУШКА: второй абзац — как давно выходит подкаст, как часто и чем он ' +
-			'отличается от остальных. Замените этот текст своим.',
-	],
+// Файла может не быть — например, его удалили из админки. Страница тогда
+// остаётся с одними ссылками на площадки, но собирается. Ронять сборку
+// всего сайта из-за одной страницы нельзя (см. CLAUDE.md).
+const page = await getEntry('pages', 'about');
+const { Content } = page ? await render(page) : { Content: null };
 
-	// ⚠️ ЗАГЛУШКА. Ведущие. Добавляйте или убирайте людей — вёрстка подстроится.
-	// `photo` — путь к картинке в public/images/, например '/images/ed.jpg'.
-	// Пока стоит null: показывается кружок с первой буквой имени.
-	hosts: [
-		{ name: 'Эд', role: '⚠️ ЗАГЛУШКА: кто он и что делает в подкасте', photo: null, url: null },
-		{ name: 'Ксюша', role: '⚠️ ЗАГЛУШКА: кто она и что делает в подкасте', photo: null, url: null },
-	],
+// Пустые строки списка выбрасываем. В админке строку ведущего очень легко
+// добавить и не заполнить, а такая строка рисовала кружок с «?» и пустотой
+// рядом — проверка на пустых полях это и поймала.
+const hosts = (page?.data.hosts ?? []).filter(
+	(host) => host.name?.trim() || host.role?.trim() || host.photo,
+);
+const supportNote = page?.data.supportNote?.trim();
+const contactEmail = page?.data.contactEmail?.trim();
 
-	// ⚠️ ЗАГЛУШКА. Подпись под блоком «Поддержать» — за что и что человек получит.
-	supportNote:
-		'⚠️ ЗАГЛУШКА: за что вы просите поддержки и что получают подписчики — ' +
-		'бонусные выпуски, ранний доступ, что-то ещё.',
-
-	// ⚠️ ЗАГЛУШКА. Для связи: письмо, реклама, предложить тему.
-	// Уберите строку целиком, если адрес не нужен.
-	contactEmail: 'hello@bakapodcast.com',
-};
+// `Content` существует всегда, даже когда текста нет вовсе, — иначе на странице
+// оставался бы пустой блок с отступами.
+const hasIntro = Boolean(page?.body?.trim());
 
 const listen = platformsOfKind('listen');
 const social = platformsOfKind('social');
 const support = platformsOfKind('support');
 
-const description = ABOUT.intro[0];
+// Описание для поисковика и превью — из первого абзаца текста, тем же
+// модулем, что у постов. Отдельного поля под него нет специально: ещё одно
+// поле в админке, которое надо не забыть заполнить, — это поле, которое
+// однажды разойдётся с текстом.
+const description = excerptFromBody(page?.body ?? '', SITE_DESCRIPTION);
+
+/**
+ * Фото ведущего. Загруженные через админку картинки сборка сжимает в webp
+ * в двух размерах (src/plugins/optimize-uploads-integration.mjs), поэтому
+ * показываем сжатую копию. Кружок маленький — хватает меньшего размера.
+ * Если формат несжимаемый (например, уже webp), берём файл как есть.
+ */
+function hostPhoto(photo: string | undefined) {
+	if (!photo) return null;
+	return isOptimizableImage(photo) ? getImageVariantSrcs(photo)[0].src : photo;
+}
 ---
 
 <Layout title="О подкасте" description={description}>
@@ -60,42 +70,56 @@ const description = ABOUT.intro[0];
 	<article class="about">
 		<h1>О подкасте</h1>
 
-		<div class="intro">
-			{ABOUT.intro.map((paragraph) => <p>{paragraph}</p>)}
-		</div>
+		{
+			hasIntro && Content && (
+				<div class="intro">
+					<Content />
+				</div>
+			)
+		}
 
-		<section class="block">
-			<h2>Ведущие</h2>
-			<ul class="hosts">
-				{
-					ABOUT.hosts.map((host) => (
-						<li class="host">
-							{/* Фото пока нет — кружок с первой буквой имени. Так блок
-							    не разъезжается и не выглядит недоделанным. */}
-							{host.photo ? (
-								<img class="host-photo" src={host.photo} alt={host.name} width="72" height="72" loading="lazy" />
-							) : (
-								<span class="host-photo host-letter" aria-hidden="true">
-									{host.name.slice(0, 1)}
-								</span>
-							)}
-							<div>
-								<p class="host-name">
-									{host.url ? (
-										<a href={host.url} target="_blank" rel="noopener noreferrer">
-											{host.name}
-										</a>
+		{
+			hosts.length > 0 && (
+				<section class="block">
+					<h2>Ведущие</h2>
+					<ul class="hosts">
+						{hosts.map((host) => {
+							const photo = hostPhoto(host.photo);
+							// Имени может не быть: в админке строку списка легко добавить
+							// и не заполнить. Пустая строка не должна ломать вёрстку.
+							const name = host.name?.trim();
+							return (
+								<li class="host">
+									{/* Фото нет — кружок с первой буквой имени. Так блок
+									    не разъезжается и не выглядит недоделанным. */}
+									{photo ? (
+										<img class="host-photo" src={photo} alt={name ?? ''} width="72" height="72" loading="lazy" />
 									) : (
-										host.name
+										<span class="host-photo host-letter" aria-hidden="true">
+											{name?.slice(0, 1) ?? '?'}
+										</span>
 									)}
-								</p>
-								<p class="host-role">{host.role}</p>
-							</div>
-						</li>
-					))
-				}
-			</ul>
-		</section>
+									<div>
+										{name && (
+											<p class="host-name">
+												{host.url ? (
+													<a href={host.url} target="_blank" rel="noopener noreferrer">
+														{name}
+													</a>
+												) : (
+													name
+												)}
+											</p>
+										)}
+										{host.role && <p class="host-role">{host.role}</p>}
+									</div>
+								</li>
+							);
+						})}
+					</ul>
+				</section>
+			)
+		}
 
 		<section class="block">
 			<h2>Где слушать</h2>
@@ -132,7 +156,7 @@ const description = ABOUT.intro[0];
 
 		<section class="block">
 			<h2>Поддержать</h2>
-			<p class="note">{ABOUT.supportNote}</p>
+			{supportNote && <p class="note">{supportNote}</p>}
 			<div class="links">
 				{
 					support.map((platform) => (
@@ -146,12 +170,12 @@ const description = ABOUT.intro[0];
 		</section>
 
 		{
-			ABOUT.contactEmail && (
+			contactEmail && (
 				<section class="block">
 					<h2>Написать нам</h2>
 					<p class="note">
-						<a href={`mailto:${ABOUT.contactEmail}`}>{ABOUT.contactEmail}</a> — предложить тему, позвать в гости или
-						договориться о рекламе.
+						<a href={`mailto:${contactEmail}`}>{contactEmail}</a> — предложить тему, позвать в гости или договориться
+						о рекламе.
 					</p>
 				</section>
 			)
@@ -166,10 +190,18 @@ const description = ABOUT.intro[0];
 		padding: var(--space-4) var(--space-3);
 	}
 
-	.intro p {
+	/* :global — текст приезжает из markdown-файла через <Content />, а до такой
+	   разметки обычные стили компонента не достают. */
+	.intro :global(p) {
 		font-size: var(--font-size-lg);
 		color: var(--color-text);
 		margin: 0 0 var(--space-2);
+	}
+
+	.intro :global(ul),
+	.intro :global(ol) {
+		margin: 0 0 var(--space-2);
+		padding-left: 1.25rem;
 	}
 
 	.block {
