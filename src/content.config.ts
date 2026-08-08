@@ -38,6 +38,11 @@ const posts = defineCollection({
 			// audioGuid нет вовсе: видеоэссе живут на YouTube, в RSS их нет,
 			// а расшифровка у них по тз/05 (шаг 2) будет.
 			transcript: z.string().optional(),
+			// Имена голосов, вписанные руками в админке, одной строкой:
+			// 'speaker_0=Эд; speaker_1=Ксюша'. Побеждают автоматические имена
+			// из файла расшифровки. Почему строкой и почему в посте —
+			// см. src/lib/speakerNames.mjs.
+			speakers: z.string().optional(),
 			script: z.string().optional(),
 			draft: z.boolean().default(false),
 			// Когда пост должен появиться на сайте — независимая ось от `date`

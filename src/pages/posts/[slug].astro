@@ -11,6 +11,7 @@ import AnimeBadge from '../../components/AnimeBadge.astro';
 import EpisodePlayer from '../../components/EpisodePlayer.astro';
 import Transcript from '../../components/Transcript.astro';
 import { hasUsableTimecodes } from '../../lib/transcript.mjs';
+import { applySpeakerNames } from '../../lib/speakerNames.mjs';
 import { buildAnimeMatcher } from '../../lib/animeMentions.mjs';
 import { makeExceptionFilter } from '../../lib/mentionExceptions.mjs';
 import { animeMentionedIn } from '../../lib/animeMentionIndex.mjs';
@@ -47,6 +48,11 @@ const { title, date, category, cover, youtube, video, buttons, anime } = post.da
 const transcriptId = post.data.transcript ?? post.data.audioGuid;
 const transcript = transcriptId ? await getEntry('transcripts', transcriptId) : undefined;
 const showTranscript = transcript && hasUsableTimecodes(transcript.data);
+
+// Имена голосов, вписанные руками в админке, побеждают автоматические
+// (тз/05, шаг 6). Сам файл расшифровки при этом не трогается — см.
+// src/lib/speakerNames.mjs, там же почему имена живут в поле поста.
+const transcriptData = showTranscript ? applySpeakerNames(transcript.data, post.data.speakers) : null;
 
 // Обложка выпуска для плеера. Хостинг подкаста отдаёт квадрат 2000×2000
 // весом около 1 МБ на картинку 72×72 — берём сжатую копию из public/episodes/
@@ -147,7 +153,7 @@ const animeEntries = (await Promise.all(animeIds.map((id) => getEntry('anime', i
 			<Content />
 		</div>
 
-		{showTranscript && <Transcript transcript={transcript.data} transcriptId={transcript.id} />}
+		{showTranscript && <Transcript transcript={transcriptData} transcriptId={transcript.id} />}
 
 		{
 			animeEntries.length > 0 && (

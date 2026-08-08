@@ -644,6 +644,148 @@
 
 			CMS.registerFieldType('anime-picker', AnimePickerControl, AnimePickerPreview);
 
+			// Поле «Имена спикеров» (тз/05, шаг 6). Имена голосов вписываются
+			// руками и побеждают автоматические. Это же закрывает и перепутанные
+			// местами голоса, и гостей — отдельной кнопки «поменять местами»
+			// поэтому не нужно.
+			//
+			// Хранится одной строкой 'speaker_0=Эд; speaker_1=Ксюша': для CMS это
+			// обычное текстовое поле, терять в нём нечего. Разбор и сборка строки —
+			// точная копия src/lib/speakerNames.mjs (админка отдельная статическая
+			// страница и импортировать из src не может). Меняете тут — поправьте
+			// и там, иначе сайт и админка перестанут понимать друг друга.
+			function parseSpeakerNames(value) {
+				const names = {};
+
+				for (const chunk of String(value ?? '').split(';')) {
+					const at = chunk.indexOf('=');
+					if (at === -1) continue;
+
+					const id = chunk.slice(0, at).trim();
+					const name = chunk.slice(at + 1).trim();
+					if (id && name) names[id] = name;
+				}
+
+				return names;
+			}
+
+			function serializeSpeakerNames(names) {
+				return Object.entries(names ?? {})
+					.filter(([id, name]) => id && String(name ?? '').trim())
+					.map(([id, name]) => `${id}=${String(name).trim()}`)
+					.join('; ');
+			}
+
+			// Данные выпуска для админки: список голосов и подсказки к ним. Готовит
+			// сайт при сборке — src/pages/admin-data/[guid].json.ts.
+			function getEpisodeAdminData(guid) {
+				window.__episodeAdminData = window.__episodeAdminData || {};
+				if (!window.__episodeAdminData[guid]) {
+					window.__episodeAdminData[guid] = fetch(`/admin-data/${encodeURIComponent(guid)}.json`)
+						.then((res) => (res.ok ? res.json() : null))
+						.catch(() => null);
+				}
+				return window.__episodeAdminData[guid];
+			}
+
+			// Как расшифровку находит сама страница выпуска: сначала поле
+			// «Расшифровка», если заполнено, иначе guid выпуска из RSS.
+			function transcriptIdOf(entry) {
+				const data = entry?.get('data');
+				return String(data?.get('transcript') || data?.get('audioGuid') || '').trim();
+			}
+
+			// Подсказка к голосу: чем человеку отличить один от другого, не слушая
+			// выпуск. Роль и высота голоса — то, по чему решала автоматика,
+			// а сколько говорил — самый понятный признак «ведущий или гость».
+			function describeVoice(speaker, position) {
+				const parts = [`Голос ${position}`];
+
+				if (speaker.uncertain) parts.push('автоматика сомневалась');
+				else if (speaker.name) parts.push(`сейчас «${speaker.name}»`);
+
+				if (speaker.role === 'host') parts.push('ведущий');
+				if (speaker.role === 'guest') parts.push('гость');
+				if (speaker.pitchHz) parts.push(`${Math.round(speaker.pitchHz)} Гц`);
+				if (speaker.speechSeconds) parts.push(`говорил ${Math.round(speaker.speechSeconds / 60)} мин`);
+
+				return parts.join(' · ');
+			}
+
+			const hintStyle = { fontSize: '13px', opacity: 0.7, padding: '4px 0' };
+
+			const SpeakerNamesControl = createClass({
+				getInitialState() {
+					return { data: null, status: 'loading' };
+				},
+				componentDidMount() {
+					const guid = transcriptIdOf(this.props.entry);
+					if (!guid) {
+						this.setState({ status: 'no-episode' });
+						return;
+					}
+					getEpisodeAdminData(guid).then((data) =>
+						this.setState(data && data.speakers ? { data, status: 'ready' } : { status: 'no-transcript' }),
+					);
+				},
+				handleChange(id, raw) {
+					// Точка с запятой и знак равенства разделяют пары в строке —
+					// в самом имени их быть не может, поэтому вырезаем при вводе.
+					const name = String(raw).replace(/[;=]/g, ' ').replace(/\s+/g, ' ').trimStart();
+					this.props.onChange(serializeSpeakerNames({ ...parseSpeakerNames(this.props.value), [id]: name }));
+				},
+				render() {
+					const { data, status } = this.state;
+
+					if (status === 'loading') return h('div', { style: hintStyle }, 'Загружаю голоса выпуска…');
+					if (status === 'no-episode') return h('div', { style: hintStyle }, 'Только для выпусков подкаста — у этого поста нет привязки к выпуску.');
+					if (status === 'no-transcript')
+						return h(
+							'div',
+							{ style: hintStyle },
+							'Расшифровки у этого выпуска пока нет (либо она добавлена только что — тогда появится после ближайшей сборки сайта).',
+						);
+
+					const manual = parseSpeakerNames(this.props.value);
+
+					return h(
+						'div',
+						{ id: this.props.forID },
+						data.speakers.map((speaker, i) =>
+							h(
+								'div',
+								{ key: speaker.id, style: { marginBottom: '10px' } },
+								h(
+									'label',
+									{
+										htmlFor: `${this.props.forID}-${speaker.id}`,
+										style: { display: 'block', fontSize: '13px', opacity: speaker.uncertain ? 1 : 0.7, marginBottom: '2px' },
+									},
+									`${speaker.uncertain ? '⚠ ' : ''}${describeVoice(speaker, i + 1)}`,
+								),
+								h('input', {
+									id: `${this.props.forID}-${speaker.id}`,
+									type: 'text',
+									value: manual[speaker.id] ?? '',
+									placeholder: speaker.uncertain ? 'Впишите имя' : speaker.name,
+									onChange: (e) => this.handleChange(speaker.id, e.target.value),
+									style: { width: '100%', boxSizing: 'border-box' },
+								}),
+							),
+						),
+					);
+				},
+			});
+
+			const SpeakerNamesPreview = createClass({
+				render() {
+					const names = Object.values(parseSpeakerNames(this.props.value));
+					return h('span', {}, names.length > 0 ? names.join(', ') : '');
+				},
+			});
+
+			CMS.registerFieldType('speaker-names', SpeakerNamesControl, SpeakerNamesPreview);
+
 			function extractAnimeIdsFromBody(body) {
 				const ids = [];
 				const re = /:anime\[[^\]]*\]\{id="([^"]+)"/g;
