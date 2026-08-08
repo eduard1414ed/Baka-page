@@ -3,6 +3,7 @@ title: 'Знакомьтесь: Ёдзи Такэсигэ'
 date: 2026-08-05
 category: note
 cover: /images/uploads/1.jpeg
+noCover: true
 draft: false
 buttons: []
 anime:
