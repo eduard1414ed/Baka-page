@@ -12,6 +12,23 @@ export const categories = [
 
 const categoryIds = categories.map((c) => c.id) as [string, ...string[]];
 
+// Необязательная дата, которая переживает пустое поле из админки.
+//
+// CMS, сохраняя запись, пишет в незаполненное поле даты ПУСТУЮ СТРОКУ, а не
+// пропускает его. Без этой поправки `z.coerce.date()` превращал её в Invalid
+// Date, схема падала — и вместе с ней СБОРКА ВСЕГО САЙТА. То есть обычным
+// сохранением поста из админки можно было положить сайт целиком; так и вышло
+// с ep-134 8 августа, причём заметно это стало только по тому, что правки
+// перестали появляться на страницах.
+//
+// Правило на будущее: со стороны CMS в схему может прийти пустая строка
+// в любом необязательном поле, и схема обязана это пережить.
+const emptyToUndefined = (value: unknown) => (value === '' || value === null ? undefined : value);
+
+const optionalDate = z.preprocess(emptyToUndefined, z.coerce.date().optional());
+const optionalNumber = z.preprocess(emptyToUndefined, z.number().optional());
+const optionalUrl = z.preprocess(emptyToUndefined, z.string().url().optional());
+
 const posts = defineCollection({
 	loader: glob({ pattern: '**/*.md', base: './src/content/posts' }),
 	schema: ({ image }) =>
@@ -20,7 +37,7 @@ const posts = defineCollection({
 			date: z.coerce.date(),
 			category: z.enum(categoryIds),
 			cover: image().optional(),
-			youtube: z.string().url().optional(),
+			youtube: optionalUrl,
 			video: z.string().optional(),
 			audioGuid: z.string().optional(),
 			buttons: z
@@ -60,7 +77,7 @@ const posts = defineCollection({
 			// робот на Cloudflare Cron Trigger сам снимает «Черновик», когда время
 			// наступает. Проверка тут — на случай, если галочку сняли вручную раньше
 			// срока: сборка всё равно не покажет пост, пока publishAt в будущем.
-			publishAt: z.coerce.date().optional(),
+			publishAt: optionalDate,
 			// Пока проставляется вручную в файле поста. Автозаполнение из разметки
 			// названий в тексте — следующий шаг (см. тз/03-тайтлы.md).
 			anime: z.array(reference('anime')).optional(),
@@ -81,12 +98,12 @@ const anime = defineCollection({
 		// на страницах тайтла это явно помечено, вписывается вручную.
 		titleRu: z.string().optional(),
 		titleOriginal: z.string(),
-		year: z.number().optional(),
+		year: optionalNumber,
 		studio: z.string().optional(),
 		// Путь к обложке в public/anime/ — см. src/lib/animePoster.mjs.
 		poster: z.string().optional(),
 		synopsis: z.string().optional(),
-		url: z.string().url().optional(),
+		url: optionalUrl,
 		// Варианты написания, по которым упоминания ищутся наравне с titleRu
 		// и titleOriginal: падежи («Ходячего замка»), как говорят вслух («K-On!»
 		// вместо «Кэйон!»), как искажает распознавание («Фринен»). Правятся

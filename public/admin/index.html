@@ -1509,6 +1509,13 @@
 
 					let newData = data.set('anime', merged);
 					if (pending.length > 0) newData = newData.set('body', body);
+
+					// Незаполненное поле даты CMS записывает пустой строкой, а не
+					// пропускает. В файле поста это мусор, а для сборки сайта было
+					// прямой поломкой — см. optionalDate в src/content.config.ts.
+					// Схема теперь такое переживает, но и писать это незачем.
+					if (newData.get('publishAt') === '') newData = newData.delete('publishAt');
+
 					return newData;
 				},
 			});
