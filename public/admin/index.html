@@ -688,11 +688,56 @@
 				return window.__episodeAdminData[guid];
 			}
 
-			// Как расшифровку находит сама страница выпуска: сначала поле
-			// «Расшифровка», если заполнено, иначе guid выпуска из RSS.
-			function transcriptIdOf(entry) {
-				const data = entry?.get('data');
-				return String(data?.get('transcript') || data?.get('audioGuid') || '').trim();
+			// Какая запись сейчас открыта — из адреса страницы админки:
+			// #/collections/posts/entries/ep-134 → «ep-134».
+			//
+			// ВАЖНО, ПОЧЕМУ ТАК, А НЕ ИЗ САМОЙ ЗАПИСИ. Sveltia CMS не передаёт
+			// запись в своё поле: приходит ровно { value, field, forID,
+			// classNameWrapper, onChange, ref } — проверено по коду CMS.
+			// В Decap, по документации которого эти виджеты писались, запись
+			// передаётся (props.entry), из-за чего поля сначала были глухими.
+			// Прочитать audioGuid из формы тоже нельзя — такого поля на экране
+			// нет вовсе, оно не заведено в config.yml.
+			//
+			// У новой, ещё не сохранённой записи в адресе стоит /new — имени нет,
+			// и это правильно: связи с выпуском у неё пока и не может быть.
+			function currentEntrySlug() {
+				const match = /#\/collections\/[^/]+\/entries\/([^/?#]+)/.exec(window.location.hash);
+				return match ? decodeURIComponent(match[1]) : '';
+			}
+
+			// Связь «пост → расшифровка», её готовит сайт при сборке
+			// (src/pages/admin-posts.json.ts).
+			function getPostTranscriptMap() {
+				if (!window.__postTranscriptMap) {
+					window.__postTranscriptMap = fetch('/admin-posts.json')
+						.then((res) => (res.ok ? res.json() : {}))
+						.catch(() => ({}));
+				}
+				return window.__postTranscriptMap;
+			}
+
+			// Расшифровка открытого поста, или пустая строка, если её нет.
+			async function currentTranscriptId() {
+				const slug = currentEntrySlug();
+				if (!slug) return '';
+
+				const map = await getPostTranscriptMap();
+				return map[slug] ?? '';
+			}
+
+			// Общее для трёх полей: дождаться данных выпуска и разложить их
+			// по состояниям. Одинаково у всех, чтобы сообщения не разъезжались.
+			function loadEpisodeInto(component, hasSection) {
+				currentTranscriptId().then((guid) => {
+					if (!guid) {
+						component.setState({ status: 'no-episode' });
+						return;
+					}
+					getEpisodeAdminData(guid).then((data) =>
+						component.setState(data && hasSection(data) ? { data, status: 'ready' } : { status: 'no-transcript' }),
+					);
+				});
 			}
 
 			// Подсказка к голосу: чем человеку отличить один от другого, не слушая
@@ -719,14 +764,7 @@
 					return { data: null, status: 'loading' };
 				},
 				componentDidMount() {
-					const guid = transcriptIdOf(this.props.entry);
-					if (!guid) {
-						this.setState({ status: 'no-episode' });
-						return;
-					}
-					getEpisodeAdminData(guid).then((data) =>
-						this.setState(data && data.speakers ? { data, status: 'ready' } : { status: 'no-transcript' }),
-					);
+					loadEpisodeInto(this, (data) => data.speakers);
 				},
 				handleChange(id, raw) {
 					// Точка с запятой и знак равенства разделяют пары в строке —
@@ -738,7 +776,7 @@
 					const { data, status } = this.state;
 
 					if (status === 'loading') return h('div', { style: hintStyle }, 'Загружаю голоса выпуска…');
-					if (status === 'no-episode') return h('div', { style: hintStyle }, 'Только для выпусков подкаста — у этого поста нет привязки к выпуску.');
+					if (status === 'no-episode') return h('div', { style: hintStyle }, 'У этого поста нет выпуска с расшифровкой. Если пост создан или привязан к выпуску только что — поле заработает после ближайшей сборки сайта.');
 					if (status === 'no-transcript')
 						return h(
 							'div',
@@ -823,14 +861,7 @@
 					return { data: null, status: 'loading' };
 				},
 				componentDidMount() {
-					const guid = transcriptIdOf(this.props.entry);
-					if (!guid) {
-						this.setState({ status: 'no-episode' });
-						return;
-					}
-					getEpisodeAdminData(guid).then((data) =>
-						this.setState(data && data.corrections ? { data, status: 'ready' } : { status: 'no-transcript' }),
-					);
+					loadEpisodeInto(this, (data) => data.corrections);
 				},
 				applied() {
 					return new Set(parseNameCorrections(this.props.value).map(correctionKey));
@@ -849,7 +880,7 @@
 					const { data, status } = this.state;
 
 					if (status === 'loading') return h('div', { style: hintStyle }, 'Смотрю, есть ли предложения…');
-					if (status === 'no-episode') return h('div', { style: hintStyle }, 'Только для выпусков с расшифровкой.');
+					if (status === 'no-episode') return h('div', { style: hintStyle }, 'У этого поста нет выпуска с расшифровкой. Если пост создан или привязан к выпуску только что — поле заработает после ближайшей сборки сайта.');
 					if (status === 'no-transcript') return h('div', { style: hintStyle }, 'Расшифровки у этого выпуска пока нет.');
 					if (data.corrections.length === 0)
 						return h('div', { style: hintStyle }, 'Распознавание не нашло похожих на названия мест — исправлять нечего.');
@@ -995,14 +1026,7 @@
 					return { data: null, status: 'loading', open: {} };
 				},
 				componentDidMount() {
-					const guid = transcriptIdOf(this.props.entry);
-					if (!guid) {
-						this.setState({ status: 'no-episode' });
-						return;
-					}
-					getEpisodeAdminData(guid).then((data) =>
-						this.setState(data && data.anime ? { data, status: 'ready' } : { status: 'no-transcript' }),
-					);
+					loadEpisodeInto(this, (data) => data.anime);
 				},
 				commit(next) {
 					this.props.onChange(serializeMentionExceptions(next));
@@ -1074,7 +1098,7 @@
 					const { data, status, open } = this.state;
 
 					if (status === 'loading') return h('div', { style: hintStyle }, 'Считаю упоминания…');
-					if (status === 'no-episode') return h('div', { style: hintStyle }, 'Только для выпусков с расшифровкой.');
+					if (status === 'no-episode') return h('div', { style: hintStyle }, 'У этого поста нет выпуска с расшифровкой. Если пост создан или привязан к выпуску только что — поле заработает после ближайшей сборки сайта.');
 					if (status === 'no-transcript') return h('div', { style: hintStyle }, 'Расшифровки у этого выпуска пока нет.');
 					if (data.anime.length === 0)
 						return h('div', { style: hintStyle }, 'В расшифровке не прозвучало ни одного тайтла из справочника.');
@@ -1219,7 +1243,9 @@
 					return { hints: null, draft: '' };
 				},
 				componentDidMount() {
-					const id = String(this.props.entry?.get('data')?.get('id') ?? '');
+					// Имя файла тайтла = его id в справочнике, и оно же стоит
+					// в адресе: #/collections/anime/entries/k-on.
+					const id = currentEntrySlug();
 					getAliasHints().then((all) => this.setState({ hints: all[id] ?? { archive: [], source: [] } }));
 				},
 				items() {
