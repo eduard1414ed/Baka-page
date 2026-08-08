@@ -58,9 +58,18 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<title>{documentTitle}</title>
 		<meta name="description" content={description} />
+
+		{/* Иконки и манифест — полный набор из раздела 8.1 подготовки к реализации.
+		    Буква «Б» чернилами на бумаге: иероглифы из логотипа в размере 32 px
+		    превращаются в кашу, а прозрачный фон сделал бы букву невидимой
+		    в тёмной теме браузера. */}
+		<link rel="icon" href="/favicon.ico" sizes="any" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+		<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+		<link rel="manifest" href="/site.webmanifest" />
+
 		<link rel="canonical" href={canonical} />
 		{noindex && <meta name="robots" content="noindex, follow" />}
 		<meta name="generator" content={Astro.generator} />
@@ -70,9 +79,14 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 		<meta property="og:site_name" content={SITE_NAME} />
 		<meta property="og:locale" content={SITE_LOCALE} />
 		<meta property="og:url" content={canonical} />
-		<meta property="og:title" content={title ?? documentTitle} />
+		<meta property="og:title" content={documentTitle} />
 		<meta property="og:description" content={description} />
 		<meta property="og:image" content={ogImage} />
+		{/* og:image:width и og:image:height здесь НЕ стоят намеренно. По разделу 8.1
+		    там должно быть 1200×630, но своих картинок такого размера у нас пока нет:
+		    в превью уходят обложки как есть, у выпуска это квадрат 1200×1200.
+		    Написать «630» под квадратной картинкой — соврать разворачивателю ссылок.
+		    Оба тега появятся вместе с генерацией /og/{slug}.jpg. */}
 		{imageAlt && <meta property="og:image:alt" content={imageAlt} />}
 
 		{/* ВСЕГДА `summary_large_image`, в том числе у квадратных обложек выпусков.
@@ -93,8 +107,13 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 		<ClientRouter />
 	</head>
 	<body>
+		{/* Первый фокусируемый элемент страницы. Без него человек на клавиатуре
+		    каждый раз проходит логотип, четыре пункта меню и поиск, прежде чем
+		    добраться до текста, — и так на каждой странице. Видна только в фокусе,
+		    проверяется одним нажатием Tab. */}
+		<a class="skip-link" href="#main">Перейти к содержимому</a>
 		<Header />
-		<main>
+		<main id="main">
 			<slot />
 		</main>
 		<Footer />

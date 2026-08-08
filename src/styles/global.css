@@ -1,4 +1,17 @@
+/*
+  База: сброс, типографика элементов, фокус и утилиты, которыми пользуются
+  все страницы. Порядок каскада из §2 дизайн-системы: токены → база →
+  общие компоненты → композиция страницы.
+
+  Пометок принудительного приоритета в CSS в проекте нет нигде — их запрещает
+  §2 системы, и это проверяется автоматически. Если правило не срабатывает,
+  чинится разделением ответственности, а не наращиванием веса (§2.1).
+*/
+
+@import './fonts.css';
 @import './tokens.css';
+
+/* ---------- Сброс ---------- */
 
 *,
 *::before,
@@ -10,24 +23,88 @@ html,
 body {
 	margin: 0;
 	padding: 0;
-	overflow-x: hidden;
 }
 
 html {
-	color-scheme: dark;
+	/* Светлая тема единственная. `prefers-color-scheme` не поддерживаем:
+	   вторая палитра означала бы заново проверенный контраст у трёх десятков
+	   сочетаний. */
+	color-scheme: light;
+	scroll-behavior: smooth;
 }
+
+/* `overflow-x: hidden` здесь стоял и убран намеренно (§4.2). Он не чинит
+   горизонтальный скролл, а прячет его — и заодно срезает фокусную рамку
+   у всего, что близко к краю. Страница должна помещаться по-настоящему;
+   если где-то поедет вбок, это дефект вёрстки, и его надо видеть. */
 
 body {
-	background: var(--color-bg);
-	color: var(--color-text);
+	background: var(--paper);
+	color: var(--text);
 	font-family: var(--font-body);
-	font-size: var(--font-size-base);
+	font-size: var(--body-md);
 	line-height: 1.6;
+	-webkit-font-smoothing: antialiased;
+	font-optical-sizing: auto;
 }
 
+img,
+picture,
+video {
+	max-width: 100%;
+	height: auto;
+}
+
+img {
+	display: block;
+}
+
+button,
+input,
+select {
+	font: inherit;
+	color: inherit;
+}
+
+button {
+	cursor: pointer;
+}
+
+/* ---------- Типографика элементов ---------- */
+
+h1,
+h2,
+h3 {
+	font-family: var(--font-display);
+	font-weight: 400;
+	margin: 0 0 var(--space-2);
+}
+
+h1 {
+	font-size: var(--h1);
+	line-height: var(--h1-lh);
+	letter-spacing: var(--h1-ls);
+}
+
+h2 {
+	font-size: var(--h2);
+	line-height: var(--h2-lh);
+	letter-spacing: -0.015em;
+}
+
+h3 {
+	font-size: var(--h3);
+	line-height: 1.12;
+}
+
+/* Ссылки пока красятся глобально: карточки и ленты ещё не переверстаны,
+   и без цвета ссылка в них стала бы неотличима от текста. В части 3,
+   когда компоненты научатся красить свои ссылки сами, здесь останется
+   `color: inherit`, как в дизайн-системе. */
 a {
 	color: var(--color-accent);
 	text-decoration: none;
+	overflow-wrap: anywhere;
 	transition: color var(--transition-fast);
 }
 
@@ -36,15 +113,111 @@ a:focus-visible {
 	color: var(--color-accent-hover);
 }
 
-h1,
-h2,
-h3 {
-	font-family: var(--font-heading);
-	line-height: 1.2;
-	margin: 0 0 var(--space-2);
+/* Длинные слова, адреса и оригинальные названия не должны распирать колонку. */
+.long-text {
+	overflow-wrap: anywhere;
 }
 
-img {
-	max-width: 100%;
-	display: block;
+/* Дети сеток, содержащие текст, обязаны уметь сжиматься: без этого
+   `minmax(auto, …)` держит колонку по самому длинному слову (§4.2). */
+.grid > *,
+.flex > * {
+	min-width: 0;
+}
+
+/* ---------- Фокус ---------- */
+
+/* Одна обводка на весь сайт. Убирать фокус без равноценной замены нельзя:
+   раньше его показывала рамка карточки, а рамки в новой системе нет. */
+:focus-visible {
+	outline: 2px solid var(--accent-text);
+	outline-offset: 2px;
+}
+
+/* ---------- Движение ---------- */
+
+/* Человек попросил систему не анимировать — уважаем. Обнуляем не каждое
+   правило по отдельности (это потребовало бы пометки принудительного
+   приоритета, а она запрещена), а сам токен длительности: компоненты
+   берут её только отсюда. */
+@media (prefers-reduced-motion: reduce) {
+	:root {
+		--transition-fast: 0s;
+	}
+
+	html {
+		scroll-behavior: auto;
+	}
+
+	*,
+	*::before,
+	*::after {
+		animation: none;
+	}
+}
+
+/* ---------- Утилиты ---------- */
+
+/* Ссылка «Перейти к содержимому». Первый фокусируемый элемент страницы:
+   человек на клавиатуре не должен каждый раз проходить логотип, меню
+   и поиск, чтобы добраться до текста. Видна только в фокусе. */
+.skip-link {
+	position: absolute;
+	z-index: 100;
+	top: 0;
+	left: 0;
+	transform: translateY(-120%);
+	padding: 12px 16px;
+	background: var(--ink);
+	color: var(--paper);
+	font-size: var(--caption);
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	text-decoration: none;
+}
+
+.skip-link:focus-visible {
+	transform: translateY(0);
+	outline-offset: -4px;
+	color: var(--paper);
+}
+
+/* Спрятать глазами, оставить экранному диктору. */
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
+/* Технический слой: типы материалов, номера, даты, таймкоды, счётчики.
+   Ровно 11 px, ниже не опускается никогда — он и так отличается
+   моноширинным начертанием, капслоком и трекингом. */
+.tech {
+	font-family: var(--font-tech);
+	font-size: var(--technical);
+	line-height: 1.35;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+/* Оболочка страницы: максимальная ширина плюс поля по краям.
+   Пока ею обёрнуты только шапка и подвал — страницы держат свою ширину
+   сами и переедут сюда по мере переверстки (части 3 и дальше). */
+.site {
+	width: 100%;
+	max-width: var(--site);
+	margin-inline: auto;
+	padding-inline: var(--gutter);
+}
+
+@media (min-width: 1101px) {
+	.site {
+		width: min(var(--site), calc(100% - 64px));
+		padding-inline: 0;
+	}
 }

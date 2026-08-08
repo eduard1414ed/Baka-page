@@ -1,65 +1,369 @@
 ---
+// Шапка. Один компонент на все страницы, локальных копий стилей нет (§6).
+//
+// Два состояния вместо прежних четырёх:
+//   до 821 px — логотип, поиск и кнопка меню, разделы в выпадающем списке;
+//   от 821 px — привычная раскладка с тэглайном.
+//
+// ПОИСК ОСТАЁТСЯ СНАРУЖИ МЕНЮ НА ВСЕХ РАЗМЕРАХ. Это главная функция сайта,
+// прятать её на два касания нельзя.
+
 import { Image } from 'astro:assets';
-import logo from '../assets/images/logo.png';
+import logo from '../assets/images/logo-ink.png';
+import { SITE_DESCRIPTION } from '../lib/site.mjs';
+
+// Логотип чернильный, а не белый. Белый (assets/images/logo.png) рисовался
+// под тёмную тему и на бумажном фоне не виден вовсе.
+const LOGO_WIDTH = 300; // максимум по §6, на узких экранах ужимается стилями
+
+// Со слэшем на конце: без него Astro отдаёт переадресацию, то есть каждый
+// переход стоил бы лишнего похода в сеть.
+const links = [
+	{ href: '/', label: 'Главная' },
+	{ href: '/anime/', label: 'Каталог аниме' },
+	{ href: '/about/', label: 'О подкасте' },
+	// Страницы «Поддержать» пока не существует — она в части 10 ТЗ.
+	// Пункт стоит по решению заказчика, до части 10 ведёт на 404.
+	{ href: '/support/', label: 'Поддержать' },
+];
+
+const path = Astro.url.pathname;
+const isActive = (href) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
 
-<header class="header">
-	<a href="/" class="logo-link" aria-label="Бака! — на главную">
-		<Image
-			src={logo}
-			alt="Бака! Подкаст об аниме"
-			widths={[220, 440]}
-			sizes="220px"
-			width={220}
-			height={Math.round(220 * (logo.height / logo.width))}
-		/>
-	</a>
+<div class="site">
+	<header class="header">
+		<a class="brand" href="/" aria-label="Бака! — на главную">
+			<Image
+				class="brand-logo"
+				src={logo}
+				alt="Бака!"
+				widths={[LOGO_WIDTH, LOGO_WIDTH * 2]}
+				sizes="(min-width: 1101px) 300px, (min-width: 821px) 270px, 190px"
+				width={LOGO_WIDTH}
+				height={Math.round(LOGO_WIDTH * (logo.height / logo.width))}
+				loading="eager"
+			/>
+			<span class="brand-rule"></span>
+			<span class="tagline">{SITE_DESCRIPTION}</span>
+		</a>
 
-	{/* Отделка шапки — этап 8, здесь только двери к страницам, на которые иначе
-	    можно было бы попасть лишь по прямому адресу. */}
-	{/* Со слэшем на конце: без него Astro отдаёт переадресацию на «/search/»,
-	    то есть каждый заход в поиск стоил бы лишнего похода в сеть. Так же
-	    записаны ссылки на «/anime/» и «/category/…/» в остальном коде. */}
-	<nav class="nav" aria-label="Разделы сайта">
-		<a href="/about/" class="nav-link">О подкасте</a>
-		<a href="/search/" class="nav-link">Поиск</a>
-	</nav>
-</header>
+		<nav class="main-nav" id="main-nav" aria-label="Разделы сайта">
+			{
+				links.map((link) => (
+					<a
+						href={link.href}
+						class={isActive(link.href) ? 'active' : undefined}
+						aria-current={isActive(link.href) ? 'page' : undefined}
+					>
+						{link.label}
+					</a>
+				))
+			}
+		</nav>
+
+		<a class="search" href="/search/" aria-label="Поиск">
+			<svg viewBox="0 0 24 24" aria-hidden="true">
+				<circle cx="10.5" cy="10.5" r="6.5"></circle>
+				<path d="M15.5 15.5L21 21"></path>
+			</svg>
+		</a>
+
+		<button class="nav-toggle" type="button" aria-controls="main-nav" aria-expanded="false" aria-label="Меню">
+			<svg class="icon-open" viewBox="0 0 24 24" aria-hidden="true">
+				<path d="M3 7h18M3 12h18M3 17h18"></path>
+			</svg>
+			<svg class="icon-close" viewBox="0 0 24 24" aria-hidden="true">
+				<path d="M5 5l14 14M19 5L5 19"></path>
+			</svg>
+		</button>
+	</header>
+</div>
+
+<script>
+	// Раскрытие меню, а не модальное окно: фокус не запирается, страница
+	// под меню остаётся доступной.
+	//
+	// Слушатели висят на document и ищут элементы в момент события. Так надо,
+	// потому что переходы между страницами идут без перезагрузки (ClientRouter
+	// в Layout.astro): сама шапка при переходе заменяется новой, а этот модуль
+	// выполняется один раз за сеанс. Привяжись мы к конкретной кнопке — после
+	// первого же перехода меню перестало бы открываться.
+	const toggleEl = () => document.querySelector('.nav-toggle');
+	const navEl = () => document.getElementById('main-nav');
+	const isOpen = () => toggleEl()?.getAttribute('aria-expanded') === 'true';
+
+	function setOpen(open) {
+		const toggle = toggleEl();
+		const nav = navEl();
+		if (!toggle || !nav) return;
+		toggle.setAttribute('aria-expanded', String(open));
+		nav.dataset.open = String(open);
+	}
+
+	document.addEventListener('click', (event) => {
+		const target = event.target instanceof Element ? event.target : null;
+		if (!target || !toggleEl()) return;
+
+		if (target.closest('.nav-toggle')) {
+			setOpen(!isOpen());
+			return;
+		}
+		// Клик мимо закрывает. Клик внутри шапки — нет: там сами пункты меню,
+		// и закрывать список под пальцем на полпути к ссылке нельзя.
+		if (isOpen() && !target.closest('.header')) setOpen(false);
+	});
+
+	document.addEventListener('keydown', (event) => {
+		if (event.key !== 'Escape' || !isOpen()) return;
+		setOpen(false);
+		// Фокус возвращается на кнопку: иначе он остался бы на закрытой ссылке
+		// и человек на клавиатуре потерял бы место.
+		toggleEl()?.focus();
+	});
+
+	// При переходе на широкий экран состояние сбрасывается: иначе меню
+	// осталось бы «закрытым» там, где оно должно быть видно всегда.
+	window.matchMedia('(min-width: 821px)').addEventListener('change', () => setOpen(false));
+</script>
 
 <style>
+	/* Компактное состояние — база. Тэглайн скрыт, разделы в меню,
+	   поиск снаружи. */
 	.header {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 44px 44px;
+		align-items: center;
+		gap: 10px var(--sp-2);
+		padding: 14px 0 16px;
+		border-bottom: 1px solid var(--line);
+	}
+
+	.brand {
+		grid-column: 1;
+		grid-row: 1;
+		min-width: 0;
+		color: var(--ink);
+		text-decoration: none;
+		display: block;
+	}
+
+	.brand:hover,
+	.brand:focus-visible {
+		color: var(--ink);
+	}
+
+	.brand-logo {
+		display: block;
+		width: 100%;
+		max-width: 190px;
+		height: auto;
+	}
+
+	.brand-rule {
+		display: none;
+	}
+
+	.tagline {
+		display: none;
+	}
+
+	.search {
+		grid-column: 2;
+		grid-row: 1;
+		width: 44px;
+		height: 44px;
+		display: grid;
+		place-items: center;
+		border: 0;
+		background: transparent;
+		color: var(--ink);
+	}
+
+	.search:hover,
+	.search:focus-visible {
+		color: var(--accent-text);
+	}
+
+	.search svg {
+		width: 23px;
+		height: 23px;
+		stroke: currentColor;
+		stroke-width: 1.6;
+		fill: none;
+	}
+
+	.nav-toggle {
+		grid-column: 3;
+		grid-row: 1;
+		width: 44px;
+		height: 44px;
+		display: grid;
+		place-items: center;
+		border: 0;
+		background: transparent;
+		color: var(--ink);
+	}
+
+	.nav-toggle svg {
+		width: 22px;
+		height: 22px;
+		stroke: currentColor;
+		stroke-width: 1.6;
+		fill: none;
+	}
+
+	.nav-toggle .icon-close {
+		display: none;
+	}
+
+	.nav-toggle[aria-expanded='true'] .icon-open {
+		display: none;
+	}
+
+	.nav-toggle[aria-expanded='true'] .icon-close {
+		display: block;
+	}
+
+	.main-nav {
+		grid-column: 1 / -1;
+		grid-row: 2;
+		display: none;
+		font-size: var(--caption);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.main-nav[data-open='true'] {
+		display: grid;
+		grid-template-columns: 1fr;
+	}
+
+	.main-nav a {
+		min-height: 48px;
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
-		gap: var(--space-2);
-		padding: var(--space-3) var(--space-3) 0;
-		max-width: var(--content-width);
-		margin: 0 auto;
-	}
-
-	.nav {
-		display: flex;
-		gap: var(--space-2);
-	}
-
-	.nav-link {
-		color: var(--color-text-muted);
+		position: relative;
+		border-top: 1px solid var(--line);
+		color: var(--ink);
 		text-decoration: none;
-		font-size: var(--font-size-sm);
-		transition: color var(--transition-fast);
 	}
 
-	.nav-link:hover {
-		color: var(--color-accent);
+	.main-nav a:hover,
+	.main-nav a:focus-visible {
+		color: var(--accent-text);
 	}
 
-	.logo-link {
-		display: inline-block;
+	/* Активный пункт — не только цвет: цвет плюс подчёркивание. */
+	.main-nav a.active {
+		color: var(--accent-text);
 	}
 
-	.logo-link :global(img) {
-		width: 220px;
-		height: auto;
-		aspect-ratio: 220 / 55;
+	.main-nav a.active::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		bottom: 12px;
+		width: 22px;
+		height: 1.5px;
+		background: var(--accent-text);
+	}
+
+	@media (min-width: 821px) {
+		.header {
+			min-height: 126px;
+			grid-template-columns: minmax(0, 1fr) auto 44px;
+			gap: var(--sp-6);
+			padding: 18px 0;
+		}
+
+		.brand-logo {
+			max-width: 270px;
+		}
+
+		.tagline {
+			display: block;
+			margin-top: var(--sp-2);
+			max-width: 250px;
+			font-size: var(--caption);
+			line-height: 1.45;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: var(--ink);
+		}
+
+		.nav-toggle {
+			display: none;
+		}
+
+		.search {
+			grid-column: 3;
+		}
+
+		/* Оба состояния в одном правиле: на широком экране меню видно всегда,
+		   даже если бы скрипт не отработал. */
+		.main-nav,
+		.main-nav[data-open='true'] {
+			grid-column: 2;
+			grid-row: 1;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: flex-end;
+			gap: var(--sp-2) var(--sp-6);
+		}
+
+		.main-nav a {
+			min-height: 44px;
+			border-top: 0;
+		}
+
+		.main-nav a.active {
+			color: inherit;
+		}
+
+		.main-nav a.active::after {
+			left: 0;
+			right: 0;
+			width: auto;
+			bottom: 8px;
+			background: var(--ink);
+		}
+	}
+
+	@media (min-width: 1101px) {
+		.header {
+			min-height: 142px;
+			grid-template-columns: minmax(430px, 1fr) auto 44px;
+			gap: 36px;
+			padding: 0;
+		}
+
+		.brand {
+			display: grid;
+			grid-template-columns: minmax(0, 300px) 1px 1fr;
+			align-items: center;
+			gap: 18px;
+		}
+
+		.brand-logo {
+			max-width: 300px;
+		}
+
+		.brand-rule {
+			display: block;
+			height: 76px;
+			background: var(--line);
+		}
+
+		.tagline {
+			margin-top: 0;
+			max-width: 175px;
+		}
+
+		.main-nav,
+		.main-nav[data-open='true'] {
+			flex-wrap: nowrap;
+			gap: 52px;
+		}
 	}
 </style>

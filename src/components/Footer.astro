@@ -1,57 +1,70 @@
 ---
+// Подвал (§7). Копирайт слева, ссылки справа, одна колонка до 821 px.
+//
+// Своих призывов подписаться и поддержать здесь нет: это отдельные блоки
+// (SocialStrip, SupportStrip), и смешивать их с подвалом нельзя.
+//
+// Ссылки на разделы сайта отсюда убраны — они переехали в меню шапки,
+// которого раньше не было. Осталось то, чего в шапке нет: площадки подкаста
+// и лента RSS.
+
 import { platforms } from '../data/platforms.js';
+import { SITE_NAME, SITE_DESCRIPTION } from '../lib/site.mjs';
 
 const year = new Date().getFullYear();
 ---
 
-<footer class="footer">
-	<nav class="links" aria-label="Площадки подкаста">
-		{
-			platforms.map((platform) => (
-				<a href={platform.url} target="_blank" rel="noopener noreferrer">
-					{platform.label}
-				</a>
-			))
-		}
-	</nav>
-	{/* Свои страницы отдельной строкой от площадок: те ведут наружу, эти —
-	    внутрь сайта, и путать их в одном ряду не стоит. */}
-	<nav class="links links-site" aria-label="Разделы сайта">
-		<a href="/about/">О подкасте</a>
-		<a href="/anime/">Тайтлы</a>
-		<a href="/search/">Поиск</a>
-		<a href="/rss.xml">RSS</a>
-	</nav>
-	<p class="copyright">© {year} Бака! Подкаст об аниме</p>
-</footer>
+<div class="site">
+	<footer class="footer">
+		<div>© {year} {SITE_NAME} · {SITE_DESCRIPTION}.</div>
+		<nav class="footer-links" aria-label="Площадки подкаста и лента">
+			{
+				platforms.map((platform) => (
+					<a href={platform.url} target="_blank" rel="noopener noreferrer">
+						{platform.label}
+					</a>
+				))
+			}
+			<a href="/rss.xml">RSS</a>
+		</nav>
+	</footer>
+</div>
 
 <style>
 	.footer {
-		max-width: var(--content-width);
-		margin: 0 auto;
-		padding: var(--space-4) var(--space-3) var(--space-3);
-		border-top: 1px solid var(--color-border);
+		display: grid;
+		gap: var(--sp-3);
+		padding: var(--sp-8) 0 40px;
+		border-top: 1px solid var(--line);
+		font-size: var(--caption);
+		line-height: 1.45;
+		color: var(--muted);
 	}
 
-	.links {
+	.footer a {
+		color: var(--muted);
+		text-decoration: none;
+	}
+
+	.footer a:hover,
+	.footer a:focus-visible {
+		color: var(--accent-text);
+	}
+
+	.footer-links {
 		display: flex;
 		flex-wrap: wrap;
-		gap: var(--space-1) var(--space-3);
-		margin-bottom: var(--space-2);
+		gap: var(--sp-3) 20px;
 	}
 
-	.links a {
-		color: var(--color-text-muted);
-	}
+	@media (min-width: 821px) {
+		.footer {
+			grid-template-columns: 1fr auto;
+			gap: var(--sp-8);
+		}
 
-	.links a:hover,
-	.links a:focus-visible {
-		color: var(--color-accent);
-	}
-
-	.copyright {
-		color: var(--color-text-muted);
-		font-size: var(--font-size-sm);
-		margin: 0;
+		.footer-links {
+			justify-content: flex-end;
+		}
 	}
 </style>
