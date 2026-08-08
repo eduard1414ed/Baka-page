@@ -43,6 +43,11 @@ const posts = defineCollection({
 			// из файла расшифровки. Почему строкой и почему в посте —
 			// см. src/lib/speakerNames.mjs.
 			speakers: z.string().optional(),
+			// Подтверждённые руками исправления названий в расшифровке, одной
+			// строкой: '9|Фринен|Фрирен'. Пусто = не исправлено ничего, и это
+			// нормальное состояние — предложения из transcripts/*.corrections.json
+			// применяются только отмеченные. См. src/lib/nameCorrections.mjs.
+			corrections: z.string().optional(),
 			script: z.string().optional(),
 			draft: z.boolean().default(false),
 			// Когда пост должен появиться на сайте — независимая ось от `date`

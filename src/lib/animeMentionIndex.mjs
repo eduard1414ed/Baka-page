@@ -8,6 +8,7 @@
 import { groupReplicas, hasUsableTimecodes } from './transcript.mjs';
 import { buildAnimeMatcher, collectMentions } from './animeMentions.mjs';
 import { makeExceptionFilter } from './mentionExceptions.mjs';
+import { applyPostOverrides } from './transcriptOverrides.mjs';
 
 // Как страница поста находит свою расшифровку: сначала по полю `transcript`,
 // если автор его заполнил, иначе по audioGuid — файл расшифровки называется тем
@@ -51,8 +52,12 @@ export function buildMentionIndex({ posts, transcripts, animeList, exceptions = 
 		if (!transcript || !hasUsableTimecodes(transcript.data)) continue;
 
 		const filter = makeExceptionFilter(byExceptionId.get(transcriptId)?.data);
+		// Подтверждённые исправления названий меняют текст, а значит и то, что
+		// в нём находится. Считать по неисправленному нельзя: тайтл нашёлся бы
+		// на странице выпуска, но не на своей собственной.
+		const data = applyPostOverrides(transcript.data, post.data);
 
-		for (const [animeId, times] of collectMentions(groupReplicas(transcript.data), matcher, filter)) {
+		for (const [animeId, times] of collectMentions(groupReplicas(data), matcher, filter)) {
 			const perPost = index.get(animeId) ?? new Map();
 			perPost.set(post.id, times);
 			index.set(animeId, perPost);

@@ -786,6 +786,135 @@
 
 			CMS.registerFieldType('speaker-names', SpeakerNamesControl, SpeakerNamesPreview);
 
+			// Поле «Исправления названий» (тз/05, шаг 6). Показывает то, что
+			// предложил скрипт распознавания, и применяет ТОЛЬКО отмеченное.
+			// Галочки сняты по умолчанию не для красоты: на пяти накопившихся
+			// файлах из 21 предложения не годилось ни одного (см. подробности
+			// в src/lib/nameCorrections.mjs). Молча применять такое нельзя.
+			//
+			// Разбор и сборка строки — копия src/lib/nameCorrections.mjs,
+			// меняете тут — поправьте и там.
+			function parseNameCorrections(value) {
+				const fixes = [];
+
+				for (const chunk of String(value ?? '').split(';')) {
+					const [replica, found, suggested] = chunk.split('|').map((part) => part.trim());
+					if (!found || !suggested || !/^\d+$/.test(replica ?? '')) continue;
+					fixes.push({ replica: Number(replica), found, suggested });
+				}
+
+				return fixes;
+			}
+
+			function serializeNameCorrections(fixes) {
+				return (fixes ?? [])
+					.map(({ replica, found, suggested }) =>
+						[replica, found, suggested].map((part) => String(part).replaceAll(';', ' ').replaceAll('|', ' ').trim()).join('|'),
+					)
+					.join('; ');
+			}
+
+			function correctionKey(fix) {
+				return `${fix.replica}|${fix.found}|${fix.suggested}`;
+			}
+
+			const NameCorrectionsControl = createClass({
+				getInitialState() {
+					return { data: null, status: 'loading' };
+				},
+				componentDidMount() {
+					const guid = transcriptIdOf(this.props.entry);
+					if (!guid) {
+						this.setState({ status: 'no-episode' });
+						return;
+					}
+					getEpisodeAdminData(guid).then((data) =>
+						this.setState(data && data.corrections ? { data, status: 'ready' } : { status: 'no-transcript' }),
+					);
+				},
+				applied() {
+					return new Set(parseNameCorrections(this.props.value).map(correctionKey));
+				},
+				toggle(item) {
+					const applied = this.applied();
+					const key = correctionKey(item);
+					// Отмеченные храним в том же порядке, в каком их предложили —
+					// так строку в файле поста можно читать глазами.
+					const kept = this.state.data.corrections.filter((fix) =>
+						correctionKey(fix) === key ? !applied.has(key) : applied.has(correctionKey(fix)),
+					);
+					this.props.onChange(serializeNameCorrections(kept));
+				},
+				render() {
+					const { data, status } = this.state;
+
+					if (status === 'loading') return h('div', { style: hintStyle }, 'Смотрю, есть ли предложения…');
+					if (status === 'no-episode') return h('div', { style: hintStyle }, 'Только для выпусков с расшифровкой.');
+					if (status === 'no-transcript') return h('div', { style: hintStyle }, 'Расшифровки у этого выпуска пока нет.');
+					if (data.corrections.length === 0)
+						return h('div', { style: hintStyle }, 'Распознавание не нашло похожих на названия мест — исправлять нечего.');
+
+					const applied = this.applied();
+
+					return h(
+						'div',
+						{ id: this.props.forID },
+						h(
+							'div',
+							{ style: { ...hintStyle, opacity: 1 } },
+							`Распознавание нашло ${data.corrections.length} похожих мест · применено ${applied.size}. Отмечайте только настоящие искажения.`,
+						),
+						data.corrections.map((fix) => {
+							const on = applied.has(correctionKey(fix));
+
+							return h(
+								'label',
+								{
+									key: correctionKey(fix),
+									style: {
+										display: 'flex',
+										gap: '8px',
+										alignItems: 'flex-start',
+										padding: '6px 0',
+										borderTop: '1px solid #eee',
+										cursor: 'pointer',
+										opacity: on ? 1 : 0.75,
+									},
+								},
+								h('input', { type: 'checkbox', checked: on, onChange: () => this.toggle(fix), style: { marginTop: '3px', flexShrink: 0 } }),
+								h(
+									'span',
+									{ style: { fontSize: '13px', lineHeight: 1.45 } },
+									h('span', { key: 'fix', style: { fontWeight: 600 } }, `«${fix.found}» → «${fix.suggested}»`),
+									h(
+										'span',
+										{ key: 'why', style: { opacity: 0.6 } },
+										fix.changesSearch ? '' : ' — разница только в «ё», на поиск не влияет',
+									),
+									h('br', { key: 'br' }),
+									h(
+										'span',
+										{ key: 'context', style: { opacity: 0.75 } },
+										`${fix.context.cutLeft ? '…' : ''}${fix.context.before} `,
+										h('mark', { key: 'match' }, fix.context.match),
+										` ${fix.context.after}${fix.context.cutRight ? '…' : ''}`,
+									),
+								),
+							);
+						}),
+					);
+				},
+			});
+
+			const NameCorrectionsPreview = createClass({
+				render() {
+					const fixes = parseNameCorrections(this.props.value);
+					return h('span', {}, fixes.length > 0 ? `исправлено названий: ${fixes.length}` : '');
+				},
+			});
+
+			CMS.registerFieldType('name-corrections', NameCorrectionsControl, NameCorrectionsPreview);
+
 			function extractAnimeIdsFromBody(body) {
 				const ids = [];
 				const re = /:anime\[[^\]]*\]\{id="([^"]+)"/g;

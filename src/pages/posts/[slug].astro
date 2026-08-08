@@ -11,7 +11,7 @@ import AnimeBadge from '../../components/AnimeBadge.astro';
 import EpisodePlayer from '../../components/EpisodePlayer.astro';
 import Transcript from '../../components/Transcript.astro';
 import { hasUsableTimecodes } from '../../lib/transcript.mjs';
-import { applySpeakerNames } from '../../lib/speakerNames.mjs';
+import { applyPostOverrides } from '../../lib/transcriptOverrides.mjs';
 import { buildAnimeMatcher } from '../../lib/animeMentions.mjs';
 import { makeExceptionFilter } from '../../lib/mentionExceptions.mjs';
 import { animeMentionedIn } from '../../lib/animeMentionIndex.mjs';
@@ -49,10 +49,10 @@ const transcriptId = post.data.transcript ?? post.data.audioGuid;
 const transcript = transcriptId ? await getEntry('transcripts', transcriptId) : undefined;
 const showTranscript = transcript && hasUsableTimecodes(transcript.data);
 
-// Имена голосов, вписанные руками в админке, побеждают автоматические
-// (тз/05, шаг 6). Сам файл расшифровки при этом не трогается — см.
-// src/lib/speakerNames.mjs, там же почему имена живут в поле поста.
-const transcriptData = showTranscript ? applySpeakerNames(transcript.data, post.data.speakers) : null;
+// Правки, сделанные руками в админке: имена голосов и подтверждённые
+// исправления названий (тз/05, шаг 6). Сам файл расшифровки не трогается —
+// см. src/lib/transcriptOverrides.mjs.
+const transcriptData = showTranscript ? applyPostOverrides(transcript.data, post.data) : null;
 
 // Обложка выпуска для плеера. Хостинг подкаста отдаёт квадрат 2000×2000
 // весом около 1 МБ на картинку 72×72 — берём сжатую копию из public/episodes/
@@ -77,7 +77,7 @@ const youtubeEmbed = youtube ? getYoutubeEmbedUrl(youtube) : null;
 // такие просто не показываем в плашках, не ломая страницу.
 const mentionedInTranscript = showTranscript
 	? animeMentionedIn(
-			transcript.data,
+			transcriptData,
 			buildAnimeMatcher(await getCollection('anime')),
 			makeExceptionFilter((await getEntry('mentionExceptions', transcriptId!))?.data),
 		)
