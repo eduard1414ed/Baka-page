@@ -9,3 +9,19 @@ export function getAnimePosterSrcs(poster) {
 	const base = dot === -1 ? poster : poster.slice(0, dot);
 	return ANIME_POSTER_WIDTHS.map((width) => ({ width, src: `${base}-${width}w.webp` }));
 }
+
+/**
+ * Из чего сборке рисовать превью тайтла для соцсетей: самый крупный постер
+ * или ничего.
+ *
+ * Знать это нужно двоим — странице (она ставит тег) и списку исходников
+ * (по нему рисуются файлы). Две копии разошлись бы молча, и страница тайтла
+ * без постера ссылалась бы на картинку, которой никто не нарисовал. Ровно
+ * поэтому у материалов такое же правило вынесено в `socialSource`.
+ *
+ * @returns {string|null}
+ */
+export function animeSocialSource(poster) {
+	const srcs = getAnimePosterSrcs(poster);
+	return srcs.length > 0 ? srcs[srcs.length - 1].src : null;
+}

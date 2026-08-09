@@ -15,6 +15,9 @@ interface Props {
 	/** Имя материала, если у него есть своя картинка превью. Не задано —
 	    страница получает общую картинку сайта. */
 	ogSlug?: string | null;
+	/** Готовый адрес превью для страниц, которые не материалы: у тайтлов своё
+	    пространство имён, и собирает его тот же src/lib/ogImage.mjs. */
+	ogUrl?: string | null;
 	imageAlt?: string;
 	/** article у поста, website у всего остального. */
 	type?: 'website' | 'article';
@@ -28,6 +31,7 @@ const {
 	title,
 	description = SITE_DESCRIPTION,
 	ogSlug = null,
+	ogUrl = null,
 	imageAlt = '',
 	type = 'website',
 	noindex = false,
@@ -43,7 +47,7 @@ const documentTitle = pageTitle(title);
 // по умолчанию: телеграм webp-превью разворачивает ненадёжно, а телеграм —
 // главная площадка подкаста. Проверено по документации и баг-репортам,
 // см. статус/этап-6-seo.md.
-const ogImage = absoluteUrl(ogSlug ? ogUrlForPost(ogSlug) : OG_DEFAULT);
+const ogImage = absoluteUrl(ogUrl ?? (ogSlug ? ogUrlForPost(ogSlug) : OG_DEFAULT));
 
 // Канонический адрес: «вот настоящий адрес этой страницы, остальные — копии».
 // Закрывает сразу два случая: www.bakapodcast.com, который показывает тот же

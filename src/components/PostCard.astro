@@ -27,9 +27,14 @@ interface Props {
 	/** Уровень заголовка карточки. По умолчанию h3 — карточка почти всегда
 	    лежит под заголовком раздела. В сетках главной раздела нет, там h2. */
 	level?: 2 | 3;
+	/** Карточка вне текущей порции: страница тайтла показывает первые шесть
+	    упоминаний, остальные закрыты до нажатия «Показать ещё». Прячем
+	    атрибутом, а не правилом display, — тогда поиск браузера по странице
+	    находит и в закрытой части. */
+	hidden?: boolean;
 }
 
-const { post, variant = 'cover', level = 3 } = Astro.props;
+const { post, variant = 'cover', level = 3, hidden = false } = Astro.props;
 const { title, date, category } = post.data;
 
 // Тип карточки — РАЗДЕЛ материала, а не его категория: бонус верстается как
@@ -70,6 +75,7 @@ const Title = `h${level}` as 'h2' | 'h3';
 		<a
 			class="list-card"
 			data-type={type}
+			hidden={hidden}
 			href={href}
 			target={isExternal ? '_blank' : undefined}
 			rel={isExternal ? 'noopener noreferrer' : undefined}
@@ -93,7 +99,7 @@ const Title = `h${level}` as 'h2' | 'h3';
 		// (тз/05, шаг 5), а вложить ссылку в ссылку нельзя — браузер такую
 		// разметку чинит по-своему, и часть ссылок просто перестаёт работать.
 		// Всё, что кликается отдельно, уходит в <slot /> за пределы ссылки.
-		<article class="archive-card" data-type={type} class:list={{ 'has-cover': noteWithCover }}>
+		<article class="archive-card" data-type={type} hidden={hidden} class:list={{ 'has-cover': noteWithCover }}>
 			<a
 				class="card-link"
 				href={href}
@@ -229,7 +235,11 @@ const Title = `h${level}` as 'h2' | 'h3';
 
 	/* ---------- Текстовый вариант ---------- */
 
-	.list-card {
+	/* `:not([hidden])` обязателен: атрибут весит один селектор, а правило
+	   компонента в Astro всегда длиннее, и `display: block` перебивал бы его
+	   по весу — карточка оставалась бы на экране с правильной разметкой.
+	   Эти грабли в проекте срабатывали трижды, см. CLAUDE.md. */
+	.list-card:not([hidden]) {
 		display: block;
 		height: 100%;
 		padding: var(--sp-4) 0 var(--sp-6);

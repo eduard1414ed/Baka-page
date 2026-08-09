@@ -1,11 +1,25 @@
 ---
+// Страница тайтла (§17 дизайн-системы, раздел 7.3 ТЗ, макет `anime.html`).
+//
+// Ради неё и затевался весь справочник: клик по названию в тексте или
+// в расшифровке приводит сюда, а здесь собраны все материалы, где тайтл
+// обсуждали, вплоть до минуты в разговоре.
+//
+// НИКАКИХ ПРЕДУПРЕЖДЕНИЙ И СИСТЕМНЫХ СООБЩЕНИЙ. Нет описания — нет абзаца;
+// нет русского названия — заголовком идёт оригинальное; нет упоминаний — нет
+// блока упоминаний. Читателю нечего чинить, а плашка «⚠ нет русского
+// названия», которая тут стояла, была запиской самому себе на видном месте.
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import PostCard from '../../components/PostCard.astro';
-import { getAnimePosterSrcs } from '../../lib/animePoster.mjs';
+import LoadMore from '../../components/LoadMore.astro';
+import { getAnimePosterSrcs, animeSocialSource } from '../../lib/animePoster.mjs';
+import { stampVar } from '../../lib/animeStamp.mjs';
 import { buildMentionIndex, postsForAnime } from '../../lib/animeMentionIndex.mjs';
 import { formatTimecode } from '../../lib/transcript.mjs';
 import { isPublished } from '../../lib/publishing.mjs';
+import { plural } from '../../lib/plural.mjs';
+import { ogUrlForAnime } from '../../lib/ogImage.mjs';
 import JsonLd from '../../components/JsonLd.astro';
 import { breadcrumbsSchema } from '../../lib/schema.mjs';
 
@@ -18,7 +32,7 @@ export async function getStaticPaths() {
 	const transcripts = await getCollection('transcripts');
 
 	// Указатель «тайтл → выпуск → минуты» считаем ОДИН раз на всю сборку,
-	// а не заново на каждой странице тайтла: расшифровок 107, страниц тайтлов
+	// а не заново на каждой странице тайтла: расшифровок 141, страниц тайтлов
 	// со временем станут сотни, и перечитывать одно другим вышло бы дорого.
 	const index = buildMentionIndex({ posts, transcripts, animeList });
 
@@ -32,7 +46,6 @@ const { entry, mentions } = Astro.props;
 const { titleRu, titleOriginal, year, studio, poster, synopsis, url, source } = entry.data;
 const posterSrcs = getAnimePosterSrcs(poster);
 const displayTitle = titleRu || titleOriginal;
-const needsTranslation = !titleRu;
 const sourceLabel = source === 'anilist' ? 'AniList' : 'Shikimori';
 
 // Сколько минут показываем в карточке выпуска. Замер по архиву: у «Наруто»
@@ -42,32 +55,52 @@ const sourceLabel = source === 'anilist' ? 'AniList' : 'Shikimori';
 // все упоминания и даёт стрелки, чтобы листать их по одному.
 const MAX_TIMES = 8;
 
+/** Сколько упоминаний видно до нажатия «Показать ещё» (§17). */
+const FIRST_MENTIONS = 6;
+
+const hiddenMentions = Math.max(0, mentions.length - FIRST_MENTIONS);
+
+/**
+ * Разметка Shikimori в описании. Два разных случая, и путать их нельзя:
+ *   [[Хокагэ]]  — ссылка на термин, текст внутри нужен;
+ *   [波風ミナト]  — японский оригинал имени рядом с русским, читателю он тут
+ *                 не нужен и уводит глаз с фразы.
+ *
+ * Снимается ОДНОЙ функцией и для страницы, и для описания в поисковой выдаче:
+ * два места, где чистится одна и та же разметка, разошлись бы молча — ровно
+ * так уже разъезжалось снятие markdown (см. CLAUDE.md про plainText.mjs).
+ */
+function cleanSynopsis(text: string | undefined) {
+	if (!text) return '';
+
+	return (
+		text
+			.replace(/\[\[([^\]]*)\]\]/g, '$1')
+			.replace(/\[[^\]]*\]/g, '')
+			// После выброшенных скобок остаётся двойной пробел и пробел перед
+			// запятой: «шляпница Софи  ведёт», «Хаула , колдуна».
+			.replace(/[^\S\n]+([,.;:!?])/g, '$1')
+			.replace(/[^\S\n]+/g, ' ')
+			.trim()
+	);
+}
+
+const synopsisParagraphs = cleanSynopsis(synopsis)
+	.split(/\n+/)
+	.map((line) => line.trim())
+	.filter(Boolean);
+
 // Описание страницы тайтла (тз/06, шаг 8). Первое предложение описания плюс
 // сколько раз тайтл упоминался — упоминания и есть то, ради чего сюда приходят,
 // и в выдаче это отличает нашу страницу от сотни карточек того же аниме
 // на других сайтах.
-//
-// Раньше здесь стоял synopsis.slice(0, 160) — он резал посреди слова.
-function firstSentence(text: string | undefined, max = 130) {
+function firstSentence(text: string, max = 130) {
 	if (!text) return null;
 
-	// Разметка Shikimori в описании. Два разных случая, и путать их нельзя:
-	//   [[Хокагэ]]        — ссылка на термин, текст внутри нужен;
-	//   [波風ミナト]       — японский оригинал имени рядом с русским,
-	//                       в строчке выдачи это шум, убираем целиком.
-	// На самой странице тайтла описание показывается как есть — там место
-	// для подробностей; режем только то, что уйдёт в поисковик и в превью.
-	const clean = text
-		.replace(/\[\[([^\]]*)\]\]/g, '$1')
-		.replace(/\[[^\]]*\]/g, '')
-		// После выброшенных скобок остаётся двойной пробел и пробел перед
-		// запятой: «шляпница Софи  ведёт», «Хаула , колдуна».
-		.replace(/\s+([,.;:!?])/g, '$1')
-		.replace(/\s+/g, ' ')
-		.trim();
-
+	const clean = text.replace(/\s+/g, ' ').trim();
 	if (!clean) return null;
 	if (clean.length <= max) return clean;
+
 	const cut = clean.slice(0, max);
 	// Режем по концу предложения, если он есть в пределах куска, иначе по слову.
 	const stop = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('! '), cut.lastIndexOf('? '));
@@ -76,250 +109,468 @@ function firstSentence(text: string | undefined, max = 130) {
 	return `${(space > max / 2 ? cut.slice(0, space) : cut).replace(/[\s,.;:—-]+$/, '')}…`;
 }
 
-// «упоминание / упоминания / упоминаний» — по правилам русского счёта.
-function mentionsWord(n: number) {
-	const mod100 = n % 100;
-	if (mod100 >= 11 && mod100 <= 14) return 'упоминаний';
-	const mod10 = n % 10;
-	if (mod10 === 1) return 'упоминание';
-	if (mod10 >= 2 && mod10 <= 4) return 'упоминания';
-	return 'упоминаний';
-}
-
 const mentionsNote =
 	mentions.length > 0
-		? `${displayTitle} в подкасте «Бака!»: ${mentions.length} ${mentionsWord(mentions.length)} в выпусках и постах.`
+		? `${displayTitle} в подкасте «Бака!»: ${mentions.length} ${plural(mentions.length, ['упоминание', 'упоминания', 'упоминаний'])} в выпусках и постах.`
 		: `${displayTitle} — карточка тайтла в подкасте «Бака!».`;
 
-const animeDescription = firstSentence(synopsis) ?? mentionsNote;
+const animeDescription = firstSentence(synopsisParagraphs.join(' ')) ?? mentionsNote;
 
 const crumbs = breadcrumbsSchema([
-	{ name: 'Тайтлы', path: '/anime/' },
+	{ name: 'Каталог аниме', path: '/anime/' },
 	{ name: displayTitle, path: `/anime/${entry.id}/` },
 ]);
 ---
 
-{/* Картинка превью не задана нарочно — подставится общая картинка сайта.
-    Обложки тайтлов лежат в public/anime/ только в webp (см. animePoster.mjs),
-    а телеграм webp-превью разворачивает ненадёжно; отдать ему сломанную
-    картинку хуже, чем баннер подкаста. */}
-<Layout title={displayTitle} description={animeDescription}>
-	<JsonLd slot="head" data={crumbs} />
-	{/* Что берёт в поиск Pagefind — см. пояснение в src/pages/posts/[slug].astro.
-	    У тайтла в индекс идёт название, оригинальное название и описание;
-	    список упоминаний ниже помечен data-pagefind-ignore, иначе заголовки
-	    выпусков попали бы ещё и в карточку тайтла и по запросу «Наруто»
-	    выдача дублировалась бы сама с собой. */}
-	<section
-		class="anime-page"
-		data-pagefind-body
-		data-pagefind-filter="type:Тайтлы"
-		data-pagefind-meta="type:anime"
-	>
-		<a class="back" href="/anime/" data-pagefind-ignore>← Все тайтлы</a>
+{/* Своя картинка превью у тайтла — постер на бумажном листе. Пространство
+    имён у неё отдельное (`/og/anime-<id>.jpg`), иначе тайтл с идентификатором
+    вроде `ep-5` перебил бы одноимённый выпуск; правило живёт в ogImage.mjs.
+    Постер 2:3 генератор вписывает целиком, не обрезая.
 
-		<div class="header">
+    ЕСЛИ ПОСТЕРА НЕТ, СВОЕГО ПРЕВЬЮ НЕТ ТОЖЕ: страница берёт общую картинку
+    сайта. Тег на несуществующий файл — это битая ссылка в мессенджере,
+    а «из чего делать превью» решает одна функция на страницу и на сборку. */}
+<Layout
+	title={displayTitle}
+	description={animeDescription}
+	ogUrl={animeSocialSource(poster) ? ogUrlForAnime(entry.id) : null}
+	imageAlt={displayTitle}
+>
+	<JsonLd slot="head" data={crumbs} />
+	<div class="site">
+		{/* Что берёт в поиск Pagefind — см. пояснение в src/pages/posts/[slug].astro.
+		    У тайтла в индекс идёт название, оригинальное название и описание;
+		    список упоминаний ниже помечен data-pagefind-ignore, иначе заголовки
+		    выпусков попали бы ещё и в карточку тайтла и по запросу «Наруто»
+		    выдача дублировалась бы сама с собой. */}
+		<div data-pagefind-body data-pagefind-filter="type:Тайтлы" data-pagefind-meta="type:anime">
+			<div class="breadcrumb tech" data-pagefind-ignore>
+				<a href="/anime/">← Все тайтлы</a>
+			</div>
+
+			<section class="hero" class:list={{ 'no-poster': posterSrcs.length === 0 }}>
+				{
+					posterSrcs.length > 0 && (
+						<div class="poster-wrap">
+							{/* Перфорация по всем четырём сторонам: верх и низ рисует
+							    рамка, бока — внутренняя обёртка. Постер не обрезается
+							    никогда, поля внутри рамки заливаются цветом марки. */}
+							<div class="poster-stamp" style={`--stamp: ${stampVar(entry.id)}`}>
+								<div class="poster-inner">
+									<img
+										src={posterSrcs[posterSrcs.length - 1].src}
+										srcset={posterSrcs.map((s) => `${s.src} ${s.width}w`).join(', ')}
+										sizes="(max-width: 620px) 280px, (max-width: 1100px) 310px, 350px"
+										alt=""
+									/>
+								</div>
+							</div>
+						</div>
+					)
+				}
+
+				<div class="copy">
+					{/* ДВЕ СТРОКИ ОБЩЕЙ СЕТКИ, А НЕ ДВА СТОЛБИКА РЯДОМ: название
+					    и оригинал стоят на одной базовой линии, техстрока и ссылка
+					    на источник — на следующей. Обёртки для этого растворяются
+					    через `display: contents`, иначе каждая пара живёт своей
+					    жизнью и выравнивать их нечем. */}
+					<div class="heading">
+						<div class="heading-main">
+							<h1>{displayTitle}</h1>
+							{
+								[year, studio].filter(Boolean).length > 0 && (
+									<div class="facts tech">{[year, studio].filter(Boolean).join(' · ')}</div>
+								)
+							}
+						</div>
+						<div class="heading-aside">
+							{titleRu && titleOriginal !== titleRu && <div class="original">{titleOriginal}</div>}
+							{
+								url && (
+									<a class="external-link" href={url} target="_blank" rel="noopener noreferrer">
+										Страница на {sourceLabel} <span aria-hidden="true">↗</span>
+									</a>
+								)
+							}
+						</div>
+					</div>
+
+					{
+						synopsisParagraphs.length > 0 && (
+							<div class="synopsis">
+								{synopsisParagraphs.map((paragraph) => (
+									<p>{paragraph}</p>
+								))}
+							</div>
+						)
+					}
+				</div>
+			</section>
+
 			{
-				posterSrcs.length > 0 && (
-					<img
-						class="poster"
-						src={posterSrcs[0].src}
-						srcset={posterSrcs.map((s) => `${s.src} ${s.width}w`).join(', ')}
-						sizes="220px"
-						alt=""
-					/>
+				mentions.length > 0 && (
+					<section class="mentions" data-pagefind-ignore>
+						<h2 class="mentions-title">Упоминания</h2>
+						<div class="mentions-grid" id="mentions-grid">
+							{mentions.map(({ post, times }: { post: any; times: number[] }, position: number) => (
+								<PostCard post={post} hidden={position >= FIRST_MENTIONS}>
+									{/* Отдельного блока для выпусков нет — выпуск идёт обычной
+									    карточкой, наравне с постами, а минуты разговора уходят
+									    в её краткое описание (тз/05, шаг 5). Ссылка ведёт на
+									    страницу выпуска и там прокручивает расшифровку к нужной
+									    реплике — разбирает её src/components/Transcript.astro. */}
+									{times.length > 0 && (
+										<p class="times">
+											обсуждали в выпуске на{' '}
+											{times.slice(0, MAX_TIMES).map((seconds, i) => (
+												<Fragment>
+													{i > 0 && ', '}
+													<a class="timecode" href={`/posts/${post.id}/#anime=${entry.id}&t=${Math.floor(seconds)}`}>
+														{formatTimecode(seconds)}
+													</a>
+												</Fragment>
+											))}
+											{times.length > MAX_TIMES && (
+												<Fragment>
+													{' и '}
+													<a class="timecode" href={`/posts/${post.id}/#anime=${entry.id}`}>
+														ещё {times.length - MAX_TIMES}
+													</a>
+												</Fragment>
+											)}
+										</p>
+									)}
+								</PostCard>
+							))}
+						</div>
+
+						<LoadMore
+							id="mentions-more"
+							controls="mentions-grid"
+							more={`Показать ещё упоминания (${hiddenMentions})`}
+							less="Свернуть упоминания"
+							done="Все упоминания показаны"
+							disabled={hiddenMentions === 0}
+						/>
+					</section>
 				)
 			}
-			<div class="info">
-				<h1>{displayTitle}</h1>
-				{
-					needsTranslation ? (
-						<p class="translation-notice">
-							⚠ нет русского названия — впишите titleRu в src/content/anime/{entry.id}.json
-						</p>
-					) : (
-						titleOriginal !== titleRu && <p class="original">{titleOriginal}</p>
-					)
-				}
-				<p class="meta">
-					{[year, studio].filter(Boolean).join(' · ')}
-				</p>
-				{
-					url && (
-						<a class="shikimori-link" href={url} target="_blank" rel="noopener noreferrer">
-							Страница на {sourceLabel} →
-						</a>
-					)
-				}
-				{synopsis && <p class="synopsis">{synopsis}</p>}
-			</div>
 		</div>
-
-		<h2 class="mentions-title" data-pagefind-ignore>Упоминания{mentions.length > 0 && ` (${mentions.length})`}</h2>
-		<div data-pagefind-ignore>
-		{
-			mentions.length === 0 ? (
-				<p class="empty">Пока нет постов с этим тайтлом.</p>
-			) : (
-				<div class="grid">
-					{mentions.map(({ post, times }: { post: any; times: number[] }) => (
-						<PostCard post={post}>
-							{/* Отдельного блока для выпусков нет — выпуск идёт обычной
-							    карточкой, наравне с постами, а минуты разговора уходят
-							    в её краткое описание (тз/05, шаг 5). Ссылка ведёт на
-							    страницу выпуска и там подсвечивает все упоминания —
-							    разбирает её src/components/Transcript.astro. */}
-							{times.length > 0 && (
-								<p class="episode-times">
-									обсуждали в выпуске на{' '}
-									{times.slice(0, MAX_TIMES).map((seconds, i) => (
-										<Fragment>
-											{i > 0 && ', '}
-											<a href={`/posts/${post.id}/#anime=${entry.id}&t=${Math.floor(seconds)}`}>
-												{formatTimecode(seconds)}
-											</a>
-										</Fragment>
-									))}
-									{times.length > MAX_TIMES && (
-										<Fragment>
-											{' и '}
-											<a href={`/posts/${post.id}/#anime=${entry.id}`}>ещё {times.length - MAX_TIMES}</a>
-										</Fragment>
-									)}
-								</p>
-							)}
-						</PostCard>
-					))}
-				</div>
-			)
-		}
-		</div>
-	</section>
+	</div>
 </Layout>
 
 <style>
-	.anime-page {
-		max-width: 72rem;
-		margin: 0 auto;
-		padding: var(--space-4) var(--space-3);
+	.breadcrumb {
+		padding: var(--sp-8) 0 var(--sp-6);
+		color: var(--muted);
 	}
 
-	.back {
-		display: inline-block;
-		color: var(--color-text-muted);
-		font-size: var(--font-size-sm);
-		margin-bottom: var(--space-3);
+	.breadcrumb a {
+		color: var(--ink);
+		text-decoration: none;
 	}
 
-	.back:hover,
-	.back:focus-visible {
-		color: var(--color-accent-hover);
+	.breadcrumb a:hover {
+		color: var(--accent-text);
 	}
 
-	.header {
-		display: flex;
-		gap: var(--space-3);
-		margin-bottom: var(--space-4);
+	/* ---------- Постер и заголовок ---------- */
+
+	.hero {
+		display: grid;
+		gap: var(--sp-8);
+		padding-bottom: var(--sp-12);
 	}
 
-	.poster {
-		width: 220px;
-		flex-shrink: 0;
+	/* Ширины из §11.2: 280 на телефоне, 310 на среднем, 350 на широком. */
+	.poster-wrap {
+		max-width: 280px;
+	}
+
+	.poster-stamp {
+		--stamp: var(--stamp-1);
+		position: relative;
+		display: block;
+		background: var(--stamp);
+	}
+
+	.poster-stamp::before,
+	.poster-stamp::after {
+		content: '';
+		position: absolute;
+		z-index: 3;
+		left: 0;
+		right: 0;
+		height: 12px;
+		pointer-events: none;
+		background: radial-gradient(circle at 6px 0, var(--paper) 5px, transparent 5.5px) 0 0 / 18px 12px repeat-x;
+	}
+
+	.poster-stamp::before {
+		top: -1px;
+	}
+
+	.poster-stamp::after {
+		bottom: -1px;
+		transform: rotate(180deg);
+	}
+
+	.poster-inner {
+		position: relative;
+		overflow: hidden;
+	}
+
+	.poster-inner::before,
+	.poster-inner::after {
+		content: '';
+		position: absolute;
+		z-index: 3;
+		top: 0;
+		bottom: 0;
+		width: 12px;
+		pointer-events: none;
+		background: radial-gradient(circle at 0 6px, var(--paper) 5px, transparent 5.5px) 0 0 / 12px 18px repeat-y;
+	}
+
+	.poster-inner::before {
+		left: -1px;
+	}
+
+	.poster-inner::after {
+		right: -1px;
+		transform: rotate(180deg);
+	}
+
+	/* Постер не обрезается: поля внутри рамки 2:3 заливаются цветом марки. */
+	.poster-stamp img {
+		display: block;
+		width: 100%;
 		aspect-ratio: 2 / 3;
-		object-fit: cover;
-		border-radius: var(--radius-md);
-		background: var(--color-bg-elevated);
+		object-fit: contain;
+		object-position: center;
 	}
 
-	.info {
-		display: flex;
-		flex-direction: column;
-		gap: var(--space-1);
+	.copy {
 		min-width: 0;
 	}
 
-	.info h1 {
-		margin: 0;
+	.heading {
+		display: grid;
+		gap: var(--sp-3);
+		margin-bottom: var(--sp-6);
+	}
+
+	.copy h1 {
+		margin: 0 0 var(--sp-3);
+	}
+
+	.facts {
+		color: var(--muted);
 	}
 
 	.original {
-		color: var(--color-text-muted);
+		margin-bottom: var(--sp-2);
+		font-family: var(--font-display);
+		font-size: var(--card-title);
+		line-height: 1.35;
 		font-style: italic;
-		margin: 0;
+		color: var(--muted);
 	}
 
-	.translation-notice {
-		width: fit-content;
-		padding: 0.15em 0.6em;
-		border-radius: var(--radius-sm);
-		background: var(--color-accent-2);
-		color: var(--color-bg);
-		font-size: var(--font-size-sm);
-		margin: 0;
+	/* Цель 44 набирается отступами сверху и снизу: `min-height` сдвинул бы
+	   текст ссылки относительно техстроки, и на широком экране они встали бы
+	   на разной высоте. */
+	.external-link {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--sp-2);
+		padding-block: 12px;
+		font-size: var(--caption);
+		color: var(--ink);
+		text-decoration: none;
 	}
 
-	.meta {
-		color: var(--color-text-muted);
-		font-size: var(--font-size-sm);
-		margin: 0;
+	.external-link:hover {
+		color: var(--accent-text);
+		text-decoration: underline;
+		text-underline-offset: 3px;
 	}
 
-	.shikimori-link {
-		color: var(--color-accent);
-		font-size: var(--font-size-sm);
-		width: fit-content;
+	.synopsis p {
+		margin: 0 0 var(--sp-4);
+		font-size: var(--body-lg);
+		line-height: 1.65;
+		color: var(--text);
 	}
 
-	.shikimori-link:hover,
-	.shikimori-link:focus-visible {
-		color: var(--color-accent-hover);
+	.synopsis p:last-child {
+		margin-bottom: 0;
 	}
 
-	.synopsis {
-		color: var(--color-text-muted);
-		margin: var(--space-1) 0 0;
+	@media (min-width: 621px) {
+		.poster-wrap {
+			max-width: 310px;
+		}
 	}
 
+	@media (min-width: 821px) {
+		.hero {
+			grid-template-columns: repeat(12, minmax(0, 1fr));
+			column-gap: var(--grid-gap);
+			align-items: start;
+			padding-bottom: 58px;
+		}
+
+		.poster-wrap {
+			grid-column: 1 / 5;
+		}
+
+		.copy {
+			grid-column: 5 / 13;
+		}
+
+		/* Постера нет — текст занимает всю ширину, а не оставляет дыру слева. */
+		.hero.no-poster .copy {
+			grid-column: 1 / 13;
+		}
+
+		.heading {
+			grid-template-columns: minmax(0, 1fr) auto;
+			grid-template-rows: auto auto;
+			column-gap: 42px;
+			row-gap: var(--sp-3);
+			/* ПО БАЗОВОЙ ЛИНИИ, А НЕ ПО ЦЕНТРУ КОРОБОК: у заголовка и оригинала
+			   разные гарнитуры и кегли, и выравнивание коробок поставило бы
+			   их буквы на разной высоте. */
+			align-items: baseline;
+		}
+
+		.heading-main,
+		.heading-aside {
+			display: contents;
+		}
+
+		.copy h1 {
+			grid-column: 1;
+			grid-row: 1;
+			margin: 0;
+		}
+
+		.original {
+			grid-column: 2;
+			grid-row: 1;
+			margin: 0;
+			text-align: right;
+		}
+
+		.facts {
+			grid-column: 1;
+			grid-row: 2;
+		}
+
+		.external-link {
+			grid-column: 2;
+			grid-row: 2;
+			justify-self: end;
+			padding-block: 0;
+		}
+	}
+
+	@media (min-width: 1101px) {
+		.poster-wrap {
+			max-width: 350px;
+		}
+	}
+
+	/* ---------- Упоминания ---------- */
+
+	/* Заголовок блока — технический слой, как у «Упоминается в материале»
+	   на странице выпуска: это служебная надпись над списком, а не раздел
+	   страницы. Своей линии снизу у него нет — её рисует верхняя граница
+	   первого ряда карточек, иначе над блоком оказались бы две. */
 	.mentions-title {
-		margin-bottom: var(--space-2);
+		margin: 0 0 20px;
+		font-family: var(--font-tech);
+		font-size: var(--technical);
+		font-weight: 600;
+		line-height: 1.35;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--ink);
 	}
 
-	.empty {
-		color: var(--color-text-muted);
-	}
-
-	.grid {
+	.mentions-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-		gap: var(--space-3);
+		grid-template-columns: minmax(0, 1fr);
+		gap: var(--sp-8) var(--grid-gap);
 	}
 
-	/* Строка живёт внутри карточки поста (<slot /> в PostCard.astro), поэтому
-	   отступы повторяют отступы её тела. */
-	.episode-times {
-		margin: 0;
-		padding: 0 var(--space-2) var(--space-2);
-		color: var(--color-text-muted);
-		font-size: var(--font-size-sm);
+	@media (min-width: 621px) {
+		.mentions-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
 	}
 
-	.episode-times a {
-		color: var(--color-accent);
+	@media (min-width: 1101px) {
+		.mentions-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	/* Строка минут живёт внутри карточки материала (её <slot />), поэтому
+	   размер и цвет у неё карточкины, а не свои. */
+	.times {
+		margin: var(--sp-3) 0 0;
+		font-size: var(--body-sm);
+		line-height: 1.6;
+		color: var(--muted);
+	}
+
+	/* Таймкод — часть предложения, поэтому в гарнитуре текста, а не плашкой:
+	   коробок в языке сайта нет. Цель 44 добирается невидимой зоной (§8). */
+	.timecode {
+		position: relative;
+		color: var(--accent-text);
+		font-weight: 600;
 		font-variant-numeric: tabular-nums;
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+		white-space: nowrap;
 	}
 
-	.episode-times a:hover,
-	.episode-times a:focus-visible {
-		color: var(--color-accent-hover);
+	.timecode::after {
+		content: '';
+		position: absolute;
+		inset: -12px -6px;
 	}
 
-	@media (max-width: 600px) {
-		.header {
-			flex-direction: column;
-		}
-
-		.poster {
-			width: 160px;
-		}
+	.timecode:hover {
+		background: var(--accent-soft);
 	}
 </style>
+
+<script>
+	// Упоминания сверх первых шести. Разметка вся на месте, лишние карточки
+	// закрыты атрибутом — так их найдёт поиск браузера по странице.
+	import { setLoadMoreState } from '../../lib/loadMore.mjs';
+
+	function setup() {
+		const grid = document.getElementById('mentions-grid');
+		const button = document.getElementById('mentions-more') as HTMLButtonElement | null;
+		if (!grid || !button || button.disabled) return;
+
+		const extra = Array.from(grid.children).filter((el) => (el as HTMLElement).hidden) as HTMLElement[];
+		if (extra.length === 0) return;
+
+		button.addEventListener('click', () => {
+			// Свернуть — та же кнопка на том же месте (§8.1).
+			const open = button.getAttribute('aria-expanded') === 'true';
+			for (const el of extra) el.hidden = open;
+			setLoadMoreState(button, open ? 'more' : 'less');
+		});
+	}
+
+	document.addEventListener('astro:page-load', setup);
+</script>

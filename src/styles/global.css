@@ -235,6 +235,64 @@ a:focus-visible {
 	}
 }
 
+/* ---------- Кнопка «Показать ещё» ---------- */
+
+/* Компонент один на весь сайт (§8.1), а стоит он в четырёх местах: подборка
+   «Из архива» на главной, ссылка «Весь архив», каталог тайтлов и упоминания
+   на странице тайтла. Поэтому правила лежат здесь, а не в чьих-то стилях:
+   четыре копии одной кнопки разъехались бы молча — сначала высотой цели,
+   потом цветом наведения. Разметку рисует src/components/LoadMore.astro,
+   три состояния переключает src/lib/loadMore.mjs. */
+.load-more-wrap {
+	display: grid;
+	grid-template-columns: 1fr auto 1fr;
+	align-items: center;
+	gap: var(--sp-6);
+	padding: var(--sp-8) 0;
+}
+
+/* Кнопка стоит МЕЖДУ ДВУМЯ ЛИНИЯМИ, и рисует их сама обёртка: линия секции
+   тут не годится, она прошла бы поверх подписи. */
+.load-more-wrap::before,
+.load-more-wrap::after {
+	content: '';
+	height: 1px;
+	background: var(--line);
+}
+
+.load-more {
+	min-height: 44px;
+	display: inline-flex;
+	align-items: center;
+	padding: 0 var(--sp-3);
+	border: 0;
+	background: transparent;
+	color: var(--ink);
+	text-decoration: none;
+}
+
+.load-more:hover {
+	color: var(--accent-text);
+}
+
+/* Выключенное состояние отличается не только цветом: подпись у него другая
+   («Все материалы показаны»), а нажатие ничего не делает. */
+.load-more[disabled] {
+	color: var(--muted);
+	cursor: default;
+}
+
+.load-more[disabled]:hover {
+	color: var(--muted);
+}
+
+.down {
+	display: inline-block;
+	margin-left: var(--sp-2);
+	font-size: var(--body-sm);
+	line-height: 1;
+}
+
 /* ---------- Контролы плеера ---------- */
 
 /* Кнопка «играть», перемотка ±15 и выбор скорости лежат ЗДЕСЬ, а не в плеере,

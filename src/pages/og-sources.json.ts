@@ -20,7 +20,8 @@ import { isPublished } from '../lib/publishing.mjs';
 import { isExternalPost } from '../lib/externalPost.mjs';
 import { findEpisodeByGuid } from '../lib/podcastFeed.mjs';
 import { socialSource } from '../lib/postImage.mjs';
-import { ogUrlForPost } from '../lib/ogImage.mjs';
+import { animeSocialSource } from '../lib/animePoster.mjs';
+import { ogUrlForPost, ogUrlForAnime } from '../lib/ogImage.mjs';
 
 export const prerender = true;
 
@@ -45,7 +46,19 @@ export const GET: APIRoute = async () => {
 		}),
 	);
 
-	return new Response(JSON.stringify(list.filter(Boolean)), {
+	// Страницы тайтлов: превью делается из уже скачанного постера. Берём
+	// крупный размер — 640 px против 1200 в полосе, но постер вписывается
+	// целиком и растягивается по высоте, а не по ширине. Тайтл без постера
+	// в список не попадает и получает общую картинку сайта.
+	const animeList = await getCollection('anime');
+	const animeSources = animeList
+		.map((entry) => {
+			const source = animeSocialSource(entry.data.poster);
+			return source ? { og: ogUrlForAnime(entry.id), source } : null;
+		})
+		.filter(Boolean);
+
+	return new Response(JSON.stringify([...list.filter(Boolean), ...animeSources]), {
 		headers: { 'Content-Type': 'application/json' },
 	});
 };

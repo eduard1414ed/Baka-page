@@ -1,6 +1,6 @@
 ---
 // Страница архива целиком: шапка, вкладки по типу, лента и листание
-// (раздел 4.1–4.3 ТЗ, макет Сборка-16/archive.html).
+// (раздел 4.1–4.3 ТЗ, макет Сборка-18/archive.html).
 //
 // ОДИН КОМПОНЕНТ НА АРХИВ И НА РАЗДЕЛЫ. `/archive/` и `/category/podcast/` —
 // это одна и та же страница с разным набором материалов, и отдельной вёрстки
@@ -19,6 +19,7 @@
 // PostCard.astro. Второго компонента карточки в проекте нет и не заводим.
 import PostCard from './PostCard.astro';
 import Pagination from './Pagination.astro';
+import SectionHead from './SectionHead.astro';
 import { visibleCategories } from '../content.config';
 
 interface Props {
@@ -41,20 +42,8 @@ interface Props {
 const { posts, eyebrow, heading, intro, countLine, activeCategory, base, current, last } = Astro.props;
 ---
 
-<section class="archive-head">
-	<div>
-		<div class="eyebrow tech">{eyebrow}</div>
-		<h1>{heading}</h1>
-	</div>
-	{/* Строка счёта выводится ВСЕГДА, даже когда считать нечего. У пустого
-	    раздела в ней пусто, но место под неё занято: иначе шапка такого
-	    раздела на строку ниже соседних, и при переходе по вкладкам список
-	    под ней прыгает. */}
-	<div class="archive-intro">
-		<p>{intro}</p>
-		<div class="archive-count tech">{countLine}</div>
-	</div>
-</section>
+{/* Шапка раздела — общий компонент: точно такая же стоит у каталога тайтлов. */}
+<SectionHead eyebrow={eyebrow} heading={heading} intro={intro} countLine={countLine} />
 
 {/* Те же вкладки, что фильтры на главной, но здесь это ОБЫЧНЫЕ ССЫЛКИ
     на разделы: у каждого типа свой адрес, на который можно сослаться
@@ -91,57 +80,7 @@ const { posts, eyebrow, heading, intro, countLine, activeCategory, base, current
 {last > 1 && <Pagination current={current} last={last} base={base} />}
 
 <style>
-	.archive-head {
-		display: grid;
-		gap: var(--sp-4);
-		padding: var(--sp-12) 0 var(--sp-8);
-		border-bottom: 1px solid var(--line);
-	}
-
-	.eyebrow {
-		font-weight: 600;
-		color: var(--accent-text);
-		margin-bottom: var(--sp-3);
-	}
-
-	.archive-head h1 {
-		margin: 0;
-	}
-
-	.archive-intro {
-		font-size: var(--body-lg);
-		line-height: 1.65;
-		color: var(--text);
-	}
-
-	.archive-intro p {
-		margin: 0 0 var(--sp-4);
-	}
-
-	/* Ровно одна строка технического слоя, даже когда она пустая: пустой блок
-	   сам по себе схлопнулся бы в нулевую высоту, и место осталось бы
-	   незанятым. */
-	.archive-count {
-		color: var(--muted);
-		min-height: calc(var(--technical) * 1.35);
-	}
-
-	@media (min-width: 821px) {
-		.archive-head {
-			grid-template-columns: repeat(12, minmax(0, 1fr));
-			column-gap: var(--grid-gap);
-			align-items: end;
-			padding-top: var(--sp-16);
-		}
-
-		.archive-head > div:first-child {
-			grid-column: 1 / 8;
-		}
-
-		.archive-intro {
-			grid-column: 8 / 13;
-		}
-	}
+	/* Шапка раздела — в SectionHead.astro: она общая с каталогом тайтлов. */
 
 	/* Вкладки переносятся, а не скроллятся: карусель прячет часть типов
 	   за краем экрана, и о них не догадаться. */

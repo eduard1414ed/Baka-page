@@ -1,112 +1,233 @@
 ---
+// Вертикальная марка аниме (§11.1 дизайн-системы, в макете `catalog.html` —
+// `.stamp`). Постер сверху в рамке 2:3, текстовый блок снизу, перфорация
+// по всем четырём сторонам.
+//
+// ФОРМ У МАРКИ РОВНО ДВЕ, ТРЕТЬЕЙ НЕ БЫВАЕТ: эта — в каталоге, горизонтальная
+// (AnimeBadge.astro) — на главной и в блоках «Упоминается». Цвет обе берут
+// из общего src/lib/animeStamp.mjs: один тайтл обязан выглядеть одинаково
+// в обеих формах.
+//
+// ПОСТЕР НЕ ОБРЕЗАЕТСЯ НИКОГДА: `object-fit: contain`, поля внутри рамки
+// заливаются цветом марки. Обрезка съедает название и лицо — то есть ровно
+// то, ради чего постер и нарисован. Квадратная картинка в поле постера —
+// это ошибка данных, а не повод включать обрезку.
+//
+// РАМКА ЗДЕСЬ ИМЕННО 2:3, В ОТЛИЧИЕ ОТ ГОРИЗОНТАЛЬНОЙ МАРКИ. Там ширина
+// колонки посчитана под самый широкий реальный постер (0.717), потому что
+// высота марки фиксирована и постер обязан занять её целиком. Здесь высоту
+// задаёт сама рамка, и лишние 5–12 px уходят в поля сверху и снизу, которые
+// на глаз не читаются: у соседних марок текстовый блок всё равно начинается
+// на одной высоте.
 import { getAnimePosterSrcs } from '../lib/animePoster.mjs';
+import { stampVar } from '../lib/animeStamp.mjs';
 import { plural } from '../lib/plural.mjs';
 
 interface Props {
-	anime: { id: string; data: Record<string, any> };
-	count: number;
+	/** Запись каталога из src/lib/animeCatalog.mjs. */
+	item: {
+		entry: { id: string; data: Record<string, any> };
+		title: string;
+		count: number;
+		order: number;
+		code: string;
+		search: string;
+	};
+	/** Не входит в текущую порцию — марка скрыта до нажатия «Показать ещё». */
+	hidden?: boolean;
 }
 
-const { anime, count } = Astro.props;
-const { titleRu, titleOriginal, year, poster } = anime.data;
-const posterSrcs = getAnimePosterSrcs(poster);
-const displayTitle = titleRu || titleOriginal;
-const needsTranslation = !titleRu;
+const { item, hidden = false } = Astro.props;
+const { entry, title, count, order, code, search } = item;
+const { titleRu, titleOriginal, year, studio } = entry.data;
 
-// Формы числительного подбирает общий src/lib/plural.mjs — тот же, что считает
-// «143 выпуска» в шапке архива. Своя копия правила тут была и убрана: правило
-// одно, а копии разъезжаются молча, на числах вроде 111 и 114.
-const mentionForms: [string, string, string] = ['упоминание', 'упоминания', 'упоминаний'];
+const posterSrcs = getAnimePosterSrcs(entry.data.poster);
+
+// Оригинальное название не повторяем, если оно же стоит заголовком: у тайтлов
+// из AniList русского названия не бывает вовсе.
+const original = titleRu ? titleOriginal : null;
+const factsLine = [year, studio].filter(Boolean).join(' · ');
 ---
 
-<a class="card" href={`/anime/${anime.id}/`}>
-	{
-		posterSrcs.length > 0 ? (
-			<img
-				class="poster"
-				src={posterSrcs[0].src}
-				srcset={posterSrcs.map((s) => `${s.src} ${s.width}w`).join(', ')}
-				sizes="(max-width: 700px) 45vw, 220px"
-				alt=""
-				loading="lazy"
-			/>
-		) : (
-			<span class="poster poster-placeholder" aria-hidden="true">
-				?
-			</span>
-		)
-	}
-	<div class="body">
-		<h3 class="title">{displayTitle}</h3>
-		{needsTranslation && <span class="badge">нужен перевод</span>}
-		<span class="meta">
-			{year}
-			{count > 0 && ` · ${count} ${plural(count, mentionForms)}`}
+<a
+	class="cat-stamp"
+	href={`/anime/${entry.id}/`}
+	style={`--stamp: ${stampVar(entry.id)}`}
+	hidden={hidden}
+	data-order={order}
+	data-title={title}
+	data-year={year ?? ''}
+	data-mentions={count}
+	data-search={search}
+>
+	<span class="inner">
+		<span class="poster">
+			{/* Заглушки «изображения нет» тут пока нет — она в части 9 вместе
+			    с самим рисунком персонажа. До тех пор место постера остаётся
+			    залитым цветом марки: рамка держит 2:3, и ряд не ломается. */}
+			{
+				posterSrcs.length > 0 && (
+					<img
+						src={posterSrcs[0].src}
+						srcset={posterSrcs.map((source) => `${source.src} ${source.width}w`).join(', ')}
+						sizes="(max-width: 620px) 45vw, 220px"
+						alt=""
+						loading="lazy"
+					/>
+				)
+			}
 		</span>
-	</div>
+		<span class="copy">
+			<span class="code tech">{code}</span>
+			<h2 class="title">{title}</h2>
+			{original && <span class="original">{original}</span>}
+			<span class="meta">
+				{factsLine && <span>{factsLine}</span>}
+				{count > 0 && <span>{count} {plural(count, ['упоминание', 'упоминания', 'упоминаний'])}</span>}
+			</span>
+			<span class="arrow" aria-hidden="true">→</span>
+		</span>
+	</span>
 </a>
 
 <style>
-	.card {
-		display: flex;
-		flex-direction: column;
-		color: var(--color-text);
-		background: var(--color-bg-elevated);
-		border-radius: var(--radius-md);
-		overflow: hidden;
-		border: 1px solid var(--color-border);
-		transition: border-color var(--transition-fast);
+	/* Своего `display` у марки нет намеренно: ребёнок сетки и так становится
+	   блочным, а лишнее правило пришлось бы уточнять через `:not([hidden])` —
+	   марки за пределами текущей порции прячутся именно атрибутом. */
+	.cat-stamp {
+		--stamp: var(--stamp-1);
+		position: relative;
+		min-width: 0;
+		background: var(--stamp);
+		color: var(--ink);
+		transition: transform var(--transition-fast);
 	}
 
-	.card:hover,
-	.card:focus-visible {
-		border-color: var(--color-accent);
-		color: var(--color-text);
+	.cat-stamp:hover {
+		transform: translateY(-3px);
+	}
+
+	/* Перфорация: верх и низ рисует сама марка, бока — внутренняя обёртка.
+	   Псевдоэлементов у элемента всего два, а сторон четыре. */
+	.cat-stamp::before,
+	.cat-stamp::after {
+		content: '';
+		position: absolute;
+		z-index: 3;
+		left: 0;
+		right: 0;
+		height: 12px;
+		pointer-events: none;
+		background: radial-gradient(circle at 6px 0, var(--paper) 5px, transparent 5.5px) 0 0 / 18px 12px repeat-x;
+	}
+
+	.cat-stamp::before {
+		top: -1px;
+	}
+
+	.cat-stamp::after {
+		bottom: -1px;
+		transform: rotate(180deg);
+	}
+
+	.inner {
+		position: relative;
+		display: block;
+		min-height: 100%;
+		overflow: hidden;
+	}
+
+	.inner::before,
+	.inner::after {
+		content: '';
+		position: absolute;
+		z-index: 3;
+		top: 0;
+		bottom: 0;
+		width: 12px;
+		pointer-events: none;
+		background: radial-gradient(circle at 0 6px, var(--paper) 5px, transparent 5.5px) 0 0 / 12px 18px repeat-y;
+	}
+
+	.inner::before {
+		left: -1px;
+	}
+
+	.inner::after {
+		right: -1px;
+		transform: rotate(180deg);
 	}
 
 	.poster {
-		width: 100%;
 		aspect-ratio: 2 / 3;
-		object-fit: cover;
-		background: var(--color-bg);
+		display: grid;
+		place-items: center;
+		overflow: hidden;
+		background: var(--stamp);
 	}
 
-	.poster-placeholder {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: var(--font-size-xl);
-		color: var(--color-text-muted);
+	.poster img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+		object-position: center;
+		display: block;
 	}
 
-	.body {
-		display: flex;
-		flex-direction: column;
-		/* Новая шкала §3.5: те же 8 и 16 пикселей, что были, но под новыми
-		   именами. Каталог переверстывается в части 7, до неё карточка
-		   остаётся прежней на вид. */
-		gap: var(--sp-2);
-		padding: var(--sp-4);
+	/* 144 — минимум, а не высота: у длинного названия текст растёт вниз,
+	   и марка растёт вместе с ним. */
+	.copy {
+		position: relative;
+		display: block;
+		min-height: 144px;
+		padding: 16px 16px 26px;
+		background: var(--stamp);
+	}
+
+	.code {
+		display: block;
+		margin-bottom: 10px;
+		color: var(--muted);
 	}
 
 	.title {
-		margin: 0;
-		font-size: var(--font-size-base);
+		margin: 0 0 var(--sp-2);
+		font-family: var(--font-display);
+		font-size: var(--card-title);
+		line-height: 1.15;
+		font-weight: 400;
+		/* Названия аниме бывают одним словом на всю колонку («Королевские
+		   космические силы»), а колонка каталога узкая — 140 px на телефоне. */
+		overflow-wrap: anywhere;
+	}
+
+	.original {
+		display: block;
+		margin-bottom: 11px;
+		font-size: var(--caption);
 		line-height: 1.3;
+		font-style: italic;
+		color: var(--muted);
 	}
 
 	.meta {
-		color: var(--color-text-muted);
-		font-size: var(--font-size-sm);
+		display: grid;
+		gap: 2px;
+		font-size: var(--caption);
+		line-height: 1.45;
+		color: var(--muted);
 	}
 
-	.badge {
-		display: inline-block;
-		width: fit-content;
-		padding: 0.1em 0.5em;
-		border-radius: var(--radius-full);
-		background: var(--color-accent-2);
-		color: var(--color-bg);
-		font-size: var(--font-size-sm);
+	.arrow {
+		position: absolute;
+		right: 12px;
+		bottom: 8px;
+		font-size: 20px;
+		line-height: 1;
+		color: var(--accent-text);
+	}
+
+	.cat-stamp:hover .title {
+		color: var(--accent-text);
 	}
 </style>

@@ -1,69 +1,353 @@
 ---
+// Каталог тайтлов (§16 дизайн-системы, раздел 7.2 ТЗ, макет `catalog.html`).
+//
+// ЧТО ЗДЕСЬ ЕСТЬ И ЧЕГО НЕТ. Есть поиск и сортировка: каталог растёт, и при
+// сотне тайтлов сетка без поиска превращается в свалку. Фильтров по параметрам
+// НЕТ НАМЕРЕННО — у аниме их слишком много (жанр, студия, год, тип, статус),
+// любой отобранный набор окажется произвольным, а поиск закрывает ту же задачу
+// без интерфейсного долга. Про это написано и в ТЗ, и в §16.1.
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import AnimeCard from '../../components/AnimeCard.astro';
-import { buildMentionIndex, postsForAnime } from '../../lib/animeMentionIndex.mjs';
-import { isPublished } from '../../lib/publishing.mjs';
+import SectionHead from '../../components/SectionHead.astro';
+import LoadMore from '../../components/LoadMore.astro';
 import JsonLd from '../../components/JsonLd.astro';
+import { buildCatalog } from '../../lib/animeCatalog.mjs';
+import { isPublished } from '../../lib/publishing.mjs';
+import { withCount } from '../../lib/plural.mjs';
 import { breadcrumbsSchema } from '../../lib/schema.mjs';
 
 const posts = await getCollection('posts', ({ data }) => isPublished(data));
 const animeList = await getCollection('anime');
 const transcripts = await getCollection('transcripts');
 
-// Счётчик считаем ровно тем же кодом, что и список на самой странице тайтла
-// (src/pages/anime/[slug].astro) — иначе тут было бы «1 упоминание», а внутри
-// три карточки: с этого шага упоминанием считается и название, прозвучавшее
-// в расшифровке выпуска, а не только проставленное в поле `anime` поста.
-const index = buildMentionIndex({ posts, transcripts, animeList });
-const mentionCounts = new Map<string, number>(
-	animeList.map((entry) => [entry.id, postsForAnime(entry.id, posts, index).length]),
-);
+// Порядок, номера CAT и число упоминаний считает общий модуль — тот же, что
+// отбирает тайтлы для блока каталога на главной. Считай их каждая страница
+// сама, числа на них разъехались бы.
+const catalog = buildCatalog({ posts, transcripts, animeList });
 
-function displayTitle(entry: (typeof animeList)[number]) {
-	return entry.data.titleRu || entry.data.titleOriginal;
-}
+/** Сколько марок показывает одна порция. Четыре ряда по шесть на широком. */
+const PER_PAGE = 24;
 
-const sorted = animeList
-	.map((entry) => ({ entry, count: mentionCounts.get(entry.id) ?? 0 }))
-	.sort((a, b) => b.count - a.count || displayTitle(a.entry).localeCompare(displayTitle(b.entry), 'ru'));
+const TITLE_FORMS: [string, string, string] = ['тайтл', 'тайтла', 'тайтлов'];
+const countLine = `Всего: ${withCount(catalog.length, TITLE_FORMS)}`;
+
+const crumbs = breadcrumbsSchema([{ name: 'Каталог аниме', path: '/anime/' }]);
 ---
 
 <Layout
-	title="Тайтлы"
-	description={`Все аниме, которые упоминались в подкасте «Бака!» — ${sorted.length} шт. Клик по тайтлу открывает все выпуски и посты с упоминаниями, вплоть до минуты в разговоре.`}
+	title="Каталог аниме"
+	description="Все аниме, которые мы упоминали в подкасте, видеоэссе и текстах. На странице каждого тайтла — материалы и точные минуты разговоров."
 >
-	<JsonLd slot="head" data={breadcrumbsSchema([{ name: 'Тайтлы', path: '/anime/' }])} />
-	<section class="anime-index">
-		<h1>Тайтлы</h1>
-		{
-			sorted.length === 0 ? (
-				<p class="empty">Пока нет ни одного тайтла.</p>
-			) : (
-				<div class="grid">
-					{sorted.map(({ entry, count }) => (
-						<AnimeCard anime={entry} count={count} />
-					))}
-				</div>
-			)
-		}
-	</section>
+	<JsonLd slot="head" data={crumbs} />
+	<div class="site">
+		<SectionHead
+			eyebrow="Каталог"
+			heading="Аниме"
+			intro="Все аниме, которые мы упоминали в подкастах, видеоэссе и текстах. На странице каждого тайтла собраны связанные материалы и точные таймкоды разговоров."
+			countLine={countLine}
+			countId="catalog-count"
+		/>
+
+		{/* ПАНЕЛЬ СТОИТ ПОД ЛИНИЕЙ ШАПКИ, А НЕ НАД НЕЙ: сначала читатель
+		    понимает, где он, и только потом получает инструменты. Своей линии
+		    у панели нет — её рисует шапка сверху, иначе вышли бы две. */}
+		<div class="tools">
+			<div class="search">
+				<input
+					class="search-box"
+					id="catalog-search"
+					type="search"
+					placeholder="Найти тайтл"
+					aria-label="Поиск по каталогу"
+					aria-controls="catalog-grid"
+					autocomplete="off"
+				/>
+			</div>
+			<div class="sort">
+				<label class="sort-label tech" for="catalog-sort">Сортировка</label>
+				{/* Тот же контрол, что выбор скорости в плеере: видимая плашка
+				    внутри цели 44, нажатие ловит прозрачный родной `select`.
+				    Стили — в global.css, второго такого контрола не заводим. */}
+				<span class="speed-wrap sort-control">
+					<select class="speed" id="catalog-sort">
+						<option value="order">по порядку добавления</option>
+						<option value="title">по алфавиту</option>
+						<option value="year">по году выхода</option>
+						<option value="mentions">по числу упоминаний</option>
+					</select>
+					<span class="speed-face" id="catalog-sort-face" aria-hidden="true">по порядку добавления</span>
+				</span>
+			</div>
+		</div>
+
+		{/* Текст пустого состояния собирает скрипт: в нём стоит сам запрос. */}
+		<p class="empty" id="catalog-empty" hidden></p>
+
+		{/* Размер порции и формы числительного висят на самой сетке, а не лежат
+		    вторым списком в скрипте: числу порции нужно совпадать с тем, по
+		    которому марки скрыты при сборке, а формам — со строкой счёта выше.
+		    Две копии разъехались бы молча. */}
+		<section
+			class="catalog-grid"
+			id="catalog-grid"
+			aria-label="Каталог аниме"
+			data-page-size={PER_PAGE}
+			data-forms={TITLE_FORMS.join('|')}
+		>
+			{catalog.map((item, position) => <AnimeCard item={item} hidden={position >= PER_PAGE} />)}
+		</section>
+
+		<LoadMore
+			id="catalog-more"
+			controls="catalog-grid"
+			more="Показать ещё тайтлы"
+			less="Свернуть тайтлы"
+			done="Все тайтлы показаны"
+			disabled={catalog.length <= PER_PAGE}
+		/>
+	</div>
 </Layout>
 
 <style>
-	.anime-index {
-		max-width: 72rem;
-		margin: 0 auto;
-		padding: var(--space-4) var(--space-3);
+	/* --- Поиск и сортировка --- */
+
+	.tools {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--sp-4) var(--sp-6);
+		min-height: 56px;
+		padding: var(--sp-6) 0 var(--sp-2);
+	}
+
+	/* Поле не тянется во всю ширину: запрос в каталог короткий, а поле
+	   на 1300 пикселей выглядит как форма регистрации, а не как фильтр. */
+	.search {
+		flex: 1 1 320px;
+		max-width: 420px;
+	}
+
+	.search-box {
+		width: 100%;
+		appearance: none;
+		-webkit-appearance: none;
+		min-height: 44px;
+		padding: 0 13px;
+		border: 1px solid var(--line-strong);
+		background: transparent;
+		font-size: var(--body-md);
+	}
+
+	.search-box:focus {
+		border-color: var(--ink);
+		outline: none;
+	}
+
+	/* Родные крестик и лупа у type="search" рисуются системным стилем
+	   и спорят с рамкой контрола. */
+	.search-box::-webkit-search-decoration,
+	.search-box::-webkit-search-cancel-button,
+	.search-box::-webkit-search-results-button {
+		-webkit-appearance: none;
+	}
+
+	.sort {
+		flex: 0 0 auto;
+		display: flex;
+		align-items: center;
+		gap: var(--sp-3);
+	}
+
+	.sort-label {
+		color: var(--muted);
+		white-space: nowrap;
+	}
+
+	/* Ширина по содержимому: подписи вариантов разной длины. Плюс стрелка,
+	   чтобы контрол читался как выбор, а не как плашка. */
+	.sort-control .speed-face {
+		white-space: nowrap;
+		padding-right: 30px;
+	}
+
+	.sort-control::after {
+		content: '▾';
+		position: absolute;
+		right: 11px;
+		top: 50%;
+		transform: translateY(-50%);
+		font-size: var(--technical);
+		line-height: 1;
+		color: var(--muted);
+		pointer-events: none;
+	}
+
+	/* На узком экране подпись съедает строку, а сам контрол и так говорит
+	   за себя. Экранному диктору она остаётся: label связан с select. */
+	@media (max-width: 520px) {
+		.sort-label {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			padding: 0;
+			margin: -1px;
+			overflow: hidden;
+			clip-path: inset(50%);
+			white-space: nowrap;
+		}
+
+		.sort,
+		.sort-control {
+			width: 100%;
+		}
+
+		.sort-control .speed-face {
+			width: 100%;
+			place-items: center start;
+		}
 	}
 
 	.empty {
-		color: var(--color-text-muted);
+		font-size: var(--body-lg);
+		line-height: 1.65;
+		color: var(--muted);
+		padding: var(--sp-12) 0 0;
 	}
 
-	.grid {
+	/* --- Сетка марок --- */
+
+	/* Сетка заполняющая, а не схлопывающая (§4.5): схлопывающий вариант
+	   растянул бы марки на всю строку, и два тайтла в каталоге выглядели бы
+	   как два плаката. Колонки фиксированные выше 620 — так в §11.1. */
+	.catalog-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-		gap: var(--space-3);
+		grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+		gap: 24px 12px;
+		padding: var(--sp-8) 0 var(--sp-4);
+	}
+
+	@media (min-width: 621px) {
+		.catalog-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 24px 16px;
+		}
+	}
+
+	@media (min-width: 821px) {
+		.catalog-grid {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: 28px 20px;
+		}
+	}
+
+	@media (min-width: 1101px) {
+		.catalog-grid {
+			grid-template-columns: repeat(6, minmax(0, 1fr));
+		}
 	}
 </style>
+
+<script>
+	// Поиск, сортировка и порции каталога. Всё в браузере: сайт статический,
+	// а запрос в каталог человек уточняет по букве.
+	//
+	// Отбор и порядок считаются ЗАНОВО при каждом изменении, а не хранятся
+	// вторым списком: единственное состояние — что набрано в поле, что выбрано
+	// в сортировке и сколько порций раскрыто.
+	// Запрос приводим ТОЙ ЖЕ функцией, которой сборка привела строку поиска
+	// у каждой марки: разойдись они — и «ё» с «й» перестали бы находиться,
+	// а понять почему было бы не по чему.
+	import { foldCatalog } from '../../lib/translit.mjs';
+	import { withCount } from '../../lib/plural.mjs';
+	import { setLoadMoreState } from '../../lib/loadMore.mjs';
+
+	function setup() {
+		const grid = document.getElementById('catalog-grid');
+		const input = document.getElementById('catalog-search') as HTMLInputElement | null;
+		const sort = document.getElementById('catalog-sort') as HTMLSelectElement | null;
+		const face = document.getElementById('catalog-sort-face');
+		const count = document.getElementById('catalog-count');
+		const empty = document.getElementById('catalog-empty');
+		const more = document.getElementById('catalog-more') as HTMLButtonElement | null;
+		if (!grid || !input || !sort || !count || !empty || !more) return;
+
+		const stamps = Array.from(grid.querySelectorAll<HTMLElement>('.cat-stamp'));
+		// Размер порции и формы числительного приходят из разметки — оттуда же,
+		// откуда ими пользовалась сборка.
+		const perPage = Number(grid.dataset.pageSize) || stamps.length;
+		const forms = String(grid.dataset.forms).split('|') as [string, string, string];
+		let shown = perPage;
+
+		const num = (el: HTMLElement, name: string) => Number(el.dataset[name] || 0);
+
+		const comparators: Record<string, (a: HTMLElement, b: HTMLElement) => number> = {
+			order: (a, b) => num(a, 'order') - num(b, 'order'),
+			title: (a, b) => String(a.dataset.title).localeCompare(String(b.dataset.title), 'ru'),
+			// Свежие сверху. Тайтл без года — в конец: пустое значение это
+			// «неизвестно», а не «нулевой год».
+			year: (a, b) => (num(b, 'year') || -Infinity) - (num(a, 'year') || -Infinity),
+			mentions: (a, b) => num(b, 'mentions') - num(a, 'mentions'),
+		};
+
+		function apply() {
+			const query = foldCatalog(input!.value.trim());
+			const matched = query ? stamps.filter((el) => String(el.dataset.search).includes(query)) : stamps.slice();
+
+			// Порядок меняем в самой разметке, а не свойством `order`: иначе
+			// человек с клавиатуры и экранный диктор шли бы по каталогу
+			// в одном порядке, а глаза видели другой.
+			matched.sort(comparators[sort!.value] ?? comparators.order);
+			for (const el of matched) grid!.appendChild(el);
+
+			const visible = matched.slice(0, shown);
+			for (const el of stamps) el.hidden = true;
+			for (const el of visible) el.hidden = false;
+
+			// Счётчик меняет вопрос: без запроса «Всего», с запросом «Найдено».
+			count!.textContent = `${query ? 'Найдено' : 'Всего'}: ${withCount(matched.length, forms)}`;
+
+			empty!.hidden = matched.length > 0;
+			if (matched.length === 0) {
+				empty!.textContent = `По запросу «${input!.value.trim()}» ничего не нашлось. Попробуйте оригинальное название или название студии.`;
+			}
+
+			setLoadMoreState(
+				more,
+				matched.length === 0
+					? 'done'
+					: matched.length > visible.length
+						? 'more'
+						: shown > perPage
+							? 'less'
+							: 'done',
+			);
+		}
+
+		function reset() {
+			shown = perPage;
+			apply();
+		}
+
+		input.addEventListener('input', reset);
+		sort.addEventListener('change', () => {
+			if (face) face.textContent = sort.options[sort.selectedIndex]?.text ?? '';
+			reset();
+		});
+
+		more.addEventListener('click', () => {
+			if (more.disabled) return;
+			// Свёрнутое состояние — та же кнопка на том же месте (§8.1).
+			shown = more.getAttribute('aria-expanded') === 'true' ? perPage : shown + perPage;
+			apply();
+		});
+
+		apply();
+	}
+
+	// Переходы между страницами идут без перезагрузки (ClientRouter), поэтому
+	// заводимся на astro:page-load: оно срабатывает и при первой загрузке,
+	// и после каждого перехода.
+	document.addEventListener('astro:page-load', setup);
+</script>

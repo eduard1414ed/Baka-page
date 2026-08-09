@@ -23,15 +23,23 @@
 // Обрезать нельзя: обрезка съедает название и лицо, то есть ровно то,
 // ради чего постер и нарисован.
 import { getAnimePosterSrcs } from '../lib/animePoster.mjs';
+import { stampVar } from '../lib/animeStamp.mjs';
 import { plural } from '../lib/plural.mjs';
 
 interface Props {
 	anime: { id: string; data: Record<string, any> };
 	/** Сколько раз тайтл прозвучал в расшифровке этого материала. */
 	mentions?: number;
+	/** Строка каталога вместо «Аниме» в кикере: `CAT. 012 · 2002 · 12 упоминаний`
+	    в блоке каталога на главной. */
+	catalogMeta?: string | null;
+	/** Марка лежит в разметке, но не показана: блок каталога на главной кладёт
+	    двенадцать марок, а показывает четыре. У скрытой картинка не грузится
+	    вовсе — в этом весь смысл двухступенчатого механизма. */
+	hidden?: boolean;
 }
 
-const { anime, mentions = 0 } = Astro.props;
+const { anime, mentions = 0, catalogMeta = null, hidden = false } = Astro.props;
 const { titleRu, titleOriginal, year, studio } = anime.data;
 
 const posterSrcs = getAnimePosterSrcs(anime.data.poster);
@@ -48,15 +56,11 @@ const metaParts = [
 	mentions > 0 ? `${mentions} ${plural(mentions, ['фрагмент', 'фрагмента', 'фрагментов'])}` : null,
 ].filter(Boolean);
 
-// Цвет марки — по имени тайтла, а не по месту в ряду. Ряд должен быть
-// разноцветным, но один и тот же тайтл обязан выглядеть одинаково везде,
-// где попадается: иначе «Фрирен» на странице выпуска и «Фрирен» на главной
-// читались бы как две разные вещи. Значения — в tokens.css.
-const STAMP_COLORS = 4;
-const stampIndex = [...anime.id].reduce((sum, char) => sum + char.charCodeAt(0), 0) % STAMP_COLORS;
+// Цвет марки выбирает общий src/lib/animeStamp.mjs: то же правило работает
+// у вертикальной каталожной марки, и двух копий у него быть не должно.
 ---
 
-<a class="stamp" href={`/anime/${anime.id}/`} style={`--stamp: var(--stamp-${stampIndex + 1})`}>
+<a class="stamp" href={`/anime/${anime.id}/`} style={`--stamp: ${stampVar(anime.id)}`} hidden={hidden}>
 	{/* Перфорация: верх и низ рисуют псевдоэлементы, бока — эти два спана.
 	    Псевдоэлементов у элемента всего два, а сторон четыре. */}
 	<span class="perf-side perf-left" aria-hidden="true"></span>
@@ -70,13 +74,21 @@ const stampIndex = [...anime.id].reduce((sum, char) => sum + char.charCodeAt(0),
 	<span class="copy">
 		<span class="kicker tech">Аниме</span>
 		<span class="title">{displayTitle}</span>
-		{metaParts.length > 0 && <span class="meta">{metaParts.join(' · ')}</span>}
+		{/* В блоке каталога на главной под названием стоит строка каталога
+		    (номер, год, число упоминаний), а не оригинал со студией: там марка
+		    приглашает в каталог, а не поясняет, о чём был выпуск. */}
+		{catalogMeta ? <span class="meta">{catalogMeta}</span> : metaParts.length > 0 && <span class="meta">{metaParts.join(' · ')}</span>}
 		<span class="arrow" aria-hidden="true">→</span>
 	</span>
 </a>
 
 <style>
-	.stamp {
+	/* `:not([hidden])` обязателен: блок каталога на главной прячет восемь марок
+	   из двенадцати атрибутом, а `[hidden]` весит один селектор против правила
+	   компонента с меткой области стилей — без уточнения `display: grid`
+	   перебил бы его, и на главной вывалились бы все двенадцать. Те же грабли
+	   в проекте срабатывали трижды, см. CLAUDE.md. */
+	.stamp:not([hidden]) {
 		--stamp: var(--stamp-1);
 		position: relative;
 		display: grid;

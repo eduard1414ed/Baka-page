@@ -2,7 +2,7 @@
 // Главная — витрина. Она НЕ РАСТЁТ: фиксированный набор слотов, три
 // редакционных ряда, и всё. Что в какой слот попадает — раздел 3.2 ТЗ,
 // считает src/lib/homeSlots.mjs (там же и развилки на случай нехватки данных).
-// Композиция рядов — из макета Сборка-16/index.html.
+// Композиция рядов — из макета Сборка-18/index.html.
 //
 // Баннер и блок с обложкой подкаста и кнопками площадок отсюда убраны:
 // в утверждённом макете их нет, страница начинается с фильтров. Ссылки
@@ -13,10 +13,13 @@ import Layout from '../layouts/Layout.astro';
 import PostFeed from '../components/PostFeed.astro';
 import PostKicker from '../components/PostKicker.astro';
 import PostMedia from '../components/PostMedia.astro';
+import AnimeBadge from '../components/AnimeBadge.astro';
 import JsonLd from '../components/JsonLd.astro';
 import { categoriesShownIn } from '../content.config';
 import { isPublished } from '../lib/publishing.mjs';
 import { pickHomeSlots } from '../lib/homeSlots.mjs';
+import { buildCatalog } from '../lib/animeCatalog.mjs';
+import { plural } from '../lib/plural.mjs';
 import { getCardMedia } from '../lib/postCardMedia.mjs';
 import { postDescription } from '../lib/excerpt.mjs';
 import { isExternalPost, postHref } from '../lib/externalPost.mjs';
@@ -60,6 +63,41 @@ const linkOf = (post: any) => ({
 // третьего ряда занимает всю ширину (раздел 3.2 ТЗ).
 const hasNotes = slots.notes.length > 0;
 const hasThirdRow = Boolean(slots.third) || hasNotes;
+
+// ---------- Блок каталога внизу главной (раздел 7.1a ТЗ) ----------
+//
+// ТАЙТЛЫ ВЫБИРАЮТСЯ СЛУЧАЙНО, а не по свежести или популярности: смысл блока —
+// показать, что каталог большой и разный, а отсортированный список эту мысль
+// не передаёт.
+//
+// МЕХАНИЗМ ДВУХСТУПЕНЧАТЫЙ, потому что сайт статический: при сборке в разметку
+// кладётся двенадцать марок, в браузере из них показываются четыре. Так
+// читатель видит новую четвёрку при каждом заходе, а весит это двенадцать
+// строчек текста, а не двенадцать картинок — у скрытых марок картинки помечены
+// ленивой загрузкой и не запрашиваются вовсе. Пул из двенадцати обновляется
+// при каждой сборке, то есть при каждой публикации и при ночном прогоне робота.
+//
+// БЕЗ JAVASCRIPT ПОКАЗЫВАЮТСЯ ПЕРВЫЕ ЧЕТЫРЕ: блок не пустеет и не ломается.
+const CATALOG_POOL = 12;
+const CATALOG_SHOWN = 4;
+
+const animeList = await getCollection('anime');
+const transcripts = await getCollection('transcripts');
+
+// ИЗ ВЫБОРКИ ИСКЛЮЧАЮТСЯ ТАЙТЛЫ БЕЗ ЕДИНОГО УПОМИНАНИЯ. Они попали
+// в справочник по касательной, и звать по ним в каталог нечестно: перейдя,
+// читатель попадёт на страницу, где нет ничего, кроме описания.
+const catalogPool = buildCatalog({ posts, transcripts, animeList }).filter((item) => item.count > 0);
+
+// Перемешиваем честно (Фишер — Йетс), а не сортировкой со случайным
+// сравнением: та даёт заметный перекос к началу списка, и первые тайтлы
+// справочника попадали бы на главную чаще остальных.
+const shuffled = [...catalogPool];
+for (let i = shuffled.length - 1; i > 0; i -= 1) {
+	const j = Math.floor(Math.random() * (i + 1));
+	[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+}
+const catalogMarks = shuffled.slice(0, CATALOG_POOL);
 ---
 
 {/* Без `title` — у главной заголовок «Бака! — подкаст об аниме» целиком,
@@ -230,6 +268,34 @@ const hasThirdRow = Boolean(slots.third) || hasNotes;
 				}
 			</Fragment>
 		</PostFeed>
+
+		{
+			catalogMarks.length > 0 && (
+				<section class="catalog" aria-labelledby="catalog-title">
+					{/* В строке ровно один акцент: метка раздела акцентная,
+					    ссылка рядом — чернильная. */}
+					<div class="catalog-head">
+						<span class="section-title tech" id="catalog-title">
+							[&thinsp;каталог аниме&thinsp;]
+						</span>
+						<a class="catalog-link tech" href="/anime/">
+							Перейти в каталог <span aria-hidden="true">→</span>
+						</a>
+					</div>
+					<div class="catalog-grid" id="home-catalog" data-shown={CATALOG_SHOWN}>
+						{catalogMarks.map((item, position) => (
+							<AnimeBadge
+								anime={item.entry}
+								catalogMeta={[item.code, item.entry.data.year, `${item.count} ${plural(item.count, ['упоминание', 'упоминания', 'упоминаний'])}`]
+									.filter(Boolean)
+									.join(' · ')}
+								hidden={position >= CATALOG_SHOWN}
+							/>
+						))}
+					</div>
+				</section>
+			)
+		}
 	</div>
 </Layout>
 
@@ -439,6 +505,56 @@ const hasThirdRow = Boolean(slots.third) || hasNotes;
 		color: var(--muted);
 	}
 
+	/* ---------- Блок каталога ---------- */
+
+	.catalog {
+		padding: var(--sp-12) 0 50px;
+		border-top: 1px solid var(--line);
+	}
+
+	.catalog-head {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: var(--sp-3) var(--sp-6);
+		margin-bottom: var(--sp-6);
+	}
+
+	/* Цель 44 набирается отступами, а не min-height: иначе текст ссылки
+	   сместился бы относительно метки раздела, и они встали бы на разной
+	   высоте при одинаковом кегле. */
+	.catalog-link {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--sp-2);
+		padding-block: 12px;
+		color: var(--ink);
+		text-decoration: none;
+	}
+
+	.catalog-link:hover {
+		color: var(--accent-text);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	/* Сетка заполняющая, а не схлопывающая (§4.5): одинокая марка не должна
+	   растягиваться на всю ширину блока. */
+	.catalog-grid {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: var(--sp-3);
+	}
+
+	@media (min-width: 621px) {
+		.catalog-grid {
+			grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+			gap: 14px;
+			justify-content: start;
+		}
+	}
+
 	/* До 761 три ряда — один поток. Вертикальные линии превращаются
 	   в горизонтальные, боковые отступы обнуляются: иначе колонки выглядят
 	   обрезками десктопной сетки. */
@@ -556,3 +672,38 @@ const hasThirdRow = Boolean(slots.third) || hasNotes;
 		}
 	}
 </style>
+
+<script>
+	// Вторая ступень блока каталога: из двенадцати марок, положенных в разметку
+	// при сборке, показываем четыре — тоже случайные. Так читатель видит новую
+	// четвёрку при каждом заходе, хотя страница статическая и лежит в кэше.
+	//
+	// Скрытые марки не грузят свои картинки вовсе (`loading="lazy"` плюс
+	// `hidden`), поэтому запас в двенадцать штук ничего не стоит.
+	function setup() {
+		const grid = document.getElementById('home-catalog');
+		if (!grid) return;
+
+		const marks = Array.from(grid.children) as HTMLElement[];
+		const shown = Number(grid.dataset.shown) || 4;
+		if (marks.length <= shown) return;
+
+		// Фишер — Йетс, как и при сборке: сортировка со случайным сравнением
+		// перекошена к началу списка.
+		const order = marks.map((_, index) => index);
+		for (let i = order.length - 1; i > 0; i -= 1) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[order[i], order[j]] = [order[j], order[i]];
+		}
+
+		const chosen = new Set(order.slice(0, shown));
+		marks.forEach((mark, index) => {
+			mark.hidden = !chosen.has(index);
+		});
+	}
+
+	// Переходы между страницами идут без перезагрузки (ClientRouter), поэтому
+	// astro:page-load: оно срабатывает и при первой загрузке, и после возврата
+	// на главную — четвёрка обновится и там.
+	document.addEventListener('astro:page-load', setup);
+</script>
