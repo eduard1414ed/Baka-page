@@ -20,6 +20,15 @@ import { isExternalPost, externalSourceName } from './externalPost.mjs';
 // Появится ещё категория со своей длительностью — дописать сюда одну строку.
 export const CATEGORIES_WITH_OWN_DURATION = ['podcast', 'videoessay'];
 
+// Чем занят читатель эти минуты. Выпуск слушают, видеоэссе смотрят — так
+// и в макетах («28 мин слушать» на подкасте, «19 мин смотреть» на видеоэссе).
+// Число у обоих одно и то же и берётся из RSS: у видеоэссе там лежит его
+// аудиоверсия, длина ролика и аудиоверсии совпадает.
+//
+// Глагол нужен только на странице материала (`label`). В метастроке карточки
+// стоит `01:06:33` — там глаголу места нет.
+const DURATION_VERB = { podcast: 'слушать', videoessay: 'смотреть' };
+
 // Категории, где метки нет вообще никакой — ни длительности, ни чтения.
 //
 // «Бонус» — указатель на материал, который лежит на Patreon и Boosty: здесь
@@ -135,7 +144,7 @@ export async function getPostTiming(post) {
 
 		return {
 			kind: 'duration',
-			label: `${formatDuration(episode.durationSec)} слушать`,
+			label: `${formatDuration(episode.durationSec)} ${DURATION_VERB[post.data.category] ?? 'слушать'}`,
 			meta: formatClock(episode.durationSec),
 		};
 	}

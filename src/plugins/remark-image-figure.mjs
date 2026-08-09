@@ -72,6 +72,57 @@ function buildCaption(item) {
 	return children.length ? { type: 'element', tagName: 'figcaption', properties: {}, children } : null;
 }
 
+// ——— Сквозная нумерация иллюстраций (тз/08, раздел 5.1) ———
+
+// Меньше двух подписанных иллюстраций — нумерации нет вовсе. Единственной
+// картинке в заметке номер не нужен: ссылаться в тексте не на что,
+// а «FIG. 01» в одиночку выглядит претенциозно.
+const MIN_NUMBERED = 2;
+
+/** «01», «09», «10» — ведущий ноль только до девятого номера. */
+const figNumber = (n) => (n < 10 ? `0${n}` : String(n));
+
+/**
+ * Расставить номера подписям.
+ *
+ * @param {{ figcaption: object, images: number, captioned: boolean }[]} units
+ *   Иллюстрации материала в порядке следования по тексту. `images` — сколько
+ *   картинок внутри: у галереи их несколько, и она занимает столько же
+ *   номеров, подписываясь диапазоном `FIG. 02–05`.
+ *
+ * НОМЕР ПОЛУЧАЮТ ТОЛЬКО ПОДПИСАННЫЕ ИЛЛЮСТРАЦИИ, и неподписанные в счёте
+ * не участвуют. Иначе в нумерации появились бы дыры — `FIG. 01`, потом
+ * `FIG. 03`, — и читатель принял бы это за ошибку вёрстки: он всё равно
+ * не знает, сколько картинок между ними пропущено.
+ *
+ * Экспортируется ради проверки: случай «галерея занимает несколько номеров»
+ * в живых данных пока не возникает (общая подпись у галереи появится в части 9),
+ * а проверить его надо сейчас — иначе диапазоны и ведущий ноль останутся
+ * непроверенными до того дня, когда их некому будет вспомнить.
+ */
+export function numberFigures(units) {
+	if (units.filter((unit) => unit.captioned).length < MIN_NUMBERED) return;
+
+	let counter = 0;
+	for (const unit of units) {
+		if (!unit.captioned) continue;
+
+		const from = counter + 1;
+		counter += unit.images;
+		// Короткое тире в диапазоне, а не дефис.
+		const label = from === counter ? figNumber(from) : `${figNumber(from)}–${figNumber(counter)}`;
+
+		// Номер — технический слой, подпись — Caption 12: это два разных слоя
+		// в одной строке, поэтому номер отдельным элементом, а не текстом.
+		unit.figcaption.children.unshift({
+			type: 'element',
+			tagName: 'b',
+			properties: {},
+			children: [text(`FIG. ${label} —`)],
+		});
+	}
+}
+
 function singleFigureData(item) {
 	const sizes = item.isFull ? '100vw' : '(max-width: 700px) 100vw, 700px';
 	const children = [buildLink(item, sizes)];
@@ -127,9 +178,19 @@ function groupFigureData(items) {
  * → <figure>. Несколько таких блоков подряд без текста между ними объединяются в одну
  * галерею (см. groupFigureData) — так проще и надёжнее, чем отдельный виджет-список
  * картинок внутри своего блока в CMS (там были проблемы с сохранением).
+ *
+ * Здесь же подписи получают сквозной номер по материалу — `FIG. 01 — текст`
+ * (см. numberFigures). Считается при сборке, автор ничего не проставляет
+ * и проставить не может: номер зависит от того, сколько картинок выше по тексту,
+ * и сдвинулся бы от любой вставки.
  */
 export default function remarkImageFigure() {
 	return (tree) => {
+		// Иллюстрации материала в порядке следования по тексту — для сквозной
+		// нумерации подписей. Собираются за тот же проход, что и сами блоки:
+		// второй обход дерева пришлось бы держать в согласии с первым.
+		const units = [];
+
 		visit(tree, (node) => {
 			if (!Array.isArray(node.children)) return;
 
@@ -140,9 +201,17 @@ export default function remarkImageFigure() {
 				if (run.length === 0) return;
 				if (run.length === 1) {
 					run[0].node.data = singleFigureData(run[0].item);
+					const figcaption = run[0].node.data.hChildren.find((child) => child.tagName === 'figcaption') ?? null;
+					units.push({ figcaption, images: 1, captioned: Boolean(figcaption) });
 					newChildren.push(run[0].node);
 				} else {
 					run[0].node.data = groupFigureData(run.map((r) => r.item));
+					// Общей подписи у галереи пока нет — она появится в части 9
+					// вместе с самой галереей, и тогда галерея начнёт занимать
+					// столько номеров, сколько в ней картинок, подписываясь
+					// диапазоном. Счётчик это уже умеет: `images` он прибавляет
+					// целиком, а не по единице.
+					units.push({ figcaption: null, images: run.length, captioned: false });
 					newChildren.push(run[0].node);
 				}
 				run = [];
@@ -163,5 +232,7 @@ export default function remarkImageFigure() {
 			flushRun();
 			node.children = newChildren;
 		});
+
+		numberFigures(units);
 	};
 }

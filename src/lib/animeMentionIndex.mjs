@@ -74,17 +74,20 @@ export function buildMentionIndex({ posts, transcripts, animeList }) {
 }
 
 /**
- * Какие тайтлы прозвучали в одной расшифровке — в порядке первого упоминания.
- * Нужно странице выпуска: плашки тайтлов под текстом должны показывать и то,
- * что нашлось в расшифровке, иначе выходит несогласица — на странице тайтла
- * выпуск есть, а на странице выпуска тайтла нет.
+ * Какие тайтлы прозвучали в одной расшифровке — в порядке первого упоминания,
+ * и на каких минутах. Нужно странице выпуска: марки тайтлов под текстом должны
+ * показывать и то, что нашлось в расшифровке, иначе выходит несогласица —
+ * на странице тайтла выпуск есть, а на странице выпуска тайтла нет. Число
+ * таймкодов у тайтла — это и есть «7 фрагментов» в подписи марки.
  *
  * Отсев тот же, что у указателя (`hasUsableTimecodes` и исключения), чтобы
  * обе стороны связи видели одно и то же.
+ *
+ * @returns {Map<string, number[]>} id тайтла → таймкоды упоминаний
  */
 export function animeMentionedIn(transcriptData, matcher, exceptions) {
-	if (!hasUsableTimecodes(transcriptData)) return [];
-	return [...collectMentions(groupReplicas(transcriptData), matcher, exceptions).keys()];
+	if (!hasUsableTimecodes(transcriptData)) return new Map();
+	return collectMentions(groupReplicas(transcriptData), matcher, exceptions);
 }
 
 /**

@@ -1,4 +1,21 @@
 ---
+// Страница материала. ОДИН ФАЙЛ РИСУЕТ ПЯТЬ РАСКЛАДОК (часть 5 тз/08-дизайн.md,
+// макеты Сборка-16/{article,video,podcast,bonus}.html):
+//
+//   подкаст   — обложка 1:1, кикер, H1, плеер, транскрипт, марки;
+//   бонус     — та же шапка, подводка вместо плеера, плашка подписки;
+//   видеоэссе — общий заголовочный блок, плеер YouTube 1000, аудиоверсия;
+//   статья    — общий заголовочный блок с подводкой, медиаблоки трёх ширин;
+//   заметка   — то же, что статья, обычно без медиа.
+//
+// Разводятся ДВЕ ветки, а не пять: «выпуск» (подкаст и бонус — у них шапка
+// с обложкой) и «текст» (всё остальное — у них общий заголовочный блок).
+// Остальные различия внутри веток — это наличие или отсутствие блока, а не
+// своя вёрстка.
+//
+// ЗАГОЛОВОЧНЫЙ БЛОК СТАТЬИ, ЗАМЕТКИ И ВИДЕОЭССЕ — ОДИН КОМПОНЕНТ
+// (ContentHeader.astro). Двух похожих быть не должно: они разъедутся, и никто
+// этого не заметит — две страницы рядом никто не открывает.
 import { getCollection, getEntry, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import JsonLd from '../../components/JsonLd.astro';
@@ -8,10 +25,12 @@ import { absoluteUrl } from '../../lib/site.mjs';
 import { podcastEpisodeSchema, articleSchema, breadcrumbsSchema } from '../../lib/schema.mjs';
 import { categories, sectionOf } from '../../content.config';
 import { getYoutubeEmbedUrl } from '../../lib/youtube.mjs';
-import { getLinkIcon } from '../../lib/linkIcon.mjs';
+import { hostOf } from '../../lib/linkIcon.mjs';
 import { findEpisodeByGuid } from '../../lib/podcastFeed.mjs';
-import PlatformIcon from '../../components/PlatformIcon.astro';
+import { formatPostDate } from '../../lib/postDate.mjs';
 import AnimeBadge from '../../components/AnimeBadge.astro';
+import ContentHeader from '../../components/ContentHeader.astro';
+import PostKicker from '../../components/PostKicker.astro';
 import EpisodePlayer from '../../components/EpisodePlayer.astro';
 import Transcript from '../../components/Transcript.astro';
 import { hasUsableTimecodes } from '../../lib/transcript.mjs';
@@ -35,6 +54,26 @@ export async function getStaticPaths() {
 	// Отсюда же растёт их отсутствие в карте сайта: src/pages/sitemap.xml.ts
 	// делает ровно ту же проверку, и там написано, почему это не случайность.
 	const posts = await getCollection('posts', ({ data }) => isPublished(data) && !isExternalPost(data));
+
+	// Соседние материалы — внутри РАЗДЕЛА, а не по всему сайту: со страницы
+	// выпуска логично попасть в соседний выпуск, а не в заметку, случайно
+	// вышедшую в тот же день. Раздел тот же, куда ведёт ссылка «← назад»,
+	// поэтому бонус ходит по выпускам.
+	//
+	// Считаем один раз на всю сборку, а не для каждой страницы отдельно:
+	// иначе это 145 сортировок одного и того же списка.
+	const byDate = [...posts].sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+	const neighbours = new Map();
+	for (const section of new Set(byDate.map((post) => sectionOf(post.data.category)))) {
+		const inSection = byDate.filter((post) => sectionOf(post.data.category) === section);
+		// Ссылку делаем только на то, у чего есть страница: список уже отфильтрован
+		// от внешних постов, поэтому битой ссылки тут появиться неоткуда.
+		const link = (entry) => (entry ? { slug: entry.id, title: entry.data.title } : null);
+		inSection.forEach((post, index) => {
+			neighbours.set(post.id, { newerPost: link(inSection[index - 1]), olderPost: link(inSection[index + 1]) });
+		});
+	}
+
 	return Promise.all(
 		posts.map(async (post) => ({
 			params: { slug: post.id },
@@ -42,12 +81,16 @@ export async function getStaticPaths() {
 			// не копируем (см. CLAUDE.md), поэтому ссылку ищем в фиде по audioGuid
 			// поста при каждой сборке. Если фид недоступен или выпуск из него
 			// пропал — episode будет null, страница просто останется без плеера.
-			props: { post, episode: post.data.audioGuid ? await findEpisodeByGuid(post.data.audioGuid) : null },
+			props: {
+				post,
+				episode: post.data.audioGuid ? await findEpisodeByGuid(post.data.audioGuid) : null,
+				...neighbours.get(post.id),
+			},
 		})),
 	);
 }
 
-const { post, episode } = Astro.props;
+const { post, episode, olderPost = null, newerPost = null } = Astro.props;
 const { Content } = await render(post);
 
 const { title, date, category, cover, youtube, video, buttons, anime } = post.data;
@@ -69,40 +112,67 @@ const showTranscript = transcript && hasUsableTimecodes(transcript.data);
 // см. src/lib/transcriptOverrides.mjs.
 const transcriptData = showTranscript ? applyPostOverrides(transcript.data, post.data) : null;
 
-// Обложка выпуска для плеера. Хостинг подкаста отдаёт квадрат 2000×2000
-// весом около 1 МБ на картинку 72×72 — берём сжатую копию из public/episodes/
-// (см. src/lib/episodeCover.mjs). Если её ещё не скачали, вернётся исходная
-// ссылка: тяжело, но не битая картинка.
+// Обложка выпуска. Хостинг подкаста отдаёт квадрат 2000×2000 весом около 1 МБ —
+// берём сжатую копию из public/episodes/ (см. src/lib/episodeCover.mjs). Если её
+// ещё не скачали, вернётся исходная ссылка: тяжело, но не битая картинка.
+//
+// ЭТА ЖЕ КАРТИНКА СТОИТ ПЕРВОЙ СТРОКОЙ В ТЕЛЕ КАЖДОГО ВЫПУСКА — её вставляет
+// робот сверки. В шапке она теперь показана квадратом 1:1, поэтому из текста
+// убирается: src/plugins/remark-episode-cover.mjs. Иначе одна и та же обложка
+// шла бы на странице дважды подряд.
 const playerCover = episode?.imageUrl ? resolveEpisodeCover(episode.imageUrl).src : null;
 const categoryLabel = categories.find((c) => c.id === category)?.label ?? category;
 // В чей раздел ведёт ссылка «← назад». У бонуса подпись своя («← Бонус»),
 // а раздел чужой — «Подкаст»: своей страницы у скрытой категории нет.
 const sectionId = sectionOf(category);
 // Выпуски или посты — считаем по РАЗДЕЛУ, а не по категории: бонус лежит
-// в разделе выпусков, значит и в поиске он «Выпуски».
+// в разделе выпусков, значит и в поиске он «Выпуски», и шапка у него выпускная.
 const isEpisode = sectionId === 'podcast';
-const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
 
 const youtubeEmbed = youtube ? getYoutubeEmbedUrl(youtube) : null;
 
 // Бонус — материал за платной подпиской (тз/10, задача 1). Плашка появляется
 // сама у любого поста этой категории, отдельного переключателя нет.
-// Кнопки площадок при этом уезжают ВНУТРЬ плашки и обычным рядом над текстом
+// Кнопки площадок при этом уезжают ВНУТРЬ плашки и обычным списком над текстом
 // уже не показываются: два одинаковых набора ссылок на одной странице —
 // это не «подстраховались», а «не решили, где они должны быть».
 const isBonus = category === 'bonus';
+const isVideoEssay = category === 'videoessay';
+
+// Подпись над описанием. У статьи и заметки её нет: там текст и есть материал,
+// объявлять его нечем.
+//
+// У видеоэссе она есть, но только если текст НЕ НАЧИНАЕТСЯ С РОЛИКА. В архиве
+// ролик почти всегда вставлен блоком в самое начало текста (`::video{…}`),
+// и подпись «О видеоэссе» оказалась бы над плеером, а не над описанием —
+// то есть врала бы о том, что под ней. В макете плеер стоит отдельным блоком
+// выше, и такого случая просто не возникает.
+const bodyStartsWithVideo = /^\s*::video\b/.test(post.body ?? '');
+const bodyLabel = isEpisode ? 'О выпуске' : isVideoEssay && !bodyStartsWithVideo ? 'О видеоэссе' : null;
+
+// Подводка. Берётся ТОЛЬКО из своего поля «Описание для карточки» и никогда
+// из первого абзаца текста: подставленный первый абзац стоял бы прямо над
+// собой же и читался как заедание.
+//
+// У выпуска подкаста её нет вовсе (§13: «заголовок и плеер — всё»), у видеоэссе
+// нет по умолчанию (§12). Остаются статья, заметка и бонус.
+const ownDescription = String(post.data.description ?? '').trim() || null;
+const lead = isEpisode || isVideoEssay ? null : ownDescription;
+const bonusDeck = isBonus ? ownDescription : null;
 
 // «Сколько это займёт» — та же функция, что зовёт карточка в ленте
-// (src/components/PostCard.astro), поэтому числа на карточке и на странице
+// (src/components/PostKicker.astro), поэтому числа на карточке и на странице
 // разойтись не могут. У выпуска тут будет длительность из RSS, у заметки —
 // время чтения, и никогда не оба сразу.
 //
-// Длительность выпуска показана и в плеере ниже («0:00 / 42:15»), но это разные
-// вещи: там бегущий счётчик воспроизведения, здесь — ответ на вопрос
-// «сколько это займёт», который читают до того, как нажать play.
+// НА СТРАНИЦЕ ВЫПУСКА ДЛИТЕЛЬНОСТЬ НАЗЫВАЕТСЯ ДВАЖДЫ И НЕ БОЛЬШЕ (§13):
+// здесь, в верхней строке рядом с датой, и внутри плеера, где это бегущий
+// счётчик воспроизведения. В кикере её нет — поэтому PostKicker зовётся
+// с `withTiming={false}`. Раньше она стояла в трёх местах подряд, и ни одно
+// из них не было главным.
 const timing = await getPostTiming(post);
 
-// Плашки тайтлов под текстом. Показываем и то, что стоит в поле `anime` поста
+// Марки тайтлов под текстом. Показываем и то, что стоит в поле `anime` поста
 // (разметка в тексте, тз/03), и то, что прозвучало в расшифровке (тз/05, шаг 5):
 // без второго выходила несогласица — на странице тайтла выпуск есть,
 // а на странице выпуска тайтла нет.
@@ -112,22 +182,22 @@ const timing = await getPostTiming(post);
 //
 // Тайтл может быть размечен в тексте до того, как робот донабрал его в справочник
 // (см. тз/03-тайтлы.md) — тогда ссылки ещё нет, getEntry вернёт undefined,
-// такие просто не показываем в плашках, не ломая страницу.
-const mentionedInTranscript = showTranscript
+// такие просто не показываем в марках, не ломая страницу.
+const mentionTimes = showTranscript
 	? animeMentionedIn(
 			transcriptData,
 			buildAnimeMatcher(await getCollection('anime')),
 			makeExceptionFilter(post.data.mentionsHidden),
 		)
-	: [];
+	: new Map();
 
-const animeIds = [...new Set([...(anime ?? []).map((ref: { id: string }) => ref.id), ...mentionedInTranscript])];
+const animeIds = [...new Set([...(anime ?? []).map((ref: { id: string }) => ref.id), ...mentionTimes.keys()])];
 const animeEntries = (await Promise.all(animeIds.map((id) => getEntry('anime', id)))).filter(Boolean);
 
 // ——— Что видно в поиске и в превью при отправке ссылки (тз/06, шаги 7–10) ———
 
-// Описание берём из первого осмысленного абзаца текста — своего поля под него
-// у поста нет, заполнять его руками для 143 выпусков архива никто не будет.
+// Описание берём из первого осмысленного абзаца текста, если своего нет —
+// заполнять его руками для 143 выпусков архива никто не будет.
 // Как отсеивается служебное сверху (обложка, реклама, столбик ссылок) —
 // см. src/lib/excerpt.mjs.
 const pageDescription = postDescription(post, undefined);
@@ -160,6 +230,9 @@ const crumbs = breadcrumbsSchema([
 	{ name: categoryLabel, path: `/category/${sectionId}/` },
 	{ name: title, path: `/posts/${post.id}/` },
 ]);
+
+const backHref = `/category/${sectionId}/`;
+const isoDate = date.toISOString().slice(0, 10);
 ---
 
 <Layout
@@ -171,109 +244,212 @@ const crumbs = breadcrumbsSchema([
 >
 	<JsonLd slot="head" data={schema} />
 	<JsonLd slot="head" data={crumbs} />
-	{/* data-pagefind-body — что берёт в поиск Pagefind (тз/06, шаг 1). Стоит
-	    на <article>, поэтому шапка, подвал и закреплённый плеер из Layout.astro
-	    в индекс не попадают вовсе: они на каждой странице одинаковые и в выдаче
-	    были бы шумом. Страницы БЕЗ этого атрибута (главная, категории, /admin)
-	    Pagefind не индексирует совсем — так работает его правило «если атрибут
-	    встретился хоть где-то, индексируем только помеченное».
+	<div class="site">
+		{/* data-pagefind-body — что берёт в поиск Pagefind (тз/06, шаг 1). Стоит
+		    на <article>, поэтому шапка, подвал и закреплённый плеер из Layout.astro
+		    в индекс не попадают вовсе: они на каждой странице одинаковые и в выдаче
+		    были бы шумом. Страницы БЕЗ этого атрибута (главная, категории, /admin)
+		    Pagefind не индексирует совсем — так работает его правило «если атрибут
+		    встретился хоть где-то, индексируем только помеченное».
 
-	    Тип и категория — фильтры выдачи (тз/06, шаг 5). «Выпуски» это не
-	    отдельная сущность, а категория `podcast`, поэтому тип выводится
-	    из категории, а не хранится отдельно. */}
-	<article
-		class="post"
-		data-pagefind-body
-		data-pagefind-filter={`type:${isEpisode ? 'Выпуски' : 'Посты'}`}
-		data-pagefind-meta={`type:${isEpisode ? 'episode' : 'post'}`}
-	>
-		{/* Один фильтр и одна метка на элемент — перечислить их через запятую
-		    в одном атрибуте НЕЛЬЗЯ, Pagefind примет всю строку за одно значение.
-		    Проверено на живом индексе: `type:Выпуски, category:Подкаст` дало
-		    фильтр «Выпуски, category:Подкаст». Поэтому лишнее висит на пустых
-		    span'ах — они ничего не показывают и в текст страницы не попадают. */}
-		<span data-pagefind-filter={`category:${categoryLabel}`} data-pagefind-meta={`category:${categoryLabel}`}></span>
-		<span data-pagefind-meta={`date:${dateFormatter.format(date)}`}></span>
-		<a class="back" href={`/category/${sectionId}/`} data-pagefind-ignore>← {categoryLabel}</a>
-		<h1 data-pagefind-meta="title">{title}</h1>
-		{/* data-pagefind-ignore на всём абзаце уже стоял ради даты — метка времени
-		    попадает под него заодно, отдельного атрибута не нужно. Это важно:
-		    без него «42 мин слушать» стало бы обычным текстом страницы и вылезало
-		    бы в выдаче поиска обрывком вроде «…42 мин слушать Вместе с Кинопоиском
-		    мы сделали…». */}
-		<p class="date" data-pagefind-ignore>
-			{dateFormatter.format(date)}
-			{timing && <span class="timing">{timing.label}</span>}
-		</p>
+		    Тип и категория — фильтры выдачи (тз/06, шаг 5). «Выпуски» это не
+		    отдельная сущность, а категория `podcast`, поэтому тип выводится
+		    из категории, а не хранится отдельно. */}
+		<article
+			class="post"
+			data-pagefind-body
+			data-pagefind-filter={`type:${isEpisode ? 'Выпуски' : 'Посты'}`}
+			data-pagefind-meta={`type:${isEpisode ? 'episode' : 'post'}`}
+		>
+			{/* Один фильтр и одна метка на элемент — перечислить их через запятую
+			    в одном атрибуте НЕЛЬЗЯ, Pagefind примет всю строку за одно значение.
+			    Проверено на живом индексе: `type:Выпуски, category:Подкаст` дало
+			    фильтр «Выпуски, category:Подкаст». Поэтому лишнее висит на пустых
+			    span'ах — они ничего не показывают и в текст страницы не попадают. */}
+			<span data-pagefind-filter={`category:${categoryLabel}`} data-pagefind-meta={`category:${categoryLabel}`}></span>
+			<span data-pagefind-meta={`date:${formatPostDate(date)}`}></span>
 
-		{/* Обложки здесь нет намеренно: она для ленты и соцсетей. На странице
-		    картинка и так есть — обложка выпуска в тексте, кадр в статье,
-		    плеер ютюба у видеоэссе, — и обложка её бы дублировала. */}
-
-		{
-			youtubeEmbed && (
-				<div class="video-wrap">
-					<iframe
-						src={youtubeEmbed}
+			{
+				isEpisode ? (
+					<section class="episode-hero">
+						<div class="episode-topline tech" data-pagefind-ignore>
+							<a class="back" href={backHref}>
+								← {categoryLabel}
+							</a>
+							<span>
+								<time datetime={isoDate}>{formatPostDate(date)}</time>
+								{timing && ` · ${timing.label}`}
+							</span>
+						</div>
+						<div class="episode-grid">
+							{/* Обложка выпуска всегда квадрат и НЕ ОБРЕЗАЕТСЯ (§9):
+							    artwork важен целиком. Рамка остаётся пустой, если
+							    фид недоступен в момент сборки, — тогда и плеера
+							    на странице не будет. */}
+							<div class="episode-cover">
+								{playerCover && <img src={playerCover} alt={`Обложка: ${title}`} width="360" height="360" />}
+							</div>
+							<div class="episode-copy">
+								<PostKicker post={post} withTiming={false} />
+								<h1 data-pagefind-meta="title">{title}</h1>
+								{bonusDeck && <p class="episode-deck">{bonusDeck}</p>}
+								{!isBonus && episode && (
+									<EpisodePlayer
+										guid={episode.guid}
+										audioUrl={episode.audioUrl}
+										title={title}
+										cover={playerCover}
+										link={`/posts/${post.id}/`}
+										durationSec={episode.durationSec}
+									/>
+								)}
+							</div>
+						</div>
+					</section>
+				) : (
+					<ContentHeader
+						backHref={backHref}
+						backLabel={categoryLabel}
+						date={date}
+						timing={timing?.label ?? null}
 						title={title}
-						loading="lazy"
-						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-						allowfullscreen
+						lead={lead}
 					/>
+				)
+			}
+
+			{/* Плеер YouTube шириной 1000 (§14). Это ветка для поля «Ссылка
+			    на ролик» у поста; в архиве видеоэссе ролик обычно стоит блоком
+			    прямо в тексте (`::video{…}`) — тот получает ту же ширину
+			    правилом `.content > .video-wrap` ниже, чтобы страница выглядела
+			    одинаково независимо от того, как ролик вставили. */}
+			{
+				youtubeEmbed && (
+					<section class="youtube-wrap" aria-label="Видео">
+						<div class="youtube-frame">
+							<iframe
+								src={youtubeEmbed}
+								title={title}
+								loading="lazy"
+								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+								allowfullscreen
+							/>
+						</div>
+					</section>
+				)
+			}
+
+			{
+				!youtubeEmbed && video && (
+					<section class="youtube-wrap" aria-label="Видео">
+						<video class="own-video" src={video} controls preload="metadata" />
+					</section>
+				)
+			}
+
+			<section class="post-body">
+				{bodyLabel && <h2 class="body-label tech">{bodyLabel}</h2>}
+				<div class="content">
+					<Content />
 				</div>
-			)
-		}
 
-		{!youtubeEmbed && video && <video class="video" src={video} controls preload="metadata" />}
+				{/* Кнопки поста — списком с линиями, а не рядом плашек: в языке
+				    сайта плиток нет. Слева площадка, справа адрес. */}
+				{
+					!isBonus && buttons && buttons.length > 0 && (
+						<div class="platform-list">
+							{buttons.map((button: { label: string; url: string }) => (
+								<div class="platform-row">
+									<strong class="tech">{button.label}</strong>
+									<a class="normal-link" href={button.url} target="_blank" rel="noopener noreferrer">
+										{hostOf(button.url) ?? button.url} ↗
+									</a>
+								</div>
+							))}
+						</div>
+					)
+				}
+			</section>
 
-		{
-			category === 'podcast' && episode && (
-				<EpisodePlayer
-					guid={episode.guid}
-					audioUrl={episode.audioUrl}
-					title={title}
-					cover={playerCover}
-					link={`/posts/${post.id}/`}
-					durationSec={episode.durationSec}
-				/>
-			)
-		}
+			{/* Плашка подписки — сразу за текстом, как в макете: текст выше это
+			    тизер, он открыт всем и попадает в поиск, а дальше начинается
+			    платное. Марки тайтлов ниже остаются на своём обычном месте,
+			    в самом низу страницы, как у всех постов. */}
+			{isBonus && <BonusPaywall buttons={buttons} />}
 
-		{
-			!isBonus && buttons && buttons.length > 0 && (
-				<div class="buttons">
-					{buttons.map((button: { label: string; url: string; style: 'primary' | 'secondary' }) => (
-						<a class={`button button-${button.style}`} href={button.url} target="_blank" rel="noopener noreferrer">
-							<PlatformIcon name={getLinkIcon(button.url)} />
-							{button.label}
-						</a>
-					))}
-				</div>
-			)
-		}
+			{/* Аудиоверсия видеоэссе — тот же плеер, что у выпуска (§14).
+			    Появляется, только если у видеоэссе есть пара в RSS: ролик,
+			    выложенный только на YouTube, аудиоверсии не имеет. */}
+			{
+				isVideoEssay && episode && (
+					<section class="audio-section" aria-labelledby="audio-title">
+						<h2 class="body-label tech" id="audio-title">
+							Аудиоверсия
+						</h2>
+						<EpisodePlayer
+							guid={episode.guid}
+							audioUrl={episode.audioUrl}
+							title={title}
+							cover={playerCover}
+							link={`/posts/${post.id}/`}
+							durationSec={episode.durationSec}
+						/>
+					</section>
+				)
+			}
 
-		<div class="content">
-			<Content />
-		</div>
+			{
+				showTranscript && (
+					<div class="transcript-wrap">
+						<Transcript transcript={transcriptData} transcriptId={transcript.id} mentionsHidden={post.data.mentionsHidden} />
+					</div>
+				)
+			}
 
-		{/* Плашка подписки — сразу за текстом, как в макете: текст выше это
-		    тизер, он открыт всем и попадает в поиск, а дальше начинается
-		    платное. Плашки тайтлов ниже остаются на своём обычном месте,
-		    в самом низу страницы, как у всех постов. */}
-		{isBonus && <BonusPaywall buttons={buttons} />}
+			{/* Заголовок блока одинаковый на всех четырёх страницах материалов:
+			    это технический слой, а не подпись под конкретный тип. «В выпуске»
+			    и «в видеоэссе» на разных страницах — два текста об одном и том же,
+			    и разойтись им проще, чем кажется. */}
+			{
+				animeEntries.length > 0 && (
+					<section class="mentions" aria-labelledby="mentions-title" data-pagefind-ignore>
+						<h2 class="mentions-title tech" id="mentions-title">
+							Упоминается в материале
+						</h2>
+						<div class="stamp-grid">
+							{animeEntries.map((entry) => (
+								<AnimeBadge anime={entry} mentions={mentionTimes.get(entry.id)?.length ?? 0} />
+							))}
+						</div>
+					</section>
+				)
+			}
 
-		{showTranscript && <Transcript transcript={transcriptData} transcriptId={transcript.id} mentionsHidden={post.data.mentionsHidden} />}
-
-		{
-			animeEntries.length > 0 && (
-				<div class="anime-mentions">
-					{animeEntries.map((entry) => (
-						<AnimeBadge anime={entry} />
-					))}
-				</div>
-			)
-		}
-	</article>
+			{/* Подписи «Предыдущий / Следующий материал» одинаковы у всех пяти
+			    раскладок. В макетах они разные («выпуск», «видеоэссе»), но пятая
+			    подпись у категории — это пятая строка, которую придётся держать
+			    в согласии с остальными; выигрыш же тут нулевой: куда ведёт
+			    ссылка, читателю говорит её собственный заголовок. */}
+			{
+				(olderPost || newerPost) && (
+					<nav class="post-nav" aria-label="Соседние материалы" data-pagefind-ignore>
+						{olderPost && (
+							<a href={`/posts/${olderPost.slug}/`}>
+								<span class="nav-label tech">← Предыдущий материал</span>
+								<span class="nav-title">{olderPost.title}</span>
+							</a>
+						)}
+						{newerPost && (
+							<a href={`/posts/${newerPost.slug}/`}>
+								<span class="nav-label tech">Следующий материал →</span>
+								<span class="nav-title">{newerPost.title}</span>
+							</a>
+						)}
+					</nav>
+				)
+			}
+		</article>
+	</div>
 </Layout>
 
 <script>
@@ -394,52 +570,135 @@ const crumbs = breadcrumbsSchema([
 </script>
 
 <style>
-	.post {
-		max-width: var(--content-width);
-		margin: 0 auto;
-		padding: var(--space-4) var(--space-3);
+	/* ——— Шапка выпуска и бонуса (§13) ——— */
+
+	.episode-hero {
+		margin: var(--sp-12) 0;
 	}
 
-	.back {
-		display: inline-block;
-		color: var(--color-text-muted);
-		font-size: var(--font-size-sm);
-		margin-bottom: var(--space-2);
+	.episode-topline {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--sp-2) var(--sp-6);
+		margin-bottom: var(--sp-6);
+		color: var(--muted);
 	}
 
-	.back:hover,
-	.back:focus-visible {
-		color: var(--color-accent-hover);
+	.episode-topline .back {
+		color: var(--ink);
 	}
 
-	h1 {
-		margin-bottom: var(--space-1);
+	.episode-topline .back:hover,
+	.episode-topline .back:focus-visible {
+		color: var(--accent-text);
 	}
 
-	.date {
-		color: var(--color-text-muted);
-		font-size: var(--font-size-sm);
-		margin-bottom: var(--space-3);
+	.episode-grid {
+		display: grid;
+		gap: var(--sp-6);
 	}
 
-	/* Точка-разделитель псевдоэлементом — как в карточке ленты
-	   (src/components/PostCard.astro): когда метки нет, не остаётся
-	   висящей точки после даты. */
-	.timing::before {
-		content: '·';
-		margin: 0 0.35em;
-	}
-
-	.video-wrap {
-		position: relative;
-		width: 100%;
-		aspect-ratio: 16 / 9;
-		margin-bottom: var(--space-3);
-		border-radius: var(--radius-md);
+	.episode-cover {
+		width: min(340px, 100%);
+		aspect-ratio: 1;
+		border: 1px solid var(--line);
+		display: grid;
+		place-items: center;
 		overflow: hidden;
 	}
 
-	.video-wrap iframe {
+	.episode-cover img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+
+	/* ФИКСИРОВАННОЙ ВЫСОТЫ У КОЛОНКИ НЕТ И БЫТЬ НЕ ДОЛЖНО (§4.2). Плеер
+	   прижимается к низу через margin-top:auto внутри флекса; высоту колонке
+	   задаёт сам ряд грида, выровненный по обложке. Поставь тут height: 360px —
+	   и длинный заголовок вылезет за край, а короткий оставит дыру. */
+	.episode-copy {
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.episode-copy h1 {
+		margin: 0;
+	}
+
+	.episode-copy :global(.kicker) {
+		margin-bottom: var(--sp-3);
+	}
+
+	.episode-deck {
+		margin: var(--sp-4) 0 0;
+		font-family: var(--font-display);
+		font-size: var(--card-title);
+		line-height: 1.45;
+		color: var(--text);
+	}
+
+	@media (min-width: 621px) {
+		.episode-hero {
+			margin-top: var(--sp-16);
+		}
+	}
+
+	@media (min-width: 821px) {
+		.episode-grid {
+			grid-template-columns: 300px minmax(0, 1fr);
+			gap: var(--sp-8);
+			align-items: stretch;
+		}
+
+		.episode-cover {
+			width: 300px;
+		}
+
+		/* Плеер живёт в своём компоненте (часть 6), поэтому его положение
+		   в колонке задаётся отсюда — это композиция страницы, а не устройство
+		   плеера. */
+		.episode-copy :global(.episode-player) {
+			margin-top: auto;
+			margin-bottom: 0;
+		}
+	}
+
+	@media (min-width: 1101px) {
+		.episode-hero {
+			max-width: var(--wide);
+			margin-inline: auto;
+			margin-block: var(--sp-16) var(--sp-18);
+		}
+
+		.episode-grid {
+			grid-template-columns: 360px minmax(0, 1fr);
+			gap: var(--sp-12);
+		}
+
+		.episode-cover {
+			width: 360px;
+		}
+	}
+
+	/* ——— Плеер YouTube и своё видео (§14) ——— */
+
+	.youtube-wrap {
+		width: 100%;
+		max-width: var(--wide);
+		margin: 0 auto var(--sp-12);
+	}
+
+	.youtube-frame {
+		position: relative;
+		aspect-ratio: 16 / 9;
+		background: var(--ink);
+	}
+
+	.youtube-frame iframe {
 		position: absolute;
 		inset: 0;
 		width: 100%;
@@ -447,107 +706,95 @@ const crumbs = breadcrumbsSchema([
 		border: 0;
 	}
 
-	.video {
+	.own-video {
+		display: block;
 		width: 100%;
-		border-radius: var(--radius-md);
-		margin-bottom: var(--space-3);
 	}
 
-	.buttons {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--space-2);
-		margin-bottom: var(--space-3);
+	/* ——— Текст материала ——— */
+
+	/* Контейнер широкий (1240), а колонка чтения задаётся детям. Так медиа
+	   получает три ширины из §12 — 700, 1000 и 1240, — не вылезая из потока
+	   и не считая ничего от ширины окна. */
+	.post-body {
+		width: 100%;
+		max-width: var(--full);
+		margin-inline: auto;
 	}
 
-	.anime-mentions {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--space-2);
-		margin-top: var(--space-4);
-		padding-top: var(--space-3);
-		border-top: 1px solid var(--color-border);
+	.body-label {
+		max-width: var(--reading);
+		margin: 0 auto var(--sp-6);
+		color: var(--accent-text);
 	}
 
-	.button {
-		display: inline-flex;
-		align-items: center;
-		gap: var(--space-1);
-		padding: var(--space-1) var(--space-2);
-		border-radius: var(--radius-sm);
-		font-size: var(--font-size-sm);
-		transition:
-			background-color var(--transition-fast),
-			border-color var(--transition-fast);
+	.content > :global(*) {
+		max-width: var(--reading);
+		margin-inline: auto;
 	}
 
-	.button-primary {
-		background: var(--color-accent);
-		color: var(--color-bg);
+	/* Медиа шире колонки. Селектор длиннее базового `.content > *`, поэтому
+	   побеждает по весу — это и есть механизм трёх ширин. */
+	.content > :global(figure.gallery),
+	.content > :global(.video-wrap),
+	.content > :global(.content-video) {
+		max-width: var(--wide);
 	}
 
-	.button-primary:hover,
-	.button-primary:focus-visible {
-		background: var(--color-accent-hover);
-		color: var(--color-bg);
+	.content > :global(figure.figure-full) {
+		max-width: var(--full);
 	}
 
-	.button-secondary {
-		border: 1px solid var(--color-border);
-		color: var(--color-text);
-	}
-
-	.button-secondary:hover,
-	.button-secondary:focus-visible {
-		border-color: var(--color-accent);
-		color: var(--color-accent);
-	}
-
+	/* ВНУТРИ .content НИГДЕ НЕ ПИШЕМ СОКРАЩЁННЫЙ `margin`: он сбросил бы
+	   margin-inline:auto выше, и всё содержимое уехало бы к левому краю
+	   контейнера в 1240. Только margin-block. */
 	.content :global(p) {
-		margin: 0 0 var(--space-2);
+		margin-block: 0 var(--sp-6);
+		font-size: var(--body-lg);
+		line-height: 1.65;
+		color: var(--text);
+	}
+
+	.content :global(h2) {
+		margin-block: var(--sp-12) var(--sp-6);
+	}
+
+	.content :global(h3) {
+		margin-block: var(--sp-8) var(--sp-4);
 	}
 
 	.content :global(ul),
 	.content :global(ol) {
-		margin: 0 0 var(--space-2);
+		margin-block: 0 var(--sp-6);
 		padding-left: 1.25rem;
+		font-size: var(--body-lg);
+		line-height: 1.65;
+		color: var(--text);
 	}
 
 	.content :global(blockquote) {
-		margin: 0 0 var(--space-2);
-		padding-left: var(--space-2);
-		border-left: 2px solid var(--color-accent);
-		color: var(--color-text-muted);
+		margin-block: 0 var(--sp-6);
+		padding-left: var(--sp-4);
+		border-left: 2px solid var(--accent-brand);
+		color: var(--muted);
 	}
 
 	/* Запасной стиль для обычной картинки в тексте (![]()) — например, обложки
-	   выпуска, которую вставляет робот сверки прямой ссылкой, см.
-	   scripts/sync-episodes.mjs. Блок «Изображение с подписью» из редактора
-	   получает свои размеры через figure.figure ниже, эта картинка проще. */
+	   выпуска у видеоэссе. Блок «Изображение с подписью» из редактора получает
+	   свои размеры через figure ниже, эта картинка проще. */
 	.content :global(p > img) {
 		display: block;
 		width: 100%;
-		/* Обязательно вместе с width: обложка выпуска приходит с атрибутами
+		/* Обязательно вместе с width: картинка приходит с атрибутами
 		   width/height в разметке (см. src/plugins/remark-episode-cover.mjs) —
 		   они держат место, пока картинка грузится, чтобы текст не подпрыгивал.
 		   Без height: auto браузер применил бы высоту из атрибута буквально
 		   и картинка растянулась бы. */
 		height: auto;
-		border-radius: var(--radius-md);
-		margin: var(--space-3) 0;
 	}
 
 	.content :global(figure.figure) {
-		margin: var(--space-3) 0;
-	}
-
-	.content :global(figure.figure-full) {
-		width: 100vw;
-		position: relative;
-		left: 50%;
-		right: 50%;
-		margin-left: -50vw;
-		margin-right: -50vw;
+		margin-block: var(--sp-12);
 	}
 
 	.content :global(.figure-zoom) {
@@ -557,31 +804,31 @@ const crumbs = breadcrumbsSchema([
 
 	.content :global(.figure-zoom img) {
 		width: 100%;
-		border-radius: var(--radius-md);
+		height: auto;
 	}
 
-	.content :global(figure.figure-full .figure-zoom img) {
-		border-radius: 0;
-	}
-
+	/* Подпись — два слоя в одной строке: технический номер и текст подписи
+	   (§12). Номер расставляет сборка, см. src/plugins/remark-image-figure.mjs. */
 	.content :global(figcaption) {
-		margin-top: var(--space-1);
-		padding: 0 var(--space-1);
-		font-size: var(--font-size-sm);
-		color: var(--color-text-muted);
-		text-align: center;
+		margin-block: var(--sp-2) 0;
+		font-size: var(--caption);
+		line-height: 1.5;
+		color: var(--muted);
 	}
 
-	.content :global(figure.figure-full figcaption) {
-		max-width: var(--content-width);
-		margin-left: auto;
-		margin-right: auto;
+	.content :global(figcaption b) {
+		font-family: var(--font-tech);
+		font-size: var(--technical);
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		margin-right: var(--sp-2);
 	}
 
 	.content :global(.gallery-grid) {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
-		gap: var(--space-2);
+		gap: var(--sp-2);
 	}
 
 	.content :global(.gallery-item .figure-zoom) {
@@ -597,7 +844,6 @@ const crumbs = breadcrumbsSchema([
 	.content :global(.carousel-viewport) {
 		position: relative;
 		overflow: hidden;
-		border-radius: var(--radius-md);
 	}
 
 	.content :global(.carousel-track) {
@@ -620,68 +866,74 @@ const crumbs = breadcrumbsSchema([
 		object-fit: cover;
 	}
 
-	.content :global(.carousel-slide figcaption) {
-		padding: var(--space-1) var(--space-3);
-	}
-
+	/* Стрелки карусели. Здесь жили два цвета мимо палитры — белый знак
+	   и полупрозрачная чёрная подложка под ним, рассчитанные на тёмную тему.
+	   На бумаге такая кнопка исчезала бы на светлом кадре, поэтому она стала
+	   обычным контролом системы: бумага, чернила, граница контрола. */
 	.content :global(.carousel-prev),
 	.content :global(.carousel-next) {
 		position: absolute;
 		top: 50%;
 		transform: translateY(-50%);
-		width: 2.5rem;
-		height: 2.5rem;
-		border: 0;
-		border-radius: var(--radius-full);
-		background: rgba(0, 0, 0, 0.5);
-		color: #fff;
-		font-size: var(--font-size-lg);
+		width: 44px;
+		height: 44px;
+		border: 1px solid var(--line-strong);
+		background: var(--paper);
+		color: var(--ink);
+		font-size: var(--h3);
 		line-height: 1;
-		cursor: pointer;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
 
+	.content :global(.carousel-prev:hover),
+	.content :global(.carousel-next:hover) {
+		border-color: var(--accent-text);
+		color: var(--accent-text);
+	}
+
 	.content :global(.carousel-prev) {
-		left: var(--space-1);
+		left: var(--sp-2);
 	}
 
 	.content :global(.carousel-next) {
-		right: var(--space-1);
+		right: var(--sp-2);
 	}
 
+	/* Спойлеры переоформляются в части 9 вместе с галереей — здесь только
+	   переезд на новую шкалу отступов. */
 	.content :global(.spoiler) {
-		margin: var(--space-3) 0;
+		margin-block: var(--sp-6);
 	}
 
 	.content :global(.spoiler-toggle) {
-		padding: var(--space-1) var(--space-2);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-sm);
-		background: var(--color-bg-elevated);
-		color: var(--color-accent);
-		font-size: var(--font-size-sm);
+		padding: var(--sp-2) var(--sp-4);
+		border: 1px solid var(--line-strong);
+		background: transparent;
+		color: var(--accent-text);
+		font-size: var(--caption);
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
 		cursor: pointer;
 		transition: border-color var(--transition-fast);
 	}
 
 	.content :global(.spoiler-toggle:hover) {
-		border-color: var(--color-accent);
+		border-color: var(--accent-text);
 	}
 
 	.content :global(.spoiler-revealed) {
 		display: block;
-		margin-top: var(--space-2);
-		padding: var(--space-2) var(--space-3);
-		border-left: 2px solid var(--color-accent);
-		background: var(--color-bg-elevated);
-		border-radius: var(--radius-sm);
+		margin-block: var(--sp-4) 0;
+		padding: var(--sp-4);
+		border-left: 2px solid var(--accent-brand);
+		background: var(--accent-soft);
 	}
 
 	/* Спойлер на слово/фразу — прямо в строке текста, без своего блока. */
 	.content :global(.spoiler-inline) {
-		margin: 0;
+		margin-block: 0;
 	}
 
 	.content :global(.spoiler-inline .spoiler-toggle) {
@@ -691,8 +943,7 @@ const crumbs = breadcrumbsSchema([
 		vertical-align: -0.15em;
 		padding: 0;
 		border: none;
-		border-radius: 3px;
-		background: var(--color-accent);
+		background: var(--accent-brand);
 	}
 
 	.content :global(.spoiler-inline .spoiler-toggle[hidden]) {
@@ -701,12 +952,11 @@ const crumbs = breadcrumbsSchema([
 
 	.content :global(.spoiler-inline .spoiler-revealed) {
 		display: inline;
-		margin: 0;
-		padding: 0 var(--space-1);
+		margin-block: 0;
+		padding: 0 var(--sp-1);
 		cursor: pointer;
 		border-left: none;
-		background: var(--color-bg-elevated);
-		border-radius: var(--radius-sm);
+		background: var(--accent-soft);
 	}
 
 	/* Без этого атрибут hidden не срабатывает: правила выше задают display
@@ -716,30 +966,18 @@ const crumbs = breadcrumbsSchema([
 	}
 
 	.content :global(.spoiler-revealed > :first-child) {
-		margin-top: 0;
+		margin-block-start: 0;
 	}
 
 	.content :global(.spoiler-revealed > :last-child) {
-		margin-bottom: 0;
-	}
-
-	/* Внутри спойлера картинка "во всю ширину" ломала бы разметку (расчёт
-	   full-bleed завязан на то, что элемент лежит прямо в колонке текста) —
-	   тут просто показываем её в колонку. */
-	.content :global(.spoiler-revealed figure.figure-full) {
-		width: 100%;
-		position: static;
-		margin-left: 0;
-		margin-right: 0;
+		margin-block-end: 0;
 	}
 
 	.content :global(.video-wrap) {
 		position: relative;
-		width: 100%;
 		aspect-ratio: 16 / 9;
-		margin: var(--space-3) 0;
-		border-radius: var(--radius-md);
-		overflow: hidden;
+		margin-block: var(--sp-12);
+		background: var(--ink);
 	}
 
 	.content :global(.video-wrap iframe) {
@@ -753,18 +991,184 @@ const crumbs = breadcrumbsSchema([
 	.content :global(.content-video) {
 		display: block;
 		width: 100%;
-		margin: var(--space-3) 0;
-		border-radius: var(--radius-md);
+		margin-block: var(--sp-12);
 	}
 
 	.content :global(.timecode) {
 		font-variant-numeric: tabular-nums;
-		border-bottom: 1px dashed var(--color-accent);
+		color: var(--accent-text);
+		border-bottom: 1px dashed var(--accent-text);
 	}
 
 	.content :global(.timecode:hover),
 	.content :global(.timecode:focus-visible) {
 		border-bottom-style: solid;
+	}
+
+	/* ——— Врезка со ссылками на площадки ——— */
+
+	/* Линии с обеих сторон — тот самый случай, когда §5 это разрешает: врезка
+	   внутри текста, после которой текст продолжается. Не стык двух секций. */
+	.platform-list {
+		max-width: var(--reading);
+		margin: var(--sp-8) auto;
+		padding-block: var(--sp-4);
+		border-top: 1px solid var(--line);
+		border-bottom: 1px solid var(--line);
+		display: grid;
+		gap: var(--sp-3);
+	}
+
+	.platform-row {
+		display: grid;
+		gap: var(--sp-1);
+		font-size: var(--body-sm);
+		line-height: 1.45;
+	}
+
+	.platform-row strong {
+		font-weight: 600;
+		color: var(--ink);
+	}
+
+	.normal-link {
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+	}
+
+	@media (min-width: 621px) {
+		.platform-row {
+			grid-template-columns: 118px minmax(0, 1fr);
+			gap: var(--sp-4);
+		}
+	}
+
+	/* ——— Аудиоверсия, транскрипт, марки, соседние материалы ——— */
+
+	.audio-section {
+		width: 100%;
+		max-width: var(--reading);
+		margin: var(--sp-16) auto 0;
+	}
+
+	/* Сам транскрипт переоформляется в части 6 — здесь ему задана только ось. */
+	.transcript-wrap {
+		width: 100%;
+		max-width: var(--wide);
+		margin: var(--sp-16) auto 0;
+	}
+
+	.mentions {
+		width: 100%;
+		max-width: var(--wide);
+		margin: var(--sp-16) auto 0;
+		border-top: 1px solid var(--line);
+		padding: var(--sp-8) 0 var(--sp-12);
+	}
+
+	.mentions-title {
+		margin: 0 0 var(--sp-6);
+		font-weight: 600;
+		color: var(--ink);
+	}
+
+	.stamp-grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: var(--sp-3);
+	}
+
+	@media (min-width: 621px) {
+		/* Именно `auto-fill` (§4.5). Со схлопывающим вариантом одинокая марка
+		   растянулась бы на всю ширину блока — а одинокая марка тут самый
+		   частый случай: у выпуска про один тайтл она ровно одна. Название
+		   запрещённого варианта в комментарии не пишем: его находит проверка
+		   из раздела 8.4, и с этого дня она врёт. */
+		.stamp-grid {
+			grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+			justify-content: start;
+		}
+	}
+
+	.post-nav {
+		width: 100%;
+		max-width: var(--wide);
+		margin: 0 auto var(--sp-18);
+		border-top: 1px solid var(--line);
+		display: grid;
+	}
+
+	.post-nav a {
+		min-height: 108px;
+		padding: var(--sp-6) 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: var(--sp-2);
+		color: var(--ink);
+	}
+
+	.post-nav a + a {
+		border-top: 1px solid var(--line);
+	}
+
+	.nav-label {
+		color: var(--muted);
+	}
+
+	.nav-title {
+		font-family: var(--font-display);
+		font-size: var(--card-title);
+		line-height: 1.15;
+	}
+
+	.post-nav a:hover .nav-title,
+	.post-nav a:focus-visible .nav-title {
+		color: var(--accent-text);
+	}
+
+	@media (min-width: 821px) {
+		.post-nav {
+			grid-template-columns: 1fr 1fr;
+		}
+
+		.post-nav a {
+			padding: var(--sp-6);
+		}
+
+		.post-nav a + a {
+			border-top: 0;
+			border-left: 1px solid var(--line);
+			text-align: right;
+			align-items: flex-end;
+		}
+	}
+
+	/* ——— Медиа до краёв экрана на телефоне (§4.3) ——— */
+
+	/* Считаем от полей страницы, а не от 100vw. Ширина окна включает место
+	   под полосу прокрутки (`scrollbar-gutter: stable` в global.css), поэтому
+	   100vw вылезает за край документа и даёт горизонтальный скролл — тот
+	   самый, который на сайте запрещено прятать. */
+	@media (max-width: 620px) {
+		.youtube-wrap,
+		.content > :global(figure.gallery),
+		.content > :global(figure.figure-full),
+		.content > :global(.video-wrap),
+		.content > :global(.content-video) {
+			max-width: none;
+			margin-inline: calc(var(--gutter) * -1);
+		}
+
+		/* Подпись возвращается внутрь полей: до краёв уходит только картинка.
+		   `:global` обязан охватывать ВЕСЬ путь, включая figcaption: разметку
+		   рисует markdown, метки Astro на ней нет, и селектор с меткой
+		   не совпал бы ни с чем. */
+		.content > :global(figure.figure-full figcaption),
+		.content > :global(figure.gallery figcaption) {
+			padding-inline: var(--gutter);
+		}
 	}
 </style>
 
@@ -775,8 +1179,13 @@ const crumbs = breadcrumbsSchema([
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: var(--space-3);
-		background: rgba(0, 0, 0, 0.85);
+		padding: var(--sp-6);
+		/* Здесь была полупрозрачная чёрная подложка мимо палитры, рассчитанная
+		   на тёмную тему. Стала чернильной из системы: полупрозрачных подложек
+		   в ней нет. Записывать старое значение в комментарии нельзя —
+		   его находит проверка «цвета мимо переменных» из раздела 8.4
+		   и с этого дня врёт. */
+		background: var(--ink);
 		cursor: zoom-out;
 		z-index: 100;
 	}
@@ -784,6 +1193,5 @@ const crumbs = breadcrumbsSchema([
 	.lightbox img {
 		max-width: 100%;
 		max-height: 100%;
-		border-radius: var(--radius-md);
 	}
 </style>

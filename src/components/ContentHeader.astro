@@ -1,0 +1,122 @@
+---
+// Заголовочный блок статьи, заметки и видеоэссе. В макетах это `.content-header`
+// (article.html и video.html), в дизайн-системе — §12.
+//
+// ОДИН КОМПОНЕНТ НА ТРИ РАСКЛАДКИ, И ЭТО ГЛАВНОЕ В НЁМ. У статьи и видеоэссе
+// совпадают ось (700), метастрока, кегль H1 и вертикальные отступы; отличается
+// ровно одна вещь — необязательная подводка, которой у видеоэссе нет. Разведи
+// это на два похожих компонента — и они разойдутся: сначала отступом снизу,
+// потом порядком даты и длительности, и заметить это будет некому, потому что
+// две страницы рядом никто не открывает.
+//
+// Выпуск подкаста и бонус сюда НЕ ходят: у них своя шапка с обложкой 1:1
+// и плеером (§13), общего с этой у неё только текст ссылки «← назад».
+import { formatPostDate } from '../lib/postDate.mjs';
+
+interface Props {
+	/** Куда ведёт «← Заметки»: раздел, в котором лежит материал. */
+	backHref: string;
+	backLabel: string;
+	date: Date;
+	/** «6 мин читать» или «19 мин смотреть». null — показывать нечего. */
+	timing?: string | null;
+	title: string;
+	/** Подводка. Есть только у статьи и заметки, и только если её написали. */
+	lead?: string | null;
+}
+
+const { backHref, backLabel, date, timing = null, title, lead = null } = Astro.props;
+---
+
+<header class="content-header">
+	{/* data-pagefind-ignore на всей метастроке: дата и «6 мин читать» — это
+	    подписи, а не текст материала. Без него они попадали бы в выдачу поиска
+	    обрывком вроде «…6 мин читать Ёдзи Такэсигэ — один из главных…». */}
+	<div class="content-meta tech" data-pagefind-ignore>
+		<a class="back" href={backHref}>← {backLabel}</a>
+		<div class="content-meta-right">
+			<time datetime={date.toISOString().slice(0, 10)}>{formatPostDate(date)}</time>
+			{
+				timing && (
+					<Fragment>
+						<span class="meta-dot" aria-hidden="true">
+							·
+						</span>
+						<span>{timing}</span>
+					</Fragment>
+				)
+			}
+		</div>
+	</div>
+	<h1 data-pagefind-meta="title">{title}</h1>
+	{lead && <p class="lead">{lead}</p>}
+</header>
+
+<style>
+	.content-header {
+		width: 100%;
+		max-width: var(--reading);
+		margin: var(--sp-12) auto var(--sp-8);
+	}
+
+	/* На узком экране метастрока встаёт в столбик: «← Заметки» и дата
+	   с длительностью не помещаются в строку на 320 px, а переносить их
+	   каруселью запрещено (§4.2). */
+	.content-meta {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--sp-2);
+		margin-bottom: var(--sp-4);
+		color: var(--muted);
+	}
+
+	.back {
+		color: var(--ink);
+	}
+
+	.back:hover,
+	.back:focus-visible {
+		color: var(--accent-text);
+	}
+
+	.content-meta-right {
+		display: flex;
+		align-items: center;
+		gap: var(--sp-2);
+	}
+
+	/* Точка-разделитель отдельным элементом, а не псевдоэлементом: когда
+	   длительности нет, её не должно остаться висеть после даты. */
+	.meta-dot {
+		color: var(--line);
+	}
+
+	.content-header h1 {
+		margin: 0;
+	}
+
+	.lead {
+		margin: var(--sp-4) 0 0;
+		font-family: var(--font-display);
+		font-size: var(--h3);
+		line-height: 1.35;
+		color: var(--text);
+	}
+
+	@media (min-width: 621px) {
+		.content-meta {
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+			gap: var(--sp-4);
+			margin-bottom: var(--sp-6);
+		}
+	}
+
+	@media (min-width: 1101px) {
+		.content-header {
+			margin: var(--sp-16) auto var(--sp-12);
+		}
+	}
+</style>

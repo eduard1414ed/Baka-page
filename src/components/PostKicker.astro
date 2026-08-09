@@ -15,9 +15,16 @@ import { episodeNumber } from '../lib/postMeta.mjs';
 
 interface Props {
 	post: { id: string; body?: string; data: Record<string, any> };
+	/**
+	 * Показывать ли длительность. В карточке — да, в шапке страницы выпуска —
+	 * НЕТ: там она уже названа рядом с датой и будет названа третий раз внутри
+	 * плеера. §13 дизайн-системы разрешает ровно два места, и кикер в них
+	 * не входит. Раньше она стояла во всех трёх, и ни одно не было главным.
+	 */
+	withTiming?: boolean;
 }
 
-const { post } = Astro.props;
+const { post, withTiming = true } = Astro.props;
 const { category } = post.data;
 
 // Подпись берём у РАЗДЕЛА, а не у категории: у бонуса написано «Подкаст»,
@@ -39,7 +46,7 @@ const number = !isBonus && section === 'podcast' ? episodeNumber(post.id) : null
 // Длительность, время чтения или название чужой площадки — что именно,
 // решает src/lib/postTiming.mjs, тот же файл зовёт и страница материала.
 // null = показывать нечего, причины перечислены там же.
-const timing = await getPostTiming(post);
+const timing = withTiming ? await getPostTiming(post) : null;
 ---
 
 <div class="kicker tech">
