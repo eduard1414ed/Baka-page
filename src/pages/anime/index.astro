@@ -81,8 +81,15 @@ const crumbs = breadcrumbsSchema([{ name: 'Каталог аниме', path: '/a
 			</div>
 		</div>
 
-		{/* Текст пустого состояния собирает скрипт: в нём стоит сам запрос. */}
-		<p class="empty" id="catalog-empty" hidden></p>
+		{/* Пустое состояние каталога (тз/08, 9.6). Вид тот же, что у поиска
+		    и у тайтла без упоминаний: техническая подпись акцентным цветом
+		    и текст под ней. Рисунка тут нет НАРОЧНО — каталог ищут прямо
+		    на ходу, буква за буквой, и картинка мигала бы при каждом наборе.
+		    Сам текст собирает скрипт: в нём стоит запрос. */}
+		<div class="empty-state empty-state--inline" id="catalog-empty" hidden>
+			<div class="tech">Ничего не нашлось</div>
+			<p id="catalog-empty-text"></p>
+		</div>
 
 		{/* Размер порции и формы числительного висят на самой сетке, а не лежат
 		    вторым списком в скрипте: числу порции нужно совпадать с тем, по
@@ -209,12 +216,9 @@ const crumbs = breadcrumbsSchema([{ name: 'Каталог аниме', path: '/a
 		}
 	}
 
-	.empty {
-		font-size: var(--body-lg);
-		line-height: 1.65;
-		color: var(--muted);
-		padding: var(--sp-12) 0 0;
-	}
+	/* Вид пустого состояния — общий на три страницы, лежит в global.css.
+	   Своей копии тут нет намеренно: разъедься они, каталог и поиск начали бы
+	   отвечать на одно и то же по-разному. */
 
 	/* --- Сетка марок --- */
 
@@ -270,6 +274,7 @@ const crumbs = breadcrumbsSchema([{ name: 'Каталог аниме', path: '/a
 		const face = document.getElementById('catalog-sort-face');
 		const count = document.getElementById('catalog-count');
 		const empty = document.getElementById('catalog-empty');
+		const emptyText = document.getElementById('catalog-empty-text');
 		const more = document.getElementById('catalog-more') as HTMLButtonElement | null;
 		if (!grid || !input || !sort || !count || !empty || !more) return;
 
@@ -309,8 +314,8 @@ const crumbs = breadcrumbsSchema([{ name: 'Каталог аниме', path: '/a
 			count!.textContent = `${query ? 'Найдено' : 'Всего'}: ${withCount(matched.length, forms)}`;
 
 			empty!.hidden = matched.length > 0;
-			if (matched.length === 0) {
-				empty!.textContent = `По запросу «${input!.value.trim()}» ничего не нашлось. Попробуйте оригинальное название или название студии.`;
+			if (matched.length === 0 && emptyText) {
+				emptyText.textContent = `По запросу «${input!.value.trim()}» ничего не нашлось. Попробуйте оригинальное название или название студии.`;
 			}
 
 			setLoadMoreState(

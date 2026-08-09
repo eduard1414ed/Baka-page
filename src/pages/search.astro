@@ -1578,34 +1578,7 @@ const SCOPES = [
 		}
 	}
 
-	/* ---------- Ничего не нашлось ---------- */
-
-	.empty-state:not([hidden]) {
-		display: grid;
-		justify-items: center;
-		gap: var(--sp-4);
-		padding: var(--sp-16) 0;
-		text-align: center;
-	}
-
-	.empty-state img {
-		width: min(240px, 60%);
-		height: auto;
-	}
-
-	.empty-state .tech {
-		color: var(--accent-text);
-	}
-
-	.empty-state h2 {
-		margin: 0;
-	}
-
-	.empty-state p {
-		margin: 0;
-		max-width: 46ch;
-		font-size: var(--body-md);
-		line-height: 1.6;
-		color: var(--muted);
-	}
+	/* Вид «ничего не нашлось» переехал в global.css: с частью 9 такое же
+	   состояние появилось в каталоге и на странице тайтла, а три копии
+	   одного вида разъехались бы молча. */
 </style>
