@@ -71,13 +71,29 @@ export async function getStaticPaths() {
 	// иначе это 145 сортировок одного и того же списка.
 	const byDate = [...posts].sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 	const neighbours = new Map();
+	// Ссылку делаем только на то, у чего есть страница: список уже отфильтрован
+	// от внешних постов, поэтому битой ссылки тут появиться неоткуда.
+	const link = (entry) => (entry ? { slug: entry.id, title: entry.data.title } : null);
+
+	// ЗАПАСНОЙ ВАРИАНТ — ВЕСЬ САЙТ, и он нужен не «на всякий случай».
+	// В разделе, где опубликован ОДИН материал, соседей нет вовсе, и блок
+	// «Предыдущий / Следующий» не рисуется совсем: у единственного видеоэссе
+	// сайта низ страницы обрывался. Заказчик увидел это 10 августа 2026
+	// и решил: раздел важнее, но пустой хвост хуже соседа из другого раздела.
+	const wholeSite = (post) => {
+		const index = byDate.findIndex((entry) => entry.id === post.id);
+		return { newerPost: link(byDate[index - 1]), olderPost: link(byDate[index + 1]) };
+	};
+
 	for (const section of new Set(byDate.map((post) => sectionOf(post.data.category)))) {
 		const inSection = byDate.filter((post) => sectionOf(post.data.category) === section);
-		// Ссылку делаем только на то, у чего есть страница: список уже отфильтрован
-		// от внешних постов, поэтому битой ссылки тут появиться неоткуда.
-		const link = (entry) => (entry ? { slug: entry.id, title: entry.data.title } : null);
 		inSection.forEach((post, index) => {
-			neighbours.set(post.id, { newerPost: link(inSection[index - 1]), olderPost: link(inSection[index + 1]) });
+			const own = { newerPost: link(inSection[index - 1]), olderPost: link(inSection[index + 1]) };
+			// Проверяем ОБА соседа сразу, а не по одному: иначе у материала,
+			// первого в своём разделе, «предыдущий» приехал бы из раздела,
+			// а «следующего» не было бы вовсе — и читатель решил бы, что ссылка
+			// ведёт наугад. Либо пара из раздела, либо пара по сайту.
+			neighbours.set(post.id, own.newerPost || own.olderPost ? own : wholeSite(post));
 		});
 	}
 
@@ -586,10 +602,15 @@ const postSearchMeta = [
 		    Своей отбивки блоки не заводят. */}
 		{
 			!isBonus && (
-				<Fragment>
+				// ОСЬ ТА ЖЕ, ЧТО У ТРАНСКРИПТА, УПОМИНАНИЙ И СОСЕДНИХ МАТЕРИАЛОВ.
+				// Сами блоки ширины не знают: на главной, в каталоге и на «О проекте»
+				// они идут во всю ширину страницы, а здесь колонка материала уже —
+				// 1000 против 1320. Без обёртки на экране 1440 их линии оказывались
+				// на 160 px левее всех остальных линий страницы.
+				<div class="tail">
 					<SocialStrip />
 					<SupportStrip />
-				</Fragment>
+				</div>
 			)
 		}
 	</div>
@@ -1278,6 +1299,20 @@ const postSearchMeta = [
 		.content :global(.gallery-btn.next) {
 			right: -58px;
 		}
+
+		/* РАМКА СНИМАЕТСЯ ТОЛЬКО ЗДЕСЬ, и это ровно та ширина, с которой кнопки
+		   вынесены за картинку на чистую бумагу: там коробка ничего не отделяет
+		   и читается лишней. Ниже 1121 кнопки лежат ПОВЕРХ края кадра, и без
+		   коробки с бумажным фоном стрелка терялась бы на светлом снимке.
+		   Решение заказчика 10 августа 2026. Фон остаётся: он и держит стрелку
+		   отдельно от того, что под ней при прокрутке. */
+		.content :global(.gallery-btn) {
+			border-color: transparent;
+		}
+
+		.content :global(.gallery-btn:hover:not(:disabled)) {
+			border-color: var(--accent-text);
+		}
 	}
 
 	/* ——— Спойлер: блок ——— */
@@ -1483,6 +1518,15 @@ const postSearchMeta = [
 		}
 	}
 
+	/* Хвостовые блоки со ссылками — на той же оси, что и всё остальное
+	   в хвосте материала. Ширину задаёт МЕСТО, а не сами блоки: они общие
+	   и стоят ещё на четырёх страницах, где колонка другая. */
+	.tail {
+		width: 100%;
+		max-width: var(--wide);
+		margin-inline: auto;
+	}
+
 	.post-nav {
 		width: 100%;
 		max-width: var(--wide);
@@ -1525,15 +1569,45 @@ const postSearchMeta = [
 			grid-template-columns: 1fr 1fr;
 		}
 
+		/* ОТСТУПЫ ТОЛЬКО ВНУТРЕННИЕ. Стояло `padding: var(--sp-6)` со всех
+		   четырёх сторон, и текст левой колонки начинался на 24 px правее
+		   края блока — то есть правее заголовка «Упоминается в материале»
+		   и правее транскрипта, стоящих ровно над ним. Три хвостовых блока
+		   давали три разные вертикали; заказчик увидел это на живой странице
+		   10 августа 2026. Теперь левая колонка открывается на оси блока,
+		   правая на ней же заканчивается, а воздух остаётся между ними. */
 		.post-nav a {
-			padding: var(--sp-6);
+			padding: var(--sp-6) var(--sp-6) var(--sp-6) 0;
 		}
 
 		.post-nav a + a {
+			padding: var(--sp-6) 0 var(--sp-6) var(--sp-6);
+		}
+
+		/* ЛИНИЯ МЕЖДУ КОЛОНКАМИ ПРЕРЫВИСТАЯ — псевдоэлементом, а не рамкой.
+		   Рамка идёт от края коробки до края и упирается в линию над блоком,
+		   сходясь с ней углом; в соседнем блоке соцсетей такая же линия
+		   не доходит до краёв, и два блока подряд читались по-разному.
+		   Заказчик увидел это на живой странице 10 августа 2026.
+
+		   Зазор равен вертикальному полю ссылки — там, где кончается воздух
+		   вокруг текста, кончается и линия. Те же числа, что у разделителей
+		   в сетке карточек. */
+		.post-nav a + a {
 			border-top: 0;
-			border-left: 1px solid var(--line);
+			position: relative;
 			text-align: right;
 			align-items: flex-end;
+		}
+
+		.post-nav a + a::before {
+			content: '';
+			position: absolute;
+			left: 0;
+			top: var(--sp-6);
+			bottom: var(--sp-6);
+			width: 1px;
+			background: var(--line);
 		}
 	}
 

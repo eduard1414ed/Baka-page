@@ -684,8 +684,12 @@ const speakerMap = blocks
 		margin-bottom: var(--sp-6);
 	}
 
+	/* Отступ считается от букв, а не от коробки: у Literata нижние выносные
+	   уходят примерно на 0.19 em ниже строки, и от восьми пикселей до приписки
+	   оставалось около двух — заголовок с ней слипался. Та же поправка стоит
+	   у заголовка страницы тайтла. */
 	.tr-head h2 {
-		margin: 0 0 var(--sp-2);
+		margin: 0 0 calc(var(--sp-2) + 0.19em);
 	}
 
 	.tr-note {
@@ -1020,10 +1024,13 @@ const speakerMap = blocks
 			grid-column: auto;
 		}
 
+		/* БЕЗ ЛЕВОГО ОТСТУПА: имя спикера должно начинаться на той же вертикали,
+		   что и заголовки соседних блоков страницы материала. Стояло 12 px,
+		   и транскрипт оказывался третьей вертикалью подряд — после упоминаний
+		   и соседних материалов. Замечено заказчиком 10 августа 2026. */
 		.tr-labels {
 			display: grid;
 			grid-template-columns: 142px minmax(0, 1fr);
-			padding-left: var(--sp-3);
 			border-top: 1px solid var(--line);
 			color: var(--muted);
 		}
@@ -1040,7 +1047,6 @@ const speakerMap = blocks
 		.tr-block {
 			display: grid;
 			grid-template-columns: 142px minmax(0, 1fr);
-			padding: 0 0 0 var(--sp-3);
 		}
 
 		.tr-side {

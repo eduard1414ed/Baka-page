@@ -22,11 +22,7 @@
 // Колонка считается от высоты марки и `--poster-ratio` (tokens.css) — ширины
 // под САМЫЙ широкий реальный постер. Число живёт в одном месте на обе формы
 // марки и на страницу тайтла: разойдись копии, полоса пустоты вернулась бы
-// в одну из них молча. Остаток у узких постеров уходит вправо, к тексту,
-// где читается полем.
-//
-// Обрезать нельзя: обрезка съедает название и лицо, то есть ровно то,
-// ради чего постер и нарисован.
+// в одну из них молча.
 import { getCollection } from 'astro:content';
 import { getAnimePosterSrcs } from '../lib/animePoster.mjs';
 import ImageMissing from './ImageMissing.astro';
@@ -106,7 +102,7 @@ const metaLines = catalogMeta ?? (metaParts.length > 0 ? [metaParts.join(' · ')
 	</span>
 	<span class="copy">
 		{code && <span class="kicker tech">{code}</span>}
-		<span class="title">{displayTitle}</span>
+		<span class="title clamp-safe">{displayTitle}</span>
 		{/* В блоке каталога на главной под названием стоит строка каталога
 		    (год со студией и число упоминаний), а не оригинал: там марка
 		    приглашает в каталог, а не поясняет, о чём был выпуск. */}
@@ -220,11 +216,13 @@ const metaLines = catalogMeta ?? (metaParts.length > 0 ? [metaParts.join(' · ')
 
 	/* Высота марки фиксирована (это медиаповерхность, а не текстовый блок),
 	   поэтому заголовок в четыре строки её сломал бы. */
+	/* Запас под выносные элементы букв даёт общий `.clamp-safe` (global.css),
+	   а высоты он не добавляет: отступ снизу уменьшен ровно на его величину. */
 	.title {
 		font-family: var(--font-display);
 		font-size: var(--card-title);
 		line-height: 1.15;
-		margin-bottom: var(--sp-2);
+		margin-block: -0.18em calc(var(--sp-2) - 0.18em);
 		display: -webkit-box;
 		-webkit-box-orient: vertical;
 		-webkit-line-clamp: 2;

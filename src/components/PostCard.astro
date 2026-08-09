@@ -81,7 +81,7 @@ const Title = `h${level}` as 'h2' | 'h3';
 			rel={isExternal ? 'noopener noreferrer' : undefined}
 		>
 			<PostKicker post={post} />
-			<Title class="list-title">
+			<Title class="list-title clamp-safe">
 				{title}
 				{isExternal && (
 					<span class="external" aria-label="откроется на другом сайте">
@@ -116,7 +116,7 @@ const Title = `h${level}` as 'h2' | 'h3';
 				    в углу карточки: он предупреждает, что клик уведёт с сайта,
 				    и должен читаться вместе с тем, по чему кликают. Название
 				    площадки видно выше, в метастроке, вместо времени чтения. */}
-				<Title class="card-title">
+				<Title class="card-title clamp-safe">
 					{title}
 					{isExternal && (
 						<span class="external" aria-label="откроется на другом сайте">
@@ -178,12 +178,16 @@ const Title = `h${level}` as 'h2' | 'h3';
 		color: var(--accent-text);
 	}
 
+	/* Запас под выносные элементы букв даёт общий `.clamp-safe` (global.css):
+	   при интерлиньяже 1.15 Literata не помещается в свою же строку, и обрезка
+	   срезала макушки и хвосты. Высоты запас не добавляет — он вычтен
+	   из внешнего отступа. */
 	.card-title {
 		font-family: var(--font-display);
 		font-size: var(--card-title);
 		line-height: 1.15;
 		font-weight: 400;
-		margin: 0;
+		margin-block: -0.18em;
 		/* Заголовок карточки — три строки (§10.4). */
 		display: -webkit-box;
 		-webkit-box-orient: vertical;
@@ -304,7 +308,8 @@ const Title = `h${level}` as 'h2' | 'h3';
 		font-size: var(--card-title);
 		line-height: 1.15;
 		font-weight: 400;
-		margin: var(--sp-2) 0 var(--sp-3);
+		/* Отступы уменьшены на величину запаса `.clamp-safe` — см. `.card-title`. */
+		margin: calc(var(--sp-2) - 0.18em) 0 calc(var(--sp-3) - 0.18em);
 		display: -webkit-box;
 		-webkit-box-orient: vertical;
 		-webkit-line-clamp: 3;
