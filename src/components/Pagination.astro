@@ -1,0 +1,144 @@
+---
+// Ряд листания под лентой (§10.3 дизайн-системы, раздел 4.2 ТЗ).
+//
+// Обычные ссылки на обычные адреса, ни строчки скрипта. В этом весь смысл
+// пагинации: на страницу можно дать ссылку, вернуться кнопкой «назад»
+// и найти её поисковиком. Появится здесь JS, подменяющий содержимое
+// без смены адреса, — всё это сразу отвалится.
+//
+// Края в неактивном состоянии — <span>, а не ссылка с `aria-disabled`.
+// Выключенная ссылка остаётся ссылкой: по ней можно перейти мышью
+// и попасть на неё табом, а `aria-disabled` только сообщает диктору,
+// что делать этого не стоит.
+import { pageNumbers, pageUrl } from '../lib/archive.mjs';
+
+interface Props {
+	/** Текущая страница, от 1. */
+	current: number;
+	/** Сколько всего страниц. */
+	last: number;
+	/** Адрес первой страницы: `/archive/` или `/category/podcast/`. */
+	base: string;
+}
+
+const { current, last, base } = Astro.props;
+
+const numbers = pageNumbers(current, last);
+---
+
+<nav class="pagination tech" aria-label="Страницы">
+	{
+		current > 1 ? (
+			<a class="edge" href={pageUrl(base, current - 1)} rel="prev">
+				← Назад
+			</a>
+		) : (
+			<span class="edge off" aria-disabled="true">
+				← Назад
+			</span>
+		)
+	}
+
+	{
+		numbers.map((n) =>
+			n === null ? (
+				<span class="gap" aria-hidden="true">
+					…
+				</span>
+			) : n === current ? (
+				<span class="num" aria-current="page">
+					{n}
+				</span>
+			) : (
+				<a class="num" href={pageUrl(base, n)}>
+					{n}
+				</a>
+			),
+		)
+	}
+
+	{/* Замена номеров на узком экране: до 620 они съедают всю строку. */}
+	<span class="pagination-status">Страница {current} из {last}</span>
+
+	{
+		current < last ? (
+			<a class="edge" href={pageUrl(base, current + 1)} rel="next">
+				Вперёд →
+			</a>
+		) : (
+			<span class="edge off" aria-disabled="true">
+				Вперёд →
+			</span>
+		)
+	}
+</nav>
+
+<style>
+	.pagination {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		gap: var(--sp-2);
+		padding: var(--sp-12) 0;
+		border-top: 1px solid var(--line);
+	}
+
+	/* Каждая цель не меньше 44×44 — и у номера, и у края (§8). */
+	.pagination a,
+	.pagination span {
+		min-width: 44px;
+		min-height: 44px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0 var(--sp-3);
+		color: var(--ink);
+	}
+
+	.pagination a:hover {
+		color: var(--accent-text);
+	}
+
+	/* Текущая страница не может отличаться одним цветом (§3.3): к акценту
+	   добавляется подчёркивание. Оно нарисовано тенью, а не border: рамка
+	   меняла бы высоту цели, а она обязана остаться ровно 44. */
+	.pagination [aria-current='page'] {
+		color: var(--accent-text);
+		box-shadow: inset 0 -1.5px 0 var(--accent-text);
+	}
+
+	.pagination .gap {
+		color: var(--muted);
+		min-width: auto;
+		padding: 0 var(--sp-1);
+	}
+
+	.pagination .off {
+		color: var(--line-strong);
+	}
+
+	/* Селектор из двух классов не для веса ради веса: правило размера выше
+	   написано как `.pagination span`, и одиночный класс проиграл бы ему
+	   по весу — строка «Страница 2 из 6» осталась бы видна на всех ширинах,
+	   а номера не спрятались бы ни на одной. */
+	.pagination .pagination-status {
+		display: none;
+		color: var(--muted);
+	}
+
+	@media (max-width: 620px) {
+		.pagination {
+			justify-content: space-between;
+		}
+
+		.pagination .num,
+		.pagination .gap {
+			display: none;
+		}
+
+		.pagination .pagination-status {
+			display: inline-flex;
+		}
+	}
+</style>

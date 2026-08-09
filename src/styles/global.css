@@ -167,6 +167,59 @@ a:focus-visible {
 	}
 }
 
+/* ---------- Общие компоненты ---------- */
+
+/* Сетка текстовых карточек. Ею выложены подборка «Из архива» на главной
+   и вся страница архива вместе со страницами разделов, поэтому она лежит
+   тут, а не в чьих-то стилях: три копии одной сетки разъехались бы молча —
+   сначала числом колонок, потом вертикальными линиями между ними.
+
+   Саму карточку рисует PostCard.astro, вариант `text`. Сетка знает про неё
+   ровно одно: где проходят линии между колонками.
+
+   `:not([hidden])` обязателен. На главной пять таких сеток — по одной
+   на режим фильтра, — и лишние спрятаны атрибутом `hidden`. Без `:not`
+   `display: grid` перебивает `[hidden]` по весу, и все пять вываливаются
+   на страницу разом: разметка при этом правильная, атрибут на месте,
+   а поймать это можно только глазами. */
+.list-grid:not([hidden]) {
+	display: grid;
+	grid-template-columns: 1fr;
+	column-gap: var(--grid-gap);
+}
+
+@media (min-width: 621px) {
+	.list-grid {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.list-grid > .list-card {
+		padding-right: var(--sp-6);
+	}
+
+	.list-grid > .list-card:nth-child(2n) {
+		border-left: 1px solid var(--line);
+		padding-left: var(--sp-6);
+	}
+}
+
+@media (min-width: 921px) {
+	.list-grid {
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+	.list-grid > .list-card:nth-child(2n) {
+		border-left: 0;
+		padding-left: 0;
+	}
+
+	.list-grid > .list-card:nth-child(3n + 2),
+	.list-grid > .list-card:nth-child(3n + 3) {
+		border-left: 1px solid var(--line);
+		padding-left: var(--sp-6);
+	}
+}
+
 /* ---------- Утилиты ---------- */
 
 /* Ссылка «Перейти к содержимому». Первый фокусируемый элемент страницы:

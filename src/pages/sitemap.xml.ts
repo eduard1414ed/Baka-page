@@ -15,8 +15,9 @@ import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { isPublished } from '../lib/publishing.mjs';
 import { isExternalPost } from '../lib/externalPost.mjs';
-import { visibleCategories } from '../content.config';
+import { visibleCategories, categoriesShownIn } from '../content.config';
 import { absoluteUrl } from '../lib/site.mjs';
+import { ARCHIVE_BASE, pageCount, pageUrl } from '../lib/archive.mjs';
 
 /**
  * Одна запись карты.
@@ -39,13 +40,33 @@ export const GET: APIRoute = async () => {
 	const posts = await getCollection('posts', ({ data }) => isPublished(data) && !isExternalPost(data));
 	const animeList = await getCollection('anime');
 
+	// СТРАНИЦ ЛИСТАНИЯ У АРХИВА НЕСКОЛЬКО, И КАЖДАЯ — ОТДЕЛЬНАЯ СТРАНИЦА САЙТА.
+	// Заявить одну первую значит спрятать от поисковика весь архив, кроме
+	// свежих 24 материалов. Сколько их выходит, считает та же функция, что
+	// нарезает сами страницы (src/lib/archive.mjs), — иначе карта однажды
+	// пообещала бы страницу, которой нет.
+	//
+	// В архив, в отличие от списка постов выше, попадают И посты-ссылки
+	// на чужие сайты: своей страницы у них нет, но в ленте архива они стоят
+	// и на число страниц влияют.
+	const inArchive = await getCollection('posts', ({ data }) => isPublished(data));
+	const pagesOf = (base: string, total: number) =>
+		Array.from({ length: pageCount(total) }, (_, i) => urlEntry(pageUrl(base, i + 1)));
+
 	const entries = [
 		urlEntry('/'),
 		urlEntry('/about/'),
 		urlEntry('/anime/'),
+		...pagesOf(ARCHIVE_BASE, inArchive.length),
 		// Только категории со своей страницей. Скрытые («Бонус») страницы
 		// не имеют вовсе — см. content.config.ts.
-		...visibleCategories.map((category) => urlEntry(`/category/${category.id}/`)),
+		...visibleCategories.flatMap((category) => {
+			// Не `data.category === id`, а список: в разделе «Подкаст» лежат
+			// и выпуски, и приписанные к нему бонусы.
+			const shown = categoriesShownIn(category.id);
+			const own = inArchive.filter((post) => shown.includes(post.data.category));
+			return pagesOf(`/category/${category.id}/`, own.length);
+		}),
 		...posts.map((post) => urlEntry(`/posts/${post.id}/`, post.data.publishAt ?? post.data.date)),
 		...animeList.map((entry) => urlEntry(`/anime/${entry.id}/`)),
 	];

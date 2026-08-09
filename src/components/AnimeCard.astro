@@ -1,5 +1,6 @@
 ---
 import { getAnimePosterSrcs } from '../lib/animePoster.mjs';
+import { plural } from '../lib/plural.mjs';
 
 interface Props {
 	anime: { id: string; data: Record<string, any> };
@@ -12,13 +13,10 @@ const posterSrcs = getAnimePosterSrcs(poster);
 const displayTitle = titleRu || titleOriginal;
 const needsTranslation = !titleRu;
 
-function pluralizeMentions(n: number) {
-	const mod10 = n % 10;
-	const mod100 = n % 100;
-	if (mod10 === 1 && mod100 !== 11) return 'упоминание';
-	if ([2, 3, 4].includes(mod10) && ![12, 13, 14].includes(mod100)) return 'упоминания';
-	return 'упоминаний';
-}
+// Формы числительного подбирает общий src/lib/plural.mjs — тот же, что считает
+// «143 выпуска» в шапке архива. Своя копия правила тут была и убрана: правило
+// одно, а копии разъезжаются молча, на числах вроде 111 и 114.
+const mentionForms: [string, string, string] = ['упоминание', 'упоминания', 'упоминаний'];
 ---
 
 <a class="card" href={`/anime/${anime.id}/`}>
@@ -43,7 +41,7 @@ function pluralizeMentions(n: number) {
 		{needsTranslation && <span class="badge">нужен перевод</span>}
 		<span class="meta">
 			{year}
-			{count > 0 && ` · ${count} ${pluralizeMentions(count)}`}
+			{count > 0 && ` · ${count} ${plural(count, mentionForms)}`}
 		</span>
 	</div>
 </a>
@@ -84,8 +82,11 @@ function pluralizeMentions(n: number) {
 	.body {
 		display: flex;
 		flex-direction: column;
-		gap: var(--space-1);
-		padding: var(--space-2);
+		/* Новая шкала §3.5: те же 8 и 16 пикселей, что были, но под новыми
+		   именами. Каталог переверстывается в части 7, до неё карточка
+		   остаётся прежней на вид. */
+		gap: var(--sp-2);
+		padding: var(--sp-4);
 	}
 
 	.title {

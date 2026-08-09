@@ -1,0 +1,78 @@
+---
+// Раздел — тот же архив, отфильтрованный по типу (раздел 4.3 ТЗ).
+//
+// Своей вёрстки у раздела НЕТ: шапку, вкладки, ленту и листание рисует
+// ArchiveView.astro, тот же самый компонент, что и `/archive/`. Вкладки
+// на странице архива ведут именно сюда.
+//
+// Адреса: `/category/podcast/`, дальше `/category/podcast/2/`.
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import ArchiveView from '../../../components/ArchiveView.astro';
+import JsonLd from '../../../components/JsonLd.astro';
+import { visibleCategories, categoriesShownIn } from '../../../content.config';
+import { isPublished } from '../../../lib/publishing.mjs';
+import { PER_PAGE, ARCHIVE_TITLE, ARCHIVE_BASE, archiveCountLine } from '../../../lib/archive.mjs';
+import { breadcrumbsSchema } from '../../../lib/schema.mjs';
+
+export const getStaticPaths = (async ({ paginate }) => {
+	// Только категории со своим разделом. У скрытых (сейчас это «Бонус»)
+	// страницы нет вовсе — их посты показываются в чужом разделе,
+	// см. content.config.ts.
+	const all = (await getCollection('posts', ({ data }) => isPublished(data))).sort(
+		(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+	);
+
+	return visibleCategories.flatMap((category) => {
+		// Не `data.category === category.id`, а список: раздел «Подкаст»
+		// показывает и выпуски, и приписанные к нему бонусы — вперемешку, по дате.
+		const shown = categoriesShownIn(category.id);
+		const posts = all.filter((post) => shown.includes(post.data.category));
+
+		// Строка счёта у раздела одна и та же на всех его страницах —
+		// «61 статья», а не «сколько влезло на эту».
+		const countLine = archiveCountLine(posts, [
+			{ ids: shown, forms: category.countForms as unknown as [string, string, string] },
+		]);
+
+		return paginate(posts, {
+			pageSize: PER_PAGE,
+			params: { category: category.id },
+			props: { category, countLine },
+		});
+	});
+}) satisfies GetStaticPaths;
+
+const { page, category, countLine } = Astro.props;
+
+const base = `/category/${category.id}/`;
+
+// Без номера в заголовке шесть страниц раздела выглядели бы для поисковика
+// шестью копиями одной.
+const title = page.currentPage === 1 ? category.label : `${category.label}, страница ${page.currentPage}`;
+
+// Крошки ведут через архив: раздел — это его отфильтрованный вид,
+// а не отдельная ветка сайта.
+const crumbs = breadcrumbsSchema([
+	{ name: ARCHIVE_TITLE, path: ARCHIVE_BASE },
+	{ name: category.label, path: base },
+]);
+---
+
+<Layout title={title} description={category.description}>
+	<JsonLd slot="head" data={crumbs} />
+	<div class="site">
+		<ArchiveView
+			posts={page.data}
+			eyebrow={ARCHIVE_TITLE}
+			heading={category.label}
+			intro={category.description}
+			countLine={countLine}
+			activeCategory={category.id}
+			base={base}
+			current={page.currentPage}
+			last={page.lastPage}
+		/>
+	</div>
+</Layout>

@@ -1,0 +1,65 @@
+---
+// Полный архив: всё, чего не должно быть на главной (раздел 4.1–4.2 ТЗ).
+//
+// Главная — витрина, она не растёт и показывает семь материалов плюс заметки.
+// Сюда уезжает всё остальное: полный список, переключение по типу и листание
+// страницами. Ссылка на эту страницу стоит внизу раскрытой подборки
+// «Из архива» на главной.
+//
+// АДРЕС ПЕРВОЙ СТРАНИЦЫ БЕЗ НОМЕРА: `/archive/`, дальше `/archive/2/`.
+// Так устроен маршрут `[...page]` — на первой странице параметра просто нет.
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import ArchiveView from '../../components/ArchiveView.astro';
+import JsonLd from '../../components/JsonLd.astro';
+import { archiveSections } from '../../content.config';
+import { isPublished } from '../../lib/publishing.mjs';
+import {
+	PER_PAGE,
+	ARCHIVE_TITLE,
+	ARCHIVE_DESCRIPTION,
+	ARCHIVE_INTRO,
+	ARCHIVE_BASE,
+	archiveCountLine,
+} from '../../lib/archive.mjs';
+import { breadcrumbsSchema } from '../../lib/schema.mjs';
+
+export const getStaticPaths = (async ({ paginate }) => {
+	// Те же две проверки, что решают, попадёт ли материал в ленту на главной
+	// и в карту сайта: `isPublished` и сортировка по дате от свежих к старым.
+	const posts = (await getCollection('posts', ({ data }) => isPublished(data))).sort(
+		(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+	);
+
+	// Строка счёта считается ОДИН РАЗ по всему архиву и раздаётся всем
+	// страницам: на пятой странице она обязана говорить то же, что на первой.
+	const countLine = archiveCountLine(posts, archiveSections);
+
+	return paginate(posts, { pageSize: PER_PAGE, props: { countLine } });
+}) satisfies GetStaticPaths;
+
+const { page, countLine } = Astro.props;
+
+// Номер страницы в заголовке — не украшение: без него у шести страниц архива
+// одинаковый <title>, и поисковик считает их дублями друг друга.
+const title = page.currentPage === 1 ? ARCHIVE_TITLE : `${ARCHIVE_TITLE}, страница ${page.currentPage}`;
+
+const crumbs = breadcrumbsSchema([{ name: ARCHIVE_TITLE, path: ARCHIVE_BASE }]);
+---
+
+<Layout title={title} description={ARCHIVE_DESCRIPTION}>
+	<JsonLd slot="head" data={crumbs} />
+	<div class="site">
+		<ArchiveView
+			posts={page.data}
+			eyebrow="Всё, что мы сделали"
+			heading={ARCHIVE_TITLE}
+			intro={ARCHIVE_INTRO}
+			countLine={countLine}
+			base={ARCHIVE_BASE}
+			current={page.currentPage}
+			last={page.lastPage}
+		/>
+	</div>
+</Layout>
