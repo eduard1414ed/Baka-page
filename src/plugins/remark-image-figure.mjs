@@ -191,7 +191,10 @@ function groupFigureData(items, onWarn) {
 			// Подпись самой галереи стоит ниже, в figcaption, и индексируется.
 			properties: { class: 'gallery-head', 'data-pagefind-ignore': '' },
 			children: [
-				{ type: 'element', tagName: 'span', properties: { class: 'gallery-kicker' }, children: [text('[ галерея ]')] },
+				// Скобки вокруг подписи рисует CSS (`.gallery-kicker::before`
+				// в global.css) — одно правило на все подписи блоков сайта.
+				// Руками их тут писать не надо, выйдут двойные.
+				{ type: 'element', tagName: 'span', properties: { class: 'gallery-kicker' }, children: [text('галерея')] },
 				{
 					type: 'element',
 					tagName: 'span',

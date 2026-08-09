@@ -25,6 +25,7 @@ import { absoluteUrl, SITE_NAME } from '../../lib/site.mjs';
 import { podcastEpisodeSchema, articleSchema, breadcrumbsSchema } from '../../lib/schema.mjs';
 import { categories, sectionOf } from '../../content.config';
 import { getYoutubeEmbedUrl } from '../../lib/youtube.mjs';
+import { parseTimecodeList } from '../../lib/timecode.mjs';
 import { hostOf } from '../../lib/linkIcon.mjs';
 import { findEpisodeByGuid } from '../../lib/podcastFeed.mjs';
 import { formatPostDate } from '../../lib/postDate.mjs';
@@ -137,7 +138,12 @@ const youtubeEmbed = youtube ? getYoutubeEmbedUrl(youtube) : null;
 // Оглавление выпуска (тз/08, 9.3). Пусто — блока нет, и метки времени
 // в тексте работают ровно как работали: у 143 выпусков архива не меняется
 // ничего.
-const timecodes = post.data.timecodes ?? [];
+//
+// Разбираем ЗДЕСЬ, один раз: строки нужны и блоку, и решению «перематывать
+// ли ролик». Разбери мы их дважды, предупреждения в лог тоже пошли бы дважды.
+const timecodeRows = parseTimecodeList(post.data.timecodes, (message) =>
+	console.warn(`[таймкоды] ${post.id}: ${message}`),
+);
 
 // Бонус — материал за платной подпиской (тз/10, задача 1). Плашка появляется
 // сама у любого поста этой категории, отдельного переключателя нет.
@@ -161,7 +167,7 @@ const isVideoEssay = category === 'videoessay';
 // перемотка не работала бы ровно там, где она нужна. Поэтому страница говорит
 // только «этот материал перематывает ролик», а какое из окошек на ней ролик,
 // разбирается скрипт ниже.
-const youtubeSeek = timecodes.length > 0 && isVideoEssay;
+const youtubeSeek = timecodeRows.length > 0 && isVideoEssay;
 
 // `enablejsapi` разрешает управлять роликом снаружи. Ставим его ТОЛЬКО там,
 // где перемотка правда нужна: без таймкодов управлять нечем, и лишнего
@@ -178,7 +184,8 @@ const youtubeSrc = youtubeSeek && youtubeEmbed ? `${youtubeEmbed}?enablejsapi=1`
 // то есть врала бы о том, что под ней. В макете плеер стоит отдельным блоком
 // выше, и такого случая просто не возникает.
 const bodyStartsWithVideo = /^\s*::video\b/.test(post.body ?? '');
-const bodyLabel = isEpisode ? 'О выпуске' : isVideoEssay && !bodyStartsWithVideo ? 'О видеоэссе' : null;
+// Скобки вокруг подписи рисует CSS (global.css), тут только слово.
+const bodyLabel = isEpisode ? 'о выпуске' : isVideoEssay && !bodyStartsWithVideo ? 'о видеоэссе' : null;
 
 // Подводка. Берётся ТОЛЬКО из своего поля «Описание для карточки» и никогда
 // из первого абзаца текста: подставленный первый абзац стоял бы прямо над
@@ -477,7 +484,7 @@ const postSearchMeta = [
 
 			{/* Оглавление выпуска — ниже описания, до транскрипта (тз/08, 9.3).
 			    Пустое поле блока не рисует вовсе. */}
-			<TimecodeList items={timecodes} postId={post.id} seekYoutube={youtubeSeek} />
+			<TimecodeList rows={timecodeRows} seekYoutube={youtubeSeek} />
 
 			{/* Плашка подписки — сразу за текстом, как в макете: текст выше это
 			    тизер, он открыт всем и попадает в поиск, а дальше начинается
@@ -492,7 +499,7 @@ const postSearchMeta = [
 				isVideoEssay && episode && (
 					<section class="audio-section" aria-labelledby="audio-title">
 						<h2 class="body-label tech" id="audio-title">
-							Аудиоверсия
+							аудиоверсия
 						</h2>
 						<EpisodePlayer
 							guid={episode.guid}
