@@ -6,6 +6,7 @@ import remarkEpisodeCover from './src/plugins/remark-episode-cover.mjs';
 import remarkSpoiler from './src/plugins/remark-spoiler.mjs';
 import remarkVideo from './src/plugins/remark-video.mjs';
 import remarkLinkList from './src/plugins/remark-link-list.mjs';
+import remarkBlockLabel from './src/plugins/remark-block-label.mjs';
 import remarkAnime from './src/plugins/remark-anime.mjs';
 import remarkTimecode from './src/plugins/remark-timecode.mjs';
 import optimizeUploadsIntegration from './src/plugins/optimize-uploads-integration.mjs';
@@ -37,6 +38,9 @@ export default defineConfig({
 			// чтобы внутри спрятанного блока врезка была уже одним узлом,
 			// а не россыпью отдельных маркеров.
 			remarkLinkList,
+			// Подпись блока внутри текста — тоже до спойлера, чтобы спрятанный
+			// блок уносил её вместе с собой одним куском.
+			remarkBlockLabel,
 			remarkAnime,
 			remarkTimecode,
 			remarkSpoiler,
