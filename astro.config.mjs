@@ -5,6 +5,7 @@ import remarkImageFigure from './src/plugins/remark-image-figure.mjs';
 import remarkEpisodeCover from './src/plugins/remark-episode-cover.mjs';
 import remarkSpoiler from './src/plugins/remark-spoiler.mjs';
 import remarkVideo from './src/plugins/remark-video.mjs';
+import remarkLinkList from './src/plugins/remark-link-list.mjs';
 import remarkAnime from './src/plugins/remark-anime.mjs';
 import remarkTimecode from './src/plugins/remark-timecode.mjs';
 import optimizeUploadsIntegration from './src/plugins/optimize-uploads-integration.mjs';
@@ -32,6 +33,10 @@ export default defineConfig({
 			// (та разбирает блоки `::image` из админки), поэтому не конфликтуют.
 			remarkEpisodeCover,
 			remarkVideo,
+			// Собирает подряд идущие `::link` в одну врезку — до спойлера,
+			// чтобы внутри спрятанного блока врезка была уже одним узлом,
+			// а не россыпью отдельных маркеров.
+			remarkLinkList,
 			remarkAnime,
 			remarkTimecode,
 			remarkSpoiler,

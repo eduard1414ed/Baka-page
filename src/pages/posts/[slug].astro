@@ -425,10 +425,15 @@ const postSearchMeta = [
 				</div>
 
 				{/* Кнопки поста — списком с линиями, а не рядом плашек: в языке
-				    сайта плиток нет. Слева площадка, справа адрес. */}
+				    сайта плиток нет. Слева площадка, справа адрес.
+
+				    В поиск врезка не идёт: названия площадок и голые домены
+				    в цитате выдачи читаются мусором. Тем же помечена врезка
+				    со ссылками внутри текста (remark-link-list.mjs) — два
+				    одинаковых на вид блока не должны вести себя по-разному. */}
 				{
 					!isBonus && buttons && buttons.length > 0 && (
-						<div class="platform-list">
+						<div class="platform-list" data-pagefind-ignore>
 							{buttons.map((button: { label: string; url: string }) => (
 								<div class="platform-row">
 									<strong class="tech">{button.label}</strong>
@@ -1264,11 +1269,26 @@ const postSearchMeta = [
 
 	/* ——— Врезка со ссылками на площадки ——— */
 
-	/* Линии с обеих сторон — тот самый случай, когда §5 это разрешает: врезка
-	   внутри текста, после которой текст продолжается. Не стык двух секций. */
-	.platform-list {
+	/* ОДНИ ПРАВИЛА НА ДВА БЛОКА. Врезка рисуется из двух разных мест: кнопки
+	   материала (`buttons`) — разметкой этой страницы, ссылки внутри текста —
+	   плагином src/plugins/remark-link-list.mjs. Разметку плагина обычный
+	   селектор компонента не видит, поэтому все правила врезки записаны
+	   через `:global`. Вид у двух блоков обязан совпадать до пикселя,
+	   а второй копии стилей быть не должно.
+
+	   ФОРМА СЕЛЕКТОРА У ВСЕХ ПРАВИЛ ОДНА, включая медиазапрос: смешай мы
+	   `:global(.platform-row)` с голым `.platform-row`, правила разошлись бы
+	   по весу и часть из них молча перестала бы применяться.
+
+	   Линии с обеих сторон — тот самый случай, когда §5 это разрешает: врезка
+	   внутри текста, после которой текст продолжается. Не стык двух секций.
+
+	   Сокращённый `margin` не пишем: внутри `.content` он сбросил бы боковые
+	   поля, и врезка уехала бы к левому краю колонки. */
+	:global(.platform-list) {
 		max-width: var(--reading);
-		margin: var(--sp-8) auto;
+		margin-block: var(--sp-8);
+		margin-inline: auto;
 		padding-block: var(--sp-4);
 		border-top: 1px solid var(--line);
 		border-bottom: 1px solid var(--line);
@@ -1276,26 +1296,26 @@ const postSearchMeta = [
 		gap: var(--sp-3);
 	}
 
-	.platform-row {
+	:global(.platform-row) {
 		display: grid;
 		gap: var(--sp-1);
 		font-size: var(--body-sm);
 		line-height: 1.45;
 	}
 
-	.platform-row strong {
+	:global(.platform-row strong) {
 		font-weight: 600;
 		color: var(--ink);
 	}
 
-	.normal-link {
+	:global(.normal-link) {
 		text-decoration: underline;
 		text-decoration-thickness: 1px;
 		text-underline-offset: 3px;
 	}
 
 	@media (min-width: 621px) {
-		.platform-row {
+		:global(.platform-row) {
 			grid-template-columns: 118px minmax(0, 1fr);
 			gap: var(--sp-4);
 		}
