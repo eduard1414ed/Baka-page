@@ -15,7 +15,7 @@
 
 import * as shikimori from './anime-sources/shikimori.mjs';
 import * as anilist from './anime-sources/anilist.mjs';
-import { writeAnimeEntry, sleep } from './anime-lib.mjs';
+import { writeAnimeEntry, borrowPoster, sleep } from './anime-lib.mjs';
 
 // Порядок = приоритет поиска. Чтобы добавить третий источник — написать
 // модуль такой же формы (id, label, find(query), findById(sourceId)) и дописать
@@ -53,6 +53,12 @@ async function fetchOne(slug, query) {
 	}
 
 	const { source, result } = found;
+
+	// Обложки у источника нет — спрашиваем остальные по оригинальному названию.
+	// Данные при этом остаются от того источника, где тайтл нашёлся.
+	if (!result.posterUrl) {
+		result.posterUrl = await borrowPoster(result, SOURCES, source.id);
+	}
 
 	if (result.posterUrl) console.log(`  скачиваю обложку и сжимаю…`);
 	await writeAnimeEntry(slug, source, result);

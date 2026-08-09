@@ -28,6 +28,68 @@ export async function downloadPoster(posterUrl, slug) {
 	}
 }
 
+/** Название к сравнимому виду: регистр и знаки препинания не в счёт. */
+function foldTitle(text) {
+	return String(text ?? '')
+		.toLowerCase()
+		.replace(/[^\p{L}\p{N}]+/gu, '');
+}
+
+/**
+ * Обложка из запасного источника, когда у основного её нет.
+ *
+ * ЗАЧЕМ. У Shikimori обложка у свежих тайтлов появляется не сразу, а у AniList
+ * она к этому времени обычно уже есть. Терять картинку из-за того, что первый
+ * источник ответил раньше времени, незачем: остальные данные берутся у него же,
+ * заимствуется только файл обложки.
+ *
+ * ИЩЕМ ПО ОРИГИНАЛЬНОМУ НАЗВАНИЮ — тому самому романизированному имени,
+ * по которому тайтл и индексируется в AniList.
+ *
+ * И СВЕРЯЕМ, ЧТО НАШЛОСЬ ТО ЖЕ САМОЕ. Поиск по названию — это всегда риск
+ * взять похожий тайтл (сиквел, спешл, ремейк), а чужая обложка хуже
+ * отсутствующей: она выглядит правильной и потому не будет замечена никогда.
+ * Название не совпало — обложку не берём и говорим об этом вслух.
+ *
+ * @param {object} result Что вернул основной источник.
+ * @param {object[]} sources Все известные источники.
+ * @param {string} primaryId `id` основного источника — его самого не спрашиваем.
+ * @returns {Promise<string|undefined>} Адрес обложки или undefined.
+ */
+export async function borrowPoster(result, sources, primaryId) {
+	const wanted = foldTitle(result.titleOriginal);
+	if (!wanted) return undefined;
+
+	for (const source of sources) {
+		if (source.id === primaryId) continue;
+
+		let found;
+		try {
+			found = await source.find(result.titleOriginal);
+		} catch (error) {
+			console.log(`  ${source.label} не ответил про обложку: ${error.message}`);
+			continue;
+		}
+
+		if (!found?.posterUrl) continue;
+
+		// Сверяем и с основным названием, и с альтернативными: у AniList
+		// романизация иногда отличается написанием, а не тайтлом.
+		const names = [found.titleOriginal, ...(found.sourceAliases ?? [])].map(foldTitle);
+		if (!names.includes(wanted)) {
+			console.log(
+				`  обложку у ${source.label} не беру: там это «${found.titleOriginal}», а у нас «${result.titleOriginal}»`,
+			);
+			continue;
+		}
+
+		console.log(`  обложки в основном источнике нет — беру у ${source.label}`);
+		return found.posterUrl;
+	}
+
+	return undefined;
+}
+
 // Поля, которые заказчик правит в админке и которые из-за этого нельзя
 // перезаписывать данными источника (CLAUDE.md, раздел «Тайтл»). Признак стоит
 // по каждому полю отдельно: описание переписано своими словами — не трогаем,

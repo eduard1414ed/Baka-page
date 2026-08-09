@@ -286,9 +286,10 @@ const catalogMarks = shuffled.slice(0, CATALOG_POOL);
 						{catalogMarks.map((item, position) => (
 							<AnimeBadge
 								anime={item.entry}
-								catalogMeta={[item.code, item.entry.data.year, `${item.count} ${plural(item.count, ['упоминание', 'упоминания', 'упоминаний'])}`]
-									.filter(Boolean)
-									.join(' · ')}
+								catalogMeta={[
+									[item.code, item.entry.data.year].filter(Boolean).join(' · '),
+									`${item.count} ${plural(item.count, ['упоминание', 'упоминания', 'упоминаний'])}`,
+								]}
 								hidden={position >= CATALOG_SHOWN}
 							/>
 						))}
@@ -507,9 +508,12 @@ const catalogMarks = shuffled.slice(0, CATALOG_POOL);
 
 	/* ---------- Блок каталога ---------- */
 
+	/* СВОЕЙ ЛИНИИ СВЕРХУ У БЛОКА НЕТ. Над ним всегда стоит кнопка «Показать
+	   ещё материалы», а она сама нарисована между двумя линиями — своя граница
+	   дала бы вторую линию в тридцати пикселях от первой, что §5 запрещает
+	   прямо. Тот же случай уже был у сайдбара главной и у сеток режимов. */
 	.catalog {
 		padding: var(--sp-12) 0 50px;
-		border-top: 1px solid var(--line);
 	}
 
 	.catalog-head {

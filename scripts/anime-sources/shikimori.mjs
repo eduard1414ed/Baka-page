@@ -4,7 +4,11 @@
 // это то, что позволяет добавлять новые источники, не трогая
 // остальной scripts/fetch-anime.mjs: id, label, find(query).
 
-const BASE = 'https://shikimori.one';
+// Домен переехал: shikimori.one отвечает 301 на shikimori.io. Старые ссылки
+// в справочнике продолжают работать через редирект, новые пишем сразу на .io.
+// ВАЖНО для запросов POST: редирект превращает их в GET и теряет тело — именно
+// поэтому GraphQL ниже ходит на .io напрямую, а не через .one.
+const BASE = 'https://shikimori.io';
 const USER_AGENT = 'BakaPodcastSite/1.0 (+https://github.com/eduard1414ed/Baka-page)';
 
 export const id = 'shikimori';
@@ -42,12 +46,47 @@ function sourceAliases(data) {
 		.filter((name) => name && !known.has(name));
 }
 
-function toEntry(data) {
+/**
+ * Настоящий постер из НОВОГО API (GraphQL).
+ *
+ * ЗАЧЕМ ЭТО НУЖНО. У Shikimori два API, и они расходятся: старый (REST)
+ * у части свежих тайтлов до сих пор отдаёт служебную заглушку
+ * `missing_original.jpg`, хотя на самом сайте обложка давно стоит и новый
+ * API её отдаёт. Так в справочник попали два тайтла 2026 года без обложек:
+ * код отработал правильно, врал источник.
+ *
+ * Спрашиваем только тогда, когда REST сказал «картинки нет»: лишний запрос
+ * на каждый тайтл ни к чему, а частоту запросов Shikimori ограничивает.
+ *
+ * Молчим и возвращаем undefined на любой сбой: обложка — не тот повод,
+ * чтобы уронить добор тайтла целиком.
+ */
+async function posterFromGraphql(animeId) {
+	try {
+		const response = await fetch(`${BASE}/api/graphql`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', 'User-Agent': USER_AGENT },
+			body: JSON.stringify({
+				query: `{ animes(ids: "${animeId}", limit: 1) { poster { originalUrl } } }`,
+			}),
+		});
+		if (!response.ok) return undefined;
+		const body = await response.json();
+		return body?.data?.animes?.[0]?.poster?.originalUrl ?? undefined;
+	} catch {
+		return undefined;
+	}
+}
+
+async function toEntry(data) {
 	const year = data.aired_on ? Number(data.aired_on.slice(0, 4)) : undefined;
 	const studio = data.studios?.[0]?.name;
 	const posterPath = data.image?.original;
-	// На совсем свежих тайтлах вместо обложки — служебная заглушка "нет картинки".
+	// Служебная заглушка «нет картинки» вместо обложки. Раньше это значило,
+	// что обложки нет вовсе; теперь это чаще значит, что старый API её просто
+	// не знает, — спрашиваем новый.
 	const hasRealPoster = posterPath && !posterPath.includes('missing_');
+	const posterUrl = hasRealPoster ? `${BASE}${posterPath}` : await posterFromGraphql(data.id);
 
 	return {
 		sourceId: data.id,
@@ -56,7 +95,7 @@ function toEntry(data) {
 		titleOriginal: data.name,
 		year,
 		studio,
-		posterUrl: hasRealPoster ? `${BASE}${posterPath}` : undefined,
+		posterUrl,
 		synopsis: cleanDescription(data.description),
 		url: data.url ? `${BASE}${data.url}` : undefined,
 		sourceAliases: sourceAliases(data),
@@ -69,7 +108,7 @@ export async function find(query) {
 	if (results.length === 0) return null;
 
 	const data = await request(`/api/animes/${results[0].id}`);
-	return toEntry(data);
+	return await toEntry(data);
 }
 
 // Тайтл уже опознан по id (например, выбран в живом поиске в админке) — без поиска
@@ -77,5 +116,5 @@ export async function find(query) {
 // который донабирает справочник после публикации поста (scripts/sync-anime.mjs).
 export async function findById(sourceId) {
 	const data = await request(`/api/animes/${sourceId}`);
-	return toEntry(data);
+	return await toEntry(data);
 }

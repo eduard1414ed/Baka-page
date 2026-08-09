@@ -18,7 +18,7 @@
 import { readdir, readFile, access } from 'node:fs/promises';
 import * as shikimori from './anime-sources/shikimori.mjs';
 import * as anilist from './anime-sources/anilist.mjs';
-import { writeAnimeEntry, sleep, ANIME_CONTENT_DIR } from './anime-lib.mjs';
+import { writeAnimeEntry, borrowPoster, sleep, ANIME_CONTENT_DIR } from './anime-lib.mjs';
 
 const SOURCES_BY_ID = { shikimori, anilist };
 const PAUSE_MS = 1200;
@@ -101,6 +101,12 @@ async function main() {
 				console.error(`  тайтл с id ${sourceId} в ${sourceModule.label} не нашёлся (мог быть удалён).`);
 				continue;
 			}
+			// Обложки у источника нет — спрашиваем остальные по оригинальному
+			// названию. Остальные данные остаются от своего источника.
+			if (!result.posterUrl) {
+				result.posterUrl = await borrowPoster(result, Object.values(SOURCES_BY_ID), sourceModule.id);
+			}
+
 			await writeAnimeEntry(id, sourceModule, result);
 			console.log(`  сохранено: src/content/anime/${id}.json`);
 		} catch (error) {
