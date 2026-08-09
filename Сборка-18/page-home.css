@@ -71,6 +71,15 @@
 
 .all-layout{ padding-top:var(--space-6) }
 
+/* Соцсети стоят РЯДОМ среди редакционных, а не отдельной секцией внизу:
+   разбивают ленту перед рядом с короткими заметками. Вид блока свой
+   и живёт в baka.css — здесь только отбивка, рядовая, как у соседей:
+   со своей блок выбивался бы из ритма ленты. */
+.all-layout > .social-strip{ padding:28px 0 }
+@media (min-width:761px){
+  .all-layout > .social-strip{ padding:42px 0 }
+}
+
 /* Линию рисует начало следующего ряда — так между рядами всегда одна. */
 .lead-grid,.feature-row,.third-row{ display:grid; gap:var(--space-6); padding:28px 0 }
 .feature-row,.third-row{ border-top:1px solid var(--line) }
