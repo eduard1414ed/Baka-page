@@ -23,6 +23,13 @@ interface Props {
 	type?: 'website' | 'article';
 	/** Закрыть страницу от поисковиков. */
 	noindex?: boolean;
+	/** У страницы нет одного своего адреса — не объявлять канонический.
+	    Случай ровно один: страница 404. Она отдаётся по ЛЮБОМУ ненайденному
+	    адресу, и строчка «настоящий адрес этой страницы — /404/» была бы
+	    неправдой, а заодно просьбой к поисковику её завести. Со страницей
+	    поиска не путать: та закрыта `noindex`, но живёт по своему адресу,
+	    и канонический ей нужен. */
+	noCanonical?: boolean;
 }
 // Разметка Schema.org приезжает в <head> через именованный слот `head`,
 // а не через свойство: так страница пишет её обычным <JsonLd slot="head" />.
@@ -35,6 +42,7 @@ const {
 	imageAlt = '',
 	type = 'website',
 	noindex = false,
+	noCanonical = false,
 } = Astro.props;
 
 const documentTitle = pageTitle(title);
@@ -73,7 +81,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 		<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
 		<link rel="manifest" href="/site.webmanifest" />
 
-		<link rel="canonical" href={canonical} />
+		{!noCanonical && <link rel="canonical" href={canonical} />}
 		{noindex && <meta name="robots" content="noindex, follow" />}
 		<meta name="generator" content={Astro.generator} />
 
