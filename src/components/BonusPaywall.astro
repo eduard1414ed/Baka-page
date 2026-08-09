@@ -38,7 +38,7 @@ const links = buttons && buttons.length > 0 ? buttons : platformsOfKind('support
 
 		<div class="copy">
 			<h2 id="paywall-title">Бонусы доступны платным подписчикам подкаста</h2>
-			<p class="lead">
+			<p class="paywall-lead">
 				Подпишитесь на удобной площадке, чтобы послушать этот выпуск и получить доступ ко всему архиву бонусов «Баки!».
 			</p>
 			<p class="note">После оформления подписки выпуск будет доступен на выбранной площадке.</p>
@@ -94,7 +94,11 @@ const links = buttons && buttons.length > 0 ? buttons : platformsOfKind('support
 		margin: 0 0 var(--space-2);
 	}
 
-	.lead {
+	/* Имя своё, а не общее `.lead`: тот теперь описан в global.css и набирает
+	   абзац шрифтом заголовков в полный кегль. Здесь абзац обычный — макет
+	   плашки набирает его Body L, — и вида ему от общего правила не нужно
+	   никакого, нужен только отступ. */
+	.paywall-lead {
 		margin: 0 0 var(--space-2);
 	}
 

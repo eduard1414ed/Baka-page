@@ -56,6 +56,7 @@ export const GET: APIRoute = async () => {
 	const entries = [
 		urlEntry('/'),
 		urlEntry('/about/'),
+		urlEntry('/support/'),
 		urlEntry('/anime/'),
 		...pagesOf(ARCHIVE_BASE, inArchive.length),
 		// Только категории со своей страницей. Скрытые («Бонус») страницы

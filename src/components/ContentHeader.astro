@@ -102,12 +102,11 @@ const { backHref, backLabel, date, timing = null, title, lead = null } = Astro.p
 		margin: 0;
 	}
 
+	/* Вид крупного абзаца — общий `.lead` в src/styles/global.css: тот же
+	   абзац стоит на странице «Поддержать», и двух описаний у него быть
+	   не должно. Здесь остаётся только зазор от заголовка. */
 	.lead {
 		margin: var(--sp-4) 0 0;
-		font-family: var(--font-display);
-		font-size: var(--h3);
-		line-height: 1.35;
-		color: var(--text);
 	}
 
 	@media (min-width: 621px) {

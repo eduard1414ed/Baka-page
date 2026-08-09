@@ -1,0 +1,422 @@
+---
+// Страница «Поддержать» (тз/08, часть 10.1).
+//
+// ТЕКСТЫ ЛЕЖАТ НЕ ЗДЕСЬ, а в src/content/pages/support.md — и правятся
+// в админке, раздел «Страницы» → «Поддержать». В этом файле только вёрстка.
+// Устроено ровно так же, как «О подкасте»: суммы, состав бонусов и способы
+// поддержки меняются чаще, чем выходят сессии, и просить сессию ради строчки
+// текста заказчик не должен.
+//
+// КНОПКИ ПЛОЩАДОК СЮДА НЕ ПЕРЕЕХАЛИ: они берутся из src/data/platforms.js,
+// оттуда же, откуда их берёт плашка подписки у бонусов и страница
+// «О подкасте». Второй список площадок означал бы, что смена ссылки Boosty
+// чинится в двух местах, а забывается в одном.
+//
+// SOCIALSTRIP ЗДЕСЬ НЕ ВЫВОДИТСЯ — так сказано в ТЗ и там же объяснено:
+// человек уже пришёл поддержать, и уводить его в соцсети незачем. Отдельного
+// кода на это не нужно: блока соцсетей на сайте нет вовсе (его убрали
+// с главной в части 3), и появиться на этой странице он может только руками.
+//
+// ВСЁ, ЧЕГО НЕТ, НЕ РИСУЕТСЯ. Пустое поле — не пустая рамка и не заголовок
+// над ничем: очищенный блок исчезает целиком вместе со своей линией. CMS
+// пишет в незаполненное поле пустую строку, а не пропускает его, поэтому
+// везде проверяется именно содержимое, а не наличие поля.
+import { getEntry, render } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import JsonLd from '../components/JsonLd.astro';
+import { platformsOfKind } from '../data/platforms.js';
+import { breadcrumbsSchema } from '../lib/schema.mjs';
+import { excerptFromBody } from '../lib/excerpt.mjs';
+import { SITE_DESCRIPTION } from '../lib/site.mjs';
+
+// Файла может не быть — например, его удалили из админки. Страница тогда
+// остаётся с одними кнопками площадок, но собирается. Ронять сборку всего
+// сайта из-за одной страницы нельзя (см. CLAUDE.md).
+const page = await getEntry('pages', 'support');
+const { Content } = page ? await render(page) : { Content: null };
+
+const lead = page?.data.lead?.trim();
+const hasBody = Boolean(page?.body?.trim());
+const benefitsNote = page?.data.benefitsNote?.trim();
+
+// Пустые строки списков выбрасываем. Строку в админке очень легко добавить
+// и не заполнить, а такая строка нарисовала бы номер «03» рядом с пустотой
+// или ссылку без подписи. Ссылке нужен и адрес: без него это не ссылка,
+// а слово, притворяющееся ссылкой.
+const benefits = (page?.data.benefits ?? []).filter((item) => item.text?.trim());
+const altText = page?.data.altText?.trim();
+const altLinks = (page?.data.altLinks ?? []).filter((link) => link.label?.trim() && link.url?.trim());
+
+const support = platformsOfKind('support');
+
+// Описание для поисковика и превью ссылки. Первая фраза страницы и есть
+// ответ на вопрос «о чём она», поэтому отдельного поля под описание нет:
+// ещё одно поле в админке — это поле, которое однажды разойдётся с текстом.
+// Так же сделано у «О подкасте».
+const description = lead || excerptFromBody(page?.body ?? '', SITE_DESCRIPTION);
+---
+
+<Layout title="Поддержать" description={description}>
+	<JsonLd slot="head" data={breadcrumbsSchema([{ name: 'Поддержать', path: '/support/' }])} />
+
+	<div class="site">
+		<section class="support-hero">
+			<div class="hero-title">
+				<div class="eyebrow tech">Поддержать проект</div>
+				<h1>Помочь «Баке!»</h1>
+			</div>
+
+			{
+				(lead || hasBody) && (
+					<div class="hero-lead">
+						{/* Вид крупной фразы — общий `.lead` из global.css: точно так же
+						    набрана подводка под заголовком любой статьи. */}
+						{lead && <p class="lead">{lead}</p>}
+						{/* Отдельная обёртка вокруг текста из markdown, а не общее
+						    правило на все абзацы блока: правило `.hero-lead p` весит
+						    больше общего `.lead` и перебило бы ему кегль — крупная
+						    фраза молча стала бы обычным абзацем. */}
+						{
+							hasBody && Content && (
+								<div class="hero-body">
+									<Content />
+								</div>
+							)
+						}
+					</div>
+				)
+			}
+
+			{/* Своего заголовка у кнопок нет: они принадлежат хиро и стоят прямо
+			    под текстом, который объясняет, за что платить. */}
+			{
+				support.length > 0 && (
+					<div class="support-buttons">
+						{support.map((platform) => (
+							<a href={platform.url} target="_blank" rel="noopener noreferrer">
+								{platform.label}
+								<span aria-hidden="true">↗</span>
+							</a>
+						))}
+					</div>
+				)
+			}
+		</section>
+
+		{
+			benefits.length > 0 && (
+				<section class="benefits">
+					<div class="section-head-main">
+						<div class="eyebrow tech">Для подписчиков</div>
+						<h2>Что даёт подписка</h2>
+					</div>
+					{/* Кегль, интерлиньяж и цвет — общий `.section-intro`: этот же текст
+					    справа от заголовка стоит на четырёх других страницах сайта. */}
+					{benefitsNote && <p class="section-head-copy section-intro">{benefitsNote}</p>}
+					<div class="benefit-list">
+						{benefits.map((item, index) => (
+							<div class="benefit-item">
+								{/* Номер считает вёрстка, а не автор: он зависит от того,
+								    сколько пунктов выше, и после удаления второго пункта
+								    руками проставленные номера пошли бы через один. */}
+								<span class="benefit-mark tech">{String(index + 1).padStart(2, '0')}</span>
+								<p>{item.text}</p>
+							</div>
+						))}
+					</div>
+				</section>
+			)
+		}
+
+		{
+			(altText || altLinks.length > 0) && (
+				<section class="alt-support">
+					<div class="alt-head">
+						<div class="eyebrow tech">Не только деньгами</div>
+						<h2>Помочь иначе</h2>
+					</div>
+					<div class="alt-copy">
+						{altText && <p>{altText}</p>}
+						{altLinks.length > 0 && (
+							<div class="alt-links">
+								{altLinks.map((link) => (
+									<a href={link.url} target="_blank" rel="noopener noreferrer">
+										{link.label}
+										<span aria-hidden="true">↗</span>
+									</a>
+								))}
+							</div>
+						)}
+					</div>
+				</section>
+			)
+		}
+	</div>
+</Layout>
+
+<style>
+	/* Надзаголовок секции — технический слой акцентным цветом, полужирным:
+	   так же набраны надзаголовки шапок архива и каталога (SectionHead.astro).
+	   Полужирный технического слоя дизайн-система не описывает, и решение
+	   тут за заказчиком — оно уже принято в части 4. */
+	.eyebrow {
+		font-weight: 600;
+		color: var(--accent-text);
+		margin-bottom: var(--sp-3);
+	}
+
+	.support-hero {
+		display: grid;
+		gap: var(--sp-6);
+		padding: var(--sp-12) 0;
+	}
+
+	.hero-title h1 {
+		margin: 0;
+	}
+
+	/* Имя `.hero-copy` занято на главной под другой блок — так написано
+	   в макете, и это единственная причина, по которой здесь `.hero-lead`. */
+	/* Зазор между крупной фразой и текстом под ней задаёт КОНТЕЙНЕР, а не поля
+	   абзацев. Правило `.hero-lead p` весило бы больше общего `.lead`
+	   из global.css и перебило бы ему кегль, интерлиньяж и цвет — вид,
+	   вынесенный в одно место, молча перестал бы работать ровно здесь. */
+	.hero-lead {
+		max-width: 730px;
+		display: grid;
+		gap: var(--sp-6);
+	}
+
+	/* Поле у крупной фразы снимает страница: вид её общий, а место
+	   в раскладке — дело этой страницы. Кегля и цвета правило не касается. */
+	.hero-lead > .lead {
+		margin: 0;
+	}
+
+	/* :global — текст приезжает из markdown-файла через <Content />, а до такой
+	   разметки обычные стили компонента не достают. */
+	.hero-body :global(p) {
+		font-size: var(--body-lg);
+		line-height: 1.65;
+		color: var(--text);
+		margin: 0 0 var(--sp-6);
+	}
+
+	.hero-body :global(p:last-child) {
+		margin-bottom: 0;
+	}
+
+	/* --- Кнопки площадок --- */
+
+	/* Сетка ЗАПОЛНЯЮЩАЯ, а не схлопывающая: пустые дорожки сохраняются,
+	   и две кнопки не растягиваются во всю ширину, когда третьей нет. */
+	.support-buttons {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 10px;
+	}
+
+	.support-buttons a {
+		/* Настоящая кнопка: цель нажатия заведомо больше 44 px по высоте.
+		   Исключение из §11 записано только для строк врезок внутри текста
+		   и сюда не распространяется. */
+		min-height: 56px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 20px;
+		padding: var(--sp-2) var(--sp-4);
+		border: 1px solid var(--line-strong);
+		color: var(--ink);
+		text-decoration: none;
+		font-size: var(--caption);
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		transition:
+			border-color var(--transition-fast),
+			color var(--transition-fast);
+	}
+
+	.support-buttons a:hover,
+	.support-buttons a:focus-visible {
+		border-color: var(--accent-text);
+		color: var(--accent-text);
+	}
+
+	.support-buttons span {
+		color: var(--accent-text);
+		font-size: 17px;
+		font-weight: 400;
+	}
+
+	/* --- Секции ниже --- */
+
+	/* Верхняя линия у секции одна и рисуется самой секцией. Двух линий подряд
+	   тут быть не может: между секциями ничего не стоит. */
+	.benefits,
+	.alt-support {
+		padding: var(--sp-12) 0;
+		border-top: 1px solid var(--line);
+	}
+
+	.section-head-main h2,
+	.alt-head h2 {
+		margin: 0;
+	}
+
+	.section-head-copy {
+		margin: var(--sp-3) 0 0;
+		max-width: 640px;
+	}
+
+	/* Между пунктами разделителей нет: это перечисление, а не список строк. */
+	.benefit-list {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: var(--sp-8);
+		margin-top: var(--sp-8);
+	}
+
+	.benefit-item {
+		min-width: 0;
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		gap: var(--sp-4);
+		align-items: start;
+	}
+
+	.benefit-mark {
+		color: var(--accent-text);
+		padding-top: var(--sp-1);
+	}
+
+	.benefit-item p {
+		margin: 0;
+		font-size: var(--body-lg);
+		line-height: 1.6;
+		color: var(--text);
+	}
+
+	/* --- Другие способы --- */
+
+	.alt-copy {
+		max-width: 700px;
+		margin-top: var(--sp-6);
+	}
+
+	.alt-copy p {
+		margin: 0 0 var(--sp-4);
+		font-size: var(--body-lg);
+		line-height: 1.6;
+		color: var(--text);
+	}
+
+	.alt-links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--sp-2) var(--sp-6);
+		font-size: var(--caption);
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+
+	/* ЦЕЛЬ 44, А НЕ 12 px ОТСТУПА СВЕРХУ И СНИЗУ, как в макете: это ссылки
+	   на отдельной странице, а не строки врезки внутри текста, и исключение
+	   части 11 на них не распространяется. Высота набирается невидимой зоной,
+	   вид строки от этого не меняется. */
+	.alt-links a {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--sp-2);
+		min-height: 44px;
+		color: var(--ink);
+		text-decoration: none;
+	}
+
+	.alt-links a:hover,
+	.alt-links a:focus-visible {
+		color: var(--accent-text);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	.alt-links span {
+		color: var(--accent-text);
+	}
+
+	@media (min-width: 621px) {
+		.support-buttons {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	/* --- Раскладка на широких экранах ---
+
+	   Колонки задаёт сама секция, а её содержимое ложится в дорожки этой же
+	   сетки. Обёртки над заголовком секции здесь нет намеренно: в макете она
+	   есть, но колонки в нём назначены её ДЕТЯМ — то есть элементам, которые
+	   до сетки секции не дотягиваются, и заголовок «Что даёт подписка» встал
+	   бы в одну двенадцатую ширины страницы. Разметка выправлена по CSS
+	   макета, а не по его HTML; в соседней секции «Помочь иначе» тот же самый
+	   заголовок стоит прямым ребёнком секции, и там всё сходится. */
+	@media (min-width: 821px) {
+		.support-hero,
+		.benefits,
+		.alt-support {
+			display: grid;
+			grid-template-columns: repeat(12, minmax(0, 1fr));
+			column-gap: var(--grid-gap);
+			align-items: start;
+		}
+
+		.support-hero {
+			padding: var(--sp-16) 0 62px;
+		}
+
+		.hero-title {
+			grid-column: 1 / 5;
+		}
+
+		.hero-lead {
+			grid-column: 6 / 12;
+		}
+
+		.support-buttons {
+			grid-column: 6 / 12;
+		}
+
+		.section-head-main,
+		.alt-head {
+			grid-column: 1 / 5;
+		}
+
+		.section-head-copy {
+			grid-column: 6 / 11;
+			margin-top: 0;
+		}
+
+		/* Список сам становится двенадцатидорожечной сеткой: пункты стоят
+		   в двух колонках правой половины, и адреса колонок у них заданы
+		   в дорожках этой сетки, а не внешней. */
+		.benefit-list {
+			grid-column: 1 / -1;
+			grid-template-columns: repeat(12, minmax(0, 1fr));
+			column-gap: var(--grid-gap);
+			row-gap: var(--sp-8);
+		}
+
+		.benefit-item:nth-child(odd) {
+			grid-column: 6 / 9;
+		}
+
+		.benefit-item:nth-child(even) {
+			grid-column: 10 / 13;
+		}
+
+		.alt-copy {
+			grid-column: 6 / 12;
+			margin-top: 0;
+		}
+	}
+</style>
