@@ -59,6 +59,9 @@ export const GET: APIRoute = async () => {
 				// ровно так же ведёт себя карточка в ленте (postTiming.mjs).
 				label: categories.find((c) => c.id === sectionOf(category))?.labelOne ?? category,
 				...(source ? { timing: source } : {}),
+				// Текст под заголовком в выдаче — то же описание, что в карточке
+				// ленты. Отрывок Pagefind тут не годится, см. posts/[slug].astro.
+				desc: description,
 			},
 			filters: {
 				type: [isEpisode ? 'Выпуски' : 'Посты'],

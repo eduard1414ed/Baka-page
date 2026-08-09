@@ -172,14 +172,28 @@ const SCOPES = [
 						    Порция здесь не косметика: на каждый показанный результат
 						    Pagefind скачивает свой кусок индекса, и у выпуска
 						    с длинной расшифровкой это до 38 КБ. «Показать всё сразу»
-						    означало бы мегабайты на один запрос. */}
-						<LoadMore
-							id={`more-${group.key}`}
-							controls={`group-${group.key}`}
-							more={group.more}
-							done={group.done}
-							disabled
-						/>
+						    означало бы мегабайты на один запрос.
+
+						    ОБЁРТКА НУЖНА, ЧТОБЫ КНОПКУ МОЖНО БЫЛО УБРАТЬ СОВСЕМ.
+						    Прятать саму `.load-more-wrap` нельзя: у неё в общих
+						    стилях стоит `display`, и атрибут «скрыто» ему
+						    проигрывает по весу — те самые грабли, что ловит
+						    `scripts/check-hidden.mjs`. У этой обёртки правил нет
+						    вовсе, и спорить с атрибутом нечему.
+
+						    Скрывается она, когда показывать больше нечего:
+						    группы и так разделены заголовками со счётчиками,
+						    и полоса «Все тайтлы показаны» под единственным
+						    результатом — шум, а не ответ. */}
+						<div class="group-more" hidden>
+							<LoadMore
+								id={`more-${group.key}`}
+								controls={`group-${group.key}`}
+								more={group.more}
+								done={group.done}
+								disabled
+							/>
+						</div>
 					</section>
 				))
 			}
@@ -230,6 +244,8 @@ const SCOPES = [
 		results: PagefindResult[];
 		cursor: number;
 		rows: number;
+		/** Обёртка кнопки «Показать ещё»: её прячем целиком. */
+		more: HTMLElement | null;
 	};
 
 	function setup() {
@@ -257,6 +273,7 @@ const SCOPES = [
 			list: section.querySelector<HTMLElement>('.group-list')!,
 			count: section.querySelector<HTMLElement>('.group-count')!,
 			button: section.querySelector<HTMLButtonElement>('.load-more'),
+			more: section.querySelector<HTMLElement>('.group-more'),
 			results: [],
 			cursor: 0,
 			rows: 0,
@@ -269,10 +286,17 @@ const SCOPES = [
 		// Номер запроса. Пока грузится порция, человек может набрать ещё букву —
 		// рисовать результаты устаревшего запроса нельзя.
 		let token = 0;
-		// Куски индекса, уже скачанные в этом сеансе. Один и тот же выпуск
+		// Куски индекса, скачанные ДЛЯ ТЕКУЩЕГО ЗАПРОСА. Один и тот же выпуск
 		// попадает и в «Материалы», и в «Упоминания» — без этой памятки его
 		// кусок скачался бы дважды.
-		const fragments = new Map<string, Promise<any>>();
+		//
+		// ОЧИЩАЕТСЯ НА КАЖДОМ НОВОМ ЗАПРОСЕ, и это не уборка мусора. В куске
+		// лежит не только текст страницы, но и МЕСТА СОВПАДЕНИЙ с отрывком —
+		// они посчитаны под конкретный запрос. Пережив запрос, память показывала
+		// чужие подсветки: по слову «мусор» в карточке светились «какой-то»
+		// и «кажется», оставшиеся от набранного до этого. Ключ у куска один
+		// и тот же на все запросы, поэтому подмену было не видно.
+		let fragments = new Map<string, Promise<any>>();
 
 		// Pagefind грузим ПО ТРЕБОВАНИЮ и только на этой странице: файлы поиска
 		// лежат в /pagefind/ и весят под сотню килобайт вместе с wasm.
@@ -359,6 +383,56 @@ const SCOPES = [
 		function fragment(result: PagefindResult) {
 			if (!fragments.has(result.id)) fragments.set(result.id, result.data());
 			return fragments.get(result.id)!;
+		}
+
+		/** Слова запроса, по которым есть смысл сверять найденное. */
+		function terms() {
+			return fold(query)
+				.split(/\s+/)
+				.filter((term: string) => term.length >= MIN_QUERY);
+		}
+
+		/**
+		 * ПОХОЖЕ ЛИ НАЙДЕННОЕ СЛОВО НА ТО, ЧТО НАБРАЛИ.
+		 *
+		 * Pagefind, не найдя слова, ОТРЕЗАЕТ У НЕГО ХВОСТ и ищет то, что
+		 * осталось. «Кейон» через «е» в индексе не встречался — и поиск дошёл
+		 * до одной буквы «к», найдя предлог «к» на шестнадцати страницах:
+		 * в выдаче светились «Ксюша», «Кэйго», «Королевские», «каждый».
+		 * Ни настройки, ни способа отключить это у Pagefind нет — проверено
+		 * прогоном движка.
+		 *
+		 * Поэтому сверяем сами. Слово обязано начинаться так же, как запрос,
+		 * минимум на половину его длины: «студии» на «студия» похоже (общее
+		 * начало в пять букв), «к» на «кейон» — нет. Половина, а не всё
+		 * целиком, потому что движок ищет по основам слова, и это правильно:
+		 * «студия» обязана находить «студии».
+		 */
+		function looksLike(word: string, term: string) {
+			const clean = fold(word.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, ''));
+			const need = Math.max(2, Math.ceil(term.length / 2));
+			if (clean.length < need) return false;
+			let same = 0;
+			while (same < clean.length && same < term.length && clean[same] === term[same]) same += 1;
+			return same >= need;
+		}
+
+		/**
+		 * Настоящая ли это выдача. Хвост запроса Pagefind режет глобально:
+		 * если слово не найдено, оно не найдено нигде. Значит достаточно
+		 * посмотреть ОДИН результат: не подтвердилось хоть одно слово запроса —
+		 * вся выдача мусорная, и честный ответ на неё «ничего не нашлось».
+		 */
+		function isRealMatch(data: any) {
+			const list = terms();
+			if (list.length === 0) return true;
+			const words: string[] = data.content.split(/\s+/);
+			const confirmed = new Set<string>();
+			for (const at of data.locations || []) {
+				const word = words[at] ?? '';
+				for (const term of list) if (looksLike(word, term)) confirmed.add(term);
+			}
+			return list.every((term) => confirmed.has(term));
 		}
 
 		/** Внешняя статья лежит на чужом домене, и адрес у неё абсолютный. */
@@ -450,7 +524,9 @@ const SCOPES = [
 				`<h3>${highlight(data.meta?.title ?? data.url, query)}` +
 				(isExternal(data.url) ? `<span class="external" aria-hidden="true"> ↗</span>` : '') +
 				`</h3>` +
-				`<p>${data.excerpt}</p>`;
+				// Описание материала, а не отрывок вокруг найденного слова:
+				// почему — в комментарии к метке `desc` в posts/[slug].astro.
+				(data.meta?.desc ? `<p>${highlight(data.meta.desc, query)}</p>` : '');
 			link.append(copy);
 			link.append(arrow());
 			list.append(link);
@@ -483,10 +559,15 @@ const SCOPES = [
 			);
 
 			const words: string[] = data.content.split(/\s+/);
-			const found: { seconds: number; speaker: string; text: string }[] = [];
+			const found: { seconds: number; speaker: string; word: string; text: string }[] = [];
 			const seen = new Set<string>();
+			const list = terms();
 
 			for (const at of data.locations || []) {
+				// Совпадение, не похожее на запрос, в цитату не берём: это
+				// обрезанный движком хвост слова, см. looksLike().
+				if (list.length > 0 && !list.some((term) => looksLike(words[at] ?? '', term))) continue;
+
 				// Ближайший якорь слева. Их у длинного выпуска под две сотни,
 				// но и совпадений мы разбираем всего несколько — перебора хватает.
 				let index = -1;
@@ -603,7 +684,13 @@ const SCOPES = [
 			}
 
 			paintCount(group);
-			setLoadMoreState(group.button, group.cursor >= group.results.length ? 'done' : 'more');
+
+			// Показывать больше нечего — кнопки нет вовсе. Состояние «всё
+			// показано» у компонента есть, но здесь оно лишнее: заголовок группы
+			// со счётчиком уже сказал, сколько всего нашлось.
+			const rest = group.results.length - group.cursor;
+			if (group.more) group.more.hidden = rest <= 0;
+			setLoadMoreState(group.button, rest <= 0 ? 'done' : 'more');
 		}
 
 		// СЧЁТЧИК ГРУППЫ ГОВОРИТ РОВНО ТО, ЧТО ЗНАЕТ. У тайтлов и материалов это
@@ -634,6 +721,7 @@ const SCOPES = [
 			group.rows = 0;
 			group.count.textContent = '';
 			group.section.hidden = true;
+			if (group.more) group.more.hidden = true;
 			setLoadMoreState(group.button, 'done');
 		}
 
@@ -719,6 +807,10 @@ const SCOPES = [
 			const overall = await api.debouncedSearch(query, {}, 200);
 			if (overall === null || mine !== token) return;
 
+			// Память кусков — на один запрос, не на сеанс: в куске лежат места
+			// совпадений, посчитанные под конкретный запрос.
+			fragments = new Map();
+
 			// СЧЁТЧИКИ БЕРЁМ ИЗ САМИХ ЗАПРОСОВ, а не из сводки по фильтрам,
 			// которую Pagefind кладёт рядом с выдачей. Та сводка на ПЕРВОМ запросе
 			// сеанса приходит пустой — файл фильтров к этому моменту ещё не
@@ -740,13 +832,24 @@ const SCOPES = [
 				found[group.key] = search.results;
 			}
 
-			counts = {
-				all: overall.results.length,
-				anime: found.anime.length,
-				material: found.material.length,
-				// Станет известно, когда группа упоминаний загрузится.
-				mention: found.mention.length === 0 ? 0 : undefined,
-			};
+			// ВЫДАЧА МОЖЕТ БЫТЬ ЦЕЛИКОМ МУСОРНОЙ, и это надо выяснить до того,
+			// как её показывать. Хвост ненайденного слова Pagefind режет
+			// глобально, поэтому достаточно посмотреть один результат: если
+			// хоть одно слово запроса им не подтверждается, честный ответ —
+			// «ничего не нашлось» (см. isRealMatch).
+			const probe = overall.results[0];
+			const real = probe ? isRealMatch(await fragment(probe)) : true;
+			if (mine !== token) return;
+
+			counts = real
+				? {
+						all: overall.results.length,
+						anime: found.anime.length,
+						material: found.material.length,
+						// Станет известно, когда группа упоминаний загрузится.
+						mention: found.mention.length === 0 ? 0 : undefined,
+					}
+				: { all: 0, anime: 0, material: 0, mention: 0 };
 			paintScopes();
 
 			metaQuery!.textContent = query;
