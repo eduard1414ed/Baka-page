@@ -140,6 +140,10 @@ const Title = `h${level}` as 'h2' | 'h3';
 		-webkit-box-orient: vertical;
 		-webkit-line-clamp: 3;
 		overflow: hidden;
+		/* По своим трём строкам, а не по высоте ячейки. Растянутая ячейка
+		   сетки обрезать нечего, и многоточие оказывается посреди текста —
+		   подробнее в такой же строке в src/pages/index.astro. */
+		align-self: start;
 	}
 
 	.external {
