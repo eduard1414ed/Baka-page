@@ -1,5 +1,6 @@
 import { visit } from 'unist-util-visit';
 import { getYoutubeEmbedUrl } from '../lib/youtube.mjs';
+import { ownVideoSrc } from '../lib/ownVideo.mjs';
 
 /**
  * `::video{youtube="..."}` → вставка ролика с YouTube в любом месте текста.
@@ -43,10 +44,10 @@ export default function remarkVideo() {
 
 			node.data = {
 				hName: 'video',
-				// preload="metadata" (не "none") — браузер подгружает первый кадр как
-				// превью, иначе видео выглядит пустым тёмным прямоугольником, пока
-				// не нажать play, и кажется сломанным.
-				hProperties: { class: 'content-video', src: fileUrl, controls: true, preload: 'metadata' },
+				// preload="metadata" (не "none") — браузер скачивает заголовок файла
+				// и узнаёт размеры кадра с длительностью. Одного этого мало: кадр
+				// он не рисует, за кадр отвечает метка в адресе (src/lib/ownVideo.mjs).
+				hProperties: { class: 'content-video', src: ownVideoSrc(fileUrl), controls: true, preload: 'metadata' },
 				hChildren: [],
 			};
 		});

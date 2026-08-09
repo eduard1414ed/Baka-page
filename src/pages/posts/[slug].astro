@@ -25,6 +25,7 @@ import { absoluteUrl, SITE_NAME } from '../../lib/site.mjs';
 import { podcastEpisodeSchema, articleSchema, breadcrumbsSchema } from '../../lib/schema.mjs';
 import { categories, sectionOf } from '../../content.config';
 import { getYoutubeEmbedUrl } from '../../lib/youtube.mjs';
+import { ownVideoSrc } from '../../lib/ownVideo.mjs';
 import { parseTimecodeList } from '../../lib/timecode.mjs';
 import { hostOf } from '../../lib/linkIcon.mjs';
 import { findEpisodeByGuid } from '../../lib/podcastFeed.mjs';
@@ -448,7 +449,7 @@ const postSearchMeta = [
 			{
 				!youtubeEmbed && video && (
 					<section class="youtube-wrap" aria-label="Видео">
-						<video class="own-video" src={video} controls preload="metadata" />
+						<video class="own-video" src={ownVideoSrc(video)} controls preload="metadata" />
 					</section>
 				)
 			}
@@ -959,9 +960,23 @@ const postSearchMeta = [
 		border: 0;
 	}
 
-	.own-video {
+	/* Своё видео — ОДНО ОПИСАНИЕ НА ОБА МЕСТА: в шапке материала из поля
+	   «Своё видео» и блоком прямо в тексте (`::video{video="…"}`). Двумя
+	   описаниями это уже было, и они разъехались: у ролика YouTube пропорция
+	   стояла, у своего видео не стояла нигде.
+
+	   `aspect-ratio: auto 16 / 9` читается так: пропорцию берём из самого
+	   файла, как только браузер вычитает его заголовок, а 16/9 — подпорка
+	   на это время. Без подпорки <video> с неизвестными размерами встаёт
+	   стандартными 300×150, то есть широкой чёрной полосой в 150 px высотой,
+	   и материал выглядит сломанным. Ролику YouTube это не грозило: у него
+	   пропорция задана жёстко, размеров у окошка нет вовсе. */
+	.own-video,
+	.content :global(.content-video) {
 		display: block;
 		width: 100%;
+		aspect-ratio: auto 16 / 9;
+		background: var(--ink);
 	}
 
 	/* ——— Текст материала ——— */
@@ -1371,9 +1386,10 @@ const postSearchMeta = [
 		border: 0;
 	}
 
+	/* Вид своего видео описан выше, вместе с видео из шапки. Тут остаётся
+	   только отступ: у блока в тексте он свой, у видео в шапке его задаёт
+	   секция вокруг. */
 	.content :global(.content-video) {
-		display: block;
-		width: 100%;
 		margin-block: var(--sp-12);
 	}
 
