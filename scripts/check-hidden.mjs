@@ -42,11 +42,28 @@ function specificity(selector) {
 
 const heavier = (a, b) => a[0] !== b[0] ? a[0] > b[0] : a[1] !== b[1] ? a[1] > b[1] : a[2] > b[2];
 
-/** Все правила собранного CSS: [селектор, объявления]. Медиазапросы разворачиваем. */
+/**
+ * Все правила собранного CSS: [селектор, объявления]. Медиазапросы разворачиваем.
+ *
+ * ЧИТАЕМ И ФАЙЛЫ, И СТИЛИ ВНУТРИ СТРАНИЦ. Astro часть правил кладёт файлом
+ * в `_astro/`, часть вставляет прямо в `<head>` страницы. Скрипт, читающий
+ * только файлы, отвечает «такого правила нет» про правило, которое есть, —
+ * то есть врёт в сторону «всё хорошо». Библиотеку поиска пропускаем: её
+ * стилями сайт не пользуется вовсе.
+ */
 function cssRules() {
 	const rules = [];
-	for (const file of walk(join(DIST, '_astro')).filter((f) => f.endsWith('.css'))) {
-		const css = readFileSync(file, 'utf8').replace(/@media[^{]*\{/g, '');
+	const sources = [];
+	for (const file of walk(DIST).filter((f) => !f.includes('pagefind'))) {
+		if (file.endsWith('.css')) {
+			sources.push(readFileSync(file, 'utf8'));
+		} else if (file.endsWith('.html')) {
+			const html = readFileSync(file, 'utf8');
+			for (const style of html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)) sources.push(style[1]);
+		}
+	}
+	for (const source of sources) {
+		const css = source.replace(/@media[^{]*\{/g, '');
 		for (const match of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
 			const selectors = match[1].trim();
 			if (selectors.startsWith('@')) continue;
