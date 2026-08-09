@@ -21,6 +21,37 @@ import { foldCatalog, latinSearchForms } from './translit.mjs';
 import { ANIME_ORDER } from '../data/animeOrder.js';
 
 let cache = null;
+let orderCache = null;
+
+/**
+ * Порядок добавления и номер `CAT. 001` — БЕЗ подсчёта упоминаний.
+ *
+ * Номер нужен двоим: каталогу (там он часть карточки) и горизонтальной марке,
+ * которая стоит на главной и в блоках «Упоминается». Марке при этом не нужны
+ * ни посты, ни расшифровки — а указатель упоминаний разбирает 141 файл, и звать
+ * его ради одного числа было бы дорого. Поэтому порядок считается отдельно,
+ * а `buildCatalog` берёт его отсюда же: правило «кто каким по счёту» живёт
+ * в одном месте, и разъехаться номерам негде.
+ *
+ * @returns {Map<string, { order: number, code: string }>}
+ */
+export function catalogCodes(animeList) {
+	if (orderCache && orderCache.key === animeList.length) return orderCache.codes;
+
+	// Чего нет в списке порядка — в конец, по имени. Число берём заведомо
+	// больше длины списка: «неизвестно когда» это «позже всех известных».
+	const rank = new Map(ANIME_ORDER.map((id, position) => [id, position]));
+	const last = ANIME_ORDER.length;
+
+	const codes = new Map(
+		[...animeList]
+			.sort((a, b) => (rank.get(a.id) ?? last) - (rank.get(b.id) ?? last) || a.id.localeCompare(b.id))
+			.map((entry, position) => [entry.id, { order: position + 1, code: `CAT. ${String(position + 1).padStart(3, '0')}` }]),
+	);
+
+	orderCache = { key: animeList.length, codes };
+	return codes;
+}
 
 /**
  * @returns {{
@@ -33,15 +64,11 @@ export function buildCatalog({ posts, transcripts, animeList }) {
 	if (cache && cache.key === key) return cache.entries;
 
 	const index = buildMentionIndex({ posts, transcripts, animeList });
-
-	// Чего нет в списке порядка — в конец, по имени. Число берём заведомо
-	// больше длины списка: «неизвестно когда» это «позже всех известных».
-	const rank = new Map(ANIME_ORDER.map((id, position) => [id, position]));
-	const last = ANIME_ORDER.length;
+	const codes = catalogCodes(animeList);
 
 	const entries = [...animeList]
-		.sort((a, b) => (rank.get(a.id) ?? last) - (rank.get(b.id) ?? last) || a.id.localeCompare(b.id))
-		.map((entry, position) => {
+		.sort((a, b) => (codes.get(a.id)?.order ?? 0) - (codes.get(b.id)?.order ?? 0))
+		.map((entry) => {
 			const { titleRu, titleOriginal, studio, aliases } = entry.data;
 
 			// Ищем по русскому названию, оригинальному, студии и вариантам
@@ -60,8 +87,7 @@ export function buildCatalog({ posts, transcripts, animeList }) {
 				// тогда заголовком идёт оригинальное, и это не ошибка.
 				title: titleRu || titleOriginal,
 				count: postsForAnime(entry.id, posts, index).length,
-				order: position + 1,
-				code: `CAT. ${String(position + 1).padStart(3, '0')}`,
+				...codes.get(entry.id),
 				search: foldCatalog(searchable),
 			};
 		});

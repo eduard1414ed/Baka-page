@@ -24,18 +24,20 @@
 //
 // Обрезать нельзя: обрезка съедает название и лицо, то есть ровно то,
 // ради чего постер и нарисован.
+import { getCollection } from 'astro:content';
 import { getAnimePosterSrcs } from '../lib/animePoster.mjs';
 import { stampVar } from '../lib/animeStamp.mjs';
+import { catalogCodes } from '../lib/animeCatalog.mjs';
 import { plural } from '../lib/plural.mjs';
 
 interface Props {
 	anime: { id: string; data: Record<string, any> };
 	/** Сколько раз тайтл прозвучал в расшифровке этого материала. */
 	mentions?: number;
-	/** Строки меты вместо обычной: блок каталога на главной ставит номер с годом
+	/** Строки меты вместо обычной: блок каталога на главной ставит год со студией
 	    и число упоминаний ОТДЕЛЬНЫМИ строками. Одной строкой перенос рвал её
 	    как придётся, и цифра оставалась на строке выше своего слова:
-	    «CAT. 011 · 2014 · 1 / упоминание». */
+	    «2014 · Kyoto Animation · 1 / упоминание». */
 	catalogMeta?: string[] | null;
 	/** Марка лежит в разметке, но не показана: блок каталога на главной кладёт
 	    двенадцать марок, а показывает четыре. У скрытой картинка не грузится
@@ -45,6 +47,17 @@ interface Props {
 
 const { anime, mentions = 0, catalogMeta = null, hidden = false } = Astro.props;
 const { titleRu, titleOriginal, year, studio } = anime.data;
+
+// НАДЗАГОЛОВОК — НОМЕР ПО КАТАЛОГУ, А НЕ СЛОВО «АНИМЕ». В макетах тут стоит
+// «АНИМЕ»; заказчик решил иначе, и по делу: слово повторяло название блока
+// («[ каталог аниме ]», «Упоминается»), а номер ставит обе формы марки в один
+// ряд — в каталожной он на этом же месте (§11.1).
+//
+// Номер считает общий src/lib/animeCatalog.mjs, тот же, что нумерует каталог:
+// свой счёт разъехался бы с каталожным молча, и один тайтл получил бы два
+// разных номера на двух страницах. Расшифровки для этого не разбираются —
+// порядок зависит только от справочника (см. catalogCodes).
+const code = catalogCodes(await getCollection('anime')).get(anime.id)?.code ?? null;
 
 const posterSrcs = getAnimePosterSrcs(anime.data.poster);
 const displayTitle = titleRu || titleOriginal;
@@ -56,7 +69,10 @@ const displayTitle = titleRu || titleOriginal;
 const metaParts = [
 	// Оригинал не повторяем, если он же и стоит заголовком (нет titleRu).
 	titleRu ? titleOriginal : null,
-	[year, studio].filter(Boolean).join(' '),
+	// Год со студией через точку — как в каталожной марке и на странице тайтла.
+	// Раньше тут стоял пробел, и одни и те же два факта писались на соседних
+	// страницах по-разному.
+	[year, studio].filter(Boolean).join(' · '),
 	mentions > 0 ? `${mentions} ${plural(mentions, ['фрагмент', 'фрагмента', 'фрагментов'])}` : null,
 ].filter(Boolean);
 
@@ -81,10 +97,10 @@ const metaLines = catalogMeta ?? (metaParts.length > 0 ? [metaParts.join(' · ')
 		{posterSrcs.length > 0 && <img src={posterSrcs[0].src} alt="" loading="lazy" width="120" height="168" />}
 	</span>
 	<span class="copy">
-		<span class="kicker tech">Аниме</span>
+		{code && <span class="kicker tech">{code}</span>}
 		<span class="title">{displayTitle}</span>
 		{/* В блоке каталога на главной под названием стоит строка каталога
-		    (номер, год, число упоминаний), а не оригинал со студией: там марка
+		    (год со студией и число упоминаний), а не оригинал: там марка
 		    приглашает в каталог, а не поясняет, о чём был выпуск. */}
 		{
 			metaLines.length > 0 && (
@@ -184,10 +200,14 @@ const metaLines = catalogMeta ?? (metaParts.length > 0 ? [metaParts.join(' · ')
 		justify-content: center;
 	}
 
+	/* Номер набран как в каталожной марке: обычным весом, приглушённым цветом.
+	   Полужирным раньше стояло слово «Аниме» — это была ПОДПИСЬ БЛОКА, а номер
+	   это ДАННЫЕ материала, и по правилу технического слоя (CLAUDE.md) данные
+	   полужирными не набираются. Акцент в марке остаётся один — стрелка,
+	   ровно как в каталоге. */
 	.kicker {
 		margin-bottom: var(--sp-2);
-		font-weight: 600;
-		color: var(--accent-text);
+		color: var(--muted);
 	}
 
 	/* Высота марки фиксирована (это медиаповерхность, а не текстовый блок),

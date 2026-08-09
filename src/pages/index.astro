@@ -283,11 +283,16 @@ const catalogMarks = shuffled.slice(0, CATALOG_POOL);
 						</a>
 					</div>
 					<div class="catalog-grid" id="home-catalog" data-shown={CATALOG_SHOWN}>
+						{/* Номер по каталогу переехал в надзаголовок марки — туда же,
+						    где он стоит у каталожной карточки. Освободившееся место
+						    занял год со студией, и порядок тот же, что в каталоге
+						    и на странице тайтла: одни и те же факты везде должны
+						    читаться одинаково. */}
 						{catalogMarks.map((item, position) => (
 							<AnimeBadge
 								anime={item.entry}
 								catalogMeta={[
-									[item.code, item.entry.data.year].filter(Boolean).join(' · '),
+									[item.entry.data.year, item.entry.data.studio].filter(Boolean).join(' · '),
 									`${item.count} ${plural(item.count, ['упоминание', 'упоминания', 'упоминаний'])}`,
 								]}
 								hidden={position >= CATALOG_SHOWN}
