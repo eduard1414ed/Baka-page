@@ -1,0 +1,175 @@
+---
+// Оглавление выпуска или видеоэссе (тз/08, раздел 9.3).
+//
+// УСТРОЕН КАК ВРЕЗКА, а не как таблица и не как плитки: линии сверху и снизу
+// всего блока, слева технический столбец, справа текст. Своих рамок у строк
+// нет — плиток в языке сайта не бывает (§5 дизайн-системы).
+//
+// ВТОРОЙ МЕХАНИКИ ПЕРЕМОТКИ ТУТ НЕТ. Строка получает класс `timecode`
+// и `data-seconds` — ровно то же, что метка времени в тексте выпуска, —
+// и её подхватывает единственный на весь сайт обработчик нажатий
+// в src/components/PlayerBar.astro (bindTimecodes). Появись у блока свой
+// обработчик, нажатие обрабатывалось бы дважды.
+import { parseTimecode, formatTimecode } from '../lib/timecode.mjs';
+
+interface Props {
+	/** Пары «время + о чём» из поля «Таймкоды». Пусто — блока не будет. */
+	items?: Array<{ time?: string; title?: string }>;
+	/** Чей это материал — только чтобы честно назвать его в предупреждении. */
+	postId: string;
+	/**
+	 * Перематывать ролик, а не аудиоплеер (видеоэссе). Решает страница —
+	 * она одна знает категорию материала; блок только передаёт это скрипту
+	 * меткой на себе, чтобы тому не пришлось знать про категории вовсе.
+	 */
+	seekYoutube?: boolean;
+}
+
+const { items = [], postId, seekYoutube = false } = Astro.props;
+
+// Мусор отсеиваем и говорим о нём в сборку. Молча пропущенная строка — это
+// тихо потерянная тема, а тихо подставленное «наверное, автор имел в виду»
+// увело бы плеер не туда, и заметить это было бы нечем.
+const rows: Array<{ seconds: number; time: string; title: string }> = [];
+
+for (const item of items) {
+	const rawTime = String(item?.time ?? '').trim();
+	const title = String(item?.title ?? '').trim();
+
+	// Пустая строка списка — это не ошибка автора, а как CMS сохраняет
+	// недозаполненную строку. Молча пропускаем, ругаться не о чем.
+	if (!rawTime && !title) continue;
+
+	const seconds = parseTimecode(rawTime);
+
+	if (seconds === null) {
+		console.warn(
+			`[таймкоды] ${postId}: «${rawTime || 'пусто'}» — не время, строка не показана. ` +
+				'Пишется как 12:04 или 1:02:11.',
+		);
+		continue;
+	}
+
+	if (!title) {
+		console.warn(`[таймкоды] ${postId}: у отметки ${rawTime} не написано, о чём она — строка не показана.`);
+		continue;
+	}
+
+	// Время печатаем своё, а не авторское: «07:05» и «7:05» в одном столбце
+	// читались бы двумя разными форматами.
+	rows.push({ seconds, time: formatTimecode(seconds), title });
+}
+---
+
+{
+	rows.length > 0 && (
+		<section class="timecodes" aria-labelledby="timecodes-title" data-seek={seekYoutube ? 'youtube' : undefined}>
+			<h2 class="timecodes-title tech" id="timecodes-title">
+				[ таймкоды ]
+			</h2>
+
+			{/* Список, а не набор абзацев: это оглавление, и диктор должен
+			    назвать, сколько в нём пунктов. Блок НЕ сворачивается, сколько
+			    бы тем ни было: прятать половину оглавления значит отменять
+			    его смысл. */}
+			<ol class="timecodes-rows">
+				{rows.map((row) => (
+					<li>
+						{/* Кнопка, а не ссылка: никуда не ведёт, а перематывает.
+						    Кликается ВСЯ СТРОКА — промахнуться мимо восьми
+						    символов времени легко, мимо строки нет. */}
+						<button type="button" class="timecode tc-row" data-seconds={row.seconds}>
+							{/* Само время в поиск не идёт: в цитате выдачи столбик
+							    чисел читается мусором. Тема остаётся — это текст
+							    материала, и раньше она была в теле выпуска. */}
+							<span class="tc-time" data-pagefind-ignore>
+								{row.time}
+							</span>
+							<span class="tc-theme">{row.title}</span>
+						</button>
+					</li>
+				))}
+			</ol>
+		</section>
+	)
+}
+
+<style>
+	/* Линии с обеих сторон — врезка внутри материала, а не стык двух секций:
+	   после неё идёт транскрипт, и без нижней линии у блока нет конца
+	   (§5 дизайн-системы, то же исключение, что у врезки со ссылками). */
+	.timecodes {
+		width: 100%;
+		max-width: var(--reading);
+		margin: var(--sp-12) auto 0;
+		padding-block: var(--sp-4);
+		border-top: 1px solid var(--line);
+		border-bottom: 1px solid var(--line);
+	}
+
+	.timecodes-title {
+		/* Подпись блока — полужирная: так технический слой отличает подпись
+		   от данных материала (см. `[ галерея ]`). */
+		margin: 0 0 var(--sp-2);
+		font-weight: 600;
+		color: var(--accent-text);
+	}
+
+	.timecodes-rows {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.tc-row {
+		display: grid;
+		width: 100%;
+		/* Цель нажатия не меньше 44 по высоте — набирается отступами, как
+		   требует ТЗ. Ширина цели — вся строка блока. */
+		min-height: 44px;
+		padding-block: var(--sp-2);
+		border: 0;
+		background: none;
+		color: inherit;
+		font: inherit;
+		text-align: left;
+		cursor: pointer;
+		/* Время 11 px против темы 14 — кегли разные, значит равняем по БАЗОВОЙ
+		   ЛИНИИ явно. По умолчанию (по верху коробок) буквы встали бы
+		   на разной высоте, и это читалось бы как съехавшая вёрстка. */
+		align-items: baseline;
+		gap: var(--sp-1);
+	}
+
+	.tc-time {
+		font-family: var(--font-tech);
+		font-size: var(--technical);
+		letter-spacing: 0.08em;
+		/* Цифры одной ширины: иначе столбец гуляет на «9:05» и «1:02:11». */
+		font-variant-numeric: tabular-nums;
+		color: var(--accent-text);
+	}
+
+	.tc-theme {
+		/* Тема — Body S: во врезке текст мельче основного, иначе она спорит
+		   с абзацами вокруг. Заголовками не набирается: это оглавление,
+		   а не разделы страницы. */
+		font-size: var(--body-sm);
+		line-height: 1.45;
+	}
+
+	/* Подчёркивание только при наведении — иначе список рябит. */
+	.tc-row:hover .tc-theme,
+	.tc-row:focus-visible .tc-theme {
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+	}
+
+	@media (min-width: 621px) {
+		.tc-row {
+			grid-template-columns: 72px minmax(0, 1fr);
+			gap: var(--sp-4);
+		}
+	}
+</style>

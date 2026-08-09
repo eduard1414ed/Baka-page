@@ -45,6 +45,7 @@ import { getPostTiming } from '../../lib/postTiming.mjs';
 import { isExternalPost } from '../../lib/externalPost.mjs';
 import { getCardMedia } from '../../lib/postCardMedia.mjs';
 import BonusPaywall from '../../components/BonusPaywall.astro';
+import TimecodeList from '../../components/TimecodeList.astro';
 
 export async function getStaticPaths() {
 	// Внешние посты (тз/10, задача 2) сюда НЕ ПОПАДАЮТ, и это главное правило
@@ -133,6 +134,11 @@ const isEpisode = sectionId === 'podcast';
 
 const youtubeEmbed = youtube ? getYoutubeEmbedUrl(youtube) : null;
 
+// Оглавление выпуска (тз/08, 9.3). Пусто — блока нет, и метки времени
+// в тексте работают ровно как работали: у 143 выпусков архива не меняется
+// ничего.
+const timecodes = post.data.timecodes ?? [];
+
 // Бонус — материал за платной подпиской (тз/10, задача 1). Плашка появляется
 // сама у любого поста этой категории, отдельного переключателя нет.
 // Кнопки площадок при этом уезжают ВНУТРЬ плашки и обычным списком над текстом
@@ -140,6 +146,28 @@ const youtubeEmbed = youtube ? getYoutubeEmbedUrl(youtube) : null;
 // это не «подстраховались», а «не решили, где они должны быть».
 const isBonus = category === 'bonus';
 const isVideoEssay = category === 'videoessay';
+
+// Куда перематывает нажатие на строку таймкодов: у видеоэссе — в ролик,
+// у всех остальных — в аудиоплеер (тз/08, 9.3). Решение принимается ЗДЕСЬ,
+// один раз, и дальше живёт меткой на самом окошке ролика: скрипт нажатий
+// не должен знать про категории материала, ему довольно спросить страницу,
+// есть ли на ней управляемый ролик.
+//
+// У видеоэссе с аудиоверсией на странице стоят оба плеера — ТЗ выбирает ролик.
+//
+// ПРО САМ РОЛИК ТУТ НИЧЕГО НЕ СКАЗАНО, И ЭТО НАРОЧНО. У живых видеоэссе архива
+// ролик стоит не в поле «Ссылка на ролик», а блоком прямо в тексте (`::video`),
+// и разметку ему делает другой файл. Требуй мы здесь заполненного поля —
+// перемотка не работала бы ровно там, где она нужна. Поэтому страница говорит
+// только «этот материал перематывает ролик», а какое из окошек на ней ролик,
+// разбирается скрипт ниже.
+const youtubeSeek = timecodes.length > 0 && isVideoEssay;
+
+// `enablejsapi` разрешает управлять роликом снаружи. Ставим его ТОЛЬКО там,
+// где перемотка правда нужна: без таймкодов управлять нечем, и лишнего
+// разрешения на странице быть не должно. Ролику из текста то же разрешение
+// добавляет скрипт — он ниже сгиба и грузится лениво, так что это бесплатно.
+const youtubeSrc = youtubeSeek && youtubeEmbed ? `${youtubeEmbed}?enablejsapi=1` : youtubeEmbed;
 
 // Подпись над описанием. У статьи и заметки её нет: там текст и есть материал,
 // объявлять его нечем.
@@ -399,7 +427,7 @@ const postSearchMeta = [
 					<section class="youtube-wrap" aria-label="Видео">
 						<div class="youtube-frame">
 							<iframe
-								src={youtubeEmbed}
+								src={youtubeSrc}
 								title={title}
 								loading="lazy"
 								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -446,6 +474,10 @@ const postSearchMeta = [
 					)
 				}
 			</section>
+
+			{/* Оглавление выпуска — ниже описания, до транскрипта (тз/08, 9.3).
+			    Пустое поле блока не рисует вовсе. */}
+			<TimecodeList items={timecodes} postId={post.id} seekYoutube={youtubeSeek} />
 
 			{/* Плашка подписки — сразу за текстом, как в макете: текст выше это
 			    тизер, он открыт всем и попадает в поиск, а дальше начинается
@@ -675,7 +707,94 @@ const postSearchMeta = [
 		});
 	}
 
-	document.addEventListener('astro:page-load', initPostInteractions);
+	/**
+	 * Перемотка ролика YouTube — для блока таймкодов у видеоэссе (тз/08, 9.3).
+	 *
+	 * САМОГО НАЖАТИЯ ЭТОТ КОД НЕ СЛЫШИТ. Обработчик нажатий на `.timecode`
+	 * один на весь сайт и живёт в src/components/PlayerBar.astro; здесь только
+	 * ответ на вопрос «куда перематывать», выставленный наружу как
+	 * `window.__bakaYouTube`. Заведи мы второй обработчик — нажатие
+	 * обработалось бы дважды (ровно эти грабли описаны в Transcript.astro).
+	 *
+	 * СВОЙ ЗАПРОС НА ПЕРЕМОТКУ ЗАПОМИНАЕТСЯ. Библиотека YouTube грузится
+	 * с их сервера и готова не сразу; нажатие в первую секунду после открытия
+	 * страницы иначе пропало бы молча, а читатель решил бы, что блок не работает.
+	 */
+	function initYoutubeSeek() {
+		const api = window as any;
+
+		// Перематывать ролик или плеер — решает страница, а не этот код:
+		// метку ставит блок таймкодов, и только у видеоэссе. Нет метки —
+		// убираем прошлый ответ: страница сменилась, и он теперь про чужой ролик.
+		const wantsYoutube = document.querySelector('.timecodes[data-seek="youtube"]');
+
+		// Ролик берём ПЕРВЫЙ на странице, каким бы способом его ни вставили:
+		// у видеоэссе архива он стоит блоком в тексте, а не в поле шапки.
+		const frame = wantsYoutube ? document.querySelector<HTMLIFrameElement>('iframe[src*="youtube.com/embed/"]') : null;
+
+		if (!frame) {
+			api.__bakaYouTube = undefined;
+			return;
+		}
+
+		// Разрешение управлять роликом снаружи. У окошка из шапки оно уже стоит
+		// (проставлено при сборке), у окошка из текста — нет: разметку ему делает
+		// плагин, который про таймкоды не знает и знать не должен. Ролик в тексте
+		// грузится лениво и до сгиба обычно не доходит, поэтому смена адреса тут
+		// ничего не стоит.
+		if (!/[?&]enablejsapi=1/.test(frame.src)) {
+			frame.src += `${frame.src.includes('?') ? '&' : '?'}enablejsapi=1`;
+		}
+
+		let player: any = null;
+		let pending: number | null = null;
+
+		api.__bakaYouTube = {
+			seek(seconds: number) {
+				if (player && typeof player.seekTo === 'function') {
+					player.seekTo(seconds, true);
+					player.playVideo?.();
+					return;
+				}
+				pending = seconds;
+			},
+		};
+
+		const createPlayer = () => {
+			// Переход между страницами без перезагрузки: библиотека уже могла
+			// быть создана на прошлой странице, а окошко теперь другое.
+			player = new api.YT.Player(frame, {
+				events: {
+					onReady: () => {
+						if (pending === null) return;
+						player.seekTo(pending, true);
+						player.playVideo?.();
+						pending = null;
+					},
+				},
+			});
+		};
+
+		if (api.YT?.Player) {
+			createPlayer();
+			return;
+		}
+
+		// Библиотека зовёт эту функцию один раз, когда загрузится. На повторных
+		// переходах её уже не будет — поэтому ветка выше проверяет YT первой.
+		api.onYouTubeIframeAPIReady = createPlayer;
+
+		if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
+			const script = document.createElement('script');
+			script.src = 'https://www.youtube.com/iframe_api';
+			document.head.appendChild(script);
+		}
+	}
+
+	document.addEventListener('astro:page-load', () => {
+		initPostInteractions();
+		initYoutubeSeek();
+	});
 </script>
 
 <style>

@@ -520,20 +520,43 @@
 		});
 	}
 
-	// Таймкоды в тексте выпуска (src/plugins/remark-timecode.mjs) — ищут на
-	// странице визуальный плеер выпуска, чтобы узнать, какой выпуск и куда
-	// перематывать.
+	// ЕДИНСТВЕННЫЙ НА ВЕСЬ САЙТ ОБРАБОТЧИК НАЖАТИЙ НА ТАЙМКОД. Их два вида —
+	// метки времени в тексте выпуска (src/plugins/remark-timecode.mjs) и строки
+	// блока таймкодов (src/components/TimecodeList.astro), — и оба носят класс
+	// `timecode` с `data-seconds` ровно затем, чтобы второй копии этого кода
+	// не появилось. Заведи блок свой обработчик — нажатие сработало бы дважды.
+	//
+	// Куда перематывать, решает не этот код, а страница: если на ней есть
+	// управляемый ролик, она выставляет `__bakaYouTube` (см. posts/[slug].astro).
+	// Так обработчику не нужно знать ни про категории материала, ни про то,
+	// какие плееры вообще бывают.
 	function bindTimecodes() {
 		const api = (window as any).__bakaPlayer as { load: (data: DOMStringMap, seekSeconds?: number) => void } | undefined;
-		if (!api) return;
 
-		document.querySelectorAll<HTMLAnchorElement>('.timecode').forEach((link) => {
+		document.querySelectorAll<HTMLElement>('.timecode').forEach((link) => {
 			link.addEventListener('click', (event) => {
-				event.preventDefault();
-				const card = document.querySelector<HTMLElement>('.episode-player');
-				if (!card) return;
 				const seconds = Number(link.dataset.seconds);
-				api.load(card.dataset, Number.isFinite(seconds) ? seconds : undefined);
+				if (!Number.isFinite(seconds)) return;
+
+				const youtube = (window as any).__bakaYouTube as { seek: (seconds: number) => void } | undefined;
+				if (youtube) {
+					event.preventDefault();
+					youtube.seek(seconds);
+					return;
+				}
+
+				const card = document.querySelector<HTMLElement>('.episode-player');
+
+				// ПЕРЕХОД ОТМЕНЯЕМ ТОЛЬКО ТОГДА, КОГДА ПРАВДА ЕСТЬ ЧТО ПЕРЕМОТАТЬ.
+				// Раньше отмена стояла первой строкой, и на странице тайтла это
+				// убивало ссылки «обсуждали в выпуске на 12:04»: перематывать там
+				// нечего, плеера на странице нет, — нажатие отменялось и никуда
+				// не вело. Такой таймкод обязан просто открыть выпуск на нужной
+				// минуте, как обычная ссылка.
+				if (!api || !card) return;
+
+				event.preventDefault();
+				api.load(card.dataset, seconds);
 			});
 		});
 	}
