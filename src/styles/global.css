@@ -414,7 +414,7 @@ a:focus-visible {
 }
 
 .speed-wrap:hover .speed-face {
-	border-color: var(--ink);
+	border-color: var(--accent-text);
 }
 
 /* Сам select прозрачный, поэтому обводку фокуса рисует видимая плашка —
