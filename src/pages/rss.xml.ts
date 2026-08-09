@@ -11,7 +11,7 @@ import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { isPublished } from '../lib/publishing.mjs';
 import { postHref } from '../lib/externalPost.mjs';
-import { excerptFromBody } from '../lib/excerpt.mjs';
+import { postDescription } from '../lib/excerpt.mjs';
 import { SITE_URL, SITE_NAME, SITE_TITLE, SITE_DESCRIPTION, absoluteUrl } from '../lib/site.mjs';
 
 /** Сколько последних постов отдавать. Читалке архив целиком не нужен. */
@@ -56,7 +56,7 @@ export const GET: APIRoute = async () => {
 			// элемент от уже показанного, и адрес статьи для этого годится —
 			// он у неё один и не меняется.
 			const url = absoluteUrl(postHref(post));
-			const description = excerptFromBody(post.body ?? '', SITE_DESCRIPTION);
+			const description = postDescription(post, SITE_DESCRIPTION);
 
 			return `		<item>
 			<title>${escapeXml(post.data.title)}</title>

@@ -2,7 +2,7 @@
 import { getCollection, getEntry, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import JsonLd from '../../components/JsonLd.astro';
-import { excerptFromBody } from '../../lib/excerpt.mjs';
+import { postDescription } from '../../lib/excerpt.mjs';
 import { socialSource } from '../../lib/postImage.mjs';
 import { absoluteUrl } from '../../lib/site.mjs';
 import { podcastEpisodeSchema, articleSchema, breadcrumbsSchema } from '../../lib/schema.mjs';
@@ -130,7 +130,7 @@ const animeEntries = (await Promise.all(animeIds.map((id) => getEntry('anime', i
 // у поста нет, заполнять его руками для 143 выпусков архива никто не будет.
 // Как отсеивается служебное сверху (обложка, реклама, столбик ссылок) —
 // см. src/lib/excerpt.mjs.
-const pageDescription = excerptFromBody(post.body, undefined);
+const pageDescription = postDescription(post, undefined);
 
 // Из чего сделать превью для соцсетей: своя обложка поста → обложка выпуска
 // из RSS → первая картинка в тексте → ничего (тогда достанется общая картинка

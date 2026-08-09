@@ -19,7 +19,7 @@ import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { isPublished } from '../lib/publishing.mjs';
 import { isExternalPost, externalSourceName } from '../lib/externalPost.mjs';
-import { excerptFromBody } from '../lib/excerpt.mjs';
+import { postDescription } from '../lib/excerpt.mjs';
 import { categories, sectionOf } from '../content.config';
 import { SITE_DESCRIPTION } from '../lib/site.mjs';
 
@@ -37,7 +37,7 @@ export const GET: APIRoute = async () => {
 		// это решает страница поста (src/pages/posts/[slug].astro), и расходиться
 		// им нельзя, иначе фильтр в выдаче начнёт врать.
 		const isEpisode = sectionOf(category) === 'podcast';
-		const description = excerptFromBody(post.body ?? '', SITE_DESCRIPTION);
+		const description = postDescription(post, SITE_DESCRIPTION);
 		const source = externalSourceName(post.data);
 
 		return {

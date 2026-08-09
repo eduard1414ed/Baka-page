@@ -20,6 +20,27 @@
 					.replaceAll('>', '&gt;')
 					.replaceAll('"', '&quot;');
 
+			// ПОЧЕМУ ПРЕДПРОСМОТР ПУСТОЙ КНОПКИ НЕ ДОЛЖЕН НАЧИНАТЬСЯ С HTML-ТЕГА.
+			//
+			// Sveltia при регистрации кнопки вызывает её `toPreview` С ПУСТЫМИ ДАННЫМИ,
+			// смотрит на первый HTML-тег в ответе — и после этого ЗАБИРАЕТ СЕБЕ ВСЕ
+			// ТАКИЕ ТЕГИ ИЗ ВСТАВЛЯЕМОГО ТЕКСТА (`importDOM` в её коде, версия 0.182).
+			//
+			// У нас предпросмотры начинались с <div> и <span>. Значит, при вставке
+			// текста из соцсетей почти каждый абзац и каждая ссылка превращались
+			// в наш блок — в тексте появлялись плашки «Аниме (не выбрано)».
+			// В документации Decap об этом нет ни слова; найдено чтением кода Sveltia.
+			//
+			// Лечится тем, что на ПУСТЫЕ данные мы отвечаем строкой без тега: тогда
+			// Sveltia не находит тега и не перехватывает при вставке ничего. На готовый
+			// блок предпросмотр по-прежнему отдаёт нормальную разметку — эта проверка
+			// делается один раз при загрузке админки, а не на каждый блок.
+			//
+			// МЕНЯЕТЕ ПРЕДПРОСМОТР — оставьте первую строку без тега, иначе вставка
+			// сломается снова, и сломается молча.
+			const isBlankData = (data) =>
+				!data || Object.values(data).every((value) => value === undefined || value === null || value === '');
+
 			CMS.registerEditorComponent({
 				// id отдельно от синтаксиса ::image{...} в тексте — так называется только
 				// сама кнопка/пункт в CMS. Встроенный простой блок картинки уже занял id "image".
@@ -67,7 +88,11 @@
 					// без разрыва строки директива читается просто как текст, не как блок.
 					return `\n::image{${parts.join(' ')}}\n`;
 				},
-				toPreview: (data) => `
+				// Первая строка без тега — см. isBlankData выше.
+				toPreview: (data) =>
+					isBlankData(data)
+						? 'Изображение с подписью (файл не выбран)'
+						: `
 					<figure style="margin:0">
 						<img src="${data.src ?? ''}" alt="${escapeHtml(data.alt)}" style="max-width:100%;border-radius:8px" />
 						${data.caption ? `<figcaption style="opacity:0.7;font-size:0.875rem;margin-top:4px">${escapeHtml(data.caption)}</figcaption>` : ''}
@@ -100,8 +125,11 @@
 					return attrs;
 				},
 				toBlock: (data) => `\n::spoiler-start{label="${escapeAttr(data.label || 'Показать спойлер')}"}\n`,
+				// Первая строка без тега — см. isBlankData выше.
 				toPreview: (data) =>
-					`<div style="opacity:0.6;font-size:0.875rem">▾ начало спойлера («${escapeHtml(data.label || 'Показать спойлер')}»)</div>`,
+					isBlankData(data)
+						? '▾ начало спойлера'
+						: `<div style="opacity:0.6;font-size:0.875rem">▾ начало спойлера («${escapeHtml(data.label || 'Показать спойлер')}»)</div>`,
 			});
 
 			CMS.registerEditorComponent({
@@ -112,7 +140,9 @@
 				pattern: /^::spoiler-end\{\}$/,
 				fromBlock: () => ({}),
 				toBlock: () => '\n::spoiler-end{}\n',
-				toPreview: () => `<div style="opacity:0.6;font-size:0.875rem">▴ конец спойлера</div>`,
+				// Без тега ВСЕГДА: своих данных у этой кнопки нет, и Sveltia видит
+				// ровно то же, что при проверке (см. isBlankData выше).
+				toPreview: () => '▴ конец спойлера',
 			});
 
 			// Для одного слова/фразы внутри предложения — без переноса строки, поэтому
@@ -130,7 +160,8 @@
 				pattern: /^:spoiler-inline\[((?:\\.|[^\]\\])*)\]\{\}$/,
 				fromBlock: (match) => ({ text: unescapeMdInline(match[1]) }),
 				toBlock: (data) => `:spoiler-inline[${escapeMdInline(data.text)}]{}`,
-				toPreview: (data) => `<span style="opacity:0.6">🔒 ${escapeHtml(data.text)}</span>`,
+				// Первая строка без тега — см. isBlankData выше.
+				toPreview: (data) => (isBlankData(data) ? '🔒 спойлер' : `<span style="opacity:0.6">🔒 ${escapeHtml(data.text)}</span>`),
 			});
 
 			// Видео в любом месте текста — YouTube-ссылка или прямая ссылка на свой
@@ -171,7 +202,8 @@
 				toPreview: (data) => {
 					if (data.youtube) return `<div style="opacity:0.6">▶ YouTube: ${escapeHtml(data.youtube)}</div>`;
 					if (data.video) return `<div style="opacity:0.6">▶ Видео: ${escapeHtml(data.video)}</div>`;
-					return `<div style="opacity:0.6">Видео (вставьте ссылку на YouTube или на файл)</div>`;
+					// Без тега — см. isBlankData выше.
+					return 'Видео (вставьте ссылку на YouTube или на файл)';
 				},
 			});
 
@@ -465,7 +497,20 @@
 				id: 'anime',
 				label: 'Аниме',
 				icon: 'movie_filter',
-				fields: [{ label: 'Тайтл', name: 'match', widget: 'anime-search' }],
+				fields: [
+					{ label: 'Тайтл', name: 'match', widget: 'anime-search' },
+					// Ссылка ведёт на страницу тайтла, а видимый текст может быть
+					// любым: в предложении название почти всегда стоит не в
+					// именительном падеже («в „Ходячем замке“»), а вставленное
+					// как в справочнике ломает фразу.
+					{
+						label: 'Как написано в тексте',
+						name: 'label',
+						widget: 'string',
+						required: false,
+						hint: 'Пусто — встанет название из справочника. Впишите свой вариант, если в предложении оно в другом падеже или сокращено: «Ходячего замка», «Кейона». На ссылку и на страницу тайтла это не влияет — только на то, что видит читатель.',
+					},
+				],
 				pattern: /^:anime\[((?:\\.|[^\]\\])*)\]\{([^\n]*)\}$/,
 				fromBlock: (match) => {
 					const label = unescapeMdInline(match[1]);
@@ -477,18 +522,29 @@
 						attrs[m[1]] = m[2];
 					}
 
+					// Текст метки кладём в ОБА поля: в `match` он нужен, чтобы
+					// строка поиска показывала, что тайтл уже выбран, а в `label` —
+					// чтобы при повторном открытии блока в поле стояло ровно то,
+					// что написано в тексте, и правка не начиналась с пустого места.
 					return {
 						match: { label, id: attrs.id || '', source: attrs.source || '', sourceId: attrs['source-id'] ? Number(attrs['source-id']) : null },
+						label,
 					};
 				},
 				toBlock: (data) => {
 					const m = data.match || {};
 					if (!m.id) return '';
-					return `:anime[${escapeMdInline(m.label)}]{id="${m.id}" source="${m.source}" source-id="${m.sourceId}"}`;
+					// Своё написание побеждает; пусто — название из справочника.
+					const text = String(data.label ?? '').trim() || m.label;
+					return `:anime[${escapeMdInline(text)}]{id="${m.id}" source="${m.source}" source-id="${m.sourceId}"}`;
 				},
+				// Первая строка без тега — см. isBlankData выше. Именно из-за неё
+				// при вставке текста из соцсетей каждый <span> становился плашкой
+				// «Аниме (не выбрано)».
 				toPreview: (data) => {
 					const m = data.match || {};
-					return m.label ? `<span style="opacity:0.75">🎬 ${escapeHtml(m.label)}</span>` : `<span style="opacity:0.5">Аниме (не выбрано)</span>`;
+					const text = String(data.label ?? '').trim() || m.label;
+					return text ? `<span style="opacity:0.75">🎬 ${escapeHtml(text)}</span>` : 'Аниме (тайтл не выбран)';
 				},
 			});
 

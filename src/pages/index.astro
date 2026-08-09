@@ -18,7 +18,7 @@ import { categoriesShownIn } from '../content.config';
 import { isPublished } from '../lib/publishing.mjs';
 import { pickHomeSlots } from '../lib/homeSlots.mjs';
 import { getCardMedia } from '../lib/postCardMedia.mjs';
-import { excerptFromBody } from '../lib/excerpt.mjs';
+import { postDescription } from '../lib/excerpt.mjs';
 import { isExternalPost, postHref } from '../lib/externalPost.mjs';
 import { formatShortDate } from '../lib/postDate.mjs';
 import { SITE_DESCRIPTION } from '../lib/site.mjs';
@@ -44,7 +44,7 @@ for (const post of featured) {
 	media.set(post.id, await getCardMedia(post));
 }
 
-const deckOf = (post: any) => excerptFromBody(post.body, '', { maxLength: 240 });
+const deckOf = (post: any) => postDescription(post, '', { maxLength: 240 });
 
 // Пост-ссылка на чужой сайт открывается в новой вкладке, а адрес собирает
 // postHref: строить `/posts/…/` руками рядом с проверкой на внешний пост

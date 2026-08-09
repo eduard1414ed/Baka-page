@@ -16,7 +16,7 @@
 import { sectionOf } from '../content.config';
 import PostKicker from './PostKicker.astro';
 import PostMedia from './PostMedia.astro';
-import { excerptFromBody } from '../lib/excerpt.mjs';
+import { postDescription } from '../lib/excerpt.mjs';
 import { getCardMedia } from '../lib/postCardMedia.mjs';
 import { isExternalPost, postHref } from '../lib/externalPost.mjs';
 import { formatPostDate } from '../lib/postDate.mjs';
@@ -51,7 +51,7 @@ const href = postHref(post);
 // Знаков просим больше, чем нужно поисковику: тут подводка обрезается тремя
 // строками средствами CSS, и на широкой колонке 160 знаков не заполнили бы
 // даже двух.
-const deck = excerptFromBody(post.body, '', { maxLength: 240 });
+const deck = postDescription(post, '', { maxLength: 240 });
 
 const media = variant === 'cover' ? await getCardMedia(post) : null;
 
