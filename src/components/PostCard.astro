@@ -1,45 +1,40 @@
 ---
-import { categories } from '../content.config';
-import { getYoutubeThumbnailUrl } from '../lib/youtube.mjs';
-import { getPostTiming } from '../lib/postTiming.mjs';
-import { coverSrcs } from '../lib/postImage.mjs';
+// Карточка материала (§10 дизайн-системы, раздел 3.1 ТЗ).
+//
+// ПЛИТКИ БОЛЬШЕ НЕТ: ни фона, ни рамки, ни скругления. Контент лежит на бумаге,
+// соседние карточки разделяет одна линия. Вместе с рамкой ушёл и `focus-within`,
+// которым раньше показывался фокус, — теперь его показывает общая обводка
+// `:focus-visible` из global.css. Проверено, что она на месте, ДО того как
+// рамка была снята: между этими двумя правками сайт нельзя было бы пройти
+// с клавиатуры.
+//
+// ДВА ВАРИАНТА ОДНОГО КОМПОНЕНТА, А НЕ ДВА ФАЙЛА:
+//   cover — с обложкой, для главной и разделов;
+//   text  — текстом, для подборки «Из архива» и будущей страницы архива.
+// Разные файлы означали бы две реализации одной карточки, и они разъехались бы
+// молча — сначала форматом метастроки, потом обрезкой.
+import { sectionOf } from '../content.config';
+import PostKicker from './PostKicker.astro';
+import { excerptFromBody } from '../lib/excerpt.mjs';
+import { getCardMedia } from '../lib/postCardMedia.mjs';
 import { isExternalPost, postHref } from '../lib/externalPost.mjs';
+import { formatPostDate } from '../lib/postDate.mjs';
 
 interface Props {
 	post: { id: string; body?: string; data: Record<string, any> };
+	variant?: 'cover' | 'text';
+	/** Уровень заголовка карточки. По умолчанию h3 — карточка почти всегда
+	    лежит под заголовком раздела. В сетках главной раздела нет, там h2. */
+	level?: 2 | 3;
 }
 
-const { post } = Astro.props;
-const { title, date, category, cover, noCover, youtube, video } = post.data;
+const { post, variant = 'cover', level = 3 } = Astro.props;
+const { title, date, category } = post.data;
 
-const categoryLabel = categories.find((c) => c.id === category)?.label ?? category;
-
-const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
-
-function excerpt(text: string | undefined, length = 140) {
-	if (!text) return '';
-	const plain = text
-		.replace(/!\[[^\]]*\]\([^)]*\)/g, '')
-		.replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
-		.replace(/[#>*_`~-]/g, '')
-		.replace(/\s+/g, ' ')
-		.trim();
-	return plain.length > length ? `${plain.slice(0, length).trim()}…` : plain;
-}
-
-// Галочка «Без обложки» перебивает всё: и саму обложку, и кадр с ютюба.
-// Это осознанный выбор автора — короткая заметка должна выглядеть заголовком
-// в строку, а не карточкой с картинкой. Отличается от «обложка не задана»:
-// там картинку просто не выбрали, и кадр с ютюба остаётся уместным.
-const coverImage = noCover ? null : coverSrcs(cover);
-const youtubeThumbnail = !noCover && youtube ? getYoutubeThumbnailUrl(youtube) : null;
-const isVideo = Boolean(youtubeThumbnail || (video && !noCover));
-
-// «Сколько это займёт» — время чтения у постов, длительность у выпусков
-// и видеоэссе. Что именно, решает src/lib/postTiming.mjs, тот же файл зовёт
-// и страница поста. null = показывать нечего, причины перечислены там же.
-// У поста-ссылки на чужой сайт здесь будет не время, а название площадки.
-const timing = await getPostTiming(post);
+// Тип карточки — РАЗДЕЛ материала, а не его категория: бонус верстается как
+// выпуск подкаста (квадратная обложка), потому что это и есть выпуск.
+// Геометрия медиа задаётся отсюда и только отсюда, см. стили ниже.
+const type = sectionOf(category);
 
 // Пост-ссылка на чужой сайт (тз/10, задача 2): своей страницы у него нет,
 // карточка ведёт сразу наружу и открывается в новой вкладке. Адрес собирает
@@ -47,171 +42,264 @@ const timing = await getPostTiming(post);
 // с лентой RSS (см. src/lib/externalPost.mjs).
 const isExternal = isExternalPost(post.data);
 const href = postHref(post);
+
+// Подводка ОБРЫВАЕТСЯ НА ПЕРВОМ СПОЙЛЕРЕ — это делает excerptFromBody, тот же
+// код, что готовит описание страницы для поисковика. Показать спрятанное
+// в карточке значит обессмыслить сам спойлер.
+//
+// Знаков просим больше, чем нужно поисковику: тут подводка обрезается тремя
+// строками средствами CSS, и на широкой колонке 160 знаков не заполнили бы
+// даже двух.
+const deck = excerptFromBody(post.body, '', { maxLength: 240 });
+
+const media = variant === 'cover' ? await getCardMedia(post) : null;
+
+// Заметка с обложкой не превращается в карточку с большим кадром: обложка
+// уходит небольшой миниатюрой вбок. Раскладку включает этот класс, и только он.
+const noteWithCover = type === 'note' && Boolean(media);
+
+const Title = `h${level}` as 'h2' | 'h3';
 ---
 
-{/*
-	Карточка — <article> со ссылкой внутри, а не одна большая ссылка, как было
-	раньше. Причина: странице тайтла нужно дописать в карточку выпуска строку
-	«обсуждали в выпуске на 12:04, 34:20» с кликабельными таймкодами (тз/05,
-	шаг 5), а вложить ссылку в ссылку нельзя — браузер такую разметку чинит
-	по-своему и часть ссылок просто перестаёт работать. Всё, что кликается
-	отдельно, уходит в <slot /> за пределы ссылки на пост.
-*/}
-<article class="card">
-	<a
-		class="card-link"
-		href={href}
-		target={isExternal ? '_blank' : undefined}
-		rel={isExternal ? 'noopener noreferrer' : undefined}
-	>
-		{
-			coverImage ? (
-				<img
-					class="media"
-					src={coverImage.src}
-					srcset={coverImage.srcset}
-					sizes="(max-width: 700px) 100vw, 400px"
-					alt=""
-					loading="lazy"
-					width="800"
-					height="450"
-				/>
-			) : youtubeThumbnail ? (
-				<span class="media-wrap">
-					<img class="media" src={youtubeThumbnail} alt="" loading="lazy" width="480" height="360" />
-					<span class="play" aria-hidden="true">
-						▶
-					</span>
-				</span>
-			) : video ? (
-				<span class="media video-placeholder" aria-hidden="true">
-					▶ Видео
-				</span>
-			) : null
-		}
-		<div class="body">
-			<span class="category">{categoryLabel}</span>
-			{/* Значок внешней ссылки стоит прямо у заголовка, а не где-нибудь
-			    в углу карточки: он предупреждает, что клик уведёт с сайта,
-			    и должен читаться вместе с тем, по чему кликают. Название
-			    площадки видно ниже, в строке даты. */}
-			<h3 class="title">
+{
+	variant === 'text' ? (
+		// Текстовый вариант: тип, заголовок, подводка, дата. Обложек нет
+		// намеренно — разные форматы дают разную геометрию медиа, и ряд
+		// из квадрата, кадра 16:9 и заметки без картинки читается рвано.
+		<a
+			class="list-card"
+			data-type={type}
+			href={href}
+			target={isExternal ? '_blank' : undefined}
+			rel={isExternal ? 'noopener noreferrer' : undefined}
+		>
+			<PostKicker post={post} />
+			<Title class="list-title">
 				{title}
-				{isExternal && <span class="external" aria-label="откроется на другом сайте">↗</span>}
-			</h3>
-			<span class="date">
-				{dateFormatter.format(date)}
-				{timing && <span class="timing">{timing.label}</span>}
-			</span>
-			{!coverImage && !isVideo && <p class="excerpt">{excerpt(post.body)}</p>}
-		</div>
-	</a>
-	<slot />
-</article>
+				{isExternal && (
+					<span class="external" aria-label="откроется на другом сайте">
+						↗
+					</span>
+				)}
+			</Title>
+			{deck && <div class="deck">{deck}</div>}
+			<div class="list-date tech">{formatPostDate(date)}</div>
+		</a>
+	) : (
+		// Карточка — <article> со ссылкой внутри, а не одна большая ссылка.
+		// Причина: странице тайтла нужно дописать в карточку выпуска строку
+		// «обсуждали в выпуске на 12:04, 34:20» с кликабельными таймкодами
+		// (тз/05, шаг 5), а вложить ссылку в ссылку нельзя — браузер такую
+		// разметку чинит по-своему, и часть ссылок просто перестаёт работать.
+		// Всё, что кликается отдельно, уходит в <slot /> за пределы ссылки.
+		<article class="archive-card" data-type={type} class:list={{ 'has-cover': noteWithCover }}>
+			<a
+				class="card-link"
+				href={href}
+				target={isExternal ? '_blank' : undefined}
+				rel={isExternal ? 'noopener noreferrer' : undefined}
+			>
+				{media && (
+					<span class="archive-media" class:list={{ 'note-cover': noteWithCover }}>
+						<img
+							src={media.src}
+							srcset={media.srcset ?? undefined}
+							sizes={media.srcset ? '(max-width: 760px) 100vw, 420px' : undefined}
+							alt=""
+							loading="lazy"
+						/>
+						{media.play && (
+							<span class="play" aria-hidden="true">
+								▶
+							</span>
+						)}
+					</span>
+				)}
+				<PostKicker post={post} />
+				{/* Значок внешней ссылки стоит прямо у заголовка, а не где-нибудь
+				    в углу карточки: он предупреждает, что клик уведёт с сайта,
+				    и должен читаться вместе с тем, по чему кликают. Название
+				    площадки видно выше, в метастроке, вместо времени чтения. */}
+				<Title class="card-title">
+					{title}
+					{isExternal && (
+						<span class="external" aria-label="откроется на другом сайте">
+							↗
+						</span>
+					)}
+				</Title>
+				{deck && <p class="deck">{deck}</p>}
+			</a>
+			<slot />
+		</article>
+	)
+}
 
 <style>
-	.card {
-		display: flex;
-		flex-direction: column;
-		background: var(--color-bg-elevated);
-		border-radius: var(--radius-md);
+	/* ---------- Общее для обоих вариантов ---------- */
+
+	/* Подводка: три строки, дальше обрезка. Обрезаем только в лентах, где ряд
+	   держится на общей высоте, — на собственной странице материала не
+	   обрезается ничего (§10.4). */
+	.deck {
+		font-size: var(--body-sm);
+		line-height: 1.5;
+		color: var(--muted);
+		margin: var(--sp-3) 0 0;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
 		overflow: hidden;
-		border: 1px solid var(--color-border);
-		transition: border-color var(--transition-fast);
 	}
 
-	/* focus-within, а не focus-visible: рамку теперь носит <article>,
-	   а фокус попадает на ссылку внутри него. */
-	.card:hover,
-	.card:focus-within {
-		border-color: var(--color-accent);
+	.external {
+		display: inline-block;
+		margin-left: 0.2em;
+		color: var(--accent-text);
+		/* Стрелка не должна тянуть вниз строку заголовка. */
+		vertical-align: 0.1em;
+		font-size: 0.7em;
+	}
+
+	/* ---------- Вариант с обложкой ---------- */
+
+	.archive-card {
+		border-top: 1px solid var(--line);
+		padding-top: var(--sp-4);
 	}
 
 	.card-link {
-		display: flex;
-		flex-direction: column;
-		color: var(--color-text);
+		display: block;
+		color: var(--ink);
 	}
 
-	.card-link:hover,
-	.card-link:focus-visible {
-		color: var(--color-text);
+	.card-link:hover .card-title,
+	.card-link:focus-visible .card-title {
+		color: var(--accent-text);
 	}
 
-	.media,
-	.media-wrap :global(.media) {
-		width: 100%;
-		aspect-ratio: 16 / 9;
-		object-fit: cover;
+	.card-title {
+		font-family: var(--font-display);
+		font-size: var(--card-title);
+		line-height: 1.15;
+		font-weight: 400;
+		margin: 0;
+		/* Заголовок карточки — три строки (§10.4). */
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+		overflow: hidden;
+		transition: color var(--transition-fast);
 	}
 
-	.media-wrap {
+	.archive-media {
+		display: block;
 		position: relative;
+		margin-bottom: var(--sp-4);
+		overflow: hidden;
+		background: var(--line-soft);
+	}
+
+	.archive-media img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
 		display: block;
 	}
 
+	/* ГЕОМЕТРИЯ МЕДИА ЗАДАЁТСЯ ТИПОМ КАРТОЧКИ И ТОЛЬКО ИМ (§2.1). Селектор
+	   режима фильтра отвечает за видимость и в эти правила не вмешивается —
+	   иначе его вес перебил бы раскладку, и она молча не применилась бы. */
+	.archive-card[data-type='podcast'] .archive-media {
+		aspect-ratio: 1;
+		max-width: 420px;
+	}
+
+	.archive-card[data-type='videoessay'] .archive-media,
+	.archive-card[data-type='article'] .archive-media,
+	.archive-card[data-type='note'] .archive-media {
+		aspect-ratio: 16 / 9;
+	}
+
+	/* Значок ролика поверх кадра. Бумажный со чернильной тенью: белым он
+	   пропадал бы на светлом кадре, а тень держит его читаемым на любом. */
 	.play {
 		position: absolute;
 		inset: 0;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: var(--font-size-xl);
-		color: #fff;
-		text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+		font-size: var(--h3);
+		color: var(--paper);
+		text-shadow: 0 1px 8px var(--ink);
 	}
 
-	.video-placeholder {
-		aspect-ratio: 16 / 9;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: var(--color-bg);
-		color: var(--color-text-muted);
-		font-size: var(--font-size-lg);
+	/* Заметка с обложкой. Картинка уточняет материал, но не претендует
+	   на роль главного изображения: техстрока идёт над всем блоком во всю
+	   ширину, а миниатюра начинается на уровне заголовка. Поставь её выше —
+	   встанет вровень с метастрокой и будет спорить с ней за начало карточки. */
+	.archive-card.has-cover .card-link {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 116px;
+		column-gap: var(--sp-4);
+		align-items: start;
 	}
 
-	.body {
-		display: flex;
-		flex-direction: column;
-		gap: var(--space-1);
-		padding: var(--space-2);
+	.archive-card.has-cover .card-link > :global(.kicker) {
+		grid-column: 1 / -1;
+		grid-row: 1;
 	}
 
-	.category {
-		color: var(--color-accent);
-		font-size: var(--font-size-sm);
+	.archive-card.has-cover .card-title {
+		grid-column: 1;
+		grid-row: 2;
 	}
 
-	.title {
+	.archive-card.has-cover .deck {
+		grid-column: 1;
+		grid-row: 3;
+	}
+
+	.archive-card.has-cover .note-cover {
+		grid-column: 2;
+		grid-row: 2 / span 2;
 		margin: 0;
-		font-size: var(--font-size-lg);
 	}
 
-	.external {
-		display: inline-block;
-		margin-left: 0.35em;
-		color: var(--color-accent);
-		font-size: var(--font-size-sm);
-		/* Стрелка не должна тянуть вниз строку заголовка. */
-		vertical-align: 0.15em;
+	/* ---------- Текстовый вариант ---------- */
+
+	.list-card {
+		display: block;
+		height: 100%;
+		padding: var(--sp-4) 0 var(--sp-6);
+		border-top: 1px solid var(--line);
+		color: var(--ink);
 	}
 
-	.date {
-		color: var(--color-text-muted);
-		font-size: var(--font-size-sm);
+	.list-card:hover .list-title,
+	.list-card:focus-visible .list-title {
+		color: var(--accent-text);
 	}
 
-	/* Точка-разделитель нарисована псевдоэлементом, а не вписана в текст:
-	   у коротких постов и у видеоэссе без аудиоверсии метки нет, и висящая
-	   точка после даты выглядела бы опечаткой. */
-	.timing::before {
-		content: '·';
-		margin: 0 0.35em;
+	.list-title {
+		font-family: var(--font-display);
+		font-size: var(--card-title);
+		line-height: 1.15;
+		font-weight: 400;
+		margin: var(--sp-2) 0 var(--sp-3);
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+		overflow: hidden;
+		transition: color var(--transition-fast);
 	}
 
-	.excerpt {
-		color: var(--color-text-muted);
-		margin: var(--space-1) 0 0;
+	.list-card .deck {
+		margin: 0;
+	}
+
+	.list-date {
+		margin-top: var(--sp-4);
+		color: var(--muted);
 	}
 </style>

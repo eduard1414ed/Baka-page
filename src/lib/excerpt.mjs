@@ -53,6 +53,25 @@ function stripMarkdown(text) {
 	);
 }
 
+/**
+ * Где в тексте начинается первый спойлер, или -1.
+ *
+ * Два вида разметки, оба заводит src/plugins/remark-spoiler.mjs:
+ *   блок  — строка `::spoiler-start{label="…"}` … `::spoiler-end{}`;
+ *   слово — `:spoiler-inline[спрятанное]{}` прямо внутри предложения.
+ *
+ * Проверяем оба и берём то, что встретилось раньше. Проверить сначала один,
+ * потом другой нельзя: в посте бывает и то и другое, и «первым» тогда
+ * оказывался бы тот, чью проверку написали выше, а не тот, что раньше в тексте.
+ */
+function spoilerIndex(text) {
+	const block = text.search(/^::spoiler-start\b/m);
+	const inline = text.indexOf(':spoiler-inline[');
+
+	const found = [block, inline].filter((at) => at >= 0);
+	return found.length > 0 ? Math.min(...found) : -1;
+}
+
 /** Доля символов, занятых ссылками, — до того как разметку сняли. */
 function linkShare(paragraph) {
 	const links = paragraph.match(/\[[^\]]*\]\([^)]*\)|https?:\/\/\S+/g) ?? [];
@@ -73,13 +92,24 @@ function truncate(text, max = MAX_LENGTH) {
 /**
  * Описание поста из его текста.
  *
+ * ТЕКСТ ОБРЫВАЕТСЯ НА ПЕРВОМ СПОЙЛЕРЕ. Спрятанное автором не попадает
+ * ни в карточку, ни в описание страницы, ни в ленту, ни в поиск: показать
+ * спрятанное в подводке — значит обессмыслить сам спойлер (тз/08, §3.1).
+ * Абзац со спойлером обрезается до его начала, а всё, что ниже, не смотрится
+ * вовсе — за спойлером текст идёт уже с оглядкой на него.
+ *
  * @param {string} body Текст поста в markdown (post.body).
  * @param {string} fallback Что вернуть, если осмысленного абзаца не нашлось —
  *   обычно общее описание сайта. Пустое описание хуже общего: поисковик тогда
  *   придумывает его сам из случайного куска страницы.
+ * @param {{ maxLength?: number }} [options] Сколько знаков оставить. По умолчанию
+ *   160 — столько показывает Google. Карточке в ленте нужно больше: там подводка
+ *   обрезается тремя строками средствами CSS, и на широкой колонке 160 знаков
+ *   не заполняют даже двух.
  * @returns {string}
  */
-export function excerptFromBody(body, fallback) {
+export function excerptFromBody(body, fallback, options = {}) {
+	const maxLength = options.maxLength ?? MAX_LENGTH;
 	if (!body) return fallback;
 
 	// Абзац — кусок между пустыми строками. Внутри абзаца перевод строки
@@ -89,21 +119,31 @@ export function excerptFromBody(body, fallback) {
 
 	const candidates = [];
 	for (const raw of paragraphs) {
-		const paragraph = raw.trim();
-		if (!paragraph) continue;
-		// Сплошные ссылки (столбик Patreon/Boosty, строчка с рекламой) — мимо.
-		if (linkShare(paragraph) > MAX_LINK_SHARE) continue;
+		// Спойлер обрывает не только свой абзац, но и весь просмотр: то, что
+		// идёт ниже, написано уже с оглядкой на спрятанное.
+		const spoilerAt = spoilerIndex(raw);
+		const paragraph = (spoilerAt >= 0 ? raw.slice(0, spoilerAt) : raw).trim();
 
-		const text = stripMarkdown(paragraph).replace(/\n+/g, ' ');
-		// Первый же абзац нормальной длины — он и есть описание. Возвращаем
-		// сразу, а не выбираем «лучший»: автор начинает с главного.
-		if (text.length >= MIN_PARAGRAPH) return truncate(text);
-		if (text.length >= MIN_PARAGRAPH_RELAXED) candidates.push(text);
+		if (paragraph) {
+			// Сплошные ссылки (столбик Patreon/Boosty, строчка с рекламой) — мимо.
+			if (linkShare(paragraph) <= MAX_LINK_SHARE) {
+				const text = stripMarkdown(paragraph).replace(/\n+/g, ' ');
+				// Первый же абзац нормальной длины — он и есть описание. Возвращаем
+				// сразу, а не выбираем «лучший»: автор начинает с главного.
+				if (text.length >= MIN_PARAGRAPH) return truncate(text, maxLength);
+				if (text.length >= MIN_PARAGRAPH_RELAXED) candidates.push(text);
+			}
+		}
+
+		if (spoilerAt >= 0) break;
 	}
 
 	// Второй проход: длинных абзацев нет вовсе — берём самый длинный короткий.
 	if (candidates.length > 0) {
-		return truncate(candidates.reduce((best, text) => (text.length > best.length ? text : best)));
+		return truncate(
+			candidates.reduce((best, text) => (text.length > best.length ? text : best)),
+			maxLength,
+		);
 	}
 
 	return fallback;

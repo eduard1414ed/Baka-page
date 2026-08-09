@@ -1,0 +1,66 @@
+---
+// Метастрока материала: `[ ПОДКАСТ ] · №135 · 01:06:33` (§10 дизайн-системы).
+//
+// Отдельный компонент, а не кусок карточки, потому что рисуют её двое: сама
+// карточка (PostCard.astro) и редакционные ряды главной, где раскладка своя,
+// а метастрока обязана быть той же. Две копии разъехались бы молча — и первым
+// же разошёлся бы формат длительности.
+//
+// СЕРОЙ СТРОКИ СО ВРЕМЕНЕМ ПОД ЗАГОЛОВКОМ БОЛЬШЕ НЕ СУЩЕСТВУЕТ. Длительность,
+// время чтения и площадка чужой статьи живут здесь и только здесь: один факт —
+// одно место.
+import { categories, sectionOf } from '../content.config';
+import { getPostTiming } from '../lib/postTiming.mjs';
+import { episodeNumber } from '../lib/postMeta.mjs';
+
+interface Props {
+	post: { id: string; body?: string; data: Record<string, any> };
+}
+
+const { post } = Astro.props;
+const { category } = post.data;
+
+// Подпись берём у РАЗДЕЛА, а не у категории: у бонуса написано «Подкаст»,
+// потому что бонус — это выпуск, просто платный. Что он платный, говорит
+// плашка рядом, и она же — единственное предупреждение до перехода.
+const section = sectionOf(category);
+const typeLabel = categories.find((c) => c.id === section)?.label ?? section;
+const isBonus = category === 'bonus';
+
+// Номер есть только у обычного выпуска. У бонуса его нет: бонусы вне общей
+// нумерации подкаста, и придуманный номер сбил бы с толку сильнее пустоты.
+const number = !isBonus && section === 'podcast' ? episodeNumber(post.id) : null;
+
+// Длительность, время чтения или название чужой площадки — что именно,
+// решает src/lib/postTiming.mjs, тот же файл зовёт и страница материала.
+// null = показывать нечего, причины перечислены там же.
+const timing = await getPostTiming(post);
+---
+
+<div class="kicker tech">
+	[&thinsp;{typeLabel}&thinsp;]{
+		isBonus && (
+			<Fragment>
+				{' · '}
+				<span class="bonus-label">Бонус</span>
+			</Fragment>
+		)
+	}{number && ` · ${number}`}{timing && ` · ${timing.meta}`}
+</div>
+
+<style>
+	.kicker {
+		color: var(--accent-text);
+		margin-bottom: var(--sp-2);
+	}
+
+	/* Плашка платного материала. Стоит внутри метастроки, поэтому не спорит
+	   с ней размером — только заливкой. Заливка брендовым акцентом в его
+	   единственной законной роли: фоном, а не текстом. */
+	.bonus-label {
+		padding: 2px 6px;
+		background: var(--accent-soft);
+		color: var(--accent-text);
+		font-weight: 600;
+	}
+</style>

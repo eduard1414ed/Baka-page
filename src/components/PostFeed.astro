@@ -1,77 +1,486 @@
 ---
+// Лента материалов: фильтры, сетки по режимам и подборка «Из архива»
+// (раздел 3.3 и 3.4 ТЗ, §10.2 дизайн-системы).
+//
+// Компонент работает в двух видах:
+//
+//   ГЛАВНАЯ (`shownIds` задан) — вкладки переключают режим прямо на странице,
+//   без перехода. Режим «Все» показывает редакционные ряды, которые страница
+//   передаёт в слот `showcase`; режим типа — 12 самых свежих материалов этого
+//   типа. Ниже кнопка, раскрывающая подборку «Из архива».
+//
+//   РАЗДЕЛ (`activeCategory` задан) — вкладки это обычные ссылки, сетка одна.
+//   Раздел останется таким до части 4, где он станет отфильтрованным архивом.
+//
+// ГЛАВНАЯ ЛОВУШКА ЭТОГО ФАЙЛА (§2.1 дизайн-системы): селектор, который
+// показывает или прячет карточку, НЕ ЗАДАЁТ ЕЙ РАСКЛАДКУ. В макете режим
+// делал и то и другое сразу — `[data-mode="note"] .archive-card[data-type="note"]
+// { display:block }` — и четыре селектора давали вес, который перебивал
+// раскладку карточки: она объявляла себе `display:grid`, а в браузере
+// оставалась блоком.
+//
+// Здесь этой битвы нет по устройству: у КАЖДОГО режима своя сетка, и прячется
+// она атрибутом `hidden`, а не селектором. Карточек правила видимости
+// не касаются вовсе, поэтому спорить с раскладкой нечему.
 import PostCard from './PostCard.astro';
-import { visibleCategories } from '../content.config';
+import { visibleCategories, categoriesShownIn } from '../content.config';
 
 interface Props {
 	posts: Array<{ id: string; body?: string; data: Record<string, any> }>;
+	/** Задан — компонент работает как лента раздела: вкладки-ссылки, одна сетка. */
 	activeCategory?: string;
+	/** Задан — компонент работает как лента главной. Внутри — что уже заняли
+	    редакционные ряды: эти материалы не должны повториться в «Из архива». */
+	shownIds?: string[];
 }
 
-const { posts, activeCategory } = Astro.props;
+const { posts, activeCategory, shownIds } = Astro.props;
+
+const isHome = !activeCategory;
+
+/** Сколько материалов показывает режим типа. Раздел 3.3 ТЗ. */
+const PER_MODE = 12;
+
+/** Сколько текстовых карточек раскрывает кнопка. Раздел 3.4 ТЗ. */
+const OLDER_COUNT = 9;
+
+const inCategory = (id: string) => {
+	// Не `data.category === id`, а список: раздел «Подкаст» показывает
+	// и выпуски, и приписанные к нему бонусы (см. content.config.ts).
+	const shown = categoriesShownIn(id);
+	return (post: (typeof posts)[number]) => shown.includes(post.data.category);
+};
+
+// Режимы фильтра: 12 самых свежих материалов каждого типа.
+const modes = isHome
+	? visibleCategories.map((category) => {
+			const own = posts.filter(inCategory(category.id));
+			return {
+				id: category.id,
+				top: own.slice(0, PER_MODE),
+				// «Из архива» в режиме типа — следующие ПОСЛЕ показанных выше
+				// в этом же режиме. Считать от редакционных рядов здесь нельзя:
+				// выше в этом режиме стоят совсем другие материалы, и половина
+				// подборки оказалась бы повтором того, что уже на экране.
+				older: own.slice(PER_MODE, PER_MODE + OLDER_COUNT),
+			};
+		})
+	: [];
+
+// «Из архива» в режиме «Все» — следующие по хронологии после всех, кого
+// разобрали редакционные ряды.
+const olderAll = isHome ? posts.filter((post) => !shownIds?.includes(post.id)).slice(0, OLDER_COUNT) : [];
+
+// Кнопка выключена, когда раскрывать нечего изначально (§8.1 дизайн-системы).
+const nothingToShow = olderAll.length === 0;
 ---
 
-<nav class="tabs" aria-label="Категории">
-	<a href="/" class:list={['tab', { active: !activeCategory }]}>
-		Все
-	</a>
-	{
-		visibleCategories.map((c) => (
-			<a href={`/category/${c.id}/`} class:list={['tab', { active: c.id === activeCategory }]}>
-				{c.label}
-			</a>
-		))
-	}
+<nav class="filters" aria-label="Фильтр материалов">
+	<div class="filters-inner">
+		<span class="filters-label tech">Материалы</span>
+		<div class="filter-group">
+			{
+				isHome ? (
+					<Fragment>
+						<button class="filter-btn tech active" type="button" data-filter="all" aria-pressed="true">
+							Все
+						</button>
+						{visibleCategories.map((c) => (
+							<button class="filter-btn tech" type="button" data-filter={c.id} aria-pressed="false">
+								{c.label}
+							</button>
+						))}
+					</Fragment>
+				) : (
+					<Fragment>
+						<a class="filter-btn tech" href="/">
+							Все
+						</a>
+						{visibleCategories.map((c) => (
+							<a
+								class:list={['filter-btn', 'tech', { active: c.id === activeCategory }]}
+								href={`/category/${c.id}/`}
+								aria-current={c.id === activeCategory ? 'page' : undefined}
+							>
+								{c.label}
+							</a>
+						))}
+					</Fragment>
+				)
+			}
+		</div>
+	</div>
 </nav>
 
 {
-	posts.length === 0 ? (
-		<p class="empty">Пока нет постов.</p>
+	isHome ? (
+		<Fragment>
+			{/* Режим «Все» — не карточная сетка, а редакционные ряды. Их
+			    собирает страница: это композиция главной, а не лента. */}
+			<div class="all-layout" id="all-layout">
+				<slot name="showcase" />
+			</div>
+
+			{modes.map((mode) => (
+				<div class="archive-grid" data-mode={mode.id} hidden>
+					{mode.top.map((post) => (
+						<PostCard post={post} level={2} />
+					))}
+				</div>
+			))}
+
+			<div class="load-more-wrap">
+				<button
+					class="load-more tech"
+					id="load-more"
+					type="button"
+					aria-expanded="false"
+					aria-controls="older-materials"
+					disabled={nothingToShow}
+				>
+					<span id="load-more-label">{nothingToShow ? 'Все материалы показаны' : 'Показать ещё материалы'}</span>
+					<span class="down" id="load-more-arrow" aria-hidden="true">
+						{nothingToShow ? '' : '↓'}
+					</span>
+				</button>
+			</div>
+
+			<section class="older-materials" id="older-materials" aria-label="Ранее опубликованные материалы" hidden>
+				<div class="section-head">
+					<span class="section-title tech">[&thinsp;из архива&thinsp;]</span>
+				</div>
+				<div class="list-grid" data-mode="all">
+					{olderAll.map((post) => (
+						<PostCard post={post} variant="text" />
+					))}
+				</div>
+				{modes.map((mode) => (
+					<div class="list-grid" data-mode={mode.id} hidden>
+						{mode.older.map((post) => (
+							<PostCard post={post} variant="text" />
+						))}
+					</div>
+				))}
+			</section>
+		</Fragment>
+	) : posts.length === 0 ? (
+		<p class="empty">Пока нет материалов.</p>
 	) : (
-		<div class="grid">
+		<div class="archive-grid" data-mode={activeCategory}>
 			{posts.map((post) => (
-				<PostCard post={post} />
+				<PostCard post={post} level={2} />
 			))}
 		</div>
 	)
 }
 
 <style>
-	.tabs {
+	/* ---------- Фильтры ---------- */
+
+	/* ПЕРЕНОСЯТСЯ, А НЕ СКРОЛЛЯТСЯ. Горизонтальная карусель на узком экране
+	   прячет часть вкладок за краем: их не видно, и о них не догадаться. */
+	.filters {
+		border-bottom: 1px solid var(--line);
+	}
+
+	.filters-inner {
+		min-height: 56px;
 		display: flex;
 		flex-wrap: wrap;
-		gap: var(--space-1);
-		margin-bottom: var(--space-3);
+		align-items: center;
+		gap: 0 var(--sp-6);
+		padding: var(--sp-2) 0;
 	}
 
-	.tab {
-		padding: var(--space-1) var(--space-2);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-full);
-		color: var(--color-text-muted);
-		font-size: var(--font-size-sm);
-		transition:
-			border-color var(--transition-fast),
-			color var(--transition-fast);
+	.filters-label {
+		display: flex;
+		align-items: center;
+		font-weight: 600;
+		color: var(--muted);
 	}
 
-	.tab:hover,
-	.tab:focus-visible {
-		border-color: var(--color-accent);
-		color: var(--color-accent-hover);
+	.filter-group {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0 var(--sp-6);
 	}
 
-	.tab.active {
-		border-color: var(--color-accent);
-		color: var(--color-text);
+	/* Цель не меньше 44 по высоте (§8). Рамки у вкладки нет: коробок
+	   в языке сайта не осталось, активная помечается подчёркиванием. */
+	.filter-btn {
+		position: relative;
+		min-height: 44px;
+		display: inline-flex;
+		align-items: center;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: var(--ink);
+		font-size: var(--caption);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		white-space: normal;
+	}
+
+	.filter-btn:hover {
+		color: var(--accent-text);
+	}
+
+	/* Активное состояние никогда не обозначается только цветом (§3.3):
+	   к начертанию добавляется подчёркивание. */
+	.filter-btn.active {
+		font-weight: 600;
+	}
+
+	.filter-btn.active::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 8px;
+		height: 1.5px;
+		background: var(--ink);
+	}
+
+	@media (min-width: 821px) {
+		.filters-label {
+			padding-right: var(--sp-6);
+			border-right: 1px solid var(--line);
+		}
+
+		.filter-group {
+			gap: 0 var(--sp-8);
+		}
+	}
+
+	.all-layout {
+		padding-top: var(--sp-6);
+	}
+
+	/* ---------- Сетки режимов ---------- */
+
+	/* Раскладку задаёт РЕЖИМ КОНТЕЙНЕРА, видимость — атрибут `hidden`
+	   (правило `[hidden]` лежит в global.css). Пересекаться им негде.
+
+	   `:not([hidden])` тут обязателен, и это не перестраховка. Без него
+	   `display: grid` перебивает `[hidden]` по весу — у правила компонента
+	   селектор длиннее, — и все четыре сетки режимов вываливаются на страницу
+	   сразу. Ошибка тихая: разметка правильная, атрибут на месте, а в браузере
+	   лента вчетверо длиннее, чем должна быть. */
+	.archive-grid:not([hidden]) {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: var(--sp-8) var(--grid-gap);
+		padding: var(--sp-12) 0 var(--sp-4);
+	}
+
+	@media (min-width: 761px) {
+		.archive-grid[data-mode='podcast'],
+		.archive-grid[data-mode='videoessay'],
+		.archive-grid[data-mode='article'] {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.archive-grid[data-mode='note'] {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 1101px) {
+		.archive-grid[data-mode='podcast'] {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
 	}
 
 	.empty {
-		color: var(--color-text-muted);
+		color: var(--muted);
+		padding: var(--sp-12) 0;
 	}
 
-	.grid {
+	/* ---------- Кнопка «Показать ещё» ---------- */
+
+	/* Один компонент на весь сайт, три состояния, и путать их нельзя:
+	   активное — «Показать ещё материалы ↓»; развёрнутое — «Свернуть архив ↑»,
+	   ТА ЖЕ кнопка на том же месте; выключенное — «Все материалы показаны».
+	   Отдельной кнопки «свернуть» рядом не существует. */
+	.load-more-wrap {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-		gap: var(--space-3);
+		grid-template-columns: 1fr auto 1fr;
+		align-items: center;
+		gap: var(--sp-6);
+		padding: var(--sp-8) 0;
+	}
+
+	.load-more-wrap::before,
+	.load-more-wrap::after {
+		content: '';
+		height: 1px;
+		background: var(--line);
+	}
+
+	.load-more {
+		min-height: 44px;
+		display: inline-flex;
+		align-items: center;
+		padding: 0 var(--sp-3);
+		border: 0;
+		background: transparent;
+		color: var(--ink);
+	}
+
+	.load-more:hover {
+		color: var(--accent-text);
+	}
+
+	.load-more[disabled] {
+		color: var(--muted);
+		cursor: default;
+	}
+
+	.load-more[disabled]:hover {
+		color: var(--muted);
+	}
+
+	.down {
+		display: inline-block;
+		margin-left: var(--sp-2);
+		font-size: var(--body-sm);
+		line-height: 1;
+	}
+
+	/* ---------- Подборка «Из архива» ---------- */
+
+	.older-materials {
+		padding: var(--sp-8) 0 var(--sp-3);
+	}
+
+	.section-head {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: var(--sp-3) var(--sp-6);
+		margin-bottom: var(--sp-6);
+	}
+
+	.section-title {
+		font-weight: 600;
+		color: var(--accent-text);
+	}
+
+	/* То же, что у сетки режимов: без `:not([hidden])` скрытые списки
+	   «Из архива» показались бы все пятеро разом. */
+	.list-grid:not([hidden]) {
+		display: grid;
+		grid-template-columns: 1fr;
+		column-gap: var(--grid-gap);
+	}
+
+	/* Вертикальные линии между колонками. `:global` здесь обязателен: карточку
+	   рисует другой компонент, и её класс носит его метку, а не нашу. */
+	@media (min-width: 621px) {
+		.list-grid {
+			grid-template-columns: 1fr 1fr;
+		}
+
+		.list-grid > :global(.list-card) {
+			padding-right: var(--sp-6);
+		}
+
+		.list-grid > :global(.list-card:nth-child(2n)) {
+			border-left: 1px solid var(--line);
+			padding-left: var(--sp-6);
+		}
+	}
+
+	@media (min-width: 921px) {
+		.list-grid {
+			grid-template-columns: repeat(3, 1fr);
+		}
+
+		.list-grid > :global(.list-card:nth-child(2n)) {
+			border-left: 0;
+			padding-left: 0;
+		}
+
+		.list-grid > :global(.list-card:nth-child(3n + 2)),
+		.list-grid > :global(.list-card:nth-child(3n + 3)) {
+			border-left: 1px solid var(--line);
+			padding-left: var(--sp-6);
+		}
 	}
 </style>
+
+<script>
+	// Переключение режимов и раскрытие подборки «Из архива».
+	//
+	// Слушатели висят на document и ищут элементы в момент события — так же,
+	// как в шапке. Переходы между страницами идут без перезагрузки (ClientRouter
+	// в Layout.astro), лента при переходе заменяется новой, а этот модуль
+	// выполняется один раз за сеанс. Привяжись мы к конкретным кнопкам —
+	// после первого же перехода фильтр перестал бы работать.
+	function syncLoadMore() {
+		const button = document.getElementById('load-more') as HTMLButtonElement | null;
+		const older = document.getElementById('older-materials');
+		const label = document.getElementById('load-more-label');
+		const arrow = document.getElementById('load-more-arrow');
+		if (!button || !older || !label || !arrow) return;
+
+		const active = older.querySelector('.list-grid:not([hidden])');
+		const empty = !active || active.childElementCount === 0;
+
+		// Раскрывать нечего — закрываем то, что было раскрыто в прошлом режиме,
+		// иначе на экране осталась бы пустая шапка «[ из архива ]».
+		if (empty) {
+			older.hidden = true;
+			button.setAttribute('aria-expanded', 'false');
+		}
+
+		const open = !older.hidden;
+		button.disabled = empty;
+		label.textContent = empty ? 'Все материалы показаны' : open ? 'Свернуть архив' : 'Показать ещё материалы';
+		arrow.textContent = empty ? '' : open ? '↑' : '↓';
+	}
+
+	function applyMode(mode: string) {
+		document.querySelectorAll<HTMLElement>('.filter-btn[data-filter]').forEach((button) => {
+			const on = button.dataset.filter === mode;
+			button.classList.toggle('active', on);
+			button.setAttribute('aria-pressed', String(on));
+		});
+
+		const showcase = document.getElementById('all-layout');
+		if (showcase) showcase.hidden = mode !== 'all';
+
+		document.querySelectorAll<HTMLElement>('.archive-grid[data-mode]').forEach((grid) => {
+			grid.hidden = grid.dataset.mode !== mode;
+		});
+
+		document.querySelectorAll<HTMLElement>('.list-grid[data-mode]').forEach((grid) => {
+			grid.hidden = grid.dataset.mode !== mode;
+		});
+
+		syncLoadMore();
+	}
+
+	document.addEventListener('click', (event) => {
+		const target = event.target instanceof Element ? event.target : null;
+		if (!target) return;
+
+		const filter = target.closest<HTMLElement>('.filter-btn[data-filter]');
+		if (filter?.dataset.filter) {
+			applyMode(filter.dataset.filter);
+			return;
+		}
+
+		const button = target.closest<HTMLButtonElement>('#load-more');
+		if (!button || button.disabled) return;
+
+		const older = document.getElementById('older-materials');
+		if (!older) return;
+
+		older.hidden = !older.hidden;
+		button.setAttribute('aria-expanded', String(!older.hidden));
+		syncLoadMore();
+	});
+</script>

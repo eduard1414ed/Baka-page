@@ -31,18 +31,19 @@ const posts = (await getCollection('posts', ({ data }) => isPublished(data) && s
 const crumbs = breadcrumbsSchema([{ name: category.label, path: `/category/${category.id}/` }]);
 ---
 
+{/* Раздел пока повторяет режим фильтра главной. В части 4 он станет
+    отфильтрованным видом страницы архива — с текстовой сеткой и листанием
+    по страницам, а вкладки на архиве будут вести именно сюда. */}
 <Layout title={category.label} description={category.description}>
 	<JsonLd slot="head" data={crumbs} />
-	<section class="category">
-		<h1>{category.label}</h1>
+	<div class="site">
+		<h1 class="category-title">{category.label}</h1>
 		<PostFeed posts={posts} activeCategory={category.id} />
-	</section>
+	</div>
 </Layout>
 
 <style>
-	.category {
-		max-width: 72rem;
-		margin: 0 auto;
-		padding: var(--space-4) var(--space-3);
+	.category-title {
+		margin: var(--sp-12) 0 var(--sp-6);
 	}
 </style>

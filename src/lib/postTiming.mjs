@@ -49,7 +49,34 @@ export function formatDuration(seconds) {
 }
 
 /**
- * @typedef {{ kind: 'duration' | 'reading' | 'source', label: string }} PostTiming
+ * Секунды → «01:06:33» или «24:18». Формат метастроки карточки из §10
+ * дизайн-системы: `[ ПОДКАСТ ] · №128 · 01:06:33`.
+ *
+ * Второй формат рядом с formatDuration — не копия одного факта, а два разных
+ * его написания для двух разных мест, и оба живут здесь, в одном файле.
+ * Часы показываем только когда они есть: «00:24:18» у видеоэссе читалось бы
+ * как ошибка.
+ */
+export function formatClock(seconds) {
+	const total = Math.max(0, Math.round(seconds));
+	const pad = (n) => String(n).padStart(2, '0');
+
+	const hours = Math.floor(total / 3600);
+	const minutes = Math.floor((total % 3600) / 60);
+	const rest = total % 60;
+
+	return hours > 0 ? `${pad(hours)}:${pad(minutes)}:${pad(rest)}` : `${pad(minutes)}:${pad(rest)}`;
+}
+
+/**
+ * @typedef {{ kind: 'duration' | 'reading' | 'source', label: string, meta: string }} PostTiming
+ *
+ * `label` — строка рядом с датой на странице материала («1 ч 6 мин слушать»).
+ * `meta`  — то же самое для метастроки карточки в ленте («01:06:33»).
+ *
+ * Два написания одного факта, посчитанные в одном месте. Так требует §10
+ * дизайн-системы: в карточке метастрока техническая и цифровая, на странице —
+ * человеческая строка рядом с датой. Разъехаться они не могут: число одно.
  */
 
 /**
@@ -84,7 +111,7 @@ export async function getPostTiming(post) {
 	// любой, в том числе поверх «Подкаста» с его длительностью из RSS.
 	if (isExternalPost(post.data)) {
 		const source = externalSourceName(post.data);
-		return source ? { kind: 'source', label: source } : null;
+		return source ? { kind: 'source', label: source, meta: source } : null;
 	}
 
 	if (CATEGORIES_WITHOUT_TIMING.includes(post.data.category)) return null;
@@ -102,11 +129,15 @@ export async function getPostTiming(post) {
 		const episode = post.data.audioGuid ? await findEpisodeByGuid(post.data.audioGuid) : null;
 		if (!episode?.durationSec) return null;
 
-		return { kind: 'duration', label: `${formatDuration(episode.durationSec)} слушать` };
+		return {
+			kind: 'duration',
+			label: `${formatDuration(episode.durationSec)} слушать`,
+			meta: formatClock(episode.durationSec),
+		};
 	}
 
 	const minutes = getReadingMinutes(post.body);
 	if (minutes === null) return null;
 
-	return { kind: 'reading', label: `${minutes} мин читать` };
+	return { kind: 'reading', label: `${minutes} мин читать`, meta: `${minutes} мин чтения` };
 }

@@ -1,13 +1,25 @@
 ---
-import { Image } from 'astro:assets';
+// Главная — витрина. Она НЕ РАСТЁТ: фиксированный набор слотов, три
+// редакционных ряда, и всё. Что в какой слот попадает — раздел 3.2 ТЗ,
+// считает src/lib/homeSlots.mjs (там же и развилки на случай нехватки данных).
+// Композиция рядов — из макета Сборка-16/index.html.
+//
+// Баннер и блок с обложкой подкаста и кнопками площадок отсюда убраны:
+// в утверждённом макете их нет, страница начинается с фильтров. Ссылки
+// на площадки остались в подвале. Файлы картинок лежат в репозитории,
+// вернуть блок — несколько строк.
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import PostFeed from '../components/PostFeed.astro';
-import banner from '../assets/images/banner.png';
-import cover from '../assets/images/cover.jpeg';
-import { platforms } from '../data/platforms.js';
-import { isPublished } from '../lib/publishing.mjs';
+import PostKicker from '../components/PostKicker.astro';
 import JsonLd from '../components/JsonLd.astro';
+import { categoriesShownIn } from '../content.config';
+import { isPublished } from '../lib/publishing.mjs';
+import { pickHomeSlots } from '../lib/homeSlots.mjs';
+import { getCardMedia } from '../lib/postCardMedia.mjs';
+import { excerptFromBody } from '../lib/excerpt.mjs';
+import { isExternalPost, postHref } from '../lib/externalPost.mjs';
+import { formatShortDate } from '../lib/postDate.mjs';
 import { SITE_DESCRIPTION } from '../lib/site.mjs';
 import { webSiteSchema } from '../lib/schema.mjs';
 
@@ -16,124 +28,535 @@ const description = SITE_DESCRIPTION;
 const posts = (await getCollection('posts', ({ data }) => isPublished(data))).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
+
+// Какие категории считаются выпуском подкаста, знает content.config —
+// оттуда и берём, а не пишем список руками. Бонус попадает сюда сам.
+const slots = pickHomeSlots(posts, { podcastCategories: categoriesShownIn('podcast') });
+
+// Картинки и подводки редакционных слотов. Считаются теми же функциями, что
+// у карточки в ленте: правило «из чего берётся обложка» и правило «подводка
+// обрывается на первом спойлере» должны жить в одном месте на весь сайт.
+const featured = [slots.hero, ...slots.sidebar, slots.podcast, slots.second, slots.third].filter(Boolean);
+
+const media = new Map<string, Awaited<ReturnType<typeof getCardMedia>>>();
+for (const post of featured) {
+	media.set(post.id, await getCardMedia(post));
+}
+
+const deckOf = (post: any) => excerptFromBody(post.body, '', { maxLength: 240 });
+
+// Пост-ссылка на чужой сайт открывается в новой вкладке, а адрес собирает
+// postHref: строить `/posts/…/` руками рядом с проверкой на внешний пост
+// нельзя, ровно так одно из мест однажды и забудут поправить.
+const isExt = (post: any) => isExternalPost(post.data);
+const linkOf = (post: any) => ({
+	href: postHref(post),
+	target: isExt(post) ? '_blank' : undefined,
+	rel: isExt(post) ? 'noopener noreferrer' : undefined,
+});
+
+// Заметок может не остаться ни одной — тогда блока нет вовсе, а материал
+// третьего ряда занимает всю ширину (раздел 3.2 ТЗ).
+const hasNotes = slots.notes.length > 0;
+const hasThirdRow = Boolean(slots.third) || hasNotes;
 ---
 
 {/* Без `title` — у главной заголовок «Бака! — подкаст об аниме» целиком,
     без приписки «— Бака!» вторым разом (см. pageTitle в src/lib/site.mjs). */}
 <Layout description={description} imageAlt="Бака! — подкаст об аниме">
 	<JsonLd slot="head" data={webSiteSchema()} />
-	<div class="hero-banner">
-		<Image
-			src={banner}
-			alt="Иллюстрация: девушка на кровати смотрит в ноутбук"
-			widths={[640, 1200]}
-			sizes="(max-width: 700px) 640px, 1200px"
-			width={1200}
-			height={Math.round(1200 * (banner.height / banner.width))}
-			priority
-		/>
-	</div>
 
-	<section class="intro">
-		<Image
-			src={cover}
-			alt="Обложка подкаста «Бака!»"
-			widths={[160, 320]}
-			sizes="160px"
-			width={160}
-			height={160}
-			class="cover"
-		/>
-		<div>
-			<h1>Бака!</h1>
-			<p class="description">{description}</p>
-			<div class="buttons">
+	<div class="site">
+		<PostFeed posts={posts} shownIds={slots.shownIds}>
+			<Fragment slot="showcase">
 				{
-					platforms.map((platform) => (
-						<a class="button" href={platform.url} target="_blank" rel="noopener noreferrer">
-							{platform.label}
-						</a>
-					))
-				}
-			</div>
-		</div>
-	</section>
+					slots.hero && (
+						<section class="lead-grid">
+							<article class="hero-material">
+								{media.get(slots.hero.id) && (
+									<div class="image">
+										<img
+											src={media.get(slots.hero.id)!.src}
+											srcset={media.get(slots.hero.id)!.srcset ?? undefined}
+											sizes="(max-width: 760px) 100vw, 780px"
+											alt=""
+										/>
+									</div>
+								)}
+								<div class="hero-copy">
+									<div>
+										<PostKicker post={slots.hero} />
+										<h1 class="title-lg">
+											<a class="stretch" {...linkOf(slots.hero)}>
+												{slots.hero.data.title}
+												{isExt(slots.hero) && (
+													<span class="external" aria-label="откроется на другом сайте">
+														↗
+													</span>
+												)}
+											</a>
+										</h1>
+									</div>
+									{deckOf(slots.hero) && <p class="deck">{deckOf(slots.hero)}</p>}
+								</div>
+							</article>
 
-	<section class="feed">
-		<PostFeed posts={posts} />
-	</section>
+							{slots.sidebar.length > 0 && (
+								<aside class="sidebar">
+									{slots.sidebar.map((post) => (
+										<article class="side-item" class:list={{ 'no-image': !media.get(post.id) }}>
+											<div>
+												<PostKicker post={post} />
+												<h2 class="side-title">
+													<a class="stretch" {...linkOf(post)}>
+														{post.data.title}
+														{isExt(post) && (
+															<span class="external" aria-label="откроется на другом сайте">
+																↗
+															</span>
+														)}
+													</a>
+												</h2>
+											</div>
+											{media.get(post.id) && (
+												<div class="side-thumb" data-type={post.data.category}>
+													<img
+														src={media.get(post.id)!.src}
+														srcset={media.get(post.id)!.srcset ?? undefined}
+														sizes="112px"
+														alt=""
+														loading="lazy"
+													/>
+												</div>
+											)}
+										</article>
+									))}
+								</aside>
+							)}
+						</section>
+					)
+				}
+
+				{
+					(slots.podcast || slots.second) && (
+						<section class="feature-row" class:list={{ single: !slots.podcast || !slots.second }}>
+							{slots.podcast && (
+								<article class="podcast-feature">
+									<PostKicker post={slots.podcast} />
+									{media.get(slots.podcast.id) && (
+										<div class="cover">
+											<img
+												src={media.get(slots.podcast.id)!.src}
+												srcset={media.get(slots.podcast.id)!.srcset ?? undefined}
+												sizes="(max-width: 760px) 100vw, 390px"
+												alt=""
+												loading="lazy"
+											/>
+										</div>
+									)}
+									<h2 class="title-md">
+										<a class="stretch" {...linkOf(slots.podcast)}>
+											{slots.podcast.data.title}
+										</a>
+									</h2>
+									{deckOf(slots.podcast) && <p class="deck">{deckOf(slots.podcast)}</p>}
+								</article>
+							)}
+
+							{slots.second && (
+								<article class="article-feature">
+									<div>
+										<PostKicker post={slots.second} />
+										<h2 class="title-lg">
+											<a class="stretch" {...linkOf(slots.second)}>
+												{slots.second.data.title}
+												{isExt(slots.second) && (
+													<span class="external" aria-label="откроется на другом сайте">
+														↗
+													</span>
+												)}
+											</a>
+										</h2>
+										{deckOf(slots.second) && <p class="deck">{deckOf(slots.second)}</p>}
+									</div>
+									{media.get(slots.second.id) && (
+										<div class="image">
+											<img
+												src={media.get(slots.second.id)!.src}
+												srcset={media.get(slots.second.id)!.srcset ?? undefined}
+												sizes="(max-width: 760px) 100vw, 560px"
+												alt=""
+												loading="lazy"
+											/>
+										</div>
+									)}
+								</article>
+							)}
+						</section>
+					)
+				}
+
+				{
+					hasThirdRow && (
+						<section class="third-row" class:list={{ 'no-notes': !hasNotes }}>
+							{slots.third && (
+								<article class="video-feature">
+									{media.get(slots.third.id) && (
+										<div class="image">
+											<img
+												src={media.get(slots.third.id)!.src}
+												srcset={media.get(slots.third.id)!.srcset ?? undefined}
+												sizes="(max-width: 760px) 100vw, 480px"
+												alt=""
+												loading="lazy"
+											/>
+										</div>
+									)}
+									<div>
+										<PostKicker post={slots.third} />
+										<h2 class="title-md">
+											<a class="stretch" {...linkOf(slots.third)}>
+												{slots.third.data.title}
+												{isExt(slots.third) && (
+													<span class="external" aria-label="откроется на другом сайте">
+														↗
+													</span>
+												)}
+											</a>
+										</h2>
+										{deckOf(slots.third) && <p class="deck">{deckOf(slots.third)}</p>}
+									</div>
+								</article>
+							)}
+
+							{hasNotes && (
+								<aside class="notes-index">
+									<div class="notes-head">
+										<span class="section-title tech">[&thinsp;короткие заметки&thinsp;]</span>
+									</div>
+									{slots.notes.map((post) => (
+										<div class="note-row">
+											<a {...linkOf(post)}>{post.data.title}</a>
+											<span class="note-date tech">{formatShortDate(post.data.date)}</span>
+										</div>
+									))}
+								</aside>
+							)}
+						</section>
+					)
+				}
+			</Fragment>
+		</PostFeed>
+	</div>
 </Layout>
 
 <style>
-	.hero-banner {
-		max-width: 1200px;
-		margin: var(--space-3) auto 0;
-		padding: 0 var(--space-3);
+	/* ---------- Общее для редакционных рядов ---------- */
+
+	.deck {
+		font-size: var(--body-sm);
+		line-height: 1.5;
+		color: var(--muted);
+		margin: 0;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+		overflow: hidden;
 	}
 
-	.hero-banner :global(img) {
+	.image,
+	.cover,
+	.side-thumb {
+		overflow: hidden;
+		background: var(--line-soft);
+	}
+
+	.image img,
+	.cover img,
+	.side-thumb img {
 		width: 100%;
-		height: auto;
-		aspect-ratio: 1200 / 675;
+		height: 100%;
 		object-fit: cover;
-		border-radius: var(--radius-md);
+		display: block;
 	}
 
-	.feed {
-		max-width: 72rem;
-		margin: 0 auto;
-		padding: 0 var(--space-3) var(--space-4);
+	/* Кликается вся плашка материала, но ссылка при этом ОДНА — на заголовке.
+	   Второй ссылкой на картинке человек на клавиатуре и в экранном дикторе
+	   проходил бы каждый материал дважды. */
+	.hero-material,
+	.side-item,
+	.podcast-feature,
+	.article-feature,
+	.video-feature {
+		position: relative;
 	}
 
-	.intro {
-		max-width: var(--content-width);
-		margin: 0 auto;
-		padding: var(--space-4) var(--space-3);
-		display: flex;
-		gap: var(--space-3);
-		align-items: flex-start;
-		flex-wrap: wrap;
+	.stretch::after {
+		content: '';
+		position: absolute;
+		inset: 0;
 	}
 
-	.intro :global(.cover) {
-		border-radius: var(--radius-md);
-		flex-shrink: 0;
-		aspect-ratio: 1 / 1;
-		object-fit: cover;
+	.hero-material a,
+	.side-item a,
+	.podcast-feature a,
+	.article-feature a,
+	.video-feature a,
+	.note-row a {
+		color: var(--ink);
+		transition: color var(--transition-fast);
 	}
 
-	h1 {
-		font-size: var(--font-size-2xl);
+	.hero-material a:hover,
+	.side-item a:hover,
+	.podcast-feature a:hover,
+	.article-feature a:hover,
+	.video-feature a:hover,
+	.note-row a:hover {
+		color: var(--accent-text);
 	}
 
-	.description {
-		color: var(--color-text-muted);
-		font-size: var(--font-size-lg);
-		max-width: 32rem;
-	}
-
-	.buttons {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--space-1);
-		margin-top: var(--space-3);
-	}
-
-	.button {
+	.external {
 		display: inline-block;
-		padding: var(--space-1) var(--space-2);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-full);
-		color: var(--color-text);
-		font-size: var(--font-size-sm);
-		transition:
-			border-color var(--transition-fast),
-			color var(--transition-fast);
+		margin-left: 0.2em;
+		color: var(--accent-text);
+		vertical-align: 0.1em;
+		font-size: 0.55em;
 	}
 
-	.button:hover,
-	.button:focus-visible {
-		border-color: var(--color-accent);
-		color: var(--color-accent-hover);
+	/* Два размера вне общей шкалы — они кодируют редакционный вес материала
+	   в номере, а не новый уровень заголовка (§3.2). */
+	.title-lg {
+		font-family: var(--font-display);
+		font-size: var(--home-l);
+		line-height: var(--home-l-lh);
+		font-weight: 400;
+		margin: 0 0 var(--sp-3);
+	}
+
+	.title-md {
+		font-family: var(--font-display);
+		font-size: var(--home-m);
+		line-height: var(--home-m-lh);
+		font-weight: 400;
+		margin: 0 0 var(--sp-3);
+	}
+
+	.side-title {
+		font-family: var(--font-display);
+		font-size: var(--card-title);
+		line-height: 1.15;
+		font-weight: 400;
+		margin: 0 0 var(--sp-3);
+	}
+
+	/* ---------- Ряды ---------- */
+
+	/* Линию рисует НАЧАЛО следующего ряда — так между рядами всегда одна.
+	   Ряд с `border-top` и `border-bottom` сразу — прямая причина двойных
+	   линий на стыке (§5). */
+	.lead-grid,
+	.feature-row,
+	.third-row {
+		display: grid;
+		gap: var(--sp-6);
+		padding: var(--sp-8) 0;
+	}
+
+	.feature-row,
+	.third-row {
+		border-top: 1px solid var(--line);
+	}
+
+	.hero-material .image {
+		aspect-ratio: 16 / 9;
+	}
+
+	.hero-copy {
+		display: grid;
+		gap: var(--sp-3);
+		padding-top: var(--sp-4);
+	}
+
+	.sidebar {
+		display: grid;
+	}
+
+	.side-item {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 112px;
+		gap: var(--sp-4);
+		padding: var(--sp-6) 0;
+		border-top: 1px solid var(--line);
+	}
+
+	.side-item.no-image {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.side-thumb {
+		width: 112px;
+		aspect-ratio: 16 / 9;
+	}
+
+	/* Обложка выпуска квадратная и обрезке не подлежит — это та же геометрия
+	   по типу материала, что и в карточке ленты. */
+	.side-thumb[data-type='podcast'],
+	.side-thumb[data-type='bonus'] {
+		aspect-ratio: 1;
+	}
+
+	.podcast-feature .cover {
+		aspect-ratio: 1;
+		max-width: 390px;
+		margin-bottom: var(--sp-4);
+	}
+
+	.article-feature,
+	.video-feature {
+		display: grid;
+		gap: var(--sp-6);
+	}
+
+	.article-feature .image,
+	.video-feature .image {
+		aspect-ratio: 16 / 9;
+	}
+
+	.notes-index {
+		display: grid;
+		align-content: start;
+	}
+
+	.notes-head {
+		margin-bottom: var(--sp-3);
+	}
+
+	.section-title {
+		font-weight: 600;
+		color: var(--accent-text);
+	}
+
+	.note-row {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: var(--sp-6);
+		padding: var(--sp-4) 0;
+		border-top: 1px solid var(--line);
+	}
+
+	.note-row:first-of-type {
+		border-top: 0;
+	}
+
+	.note-row a {
+		font-family: var(--font-display);
+		font-size: var(--body-lg);
+		line-height: 1.2;
+	}
+
+	.note-date {
+		color: var(--muted);
+	}
+
+	/* До 761 три ряда — один поток. Вертикальные линии превращаются
+	   в горизонтальные, боковые отступы обнуляются: иначе колонки выглядят
+	   обрезками десктопной сетки. */
+	@media (max-width: 760px) {
+		.sidebar,
+		.article-feature,
+		.notes-index {
+			border-top: 1px solid var(--line);
+			padding-top: var(--sp-6);
+			margin-top: var(--sp-6);
+		}
+
+		.side-item {
+			grid-template-columns: minmax(0, 1fr) 96px;
+		}
+
+		.side-thumb {
+			width: 96px;
+		}
+
+		.podcast-feature .cover {
+			max-width: none;
+		}
+	}
+
+	@media (min-width: 761px) {
+		.lead-grid,
+		.feature-row,
+		.third-row {
+			grid-template-columns: repeat(12, minmax(0, 1fr));
+			column-gap: var(--grid-gap);
+			align-items: start;
+			padding: var(--sp-12) 0;
+		}
+
+		.hero-material {
+			grid-column: 1 / 9;
+		}
+
+		.hero-copy {
+			grid-template-columns: 2fr 1fr;
+			column-gap: var(--grid-gap);
+		}
+
+		/* Колонки с линией тянутся на высоту ряда: иначе линия обрывается
+		   по низкой колонке, а не идёт вдоль высокой. */
+		.sidebar,
+		.article-feature,
+		.notes-index {
+			align-self: stretch;
+		}
+
+		.sidebar {
+			grid-column: 9 / 13;
+			border-left: 1px solid var(--line);
+			padding-left: var(--sp-6);
+		}
+
+		.side-item:first-child {
+			border-top: 0;
+			padding-top: 0;
+		}
+
+		.podcast-feature {
+			grid-column: 1 / 5;
+		}
+
+		.article-feature {
+			grid-column: 5 / 13;
+			grid-template-columns: 4fr 5fr;
+			align-items: center;
+			border-left: 1px solid var(--line);
+			padding-left: var(--sp-8);
+		}
+
+		.video-feature {
+			grid-column: 1 / 8;
+			grid-template-columns: 1.15fr 0.85fr;
+			align-items: center;
+		}
+
+		.notes-index {
+			grid-column: 8 / 13;
+			border-left: 1px solid var(--line);
+			padding-left: var(--sp-8);
+		}
+
+		/* Заметок не осталось — материал третьего ряда занимает всю ширину.
+		   То же и когда во втором ряду выпал один из двух слотов. */
+		.third-row.no-notes .video-feature {
+			grid-column: 1 / 13;
+		}
+
+		.feature-row.single .podcast-feature,
+		.feature-row.single .article-feature {
+			grid-column: 1 / 13;
+			border-left: 0;
+			padding-left: 0;
+		}
 	}
 </style>
