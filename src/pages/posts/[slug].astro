@@ -48,6 +48,8 @@ import { isExternalPost } from '../../lib/externalPost.mjs';
 import { getCardMedia } from '../../lib/postCardMedia.mjs';
 import BonusPaywall from '../../components/BonusPaywall.astro';
 import TimecodeList from '../../components/TimecodeList.astro';
+import SocialStrip from '../../components/SocialStrip.astro';
+import SupportStrip from '../../components/SupportStrip.astro';
 
 export async function getStaticPaths() {
 	// Внешние посты (тз/10, задача 2) сюда НЕ ПОПАДАЮТ, и это главное правило
@@ -567,6 +569,31 @@ const postSearchMeta = [
 				)
 			}
 		</article>
+
+		{/* ДВА ХВОСТОВЫХ БЛОКА — ЗА ПРЕДЕЛАМИ `<article>`, и это не оформление,
+		    а условие: `data-pagefind-body` стоит на самой статье, и всё, что
+		    внутри неё, уходит в поисковый индекс как текст материала. Внутри
+		    статьи ссылки на площадки превратили бы каждую цитату выдачи
+		    в «Telegram · Новости, мысли и новые материалы». У самих блоков
+		    вдобавок стоит `data-pagefind-ignore` — на случай, если однажды
+		    их поставят внутрь.
+
+		    БОНУСУ ИХ НЕ ДОСТАЁТСЯ: там уже стоит плашка подписки с теми же
+		    кнопками площадок, и второй такой же блок читался бы повтором.
+		    Так и в макете `bonus.html`. Постов-ссылок на чужие сайты это
+		    не касается вовсе — своей страницы у них не создаётся.
+
+		    Отбивку сверху даёт «Соседние материалы»: у неё `margin-bottom`
+		    в 72 px, ровно те же, что у обёртки `.article-tail` в макете.
+		    Своей отбивки блоки не заводят. */}
+		{
+			!isBonus && (
+				<Fragment>
+					<SocialStrip />
+					<SupportStrip />
+				</Fragment>
+			)
+		}
 	</div>
 </Layout>
 

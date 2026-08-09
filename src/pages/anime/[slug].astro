@@ -22,6 +22,8 @@ import { plural } from '../../lib/plural.mjs';
 import { ogUrlForAnime } from '../../lib/ogImage.mjs';
 import { latinSearchForms } from '../../lib/translit.mjs';
 import JsonLd from '../../components/JsonLd.astro';
+import SocialStrip from '../../components/SocialStrip.astro';
+import SupportStrip from '../../components/SupportStrip.astro';
 import { breadcrumbsSchema } from '../../lib/schema.mjs';
 
 export async function getStaticPaths() {
@@ -337,6 +339,13 @@ const crumbs = breadcrumbsSchema([
 				</span>
 			)}
 		</div>
+
+		{/* ХВОСТОВЫЕ БЛОКИ — ЗА ПРЕДЕЛАМИ `data-pagefind-body`: внутри они ушли бы
+		    в индекс как текст карточки тайтла, и запрос «телеграм» находил бы
+		    каждый тайтл справочника. Так же они стоят в макете `anime.html` —
+		    после `</main>`. */}
+		<SocialStrip />
+		<SupportStrip />
 	</div>
 </Layout>
 

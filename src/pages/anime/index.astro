@@ -12,6 +12,8 @@ import AnimeCard from '../../components/AnimeCard.astro';
 import SectionHead from '../../components/SectionHead.astro';
 import LoadMore from '../../components/LoadMore.astro';
 import JsonLd from '../../components/JsonLd.astro';
+import SocialStrip from '../../components/SocialStrip.astro';
+import SupportStrip from '../../components/SupportStrip.astro';
 import { buildCatalog } from '../../lib/animeCatalog.mjs';
 import { isPublished } from '../../lib/publishing.mjs';
 import { withCount } from '../../lib/plural.mjs';
@@ -113,6 +115,12 @@ const crumbs = breadcrumbsSchema([{ name: 'Каталог аниме', path: '/a
 			done="Все тайтлы показаны"
 			disabled={catalog.length <= PER_PAGE}
 		/>
+
+		{/* Хвостовые блоки, как в макете `catalog.html`. Двух линий подряд
+		    с кнопкой «Показать ещё» не выходит: линии у неё идут СЛЕВА И СПРАВА
+		    от подписи, а не над и под ней. */}
+		<SocialStrip />
+		<SupportStrip />
 	</div>
 </Layout>
 

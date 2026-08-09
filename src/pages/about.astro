@@ -29,6 +29,8 @@ import Layout from '../layouts/Layout.astro';
 import JsonLd from '../components/JsonLd.astro';
 import PlatformIcon from '../components/PlatformIcon.astro';
 import ImageMissing from '../components/ImageMissing.astro';
+import SocialStrip from '../components/SocialStrip.astro';
+import SupportStrip from '../components/SupportStrip.astro';
 import { platformsOfKind } from '../data/platforms.js';
 import { getLinkIcon } from '../lib/linkIcon.mjs';
 import { breadcrumbsSchema } from '../lib/schema.mjs';
@@ -59,9 +61,9 @@ const supportNote = page?.data.supportNote?.trim();
 const contactText = page?.data.contactText?.trim();
 const contactEmail = page?.data.contactEmail?.trim();
 
+// Только «Слушать подкаст»: два других блока со ссылками — общие компоненты,
+// и свой вид площадок каждый берёт сам из того же списка.
 const listen = platformsOfKind('listen');
-const social = platformsOfKind('social');
-const support = platformsOfKind('support');
 
 // Описание для поисковика и превью — из первой фразы страницы, тем же
 // модулем, что у постов. Отдельного поля под него нет специально: ещё одно
@@ -206,62 +208,13 @@ function hostPhoto(photo: string | undefined) {
 			)
 		}
 
-		{
-			social.length > 0 && (
-				<section class="social-strip" aria-labelledby="social-title">
-					<div class="social-intro">
-						{socialNote && <div class="eyebrow tech">{socialNote}</div>}
-						<h2 id="social-title">Ещё немного нас</h2>
-					</div>
-					{social.map((platform) => (
-						<a class="social-link" href={platform.url} target="_blank" rel="noopener noreferrer">
-							<span class="social-name">
-								<span>{platform.label}</span>
-								<span class="social-arrow ext-arrow" aria-hidden="true">
-									↗
-								</span>
-							</span>
-							{/* Описание живёт у самой площадки в platforms.js, а не в
-							    админке: второй список площадок с подписями разошёлся бы
-							    с этим при первом переименовании. Площадка без описания
-							    рисуется одной строкой названия. */}
-							{platform.desc && <span class="social-desc">{platform.desc}</span>}
-						</a>
-					))}
-				</section>
-			)
-		}
+		{/* ДВА БЛОКА НИЖЕ — ОБЩИЕ КОМПОНЕНТЫ, они же стоят на главной (10.5).
+		    Разметка и вид у них общие; страница задаёт только тексты, а состав
+		    площадок оба берут сами из platforms.js. Пустой заголовок — не пустая
+		    рамка: компонент подставляет свой. */}
+		<SocialStrip note={socialNote} />
 
-		{
-			support.length > 0 && (
-				<section class="support-strip" aria-labelledby="support-title">
-					{/* Имя `.support` из макета занято на сайте под целую страницу
-					    `/support/`, поэтому блок называется `.support-strip`. */}
-					{/* Рисунок персонажа на прозрачном фоне, а не обложка в рамке:
-					    решение заказчика. Значит `contain`, а не `cover` — обрезать
-					    тут нечего, — и никакой заливки под ним: он лежит прямо
-					    на бумаге. Проверено замером: средний цвет непрозрачных
-					    пикселей 120 из 255, на светлом фоне он виден. */}
-					<div class="support-img">
-						<img src="/baka-character.png" alt="" width="160" height="160" loading="lazy" />
-					</div>
-					<div class="support-copy">
-						<h2 id="support-title">{supportTitle || 'Поддержать «Баку!»'}</h2>
-						{supportNote && <p>{supportNote}</p>}
-					</div>
-					<div class="support-links">
-						{support.map((platform) => (
-							<a href={platform.url} target="_blank" rel="noopener noreferrer">
-								{platform.label}
-								<span class="ext-arrow" aria-hidden="true">
-									↗
-								</span>
-							</a>
-						))}
-					</div>
-				</section>
-			)
-		}
+		<SupportStrip title={supportTitle} note={supportNote} />
 
 		{
 			(contactText || contactEmail) && (
@@ -293,13 +246,8 @@ function hostPhoto(photo: string | undefined) {
 </Layout>
 
 <style>
-	/* Надзаголовок секции — технический слой акцентным цветом, полужирным:
-	   так же набраны надзаголовки шапок архива, каталога и «Поддержать». */
-	.eyebrow {
-		font-weight: 600;
-		color: var(--accent-text);
-		margin-bottom: var(--sp-3);
-	}
+	/* Надзаголовок секции — общий `.eyebrow` в global.css: он стоит в шести
+	   местах сайта, и описание у него одно. */
 
 	/* --- Хиро --- */
 
@@ -355,26 +303,15 @@ function hostPhoto(photo: string | undefined) {
 
 	/* --- Секции: линию между ними рисует начало следующей --- */
 
+	/* Блока соцсетей и полосы поддержки в этих списках нет: они общие
+	   компоненты, и линию с отбивкой каждый рисует себе сам — иначе правило
+	   страницы и правило компонента весили бы одинаково, и кто победит,
+	   решал бы порядок файлов в сборке. */
 	.hosts-section,
 	.link-section,
-	.social-strip,
-	.support-strip,
 	.contact-section {
 		border-top: 1px solid var(--line);
-	}
-
-	.hosts-section,
-	.link-section,
-	.support-strip,
-	.contact-section {
 		padding: var(--sp-12) 0;
-	}
-
-	/* Зазора между строчками нет: их разделяют линии, а не воздух. */
-	.social-strip {
-		display: grid;
-		gap: 0;
-		padding: var(--sp-8) 0;
 	}
 
 	.section-heading-block h2,
@@ -570,136 +507,9 @@ function hostPhoto(photo: string | undefined) {
 		}
 	}
 
-	/* --- Ещё немного нас --- */
-
-	.social-intro {
-		padding-bottom: 20px;
-	}
-
-	.social-intro h2 {
-		margin: 0;
-		font-size: var(--h3);
-		line-height: 1.12;
-	}
-
-	.social-link {
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		gap: var(--sp-2);
-		/* Цель нажатия набирается высотой самой строки: 18 + 18 сверху и снизу
-		   плюс текст — заведомо больше 44 px даже без описания. */
-		padding: 18px 0;
-		border-top: 1px solid var(--line);
-		text-decoration: none;
-	}
-
-	.social-name {
-		display: flex;
-		justify-content: space-between;
-		gap: var(--sp-4);
-		font-size: var(--caption);
-		font-weight: 600;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--ink);
-	}
-
-	/* Только кегль: цвет и начертание приходят из общего `.ext-arrow`.
-	   Повтори их тут — и через сессию они разойдутся с остальными четырьмя
-	   стрелками, а заметить это будет некому. */
-	.social-arrow {
-		font-size: 16px;
-	}
-
-	.social-desc {
-		font-size: var(--body-sm);
-		line-height: 1.5;
-		color: var(--muted);
-	}
-
-	/* --- Поддержать «Баку!» --- */
-
-	.support-strip {
-		display: grid;
-		gap: 20px;
-	}
-
-	/* `align-self` тут не ставится нарочно: на широком экране блок выравнивает
-	   свои три колонки по центру, и рисунок должен ехать вместе с ними. */
-	.support-img {
-		width: 160px;
-		aspect-ratio: 1;
-	}
-
-	/* `contain`, а не `cover`: у рисунка на прозрачном фоне нет краёв, которые
-	   можно обрезать, — обрезка съела бы ему макушку. Рамки и заливки тоже
-	   нет: он лежит прямо на бумаге. */
-	.support-img img {
-		width: 100%;
-		height: 100%;
-		object-fit: contain;
-		display: block;
-	}
-
-	/* Заголовок этого блока — H2, а не H3 как в макете: он такой же заголовок
-	   блока, что и «Команда» со «Слушать подкаст», и по смыслу стоит на том же
-	   уровне. Кегль при этом взят из макета — `--h3`, — потому что блок узкий
-	   и полноразмерный заголовок в нём смотрелся бы вторым хиро. Уровень
-	   заголовка решает содержание, кегль решает макет. */
-	.support-copy h2 {
-		margin: 0 0 var(--sp-2);
-		font-size: var(--h3);
-	}
-
-	.support-copy p {
-		margin: 0;
-		font-size: var(--body-sm);
-		line-height: 1.5;
-		color: var(--muted);
-		max-width: 540px;
-	}
-
-	.support-links {
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: 10px;
-	}
-
-	/* КНОПКИ ТАКИЕ ЖЕ, КАК В ХИРО СТРАНИЦЫ «ПОДДЕРЖАТЬ», а не мельче, как
-	   в макете: решение заказчика по живой странице. Это те же четыре кнопки
-	   с теми же адресами, и разный размер читался бы не как «тут поменьше»,
-	   а как две разные вещи. Высота 56 и поля 8/16 — оттуда же. */
-	.support-links a {
-		min-height: 56px;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 20px;
-		padding: var(--sp-2) var(--sp-4);
-		border: 1px solid var(--line);
-		color: var(--ink);
-		text-decoration: none;
-		font-size: var(--caption);
-		font-weight: 600;
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
-		transition:
-			border-color var(--transition-fast),
-			color var(--transition-fast);
-	}
-
-	.support-links a:hover,
-	.support-links a:focus-visible {
-		border-color: var(--accent-text);
-		color: var(--accent-text);
-	}
-
-	/* Кегль стрелки — своё дело каждого места; цвет и начертание берутся
-	   из общего `.ext-arrow` в global.css. */
-	.support-links .ext-arrow {
-		font-size: 17px;
-	}
+	/* Вид блоков «Ещё немного нас» и «Поддержать «Баку!»» переехал целиком
+	   в SocialStrip.astro и SupportStrip.astro: с части 10.5 те же два блока
+	   стоят на главной, и второго описания у них быть не должно. */
 
 	/* --- Связаться --- */
 
@@ -768,9 +578,6 @@ function hostPhoto(photo: string | undefined) {
 			border-top: 0;
 		}
 
-		.support-links {
-			grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-		}
 	}
 
 	/* --- Раскладка на широких экранах ---
@@ -786,7 +593,6 @@ function hostPhoto(photo: string | undefined) {
 		.about-hero,
 		.hosts-section,
 		.link-section,
-		.social-strip,
 		.contact-section {
 			display: grid;
 			grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -833,37 +639,5 @@ function hostPhoto(photo: string | undefined) {
 			grid-column: 6 / 13;
 		}
 
-		.social-intro {
-			grid-column: 1 / 4;
-			padding: 0 var(--sp-6) 0 0;
-		}
-
-		.social-link {
-			grid-column: span 3;
-			min-height: 78px;
-			padding: var(--sp-1) 18px var(--sp-1) 22px;
-			border-top: 0;
-			border-left: 1px solid var(--line);
-			transition: background var(--transition-fast);
-		}
-
-		.social-link:hover,
-		.social-link:focus-visible {
-			background: var(--accent-soft);
-		}
-
-		.social-desc {
-			max-width: 18em;
-		}
-
-		.support-strip {
-			grid-template-columns: 144px minmax(0, 1fr) auto;
-			gap: 28px;
-			align-items: center;
-		}
-
-		.support-links {
-			grid-template-columns: repeat(2, minmax(150px, 1fr));
-		}
 	}
 </style>
