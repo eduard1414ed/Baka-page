@@ -58,9 +58,6 @@ const supportTitle = page?.data.supportTitle?.trim();
 const supportNote = page?.data.supportNote?.trim();
 const contactText = page?.data.contactText?.trim();
 const contactEmail = page?.data.contactEmail?.trim();
-const chatText = page?.data.chatText?.trim();
-const chatLabel = page?.data.chatLabel?.trim();
-const chatUrl = page?.data.chatUrl?.trim();
 
 const listen = platformsOfKind('listen');
 const social = platformsOfKind('social');
@@ -159,7 +156,9 @@ function hostPhoto(photo: string | undefined) {
 											<div class="host-links">
 												<a href={url} target="_blank" rel="noopener noreferrer">
 													{host.urlLabel?.trim() || 'Ссылка'}
-													<span aria-hidden="true"> ↗</span>
+													<span class="ext-arrow" aria-hidden="true">
+														↗
+													</span>
 												</a>
 											</div>
 										)}
@@ -215,7 +214,7 @@ function hostPhoto(photo: string | undefined) {
 						<a class="social-link" href={platform.url} target="_blank" rel="noopener noreferrer">
 							<span class="social-name">
 								<span>{platform.label}</span>
-								<span class="social-arrow" aria-hidden="true">
+								<span class="social-arrow ext-arrow" aria-hidden="true">
 									↗
 								</span>
 							</span>
@@ -235,8 +234,13 @@ function hostPhoto(photo: string | undefined) {
 				<section class="support-strip" aria-labelledby="support-title">
 					{/* Имя `.support` из макета занято на сайте под целую страницу
 					    `/support/`, поэтому блок называется `.support-strip`. */}
+					{/* Рисунок персонажа на прозрачном фоне, а не обложка в рамке:
+					    решение заказчика. Значит `contain`, а не `cover` — обрезать
+					    тут нечего, — и никакой заливки под ним: он лежит прямо
+					    на бумаге. Проверено замером: средний цвет непрозрачных
+					    пикселей 120 из 255, на светлом фоне он виден. */}
 					<div class="support-img">
-						<img src="/baka-cover.jpg" alt="Обложка «Бака!»" width="144" height="144" loading="lazy" />
+						<img src="/baka-character.png" alt="" width="160" height="160" loading="lazy" />
 					</div>
 					<div class="support-copy">
 						<h2 id="support-title">{supportTitle || 'Поддержать «Баку!»'}</h2>
@@ -246,7 +250,9 @@ function hostPhoto(photo: string | undefined) {
 						{support.map((platform) => (
 							<a href={platform.url} target="_blank" rel="noopener noreferrer">
 								{platform.label}
-								<span aria-hidden="true">↗</span>
+								<span class="ext-arrow" aria-hidden="true">
+									↗
+								</span>
 							</a>
 						))}
 					</div>
@@ -255,28 +261,25 @@ function hostPhoto(photo: string | undefined) {
 		}
 
 		{
-			(contactText || contactEmail || chatText || chatUrl) && (
+			(contactText || contactEmail) && (
 				<section class="contact-section" aria-labelledby="contact-title">
 					<div class="contact-heading">
 						<div class="eyebrow tech">Связаться</div>
 						<h2 id="contact-title">Написать нам</h2>
 					</div>
-					{/* ДВЕ ПАРЫ «ТЕКСТ — ССЫЛКА»: почта для дел, чат для разговора.
-					    Отбивка МЕЖДУ парами больше, чем внутри пары, иначе четыре
-					    строки читаются одним списком, а не двумя способами связаться. */}
+					{/* ПАРА ОСТАЛАСЬ ОДНА: абзац и почта. Вторая пара — чат — переехала
+					    решением заказчика в блок «Ещё немного нас»: чат это место,
+					    куда приходят, а не способ написать нам лично. Правила отбивки
+					    между парами вместе с ней не стало: мёртвого кода «на случай,
+					    если пара вернётся», не держим. */}
 					<div class="contact-copy">
 						{contactText && <p>{contactText}</p>}
 						{contactEmail && (
 							<a class="contact-link" href={`mailto:${contactEmail}`}>
 								{contactEmail}
-								<span aria-hidden="true"> ↗</span>
-							</a>
-						)}
-						{chatText && <p>{chatText}</p>}
-						{chatUrl && (
-							<a class="contact-link" href={chatUrl} target="_blank" rel="noopener noreferrer">
-								{chatLabel || 'Чат'}
-								<span aria-hidden="true"> ↗</span>
+								<span class="ext-arrow" aria-hidden="true">
+									↗
+								</span>
 							</a>
 						)}
 					</div>
@@ -566,10 +569,11 @@ function hostPhoto(photo: string | undefined) {
 		color: var(--ink);
 	}
 
+	/* Только кегль: цвет и начертание приходят из общего `.ext-arrow`.
+	   Повтори их тут — и через сессию они разойдутся с остальными четырьмя
+	   стрелками, а заметить это будет некому. */
 	.social-arrow {
-		color: var(--accent-text);
 		font-size: 16px;
-		font-weight: 400;
 	}
 
 	.social-desc {
@@ -586,17 +590,19 @@ function hostPhoto(photo: string | undefined) {
 	}
 
 	/* `align-self` тут не ставится нарочно: на широком экране блок выравнивает
-	   свои три колонки по центру, и обложка должна ехать вместе с ними. */
+	   свои три колонки по центру, и рисунок должен ехать вместе с ними. */
 	.support-img {
-		width: 144px;
+		width: 160px;
 		aspect-ratio: 1;
-		overflow: hidden;
 	}
 
+	/* `contain`, а не `cover`: у рисунка на прозрачном фоне нет краёв, которые
+	   можно обрезать, — обрезка съела бы ему макушку. Рамки и заливки тоже
+	   нет: он лежит прямо на бумаге. */
 	.support-img img {
 		width: 100%;
 		height: 100%;
-		object-fit: cover;
+		object-fit: contain;
 		display: block;
 	}
 
@@ -621,20 +627,25 @@ function hostPhoto(photo: string | undefined) {
 	.support-links {
 		display: grid;
 		grid-template-columns: 1fr;
-		gap: var(--sp-2);
+		gap: 10px;
 	}
 
+	/* КНОПКИ ТАКИЕ ЖЕ, КАК В ХИРО СТРАНИЦЫ «ПОДДЕРЖАТЬ», а не мельче, как
+	   в макете: решение заказчика по живой странице. Это те же четыре кнопки
+	   с теми же адресами, и разный размер читался бы не как «тут поменьше»,
+	   а как две разные вещи. Высота 56 и поля 8/16 — оттуда же. */
 	.support-links a {
-		min-height: 44px;
+		min-height: 56px;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: var(--sp-3);
-		padding: 10px 12px;
+		gap: 20px;
+		padding: var(--sp-2) var(--sp-4);
 		border: 1px solid var(--line-strong);
 		color: var(--ink);
 		text-decoration: none;
 		font-size: var(--caption);
+		font-weight: 600;
 		letter-spacing: 0.06em;
 		text-transform: uppercase;
 		transition:
@@ -648,8 +659,10 @@ function hostPhoto(photo: string | undefined) {
 		color: var(--accent-text);
 	}
 
-	.support-links span {
-		color: var(--accent-text);
+	/* Кегль стрелки — своё дело каждого места; цвет и начертание берутся
+	   из общего `.ext-arrow` в global.css. */
+	.support-links .ext-arrow {
+		font-size: 17px;
 	}
 
 	/* --- Связаться --- */
@@ -670,12 +683,9 @@ function hostPhoto(photo: string | undefined) {
 		color: var(--text);
 	}
 
-	/* ОТБИВКА МЕЖДУ ПАРАМИ БОЛЬШЕ, ЧЕМ ВНУТРИ ПАРЫ. Правило взято из
-	   page-about.css макета: абзац, идущий ЗА ссылкой, начинает вторую пару. */
-	.contact-link + p {
-		margin-top: var(--sp-8);
-	}
-
+	/* Правила отбивки между парами тут больше нет: пара осталась одна, чат
+	   переехал в блок «Ещё немного нас». Правило «на случай, если вторая пара
+	   вернётся» — это мёртвый код, который переживёт память о том, зачем он. */
 	.contact-link {
 		display: inline-block;
 		font-family: var(--font-display);

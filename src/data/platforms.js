@@ -60,6 +60,17 @@ export const platforms = [
 		desc: 'Короткие видео и фрагменты.',
 		inFooter: false,
 	},
+	// Чат переехал сюда из блока «Связаться» решением заказчика: это место,
+	// куда приходят, а не способ написать нам лично. Адрес тот же, что был
+	// у поля «Адрес чата», и он же стоит в «Помочь иначе» на «Поддержать» —
+	// теперь это одна запись, а не три строчки в трёх местах.
+	{
+		label: 'Наш чат',
+		url: 'https://t.me/bakapodcast',
+		kind: 'social',
+		desc: 'Поговорить об аниме — заходите.',
+		inFooter: false,
+	},
 	{ label: 'Boosty', url: 'https://boosty.to/bakapodcast', kind: 'support' },
 	{ label: 'Patreon', url: 'https://www.patreon.com/bakapodcast', kind: 'support' },
 	{ label: 'Закрытый TG-канал', url: 'https://t.me/tribute/app?startapp=s26z', kind: 'support', inFooter: false },

@@ -25,10 +25,13 @@ export function getLinkIcon(url) {
 	if (host === 't.me' || host.includes('telegram.')) return 'telegram';
 	if (host.includes('music.yandex.')) return 'yandex';
 	if (host.includes('mave.stream') || host.includes('mave.digital')) return 'mave';
+	// ВКонтакте живёт на двух доменах сразу, и у нас используются оба:
+	// площадка «VK» записана на vk.ru, VK Donat — на vk.com.
+	if (host === 'vk.ru' || host === 'vk.com') return 'vk';
+	if (host.includes('tiktok.com')) return 'tiktok';
+	if (host.includes('patreon.com')) return 'patreon';
 
-	// Нарисованной иконки нет ещё у трёх площадок — VK, TikTok, Patreon.
-	// Возвращаем null, и место под иконку остаётся пустым: названия в списке
-	// от этого стоят одной колонкой. Придумывать логотип самому нельзя,
-	// в утверждённом макете этих трёх иконок нет.
+	// Незнакомый домен — иконки нет, и место под неё в списке всё равно
+	// занимается: иначе названия встали бы рваным левым краем.
 	return null;
 }

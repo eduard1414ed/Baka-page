@@ -414,14 +414,15 @@ const pages = defineCollection({
 		// --- Остальные поля страницы «О проекте» (тз/10.4) ---
 		//
 		// `lead` ниже — общее поле обеих страниц, оно уже описано у «Поддержать».
+		//
+		// ПОЛЕЙ ПРО ЧАТ ЗДЕСЬ НЕТ, и это не забывчивость: чат переехал
+		// в блок «Ещё немного нас» и живёт теперь записью в platforms.js —
+		// он место, куда приходят, а не способ написать нам лично.
 		hostsNote: z.string().optional(),
 		listenNote: z.string().optional(),
 		socialNote: z.string().optional(),
 		supportTitle: z.string().optional(),
 		contactText: z.string().optional(),
-		chatText: z.string().optional(),
-		chatLabel: z.string().optional(),
-		chatUrl: z.preprocess(emptyToUndefined, z.string().optional()),
 
 		// --- Поля страницы «Поддержать» (тз/08, часть 10.1) ---
 		//

@@ -95,7 +95,7 @@ const description = lead || excerptFromBody(page?.body ?? '', SITE_DESCRIPTION);
 						{support.map((platform) => (
 							<a href={platform.url} target="_blank" rel="noopener noreferrer">
 								{platform.label}
-								<span aria-hidden="true">↗</span>
+								<span class="ext-arrow" aria-hidden="true">↗</span>
 							</a>
 						))}
 					</div>
@@ -142,7 +142,7 @@ const description = lead || excerptFromBody(page?.body ?? '', SITE_DESCRIPTION);
 								{altLinks.map((link) => (
 									<a href={link.url} target="_blank" rel="noopener noreferrer">
 										{link.label}
-										<span aria-hidden="true">↗</span>
+										<span class="ext-arrow" aria-hidden="true">↗</span>
 									</a>
 								))}
 							</div>
@@ -255,10 +255,11 @@ const description = lead || excerptFromBody(page?.body ?? '', SITE_DESCRIPTION);
 		color: var(--accent-text);
 	}
 
-	.support-buttons span {
-		color: var(--accent-text);
+	/* Только кегль: цвет и начертание приходят из общего `.ext-arrow`
+	   в global.css — стрелка ↗ стоит на сайте в пяти местах, и своё описание
+	   у каждого уже разъехалось однажды. */
+	.support-buttons .ext-arrow {
 		font-size: 17px;
-		font-weight: 400;
 	}
 
 	/* --- Секции ниже --- */
@@ -352,9 +353,8 @@ const description = lead || excerptFromBody(page?.body ?? '', SITE_DESCRIPTION);
 		text-underline-offset: 3px;
 	}
 
-	.alt-links span {
-		color: var(--accent-text);
-	}
+	/* Цвет стрелки здесь не задаётся: он общий, `.ext-arrow` в global.css.
+	   Своего кегля этой строке не нужно — стрелка идёт вровень с подписью. */
 
 	@media (min-width: 621px) {
 		.support-buttons {
