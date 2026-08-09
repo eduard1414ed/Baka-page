@@ -198,3 +198,16 @@
     });
   });
 })();
+
+
+/* Таймкоды: нажатие перематывает плеер. Механика та же, что у таймкодов
+   внутри текста, — второй реализации быть не должно. */
+(() => {
+  document.querySelectorAll(".timecode-row").forEach((row) => {
+    row.addEventListener("click", () => {
+      const t = Number(row.dataset.time);
+      const audio = document.querySelector("audio");
+      if (audio) { audio.currentTime = t; audio.play(); }
+    });
+  });
+})();
