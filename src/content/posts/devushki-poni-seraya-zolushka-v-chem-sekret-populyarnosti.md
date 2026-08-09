@@ -4,7 +4,7 @@ date: 2026-08-06
 category: bonus
 draft: false
 description: ''
-cover: ''
+cover: /images/uploads/Пони.png
 noCover: false
 externalUrl: ''
 externalSource: ''
@@ -21,9 +21,6 @@ bonusLinks:
 anime:
   - uma-musume-cinderella-gray
 ---
-
-::image{src="/images/uploads/%D0%9F%D0%BE%D0%BD%D0%B8.png" alt="" width="column"}
-
 
 В чем разница между пони и лошадью? Кто смотрит скачки в Японии? При чем здесь квадроберы? И сколько в мире фанатов хоббихорсинга? 
 
