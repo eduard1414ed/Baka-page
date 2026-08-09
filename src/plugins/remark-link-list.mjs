@@ -35,7 +35,7 @@ function parseLinkNode(node) {
  * только у маркера, поправленного руками.
  */
 function buildRow(item) {
-	return el('div', { class: 'platform-row' }, [
+	return el('div', { class: 'inset-row' }, [
 		el('strong', { class: 'tech' }, item.label ? [text(item.label)] : []),
 		el('a', { class: 'normal-link', href: item.url, target: '_blank', rel: 'noopener noreferrer' }, [
 			text(`${hostOf(item.url) ?? item.url} ↗`),
@@ -49,7 +49,8 @@ function buildRow(item) {
  * ЛИНИИ С ОБЕИХ СТОРОН — единственное место на сайте, где так можно (§5
  * дизайн-системы). Правило «одну линию рисует следующая секция» здесь
  * не работает: после врезки текст продолжается, и без нижней линии
- * у неё нет конца. Сами линии — в стилях `.platform-list`.
+ * у неё нет конца. Сами линии — в общих стилях `.inset-list` (global.css): у врезки
+ * со ссылками и у оглавления выпуска вид один на двоих.
  *
  * В ПОИСК ВРЕЗКА НЕ ИДЁТ. Названия площадок и голые домены в цитате выдачи
  * читаются мусором — ровно как шапка карусели («[ галерея ]01 / 06»).
@@ -59,7 +60,7 @@ function buildRow(item) {
 function linkListData(items) {
 	return {
 		hName: 'div',
-		hProperties: { class: 'platform-list', 'data-pagefind-ignore': '' },
+		hProperties: { class: 'inset-list', 'data-pagefind-ignore': '' },
 		hChildren: items.map(buildRow),
 	};
 }
