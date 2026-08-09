@@ -1,0 +1,104 @@
+// Проверка: правда ли скрыто то, что помечено атрибутом `hidden`.
+//
+// ЗАЧЕМ ОТДЕЛЬНАЯ ПРОВЕРКА. Атрибут `hidden` весит один селектор, а правило
+// компонента в Astro всегда длиннее (`.foo[data-astro-cid-…]`), поэтому любой
+// `display` из компонента его перебивает. Разметка при этом правильная, атрибут
+// на месте, ошибок нигде нет — а элемент виден на странице. Эти грабли в проекте
+// сработали трижды: сетки режимов фильтра на главной, плашка «не удалось
+// загрузить аудио» поверх играющего плеера и строка «показаны все упоминания
+// тайтла», висевшая всегда. Каждый раз это находил заказчик глазами.
+//
+// Лечится `:not([hidden])` в самом правиле раскладки — и вот это проверяется
+// здесь, разбором собранного CSS, а не чтением исходников.
+//
+// Запуск: node scripts/check-hidden.mjs   (после `npm run build`)
+
+import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+
+const DIST = 'dist';
+
+function walk(dir) {
+	return readdirSync(dir).flatMap((name) => {
+		const path = join(dir, name);
+		return statSync(path).isDirectory() ? walk(path) : [path];
+	});
+}
+
+/** Вес селектора: (id, класс/атрибут/псевдокласс, тег). Псевдоэлементы не считаем. */
+function specificity(selector) {
+	const ids = selector.match(/#[\w-]+/g) ?? [];
+	const classes = selector.match(/\.[\w-]+|\[[^\]]+\]|:(?!:)(?!not\b)[\w-]+/g) ?? [];
+	const tags = selector.match(/(?:^|[\s>+~])([a-z][\w-]*)/g) ?? [];
+	// Содержимое :not() тоже считается — там внутри обычный селектор.
+	const inside = selector.match(/:not\(([^)]*)\)/g) ?? [];
+	let extra = [0, 0, 0];
+	for (const part of inside) {
+		const s = specificity(part.slice(5, -1));
+		extra = [extra[0] + s[0], extra[1] + s[1], extra[2] + s[2]];
+	}
+	return [ids.length + extra[0], classes.length + extra[1], tags.length + extra[2]];
+}
+
+const heavier = (a, b) => a[0] !== b[0] ? a[0] > b[0] : a[1] !== b[1] ? a[1] > b[1] : a[2] > b[2];
+
+/** Все правила собранного CSS: [селектор, объявления]. Медиазапросы разворачиваем. */
+function cssRules() {
+	const rules = [];
+	for (const file of walk(join(DIST, '_astro')).filter((f) => f.endsWith('.css'))) {
+		const css = readFileSync(file, 'utf8').replace(/@media[^{]*\{/g, '');
+		for (const match of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+			const selectors = match[1].trim();
+			if (selectors.startsWith('@')) continue;
+			for (const selector of selectors.split(',')) rules.push([selector.trim(), match[2]]);
+		}
+	}
+	return rules;
+}
+
+// Насколько весит `[hidden]{display:none}` из global.css — с этим и сравниваем.
+const HIDDEN_WEIGHT = [0, 1, 0];
+
+const rules = cssRules().filter(([, decls]) => /(?:^|;)\s*display\s*:/.test(decls));
+
+const problems = [];
+
+for (const page of walk(DIST).filter((f) => f.endsWith('.html'))) {
+	const html = readFileSync(page, 'utf8');
+
+	// Открывающие теги с атрибутом `hidden` (не `data-hidden`, не внутри значения).
+	for (const tag of html.matchAll(/<(\w+)((?:\s+[^\s=>]+(?:=(?:"[^"]*"|'[^']*'|[^\s>]+))?)*)\s*\/?>/g)) {
+		const attrs = tag[2];
+		if (!/(?:^|\s)hidden(?:=|\s|$)/.test(attrs)) continue;
+
+		const classAttr = attrs.match(/\sclass="([^"]*)"/)?.[1] ?? '';
+		const classes = classAttr.split(/\s+/).filter(Boolean);
+		if (classes.length === 0) continue;
+
+		for (const [selector, decls] of rules) {
+			// Правило про этот элемент, только если его последняя часть —
+			// один из классов элемента и в ней нет ничего, кроме классов.
+			const last = selector.split(/[\s>+~]+/).pop() ?? '';
+			if (!/^(?:\.[\w-]+|\[[^\]]+\]|:not\([^)]*\))+$/.test(last)) continue;
+			const used = last.match(/\.[\w-]+/g) ?? [];
+			if (used.length === 0 || !used.every((c) => classes.includes(c.slice(1)))) continue;
+			// Само правило уже учло `hidden` — значит и задумано так.
+			if (/:not\(\[hidden\]\)/.test(last)) continue;
+			// Правило само прячет — не беда.
+			if (/(?:^|;)\s*display\s*:\s*none/.test(decls)) continue;
+
+			if (heavier(specificity(selector), HIDDEN_WEIGHT)) {
+				problems.push(`${page}: <${tag[1]} class="${classAttr}" hidden> перебивается правилом ${selector}`);
+			}
+		}
+	}
+}
+
+const unique = [...new Set(problems)];
+if (unique.length === 0) {
+	console.log('Скрытое действительно скрыто: правил, перебивающих hidden, нет.');
+} else {
+	console.log(`Найдено ${unique.length} мест, где hidden не сработает:`);
+	for (const line of unique) console.log('  ' + line);
+	process.exitCode = 1;
+}

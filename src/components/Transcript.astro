@@ -751,7 +751,12 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 		color: var(--accent-text);
 	}
 
-	.tr-hits {
+	/* `:not([hidden])` обязателен по той же причине, что и у плашки ошибки
+	   в плеере: атрибут весит один селектор, правило компонента — два,
+	   и `display: flex` его перебивает. Без этого строка «показаны все
+	   упоминания тайтла» висела бы всегда, вместе с кнопкой возврата
+	   к поиску, которому нечего возвращать. */
+	.tr-hits:not([hidden]) {
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;

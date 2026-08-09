@@ -57,10 +57,10 @@ const fallbackPlatform = platformsOfKind('listen')[0];
 	data-link={link}
 	data-duration={durationSec ?? ''}
 >
-	{/* Обёртка нужна, чтобы состояние «аудио не отдалось» пряталось и показывалось
-	    ОДНИМ атрибутом `hidden`, без правил display в двух местах: у неё самой
-	    правил раскладки нет, поэтому `[hidden]` из global.css срабатывает
-	    без единого уточнения (§2.1). */}
+	{/* Обёртка нужна, чтобы «живой» плеер прятался и показывался ОДНИМ атрибутом
+	    `hidden`: своих правил раскладки у неё нет, поэтому `[hidden]`
+	    из global.css срабатывает без уточнений (§2.1). У самой плашки ошибки
+	    ниже правило раскладки есть, и там уточнение обязательно — см. стили. */}
 	<div class="ep-live">
 		<div class="ep-main">
 			<button type="button" class="ep-toggle play" aria-label="Воспроизвести">
@@ -241,7 +241,13 @@ const fallbackPlatform = platformsOfKind('listen')[0];
 		color: var(--muted);
 	}
 
-	.ep-error {
+	/* `:not([hidden])` тут обязателен, и это не перестраховка. Атрибут `hidden`
+	   весит один селектор, а правило компонента в Astro всегда длиннее
+	   (`.ep-error[data-astro-cid-…]`) — и `display: grid` побеждает. Разметка
+	   при этом правильная, атрибут на месте, а плашка «не удалось загрузить»
+	   висит на странице всегда, поверх исправно играющего плеера. Ровно это
+	   и случилось. */
+	.ep-error:not([hidden]) {
 		display: grid;
 		gap: var(--sp-4);
 		justify-items: start;
