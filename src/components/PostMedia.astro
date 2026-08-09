@@ -1,0 +1,103 @@
+---
+// Картинка материала вместе с её геометрией. ОДИН КОД НА ВЕСЬ САЙТ.
+//
+// ЗАЧЕМ ОТДЕЛЬНЫЙ КОМПОНЕНТ. Пропорции картинки задавал слот, в котором она
+// стоит: в карточке ленты — свои правила, в каждом ряду главной — свои. Пока
+// в «широкий» слот не попал выпуск подкаста, это работало. А попал — и его
+// квадратную обложку обрезало до полосы 16:9, потому что слот про материал
+// ничего не знал.
+//
+// ПРАВИЛО, КОТОРОЕ ТЕПЕРЬ ЖИВЁТ ЗДЕСЬ И ТОЛЬКО ЗДЕСЬ:
+//
+//   обложка выпуска подкаста — всегда квадрат и всегда целиком, не обрезается
+//   никогда, в каком бы слоте выпуск ни оказался (§9 дизайн-системы);
+//   всё остальное — кадр 16:9, его обрезать можно.
+//
+// Слот теперь решает только, СКОЛЬКО МЕСТА дать картинке. Какой она формы —
+// не его дело. Поэтому в стилях страниц не должно появляться ни `aspect-ratio`,
+// ни `object-fit` для картинок материалов: появятся — правило снова расползётся
+// по слотам, и следующий выпуск снова обрежут.
+import { sectionOf } from '../content.config';
+
+interface Props {
+	post: { id: string; data: Record<string, any> };
+	/** Что показывать — считает src/lib/postCardMedia.mjs. null = картинки нет. */
+	media: { src: string; srcset: string | null; play: boolean } | null;
+	sizes?: string;
+	loading?: 'lazy' | 'eager';
+}
+
+const { post, media, sizes, loading = 'lazy' } = Astro.props;
+
+// Квадрат — у РАЗДЕЛА «Подкаст», а не у категории: бонус это тоже выпуск,
+// и обложка у него такая же квадратная.
+const shape = sectionOf(post.data.category) === 'podcast' ? 'square' : 'wide';
+---
+
+{
+	media && (
+		<span class="post-media" data-shape={shape}>
+			<img
+				src={media.src}
+				srcset={media.srcset ?? undefined}
+				sizes={media.srcset ? sizes : undefined}
+				alt=""
+				loading={loading}
+			/>
+			{media.play && (
+				<span class="play" aria-hidden="true">
+					▶
+				</span>
+			)}
+		</span>
+	)
+}
+
+<style>
+	.post-media {
+		display: block;
+		position: relative;
+		overflow: hidden;
+		background: var(--line-soft);
+	}
+
+	.post-media img {
+		width: 100%;
+		height: 100%;
+		display: block;
+	}
+
+	/* Обложка выпуска. `contain`, а не `cover`: обрезка съедает ровно то,
+	   ради чего обложку рисовали. Предел 390 — из §10.1: квадрат во всю
+	   ширину редакционной колонки был бы стеной в пол-экрана. В архиве предел
+	   420, то есть 390 подходит и туда; двух чисел на одно правило не заводим. */
+	.post-media[data-shape='square'] {
+		aspect-ratio: 1;
+		max-width: 390px;
+	}
+
+	.post-media[data-shape='square'] img {
+		object-fit: contain;
+	}
+
+	.post-media[data-shape='wide'] {
+		aspect-ratio: 16 / 9;
+	}
+
+	.post-media[data-shape='wide'] img {
+		object-fit: cover;
+	}
+
+	/* Значок ролика поверх кадра. Бумажный с чернильной тенью: белым он
+	   пропадал бы на светлом кадре, а тень держит его читаемым на любом. */
+	.play {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: var(--h3);
+		color: var(--paper);
+		text-shadow: 0 1px 8px var(--ink);
+	}
+</style>

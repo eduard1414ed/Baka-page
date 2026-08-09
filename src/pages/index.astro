@@ -12,6 +12,7 @@ import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import PostFeed from '../components/PostFeed.astro';
 import PostKicker from '../components/PostKicker.astro';
+import PostMedia from '../components/PostMedia.astro';
 import JsonLd from '../components/JsonLd.astro';
 import { categoriesShownIn } from '../content.config';
 import { isPublished } from '../lib/publishing.mjs';
@@ -75,12 +76,7 @@ const hasThirdRow = Boolean(slots.third) || hasNotes;
 							<article class="hero-material">
 								{media.get(slots.hero.id) && (
 									<div class="image">
-										<img
-											src={media.get(slots.hero.id)!.src}
-											srcset={media.get(slots.hero.id)!.srcset ?? undefined}
-											sizes="(max-width: 760px) 100vw, 780px"
-											alt=""
-										/>
+										<PostMedia post={slots.hero} media={media.get(slots.hero.id)!} sizes="(max-width: 760px) 100vw, 780px" loading="eager" />
 									</div>
 								)}
 								<div class="hero-copy">
@@ -119,16 +115,10 @@ const hasThirdRow = Boolean(slots.third) || hasNotes;
 												</h2>
 											</div>
 											{media.get(post.id) && (
-												<div class="side-thumb" data-type={post.data.category}>
-													<img
-														src={media.get(post.id)!.src}
-														srcset={media.get(post.id)!.srcset ?? undefined}
-														sizes="112px"
-														alt=""
-														loading="lazy"
-													/>
-												</div>
-											)}
+									<div class="side-thumb">
+										<PostMedia post={post} media={media.get(post.id)!} sizes="112px" />
+									</div>
+								)}
 										</article>
 									))}
 								</aside>
@@ -144,16 +134,10 @@ const hasThirdRow = Boolean(slots.third) || hasNotes;
 								<article class="podcast-feature">
 									<PostKicker post={slots.podcast} />
 									{media.get(slots.podcast.id) && (
-										<div class="cover">
-											<img
-												src={media.get(slots.podcast.id)!.src}
-												srcset={media.get(slots.podcast.id)!.srcset ?? undefined}
-												sizes="(max-width: 760px) 100vw, 390px"
-												alt=""
-												loading="lazy"
-											/>
-										</div>
-									)}
+									<div class="cover">
+										<PostMedia post={slots.podcast} media={media.get(slots.podcast.id)!} sizes="(max-width: 760px) 100vw, 390px" />
+									</div>
+								)}
 									<h2 class="title-md">
 										<a class="stretch" {...linkOf(slots.podcast)}>
 											{slots.podcast.data.title}
@@ -180,16 +164,10 @@ const hasThirdRow = Boolean(slots.third) || hasNotes;
 										{deckOf(slots.second) && <p class="deck">{deckOf(slots.second)}</p>}
 									</div>
 									{media.get(slots.second.id) && (
-										<div class="image">
-											<img
-												src={media.get(slots.second.id)!.src}
-												srcset={media.get(slots.second.id)!.srcset ?? undefined}
-												sizes="(max-width: 760px) 100vw, 560px"
-												alt=""
-												loading="lazy"
-											/>
-										</div>
-									)}
+									<div class="image">
+										<PostMedia post={slots.second} media={media.get(slots.second.id)!} sizes="(max-width: 760px) 100vw, 560px" />
+									</div>
+								)}
 								</article>
 							)}
 						</section>
@@ -202,16 +180,10 @@ const hasThirdRow = Boolean(slots.third) || hasNotes;
 							{slots.third && (
 								<article class="video-feature">
 									{media.get(slots.third.id) && (
-										<div class="image">
-											<img
-												src={media.get(slots.third.id)!.src}
-												srcset={media.get(slots.third.id)!.srcset ?? undefined}
-												sizes="(max-width: 760px) 100vw, 480px"
-												alt=""
-												loading="lazy"
-											/>
-										</div>
-									)}
+									<div class="image">
+										<PostMedia post={slots.third} media={media.get(slots.third.id)!} sizes="(max-width: 760px) 100vw, 480px" />
+									</div>
+								)}
 									<div>
 										<PostKicker post={slots.third} />
 										<h2 class="title-md">
@@ -264,21 +236,10 @@ const hasThirdRow = Boolean(slots.third) || hasNotes;
 		overflow: hidden;
 	}
 
-	.image,
-	.cover,
-	.side-thumb {
-		overflow: hidden;
-		background: var(--line-soft);
-	}
-
-	.image img,
-	.cover img,
-	.side-thumb img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		display: block;
-	}
+	/* Обёртки картинок заняты ТОЛЬКО местом: шириной и отступами. Пропорции,
+	   обрезка и фон живут в PostMedia.astro — одни на весь сайт. Именно
+	   из-за того, что они когда-то стояли здесь, квадратную обложку выпуска
+	   обрезало, стоило ему попасть в «широкий» слот. */
 
 	/* Кликается вся плашка материала, но ссылка при этом ОДНА — на заголовке.
 	   Второй ссылкой на картинке человек на клавиатуре и в экранном дикторе
@@ -368,9 +329,6 @@ const hasThirdRow = Boolean(slots.third) || hasNotes;
 		border-top: 1px solid var(--line);
 	}
 
-	.hero-material .image {
-		aspect-ratio: 16 / 9;
-	}
 
 	.hero-copy {
 		display: grid;
@@ -396,19 +354,9 @@ const hasThirdRow = Boolean(slots.third) || hasNotes;
 
 	.side-thumb {
 		width: 112px;
-		aspect-ratio: 16 / 9;
-	}
-
-	/* Обложка выпуска квадратная и обрезке не подлежит — это та же геометрия
-	   по типу материала, что и в карточке ленты. */
-	.side-thumb[data-type='podcast'],
-	.side-thumb[data-type='bonus'] {
-		aspect-ratio: 1;
 	}
 
 	.podcast-feature .cover {
-		aspect-ratio: 1;
-		max-width: 390px;
 		margin-bottom: var(--sp-4);
 	}
 
@@ -418,10 +366,6 @@ const hasThirdRow = Boolean(slots.third) || hasNotes;
 		gap: var(--sp-6);
 	}
 
-	.article-feature .image,
-	.video-feature .image {
-		aspect-ratio: 16 / 9;
-	}
 
 	.notes-index {
 		display: grid;

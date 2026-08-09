@@ -15,6 +15,7 @@
 // молча — сначала форматом метастроки, потом обрезкой.
 import { sectionOf } from '../content.config';
 import PostKicker from './PostKicker.astro';
+import PostMedia from './PostMedia.astro';
 import { excerptFromBody } from '../lib/excerpt.mjs';
 import { getCardMedia } from '../lib/postCardMedia.mjs';
 import { isExternalPost, postHref } from '../lib/externalPost.mjs';
@@ -101,18 +102,7 @@ const Title = `h${level}` as 'h2' | 'h3';
 			>
 				{media && (
 					<span class="archive-media" class:list={{ 'note-cover': noteWithCover }}>
-						<img
-							src={media.src}
-							srcset={media.srcset ?? undefined}
-							sizes={media.srcset ? '(max-width: 760px) 100vw, 420px' : undefined}
-							alt=""
-							loading="lazy"
-						/>
-						{media.play && (
-							<span class="play" aria-hidden="true">
-								▶
-							</span>
-						)}
+						<PostMedia post={post} media={media} sizes="(max-width: 760px) 100vw, 420px" />
 					</span>
 				)}
 				<PostKicker post={post} />
@@ -192,46 +182,13 @@ const Title = `h${level}` as 'h2' | 'h3';
 		transition: color var(--transition-fast);
 	}
 
+	/* Обёртка занята только местом: отступом снизу и — у заметки — шириной
+	   миниатюры. Пропорции и обрезка тут не задаются НИГДЕ: их знает
+	   PostMedia.astro, и знает один на весь сайт. Появится `aspect-ratio`
+	   здесь — и обложка выпуска снова поедет по слотам. */
 	.archive-media {
 		display: block;
-		position: relative;
 		margin-bottom: var(--sp-4);
-		overflow: hidden;
-		background: var(--line-soft);
-	}
-
-	.archive-media img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		display: block;
-	}
-
-	/* ГЕОМЕТРИЯ МЕДИА ЗАДАЁТСЯ ТИПОМ КАРТОЧКИ И ТОЛЬКО ИМ (§2.1). Селектор
-	   режима фильтра отвечает за видимость и в эти правила не вмешивается —
-	   иначе его вес перебил бы раскладку, и она молча не применилась бы. */
-	.archive-card[data-type='podcast'] .archive-media {
-		aspect-ratio: 1;
-		max-width: 420px;
-	}
-
-	.archive-card[data-type='videoessay'] .archive-media,
-	.archive-card[data-type='article'] .archive-media,
-	.archive-card[data-type='note'] .archive-media {
-		aspect-ratio: 16 / 9;
-	}
-
-	/* Значок ролика поверх кадра. Бумажный со чернильной тенью: белым он
-	   пропадал бы на светлом кадре, а тень держит его читаемым на любом. */
-	.play {
-		position: absolute;
-		inset: 0;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: var(--h3);
-		color: var(--paper);
-		text-shadow: 0 1px 8px var(--ink);
 	}
 
 	/* Заметка с обложкой. Картинка уточняет материал, но не претендует
