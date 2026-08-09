@@ -27,7 +27,6 @@ import { categories, sectionOf } from '../../content.config';
 import { getYoutubeEmbedUrl } from '../../lib/youtube.mjs';
 import { ownVideoSrc } from '../../lib/ownVideo.mjs';
 import { parseTimecodeList } from '../../lib/timecode.mjs';
-import { hostOf } from '../../lib/linkIcon.mjs';
 import { findEpisodeByGuid } from '../../lib/podcastFeed.mjs';
 import { formatPostDate } from '../../lib/postDate.mjs';
 import { episodeNumber } from '../../lib/postMeta.mjs';
@@ -116,7 +115,7 @@ export async function getStaticPaths() {
 const { post, episode, olderPost = null, newerPost = null } = Astro.props;
 const { Content } = await render(post);
 
-const { title, date, category, cover, youtube, video, buttons, anime } = post.data;
+const { title, date, category, cover, youtube, video, bonusLinks, anime } = post.data;
 
 // Расшифровка (тз/05, шаг 5). Ищем сначала по полю `transcript`, если автор его
 // заполнил, иначе по audioGuid — у выпусков подкаста файл расшифровки называется
@@ -478,27 +477,6 @@ const postSearchMeta = [
 					<Content />
 				</div>
 
-				{/* Кнопки поста — списком с линиями, а не рядом плашек: в языке
-				    сайта плиток нет. Слева площадка, справа адрес.
-
-				    В поиск врезка не идёт: названия площадок и голые домены
-				    в цитате выдачи читаются мусором. Тем же помечена врезка
-				    со ссылками внутри текста (remark-link-list.mjs) — два
-				    одинаковых на вид блока не должны вести себя по-разному. */}
-				{
-					!isBonus && buttons && buttons.length > 0 && (
-						<div class="inset-list" data-pagefind-ignore>
-							{buttons.map((button: { label: string; url: string }) => (
-								<div class="inset-row">
-									<strong class="tech">{button.label}</strong>
-									<a class="normal-link" href={button.url} target="_blank" rel="noopener noreferrer">
-										{hostOf(button.url) ?? button.url} ↗
-									</a>
-								</div>
-							))}
-						</div>
-					)
-				}
 			</section>
 
 			{/* Оглавление выпуска — ниже описания, до транскрипта (тз/08, 9.3).
@@ -509,7 +487,7 @@ const postSearchMeta = [
 			    тизер, он открыт всем и попадает в поиск, а дальше начинается
 			    платное. Марки тайтлов ниже остаются на своём обычном месте,
 			    в самом низу страницы, как у всех постов. */}
-			{isBonus && <BonusPaywall buttons={buttons} />}
+			{isBonus && <BonusPaywall links={bonusLinks} postId={post.id} />}
 
 			{/* Аудиоверсия видеоэссе — тот же плеер, что у выпуска (§14).
 			    Появляется, только если у видеоэссе есть пара в RSS: ролик,
@@ -1467,7 +1445,15 @@ const postSearchMeta = [
 	/* Вид врезки со ссылками — общий на две врезки, лежит в global.css
 	   (`.inset-list`). Своей копии тут нет намеренно: у врезки со ссылками
 	   и у оглавления выпуска она была своя, и за одну сессию они разъехались
-	   отступами и высотой строки. */
+	   отступами и высотой строки.
+
+	   САМА СТРАНИЦА ВРЕЗОК БОЛЬШЕ НЕ РИСУЕТ. Третьей врезкой были «кнопки
+	   материала» из поля `buttons` — фиксированный блок под всем текстом.
+	   Поле переделано в «Ссылки площадок» бонусного поста (10.2), а блок убран
+	   решением заказчика от 10 августа 2026: своей задачи у него не было,
+	   ссылки внутри повествования ставятся кнопкой «Блок ссылок» в редакторе
+	   и стоят там, где им место по смыслу, а не в хвосте. Пользовался блоком
+	   ноль постов. */
 
 	/* ——— Аудиоверсия, транскрипт, марки, соседние материалы ——— */
 

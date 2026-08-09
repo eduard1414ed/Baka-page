@@ -13,19 +13,11 @@ speakers: ''
 corrections: ''
 script: ''
 timecodes: ''
-buttons:
-  - label: Boosty
-    url: https://boosty.to/bakapodcast/posts/da99fba8-bb4b-40fb-a264-ca38b52813ca?share=post_link
-    style: secondary
-  - label: Patreon
-    url: https://www.patreon.com/bakapodcast/posts/devushki-poni-v-165914541?utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=postshare_creator&utm_content=join_link
-    style: secondary
-  - label: Закрытый TG-канал
-    url: https://t.me/tribute/app?startapp=s26z
-    style: secondary
-  - label: VK Донат
-    url: https://vk.ru/wall-211086713_2666
-    style: secondary
+bonusLinks:
+  boosty: https://boosty.to/bakapodcast/posts/da99fba8-bb4b-40fb-a264-ca38b52813ca?share=post_link
+  patreon: https://www.patreon.com/bakapodcast/posts/devushki-poni-v-165914541?utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=postshare_creator&utm_content=join_link
+  tgClosed: ''
+  vkDonat: https://vk.ru/wall-211086713_2666
 anime:
   - uma-musume-cinderella-gray
 ---

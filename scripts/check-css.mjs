@@ -113,7 +113,14 @@ check(
 //    и раскладывает, невозможно перебить атрибутом `hidden`: сняв видимость,
 //    снимешь заодно и раскладку. Смотрим внутрь одного блока `{…}`, а не
 //    по всем правилам с таким селектором — см. комментарий у `rules()`.
-const LAYOUT = /^(grid-template|grid-column|grid-row|grid-auto|flex-direction|flex-wrap|gap|column-gap|row-gap|place-items|align-items|justify-content)\s*:/;
+//    ХВОСТ `[-a-z]*` ОБЯЗАТЕЛЕН, И ВОТ ПОЧЕМУ. Без него `grid-template`
+//    совпадало только с самим словом, а в CSS почти всегда пишут
+//    `grid-template-columns` — то есть проверка пропускала самый частый
+//    случай и отвечала «пусто». Нашлось 10 августа 2026 подложенным
+//    нарушением: четыре пункта из пяти поймали, этот промолчал. Четвёртая
+//    ложь этой проверки за проект, и снова в сторону «всё хорошо».
+const LAYOUT =
+	/^(grid-template|grid-column|grid-row|grid-auto|flex-direction|flex-wrap|gap|column-gap|row-gap|place-items|align-items|justify-content)[-a-z]*\s*:/;
 check(
 	'Видимость и раскладка в одном правиле',
 	allRules

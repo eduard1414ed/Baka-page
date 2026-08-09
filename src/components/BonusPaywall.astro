@@ -1,55 +1,70 @@
 ---
-// Плашка подписки под бонусным постом (тз/10, задача 1).
+// Плашка подписки под бонусным постом (тз/08, 10.2 — макет Сборка-18/bonus.html).
 //
 // Показывается САМА у любого поста категории `bonus`, отдельного переключателя
 // нет: бонус по определению лежит за подпиской. Решает это страница поста
-// (src/pages/posts/[slug].astro), сюда попадают уже готовые ссылки.
+// (src/pages/posts/[slug].astro).
 //
 // Ни плеера, ни транскрипта, ни метки времени у бонуса нет и не будет: аудио
 // у нас не хранится, бонусы живут на платных площадках (CLAUDE.md, «Место
 // на сервере»). Метку времени гасит src/lib/postTiming.mjs.
 //
-// ОФОРМЛЕНИЕ. Структура и порядок блоков взяты из макета заказчика
-// (baka_bonus_episode_mockup_v2.html), а цвета, шрифты и отступы — только
-// из src/styles/tokens.css. Макет светлый, сайт сейчас тёмный: светлая тема
-// придёт на восьмом этапе, и плашка должна переодеться вместе со всем сайтом,
-// а не остаться на странице светлым пятном.
-import { platformsOfKind } from '../data/platforms.js';
+// АДРЕСА КНОПОК ПЛАШКА НЕ ХРАНИТ. Их считает `bonusSupportLinks` в
+// src/data/platforms.js: по кнопке на каждую площадку поддержки, адрес общий
+// или подменённый строкой из поля поста. Правило «пусто — общий адрес» живёт
+// там же, одним куском, а не разложено между схемой, страницей и плашкой.
+import { bonusSupportLinks, supportIds } from '../data/platforms.js';
 
 interface Props {
-	// Поле «Кнопки» самого поста. Заполнено — показываем его, иначе общий
-	// набор площадок поддержки. Исключение нужно ради закрытого телеграм-канала:
-	// у разных бонусов он может быть разный, а вбивать Boosty с Patreon
-	// в каждый пост руками — верный способ однажды забыть их поправить.
-	buttons?: Array<{ label: string; url: string }>;
+	/** Поле «Ссылки площадок» поста: имя площадки → свой адрес. */
+	links?: Record<string, string>;
+	/** Имя поста — чтобы сказать в лог, у какого именно лишний ключ. */
+	postId?: string;
 }
 
-const { buttons } = Astro.props;
+const { links, postId } = Astro.props;
 
-const links = buttons && buttons.length > 0 ? buttons : platformsOfKind('support');
+// Ломаемся ГРОМКО: ключ, которого нет среди площадок, — это переименованная
+// площадка, и адрес, вписанный руками, молча перестал показываться. Схема
+// такой ключ пропускает нарочно (иначе упала бы сборка всего сайта), значит
+// сказать о нём должен кто-то другой.
+const known = new Set(supportIds());
+for (const key of Object.keys(links ?? {})) {
+	if (!known.has(key) && String(links?.[key] ?? '').trim() !== '') {
+		console.warn(
+			`[бонус] У поста ${postId ?? '(без имени)'} в поле «Ссылки площадок» есть строка «${key}», ` +
+				`а площадки с таким именем в src/data/platforms.js нет. Адрес не показан.`,
+		);
+	}
+}
+
+const buttons = bonusSupportLinks(links);
 ---
 
 <section class="paywall" aria-labelledby="paywall-title">
-	<div class="frame">
-		{/* Подпись разрывает верхнюю границу рамки — так в макете. Это не
-		    украшение: она отделяет «дальше платное» от текста-тизера выше,
-		    который открыт всем и попадает в поиск. */}
-		<span class="hook">Только для подписчиков</span>
+	{/* Подпись стоит НА верхней границе рамки и разрывает её собой: фон
+	    у подписи — цвет страницы, и линия под ней просто не видна. Это
+	    не украшение — подпись отделяет «дальше платное» от текста-тизера
+	    выше, который открыт всем и попадает в поиск. */}
+	<div class="paywall-hook tech">Только для подписчиков</div>
 
-		<div class="copy">
+	<div class="paywall-frame">
+		<div class="paywall-copy">
 			<h2 id="paywall-title">Бонусы доступны платным подписчикам подкаста</h2>
+			{/* Имя своё, а не общее `.lead`: тот набирает абзац шрифтом заголовков
+			    в полный кегль, а макет плашки набирает его обычным Body L. */}
 			<p class="paywall-lead">
 				Подпишитесь на удобной площадке, чтобы послушать этот выпуск и получить доступ ко всему архиву бонусов «Баки!».
 			</p>
-			<p class="note">После оформления подписки выпуск будет доступен на выбранной площадке.</p>
+			<div class="paywall-note">После оформления подписки выпуск будет доступен на выбранной площадке.</div>
 		</div>
 
-		<div class="actions">
+		<div class="paywall-actions">
 			{
-				links.map((link) => (
-					<a href={link.url} target="_blank" rel="noopener noreferrer">
-						<span class="label">{link.label}</span>
-						<span class="arrow" aria-hidden="true">
+				buttons.map((button) => (
+					<a class="btn-large" href={button.url} target="_blank" rel="noopener noreferrer">
+						{button.label}
+						<span class="ext-arrow" aria-hidden="true">
 							↗
 						</span>
 					</a>
@@ -60,87 +75,110 @@ const links = buttons && buttons.length > 0 ? buttons : platformsOfKind('support
 </section>
 
 <style>
+	/* Ширина 1240 — та же `--full`, что у контейнера текста материала: плашка
+	   и задумана самым широким блоком страницы, шире и колонки чтения (700),
+	   и шапки выпуска (1000). Так в макете и так в ТЗ. */
 	.paywall {
-		margin-top: var(--space-4);
-	}
-
-	.frame {
 		position: relative;
-		border: 1px solid var(--accent-text);
-		border-radius: var(--radius-md);
-		background: var(--color-bg-elevated);
-		padding: var(--space-4) var(--space-3) var(--space-3);
+		width: 100%;
+		max-width: var(--full);
+		margin-inline: auto;
+		padding-top: var(--sp-4);
 	}
 
-	/* Фон подписи — цвет страницы, а не рамки: именно им она и «разрывает»
-	   верхнюю границу. Отдельного полупрозрачного цвета в токенах нет,
-	   и заводить его тут не стали — на восьмом этапе цвета всё равно
-	   пересматриваются целиком. */
-	.hook {
+	/* РАЗРЫВ СДЕЛАН ФОНОМ ПОДПИСИ, А НЕ ВЫРЕЗОМ В РАМКЕ. Подпись прижата
+	   к верхнему краю рамки (`top` равен отступу сверху) и поднята на половину
+	   своей высоты — так она стоит на линии серединой, а не над ней. Половина
+	   считается от реальной высоты строки, поэтому разрыв не разъезжается
+	   ни от смены кегля, ни от переноса на узком экране; в макете стояло
+	   `top: 0` без вертикального сдвига, и там разрыв держался на том, что
+	   высота строки случайно чуть больше отступа. */
+	.paywall-hook {
 		position: absolute;
-		top: 0;
+		z-index: 2;
+		top: var(--sp-4);
 		left: 50%;
 		transform: translate(-50%, -50%);
-		padding: 0 var(--space-1);
-		background: var(--color-bg);
-		color: var(--color-accent);
-		font-size: var(--font-size-sm);
+		padding: 0 18px;
+		background: var(--paper);
+		color: var(--accent-text);
 		white-space: nowrap;
 	}
 
-	h2 {
-		font-family: var(--font-heading);
-		font-size: var(--font-size-xl);
-		margin: 0 0 var(--space-2);
-	}
-
-	/* Имя своё, а не общее `.lead`: тот теперь описан в global.css и набирает
-	   абзац шрифтом заголовков в полный кегль. Здесь абзац обычный — макет
-	   плашки набирает его Body L, — и вида ему от общего правила не нужно
-	   никакого, нужен только отступ. */
-	.paywall-lead {
-		margin: 0 0 var(--space-2);
-	}
-
-	.note {
-		margin: 0;
-		color: var(--color-text-muted);
-		font-size: var(--font-size-sm);
-	}
-
-	/* auto-fit вместо жёстких четырёх колонок из макета: площадок может быть
-	   и две (общий набор), и пять (если у бонуса свои кнопки), а на телефоне
-	   они должны сложиться в столбик сами, без отдельных правил под ширину. */
-	.actions {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
-		gap: var(--space-1);
-		margin-top: var(--space-3);
-	}
-
-	.actions a {
+	/* Высота 400 — из макета: плашка должна читаться преградой, а не строчкой.
+	   Кнопки прижимаются к низу через space-between, а не auto-margin: тот
+	   схлопывается в ноль, стоит содержимому перерасти место. */
+	.paywall-frame {
+		min-height: 400px;
 		display: flex;
-		align-items: center;
+		flex-direction: column;
 		justify-content: space-between;
-		gap: var(--space-1);
-		padding: var(--space-1) var(--space-2);
-		border: 1px solid var(--line);
-		border-radius: var(--radius-sm);
-		background: var(--color-bg);
-		color: var(--color-text);
-		font-size: var(--font-size-sm);
-		transition:
-			border-color var(--transition-fast),
-			color var(--transition-fast);
+		gap: var(--sp-8);
+		padding: var(--sp-6);
+		border: 1px solid var(--accent-text);
+		background: var(--accent-soft);
 	}
 
-	.actions a:hover,
-	.actions a:focus-visible {
-		border-color: var(--accent-text);
-		color: var(--color-accent);
+	.paywall-copy {
+		max-width: 760px;
 	}
 
-	.arrow {
-		color: var(--color-accent);
+	.paywall-copy h2 {
+		margin: 0 0 18px;
+	}
+
+	.paywall-lead {
+		margin: 0;
+		max-width: 680px;
+		font-size: var(--body-lg);
+		line-height: 1.6;
+		color: var(--text);
+	}
+
+	.paywall-note {
+		margin-top: 20px;
+		max-width: 620px;
+		font-size: var(--caption);
+		line-height: 1.5;
+		color: var(--muted);
+	}
+
+	/* Колонок ровно столько, сколько сказано, — сетка не считает их сама,
+	   ни заполняя, ни схлопывая: ширина кнопки тут не «сколько поместится»,
+	   а «четверть ряда». (Слова, которые ищет проверка 8.4, в комментарии
+	   не пишем: она читает собранный CSS, а комментарий из него уезжает
+	   не всегда.) Площадок
+	   поддержки четыре, и все четыре кнопки есть всегда: пустая строка в поле
+	   поста не убирает кнопку, а оставляет ей общий адрес. Станет площадок
+	   пять — пятая встанет на второй ряд, и это правильнее, чем четыре кнопки
+	   разной ширины. Вид самой кнопки — общий `.btn-large` в global.css. */
+	.paywall-actions {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 10px;
+	}
+
+	/* Фон кнопке даёт МЕСТО, а не общий класс: только здесь она лежит
+	   на подсвеченной подложке рамки, и без своего фона розовая подсветка
+	   просвечивала бы сквозь неё. На «Поддержать» и на 404 фон под кнопкой
+	   и так бумажный. */
+	.paywall-actions .btn-large {
+		background: var(--paper);
+	}
+
+	@media (min-width: 621px) {
+		.paywall-actions {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	@media (min-width: 1101px) {
+		.paywall-frame {
+			padding: var(--sp-12);
+		}
+
+		.paywall-actions {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
 	}
 </style>

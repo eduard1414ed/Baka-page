@@ -9,7 +9,11 @@ mentionsHidden: ''
 speakers: ''
 corrections: ''
 script: ''
-buttons: []
+bonusLinks:
+  boosty: ''
+  patreon: ''
+  tgClosed: ''
+  vkDonat: ''
 anime:
   - egao-no-taenai-shokuba-desu
   - zenshuu

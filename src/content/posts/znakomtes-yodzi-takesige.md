@@ -8,7 +8,11 @@ cover: /images/uploads/1.jpeg
 noCover: false
 externalUrl: ''
 externalSource: ''
-buttons: []
+bonusLinks:
+  boosty: ''
+  patreon: ''
+  tgClosed: ''
+  vkDonat: ''
 anime:
   - naruto
   - spirited-away

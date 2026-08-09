@@ -71,15 +71,59 @@ export const platforms = [
 		desc: 'Поговорить об аниме — заходите.',
 		inFooter: false,
 	},
-	{ label: 'Boosty', url: 'https://boosty.to/bakapodcast', kind: 'support' },
-	{ label: 'Patreon', url: 'https://www.patreon.com/bakapodcast', kind: 'support' },
-	{ label: 'Закрытый TG-канал', url: 'https://t.me/tribute/app?startapp=s26z', kind: 'support', inFooter: false },
-	{ label: 'VK Donat', url: 'https://vk.com/podcast.baka', kind: 'support', inFooter: false },
+	// ▲▼ ЗДЕСЬ НАЧИНАЮТСЯ ПЛОЩАДКИ ПОДДЕРЖКИ, И У НИХ ЕСТЬ ВТОРАЯ КОПИЯ. ▼▲
+	//
+	// Поле `id` — короткое имя площадки для поля «Ссылки площадок» у бонусного
+	// поста: там на каждую из них заведена своя строка, и пустая означает
+	// «взять адрес отсюда». Именем строка и привязывается к записи, потому что
+	// подпись заказчик может переименовать («VK Donat» → «VK Донат»),
+	// а привязка от этого рваться не должна.
+	//
+	// МЕНЯЕТЕ СОСТАВ ЗДЕСЬ — ПОПРАВЬТЕ И В `public/admin/config.yml`, поле
+	// `bonusLinks` у коллекции постов. Второй копии не хотелось никому, но
+	// config.yml статичен: спросить этот файл, сколько в нём площадок, он
+	// не умеет. Появится пятая площадка поддержки — в админке её строки
+	// не будет, пока не допишете руками. Правило записано в карте кода.
+	{ id: 'boosty', label: 'Boosty', url: 'https://boosty.to/bakapodcast', kind: 'support' },
+	{ id: 'patreon', label: 'Patreon', url: 'https://www.patreon.com/bakapodcast', kind: 'support' },
+	{
+		id: 'tgClosed',
+		label: 'Закрытый TG-канал',
+		url: 'https://t.me/tribute/app?startapp=s26z',
+		kind: 'support',
+		inFooter: false,
+	},
+	{ id: 'vkDonat', label: 'VK Donat', url: 'https://vk.com/podcast.baka', kind: 'support', inFooter: false },
 ];
 
 /** Площадки одного вида, в том же порядке, что в списке выше. */
 export function platformsOfKind(kind) {
 	return platforms.filter((platform) => platform.kind === kind);
+}
+
+/**
+ * Кнопки плашки подписки у бонусного поста.
+ *
+ * ПОЛЕ ПОСТА НЕ ЗАМЕНЯЕТ СПИСОК ЦЕЛИКОМ, А ПОДМЕНЯЕТ ОТДЕЛЬНЫЕ АДРЕСА.
+ * Раньше поле работало «всё или ничего»: чтобы дать бонусу свою ссылку
+ * на Boosty, приходилось вписать руками и три остальные — и они молча
+ * отставали от этого файла при первой же смене адреса. Теперь у поста своя
+ * строка на каждую площадку: пустая — берётся адрес отсюда, заполненная —
+ * вписанный. Пустая строка не хранит ничего, поэтому копий адресов
+ * в постах не заводится.
+ *
+ * `own` возвращается затем, чтобы вызывающий мог сказать в лог, что подменено.
+ */
+export function bonusSupportLinks(overrides) {
+	return platformsOfKind('support').map((platform) => {
+		const own = typeof overrides?.[platform.id] === 'string' ? overrides[platform.id].trim() : '';
+		return { id: platform.id, label: platform.label, url: own || platform.url, own: own !== '' };
+	});
+}
+
+/** Имена площадок поддержки — чтобы вызывающий мог узнать лишний ключ. */
+export function supportIds() {
+	return platformsOfKind('support').map((platform) => platform.id);
 }
 
 /** Что показывает подвал: всё, кроме помеченного `inFooter: false`. */
