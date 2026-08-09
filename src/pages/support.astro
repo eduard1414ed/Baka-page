@@ -385,16 +385,29 @@ const description = lead || excerptFromBody(page?.body ?? '', SITE_DESCRIPTION);
 			padding: var(--sp-16) 0 62px;
 		}
 
+		/* ПРАВЫЙ КРАЙ У ВСЕЙ ПРАВОЙ КОЛОНКИ ОДИН — край сетки, `6 / 13`.
+		   В макете он был разным у каждого блока: текст и кнопки `6/12`,
+		   подпись `6/11`, пункты `10/13`. На экране 1440 это три границы
+		   с разбросом 224 px, и заказчик увидел их глазами: подпись «Набор
+		   бонусов» не дотягивалась до кнопок, а пункты 02 и 04 уезжали
+		   за них вправо. Макет спорит сам с собой; выровнено по самому
+		   правому, чтобы колонка кончалась там же, где шапка и подвал.
+
+		   Заодно сняты `max-width` у этих блоков. Они были 730, 700 и 640 —
+		   то есть резали правый край ещё раз и снова по-разному, уже внутри
+		   одинаковых колонок. Ширину теперь задаёт колонка, и другого мнения
+		   о ней нет ни у кого. */
 		.hero-title {
 			grid-column: 1 / 5;
 		}
 
 		.hero-lead {
-			grid-column: 6 / 12;
+			grid-column: 6 / 13;
+			max-width: none;
 		}
 
 		.support-buttons {
-			grid-column: 6 / 12;
+			grid-column: 6 / 13;
 		}
 
 		.section-head-main,
@@ -403,7 +416,8 @@ const description = lead || excerptFromBody(page?.body ?? '', SITE_DESCRIPTION);
 		}
 
 		.section-head-copy {
-			grid-column: 6 / 11;
+			grid-column: 6 / 13;
+			max-width: none;
 			margin-top: 0;
 		}
 
@@ -426,7 +440,8 @@ const description = lead || excerptFromBody(page?.body ?? '', SITE_DESCRIPTION);
 		}
 
 		.alt-copy {
-			grid-column: 6 / 12;
+			grid-column: 6 / 13;
+			max-width: none;
 			margin-top: 0;
 		}
 	}

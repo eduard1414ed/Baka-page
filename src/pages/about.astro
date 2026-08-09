@@ -194,7 +194,10 @@ function hostPhoto(photo: string | undefined) {
 									<span class="platform-icon" aria-hidden="true">
 										<PlatformIcon name={getLinkIcon(platform.url)} />
 									</span>
-									<span class="platform-name">{platform.label}</span>
+									{/* `visually-hidden-sm` — на телефоне остаётся один значок,
+									    но подпись не исчезает из разметки: без неё ссылка
+									    станет безымянной для диктора. Утилита в global.css. */}
+									<span class="platform-name visually-hidden-sm">{platform.label}</span>
 								</div>
 							</a>
 						))}
@@ -534,6 +537,39 @@ function hostPhoto(photo: string | undefined) {
 		line-height: 1.2;
 	}
 
+	/* НА УЗКОМ ЭКРАНЕ ОСТАЮТСЯ ОДНИ ПИКТОГРАММЫ, по три в ряд — решение
+	   заказчика: шесть строк с подписями съедали пол-экрана телефона, а логотипы
+	   узнаются и без слов.
+
+	   ПОДПИСЬ НЕ `display: none`, А `.visually-hidden`. Убери её из потока
+	   совсем — и ссылка останется без имени: экранный диктор прочитает
+	   «ссылка», а голосовое управление не сможет её назвать. Утилита прячет
+	   от глаза, оставляя тексту голос.
+
+	   Линии перестроены под сетку: своей верхней линии нет у первых ТРЁХ,
+	   а не у первой, — иначе над вторым и третьим значком первого ряда легла бы
+	   вторая линия сразу под той, которую уже нарисовала секция. */
+	@media (max-width: 620px) {
+		.link-grid {
+			grid-template-columns: repeat(3, 1fr);
+			column-gap: var(--sp-2);
+		}
+
+		.platform-link {
+			justify-content: center;
+			padding-right: 0;
+		}
+
+		.platform-link:nth-child(-n + 3) {
+			border-top: 0;
+		}
+
+		.platform-top {
+			justify-content: center;
+			gap: 0;
+		}
+	}
+
 	/* --- Ещё немного нас --- */
 
 	.social-intro {
@@ -676,11 +712,17 @@ function hostPhoto(photo: string | undefined) {
 		min-width: 0;
 	}
 
+	/* Тот же набор, что у абзаца в блоке поддержки строкой выше: решение
+	   заказчика по живой странице. Оба — короткое пояснение под заголовком
+	   блока, и разный кегль читался бы разными уровнями там, где уровень один.
+	   Значения повторены, а не вынесены в общий класс, намеренно: общего
+	   у них ровно три строчки, а завести класс — значит пообещать, что все
+	   будущие пояснения будут такими же. */
 	.contact-copy p {
 		margin: 0 0 var(--sp-4);
-		font-size: var(--body-lg);
-		line-height: 1.6;
-		color: var(--text);
+		font-size: var(--body-sm);
+		line-height: 1.5;
+		color: var(--muted);
 	}
 
 	/* Правила отбивки между парами тут больше нет: пара осталась одна, чат
@@ -756,12 +798,19 @@ function hostPhoto(photo: string | undefined) {
 			padding: 68px 0 62px;
 		}
 
+		/* ПРАВЫЙ КРАЙ У ВСЕЙ ПРАВОЙ КОЛОНКИ ОДИН — край сетки, `6 / 13`.
+		   Список площадок стоял так с самого начала, а текст, карточки людей
+		   и «Связаться» кончались на колонку раньше. Заказчик заметил это
+		   на соседней странице «Поддержать», где границ было три; болезнь
+		   одна и та же, и лечится она на обеих сразу — иначе разъедется
+		   уже не внутри страницы, а между страницами. */
 		.about-title {
 			grid-column: 1 / 5;
 		}
 
 		.about-copy {
-			grid-column: 6 / 12;
+			grid-column: 6 / 13;
+			max-width: none;
 		}
 
 		.section-heading-block,
@@ -772,7 +821,7 @@ function hostPhoto(photo: string | undefined) {
 
 		.hosts-grid,
 		.contact-copy {
-			grid-column: 6 / 12;
+			grid-column: 6 / 13;
 		}
 
 		.hosts-grid,
