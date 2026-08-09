@@ -19,15 +19,9 @@ export const MAX_BLOCK_SEC = 90;
 // Что показываем вместо имени, когда автоматика в нём сомневалась.
 export const UNKNOWN_SPEAKER = 'Спикер не определён';
 
-// Таймкод в вид 4:07 или 1:23:45 — как в тексте постов (remark-timecode.mjs).
-export function formatTimecode(seconds) {
-	const total = Math.max(0, Math.floor(Number(seconds) || 0));
-	const pad = (n) => String(n).padStart(2, '0');
-	const s = total % 60;
-	const m = Math.floor(total / 60) % 60;
-	const h = Math.floor(total / 3600);
-	return h > 0 ? `${h}:${pad(m)}:${pad(s)}` : `${m}:${pad(s)}`;
-}
+// Запись и разбор таймкода переехали в src/lib/timecode.mjs: их стало касаться
+// три разных места (текст выпуска, блок таймкодов, расшифровка), и держать
+// понятие формата тут, среди правил расшифровки, стало неправильно.
 
 // Имя голоса для читателя.
 //

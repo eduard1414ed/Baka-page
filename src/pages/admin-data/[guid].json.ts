@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import { readFile } from 'node:fs/promises';
 import { mentionContext } from '../../lib/mentionContext.mjs';
 import { fold, buildAnimeMatcher, findMentions } from '../../lib/animeMentions.mjs';
-import { formatTimecode } from '../../lib/transcript.mjs';
+import { formatTimecode } from '../../lib/timecode.mjs';
 import { postForTranscript } from '../../lib/animeMentionIndex.mjs';
 import { applyPostOverrides } from '../../lib/transcriptOverrides.mjs';
 

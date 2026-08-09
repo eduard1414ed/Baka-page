@@ -4,15 +4,14 @@
 // становятся только у постов категории `podcast` (см. тз/04) — у остальных
 // категорий число с двоеточием не имеет отношения к плееру.
 //
-// Формат H:MM:SS отдельно от M:SS (минуты могут быть трёхзначными — выпуски
-// длиннее часа), чтобы не путать секунды с минутами при разборе.
-const TIME_RE = /\b(?:(\d{1,2}):([0-5]\d):([0-5]\d)|(\d{1,3}):([0-5]\d))\b/g;
+// САМ ФОРМАТ ТУТ НЕ ОПИСАН — он один на весь сайт и живёт в src/lib/timecode.mjs.
+// Здесь только поиск таких меток в сплошном тексте: границы слова и флаг «все
+// совпадения». Блок таймкодов у выпуска разбирает то же самое той же меркой,
+// и второй копии понятия «что такое таймкод» быть не должно.
+import { TIMECODE_SOURCE, matchToSeconds } from '../lib/timecode.mjs';
 
-function toSeconds(match) {
-	const [, h, m, s, m2, s2] = match;
-	if (h !== undefined) return Number(h) * 3600 + Number(m) * 60 + Number(s);
-	return Number(m2) * 60 + Number(s2);
-}
+const TIME_RE = new RegExp(`\\b${TIMECODE_SOURCE}\\b`, 'g');
+const toSeconds = matchToSeconds;
 
 function timecodeNode(text, seconds) {
 	return {

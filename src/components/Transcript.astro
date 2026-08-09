@@ -13,7 +13,8 @@
 // (как на референсе), чистый CSS. Это удобство чтения, чтобы транскрипт не
 // отодвигал подвал на два экрана, а не экономия трафика.
 import { getCollection } from 'astro:content';
-import { groupReplicas, formatTimecode, UNKNOWN_SPEAKER } from '../lib/transcript.mjs';
+import { groupReplicas, UNKNOWN_SPEAKER } from '../lib/transcript.mjs';
+import { formatTimecode } from '../lib/timecode.mjs';
 import { plural } from '../lib/plural.mjs';
 import { buildAnimeMatcher, splitByMentions } from '../lib/animeMentions.mjs';
 import { makeExceptionFilter } from '../lib/mentionExceptions.mjs';
