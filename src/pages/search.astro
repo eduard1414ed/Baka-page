@@ -380,6 +380,28 @@ const SCOPES = [
 			return html + esc(text.slice(cursor));
 		}
 
+		/**
+		 * Фраза вокруг найденного слова, с подсветкой самого слова.
+		 *
+		 * `low` и `high` — границы, за которые вылезать нельзя. У реплики это
+		 * её начало и конец: окно в двадцать слов у совпадения в начале блока
+		 * иначе залезало в чужой текст. У обычного материала границ нет,
+		 * и тогда это вся страница.
+		 *
+		 * Один код на оба случая: цитату в упоминаниях и фразу под заголовком
+		 * материала. Две копии разъехались бы длиной окна.
+		 */
+		function quote(words: string[], at: number, low: number, high: number) {
+			const from = Math.max(low, at - 9);
+			const to = Math.min(high, at + 10);
+			return (
+				(from > low ? '… ' : '') +
+				`${esc(words.slice(from, at).join(' '))} <mark>${esc(words[at] ?? '')}</mark> ` +
+				`${esc(words.slice(at + 1, to).join(' '))}` +
+				(to < high ? ' …' : '')
+			);
+		}
+
 		function fragment(result: PagefindResult) {
 			if (!fragments.has(result.id)) fragments.set(result.id, result.data());
 			return fragments.get(result.id)!;
@@ -538,6 +560,53 @@ const SCOPES = [
 		// «как выглядит метастрока» живёт в PostKicker.astro; здесь только
 		// порядок кусков, который у поиска свой: вместо номера выпуска — дата,
 		// как в макете.
+		/**
+		 * ЧТО СТОИТ ПОД ЗАГОЛОВКОМ МАТЕРИАЛА — ОПИСАНИЕ ИЛИ МЕСТО НАХОДКИ.
+		 *
+		 * Описание отвечает на вопрос «что это за материал», но не отвечает
+		 * на «почему он здесь». Пока искомое слово есть в названии или
+		 * в описании, одно совпадает с другим: слово подсвечено, и всё понятно.
+		 *
+		 * А если слово прозвучало только в разговоре, описание молчит —
+		 * материал в выдаче стоит, и непонятно, за что. Тогда вместо описания
+		 * показываем то же, что в группе упоминаний: минуту и саму фразу.
+		 *
+		 * Считает это ТА ЖЕ функция `moments`, что рисует упоминания, — только
+		 * просим у неё один кусок вместо трёх. Второго разбора расшифровки
+		 * здесь нет и быть не должно.
+		 *
+		 * Минута тут НЕ ССЫЛКА: вложить ссылку в ссылку нельзя, а вся карточка
+		 * уже ведёт на материал. За точной минутой — группа «Упоминания»
+		 * ниже, там таймкод живой.
+		 */
+		function evidence(data: any) {
+			const desc = data.meta?.desc ?? '';
+			const list = terms();
+			const explains = list.length === 0 || matchedPart(`${data.meta?.title ?? ''} ${desc}`, list) !== null;
+			if (explains && desc) return `<p>${highlight(desc, query)}</p>`;
+
+			const [first] = moments(data, 1);
+			if (first) {
+				return (
+					`<p class="material-found">` +
+					`<span class="found-time tech">${timecode(first.seconds)}</span>${first.text}` +
+					`</p>`
+				);
+			}
+
+			// Расшифровки у материала нет, а слово всё равно где-то в тексте:
+			// статья, заметка, описание выпуска. Минуты тут не бывает, но фраза
+			// есть — её и показываем, иначе выходит ровно то, на что жаловался
+			// заказчик: материал стоит, и непонятно, за что.
+			const words: string[] = String(data.content ?? '').split(/\s+/);
+			for (const at of data.locations || []) {
+				if (list.length > 0 && matchedPart(words[at] ?? '', list) === null) continue;
+				return `<p class="material-found">${quote(words, at, 0, words.length)}</p>`;
+			}
+
+			return desc ? `<p>${highlight(desc, query)}</p>` : '';
+		}
+
 		function renderMaterial(data: any, list: HTMLElement) {
 			const link = linkTo(data.url);
 			link.className = 'material-result';
@@ -563,9 +632,7 @@ const SCOPES = [
 				`<h3>${highlight(data.meta?.title ?? data.url, query)}` +
 				(isExternal(data.url) ? `<span class="external" aria-hidden="true"> ↗</span>` : '') +
 				`</h3>` +
-				// Описание материала, а не отрывок вокруг найденного слова:
-				// почему — в комментарии к метке `desc` в posts/[slug].astro.
-				(data.meta?.desc ? `<p>${highlight(data.meta.desc, query)}</p>` : '');
+				evidence(data);
 			link.append(copy);
 			link.append(arrow());
 			list.append(link);
@@ -581,7 +648,7 @@ const SCOPES = [
 		//
 		// Отдельный индекс по 24 900 репликам был бы 24 900 файлов в сборке,
 		// а у Cloudflare лимит 20 000 (см. CLAUDE.md).
-		function moments(data: any) {
+		function moments(data: any, limit = MOMENTS) {
 			const anchors = (data.anchors || []).filter((a: any) => /^t(\d+|end)/.test(a.id));
 			if (anchors.length === 0) return [];
 
@@ -635,11 +702,6 @@ const SCOPES = [
 				// слова. Границы блока — это соседние якоря, других данных не нужно.
 				const blockStart = anchor.location;
 				const blockEnd = anchors[index + 1]?.location ?? words.length;
-				const from = Math.max(blockStart, at - 9);
-				const to = Math.min(blockEnd, at + 10);
-				const before = words.slice(from, at).join(' ');
-				const hit = words[at] ?? '';
-				const after = words.slice(at + 1, to).join(' ');
 				found.push({
 					seconds: Number(anchor.id.slice(1).split('-')[0]),
 					speaker,
@@ -649,12 +711,9 @@ const SCOPES = [
 					// получив «студия», не подсветил бы ничего — читатель пришёл бы
 					// на нужную реплику и увидел «ничего не найдено».
 					word: part,
-					text:
-						(from > blockStart ? '… ' : '') +
-						`${esc(before)} <mark>${esc(hit)}</mark> ${esc(after)}` +
-						(to < blockEnd ? ' …' : ''),
+					text: quote(words, at, blockStart, blockEnd),
 				});
-				if (found.length >= MOMENTS) break;
+				if (found.length >= limit) break;
 			}
 			return found;
 		}
@@ -1009,7 +1068,30 @@ const SCOPES = [
 		.search-heading {
 			grid-template-columns: repeat(12, minmax(0, 1fr));
 			column-gap: var(--grid-gap);
-			align-items: start;
+			/* Подводка стоит НА НИЖНЕЙ ЛИНИИ заголовка, а не под верхней кромкой:
+			   в макете она прижата вверх, и рядом с крупным «Поиск» это читалось
+			   как две несвязанные надписи. Правка по решению заказчика.
+
+			   Здесь выравниваются нижние края коробок — это умеют все. Точную
+			   посадку на базовую линию добавляет `@supports` ниже. */
+			align-items: end;
+		}
+
+		/* Кегли и интерлиньяж у заголовка и подводки разные, поэтому нижний край
+		   коробки и базовая линия — не одно и то же: подводка садится на пару
+		   пикселей ниже «Поиска». `last baseline` ставит ПОСЛЕДНЮЮ строку
+		   подводки ровно на базовую линию заголовка (то же правило, что
+		   в CLAUDE.md: две строки в одной линейке равняются по базовой линии,
+		   а не по коробкам).
+
+		   ПРОВЕРКА ПОДДЕРЖКИ ОБЯЗАТЕЛЬНА, И НЕ ТОЛЬКО РАДИ СТАРЫХ БРАУЗЕРОВ:
+		   две записи `align-items` подряд в одном правиле сборщик схлопывает
+		   в последнюю, и запасная просто исчезает из собранного файла.
+		   Проверено разбором собранного CSS. */
+		@supports (align-items: last baseline) {
+			.search-heading {
+				align-items: last baseline;
+			}
 		}
 
 		.search-heading-main {
@@ -1018,7 +1100,6 @@ const SCOPES = [
 
 		.search-heading-copy {
 			grid-column: 6 / 11;
-			padding-top: 3px;
 		}
 	}
 
@@ -1367,6 +1448,15 @@ const SCOPES = [
 
 	.group-list :global(.external) {
 		color: var(--accent-text);
+	}
+
+	/* Минута перед фразой, когда слово нашлось не в описании, а в разговоре.
+	   БЕЗ ПОДЧЁРКИВАНИЯ: подчёркнутый акцент на этом сайте означает ссылку,
+	   а нажимается тут вся карточка целиком, и ведёт она на материал. */
+	.group-list :global(.found-time) {
+		margin-right: var(--sp-2);
+		color: var(--accent-text);
+		font-variant-numeric: tabular-nums;
 	}
 
 	/* ---------- Результат: упоминание ---------- */
