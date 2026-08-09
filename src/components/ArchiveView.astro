@@ -28,7 +28,7 @@ interface Props {
 	eyebrow: string;
 	heading: string;
 	intro: string;
-	/** «143 выпуска · 24 видеоэссе · 61 статья». Пусто — строки нет. */
+	/** «143 выпуска · 24 видеоэссе · 61 статья». У пустого раздела пусто. */
 	countLine: string;
 	/** Раздел, если это страница раздела. Не задан — весь архив. */
 	activeCategory?: string;
@@ -46,9 +46,13 @@ const { posts, eyebrow, heading, intro, countLine, activeCategory, base, current
 		<div class="eyebrow tech">{eyebrow}</div>
 		<h1>{heading}</h1>
 	</div>
+	{/* Строка счёта выводится ВСЕГДА, даже когда считать нечего. У пустого
+	    раздела в ней пусто, но место под неё занято: иначе шапка такого
+	    раздела на строку ниже соседних, и при переходе по вкладкам список
+	    под ней прыгает. */}
 	<div class="archive-intro">
 		<p>{intro}</p>
-		{countLine && <div class="archive-count tech">{countLine}</div>}
+		<div class="archive-count tech">{countLine}</div>
 	</div>
 </section>
 
@@ -114,8 +118,12 @@ const { posts, eyebrow, heading, intro, countLine, activeCategory, base, current
 		margin: 0 0 var(--sp-4);
 	}
 
+	/* Ровно одна строка технического слоя, даже когда она пустая: пустой блок
+	   сам по себе схлопнулся бы в нулевую высоту, и место осталось бы
+	   незанятым. */
 	.archive-count {
 		color: var(--muted);
+		min-height: calc(var(--technical) * 1.35);
 	}
 
 	@media (min-width: 821px) {
