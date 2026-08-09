@@ -144,11 +144,16 @@ const fallbackPlatform = platformsOfKind('listen')[0];
 </div>
 
 <style>
+	/* ЛИНИИ ТУТ ОБЫЧНЫЕ, А НЕ ЧЕРНИЛЬНЫЕ. §5 системы отводил плееру и началу
+	   транскрипта «сильную» линию `--ink` как акцент начала блока — заказчик
+	   посмотрел живую страницу и решил иначе: линия на сайте одна. Рядом
+	   с этими двумя стоят обычные разделители, и чернильные читались не как
+	   акцент, а как сбой. Решение от 9 августа 2026, §5 приведён в соответствие. */
 	.episode-player {
 		width: 100%;
 		padding: 18px 0 16px;
-		border-top: 1px solid var(--ink);
-		border-bottom: 1px solid var(--ink);
+		border-top: 1px solid var(--line);
+		border-bottom: 1px solid var(--line);
 	}
 
 	.ep-main {
