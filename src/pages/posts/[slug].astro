@@ -20,7 +20,7 @@ import { getCollection, getEntry, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import JsonLd from '../../components/JsonLd.astro';
 import { postDescription } from '../../lib/excerpt.mjs';
-import { socialSource } from '../../lib/postImage.mjs';
+import { socialSource, coverSrcs } from '../../lib/postImage.mjs';
 import { absoluteUrl, SITE_NAME } from '../../lib/site.mjs';
 import { podcastEpisodeSchema, articleSchema, breadcrumbsSchema } from '../../lib/schema.mjs';
 import { categories, sectionOf } from '../../content.config';
@@ -142,7 +142,25 @@ const transcriptData = showTranscript ? applyPostOverrides(transcript.data, post
 // робот сверки. В шапке она теперь показана квадратом 1:1, поэтому из текста
 // убирается: src/plugins/remark-episode-cover.mjs. Иначе одна и та же обложка
 // шла бы на странице дважды подряд.
-const playerCover = episode?.imageUrl ? resolveEpisodeCover(episode.imageUrl).src : null;
+//
+// ПОРЯДОК ДВА ИСТОЧНИКА, И ПОЛЕ АВТОРА ГЛАВНЕЕ. Сначала поле «Обложка»
+// у поста, потом обложка выпуска из RSS. У бонуса второго источника нет
+// вовсе: в фиде подкаста его не существует, `audioGuid` не заполняется, —
+// и без первого рамка оставалась пустым квадратом с линией по краю. Пустая
+// рамка читается поломкой вёрстки, а не «картинки нет»: заказчик увидел
+// это на первом же опубликованном бонусе 10 августа 2026.
+//
+// НЕТ НИ ТОЙ, НИ ДРУГОЙ — РАМКИ НЕ РИСУЕТСЯ СОВСЕМ, и заголовок занимает
+// всю ширину. Заглушку «изображения нет» сюда не ставим: она отвечает
+// на «картинка была, но не загрузилась», а тут её не задавали вовсе.
+//
+// Картинки из ТЕКСТА в шапку не поднимаются — решение заказчика от
+// 10 августа 2026. Первая картинка тела остаётся делом текста; исключение
+// одно, и оно ниже: если она совпала с обложкой, из текста её убирают,
+// чтобы не стояла дважды подряд.
+const heroCover = coverSrcs(cover) ?? (episode?.imageUrl ? resolveEpisodeCover(episode.imageUrl) : null);
+// Обложка в плеере — та же, что в шапке: картинка у материала одна.
+const playerCover = heroCover?.src ?? null;
 const categoryLabel = categories.find((c) => c.id === category)?.label ?? category;
 // В чей раздел ведёт ссылка «← назад». У бонуса подпись своя («← Бонус»),
 // а раздел чужой — «Подкаст»: своей страницы у скрытой категории нет.
@@ -395,14 +413,17 @@ const postSearchMeta = [
 								{timing && ` · ${timing.label}`}
 							</span>
 						</div>
-						<div class="episode-grid">
+						<div class:list={['episode-grid', !heroCover && 'without-cover']}>
 							{/* Обложка выпуска всегда квадрат и НЕ ОБРЕЗАЕТСЯ (§9):
-							    artwork важен целиком. Рамка остаётся пустой, если
-							    фид недоступен в момент сборки, — тогда и плеера
-							    на странице не будет. */}
-							<div class="episode-cover">
-								{playerCover && <img src={playerCover} alt={`Обложка: ${title}`} width="360" height="360" />}
-							</div>
+							    artwork важен целиком. Картинки нет — нет и рамки:
+							    пустой квадрат с линией по краю читается поломкой
+							    вёрстки. Тогда сетка становится одноколоночной,
+							    иначе заголовок встал бы в колонку под обложку. */}
+							{heroCover && (
+								<div class="episode-cover">
+									<img src={heroCover.src} alt={`Обложка: ${title}`} width="360" height="360" />
+								</div>
+							)}
 							<div class="episode-copy">
 								<PostKicker post={post} withTiming={false} />
 								<h1 data-pagefind-meta="title">{title}</h1>
@@ -936,6 +957,14 @@ const postSearchMeta = [
 			align-items: stretch;
 		}
 
+		/* Колонки под обложку нет, когда нет обложки. Уточнение стоит В КАЖДОМ
+		   медиазапросе, где задаются колонки, — иначе на одной ширине сетка
+		   осталась бы двухколоночной с пустой первой колонкой, и увидеть это
+		   можно было бы только глазами на этой ширине. */
+		.episode-grid.without-cover {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
 		.episode-cover {
 			width: 300px;
 		}
@@ -959,6 +988,10 @@ const postSearchMeta = [
 		.episode-grid {
 			grid-template-columns: 360px minmax(0, 1fr);
 			gap: var(--sp-12);
+		}
+
+		.episode-grid.without-cover {
+			grid-template-columns: minmax(0, 1fr);
 		}
 
 		.episode-cover {

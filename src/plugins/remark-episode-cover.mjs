@@ -24,9 +24,27 @@ const CATEGORIES_WITH_COVER_IN_HERO = ['podcast', 'bonus'];
 // Если обложка ещё не скачана (новый выпуск появился в RSS, а робот пока не
 // добежал), resolveEpisodeCover вернёт исходный адрес — картинка будет тяжёлой,
 // но не битой.
+/**
+ * Один ли это файл. Админка пишет адреса картинок в URL-кодировке
+ * (`%D0%9F%D0%BE%D0%BD%D0%B8.png`), а в поле «Обложка» тот же файл может
+ * лежать буквами — сравнение «строка в строку» такую пару не узнало бы.
+ */
+function sameFile(a, b) {
+	if (!a || !b) return false;
+	const normalize = (value) => {
+		try {
+			return decodeURIComponent(value).trim();
+		} catch {
+			return value.trim();
+		}
+	};
+	return normalize(a) === normalize(b);
+}
+
 export default function remarkEpisodeCover() {
 	return (tree, file) => {
-		const category = file?.data?.astro?.frontmatter?.category;
+		const frontmatter = file?.data?.astro?.frontmatter ?? {};
+		const category = frontmatter.category;
 
 		if (CATEGORIES_WITH_COVER_IN_HERO.includes(category)) {
 			// Убираем не саму картинку, а абзац целиком: в файле она лежит
@@ -40,6 +58,34 @@ export default function remarkEpisodeCover() {
 				// Индекс не сдвигаем: на его место встал следующий элемент.
 				return [SKIP, index];
 			});
+
+			// ТО ЖЕ САМОЕ ДЛЯ КАРТИНКИ, ЗАГРУЖЕННОЙ В АДМИНКЕ. Выше убирается
+			// обложка с хостинга подкаста, которую вставляет робот сверки;
+			// здесь — блок `::image`, если он показывает ровно тот файл, что
+			// стоит в поле «Обложка». У бонуса выпуска в RSS нет вовсе, обложка
+			// у него только своя, и без этой ветки одна и та же картинка шла бы
+			// дважды подряд: крупная в шапке и она же первой строкой текста.
+			//
+			// ПРАВИЛО ОДНО НА ОБА СЛУЧАЯ И ЖИВЁТ ЗДЕСЬ: «картинка, показанная
+			// в шапке, из текста уходит». Что именно показано в шапке, решает
+			// src/pages/posts/[slug].astro — тем же порядком «своё поле, потом
+			// RSS». Разъедься они, картинка либо пропала бы из текста, не появившись
+			// в шапке, либо встала бы дважды.
+			//
+			// ПЛАГИН ИДЁТ ДО remarkImageFigure: тот превращает `::image` в готовый
+			// блок с подписью, и после него узла-директивы уже нет.
+			const cover = typeof frontmatter.cover === 'string' ? frontmatter.cover.trim() : '';
+			if (cover) {
+				let removed = false;
+				visit(tree, 'leafDirective', (node, index, parent) => {
+					if (removed || node.name !== 'image') return;
+					if (!sameFile(node.attributes?.src, cover)) return;
+
+					parent.children.splice(index, 1);
+					removed = true;
+					return [SKIP, index];
+				});
+			}
 			return;
 		}
 
