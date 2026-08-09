@@ -439,14 +439,25 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 				button.disabled = true;
 			});
 		} else {
-			// Клик по плашке таймкода перематывает плеер. Через делегирование, а не
-			// слушателем на каждой из сотен плашек. Свой класс .tr-time, а НЕ .timecode
-			// из remark-timecode.mjs: те PlayerBar.astro ловит сам, и на общем классе
-			// клик обработался бы дважды.
+			// ПЕРЕМАТЫВАЕТ ВЕСЬ БЛОК, А НЕ ТОЛЬКО ПЛАШКА ВРЕМЕНИ: читатель целится
+			// в реплику, которую хочет услышать, а не в четыре цифры сбоку от неё.
+			// Плашка остаётся кнопкой — она нужна тем, кто ходит с клавиатуры,
+			// и она же объясняет, что блок кликабельный.
+			//
+			// Через делегирование, а не слушателем на каждом из сотен блоков.
+			// Свой класс .tr-time, а НЕ .timecode из remark-timecode.mjs: те
+			// PlayerBar.astro ловит сам, и на общем классе клик обработался бы дважды.
+			section.classList.add('is-playable');
 			section.addEventListener('click', (event) => {
-				const button = (event.target as HTMLElement).closest<HTMLButtonElement>('.tr-time');
-				if (!button) return;
-				api.load(playerCard.dataset, Number(button.dataset.seconds));
+				const target = event.target as HTMLElement;
+				// Ссылка на тайтл ведёт на страницу тайтла, а не перематывает.
+				if (target.closest('a')) return;
+				const block = target.closest<HTMLElement>('.tr-block');
+				if (!block) return;
+				// Человек выделял текст, а не тыкал в реплику: уводить плеер
+				// в этот момент — значит наказать за попытку скопировать цитату.
+				if ((window.getSelection()?.toString() ?? '').length > 0) return;
+				api.load(playerCard.dataset, Number(block.dataset.start));
 			});
 
 			bindFollow(section, body, follow, api, playerCard, reveal);
@@ -564,24 +575,18 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 			if (following) reveal(blocks[index]);
 		}
 
+		// СЛЕЖЕНИЕ УПРАВЛЯЕТ ТОЛЬКО АВТОПРОКРУТКОЙ, а не подсветкой. Подсветка
+		// звучащей реплики нужна всегда: без неё, читая транскрипт под звук,
+		// невозможно понять, где ты сейчас, — а это единственное, ради чего
+		// расшифровка стоит рядом с плеером.
 		function setFollowing(on: boolean) {
 			following = on;
 			follow.setAttribute('aria-pressed', String(on));
 			follow.classList.toggle('is-on', on);
 			follow.textContent = on ? 'Слежу за плеером' : 'Следить за плеером';
 
-			if (!on) {
-				setPlaying(-1);
-				return;
-			}
-			// Включили на ходу — сразу прыгаем к тому месту, где сейчас звук.
-			// Если играет другой выпуск (или ничего), просто ждём: как только
-			// запустят этот, подсветка поедет сама.
-			if (api.getGuid() === guid) {
-				const index = blockAt(api.audio.currentTime);
-				playing = -1;
-				setPlaying(index);
-			}
+			// Включили на ходу — сразу подводим к тому месту, где сейчас звук.
+			if (on && api.getGuid() === guid) reveal(blocks[playing] ?? blocks[0]);
 		}
 
 		follow.addEventListener('click', () => setFollowing(!following));
@@ -605,7 +610,12 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 				api.audio.removeEventListener('timeupdate', onTime);
 				return;
 			}
-			if (!following || api.getGuid() !== guid) return;
+			// Подсвечиваем всегда, пока играет ЭТОТ выпуск; прокручиваем — только
+			// при включённом слежении (решает setPlaying).
+			if (api.getGuid() !== guid) {
+				setPlaying(-1);
+				return;
+			}
 			setPlaying(blockAt(api.audio.currentTime));
 		};
 
@@ -792,9 +802,33 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 		overflow-y: visible;
 	}
 
+	/* Слева у каждого блока пустая колонка в 12 px — в ней рисуется полоска
+	   у звучащей сейчас реплики. Полоска не должна ни налезать на текст,
+	   ни сдвигать его при появлении, поэтому место под неё занято всегда. */
 	.tr-block {
-		padding: 18px 0;
+		padding: 18px 0 18px var(--sp-3);
 		border-bottom: 1px solid var(--line-soft);
+	}
+
+	/* Реплика, которая звучит прямо сейчас. Отмечается не только цветом
+	   (§3.3): полоска слева, подложка под текстом и акцентное имя. */
+	.tr-block.is-playing {
+		box-shadow: inset 3px 0 0 var(--accent-brand);
+	}
+
+	/* Перематывает ВЕСЬ блок, а не только плашка времени. Класс вешает скрипт
+	   и только когда плеер на странице есть: без него курсор обещал бы
+	   действие, которого не будет. */
+	.transcript.is-playable .tr-block {
+		cursor: pointer;
+	}
+
+	.transcript.is-playable .tr-block:hover {
+		box-shadow: inset 3px 0 0 var(--line-strong);
+	}
+
+	.transcript.is-playable .tr-block.is-playing:hover {
+		box-shadow: inset 3px 0 0 var(--accent-brand);
 	}
 
 	.tr-side {
@@ -944,6 +978,7 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 		.tr-labels {
 			display: grid;
 			grid-template-columns: 142px minmax(0, 1fr);
+			padding-left: var(--sp-3);
 			border-top: 1px solid var(--line);
 			color: var(--muted);
 		}
@@ -960,7 +995,7 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 		.tr-block {
 			display: grid;
 			grid-template-columns: 142px minmax(0, 1fr);
-			padding: 0;
+			padding: 0 0 0 var(--sp-3);
 		}
 
 		.tr-side {

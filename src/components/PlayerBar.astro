@@ -9,12 +9,12 @@
 // ней. Своя линия плюс граница дали бы две линии подряд — то же правило, что
 // у секций (§5).
 //
-// ПОЛОСА ПОКАЗЫВАЕТ, А НЕ УПРАВЛЯЕТ. Перемотка тут — кнопки ±15, а тащить
-// полосу в 3 пикселя нельзя: цель обязана быть 44 (§8), и добрать её нечем —
-// невидимая зона на 44 накрыла бы название и кнопки под ней. Полноразмерный
-// таймлайн есть там, где ему место, — на самой странице выпуска; в панели
-// её роль — сказать, сколько осталось. В перечне того, что в панели есть
-// (§6.2 ТЗ), полосы среди органов управления и нет.
+// ПОЛОСУ МОЖНО ТАЩИТЬ, и это решение заказчика: сначала она была только
+// указателем. Компромисс по цели нажатия здесь честный и осознанный: видимая
+// полоса 3, ползунок поверх неё высотой 20. Полных 44 не добрать — невидимая
+// зона такой высоты накрыла бы название и кнопки под ней, то есть отняла бы
+// две цели ради одной. Полноразмерный таймлайн 44 есть на самой странице
+// выпуска, а 3 пикселя пальцем не берутся вовсе.
 //
 // Запускает воспроизведение визуальный плеер на странице выпуска
 // (src/components/EpisodePlayer.astro, класс .episode-player) — он несёт данные
@@ -28,8 +28,14 @@
 ---
 
 <div id="player-bar" class="miniplayer" hidden transition:persist transition:name="player-bar">
-	<div class="mini-progress" aria-hidden="true">
-		<span id="player-fill" class="mini-fill"></span>
+	{/* Полоса видимая 3, а тащить её можно за полосу вдвое шире: ползунок лежит
+	    поверх, прозрачный и выше своей дорожки. Целых 44 тут не добрать —
+	    невидимая зона такой высоты накрыла бы название и кнопки под ней, —
+	    но 3 пикселя не годятся никак, а 20 пальцем берутся. Полноразмерный
+	    таймлайн есть на самой странице выпуска. */}
+	<div class="mini-progress">
+		<input id="player-range" class="mini-range" type="range" min="0" max="0" step="1" value="0" aria-label="Перемотка" />
+		<span class="mini-track" aria-hidden="true"><span id="player-fill" class="mini-fill"></span></span>
 	</div>
 
 	<div class="mini-inner">
@@ -151,6 +157,7 @@
 		const back15 = document.getElementById('player-back15') as HTMLButtonElement;
 		const fwd15 = document.getElementById('player-fwd15') as HTMLButtonElement;
 		const fill = document.getElementById('player-fill') as HTMLSpanElement;
+		const range = document.getElementById('player-range') as HTMLInputElement;
 		const timeCurrent = document.getElementById('player-time-current') as HTMLSpanElement;
 		const timeDuration = document.getElementById('player-time-duration') as HTMLSpanElement;
 		const rateSelect = document.getElementById('player-rate') as HTMLSelectElement;
@@ -272,9 +279,23 @@
 			});
 		}
 
+		let scrubbing = false;
+
 		toggle.addEventListener('click', () => {
 			if (audio.paused) audio.play();
 			else audio.pause();
+		});
+
+		// Пока тащат ползунок, время и заливку рисуем по нему, а не по звуку:
+		// иначе они спорили бы друг с другом под рукой.
+		range.addEventListener('input', () => {
+			scrubbing = true;
+			timeCurrent.textContent = formatTime(Number(range.value));
+			fill.style.width = playedPercent(Number(range.value), Number(range.max));
+		});
+		range.addEventListener('change', () => {
+			audio.currentTime = Number(range.value);
+			scrubbing = false;
 		});
 
 		back15.addEventListener('click', () => {
@@ -317,6 +338,7 @@
 			saveState();
 		});
 		audio.addEventListener('loadedmetadata', () => {
+			range.max = String(Math.floor(audio.duration || 0));
 			timeDuration.textContent = formatTime(audio.duration);
 		});
 		audio.addEventListener('ratechange', () => {
@@ -325,21 +347,38 @@
 			saveState();
 		});
 		audio.addEventListener('timeupdate', () => {
-			timeCurrent.textContent = formatTime(audio.currentTime);
-			fill.style.width = playedPercent(audio.currentTime, audio.duration);
+			if (!scrubbing) {
+				range.value = String(Math.floor(audio.currentTime));
+				timeCurrent.textContent = formatTime(audio.currentTime);
+				fill.style.width = playedPercent(audio.currentTime, audio.duration);
+			}
 			// Пишем в localStorage не на каждый тик (несколько раз в секунду),
 			// а примерно раз в 5 секунд — достаточно для восстановления позиции.
 			if (Math.floor(audio.currentTime) % 5 === 0) saveState();
 		});
 
-		// Состояния загрузки и ошибки. `error` у <audio> приходит и когда мы сами
-		// снимаем src при закрытии панели — тогда выпуска уже нет, и показывать
-		// нечего.
+		// Состояния загрузки и ошибки.
+		//
+		// ПРОВЕРКА ОШИБКИ НАРОЧНО ПРИДИРЧИВАЯ. Событие `error` у <audio> приходит
+		// не только когда всё пропало: браузер шлёт его и на прерванную загрузку
+		// (мы сами снимаем src при закрытии панели), и на неудачную первую попытку,
+		// после которой он спокойно берёт файл со второго раза, — а выпуск при
+		// этом играет. Показанная в такой момент плашка «не удалось загрузить»
+		// прямо врёт читателю поверх работающего плеера, и это уже случилось.
+		//
+		// Поэтому ошибку признаём, только если сошлось всё сразу: выпуск выбран,
+		// элемент правда в состоянии ошибки, ошибка не «прервано», и играть
+		// при этом нечего — данных не набралось совсем.
 		audio.addEventListener('waiting', () => setState('loading'));
 		audio.addEventListener('playing', () => setState('ready'));
 		audio.addEventListener('canplay', () => setState('ready'));
+		audio.addEventListener('loadedmetadata', () => setState('ready'));
 		audio.addEventListener('error', () => {
-			if (currentGuid) setState('error');
+			if (!currentGuid) return;
+			const code = audio.error?.code;
+			if (!code || code === MediaError.MEDIA_ERR_ABORTED) return;
+			if (audio.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) return;
+			setState('error');
 		});
 
 		// Подстраховка: если вкладку закрыли или перезагрузили во время
@@ -535,7 +574,13 @@
 		left: 0;
 		right: 0;
 		height: 3px;
+	}
+
+	.mini-track {
+		position: absolute;
+		inset: 0;
 		background: var(--line);
+		pointer-events: none;
 	}
 
 	.mini-fill {
@@ -545,6 +590,45 @@
 		bottom: 0;
 		width: 0;
 		background: var(--accent-brand);
+	}
+
+	/* Ручка едет вместе с концом заливки — считать её положение отдельно
+	   не нужно, а значит и разъехаться им не с чем. */
+	.mini-fill::after {
+		content: '';
+		position: absolute;
+		right: -7px;
+		top: 50%;
+		width: 14px;
+		height: 14px;
+		border-radius: 50%;
+		background: var(--accent-brand);
+		transform: translateY(-50%);
+	}
+
+	/* Прозрачный ползунок поверх полосы: видно дорожку, а тащат его.
+	   Выше своей дорожки нарочно — 3 пикселя пальцем не взять. */
+	.mini-range {
+		appearance: none;
+		-webkit-appearance: none;
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 50%;
+		z-index: 1;
+		width: 100%;
+		height: 20px;
+		margin: 0;
+		transform: translateY(-50%);
+		opacity: 0;
+		background: transparent;
+		cursor: pointer;
+	}
+
+	/* Сам ползунок прозрачный, поэтому фокус показывает видимая дорожка. */
+	.mini-range:focus-visible ~ .mini-track {
+		outline: 2px solid var(--accent-text);
+		outline-offset: 2px;
 	}
 
 	.mini-inner {
