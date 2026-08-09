@@ -5,26 +5,26 @@ hosts:
   - name: Эд
     role: Ведущий · сценарист
     photo: /images/uploads/DSCF0304.jpg
-    url: https://t.me/etsarionov
     bio: Медиаменеджер, помимо «Баки!» — автор подкаста про комиксы и мангу «Омнибус и танкобон» от Arzamas, текстов об аниме и манге для «Кинопоиска», «Т—Ж» и других изданий.
     urlLabel: Telegram
+    url: https://t.me/etsarionov
   - name: Ксюша
     role: Ведущая
-    url: https://t.me/ksushaotakuet
     bio: Журналистка, пишет для «Кинопоиска» и других изданий.
     urlLabel: Telegram
+    url: https://t.me/ksushaotakuet
   - name: Иван
     role: Монтажёр
-    url: https://t.me/in_da_tresh
     bio: Собирает наши потрясающие видеоверсии и эссе. Помимо этого работает и над десятком других успешных подкастов.
     urlLabel: Telegram
+    url: https://t.me/in_da_tresh
 listenNote: Бака! в наушниках
 socialNote: Бака! в других местах
 supportTitle: Поддержать «Баку!»
 supportNote: Подписка помогает нам выпускать подкасты, видеоэссе и тексты — и даёт доступ к бонусным выпускам и дополнительным материалам.
-contactText: По вопросам сотрудничества, рекламы или участия в выпуске — пишите на почту.
+contactText: По вопросам сотрудничества, рекламы или участия в выпуске — пишите на почту
 contactEmail: litotaprod@gmail.com
-chatText: А если просто хочется поговорить об аниме — у нас есть чат, заходите.
+chatText: А если просто хочется поговорить об аниме — у нас есть чат, заходите
 chatLabel: Чат в Telegram
 chatUrl: https://t.me/bakapodcast
 ---
