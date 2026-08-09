@@ -281,7 +281,7 @@ const crumbs = breadcrumbsSchema([
 			{
 				mentions.length > 0 && (
 					<section class="mentions" data-pagefind-ignore>
-						<h2 class="mentions-title">Упоминания</h2>
+						<h2 class="mentions-title eyebrow tech">упоминания</h2>
 						<div class="mentions-grid" id="mentions-grid">
 							{mentions.map(({ post, times }: { post: any; times: number[] }, position: number) => (
 								<PostCard post={post} hidden={position >= FIRST_MENTIONS}>
@@ -431,14 +431,14 @@ const crumbs = breadcrumbsSchema([
 		transform: rotate(180deg);
 	}
 
-	/* Постер не обрезается: поля внутри рамки заливаются цветом марки.
-	   Пропорция рамки — из замера справочника (`--poster-ratio` в tokens.css),
-	   а не 2:3 из ТЗ: иначе у широких постеров сверху остаётся пустая полоса. */
+	/* Постер заполняет рамку целиком — решение заказчика 10 августа 2026,
+	   цена замерена по всем постерам (см. AnimeCard.astro). Пропорция рамки —
+	   из замера справочника (`--poster-ratio` в tokens.css), а не 2:3 из ТЗ. */
 	.poster-stamp img {
 		display: block;
 		width: 100%;
 		aspect-ratio: var(--poster-ratio);
-		object-fit: contain;
+		object-fit: cover;
 		object-position: center;
 	}
 
@@ -573,15 +573,12 @@ const crumbs = breadcrumbsSchema([
 	   на странице выпуска: это служебная надпись над списком, а не раздел
 	   страницы. Своей линии снизу у него нет — её рисует верхняя граница
 	   первого ряда карточек, иначе над блоком оказались бы две. */
+	/* Вид — общий `.eyebrow` в global.css, кегль и капслок — общий `.tech`.
+	   Своё описание тут было ЦЕЛИКОМ, включая гарнитуру и трекинг, и вышло
+	   третьим видом надзаголовка на сайте: чернильным и без скобок. Сведено
+	   решением заказчика 10 августа. Здесь остаётся только зазор до списка. */
 	.mentions-title {
 		margin: 0 0 20px;
-		font-family: var(--font-tech);
-		font-size: var(--technical);
-		font-weight: 600;
-		line-height: 1.35;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--ink);
 	}
 
 	.mentions-grid {

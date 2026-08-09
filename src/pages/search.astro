@@ -22,6 +22,7 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import LoadMore from '../components/LoadMore.astro';
+import SearchIcon from '../components/SearchIcon.astro';
 import { isPublished } from '../lib/publishing.mjs';
 import { hasUsableTimecodes } from '../lib/transcript.mjs';
 import { plural } from '../lib/plural.mjs';
@@ -122,10 +123,7 @@ const SCOPES = [
 						autocomplete="off"
 						aria-label="Что искать"
 					/>
-					<svg viewBox="0 0 24 24" aria-hidden="true">
-						<circle cx="10.5" cy="10.5" r="6.5"></circle>
-						<path d="M15.5 15.5L21 21"></path>
-					</svg>
+					<SearchIcon />
 				</div>
 
 				{/* Области ПЕРЕНОСЯТСЯ, А НЕ СКРОЛЛЯТСЯ. Горизонтальная карусель
@@ -1144,7 +1142,8 @@ const SCOPES = [
 		-webkit-appearance: none;
 	}
 
-	.search-box svg {
+	/* `:global` обязателен: значок рисует SearchIcon.astro (метка его, не наша). */
+	.search-box :global(svg) {
 		position: absolute;
 		right: 19px;
 		top: 50%;
@@ -1316,10 +1315,15 @@ const SCOPES = [
 		overflow: hidden;
 	}
 
+	/* ЧЕТВЁРТОЕ МЕСТО, ГДЕ РИСУЕТСЯ ПОСТЕР, и вписан он так же, как в трёх
+	   остальных: заполняет рамку целиком (решение заказчика 10 августа 2026).
+	   Марку выдачи собирает браузер, до стилей компонента она не дотягивается,
+	   поэтому правило приходится повторять — но значение обязано совпадать
+	   с AnimeCard, AnimeBadge и страницей тайтла. */
 	.group-list :global(.anime-stamp img) {
 		width: 100%;
 		height: 100%;
-		object-fit: contain;
+		object-fit: cover;
 	}
 
 	/* Перфорация по всем четырём сторонам: верх и низ рисуют псевдоэлементы,

@@ -11,6 +11,7 @@
 import { Image } from 'astro:assets';
 import logo from '../assets/images/logo-ink.png';
 import { SITE_DESCRIPTION } from '../lib/site.mjs';
+import SearchIcon from './SearchIcon.astro';
 
 // Логотип чернильный, а не белый. Белый (assets/images/logo.png) рисовался
 // под тёмную тему и на бумажном фоне не виден вовсе.
@@ -30,6 +31,31 @@ const links = [
 
 const path = Astro.url.pathname;
 const isActive = (href) => (href === '/' ? path === '/' : path.startsWith(href));
+
+/**
+ * Короткие слова не отрываются от следующего: «и о том» не должно висеть
+ * концом строки. Подпись под логотипом переносится на три строки, и предлог
+ * с союзом попадали в конец второй.
+ *
+ * ДЕЛАЕТСЯ ЗДЕСЬ, А НЕ В САМОЙ СТРОКЕ. `SITE_DESCRIPTION` уезжает ещё
+ * в метатеги, в описание для соцсетей и в подвал; неразрывный пробел там
+ * не нужен, а в подвале строка вообще стоит одной строкой. Это вопрос
+ * вёрстки этого места, а не данных.
+ *
+ * Регулярным выражением тут не обойтись: после замены поиск продолжается
+ * ЗА неразрывным пробелом, и во «и о том» второе короткое слово не ловится
+ * вовсе. Поэтому просто идём по словам.
+ */
+function bindShortWords(text) {
+	const words = text.split(' ');
+	return words.reduce((out, word, i) => {
+		if (i === 0) return word;
+		const previous = words[i - 1].replace(/[^\p{L}]/gu, '');
+		return out + (previous.length > 0 && previous.length <= 2 ? ' ' : ' ') + word;
+	}, '');
+}
+
+const tagline = bindShortWords(SITE_DESCRIPTION);
 ---
 
 <div class="site">
@@ -46,7 +72,7 @@ const isActive = (href) => (href === '/' ? path === '/' : path.startsWith(href))
 				loading="eager"
 			/>
 			<span class="brand-rule"></span>
-			<span class="tagline">{SITE_DESCRIPTION}</span>
+			<span class="tagline">{tagline}</span>
 		</a>
 
 		<nav class="main-nav" id="main-nav" aria-label="Разделы сайта">
@@ -64,10 +90,7 @@ const isActive = (href) => (href === '/' ? path === '/' : path.startsWith(href))
 		</nav>
 
 		<a class="search" href="/search/" aria-label="Поиск">
-			<svg viewBox="0 0 24 24" aria-hidden="true">
-				<circle cx="10.5" cy="10.5" r="6.5"></circle>
-				<path d="M15.5 15.5L21 21"></path>
-			</svg>
+			<SearchIcon />
 		</a>
 
 		<button class="nav-toggle" type="button" aria-controls="main-nav" aria-expanded="false" aria-label="Меню">
@@ -186,7 +209,9 @@ const isActive = (href) => (href === '/' ? path === '/' : path.startsWith(href))
 		color: var(--accent-text);
 	}
 
-	.search svg {
+	/* `:global` обязателен: значок рисует SearchIcon.astro, и метку он носит
+	   свою, а не нашу. Размер и обводку задаёт место, компонент даёт контур. */
+	.search :global(svg) {
 		width: 23px;
 		height: 23px;
 		stroke: currentColor;
@@ -255,11 +280,22 @@ const isActive = (href) => (href === '/' ? path === '/' : path.startsWith(href))
 		color: var(--accent-text);
 	}
 
-	/* Активный пункт — не только цвет: цвет плюс подчёркивание. */
+	/* АКТИВНЫЙ ПУНКТ ВЫГЛЯДИТ ТАК ЖЕ, КАК АКТИВНАЯ ВКЛАДКА ФИЛЬТРОВ: чернильный
+	   полужирный и черта во всю ширину слова. Раньше он был акцентного цвета
+	   с акцентной чертой в 22 px — то есть два ряда ссылок, стоящих один
+	   над другим, сообщали «вы здесь» двумя разными способами, и заказчик
+	   увидел это на живом сайте. Сведено решением 10 августа 2026.
+
+	   Признак не только цветом и не только весом: цвет плюс начертание плюс
+	   черта — так требует §3.3 системы. */
 	.main-nav a.active {
-		color: var(--accent-text);
+		font-weight: 600;
 	}
 
+	/* На УЗКОМ экране меню — список строк во всю ширину, и черта во всю ширину
+	   строки читалась бы разделителем между пунктами, а не пометкой «вы здесь».
+	   Поэтому тут она короткая, слева. На широком (ниже) пункты стоят в ряд,
+	   и черта идёт по ширине слова — как у вкладок фильтров. */
 	.main-nav a.active::after {
 		content: '';
 		position: absolute;
@@ -267,7 +303,7 @@ const isActive = (href) => (href === '/' ? path === '/' : path.startsWith(href))
 		bottom: 12px;
 		width: 22px;
 		height: 1.5px;
-		background: var(--accent-text);
+		background: var(--ink);
 	}
 
 	@media (min-width: 821px) {
@@ -318,16 +354,10 @@ const isActive = (href) => (href === '/' ? path === '/' : path.startsWith(href))
 			border-top: 0;
 		}
 
-		.main-nav a.active {
-			color: inherit;
-		}
-
 		.main-nav a.active::after {
-			left: 0;
 			right: 0;
 			width: auto;
 			bottom: 8px;
-			background: var(--ink);
 		}
 	}
 

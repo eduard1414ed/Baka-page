@@ -12,6 +12,7 @@ import AnimeCard from '../../components/AnimeCard.astro';
 import SectionHead from '../../components/SectionHead.astro';
 import LoadMore from '../../components/LoadMore.astro';
 import JsonLd from '../../components/JsonLd.astro';
+import SearchIcon from '../../components/SearchIcon.astro';
 import SocialStrip from '../../components/SocialStrip.astro';
 import SupportStrip from '../../components/SupportStrip.astro';
 import { buildCatalog } from '../../lib/animeCatalog.mjs';
@@ -55,6 +56,10 @@ const crumbs = breadcrumbsSchema([{ name: 'Каталог аниме', path: '/a
 		    понимает, где он, и только потом получает инструменты. Своей линии
 		    у панели нет — её рисует шапка сверху, иначе вышли бы две. */}
 		<div class="tools">
+			{/* ЗНАЧОК ЛУПЫ ТОТ ЖЕ, ЧТО В ШАПКЕ И НА СТРАНИЦЕ ПОИСКА. Здесь его
+			    не было — ни в макете, ни на сайте, — и два поля поиска на одном
+			    сайте выглядели разными контролами. Замечено заказчиком
+			    10 августа 2026. */}
 			<div class="search">
 				<input
 					class="search-box"
@@ -65,14 +70,19 @@ const crumbs = breadcrumbsSchema([{ name: 'Каталог аниме', path: '/a
 					aria-controls="catalog-grid"
 					autocomplete="off"
 				/>
+				<SearchIcon />
 			</div>
+			{/* ПОДПИСИ «СОРТИРОВКА» РЯДОМ С КОНТРОЛОМ НЕТ — решение заказчика:
+			    в самом контроле написано «по порядку добавления», и слово
+			    «сортировка» рядом ничего не добавляет. Для экранного диктора
+			    подпись осталась — она ушла в `aria-label` самого выбора,
+			    иначе он прочитал бы «список» без имени. */}
 			<div class="sort">
-				<label class="sort-label tech" for="catalog-sort">Сортировка</label>
 				{/* Тот же контрол, что выбор скорости в плеере: видимая плашка
 				    внутри цели 44, нажатие ловит прозрачный родной `select`.
 				    Стили — в global.css, второго такого контрола не заводим. */}
 				<span class="speed-wrap sort-control">
-					<select class="speed" id="catalog-sort">
+					<select class="speed" id="catalog-sort" aria-label="Сортировка">
 						<option value="order">по порядку добавления</option>
 						<option value="title">по алфавиту</option>
 						<option value="year">по году выхода</option>
@@ -140,19 +150,37 @@ const crumbs = breadcrumbsSchema([{ name: 'Каталог аниме', path: '/a
 	/* Поле не тянется во всю ширину: запрос в каталог короткий, а поле
 	   на 1300 пикселей выглядит как форма регистрации, а не как фильтр. */
 	.search {
+		position: relative;
 		flex: 1 1 320px;
 		max-width: 420px;
 	}
 
+	/* Место под лупу справа — как в поле на странице поиска. Там поле высотой
+	   64 и отступ 56; здесь поле 44, поэтому и отступ, и сам значок мельче
+	   в той же пропорции. */
 	.search-box {
 		width: 100%;
 		appearance: none;
 		-webkit-appearance: none;
 		min-height: 44px;
-		padding: 0 13px;
+		padding: 0 40px 0 13px;
 		border: 1px solid var(--line);
 		background: transparent;
 		font-size: var(--body-md);
+	}
+
+	/* `:global` обязателен: значок рисует SearchIcon.astro, метка у него своя. */
+	.search :global(svg) {
+		position: absolute;
+		right: 13px;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 17px;
+		height: 17px;
+		fill: none;
+		stroke: var(--muted);
+		stroke-width: 1.5;
+		pointer-events: none;
 	}
 
 	.search-box:focus {
@@ -175,11 +203,6 @@ const crumbs = breadcrumbsSchema([{ name: 'Каталог аниме', path: '/a
 		gap: var(--sp-3);
 	}
 
-	.sort-label {
-		color: var(--muted);
-		white-space: nowrap;
-	}
-
 	/* Ширина по содержимому: подписи вариантов разной длины. Плюс стрелка,
 	   чтобы контрол читался как выбор, а не как плашка. */
 	.sort-control .speed-face {
@@ -199,20 +222,10 @@ const crumbs = breadcrumbsSchema([{ name: 'Каталог аниме', path: '/a
 		pointer-events: none;
 	}
 
-	/* На узком экране подпись съедает строку, а сам контрол и так говорит
-	   за себя. Экранному диктору она остаётся: label связан с select. */
+	/* Правила, прятавшего подпись «Сортировка» на узком экране, тут больше нет:
+	   подписи не стало вовсе, а мёртвое правило пережило бы память о том,
+	   зачем оно. */
 	@media (max-width: 520px) {
-		.sort-label {
-			position: absolute;
-			width: 1px;
-			height: 1px;
-			padding: 0;
-			margin: -1px;
-			overflow: hidden;
-			clip-path: inset(50%);
-			white-space: nowrap;
-		}
-
 		.sort,
 		.sort-control {
 			width: 100%;

@@ -277,7 +277,7 @@ const catalogMarks = shuffled.slice(0, CATALOG_POOL);
 							{hasNotes && (
 								<aside class="notes-index">
 									<div class="notes-head">
-										<span class="section-title tech">[&thinsp;короткие заметки&thinsp;]</span>
+										<span class="eyebrow tech">короткие заметки</span>
 									</div>
 									{slots.notes.map((post) => (
 										<div class="note-row">
@@ -304,9 +304,7 @@ const catalogMarks = shuffled.slice(0, CATALOG_POOL);
 					{/* В строке ровно один акцент: метка раздела акцентная,
 					    ссылка рядом — чернильная. */}
 					<div class="catalog-head">
-						<span class="section-title tech" id="catalog-title">
-							[&thinsp;каталог аниме&thinsp;]
-						</span>
+						<span class="eyebrow tech" id="catalog-title">каталог аниме</span>
 						<a class="catalog-link tech" href="/anime/">
 							Перейти в каталог <span aria-hidden="true">→</span>
 						</a>
@@ -519,9 +517,12 @@ const catalogMarks = shuffled.slice(0, CATALOG_POOL);
 		margin-bottom: var(--sp-3);
 	}
 
-	.section-title {
-		font-weight: 600;
-		color: var(--accent-text);
+	/* Надзаголовки обоих рядов — общий `.eyebrow` в global.css. Здесь только
+	   место: оба стоят СТРОКОЙ (у заметок — над списком, у каталога — рядом
+	   со ссылкой), и зазор задаёт сам ряд, а не подпись. */
+	.notes-head .eyebrow,
+	.catalog-head .eyebrow {
+		margin-bottom: 0;
 	}
 
 	.note-row {

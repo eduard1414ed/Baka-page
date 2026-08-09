@@ -533,9 +533,7 @@ const postSearchMeta = [
 			{
 				animeEntries.length > 0 && (
 					<section class="mentions" aria-labelledby="mentions-title" data-pagefind-ignore>
-						<h2 class="mentions-title tech" id="mentions-title">
-							Упоминается в материале
-						</h2>
+						<h2 class="mentions-title eyebrow tech" id="mentions-title">упоминается в материале</h2>
 						<div class="stamp-grid">
 							{animeEntries.map((entry) => (
 								<AnimeBadge anime={entry} mentions={mentionTimes.get(entry.id)?.length ?? 0} />
@@ -1459,10 +1457,12 @@ const postSearchMeta = [
 		padding: var(--sp-8) 0 var(--sp-12);
 	}
 
+	/* Вид — общий `.eyebrow` в global.css: это надзаголовок списка, такой же,
+	   как «[ из архива ]» на главной. Своим он был чернильным и без скобок,
+	   и заказчик увидел разнобой на живом сайте. Здесь остаётся зазор
+	   до первой марки — он больше общего. */
 	.mentions-title {
 		margin: 0 0 var(--sp-6);
-		font-weight: 600;
-		color: var(--ink);
 	}
 
 	.stamp-grid {
