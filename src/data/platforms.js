@@ -17,6 +17,16 @@
 // «Поддержать» — она в тот же день появилась в подвале каждой страницы
 // и на кнопках бонусного выпуска. Это не побочный эффект, а смысл файла,
 // но помнить об этом надо до правки, а не после.
+//
+// `inFooter: false` — «площадка настоящая, но в подвале не нужна». Поле
+// заведено ради VK Donat: он ведёт на ту же страницу ВКонтакте, что и площадка
+// «VK» строкой выше, и в общей строчке подвала это выглядело двумя ссылками
+// в одно место. На странице «Поддержать» и на кнопках бонуса он при этом
+// нужен: там он не дубль, а способ заплатить.
+//
+// ПРЯТАТЬ УДАЛЕНИЕМ ЗАПИСИ НЕЛЬЗЯ — она нужна трём другим местам. Признак
+// стоит на самой площадке, а не списком имён внутри подвала: список чужих
+// имён в чужом файле пришлось бы дописывать при каждой новой площадке.
 export const platforms = [
 	{ label: 'YouTube', url: 'https://www.youtube.com/@bakapodcast', kind: 'listen' },
 	{ label: 'Telegram', url: 'https://t.me/podcastbaka', kind: 'social' },
@@ -27,10 +37,15 @@ export const platforms = [
 	{ label: 'Boosty', url: 'https://boosty.to/bakapodcast', kind: 'support' },
 	{ label: 'Patreon', url: 'https://www.patreon.com/bakapodcast', kind: 'support' },
 	{ label: 'Закрытый TG-канал', url: 'https://t.me/tribute/app?startapp=s26z', kind: 'support' },
-	{ label: 'VK Donat', url: 'https://vk.com/podcast.baka', kind: 'support' },
+	{ label: 'VK Donat', url: 'https://vk.com/podcast.baka', kind: 'support', inFooter: false },
 ];
 
 /** Площадки одного вида, в том же порядке, что в списке выше. */
 export function platformsOfKind(kind) {
 	return platforms.filter((platform) => platform.kind === kind);
+}
+
+/** Что показывает подвал: всё, кроме помеченного `inFooter: false`. */
+export function footerPlatforms() {
+	return platforms.filter((platform) => platform.inFooter !== false);
 }
