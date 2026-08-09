@@ -80,9 +80,15 @@ const { backHref, backLabel, date, timing = null, title, lead = null } = Astro.p
 		color: var(--accent-text);
 	}
 
+	/* ПО БАЗОВОЙ ЛИНИИ, А НЕ ПО ЦЕНТРУ. Слева ссылка со стрелкой, справа дата
+	   с длительностью — это две строки одного текста, и человек читает их
+	   по одной линии букв. `center` выравнивает КОРОБКИ: стоит их высотам
+	   разойтись на пиксель (другая гарнитура у стрелки, округление строки),
+	   и текст встаёт на разной высоте. Выглядит как съехавшая вёрстка,
+	   а причина невидима. */
 	.content-meta-right {
 		display: flex;
-		align-items: center;
+		align-items: baseline;
 		gap: var(--sp-2);
 	}
 
@@ -107,7 +113,7 @@ const { backHref, backLabel, date, timing = null, title, lead = null } = Astro.p
 	@media (min-width: 621px) {
 		.content-meta {
 			flex-direction: row;
-			align-items: center;
+			align-items: baseline;
 			justify-content: space-between;
 			gap: var(--sp-4);
 			margin-bottom: var(--sp-6);

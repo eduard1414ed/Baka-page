@@ -293,15 +293,23 @@ const isoDate = date.toISOString().slice(0, 10);
 								<PostKicker post={post} withTiming={false} />
 								<h1 data-pagefind-meta="title">{title}</h1>
 								{bonusDeck && <p class="episode-deck">{bonusDeck}</p>}
+								{/* Плеер лежит в своей обёртке, а не прижимается сам.
+								    Обёртка держит и «прижаться к низу», и обязательный
+								    зазор от заголовка: `margin-top: auto` при длинном
+								    названии схлопывается в ноль, и плеер прилипает
+								    к последней строке. Отступ отдан padding'у —
+								    его auto-margin не съедает. */}
 								{!isBonus && episode && (
-									<EpisodePlayer
-										guid={episode.guid}
-										audioUrl={episode.audioUrl}
-										title={title}
-										cover={playerCover}
-										link={`/posts/${post.id}/`}
-										durationSec={episode.durationSec}
-									/>
+									<div class="player-slot">
+										<EpisodePlayer
+											guid={episode.guid}
+											audioUrl={episode.audioUrl}
+											title={title}
+											cover={playerCover}
+											link={`/posts/${post.id}/`}
+											durationSec={episode.durationSec}
+										/>
+									</div>
 								)}
 							</div>
 						</div>
@@ -576,10 +584,14 @@ const isoDate = date.toISOString().slice(0, 10);
 		margin: var(--sp-12) 0;
 	}
 
+	/* По базовой линии, а не по центру: слева и справа один и тот же
+	   технический текст, и он обязан стоять на одной линии букв независимо
+	   от того, какой высоты вышли коробки. Подробнее — в ContentHeader.astro,
+	   там же живёт та же строка у статьи. */
 	.episode-topline {
 		display: flex;
 		flex-wrap: wrap;
-		align-items: center;
+		align-items: baseline;
 		justify-content: space-between;
 		gap: var(--sp-2) var(--sp-6);
 		margin-bottom: var(--sp-6);
@@ -633,6 +645,17 @@ const isoDate = date.toISOString().slice(0, 10);
 		margin-bottom: var(--sp-3);
 	}
 
+	/* Зазор от заголовка обязателен на всех ширинах: при длинном названии
+	   колонка перерастает обложку, свободного места не остаётся, и плеер
+	   встаёт вплотную к последней строке. */
+	.player-slot {
+		padding-top: var(--sp-8);
+	}
+
+	.player-slot :global(.episode-player) {
+		margin-bottom: 0;
+	}
+
 	.episode-deck {
 		margin: var(--sp-4) 0 0;
 		font-family: var(--font-display);
@@ -660,10 +683,10 @@ const isoDate = date.toISOString().slice(0, 10);
 
 		/* Плеер живёт в своём компоненте (часть 6), поэтому его положение
 		   в колонке задаётся отсюда — это композиция страницы, а не устройство
-		   плеера. */
-		.episode-copy :global(.episode-player) {
+		   плеера. Прижимается обёртка: у самого плеера auto-margin съел бы
+		   зазор от заголовка. */
+		.player-slot {
 			margin-top: auto;
-			margin-bottom: 0;
 		}
 	}
 
