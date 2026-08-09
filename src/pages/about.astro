@@ -1,21 +1,34 @@
 ---
-// Страница «О подкасте» (тз/06, шаг 5).
+// Страница «О проекте» (тз/10.4; раньше — «О подкасте», тз/06, шаг 5).
+//
+// АДРЕС ОСТАЁТСЯ `/about/`. Переименовалось название, а не страница: адрес
+// стоит в карте сайта и может быть уже проиндексирован, а переименование ради
+// красоты ломает чужие ссылки без всякой выгоды.
 //
 // ТЕКСТЫ ЛЕЖАТ НЕ ЗДЕСЬ, а в src/content/pages/about.md — и правятся
-// в админке, раздел «Страницы» → «О подкасте». В этом файле только вёрстка.
+// в админке, раздел «Страницы» → «О проекте». В этом файле только вёрстка.
 //
-// Почему не пост: «О подкасте» не материал в ленте — у неё нет даты,
+// Почему не пост: «О проекте» не материал в ленте — у неё нет даты,
 // и попадать в ленту, RSS и поиск наравне с выпусками она не должна.
 // Поэтому отдельная полка `pages`, а в админке — файловая коллекция
 // (запись одна и заранее известна, создавать и удалять нечего).
 //
-// Ссылки на площадки сюда НЕ переехали: они лежат в src/data/platforms.js
-// и выводятся ещё на главной и в подвале. Через админку правится текст,
-// а не устройство сайта.
+// ССЫЛКИ НА ПЛОЩАДКИ СЮДА НЕ ПЕРЕЕХАЛИ, и это касается всех ТРЁХ блоков со
+// ссылками — «Слушать подкаст», «Ещё немного нас» и «Поддержать «Баку!»».
+// Все три берут один список src/data/platforms.js, оттуда же, откуда его берут
+// подвал, страница «Поддержать» и плашка подписки у бонусов. Второй список
+// означал бы, что смена ссылки чинится в двух местах, а забывается в одном.
+// Через админку правится текст, а не устройство сайта.
+//
+// ВСЁ, ЧЕГО НЕТ, НЕ РИСУЕТСЯ. Пустое поле — не пустая рамка и не заголовок
+// над ничем: очищенный блок исчезает целиком вместе со своей линией. CMS
+// пишет в незаполненное поле пустую строку, а не пропускает его, поэтому
+// везде проверяется именно содержимое, а не наличие поля.
 import { getEntry, render } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import JsonLd from '../components/JsonLd.astro';
 import PlatformIcon from '../components/PlatformIcon.astro';
+import ImageMissing from '../components/ImageMissing.astro';
 import { platformsOfKind } from '../data/platforms.js';
 import { getLinkIcon } from '../lib/linkIcon.mjs';
 import { breadcrumbsSchema } from '../lib/schema.mjs';
@@ -29,31 +42,38 @@ import { SITE_DESCRIPTION } from '../lib/site.mjs';
 const page = await getEntry('pages', 'about');
 const { Content } = page ? await render(page) : { Content: null };
 
-// Пустые строки списка выбрасываем. В админке строку ведущего очень легко
-// добавить и не заполнить, а такая строка рисовала кружок с «?» и пустотой
-// рядом — проверка на пустых полях это и поймала.
-const hosts = (page?.data.hosts ?? []).filter(
-	(host) => host.name?.trim() || host.role?.trim() || host.photo,
-);
-const supportNote = page?.data.supportNote?.trim();
-const contactEmail = page?.data.contactEmail?.trim();
+const lead = page?.data.lead?.trim();
+const hasBody = Boolean(page?.body?.trim());
 
-// `Content` существует всегда, даже когда текста нет вовсе, — иначе на странице
-// оставался бы пустой блок с отступами.
-const hasIntro = Boolean(page?.body?.trim());
+// ЧИСЛО ЛЮДЕЙ В КОДЕ НЕ ЗАШИТО: сколько заведено в админке, столько
+// и рисуется. Пустые строки списка выбрасываем — строку очень легко добавить
+// и не заполнить, а такая строка рисовала бы кружок заглушки рядом с пустотой.
+const hosts = (page?.data.hosts ?? []).filter(
+	(host) => host.name?.trim() || host.role?.trim() || host.bio?.trim() || host.photo,
+);
+const hostsNote = page?.data.hostsNote?.trim();
+const listenNote = page?.data.listenNote?.trim();
+const socialNote = page?.data.socialNote?.trim();
+const supportTitle = page?.data.supportTitle?.trim();
+const supportNote = page?.data.supportNote?.trim();
+const contactText = page?.data.contactText?.trim();
+const contactEmail = page?.data.contactEmail?.trim();
+const chatText = page?.data.chatText?.trim();
+const chatLabel = page?.data.chatLabel?.trim();
+const chatUrl = page?.data.chatUrl?.trim();
 
 const listen = platformsOfKind('listen');
 const social = platformsOfKind('social');
 const support = platformsOfKind('support');
 
-// Описание для поисковика и превью — из первого абзаца текста, тем же
+// Описание для поисковика и превью — из первой фразы страницы, тем же
 // модулем, что у постов. Отдельного поля под него нет специально: ещё одно
 // поле в админке, которое надо не забыть заполнить, — это поле, которое
-// однажды разойдётся с текстом.
-const description = excerptFromBody(page?.body ?? '', SITE_DESCRIPTION);
+// однажды разойдётся с текстом. Так же сделано у «Поддержать».
+const description = lead || excerptFromBody(page?.body ?? '', SITE_DESCRIPTION);
 
 /**
- * Фото ведущего. Загруженные через админку картинки сборка сжимает в webp
+ * Фото человека. Загруженные через админку картинки сборка сжимает в webp
  * в двух размерах (src/plugins/optimize-uploads-integration.mjs), поэтому
  * показываем сжатую копию. Кружок маленький — хватает меньшего размера.
  * Если формат несжимаемый (например, уже webp), берём файл как есть.
@@ -64,89 +84,119 @@ function hostPhoto(photo: string | undefined) {
 }
 ---
 
-<Layout title="О подкасте" description={description}>
-	<JsonLd slot="head" data={breadcrumbsSchema([{ name: 'О подкасте', path: '/about/' }])} />
+<Layout title="О проекте" description={description}>
+	<JsonLd slot="head" data={breadcrumbsSchema([{ name: 'О проекте', path: '/about/' }])} />
 
-	<article class="about">
-		<h1>О подкасте</h1>
+	<div class="site">
+		<section class="about-hero">
+			{/* H1 — «Бака!», а «О проекте» стоит НАД ним надзаголовком: так в макете,
+			    и композиция берётся из макета. Название «О проекте» при этом живёт
+			    во вкладке браузера, в хлебных крошках и в пункте меню. */}
+			<div class="about-title">
+				<div class="eyebrow tech">О проекте</div>
+				<h1>Бака!</h1>
+			</div>
 
-		{
-			hasIntro && Content && (
-				<div class="intro">
-					<Content />
-				</div>
-			)
-		}
+			{
+				(lead || hasBody) && (
+					<div class="about-copy">
+						{/* Вид крупной фразы — общий `.lead` из global.css: точно так же
+						    набрана подводка под заголовком любой статьи и первая фраза
+						    страницы «Поддержать». */}
+						{lead && <p class="lead">{lead}</p>}
+						{/* Отдельная обёртка вокруг текста из markdown, а не общее
+						    правило на все абзацы блока: правило `.about-copy p` весит
+						    больше общего `.lead` и перебило бы ему кегль — крупная
+						    фраза молча стала бы обычным абзацем. Ровно эти грабли
+						    сработали на «Поддержать» при первой сборке. */}
+						{
+							hasBody && Content && (
+								<div class="about-body">
+									<Content />
+								</div>
+							)
+						}
+					</div>
+				)
+			}
+		</section>
 
 		{
 			hosts.length > 0 && (
-				<section class="block">
-					<h2>Ведущие</h2>
-					<ul class="hosts">
+				<section class="hosts-section" aria-labelledby="hosts-title">
+					{/* Обёртки `.hosts-layout` из макета здесь нет: колонки задаёт
+					    сама секция, а её содержимое ложится в дорожки этой же сетки.
+					    Так же выправлена страница «Поддержать». */}
+					<div class="section-heading-block">
+						{hostsNote && <div class="eyebrow tech">{hostsNote}</div>}
+						<h2 id="hosts-title">Команда</h2>
+					</div>
+					<div class="hosts-grid">
 						{hosts.map((host) => {
 							const photo = hostPhoto(host.photo);
-							// Имени может не быть: в админке строку списка легко добавить
-							// и не заполнить. Пустая строка не должна ломать вёрстку.
 							const name = host.name?.trim();
+							const url = host.url?.trim();
 							return (
-								<li class="host">
-									{/* Фото нет — кружок с первой буквой имени. Так блок
-									    не разъезжается и не выглядит недоделанным. */}
-									{photo ? (
-										<img class="host-photo" src={photo} alt={name ?? ''} width="72" height="72" loading="lazy" />
-									) : (
-										<span class="host-photo host-letter" aria-hidden="true">
-											{name?.slice(0, 1) ?? '?'}
-										</span>
-									)}
-									<div>
-										{name && (
-											<p class="host-name">
-												{host.url ? (
-													<a href={host.url} target="_blank" rel="noopener noreferrer">
-														{name}
-													</a>
-												) : (
-													name
-												)}
-											</p>
+								<article class="host-card">
+									{/* ФОТО НЕТ — ПЕРСОНАЖ ОБЩЕЙ ЗАГЛУШКИ, обрезанный
+									    по кругу, и БЕЗ подписи «Изображения нет»: 96 px —
+									    узкое место, а в узких местах подпись снимается
+									    (§9.1 дизайн-системы, четвёртая строка). Пустой
+									    кружок не используется: читатель принимает его
+									    за поломку вёрстки, а не за отсутствие данных. */}
+									<div class="host-photo">
+										{photo ? (
+											<img src={photo} alt={name ?? ''} width="120" height="120" loading="lazy" />
+										) : (
+											<ImageMissing compact />
 										)}
-										{host.role && <p class="host-role">{host.role}</p>}
 									</div>
-								</li>
+									<div class="host-info">
+										{host.role && <div class="host-role tech">{host.role}</div>}
+										{name && <h3>{name}</h3>}
+										{host.bio && <p>{host.bio}</p>}
+										{url && (
+											<div class="host-links">
+												<a href={url} target="_blank" rel="noopener noreferrer">
+													{host.urlLabel?.trim() || 'Ссылка'}
+													<span aria-hidden="true"> ↗</span>
+												</a>
+											</div>
+										)}
+									</div>
+								</article>
 							);
 						})}
-					</ul>
+					</div>
 				</section>
 			)
 		}
 
-		<section class="block">
-			<h2>Где слушать</h2>
-			<div class="links">
-				{
-					listen.map((platform) => (
-						<a class="link" href={platform.url} target="_blank" rel="noopener noreferrer">
-							<PlatformIcon name={getLinkIcon(platform.url)} />
-							{platform.label}
-						</a>
-					))
-				}
-			</div>
-			<p class="note">
-				Ещё есть <a href="/rss.xml">лента сайта</a> — в неё попадает всё, что здесь выходит: выпуски, статьи и заметки.
-			</p>
-		</section>
-
 		{
-			social.length > 0 && (
-				<section class="block">
-					<h2>Где общаемся</h2>
-					<div class="links">
-						{social.map((platform) => (
-							<a class="link" href={platform.url} target="_blank" rel="noopener noreferrer">
-								<PlatformIcon name={getLinkIcon(platform.url)} />
-								{platform.label}
+			listen.length > 0 && (
+				<section class="link-section" aria-labelledby="listen-title">
+					{/* Обёртки `.split-head` из макета тут нет по той же причине,
+					    что и на «Поддержать»: макет назначает колонки её ребёнку
+					    `.link-section-heading`, а ребёнок обёртки до сетки секции
+					    не дотягивается. Заголовок встал бы в одну двенадцатую ширины
+					    страницы. Верстаем по CSS макета, а не по его HTML. */}
+					<div class="link-section-heading">
+						{listenNote && <div class="eyebrow tech">{listenNote}</div>}
+						<h2 id="listen-title">Слушать подкаст</h2>
+					</div>
+					<div class="link-grid">
+						{listen.map((platform) => (
+							<a class="platform-link" href={platform.url} target="_blank" rel="noopener noreferrer">
+								<div class="platform-top">
+									{/* Коробка под иконку стоит всегда, даже когда иконки
+									    нет: без неё названия площадок встали бы рваным
+									    левым краем. Своего фона у пустой коробки нет —
+									    это просто воздух, а не серый прямоугольник. */}
+									<span class="platform-icon" aria-hidden="true">
+										<PlatformIcon name={getLinkIcon(platform.url)} />
+									</span>
+									<span class="platform-name">{platform.label}</span>
+								</div>
 							</a>
 						))}
 					</div>
@@ -154,148 +204,607 @@ function hostPhoto(photo: string | undefined) {
 			)
 		}
 
-		<section class="block">
-			<h2>Поддержать</h2>
-			{supportNote && <p class="note">{supportNote}</p>}
-			<div class="links">
-				{
-					support.map((platform) => (
-						<a class="link link-accent" href={platform.url} target="_blank" rel="noopener noreferrer">
-							<PlatformIcon name={getLinkIcon(platform.url)} />
-							{platform.label}
-						</a>
-					))
-				}
-			</div>
-		</section>
-
 		{
-			contactEmail && (
-				<section class="block">
-					<h2>Написать нам</h2>
-					<p class="note">
-						<a href={`mailto:${contactEmail}`}>{contactEmail}</a> — предложить тему, позвать в гости или договориться
-						о рекламе.
-					</p>
+			social.length > 0 && (
+				<section class="social-strip" aria-labelledby="social-title">
+					<div class="social-intro">
+						{socialNote && <div class="eyebrow tech">{socialNote}</div>}
+						<h2 id="social-title">Ещё немного нас</h2>
+					</div>
+					{social.map((platform) => (
+						<a class="social-link" href={platform.url} target="_blank" rel="noopener noreferrer">
+							<span class="social-name">
+								<span>{platform.label}</span>
+								<span class="social-arrow" aria-hidden="true">
+									↗
+								</span>
+							</span>
+							{/* Описание живёт у самой площадки в platforms.js, а не в
+							    админке: второй список площадок с подписями разошёлся бы
+							    с этим при первом переименовании. Площадка без описания
+							    рисуется одной строкой названия. */}
+							{platform.desc && <span class="social-desc">{platform.desc}</span>}
+						</a>
+					))}
 				</section>
 			)
 		}
-	</article>
+
+		{
+			support.length > 0 && (
+				<section class="support-strip" aria-labelledby="support-title">
+					{/* Имя `.support` из макета занято на сайте под целую страницу
+					    `/support/`, поэтому блок называется `.support-strip`. */}
+					<div class="support-img">
+						<img src="/baka-cover.jpg" alt="Обложка «Бака!»" width="144" height="144" loading="lazy" />
+					</div>
+					<div class="support-copy">
+						<h2 id="support-title">{supportTitle || 'Поддержать «Баку!»'}</h2>
+						{supportNote && <p>{supportNote}</p>}
+					</div>
+					<div class="support-links">
+						{support.map((platform) => (
+							<a href={platform.url} target="_blank" rel="noopener noreferrer">
+								{platform.label}
+								<span aria-hidden="true">↗</span>
+							</a>
+						))}
+					</div>
+				</section>
+			)
+		}
+
+		{
+			(contactText || contactEmail || chatText || chatUrl) && (
+				<section class="contact-section" aria-labelledby="contact-title">
+					<div class="contact-heading">
+						<div class="eyebrow tech">Связаться</div>
+						<h2 id="contact-title">Написать нам</h2>
+					</div>
+					{/* ДВЕ ПАРЫ «ТЕКСТ — ССЫЛКА»: почта для дел, чат для разговора.
+					    Отбивка МЕЖДУ парами больше, чем внутри пары, иначе четыре
+					    строки читаются одним списком, а не двумя способами связаться. */}
+					<div class="contact-copy">
+						{contactText && <p>{contactText}</p>}
+						{contactEmail && (
+							<a class="contact-link" href={`mailto:${contactEmail}`}>
+								{contactEmail}
+								<span aria-hidden="true"> ↗</span>
+							</a>
+						)}
+						{chatText && <p>{chatText}</p>}
+						{chatUrl && (
+							<a class="contact-link" href={chatUrl} target="_blank" rel="noopener noreferrer">
+								{chatLabel || 'Чат'}
+								<span aria-hidden="true"> ↗</span>
+							</a>
+						)}
+					</div>
+				</section>
+			)
+		}
+	</div>
 </Layout>
 
 <style>
-	.about {
-		max-width: var(--content-width);
-		margin: 0 auto;
-		padding: var(--space-4) var(--space-3);
+	/* Надзаголовок секции — технический слой акцентным цветом, полужирным:
+	   так же набраны надзаголовки шапок архива, каталога и «Поддержать». */
+	.eyebrow {
+		font-weight: 600;
+		color: var(--accent-text);
+		margin-bottom: var(--sp-3);
+	}
+
+	/* --- Хиро --- */
+
+	.about-hero {
+		display: grid;
+		gap: var(--sp-6);
+		padding: var(--sp-12) 0;
+	}
+
+	/* НАЗВАНИЕ СТРАНИЦЫ НАБИРАЕТСЯ КЕГЛЕМ ЗАГОЛОВКА БЛОКА, а не своим —
+	   то же решение, что принято заказчиком для «Поддержать» 9 августа.
+	   Причина видна на живой странице: «Бака!» и «Команда» устроены одинаково
+	   (мелкий надзаголовок слева, заголовок под ним), и разный кегль читается
+	   не как разные уровни, а как сбой. Выровнено по меньшему.
+
+	   Все три значения — токены, в том числе трекинг: числом он стоял бы
+	   второй копией правила `h2` из global.css и разошёлся бы с ним молча. */
+	.about-title h1 {
+		margin: 0;
+		font-size: var(--h2);
+		line-height: var(--h2-lh);
+		letter-spacing: var(--h2-ls);
+	}
+
+	/* Зазор между крупной фразой и текстом под ней задаёт КОНТЕЙНЕР, а не поля
+	   абзацев. Правило `.about-copy p` весило бы больше общего `.lead`
+	   из global.css и перебило бы ему кегль, интерлиньяж и цвет — вид,
+	   вынесенный в одно место, молча перестал бы работать ровно здесь. */
+	.about-copy {
+		max-width: 720px;
+		display: grid;
+		gap: var(--sp-6);
+	}
+
+	/* Поле у крупной фразы снимает страница: вид её общий, а место
+	   в раскладке — дело этой страницы. Кегля и цвета правило не касается. */
+	.about-copy > .lead {
+		margin: 0;
 	}
 
 	/* :global — текст приезжает из markdown-файла через <Content />, а до такой
 	   разметки обычные стили компонента не достают. */
-	.intro :global(p) {
-		font-size: var(--font-size-lg);
-		color: var(--color-text);
-		margin: 0 0 var(--space-2);
+	.about-body :global(p) {
+		font-size: var(--body-lg);
+		line-height: 1.65;
+		color: var(--text);
+		margin: 0 0 var(--sp-4);
 	}
 
-	.intro :global(ul),
-	.intro :global(ol) {
-		margin: 0 0 var(--space-2);
-		padding-left: 1.25rem;
+	.about-body :global(p:last-child) {
+		margin-bottom: 0;
 	}
 
-	.block {
-		margin-top: var(--space-4);
-		padding-top: var(--space-3);
-		border-top: 1px solid var(--color-border);
+	/* --- Секции: линию между ними рисует начало следующей --- */
+
+	.hosts-section,
+	.link-section,
+	.social-strip,
+	.support-strip,
+	.contact-section {
+		border-top: 1px solid var(--line);
 	}
 
-	.block h2 {
-		font-size: var(--font-size-xl);
+	.hosts-section,
+	.link-section,
+	.support-strip,
+	.contact-section {
+		padding: var(--sp-12) 0;
 	}
 
-	.note {
-		color: var(--color-text-muted);
-		margin: 0 0 var(--space-2);
-	}
-
-	.hosts {
-		list-style: none;
-		margin: 0;
-		padding: 0;
+	/* Зазора между строчками нет: их разделяют линии, а не воздух. */
+	.social-strip {
 		display: grid;
-		gap: var(--space-3);
+		gap: 0;
+		padding: var(--sp-8) 0;
 	}
 
-	.host {
-		display: flex;
-		align-items: center;
-		gap: var(--space-2);
-	}
-
-	.host-photo {
-		width: 72px;
-		height: 72px;
-		flex-shrink: 0;
-		border-radius: var(--radius-full);
-		object-fit: cover;
-	}
-
-	.host-letter {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: var(--color-bg-elevated);
-		border: 1px solid var(--color-border);
-		color: var(--color-accent);
-		font-family: var(--font-heading);
-		font-size: var(--font-size-xl);
-	}
-
-	.host-name {
+	.section-heading-block h2,
+	.link-section-heading h2,
+	.contact-heading h2 {
 		margin: 0;
-		font-weight: 600;
+	}
+
+	/* --- Команда --- */
+
+	/* Карточки идут списком сверху вниз, разделённые линиями, а не рядом. */
+	.hosts-grid {
+		display: grid;
+		margin-top: var(--sp-6);
+	}
+
+	.host-card {
+		display: grid;
+		grid-template-columns: 96px minmax(0, 1fr);
+		gap: var(--sp-4);
+		padding: 22px 0;
+	}
+
+	/* Первой карточке линия не нужна: её уже нарисовала сама секция,
+	   а двух линий подряд §5 не допускает. */
+	.host-card + .host-card {
+		border-top: 1px solid var(--line);
+	}
+
+	/* Ряд сетки растягивает свои ячейки, и это перебило бы `aspect-ratio`
+	   у кружка рядом с длинным рассказом о человеке: круг превратился бы
+	   в овал. Растягивается только колонка с текстом. */
+	.host-photo {
+		width: 96px;
+		aspect-ratio: 1;
+		align-self: start;
+		border-radius: 50%;
+		overflow: hidden;
+	}
+
+	.host-photo img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	/* Заглушка разворачивается на весь кружок и обрезается им же:
+	   `overflow: hidden` плюс скругление у родителя. Своего вида
+	   у заглушки здесь не появляется — он общий, `.img-missing`. */
+	.host-photo :global(.img-missing) {
+		width: 100%;
+		height: 100%;
+	}
+
+	.host-info {
+		min-width: 0;
 	}
 
 	.host-role {
-		margin: 0;
-		color: var(--color-text-muted);
-		font-size: var(--font-size-sm);
+		margin-bottom: var(--sp-2);
+		color: var(--accent-text);
 	}
 
-	.links {
+	.host-info h3 {
+		margin: 0 0 var(--sp-2);
+	}
+
+	.host-info p {
+		margin: 0 0 var(--sp-3);
+		font-size: var(--body-sm);
+		line-height: 1.5;
+		color: var(--muted);
+	}
+
+	.host-links {
 		display: flex;
 		flex-wrap: wrap;
-		gap: var(--space-1);
+		gap: var(--sp-2) var(--sp-4);
+		font-size: var(--caption);
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
 	}
 
-	.link {
+	/* ЦЕЛЬ 44, А НЕ 12 px ОТСТУПА СВЕРХУ И СНИЗУ, как в макете: это ссылка
+	   на отдельной странице, а не строка врезки внутри текста, и исключение
+	   части 11 на неё не распространяется. Высота набирается невидимой зоной,
+	   вид строки от этого не меняется. Так же сделано на «Поддержать». */
+	.host-links a {
 		display: inline-flex;
 		align-items: center;
-		gap: var(--space-1);
-		padding: var(--space-1) var(--space-2);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-full);
-		color: var(--color-text);
-		font-size: var(--font-size-sm);
+		min-height: 44px;
+		color: var(--ink);
+		text-decoration: none;
+	}
+
+	.host-links a:hover,
+	.host-links a:focus-visible {
+		color: var(--accent-text);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	/* --- Слушать подкаст --- */
+
+	/* Не строка в ряд: при пяти площадках длинные названия переносились
+	   внутри колонки и ломали ритм. Список с линиями держит форму
+	   при любом числе площадок и любой длине названия. */
+	.link-grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		margin-top: var(--sp-6);
+	}
+
+	.platform-link {
+		display: flex;
+		align-items: center;
+		gap: var(--sp-3);
+		/* Настоящая строка списка: цель нажатия заведомо больше 44 px. */
+		min-height: 56px;
+		min-width: 0;
+		padding-right: var(--sp-4);
+		border-top: 1px solid var(--line);
+		text-decoration: none;
+		color: var(--ink);
+	}
+
+	/* Верхнюю границу секции рисует сама секция: первая строка списка
+	   своей линии не добавляет, иначе их две. */
+	.platform-link:first-child {
+		border-top: 0;
+	}
+
+	.platform-link:hover .platform-name,
+	.platform-link:focus-visible .platform-name {
+		color: var(--accent-text);
+	}
+
+	.platform-top {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		min-width: 0;
+	}
+
+	.platform-icon {
+		width: 28px;
+		height: 28px;
+		flex: 0 0 28px;
+		display: grid;
+		place-items: center;
+		overflow: hidden;
+	}
+
+	.platform-name {
+		font-size: var(--caption);
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		line-height: 1.2;
+	}
+
+	/* --- Ещё немного нас --- */
+
+	.social-intro {
+		padding-bottom: 20px;
+	}
+
+	.social-intro h2 {
+		margin: 0;
+		font-size: var(--h3);
+		line-height: 1.12;
+	}
+
+	.social-link {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		gap: var(--sp-2);
+		/* Цель нажатия набирается высотой самой строки: 18 + 18 сверху и снизу
+		   плюс текст — заведомо больше 44 px даже без описания. */
+		padding: 18px 0;
+		border-top: 1px solid var(--line);
+		text-decoration: none;
+	}
+
+	.social-name {
+		display: flex;
+		justify-content: space-between;
+		gap: var(--sp-4);
+		font-size: var(--caption);
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--ink);
+	}
+
+	.social-arrow {
+		color: var(--accent-text);
+		font-size: 16px;
+		font-weight: 400;
+	}
+
+	.social-desc {
+		font-size: var(--body-sm);
+		line-height: 1.5;
+		color: var(--muted);
+	}
+
+	/* --- Поддержать «Баку!» --- */
+
+	.support-strip {
+		display: grid;
+		gap: 20px;
+	}
+
+	/* `align-self` тут не ставится нарочно: на широком экране блок выравнивает
+	   свои три колонки по центру, и обложка должна ехать вместе с ними. */
+	.support-img {
+		width: 144px;
+		aspect-ratio: 1;
+		overflow: hidden;
+	}
+
+	.support-img img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	/* Заголовок этого блока — H2, а не H3 как в макете: он такой же заголовок
+	   блока, что и «Команда» со «Слушать подкаст», и по смыслу стоит на том же
+	   уровне. Кегль при этом взят из макета — `--h3`, — потому что блок узкий
+	   и полноразмерный заголовок в нём смотрелся бы вторым хиро. Уровень
+	   заголовка решает содержание, кегль решает макет. */
+	.support-copy h2 {
+		margin: 0 0 var(--sp-2);
+		font-size: var(--h3);
+	}
+
+	.support-copy p {
+		margin: 0;
+		font-size: var(--body-sm);
+		line-height: 1.5;
+		color: var(--muted);
+		max-width: 540px;
+	}
+
+	.support-links {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: var(--sp-2);
+	}
+
+	.support-links a {
+		min-height: 44px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--sp-3);
+		padding: 10px 12px;
+		border: 1px solid var(--line-strong);
+		color: var(--ink);
+		text-decoration: none;
+		font-size: var(--caption);
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
 		transition:
 			border-color var(--transition-fast),
 			color var(--transition-fast);
 	}
 
-	.link:hover,
-	.link:focus-visible {
-		border-color: var(--color-accent);
-		color: var(--color-accent-hover);
+	.support-links a:hover,
+	.support-links a:focus-visible {
+		border-color: var(--accent-text);
+		color: var(--accent-text);
 	}
 
-	.link :global(svg) {
-		width: 1.1em;
-		height: 1.1em;
+	.support-links span {
+		color: var(--accent-text);
 	}
 
-	.link-accent {
-		border-color: var(--color-accent);
-		color: var(--color-accent);
+	/* --- Связаться --- */
+
+	.contact-section {
+		display: grid;
+		gap: var(--sp-6);
+	}
+
+	.contact-copy {
+		min-width: 0;
+	}
+
+	.contact-copy p {
+		margin: 0 0 var(--sp-4);
+		font-size: var(--body-lg);
+		line-height: 1.6;
+		color: var(--text);
+	}
+
+	/* ОТБИВКА МЕЖДУ ПАРАМИ БОЛЬШЕ, ЧЕМ ВНУТРИ ПАРЫ. Правило взято из
+	   page-about.css макета: абзац, идущий ЗА ссылкой, начинает вторую пару. */
+	.contact-link + p {
+		margin-top: var(--sp-8);
+	}
+
+	.contact-link {
+		display: inline-block;
+		font-family: var(--font-display);
+		font-size: var(--h3);
+		line-height: 1.2;
+		color: var(--ink);
+		text-decoration: none;
+		border-bottom: 1px solid var(--line);
+		padding-bottom: var(--sp-1);
+		overflow-wrap: anywhere;
+	}
+
+	.contact-link:hover,
+	.contact-link:focus-visible {
+		color: var(--accent-text);
+		border-bottom-color: var(--accent-text);
+	}
+
+	@media (min-width: 621px) {
+		.host-card {
+			grid-template-columns: 120px minmax(0, 1fr);
+			gap: var(--sp-6);
+		}
+
+		.host-photo {
+			width: 120px;
+		}
+
+		/* Сетка ЗАПОЛНЯЮЩАЯ, а не схлопывающая: пустые дорожки сохраняются,
+		   и две кнопки не растягиваются во всю ширину, когда третьей нет. */
+		.link-grid {
+			grid-template-columns: 1fr 1fr;
+			column-gap: var(--grid-gap);
+		}
+
+		/* В две колонки первая строка — это два элемента, а не один. */
+		.platform-link:nth-child(2) {
+			border-top: 0;
+		}
+
+		.support-links {
+			grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+		}
+	}
+
+	/* --- Раскладка на широких экранах ---
+
+	   Колонки задаёт сама секция, а её содержимое ложится в дорожки этой же
+	   сетки. Обёрток над шапками блоков (`.hosts-layout`, `.split-head`
+	   из макета) здесь нет намеренно: макет назначает колонки их ДЕТЯМ —
+	   то есть элементам, которые до сетки секции не дотягиваются, и заголовок
+	   встал бы в одну двенадцатую ширины страницы. Разметка выправлена
+	   по CSS макета, а не по его HTML; те же грабли уже разбирались
+	   на «Поддержать». */
+	@media (min-width: 821px) {
+		.about-hero,
+		.hosts-section,
+		.link-section,
+		.social-strip,
+		.contact-section {
+			display: grid;
+			grid-template-columns: repeat(12, minmax(0, 1fr));
+			column-gap: var(--grid-gap);
+			align-items: start;
+		}
+
+		.about-hero {
+			padding: 68px 0 62px;
+		}
+
+		.about-title {
+			grid-column: 1 / 5;
+		}
+
+		.about-copy {
+			grid-column: 6 / 12;
+		}
+
+		.section-heading-block,
+		.link-section-heading,
+		.contact-heading {
+			grid-column: 1 / 5;
+		}
+
+		.hosts-grid,
+		.contact-copy {
+			grid-column: 6 / 12;
+		}
+
+		.hosts-grid,
+		.link-grid {
+			margin-top: 0;
+		}
+
+		.link-grid {
+			grid-column: 6 / 13;
+		}
+
+		.social-intro {
+			grid-column: 1 / 4;
+			padding: 0 var(--sp-6) 0 0;
+		}
+
+		.social-link {
+			grid-column: span 3;
+			min-height: 78px;
+			padding: var(--sp-1) 18px var(--sp-1) 22px;
+			border-top: 0;
+			border-left: 1px solid var(--line);
+			transition: background var(--transition-fast);
+		}
+
+		.social-link:hover,
+		.social-link:focus-visible {
+			background: var(--accent-soft);
+		}
+
+		.social-desc {
+			max-width: 18em;
+		}
+
+		.support-strip {
+			grid-template-columns: 144px minmax(0, 1fr) auto;
+			gap: 28px;
+			align-items: center;
+		}
+
+		.support-links {
+			grid-template-columns: repeat(2, minmax(150px, 1fr));
+		}
 	}
 </style>

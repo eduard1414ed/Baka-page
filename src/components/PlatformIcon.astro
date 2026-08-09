@@ -48,11 +48,36 @@ const { name } = Astro.props;
 		</svg>
 	)
 }
+{/* Обе взяты из утверждённого макета as is, включая систему координат 48×48:
+    перерисовывать их под наши 24×24 значило бы рисовать заново и разойтись
+    с макетом в пропорциях. viewBox масштабирует сам. */}
+{
+	name === 'yandex' && (
+		<svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+			<circle cx="24" cy="24" r="18" stroke="currentColor" stroke-width="2" />
+			<path d="M28 14v18.5a5.5 5.5 0 1 1-2-4.2V18l10-2.5V13L28 14Z" fill="currentColor" />
+		</svg>
+	)
+}
+{
+	name === 'mave' && (
+		<svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+			<rect x="7" y="7" width="34" height="34" rx="17" stroke="currentColor" stroke-width="2" />
+			<path d="M14 31V17h4.4l5.6 8.2 5.6-8.2H34v14h-4V23.4l-5.3 7.6h-1.4L18 23.4V31h-4Z" fill="currentColor" />
+		</svg>
+	)
+}
 
 <style>
+	/* РАЗМЕР ЗАДАЁТ МЕСТО, А НЕ ИКОНКА. Раньше тут стояли 1.1em — под кнопки-
+	   таблетки старой страницы «О подкасте». В новом макете иконка стоит
+	   в коробке 28×28, и своя ширина компонента спорила бы с ней: правило
+	   `.platform-icon :global(svg)` со стороны страницы весит ровно столько же,
+	   сколько правило `svg` внутри компонента, и кто победит — решал бы порядок
+	   файлов в сборке. Компонент рисует, коробку меряет тот, кто ставит. */
 	svg {
-		width: 1.1em;
-		height: 1.1em;
-		flex-shrink: 0;
+		width: 100%;
+		height: 100%;
+		display: block;
 	}
 </style>

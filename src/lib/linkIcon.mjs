@@ -23,6 +23,12 @@ export function getLinkIcon(url) {
 	if (host.includes('apple.com')) return 'apple';
 	if (host.includes('boosty.to')) return 'boosty';
 	if (host === 't.me' || host.includes('telegram.')) return 'telegram';
+	if (host.includes('music.yandex.')) return 'yandex';
+	if (host.includes('mave.stream') || host.includes('mave.digital')) return 'mave';
 
+	// Нарисованной иконки нет ещё у трёх площадок — VK, TikTok, Patreon.
+	// Возвращаем null, и место под иконку остаётся пустым: названия в списке
+	// от этого стоят одной колонкой. Придумывать логотип самому нельзя,
+	// в утверждённом макете этих трёх иконок нет.
 	return null;
 }

@@ -18,25 +18,51 @@
 // и на кнопках бонусного выпуска. Это не побочный эффект, а смысл файла,
 // но помнить об этом надо до правки, а не после.
 //
+// `desc` — строчка под названием в блоке «Ещё немного нас» на странице
+// «О проекте». Есть только у соцсетей: там площадки не однотипны, и «Telegram»
+// без пояснения не отвечает на вопрос, чем он отличается от YouTube. В подвале
+// и в остальных трёх местах поле не используется вовсе — оно необязательное.
+// Заведено здесь, а не в админке: второй список площадок с подписями разошёлся
+// бы с этим при первом же переименовании.
+//
 // `inFooter: false` — «площадка настоящая, но в подвале не нужна». Поле
 // заведено ради VK Donat: он ведёт на ту же страницу ВКонтакте, что и площадка
 // «VK» строкой выше, и в общей строчке подвала это выглядело двумя ссылками
 // в одно место. На странице «Поддержать» и на кнопках бонуса он при этом
-// нужен: там он не дубль, а способ заплатить.
+// нужен: там он не дубль, а способ заплатить. Решением заказчика от 9 августа
+// признак стоит ещё у трёх: «Закрытый TG-канал» (кнопка оплаты, а не площадка,
+// куда ходят читать), Mave и TikTok.
 //
 // ПРЯТАТЬ УДАЛЕНИЕМ ЗАПИСИ НЕЛЬЗЯ — она нужна трём другим местам. Признак
 // стоит на самой площадке, а не списком имён внутри подвала: список чужих
 // имён в чужом файле пришлось бы дописывать при каждой новой площадке.
+//
+// ПОРЯДОК ВНУТРИ ВИДА ЗНАЧИМ ЕЩЁ В ОДНОМ МЕСТЕ: `EpisodePlayer.astro` берёт
+// ПЕРВУЮ площадку вида `listen` как запасную ссылку, когда аудио не отдалось.
+// Сейчас это YouTube; новые записи дописываются в конец своего вида.
 export const platforms = [
 	{ label: 'YouTube', url: 'https://www.youtube.com/@bakapodcast', kind: 'listen' },
-	{ label: 'Telegram', url: 'https://t.me/podcastbaka', kind: 'social' },
+	{
+		label: 'Telegram',
+		url: 'https://t.me/podcastbaka',
+		kind: 'social',
+		desc: 'Новости, мысли и новые материалы.',
+	},
 	{ label: 'Apple Podcasts', url: 'https://podcasts.apple.com/podcast/id1577387113', kind: 'listen' },
 	{ label: 'Яндекс Музыка', url: 'https://music.yandex.ru/album/16989745', kind: 'listen' },
 	{ label: 'Spotify', url: 'https://open.spotify.com/show/23VyxCbBLw6hh8NcsWZy7N', kind: 'listen' },
 	{ label: 'VK', url: 'https://vk.ru/podcast.baka', kind: 'listen' },
+	{ label: 'Mave', url: 'https://mave.stream/baka', kind: 'listen', inFooter: false },
+	{
+		label: 'TikTok',
+		url: 'https://www.tiktok.com/@bakapodcast',
+		kind: 'social',
+		desc: 'Короткие видео и фрагменты.',
+		inFooter: false,
+	},
 	{ label: 'Boosty', url: 'https://boosty.to/bakapodcast', kind: 'support' },
 	{ label: 'Patreon', url: 'https://www.patreon.com/bakapodcast', kind: 'support' },
-	{ label: 'Закрытый TG-канал', url: 'https://t.me/tribute/app?startapp=s26z', kind: 'support' },
+	{ label: 'Закрытый TG-канал', url: 'https://t.me/tribute/app?startapp=s26z', kind: 'support', inFooter: false },
 	{ label: 'VK Donat', url: 'https://vk.com/podcast.baka', kind: 'support', inFooter: false },
 ];
 

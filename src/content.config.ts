@@ -378,9 +378,9 @@ const transcripts = defineCollection({
 	}),
 });
 
-// Отдельные страницы сайта, которые правятся в админке. Сейчас там одна —
-// «О подкасте». Не пост: у неё нет даты, и в ленту, RSS и поиск она попадать
-// не должна.
+// Отдельные страницы сайта, которые правятся в админке. Их две — «О проекте»
+// и «Поддержать». Не посты: у них нет даты, и в ленту, RSS и поиск они попадать
+// не должны.
 //
 // СХЕМА ЗДЕСЬ НАРОЧНО МАКСИМАЛЬНО СНИСХОДИТЕЛЬНАЯ: обязательных полей нет
 // ни одного, всё переживает пустую строку. Причина в CLAUDE.md — падение
@@ -390,6 +390,10 @@ const transcripts = defineCollection({
 const pages = defineCollection({
 	loader: glob({ pattern: '*.md', base: './src/content/pages' }),
 	schema: z.object({
+		// СТАРЫЕ ПОЛЯ РАСШИРЕНЫ, А НЕ ЗАМЕНЕНЫ. В части 10.4 у человека появились
+		// рассказ о себе и подпись ссылки, но `name`, `role`, `photo` и `url`
+		// остались теми же — иначе фото, загруженное заказчиком через админку
+		// в августе, потерялось бы при первом же сохранении.
 		hosts: z
 			.array(
 				z.object({
@@ -399,15 +403,29 @@ const pages = defineCollection({
 					// Сжатые копии делает сборка, см. src/lib/imageVariants.mjs.
 					photo: z.preprocess(emptyToUndefined, z.string().optional()),
 					url: z.preprocess(emptyToUndefined, z.string().optional()),
+					bio: z.string().optional(),
+					urlLabel: z.string().optional(),
 				}),
 			)
 			.default([]),
 		supportNote: z.string().optional(),
 		contactEmail: z.preprocess(emptyToUndefined, z.string().optional()),
 
+		// --- Остальные поля страницы «О проекте» (тз/10.4) ---
+		//
+		// `lead` ниже — общее поле обеих страниц, оно уже описано у «Поддержать».
+		hostsNote: z.string().optional(),
+		listenNote: z.string().optional(),
+		socialNote: z.string().optional(),
+		supportTitle: z.string().optional(),
+		contactText: z.string().optional(),
+		chatText: z.string().optional(),
+		chatLabel: z.string().optional(),
+		chatUrl: z.preprocess(emptyToUndefined, z.string().optional()),
+
 		// --- Поля страницы «Поддержать» (тз/08, часть 10.1) ---
 		//
-		// Лежат в той же полке, что и поля «О подкасте»: страниц в админке две,
+		// Лежат в той же полке, что и поля «О проекте»: страниц в админке две,
 		// а схема на коллекцию одна. Незаполненное поле у чужой страницы —
 		// это просто отсутствующее поле, и обе страницы это переживают.
 		//
