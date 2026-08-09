@@ -5,8 +5,15 @@
 // из 21 предложения по исправлению названий однажды не годилось ни одного,
 // и тихо применённое предложение хуже неприменённого.
 //
-//     node scripts/timecodes-from-body.mjs           отчёт, файлы не трогаются
-//     node scripts/timecodes-from-body.mjs --write   записать одобренное
+//     node scripts/timecodes-from-body.mjs                  отчёт, файлы не трогаются
+//     node scripts/timecodes-from-body.mjs --write          записать поле
+//     node scripts/timecodes-from-body.mjs --write --cut    и убрать список из тела
+//     … --only ep-102                                       только один выпуск
+//
+// ЗАПИСЬ ИДЁТ ПО ОДНОМУ ВЫПУСКУ, А НЕ ПО АРХИВУ СРАЗУ. Первым был ep-102:
+// на нём проверялось, переживёт ли наша запись сохранение поста в админке.
+// Sveltia переписывает файл целиком, и разойдись формат — заказчик увидел бы
+// гигантскую разницу при первом же сохранении.
 //
 // СВОЕГО РАЗБОРА ВРЕМЕНИ ЗДЕСЬ НЕТ НИ СТРОЧКИ. И формат таймкода,
 // и разбор списка берутся из src/lib/timecode.mjs — оттуда же, откуда их
@@ -19,6 +26,11 @@ import { TIMECODE_SOURCE, parseTimecodeList } from '../src/lib/timecode.mjs';
 
 const DIR = 'src/content/posts';
 const WRITE = process.argv.includes('--write');
+const CUT = process.argv.includes('--cut');
+
+// --only ep-102 — работать с одним выпуском. Без него берутся все найденные.
+const onlyArg = process.argv[process.argv.indexOf('--only') + 1];
+const ONLY = process.argv.includes('--only') ? onlyArg.replace(/\.md$/, '') + '.md' : null;
 
 // Материалы, у которых бывает оглавление: выпуск подкаста и видеоэссе.
 const CATEGORIES = new Set(['podcast', 'videoessay']);
@@ -96,16 +108,22 @@ function findGroups(body) {
 	return groups.map((idx) => {
 		// Подпись «Таймкоды» — ближайшая непустая строка перед группой.
 		let heading = null;
+		let headingAt = -1;
 		for (let i = idx[0] - 1; i >= 0 && i >= idx[0] - 3; i--) {
 			const text = lines[i].trim().replace(/^[#*\s]+|[*\s]+$/g, '');
 			if (!text) continue;
-			if (HEADING_RE.test(text)) heading = lines[i].trim();
+			if (HEADING_RE.test(text)) {
+				heading = lines[i].trim();
+				headingAt = i;
+			}
 			break;
 		}
 		const gaps = idx.slice(1).map((n, k) => n - idx[k]);
 		return {
 			start: idx[0],
+			end: idx[idx.length - 1],
 			heading,
+			headingAt,
 			gaps,
 			lines: idx.map((n) => ({ n: n + 1, text: lines[n].trim() })),
 		};
@@ -285,20 +303,45 @@ if (!WRITE) {
 // Поле ставится ПЕРЕД audioGuid: ровно там его держит Sveltia в обоих
 // выпусках, где заказчик заполнил поле руками (ep-107 и ep-146). Нет
 // audioGuid — в конец шапки.
+const targets = ONLY ? found.filter((f) => f.file === ONLY) : found;
+
+if (ONLY && !targets.length) {
+	console.log(`\n${ONLY}: списка не найдено или поле уже заполнено — писать нечего.`);
+	process.exit(1);
+}
+
 let written = 0;
-for (const f of found) {
+for (const f of targets) {
 	const path = `${DIR}/${f.file}`;
 	const raw = readFileSync(path, 'utf8');
 	const { head, body } = splitPost(raw);
 	const block = yamlBlock(f.rows.map((r) => `${r.time} — ${r.title}`).join('\n'));
 
-	const lines = head.split('\n');
-	const at = lines.findIndex((l) => /^audioGuid:/.test(l));
-	if (at === -1) lines.push(...block.split('\n'));
-	else lines.splice(at, 0, ...block.split('\n'));
+	const headLines = head.split('\n');
+	const at = headLines.findIndex((l) => /^audioGuid:/.test(l));
+	if (at === -1) headLines.push(...block.split('\n'));
+	else headLines.splice(at, 0, ...block.split('\n'));
 
-	writeFileSync(path, `---\n${lines.join('\n')}\n---\n${body}`);
+	let bodyLines = body.split('\n');
+
+	if (CUT) {
+		// Вырезается РОВНО список: подпись «Таймкоды», если она есть, и строки
+		// от первой темы до последней. Ни строкой больше — всё остальное
+		// в теле авторское, и трогать его нельзя.
+		const from = f.group.headingAt >= 0 ? f.group.headingAt : f.group.start;
+		const to = f.group.end;
+		bodyLines.splice(from, to - from + 1);
+
+		// На месте выреза сходятся две пустые строки — та, что была перед
+		// списком, и та, что была после. Оставляем одну: markdown понял бы
+		// две как есть, но в файле это выглядело бы дырой.
+		if (from > 0 && !bodyLines[from - 1].trim() && from < bodyLines.length && !bodyLines[from].trim()) {
+			bodyLines.splice(from, 1);
+		}
+	}
+
+	writeFileSync(path, `---\n${headLines.join('\n')}\n---\n${bodyLines.join('\n')}`);
 	written++;
-	console.log(`записан ${f.file}`);
+	console.log(`записан ${f.file}${CUT ? ' — поле заполнено, список из тела убран' : ' — поле заполнено, тело не тронуто'}`);
 }
-console.log(`\nЗаписано выпусков: ${written}. Тела постов не тронуты.`);
+console.log(`\nЗаписано выпусков: ${written}.`);
