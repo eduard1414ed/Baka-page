@@ -203,18 +203,25 @@ a:focus-visible {
 	column-gap: var(--grid-gap);
 }
 
+/* ЛИНИИ НЕ ВСТРЕЧАЮТСЯ УГЛОМ, и это правило языка сайта, а не мелочь.
+   Вертикальная линия между колонками идёт сплошняком, а горизонтальные между
+   карточками начинаются ПОСЛЕ отступа — так же, как в сайдбаре главной,
+   где вертикальную линию рисует сама колонка, а карточки внутри неё лежат
+   за её полем. Углы превращают ленту в таблицу и перегружают страницу.
+
+   Отступ от линии карточка знает как `--card-inset`: сама горизонтальная
+   линия рисуется псевдоэлементом, а не рамкой (PostCard.astro), потому что
+   рамка всегда идёт от края коробки и отодвинуть её нечем. Значение стоит
+   рядом с `padding-left` — это одно и то же число, и разъехаться им нельзя. */
 @media (min-width: 621px) {
 	.list-grid:not([hidden]) {
 		grid-template-columns: 1fr 1fr;
 	}
 
-	.list-grid > .list-card {
-		padding-right: var(--sp-6);
-	}
-
 	.list-grid > .list-card:nth-child(2n) {
 		border-left: 1px solid var(--line);
 		padding-left: var(--sp-6);
+		--card-inset: var(--sp-6);
 	}
 }
 
@@ -226,12 +233,14 @@ a:focus-visible {
 	.list-grid > .list-card:nth-child(2n) {
 		border-left: 0;
 		padding-left: 0;
+		--card-inset: 0px;
 	}
 
 	.list-grid > .list-card:nth-child(3n + 2),
 	.list-grid > .list-card:nth-child(3n + 3) {
 		border-left: 1px solid var(--line);
 		padding-left: var(--sp-6);
+		--card-inset: var(--sp-6);
 	}
 }
 
