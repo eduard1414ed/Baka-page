@@ -13,7 +13,8 @@
 // (как на референсе), чистый CSS. Это удобство чтения, чтобы транскрипт не
 // отодвигал подвал на два экрана, а не экономия трафика.
 import { getCollection } from 'astro:content';
-import { groupReplicas, formatTimecode } from '../lib/transcript.mjs';
+import { groupReplicas, formatTimecode, UNKNOWN_SPEAKER } from '../lib/transcript.mjs';
+import { plural } from '../lib/plural.mjs';
 import { buildAnimeMatcher, splitByMentions } from '../lib/animeMentions.mjs';
 import { makeExceptionFilter } from '../lib/mentionExceptions.mjs';
 
@@ -43,6 +44,16 @@ const { transcript, transcriptId, mentionsHidden } = Astro.props;
 //
 // Убранное руками в админке сюда не попадает вовсе — остаётся обычным текстом.
 // Ссылкой становится первое ВИДИМОЕ упоминание.
+// Строка статистики в шапке блока: «28:05 · 2 голоса». Считается по самой
+// расшифровке, а не берётся из RSS: длительность звука и длина расшифровки —
+// разные числа (распознавание кончается там, где кончилась речь), и подставить
+// сюда чужое было бы неправдой.
+const lastEnd = transcript.replicas.length > 0 ? transcript.replicas[transcript.replicas.length - 1].end : 0;
+const voiceCount = new Set(
+	transcript.replicas.map((replica: { speaker: string }) => transcript.speakers?.[replica.speaker] ?? replica.speaker),
+).size;
+const statLine = `${formatTimecode(lastEnd)} · ${voiceCount} ${plural(voiceCount, ['голос', 'голоса', 'голосов'])}`;
+
 const animeList = await getCollection('anime');
 const matcher = buildAnimeMatcher(animeList);
 const exceptions = makeExceptionFilter(mentionsHidden);
@@ -85,10 +96,15 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 ---
 
 <section class="transcript" aria-labelledby="transcript-title">
-	<h2 id="transcript-title">Транскрипт</h2>
-	{/* Приписка в поиск не идёт: иначе по запросу «ошибки» находился бы весь
-	    архив разом. Референс («Запуск завтра») помечает её ровно так же. */}
-	<p class="tr-note" data-pagefind-ignore>расшифровано автоматически, ошибки возможны</p>
+	<div class="tr-head">
+		<div>
+			<h2 id="transcript-title">Транскрипт</h2>
+			{/* Приписка в поиск не идёт: иначе по запросу «ошибки» находился бы весь
+			    архив разом. */}
+			<p class="tr-note" data-pagefind-ignore>Расшифровано автоматически, ошибки возможны. Таймкоды синхронизированы с плеером.</p>
+		</div>
+		<div class="tr-stat tech" data-pagefind-ignore>{statLine}</div>
+	</div>
 
 	<div class="tr-tools" data-pagefind-ignore>
 		<input
@@ -98,8 +114,10 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 			autocomplete="off"
 			aria-label="Поиск по транскрипту"
 		/>
-		<button class="tr-step" type="button" data-dir="-1" aria-label="Предыдущее совпадение" disabled>↑</button>
-		<button class="tr-step" type="button" data-dir="1" aria-label="Следующее совпадение" disabled>↓</button>
+		<div class="tr-steps">
+			<button class="tr-step" type="button" data-dir="-1" aria-label="Предыдущее совпадение" disabled>↑</button>
+			<button class="tr-step" type="button" data-dir="1" aria-label="Следующее совпадение" disabled>↓</button>
+		</div>
 		<span class="tr-count" role="status" aria-live="polite"></span>
 		<button class="tr-follow" type="button" aria-pressed="false" hidden>Следить за плеером</button>
 	</div>
@@ -113,6 +131,13 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 		<button class="tr-hits-off" type="button">✕ обычный поиск</button>
 	</p>
 
+	{/* Подписи колонок — только на широком экране, где колонки и есть.
+	    На телефоне колонка одна, и подписывать нечего. */}
+	<div class="tr-labels tech" aria-hidden="true">
+		<div>Голос · время</div>
+		<div>Реплика</div>
+	</div>
+
 	<div class="tr-body">
 		{
 			blocks.map((block: any) => (
@@ -120,7 +145,12 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 					<div class="tr-side">
 						{/* У блока, оторвавшегося от предыдущего по порогу длины, имя
 						    не повторяем — это та же речь, просто с новым таймкодом. */}
-						{!block.continues && <span class="tr-name">{block.name}</span>}
+						{/* «Спикер не определён» пишем прямо в имени, без значков
+						    и приписок: это состояние данных, а не ошибка, которую
+						    читатель может исправить. */}
+						{!block.continues && (
+							<span class:list={['tr-name', block.name === UNKNOWN_SPEAKER && 'is-unknown']}>{block.name}</span>
+						)}
 						{/* Сама плашка в поиск не идёт: иначе текст страницы был бы
 						    прошит сотнями «12:04», и они лезли бы в выдачу. Таймкод
 						    от этого не теряется — он в id блока выше. */}
@@ -171,9 +201,10 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 	    приписал бы последнему блоку и позвал бы человека на чужую минуту. */}
 	<span id="tend"></span>
 
-	<button class="tr-expand" type="button" aria-expanded="false" data-pagefind-ignore>
-		Развернуть транскрипт целиком
-	</button>
+	<div class="tr-actions" data-pagefind-ignore>
+		<button class="tr-expand tech" type="button" aria-expanded="false">Развернуть транскрипт целиком ↓</button>
+		<span class="tr-hint">Нажмите на время слева, чтобы перейти к фрагменту.</span>
+	</div>
 </section>
 
 <script>
@@ -240,11 +271,17 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 			steps.forEach((step) => (step.disabled = true));
 		}
 
-		// Показать совпадение. Пока транскрипт свёрнут, у блока своя полоса
+		// Показать совпадение. Пока транскрипт свёрнут, у окна своя полоса
 		// прокрутки — двигаем её, страницу не трогаем совсем (иначе при каждом
 		// переходе к следующему совпадению страница прыгала бы под руками).
+		//
+		// СВЁРНУТОСТЬ ОПРЕДЕЛЯЕМ ПО КЛАССУ, А НЕ ПО ИЗМЕРЕННОЙ ВЫСОТЕ. У окна
+		// стоит `content-visibility: auto`, и пока оно за кромкой экрана, его
+		// содержимое не разложено: `scrollHeight` в этот момент равен видимой
+		// высоте, и проверка «есть ли что прокручивать» отвечала бы «нет» —
+		// вместо прокрутки внутри окна дёргалась бы вся страница.
 		function reveal(element: HTMLElement, smooth = true) {
-			if (body!.scrollHeight > body!.clientHeight) {
+			if (!section.classList.contains('is-expanded')) {
 				const rect = element.getBoundingClientRect();
 				const bodyRect = body!.getBoundingClientRect();
 				body!.scrollTop += rect.top - bodyRect.top - body!.clientHeight / 2;
@@ -339,7 +376,7 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 		expand.addEventListener('click', () => {
 			const opened = section.classList.toggle('is-expanded');
 			expand.setAttribute('aria-expanded', String(opened));
-			expand.textContent = opened ? 'Свернуть транскрипт' : 'Развернуть транскрипт целиком';
+			expand.textContent = opened ? 'Свернуть транскрипт ↑' : 'Развернуть транскрипт целиком ↓';
 		});
 
 		// Возврат к обычному поиску. Поле чистим здесь, а не в clearHighlights():
@@ -383,9 +420,9 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 			input!.value = found[0].textContent ?? '';
 			steps.forEach((step) => (step.disabled = false));
 
-			// Сначала подводим к транскрипту саму страницу, потом внутри блока —
-			// к нужному упоминанию (или к первому, если таймкод не совпал).
-			section.scrollIntoView({ block: 'start' });
+			// К транскрипту страница уже подведена вызывающей стороной — здесь
+			// остаётся встать на нужное упоминание (или на первое, если таймкод
+			// не совпал).
 			const at = Number.isFinite(seconds) ? found.findIndex((el) => Number(el.dataset.seconds) === seconds) : -1;
 			setCurrent(at === -1 ? 0 : at);
 		}
@@ -415,13 +452,22 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 			bindFollow(section, body, follow, api, playerCard, reveal);
 		}
 
+		// Оба перехода по ссылке ниже сначала подводят к транскрипту саму страницу,
+		// а потом мотают окно внутри. Между этим нужен кадр отрисовки: пока окно
+		// было за кромкой экрана, `content-visibility: auto` не раскладывал его
+		// содержимое, и измерять положение реплики было бы не по чему. Два кадра,
+		// а не один: обработчики кадра выполняются ДО пересчёта раскладки,
+		// поэтому на первом мерить ещё рано.
+		const afterPaint = (run: () => void) => requestAnimationFrame(() => requestAnimationFrame(run));
+
 		// Ссылка со страницы тайтла. Разбираем после того, как плеер уже привязан:
 		// переход должен и подсветить упоминания, и завести выпуск с этой минуты.
 		const link = location.hash.match(/^#anime=([^&\s]+)(?:&t=(\d+))?$/);
 		if (link) {
 			const animeId = decodeURIComponent(link[1]);
 			const seconds = Number(link[2]);
-			showMentions(animeId, seconds);
+			section.scrollIntoView({ block: 'start' });
+			afterPaint(() => showMentions(animeId, seconds));
 			// Клик по ссылке — действие пользователя, а переход между страницами
 			// сайта идёт без перезагрузки (<ClientRouter />), поэтому браузер обычно
 			// разрешает звук. Если всё же заблокирует — транскрипт всё равно
@@ -452,16 +498,18 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 
 			section.scrollIntoView({ block: 'start' });
 
-			if (query) {
-				input.value = query;
-				search(query);
-			}
+			afterPaint(() => {
+				if (query) {
+					input.value = query;
+					search(query);
+				}
 
-			// Совпадений на странице может быть много; встаём на то, что внутри
-			// нужного блока, а не на первое сверху — за ним человек и пришёл.
-			const at = target ? matches.findIndex((mark) => target.contains(mark)) : -1;
-			if (at !== -1) setCurrent(at);
-			else if (target) reveal(target, false);
+				// Совпадений на странице может быть много; встаём на то, что внутри
+				// нужного блока, а не на первое сверху — за ним человек и пришёл.
+				const at = target ? matches.findIndex((mark) => target.contains(mark)) : -1;
+				if (at !== -1) setCurrent(at);
+				else if (target) reveal(target, false);
+			});
 
 			if (playerCard && api) api.load(playerCard.dataset, seconds);
 		}
@@ -574,143 +622,169 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 </script>
 
 <style>
+	/* Начало транскрипта — «сильная» линия из §5: чернильная, а не декоративная.
+	   Ось задаёт страница (.transcript-wrap, 1000), здесь только вертикальный
+	   ритм. */
 	.transcript {
-		margin-top: var(--space-4);
-		padding-top: var(--space-3);
-		border-top: 1px solid var(--color-border);
+		padding-top: 34px;
+		border-top: 1px solid var(--ink);
+	}
+
+	.tr-head {
+		margin-bottom: var(--sp-6);
+	}
+
+	.tr-head h2 {
+		margin: 0 0 var(--sp-2);
 	}
 
 	.tr-note {
-		margin-top: var(--space-1);
-		color: var(--color-text-muted);
-		font-size: var(--font-size-sm);
+		margin: 0;
+		font-size: var(--caption);
+		line-height: 1.45;
+		color: var(--muted);
+	}
+
+	.tr-stat {
+		margin-top: var(--sp-3);
+		color: var(--muted);
 	}
 
 	.tr-tools {
-		display: flex;
-		flex-wrap: wrap;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: var(--sp-2);
 		align-items: center;
-		gap: var(--space-1);
-		margin: var(--space-2) 0;
+		margin-bottom: 18px;
 	}
 
 	.tr-search {
-		flex: 1 1 12rem;
+		appearance: none;
+		-webkit-appearance: none;
+		min-height: 44px;
 		min-width: 0;
-		padding: var(--space-1) var(--space-2);
-		background: var(--color-bg-elevated);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-sm);
-		color: var(--color-text);
-		font: inherit;
-		font-size: var(--font-size-base);
+		padding: 0 13px;
+		border: 1px solid var(--line-strong);
+		background: transparent;
+		color: var(--ink);
+		font-size: var(--body-md);
 	}
 
-	.tr-search:focus-visible {
+	.tr-search:focus {
 		outline: none;
-		border-color: var(--color-accent);
+		border-color: var(--ink);
+	}
+
+	/* Своя крестик-кнопка у поля поиска в вебките — лишняя: очистка тут ничего
+	   не сбрасывает, подсветку снимает событие ввода. */
+	.tr-search::-webkit-search-decoration,
+	.tr-search::-webkit-search-cancel-button,
+	.tr-search::-webkit-search-results-button {
+		-webkit-appearance: none;
+	}
+
+	.tr-steps {
+		display: flex;
+		gap: var(--sp-2);
 	}
 
 	.tr-step {
-		flex-shrink: 0;
-		width: 2.25rem;
-		height: 2.25rem;
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-sm);
+		width: 44px;
+		height: 44px;
+		border: 1px solid var(--line-strong);
 		background: transparent;
-		color: var(--color-text);
-		font-size: var(--font-size-base);
-		line-height: 1;
-		cursor: pointer;
-		transition:
-			border-color var(--transition-fast),
-			color var(--transition-fast);
+		color: var(--ink);
 	}
 
 	.tr-step:hover:not(:disabled),
 	.tr-step:focus-visible:not(:disabled) {
-		border-color: var(--color-accent);
-		color: var(--color-accent);
+		border-color: var(--accent-text);
+		color: var(--accent-text);
 	}
 
 	.tr-step:disabled {
-		opacity: 0.4;
+		color: var(--muted);
 		cursor: default;
 	}
 
 	.tr-count {
-		flex-shrink: 0;
-		min-width: 6.5rem;
-		color: var(--color-text-muted);
-		font-size: var(--font-size-sm);
+		grid-column: 1 / -1;
+		color: var(--muted);
+		font-size: var(--caption);
 		font-variant-numeric: tabular-nums;
 	}
 
 	.tr-follow {
-		flex-shrink: 0;
-		margin-left: auto;
-		padding: var(--space-1) var(--space-2);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-sm);
+		grid-column: 1 / -1;
+		justify-self: start;
+		min-height: 44px;
+		padding: 0 14px;
+		border: 1px solid var(--line-strong);
 		background: transparent;
-		color: var(--color-text);
-		font: inherit;
-		font-size: var(--font-size-sm);
-		cursor: pointer;
-		transition:
-			border-color var(--transition-fast),
-			background-color var(--transition-fast),
-			color var(--transition-fast);
+		color: var(--ink);
+		font-size: var(--caption);
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
 	}
 
 	.tr-follow:hover,
 	.tr-follow:focus-visible {
-		border-color: var(--color-accent);
-		color: var(--color-accent);
+		border-color: var(--accent-text);
+		color: var(--accent-text);
 	}
 
 	/* Включённое слежение видно с одного взгляда — иначе непонятно, почему
-	   текст едет сам. */
+	   текст едет сам. Не только цветом: рамка и заливка вместе. */
 	.tr-follow.is-on {
-		background: var(--color-accent);
-		border-color: var(--color-accent);
-		color: var(--color-bg);
-	}
-
-	.tr-follow[hidden] {
-		display: none;
+		border-color: var(--accent-text);
+		background: var(--accent-soft);
+		color: var(--accent-text);
 	}
 
 	.tr-hits {
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
-		gap: var(--space-1);
-		margin: 0 0 var(--space-2);
-		color: var(--color-text-muted);
-		font-size: var(--font-size-sm);
-	}
-
-	.tr-hits[hidden] {
-		display: none;
+		gap: var(--sp-2);
+		margin: 0 0 var(--sp-4);
+		color: var(--muted);
+		font-size: var(--caption);
 	}
 
 	.tr-hits-off {
-		border: none;
+		min-height: 44px;
+		border: 0;
 		background: transparent;
 		padding: 0;
-		color: var(--color-accent);
-		font: inherit;
-		font-size: var(--font-size-sm);
-		cursor: pointer;
+		color: var(--accent-text);
+		font-size: var(--caption);
 	}
 
-	/* Свёрнутый вид: окно фиксированной высоты со своей прокруткой.
-	   Развёрнутый — обычный поток страницы, ограничение снимается. */
+	.tr-labels {
+		display: none;
+	}
+
+	/* ВЕСЬ ТРАНСКРИПТ ЛЕЖИТ В РАЗМЕТКЕ, свёрнут только высотой окна.
+	   Три правила, и все три нарушить легко:
+
+	   — окно прокручивается САМО. Переход по таймкоду и «Следить за плеером»
+	     мотают его внутри, а не разворачивают: человек свернул окно намеренно,
+	     и подменять его решение автоматикой нельзя;
+	   — прятать через `display: none` тоже нельзя — тогда поиск браузера
+	     (Ctrl+F) перестанет находить в свёрнутой части;
+	   — высота в `em`, а не в пикселях: при увеличении шрифта окно растёт
+	     вместе с текстом, и на зуме 200 % в нём всё так же видно несколько
+	     реплик, а не полторы строки.
+
+	   `content-visibility` снимает стоимость отрисовки нижних реплик, не убирая
+	   их из документа: у выпуска на 900 реплик это разница, которую видно. */
 	.tr-body {
-		max-height: 32rem;
+		max-height: 34em;
 		overflow-y: auto;
 		overscroll-behavior: contain;
+		scrollbar-width: thin;
+		content-visibility: auto;
+		contain-intrinsic-size: auto 34em;
 	}
 
 	.transcript.is-expanded .tr-body {
@@ -719,123 +793,189 @@ const blocks = groupReplicas(transcript).map((block: any) => ({
 	}
 
 	.tr-block {
-		display: grid;
-		grid-template-columns: 9rem minmax(0, 1fr);
-		gap: var(--space-2);
-		padding: var(--space-2) 0;
-	}
-
-	.tr-block + .tr-block {
-		border-top: 1px solid var(--color-border);
-	}
-
-	/* Блок, который звучит прямо сейчас (режим «Следить за плеером»). Полоска
-	   слева, а не заливка всего блока: заливка на пол-экрана текста мешает читать. */
-	.tr-block.is-playing {
-		box-shadow: inset 3px 0 0 var(--color-accent);
+		padding: 18px 0;
+		border-bottom: 1px solid var(--line-soft);
 	}
 
 	.tr-side {
 		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: var(--space-1);
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--sp-3);
+		padding: 0 0 var(--sp-2);
 	}
 
 	.tr-name {
-		font-size: var(--font-size-sm);
+		font-size: var(--body-sm);
 		font-weight: 600;
-		line-height: 1.3;
+		color: var(--ink);
 	}
 
+	/* Состояние данных, а не ошибка: пишем прямо, без предупреждающих значков. */
+	.tr-name.is-unknown {
+		font-weight: 400;
+		font-style: italic;
+		color: var(--muted);
+	}
+
+	/* Таймкод БЕЗ РАМКИ: подчёркнутый акцентный текст. Коробок в языке сайта
+	   нет, а в транскрипте их было бы по двести на страницу — они спорили бы
+	   с самим текстом. Цель 44 добирается невидимой зоной. */
 	.tr-time {
-		padding: 0.15rem var(--space-1);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-sm);
+		position: relative;
+		border: 0;
 		background: transparent;
-		color: var(--color-accent);
-		font: inherit;
-		font-size: var(--font-size-sm);
-		font-variant-numeric: tabular-nums;
-		line-height: 1.4;
-		cursor: pointer;
-		transition: border-color var(--transition-fast);
+		padding: 0;
+		color: var(--accent-text);
+		font-family: var(--font-tech);
+		font-size: var(--technical);
+		letter-spacing: 0.04em;
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
 	}
 
-	.tr-time:hover:not(:disabled),
-	.tr-time:focus-visible:not(:disabled) {
-		border-color: var(--color-accent);
+	.tr-time::after {
+		content: '';
+		position: absolute;
+		inset: -15px -10px;
 	}
 
-	/* Плеера на странице нет — плашка остаётся видна как метка времени,
-	   но не выглядит кнопкой, которая ничего не делает. */
+	.tr-time:hover:not(:disabled) {
+		background: var(--accent-soft);
+	}
+
+	/* Плеера на странице нет — плашка остаётся меткой времени, но не
+	   притворяется кнопкой, которая ничего не делает. */
 	.tr-time:disabled {
-		color: var(--color-text-muted);
+		color: var(--muted);
+		text-decoration: none;
 		cursor: default;
 	}
 
 	.tr-text {
 		margin: 0;
+		font-size: var(--body-lg);
+		line-height: 1.65;
+	}
+
+	/* Блок, который звучит прямо сейчас (режим «Следить за плеером»). */
+	.tr-block.is-playing .tr-text {
+		background: var(--accent-soft);
+	}
+
+	.tr-block.is-playing .tr-name {
+		color: var(--accent-text);
 	}
 
 	/* :global обязательно — <mark> создаёт скрипт во время работы страницы,
 	   и на него не попадает атрибут, по которому Astro ограничивает стили
 	   этим компонентом. Без :global подсветка не покрасилась бы вообще. */
 	.tr-text :global(mark) {
-		background: var(--color-accent-2);
-		color: var(--color-bg);
-		border-radius: 3px;
+		background: var(--accent-soft);
+		color: inherit;
+		padding: 1px 0;
 	}
 
 	.tr-text :global(mark.is-current) {
-		background: var(--color-accent);
+		background: var(--accent-brand);
 	}
 
 	/* Упоминания тайтлов. Ссылка только у первого в выпуске — повторные лежат
 	   в <span> и выглядят как обычный текст, иначе выпуск про «K-On!», где
-	   название звучит 17 раз, стал бы синим месивом.
+	   название звучит 17 раз, стал бы сплошной строчкой ссылок.
 	   :global тут НЕ нужен: сами элементы созданы при сборке, атрибут Astro
 	   на них есть, скрипт только добавляет классы. */
 	.tr-anime.is-hit {
-		background: var(--color-accent-2);
-		color: var(--color-bg);
-		border-radius: 3px;
+		background: var(--accent-soft);
 	}
 
 	.tr-anime.is-current {
-		background: var(--color-accent);
-		color: var(--color-bg);
+		background: var(--accent-brand);
+		color: var(--ink);
+	}
+
+	.tr-actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		align-items: center;
+		gap: var(--sp-4);
+		padding-top: 18px;
 	}
 
 	.tr-expand {
-		margin-top: var(--space-2);
-		padding: var(--space-1) var(--space-2);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-sm);
-		background: var(--color-bg-elevated);
-		color: var(--color-accent);
-		font: inherit;
-		font-size: var(--font-size-sm);
-		cursor: pointer;
-		transition: border-color var(--transition-fast);
+		min-height: 44px;
+		border: 0;
+		background: transparent;
+		padding: 0;
+		color: var(--accent-text);
 	}
 
-	.tr-expand:hover,
-	.tr-expand:focus-visible {
-		border-color: var(--color-accent);
+	.tr-hint {
+		font-size: var(--caption);
+		color: var(--muted);
 	}
 
-	/* На телефоне двух колонок нет: имя и таймкод уезжают над текстом реплики. */
-	@media (max-width: 640px) {
+	/* Две колонки появляются только на широком экране. На телефоне спикер
+	   и таймкод стоят НАД репликой — двух колонок там нет вовсе. */
+	@media (min-width: 821px) {
+		.tr-head {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) auto;
+			gap: var(--sp-6);
+			align-items: end;
+		}
+
+		.tr-stat {
+			margin-top: 0;
+			padding-bottom: var(--sp-1);
+		}
+
+		.tr-tools {
+			grid-template-columns: minmax(0, 1fr) auto auto;
+		}
+
+		.tr-count,
+		.tr-follow {
+			grid-column: auto;
+		}
+
+		.tr-labels {
+			display: grid;
+			grid-template-columns: 142px minmax(0, 1fr);
+			border-top: 1px solid var(--line);
+			color: var(--muted);
+		}
+
+		.tr-labels > div {
+			padding: 10px 0;
+		}
+
+		.tr-labels > div:last-child {
+			padding-left: 26px;
+			border-left: 1px solid var(--line);
+		}
+
 		.tr-block {
-			grid-template-columns: 1fr;
-			gap: var(--space-1);
+			display: grid;
+			grid-template-columns: 142px minmax(0, 1fr);
+			padding: 0;
 		}
 
 		.tr-side {
-			flex-direction: row;
-			align-items: center;
-			gap: var(--space-1);
+			display: block;
+			padding: 22px 18px 22px 0;
+		}
+
+		.tr-name {
+			display: block;
+			margin-bottom: var(--sp-2);
+		}
+
+		.tr-text {
+			padding: 20px 0 21px 26px;
+			border-left: 1px solid var(--line);
 		}
 	}
 </style>

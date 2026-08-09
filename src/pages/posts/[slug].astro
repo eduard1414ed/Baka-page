@@ -21,13 +21,14 @@ import Layout from '../../layouts/Layout.astro';
 import JsonLd from '../../components/JsonLd.astro';
 import { postDescription } from '../../lib/excerpt.mjs';
 import { socialSource } from '../../lib/postImage.mjs';
-import { absoluteUrl } from '../../lib/site.mjs';
+import { absoluteUrl, SITE_NAME } from '../../lib/site.mjs';
 import { podcastEpisodeSchema, articleSchema, breadcrumbsSchema } from '../../lib/schema.mjs';
 import { categories, sectionOf } from '../../content.config';
 import { getYoutubeEmbedUrl } from '../../lib/youtube.mjs';
 import { hostOf } from '../../lib/linkIcon.mjs';
 import { findEpisodeByGuid } from '../../lib/podcastFeed.mjs';
 import { formatPostDate } from '../../lib/postDate.mjs';
+import { episodeNumber } from '../../lib/postMeta.mjs';
 import AnimeBadge from '../../components/AnimeBadge.astro';
 import ContentHeader from '../../components/ContentHeader.astro';
 import PostKicker from '../../components/PostKicker.astro';
@@ -231,6 +232,15 @@ const crumbs = breadcrumbsSchema([
 	{ name: title, path: `/posts/${post.id}/` },
 ]);
 
+// Подписи под плеером (§13). Слева — что играет, справа — подсказка про
+// таймкоды, и она появляется ТОЛЬКО там, где таймкоды на странице правда есть:
+// обещание, которому нечего исполнить, хуже молчания.
+const playerNumber = episodeNumber(post.id);
+const playerCaption = isEpisode
+	? [SITE_NAME, playerNumber && `выпуск ${playerNumber}`].filter(Boolean).join(' · ')
+	: `${SITE_NAME} · аудиоверсия`;
+const playerHint = showTranscript ? 'Клик по таймкоду переносит плеер' : null;
+
 const backHref = `/category/${sectionId}/`;
 const isoDate = date.toISOString().slice(0, 10);
 ---
@@ -308,6 +318,8 @@ const isoDate = date.toISOString().slice(0, 10);
 											cover={playerCover}
 											link={`/posts/${post.id}/`}
 											durationSec={episode.durationSec}
+											caption={playerCaption}
+											hint={playerHint}
 										/>
 									</div>
 								)}
@@ -401,6 +413,8 @@ const isoDate = date.toISOString().slice(0, 10);
 							cover={playerCover}
 							link={`/posts/${post.id}/`}
 							durationSec={episode.durationSec}
+							caption={playerCaption}
+							hint={playerHint}
 						/>
 					</section>
 				)
@@ -650,10 +664,6 @@ const isoDate = date.toISOString().slice(0, 10);
 	   встаёт вплотную к последней строке. */
 	.player-slot {
 		padding-top: var(--sp-8);
-	}
-
-	.player-slot :global(.episode-player) {
-		margin-bottom: 0;
 	}
 
 	.episode-deck {
