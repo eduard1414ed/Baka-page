@@ -2,7 +2,7 @@
 title: 'Девушки-пони: Серая Золушка | В чем секрет популярности?'
 date: 2026-08-06
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: ''
 noCover: false
