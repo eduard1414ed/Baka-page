@@ -117,6 +117,12 @@
 /* --- Контакты --- */
 
 .contact-copy{ min-width:0 }
+.contact-copy p{ margin:0 0 var(--space-4) }
+
+/* Две пары «текст — ссылка»: почта для дел, чат для разговора.
+   Отбивка МЕЖДУ парами больше, чем внутри пары, иначе четыре строки
+   читаются одним списком, а не двумя способами связаться. */
+.contact-mail + p{ margin-top:var(--space-8) }
 .contact-mail{
   display:inline-block;
   font-family:var(--font-display);

@@ -200,7 +200,12 @@ const catalogMarks = shuffled.slice(0, CATALOG_POOL);
 								<article class="article-feature">
 									<div>
 										<PostKicker post={slots.second} />
-										<h2 class="title-lg">
+										{/* Средний размер, а не крупный: в макете здесь стоял `title-lg`,
+										    но на живой странице он оказывается ВТОРЫМ крупным заголовком
+										    экрана и спорит с соседом по ряду — тот набран средним, а стоят
+										    они рядом. Крупный кегль остаётся ровно у одного материала
+										    главной, самого первого; решение заказчика 9 августа. */}
+										<h2 class="title-md">
 											<a class="stretch" {...linkOf(slots.second)}>
 												{slots.second.data.title}
 												{isExt(slots.second) && (
