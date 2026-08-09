@@ -269,9 +269,14 @@ const catalogMarks = shuffled.slice(0, CATALOG_POOL);
 			</Fragment>
 		</PostFeed>
 
+		{/* Блок каталога живёт ТОЛЬКО В РЕЖИМЕ «ВСЕ» — про это `data-only-mode`
+		    ниже. Он про аниме вообще, а не про выбранный тип материалов, и
+		    в отфильтрованной ленте читается чужим хвостом. Прячет его лента
+		    по атрибуту, своего имени в её скрипте у блока нет. В макете он
+		    остаётся во всех режимах — это решение заказчика. */}
 		{
 			catalogMarks.length > 0 && (
-				<section class="catalog" aria-labelledby="catalog-title">
+				<section class="catalog" aria-labelledby="catalog-title" data-only-mode="all">
 					{/* В строке ровно один акцент: метка раздела акцентная,
 					    ссылка рядом — чернильная. */}
 					<div class="catalog-head">

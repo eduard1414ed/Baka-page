@@ -116,7 +116,7 @@ const nothingToShow = olderAll.length === 0;
 
 {/* Режим «Все» — не карточная сетка, а редакционные ряды. Их собирает
     страница: это композиция главной, а не лента. */}
-<div class="all-layout" id="all-layout">
+<div class="all-layout" id="all-layout" data-only-mode="all">
 	<slot name="showcase" />
 </div>
 
@@ -279,20 +279,23 @@ const nothingToShow = olderAll.length === 0;
 		padding: var(--sp-12) 0 var(--sp-4);
 	}
 
-	/* Линию над первой карточкой рисует панель фильтров, а не сама карточка.
-	   Тут та же беда, что была у сайдбара главной: панель закрывается своей
-	   линией снизу, карточка открывается своей сверху, между ними только
-	   отступ — и на узком экране получаются две линии подряд, что §5 системы
-	   запрещает прямо.
+	/* Линию над ПЕРВЫМ РЯДОМ карточек рисует панель фильтров, а не сами
+	   карточки. Панель закрывается своей линией снизу, карточка открывается
+	   своей сверху, между ними только отступ — и получаются две линии подряд,
+	   что §5 системы запрещает прямо.
 
-	   Только до 761: выше сетка становится двух- и трёхколонной, и линии над
-	   карточками первого ряда идут в ряд, как и задумано. Снять её у одной
-	   из трёх — вот тогда ряд и выглядел бы сломанным. */
-	@media (max-width: 760px) {
-		.archive-grid > :global(.archive-card:first-child) {
-			border-top: 0;
-			padding-top: 0;
-		}
+	   Раньше это было снято только до 761 px: считалось, что выше линии над
+	   карточками первого ряда идут в ряд и так и задумано. На живом сайте
+	   заказчик увидел ровно то же самое нарушение — две линии под панелью, —
+	   и оно снимается на всех ширинах. В макете обе линии тоже есть, но макет
+	   тут проигрывает документу.
+
+	   СКОЛЬКО КАРТОЧЕК В ПЕРВОМ РЯДУ, СТОЛЬКО И СТОЛБЦОВ, поэтому число стоит
+	   рядом с самой сеткой — в том же медиазапросе. Разъедься они, линия
+	   пропала бы не у того ряда, а заметить это можно только глазами. */
+	.archive-grid > :global(.archive-card:first-child) {
+		border-top: 0;
+		padding-top: 0;
 	}
 
 	@media (min-width: 761px) {
@@ -302,14 +305,31 @@ const nothingToShow = olderAll.length === 0;
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 
+		.archive-grid[data-mode='podcast'] > :global(.archive-card:nth-child(-n + 2)),
+		.archive-grid[data-mode='videoessay'] > :global(.archive-card:nth-child(-n + 2)),
+		.archive-grid[data-mode='article'] > :global(.archive-card:nth-child(-n + 2)) {
+			border-top: 0;
+			padding-top: 0;
+		}
+
 		.archive-grid[data-mode='note'] {
 			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+
+		.archive-grid[data-mode='note'] > :global(.archive-card:nth-child(-n + 3)) {
+			border-top: 0;
+			padding-top: 0;
 		}
 	}
 
 	@media (min-width: 1101px) {
 		.archive-grid[data-mode='podcast'] {
 			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+
+		.archive-grid[data-mode='podcast'] > :global(.archive-card:nth-child(-n + 3)) {
+			border-top: 0;
+			padding-top: 0;
 		}
 	}
 
@@ -395,8 +415,14 @@ const nothingToShow = olderAll.length === 0;
 			if (on) syncArchiveLink(button);
 		});
 
-		const showcase = document.getElementById('all-layout');
-		if (showcase) showcase.hidden = mode !== 'all';
+		// Блоки, живущие только в одном режиме, помечают себя сами атрибутом
+		// `data-only-mode`: редакционные ряды главной и блок каталога аниме
+		// показываются в режиме «Все» и уходят, когда выбран тип. Так лента
+		// не знает чужих блоков по именам — и странице не приходится лезть
+		// в её скрипт, чтобы добавить свой.
+		document.querySelectorAll<HTMLElement>('[data-only-mode]').forEach((block) => {
+			block.hidden = block.dataset.onlyMode !== mode;
+		});
 
 		document.querySelectorAll<HTMLElement>('.archive-grid[data-mode]').forEach((grid) => {
 			grid.hidden = grid.dataset.mode !== mode;
