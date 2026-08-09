@@ -79,20 +79,25 @@ const hasThirdRow = Boolean(slots.third) || hasNotes;
 										<PostMedia post={slots.hero} media={media.get(slots.hero.id)!} sizes="(max-width: 760px) 100vw, 780px" loading="eager" />
 									</div>
 								)}
+								{/* Метастрока, заголовок и подводка лежат в сетке ПООТДЕЛЬНОСТИ,
+								    а не заголовок с метастрокой в общей обёртке. Так подводка
+								    встаёт в один ряд с заголовком и начинается на его первой
+								    строке. Собери их в обёртку — и подводка выровняется
+								    по метастроке, то есть окажется выше заголовка на целую
+								    строку технического слоя; на однострочном заголовке
+								    в макете это незаметно, на двухстрочном видно сразу. */}
 								<div class="hero-copy">
-									<div>
-										<PostKicker post={slots.hero} />
-										<h1 class="title-lg">
-											<a class="stretch" {...linkOf(slots.hero)}>
-												{slots.hero.data.title}
-												{isExt(slots.hero) && (
-													<span class="external" aria-label="откроется на другом сайте">
-														↗
-													</span>
-												)}
-											</a>
-										</h1>
-									</div>
+									<PostKicker post={slots.hero} />
+									<h1 class="title-lg">
+										<a class="stretch" {...linkOf(slots.hero)}>
+											{slots.hero.data.title}
+											{isExt(slots.hero) && (
+												<span class="external" aria-label="откроется на другом сайте">
+													↗
+												</span>
+											)}
+										</a>
+									</h1>
 									{deckOf(slots.hero) && <p class="deck">{deckOf(slots.hero)}</p>}
 								</div>
 							</article>
@@ -344,10 +349,17 @@ const hasThirdRow = Boolean(slots.third) || hasNotes;
 	}
 
 
+	/* Расстояния между строками задают сами элементы: метастрока и заголовок
+	   несут свои отступы снизу. Общего `row-gap` у сетки нет намеренно — он
+	   сложился бы с ними и раздвинул метастроку с заголовком, которые должны
+	   стоять вплотную. */
 	.hero-copy {
 		display: grid;
-		gap: var(--sp-3);
 		padding-top: var(--sp-4);
+	}
+
+	.hero-copy .deck {
+		margin-top: var(--sp-3);
 	}
 
 	.sidebar {
@@ -466,9 +478,30 @@ const hasThirdRow = Boolean(slots.third) || hasNotes;
 			grid-column: 1 / 9;
 		}
 
+		/* Две колонки и два ряда: метастрока одна наверху, а заголовок
+		   и подводка идут вторым рядом бок о бок. Из-за этого верх подводки
+		   совпадает с верхом заголовка, а не с метастрокой над ним. */
 		.hero-copy {
 			grid-template-columns: 2fr 1fr;
 			column-gap: var(--grid-gap);
+		}
+
+		/* `:global` обязателен: метастроку рисует другой компонент
+		   (PostKicker.astro), и её класс носит его метку, а не нашу. */
+		.hero-copy > :global(.kicker) {
+			grid-column: 1;
+			grid-row: 1;
+		}
+
+		.hero-copy .title-lg {
+			grid-column: 1;
+			grid-row: 2;
+		}
+
+		.hero-copy .deck {
+			grid-column: 2;
+			grid-row: 2;
+			margin-top: 0;
 		}
 
 		/* Колонки с линией тянутся на высоту ряда: иначе линия обрывается
