@@ -113,6 +113,12 @@ const hasThirdRow = Boolean(slots.third) || hasNotes;
 														)}
 													</a>
 												</h2>
+												{/* В макете подводки здесь не было, и на живых материалах
+												    это оказалось видно: под коротким заголовком оставалась
+												    пустая колонка. Подводка та же, что у остальных карточек,
+												    и обрезается теми же тремя строками — своего размера
+												    и своего цвета сайдбар не заводит. */}
+												{deckOf(post) && <p class="deck">{deckOf(post)}</p>}
 											</div>
 											{media.get(post.id) && (
 									<div class="side-thumb">
@@ -352,6 +358,16 @@ const hasThirdRow = Boolean(slots.third) || hasNotes;
 		grid-template-columns: minmax(0, 1fr);
 	}
 
+	/* Линию перед первой карточкой рисует САМ САЙДБАР, а не она.
+	   Правило стояло только на широком экране, и на узком выходили две линии
+	   подряд с зазором между ними: одну рисовал сайдбар (он там отделяется
+	   от главного материала), вторую — первая карточка. §5 системы это
+	   прямо запрещает: между двумя соседними секциями всегда одна линия. */
+	.side-item:first-child {
+		border-top: 0;
+		padding-top: 0;
+	}
+
 	.side-thumb {
 		width: 112px;
 	}
@@ -459,11 +475,6 @@ const hasThirdRow = Boolean(slots.third) || hasNotes;
 			grid-column: 9 / 13;
 			border-left: 1px solid var(--line);
 			padding-left: var(--sp-6);
-		}
-
-		.side-item:first-child {
-			border-top: 0;
-			padding-top: 0;
 		}
 
 		.podcast-feature {
