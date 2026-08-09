@@ -220,6 +220,7 @@ const SCOPES = [
 	import { stampVar } from '../lib/animeStamp.mjs';
 	import { plural } from '../lib/plural.mjs';
 	import { setLoadMoreState } from '../lib/loadMore.mjs';
+	import { imageMissingHtml } from '../lib/imageMissing.mjs';
 
 	/** Короче двух знаков не ищем: одна буква нашлась бы почти везде. */
 	const MIN_QUERY = 2;
@@ -535,7 +536,9 @@ const SCOPES = [
 				`<span class="anime-stamp">` +
 				`<span class="perf-side perf-left" aria-hidden="true"></span>` +
 				`<span class="perf-side perf-right" aria-hidden="true"></span>` +
-				(poster ? `<img src="${esc(poster)}" alt="" loading="lazy">` : '') +
+				// Постера нет — заглушка, а не дыра: марка держится на пропорции
+				// постера. Разметка общая на все три места, где заглушка рождается.
+				(poster ? `<img src="${esc(poster)}" alt="" loading="lazy">` : imageMissingHtml({ compact: true })) +
 				`</span>` +
 				`<div class="anime-copy">` +
 				`<h3 class="anime-title">${highlight(data.meta?.title ?? '', query)}</h3>` +

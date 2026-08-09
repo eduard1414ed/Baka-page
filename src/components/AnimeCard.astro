@@ -18,6 +18,7 @@
 // широкие постеры не дотягивали до края, и над картинкой появлялась пустая
 // полоса у самой перфорации.
 import { getAnimePosterSrcs } from '../lib/animePoster.mjs';
+import ImageMissing from './ImageMissing.astro';
 import { stampVar } from '../lib/animeStamp.mjs';
 import { plural } from '../lib/plural.mjs';
 
@@ -60,11 +61,12 @@ const factsLine = [year, studio].filter(Boolean).join(' · ');
 >
 	<span class="inner">
 		<span class="poster">
-			{/* Заглушки «изображения нет» тут пока нет — она в части 9 вместе
-			    с самим рисунком персонажа. До тех пор место постера остаётся
-			    залитым цветом марки: рамка держит 2:3, и ряд не ломается. */}
+			{/* Постера нет в данных — заглушка обязательна: рамка держится
+			    на пропорции из замера справочника, и дыра в ней ломала бы ряд
+			    (тз/08, 9.5). Узкий вариант: подпись в карточку каталога
+			    не помещается, объясняет один рисунок. */}
 			{
-				posterSrcs.length > 0 && (
+				posterSrcs.length > 0 ? (
 					<img
 						src={posterSrcs[0].src}
 						srcset={posterSrcs.map((source) => `${source.src} ${source.width}w`).join(', ')}
@@ -72,6 +74,8 @@ const factsLine = [year, studio].filter(Boolean).join(' · ');
 						alt=""
 						loading="lazy"
 					/>
+				) : (
+					<ImageMissing compact />
 				)
 			}
 		</span>

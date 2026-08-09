@@ -122,3 +122,46 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 		<PlayerBar />
 	</body>
 </html>
+
+<script>
+	// КАРТИНКА БЫЛА, НО НЕ ЗАГРУЗИЛАСЬ → ЗАГЛУШКА ВЕЗДЕ (тз/08, раздел 9.5).
+	// Пустое место читатель принимает за поломку вёрстки, рисунок — за честный
+	// ответ. Слушатель один на весь сайт: случиться это может с обложкой,
+	// постером и превью, а не только там, где мы этого ждали.
+	import { imageMissingHtml, IMAGE_MISSING_SRC } from '../lib/imageMissing.mjs';
+
+	// `error` не всплывает — ловим на погружении, иначе до нас он не дойдёт.
+	// Флаг `once` не годится: картинок много, и каждая может подвести своя.
+	document.addEventListener(
+		'error',
+		(event) => {
+			const target = event.target as HTMLElement | null;
+			if (!(target instanceof HTMLImageElement)) return;
+
+			// Не загрузился сам рисунок заглушки — заменять его на себя же
+			// значило бы зациклиться.
+			if (target.src.endsWith(IMAGE_MISSING_SRC)) return;
+
+			// Размер меряем ДО подмены: после неё элемента уже нет, а заглушке
+			// нужно занять ровно то же место, иначе страница дёрнется.
+			// Узкой считаем колонку меньше 200 px — марка, карточка каталога,
+			// строка выдачи: там подпись всё равно не поместилась бы.
+			const box = target.getBoundingClientRect();
+			const ratio = box.width > 0 && box.height > 0 ? box.width / box.height : null;
+
+			const wrapper = document.createElement('div');
+			wrapper.innerHTML = imageMissingHtml({ compact: box.width > 0 && box.width < 200 });
+
+			const missing = wrapper.firstElementChild as HTMLElement | null;
+			if (!missing) return;
+
+			// Занять место ушедшей картинки. Пропорцию берём её же: у постера
+			// и у обложки 16:9 она разная, а рамка вокруг не всегда своя.
+			missing.style.width = '100%';
+			if (ratio) missing.style.aspectRatio = String(ratio);
+
+			target.replaceWith(missing);
+		},
+		true,
+	);
+</script>

@@ -26,6 +26,7 @@
 // ради чего постер и нарисован.
 import { getCollection } from 'astro:content';
 import { getAnimePosterSrcs } from '../lib/animePoster.mjs';
+import ImageMissing from './ImageMissing.astro';
 import { stampVar } from '../lib/animeStamp.mjs';
 import { catalogCodes } from '../lib/animeCatalog.mjs';
 import { plural } from '../lib/plural.mjs';
@@ -91,10 +92,14 @@ const metaLines = catalogMeta ?? (metaParts.length > 0 ? [metaParts.join(' · ')
 	<span class="perf-side perf-left" aria-hidden="true"></span>
 	<span class="perf-side perf-right" aria-hidden="true"></span>
 	<span class="media">
-		{/* Заглушки «изображения нет» тут пока нет — она в части 9 вместе
-		    с самим рисунком персонажа. До тех пор место постера остаётся
-		    залитым цветом марки: ширина колонки сохраняется, ряд не ломается. */}
-		{posterSrcs.length > 0 && <img src={posterSrcs[0].src} alt="" loading="lazy" width="120" height="168" />}
+		{/* Постера нет в данных — заглушка обязательна (тз/08, 9.5): марка
+		    держится на пропорции постера, и дыра в ней ломала бы ряд.
+		    Узкий вариант: подпись в марку не помещается. */}
+		{posterSrcs.length > 0 ? (
+			<img src={posterSrcs[0].src} alt="" loading="lazy" width="120" height="168" />
+		) : (
+			<ImageMissing compact />
+		)}
 	</span>
 	<span class="copy">
 		{code && <span class="kicker tech">{code}</span>}
