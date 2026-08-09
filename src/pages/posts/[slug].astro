@@ -43,6 +43,7 @@ import { resolveEpisodeCover } from '../../lib/episodeCover.mjs';
 import { isPublished } from '../../lib/publishing.mjs';
 import { getPostTiming } from '../../lib/postTiming.mjs';
 import { isExternalPost } from '../../lib/externalPost.mjs';
+import { getCardMedia } from '../../lib/postCardMedia.mjs';
 import BonusPaywall from '../../components/BonusPaywall.astro';
 
 export async function getStaticPaths() {
@@ -243,6 +244,37 @@ const playerHint = showTranscript ? 'Клик по таймкоду перено
 
 const backHref = `/category/${sectionId}/`;
 const isoDate = date.toISOString().slice(0, 10);
+
+// ЧТО ПОИСК ПО САЙТУ ПОКАЗЫВАЕТ В РЕЗУЛЬТАТЕ-МАТЕРИАЛЕ (часть 8).
+//
+// Страница результатов рисуется уже в браузере — из того, что Pagefind
+// запомнил про эту страницу. Метастрока результата собирается там из трёх
+// готовых фактов: подпись типа, дата и «сколько это займёт». СКЛЕИВАЕТСЯ
+// ОНА ТАМ, А НЕ ЗДЕСЬ, и это нарочно: правило «как выглядит метастрока»
+// живёт в PostKicker.astro, и вторая его копия строкой в атрибуте разошлась бы
+// с первой молча. Здесь только факты по отдельности.
+//
+// Подпись берём у РАЗДЕЛА (`labelOne`), ровно как PostKicker: у бонуса
+// написано «Подкаст», а что он платный — говорит отдельная метка.
+const searchLabel = categories.find((c) => c.id === sectionId)?.labelOne ?? sectionId;
+
+// Картинка результата — ТА ЖЕ, ЧТО В КАРТОЧКЕ ЛЕНТЫ, и решает это тот же
+// getCardMedia: заглушку не подставляем, нет обложки — результат текстовый.
+// Своей копии правила у поиска нет.
+const searchMedia = await getCardMedia(post);
+
+const postSearchMeta = [
+	`label:${searchLabel}`,
+	// Номер нужен группе упоминаний: там над цитатой стоит «Выпуск №106».
+	// У бонуса и у статьи номера нет и быть не может (см. postMeta.mjs).
+	playerNumber && isEpisode && !isBonus ? `number:${playerNumber}` : null,
+	timing?.meta ? `timing:${timing.meta}` : null,
+	// Форма картинки: квадрат у выпуска, кадр 16:9 у остального. То же правило,
+	// что в PostMedia.astro, — геометрию задаёт материал, а не место.
+	`shape:${isEpisode ? 'square' : 'wide'}`,
+	searchMedia ? `thumb:${searchMedia.src}` : null,
+	isBonus ? 'bonus:1' : null,
+].filter(Boolean) as string[];
 ---
 
 <Layout
@@ -278,6 +310,9 @@ const isoDate = date.toISOString().slice(0, 10);
 			    span'ах — они ничего не показывают и в текст страницы не попадают. */}
 			<span data-pagefind-filter={`category:${categoryLabel}`} data-pagefind-meta={`category:${categoryLabel}`}></span>
 			<span data-pagefind-meta={`date:${formatPostDate(date)}`}></span>
+			{postSearchMeta.map((meta) => (
+				<span data-pagefind-meta={meta} />
+			))}
 
 			{
 				isEpisode ? (

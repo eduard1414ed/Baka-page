@@ -54,6 +54,11 @@ export const GET: APIRoute = async () => {
 				type: isEpisode ? 'episode' : 'post',
 				category: categoryLabel,
 				date: dateFormatter.format(date),
+				// Метастрока результата (часть 8). Подпись типа — у РАЗДЕЛА,
+				// как везде; вместо длительности стоит название площадки —
+				// ровно так же ведёт себя карточка в ленте (postTiming.mjs).
+				label: categories.find((c) => c.id === sectionOf(category))?.labelOne ?? category,
+				...(source ? { timing: source } : {}),
 			},
 			filters: {
 				type: [isEpisode ? 'Выпуски' : 'Посты'],

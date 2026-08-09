@@ -20,6 +20,7 @@ import { formatTimecode } from '../../lib/transcript.mjs';
 import { isPublished } from '../../lib/publishing.mjs';
 import { plural } from '../../lib/plural.mjs';
 import { ogUrlForAnime } from '../../lib/ogImage.mjs';
+import { latinSearchForms } from '../../lib/translit.mjs';
 import JsonLd from '../../components/JsonLd.astro';
 import { breadcrumbsSchema } from '../../lib/schema.mjs';
 
@@ -116,6 +117,36 @@ const mentionsNote =
 
 const animeDescription = firstSentence(synopsisParagraphs.join(' ')) ?? mentionsNote;
 
+// ЧТО ПОИСК ПО САЙТУ ПОКАЗЫВАЕТ В РЕЗУЛЬТАТЕ-ТАЙТЛЕ (часть 8).
+//
+// Результаты страница поиска рисует уже в браузере, из того, что Pagefind
+// запомнил про страницу. Текста страницы для марки мало: нужны постер,
+// оригинальное название, год со студией и число упоминаний — то же, что стоит
+// в горизонтальной марке. Всё это метки, а не текст: в индекс они идут строкой
+// и в выдачу словами не лезут.
+//
+// Постер берём МАЛЫЙ (320w) — тот же файл, что грузит марка. Крупный (640w)
+// нужен только самой странице тайтла.
+const searchMeta = [
+	posterSrcs.length > 0 ? `poster:${posterSrcs[0].src}` : null,
+	titleRu && titleOriginal !== titleRu ? `original:${titleOriginal}` : null,
+	[year, studio].filter(Boolean).length > 0 ? `facts:${[year, studio].filter(Boolean).join(' · ')}` : null,
+	`mentions:${mentions.length}`,
+].filter(Boolean) as string[];
+
+// ЛАТИНИЦА КИРИЛЛИЦЕЙ — ДЛЯ ПОИСКА ПО САЙТУ, как в каталоге (часть 7).
+//
+// Оригинальные названия и студии записаны латиницей: Shikimori других не отдаёт.
+// Каталог из-за этого не находил «гибли», и то же самое было верно для поиска
+// по сайту — он про эту запись не знал вовсе. Правило одно на два поиска
+// и живёт в одном месте (src/lib/translit.mjs), второй копии нет.
+//
+// Строка НЕ ПОКАЗЫВАЕТСЯ читателю и только ДОБАВЛЯЕТ совпадения: оригинал
+// остаётся в тексте страницы как есть. Показать её нельзя — «Sousou no Frieren»
+// превращается в «соусоу но фрирен», а человек пишет «Фрирен».
+const latinSource = [titleOriginal, studio].filter(Boolean).join(' ');
+const latinForms = latinSource ? latinSearchForms(latinSource).join(' ') : '';
+
 const crumbs = breadcrumbsSchema([
 	{ name: 'Каталог аниме', path: '/anime/' },
 	{ name: displayTitle, path: `/anime/${entry.id}/` },
@@ -144,6 +175,12 @@ const crumbs = breadcrumbsSchema([
 		    выпусков попали бы ещё и в карточку тайтла и по запросу «Наруто»
 		    выдача дублировалась бы сама с собой. */}
 		<div data-pagefind-body data-pagefind-filter="type:Тайтлы" data-pagefind-meta="type:anime">
+			{/* По одной метке на элемент: перечислить их через запятую в одном
+			    атрибуте нельзя, Pagefind примет всю строку за одно значение —
+			    это уже проверялось на живом индексе, см. posts/[slug].astro. */}
+			{searchMeta.map((meta) => (
+				<span data-pagefind-meta={meta} />
+			))}
 			<div class="breadcrumb tech" data-pagefind-ignore>
 				<a href="/anime/">← Все тайтлы</a>
 			</div>
@@ -256,6 +293,18 @@ const crumbs = breadcrumbsSchema([
 					</section>
 				)
 			}
+
+			{/* Невидимое поле поиска: латиница, записанная кириллицей. Стоит
+			    последним, чтобы не попадать в начало отрывка выдачи, и спрятано
+			    от глаз и от экранного диктора — читать «студио гибли соусоу но
+			    фрирен» вслух незачем. Pagefind разбирает разметку, а не стили,
+			    и слова из неё в индекс попадают. ПРОВЕРЕНО РАЗБОРОМ СОБРАННОГО
+			    ИНДЕКСА, а не предположением. */}
+			{latinForms && (
+				<span class="visually-hidden" aria-hidden="true">
+					{latinForms}
+				</span>
+			)}
 		</div>
 	</div>
 </Layout>
