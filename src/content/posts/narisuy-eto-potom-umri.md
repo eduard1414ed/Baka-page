@@ -4,7 +4,7 @@ date: 2026-08-09
 category: note
 cover: ''
 noCover: true
-draft: true
+draft: false
 mentionsHidden: ''
 speakers: ''
 corrections: ''
