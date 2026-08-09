@@ -505,8 +505,15 @@ const SCOPES = [
 				let speaker = '';
 				for (let i = index; i >= 0 && !speaker; i -= 1) speaker = speakers.get(anchors[i].id) ?? '';
 
-				const from = Math.max(0, at - 9);
-				const to = Math.min(words.length, at + 10);
+				// ЦИТАТА НЕ ВЫХОДИТ ЗА ГРАНИЦЫ СВОЕЙ РЕПЛИКИ. Окно в двадцать слов
+				// у совпадения в начале блока залезало в предыдущий текст страницы,
+				// и в цитату попадало «…53:20 — Эндинг. Транскрипт. Всем привет!»:
+				// заголовок блока и хвост оглавления выпуска выглядели как чьи-то
+				// слова. Границы блока — это соседние якоря, других данных не нужно.
+				const blockStart = anchor.location;
+				const blockEnd = anchors[index + 1]?.location ?? words.length;
+				const from = Math.max(blockStart, at - 9);
+				const to = Math.min(blockEnd, at + 10);
 				const before = words.slice(from, at).join(' ');
 				const hit = words[at] ?? '';
 				const after = words.slice(at + 1, to).join(' ');
@@ -514,9 +521,9 @@ const SCOPES = [
 					seconds: Number(anchor.id.slice(1).split('-')[0]),
 					speaker,
 					text:
-						(from > 0 ? '… ' : '') +
+						(from > blockStart ? '… ' : '') +
 						`${esc(before)} <mark>${esc(hit)}</mark> ${esc(after)}` +
-						(to < words.length ? ' …' : ''),
+						(to < blockEnd ? ' …' : ''),
 				});
 				if (found.length >= MOMENTS) break;
 			}
@@ -681,20 +688,43 @@ const SCOPES = [
 			say(loadingText);
 			const mine = ++token;
 
-			// Один запрос без фильтров — ради точных счётчиков областей: Pagefind
-			// отдаёт их вместе с выдачей и ничего лишнего для этого не качает.
-			const overall = await api.debouncedSearch(query, {}, 200);
+			// Первый запрос — без фильтров и через debouncedSearch: он же и есть
+			// пауза, которая не даёт искать на каждую букву. Остальные запросы
+			// идут обычным search: второй debouncedSearch подряд отменил бы
+			// первый и вернул null, и выдача не появилась бы вовсе.
+			//
 			// null означает, что за это время набрали ещё символ — этот запрос
 			// уже неактуален, рисовать его результаты нельзя.
+			const overall = await api.debouncedSearch(query, {}, 200);
 			if (overall === null || mine !== token) return;
 
-			const types = overall.filters?.type ?? {};
+			// СЧЁТЧИКИ БЕРЁМ ИЗ САМИХ ЗАПРОСОВ, а не из сводки по фильтрам,
+			// которую Pagefind кладёт рядом с выдачей. Та сводка на ПЕРВОМ запросе
+			// сеанса приходит пустой — файл фильтров к этому моменту ещё не
+			// скачан, — и «Наруто» показывал бы ноль в каждой области, найдя при
+			// этом три страницы. Проверено прогоном движка по собранному индексу.
+			//
+			// Запросы идут по всем трём группам, даже если показывается одна:
+			// счётчик области обязан быть у каждой, а стоит это только работы
+			// на месте — сверх уже скачанного ничего не качается.
+			const found: Record<string, PagefindResult[]> = {};
+			for (const group of groups) {
+				// СПИСОК ЗНАЧЕНИЙ У PAGEFIND — ЭТО «И», А НЕ «ИЛИ». Запись
+				// `type: ['Посты','Выпуски']` требует, чтобы страница была
+				// сразу и тем, и другим, и находила ровно ноль. «Или» пишется
+				// через `any`. Тоже поймано прогоном движка, а не чтением
+				// документации.
+				const search = await api.search(query, { filters: { type: { any: group.types } } });
+				if (mine !== token) return;
+				found[group.key] = search.results;
+			}
+
 			counts = {
 				all: overall.results.length,
-				anime: types['Тайтлы'] ?? 0,
-				material: (types['Посты'] ?? 0) + (types['Выпуски'] ?? 0),
+				anime: found.anime.length,
+				material: found.material.length,
 				// Станет известно, когда группа упоминаний загрузится.
-				mention: (types['Выпуски'] ?? 0) === 0 ? 0 : undefined,
+				mention: found.mention.length === 0 ? 0 : undefined,
 			};
 			paintScopes();
 
@@ -716,10 +746,7 @@ const SCOPES = [
 				resetGroup(group);
 				if (scope !== 'all' && scope !== group.key) continue;
 
-				const search = await api.search(query, { filters: { type: group.types } });
-				if (mine !== token) return;
-
-				group.results = search.results;
+				group.results = found[group.key];
 				if (group.results.length === 0) continue;
 
 				group.section.hidden = false;
