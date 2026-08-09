@@ -40,7 +40,7 @@ const { eyebrow, heading, intro, countLine, countId } = Astro.props;
 	    раздела в ней пусто, но место под неё занято: иначе шапка такого
 	    раздела на строку ниже соседних, и при переходе по вкладкам список
 	    под ней прыгает. */}
-	<div class="page-intro">
+	<div class="page-intro section-intro">
 		<p>{intro}</p>
 		<div class="page-count tech" id={countId}>{countLine}</div>
 	</div>
@@ -64,10 +64,12 @@ const { eyebrow, heading, intro, countLine, countId } = Astro.props;
 		margin: 0;
 	}
 
+	/* Кегль, интерлиньяж и цвет подводки — в общем `.section-intro`
+	   (src/styles/global.css): та же подводка стоит на странице поиска,
+	   и двух описаний у неё быть не должно. Здесь остаётся только место
+	   в сетке и отступ до строки счёта. */
 	.page-intro {
-		font-size: var(--body-lg);
-		line-height: 1.65;
-		color: var(--text);
+		min-width: 0;
 	}
 
 	.page-intro p {

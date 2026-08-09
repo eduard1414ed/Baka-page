@@ -87,7 +87,7 @@ const nothingToShow = olderAll.length === 0;
 		    категорий, не появляется. */}
 		<div class="filter-group">
 			<button
-				class="filter-btn tech active"
+				class="filter-btn active"
 				type="button"
 				data-filter="all"
 				aria-pressed="true"
@@ -99,7 +99,7 @@ const nothingToShow = olderAll.length === 0;
 			{
 				modes.map((mode) => (
 					<button
-						class="filter-btn tech"
+						class="filter-btn"
 						type="button"
 						data-filter={mode.id}
 						aria-pressed="false"
@@ -202,7 +202,16 @@ const nothingToShow = olderAll.length === 0;
 	}
 
 	/* Цель не меньше 44 по высоте (§8). Рамки у вкладки нет: коробок
-	   в языке сайта не осталось, активная помечается подчёркиванием. */
+	   в языке сайта не осталось, активная помечается подчёркиванием.
+
+	   МОНОШИРИННОГО НАЧЕРТАНИЯ ТУТ НЕТ, и это важно. У кнопок стоял класс
+	   технического слоя, и он приводил с собой гарнитуру: вкладки главной
+	   набирались IBM Plex Mono, а точно такие же вкладки архива — Inter.
+	   Один и тот же ряд выглядел на двух страницах по-разному. В макетах
+	   у `.filter-btn` и у `.archive-tab` гарнитура не задана вовсе, то есть
+	   обе берут основную; капслок, кегль и трекинг — здесь, ниже.
+	   Моноширинной остаётся только подпись «Материалы» слева: она подпись
+	   блока, а не вкладка. */
 	.filter-btn {
 		position: relative;
 		min-height: 44px;

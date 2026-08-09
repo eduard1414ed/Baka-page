@@ -107,7 +107,7 @@ const SCOPES = [
 					<div class="eyebrow tech">По каталогу «Баки!»</div>
 					<h1>Поиск</h1>
 				</div>
-				<p class="search-heading-copy">
+				<p class="search-heading-copy section-intro">
 					Ищем материалы, страницы аниме и конкретные упоминания в расшифровках выпусков.
 				</p>
 			</section>
@@ -1056,12 +1056,11 @@ const SCOPES = [
 		margin: 0;
 	}
 
+	/* Кегль, интерлиньяж и цвет — в общем `.section-intro` (global.css):
+	   та же подводка стоит в архиве, в разделах и в каталоге. Своей ширины
+	   подводке не нужно — её держит колонка сетки. */
 	.search-heading-copy {
 		margin: 0;
-		font-size: var(--body-sm);
-		line-height: 1.55;
-		color: var(--muted);
-		max-width: 580px;
 	}
 
 	@media (min-width: 821px) {
@@ -1094,12 +1093,16 @@ const SCOPES = [
 			}
 		}
 
+		/* Те же колонки, что у шапки архива и каталога (SectionHead): подводка
+		   кончается ровно у правого края страницы, а не повисает посередине.
+		   В макете поиска она стоит в 6/11 — то есть не доходит до края,
+		   и рядом с полем во всю ширину это читалось как ошибка вёрстки. */
 		.search-heading-main {
-			grid-column: 1 / 5;
+			grid-column: 1 / 8;
 		}
 
 		.search-heading-copy {
-			grid-column: 6 / 11;
+			grid-column: 8 / 13;
 		}
 	}
 
