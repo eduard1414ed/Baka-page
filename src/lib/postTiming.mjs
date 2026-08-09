@@ -7,7 +7,7 @@
 // оба числа сразу физически невозможно, а разойтись в ответе эти две страницы
 // не могут — им неоткуда взять разные данные.
 
-import { getReadingMinutes } from './readingTime.mjs';
+import { getReadingTime, MIN_MINUTES } from './readingTime.mjs';
 import { findEpisodeByGuid } from './podcastFeed.mjs';
 import { isExternalPost, externalSourceName } from './externalPost.mjs';
 
@@ -86,10 +86,14 @@ export function formatClock(seconds) {
  * карточки разных категорий идут вперемешку, и без него «42 мин» у выпуска
  * и «4 мин» у заметки выглядели бы числами одного рода.
  *
+ * Короткий текст метку ПОЛУЧАЕТ — «меньше 3 мин читать». Раньше он не получал
+ * ничего, и это было хуже: в ленте карточка без метки неотличима от карточки,
+ * у которой метку не удалось посчитать. Молчание значило сразу две разные вещи.
+ *
  * null бывает в четырёх случаях, и все четыре — нормальное состояние,
  * а не поломка:
  *  — категория из CATEGORIES_WITHOUT_TIMING (сейчас это «Бонус»);
- *  — текст короче трёх минут («1 мин» рядом с заголовком выглядит суетливо);
+ *  — в теле поста нет ни слова и ни картинки: читать не мало, а нечего;
  *  — у выпуска нет пары в RSS или фид недоступен в момент сборки (тогда
  *    на странице не будет и плеера — так устроено, см. podcastFeed.mjs);
  *  — видеоэссе живёт только на YouTube, аудиоверсии в RSS нет. Длительность
@@ -136,8 +140,26 @@ export async function getPostTiming(post) {
 		};
 	}
 
-	const minutes = getReadingMinutes(post.body);
-	if (minutes === null) return null;
+	const reading = getReadingTime(post.body);
+	if (reading === null) return null;
 
-	return { kind: 'reading', label: `${minutes} мин читать`, meta: `${minutes} мин чтения` };
+	// Короткий текст больше не молчит, а говорит, что он короткий. Поштучно
+	// минуты тут не называются: разница между «1 мин» и «2 мин» читателю ничего
+	// не решает, а суетливости добавляет.
+	//
+	// Знак «меньше», а не «больше»: речь о текстах КОРОЧЕ порога. «>3 мин»
+	// у полутораминутной заметки было бы прямой неправдой.
+	if (reading.short) {
+		return {
+			kind: 'reading',
+			label: `меньше ${MIN_MINUTES} мин читать`,
+			meta: `<${MIN_MINUTES} мин чтения`,
+		};
+	}
+
+	return {
+		kind: 'reading',
+		label: `${reading.minutes} мин читать`,
+		meta: `${reading.minutes} мин чтения`,
+	};
 }
