@@ -65,7 +65,11 @@ const GROUPS = [
 	{
 		key: 'mention',
 		title: 'Упоминания в выпусках',
-		types: 'Выпуски',
+		// Не только «Выпуски». Расшифровка есть и у видеоэссе — их 36 в архиве,
+		// и таймкод в них такой же живой. Отберётся всё равно только то,
+		// у чего расшифровка есть: у материала без неё якорей нет, и строк
+		// он не даёт вовсе.
+		types: 'Посты,Выпуски',
 		more: 'Показать ещё упоминания',
 		done: 'Все упоминания показаны',
 	},
@@ -226,7 +230,6 @@ const SCOPES = [
 		results: PagefindResult[];
 		cursor: number;
 		rows: number;
-		episodes: number;
 	};
 
 	function setup() {
@@ -257,7 +260,6 @@ const SCOPES = [
 			results: [],
 			cursor: 0,
 			rows: 0,
-			episodes: 0,
 		}));
 		const groupBy = new Map(groups.map((group) => [group.key, group]));
 
@@ -520,6 +522,13 @@ const SCOPES = [
 				found.push({
 					seconds: Number(anchor.id.slice(1).split('-')[0]),
 					speaker,
+					// СЛОВО, КОТОРОЕ ПРАВДА СТОИТ В РЕПЛИКЕ, а не то, что набрал
+					// человек. Pagefind ищет по основам: «студия» находит «студии».
+					// Поиск внутри расшифровки (часть 5) ищет буква в букву, и,
+					// получив «студия», не подсветил бы ничего — читатель пришёл бы
+					// на нужную реплику и увидел «ничего не найдено». Кавычки
+					// и запятые с краёв снимаем: они попадают в слово вместе с ним.
+					word: hit.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, ''),
 					text:
 						(from > blockStart ? '… ' : '') +
 						`${esc(before)} <mark>${esc(hit)}</mark> ${esc(after)}` +
@@ -538,9 +547,13 @@ const SCOPES = [
 		function renderMentions(data: any, list: HTMLElement) {
 			const found = moments(data);
 			for (const moment of found) {
-				const link = linkTo(`${data.url}#t=${moment.seconds}&q=${encodeURIComponent(query)}`);
+				const needle = moment.word.length >= MIN_QUERY ? moment.word : query;
+				const link = linkTo(`${data.url}#t=${moment.seconds}&q=${encodeURIComponent(needle)}`);
 				link.className = 'transcript-result';
-				const number = data.meta?.number ? `Выпуск ${data.meta.number}` : 'Выпуск';
+				// «Выпуск №106» — у выпуска. У видеоэссе номера нет и быть не может,
+				// там подписью идёт тип материала: пустое слово «Выпуск» над
+				// названием эссе выглядело бы ошибкой данных.
+				const number = data.meta?.number ? `Выпуск ${data.meta.number}` : (data.meta?.label ?? 'Материал');
 				link.innerHTML =
 					`<div class="transcript-episode"><strong>${esc(number)}</strong>${esc(data.meta?.title ?? '')}</div>` +
 					`<div class="transcript-time">${timecode(moment.seconds)}</div>` +
@@ -559,12 +572,19 @@ const SCOPES = [
 		async function showMore(group: Group) {
 			const before = group.rows;
 
-			// Порций может понадобиться несколько. В группе упоминаний выпуск,
+			// Порций может понадобиться несколько. В группе упоминаний материал,
 			// у которого совпадение нашлось в названии, а не в разговоре, строк
 			// не даёт вовсе — и нажатие «Показать ещё» выглядело бы так, будто
 			// кнопка сломана. Поэтому берём следующую порцию, пока не появилось
-			// хоть что-то или пока выпуски не кончились.
-			while (group.cursor < group.results.length && group.rows === before) {
+			// хоть что-то.
+			//
+			// НО НЕ БОЛЬШЕ ТРЁХ ПОРЦИЙ ЗА НАЖАТИЕ. Без этого один запрос, у
+			// которого расшифровок нет вовсе, вытянул бы куски всех найденных
+			// страниц разом — при полном архиве это мегабайты на пустом месте.
+			// Лучше кнопка, которую надо нажать ещё раз, чем молчаливая закачка.
+			let batches = 0;
+			while (group.cursor < group.results.length && group.rows === before && batches < 3) {
+				batches += 1;
 				const slice = group.results.slice(group.cursor, group.cursor + BATCH);
 				group.cursor += slice.length;
 
@@ -577,9 +597,7 @@ const SCOPES = [
 						renderMaterial(data, group.list);
 						group.rows += 1;
 					} else {
-						const added = renderMentions(data, group.list);
-						group.rows += added;
-						if (added > 0) group.episodes += 1;
+						group.rows += renderMentions(data, group.list);
 					}
 				}
 			}
@@ -595,9 +613,13 @@ const SCOPES = [
 		// Поэтому там счётчик живой и растёт вместе с кнопкой «Показать ещё».
 		function paintCount(group: Group) {
 			if (group.key === 'mention') {
-				const rows = `${group.rows} ${plural(group.rows, ['совпадение', 'совпадения', 'совпадений'])}`;
-				const where = `${group.episodes} ${plural(group.episodes, ['выпуске', 'выпусках', 'выпусках'])}`;
-				group.count.textContent = group.rows > 0 ? `${rows} в ${where}` : '';
+				group.count.textContent =
+					group.rows > 0 ? `${group.rows} ${plural(group.rows, ['совпадение', 'совпадения', 'совпадений'])}` : '';
+				// Счётчик области показывает ТО ЖЕ ЧИСЛО, что заголовок группы:
+				// два счётчика рядом обязаны считать одно и то же, иначе читатель
+				// решает, что один из них врёт, — и будет прав.
+				counts.mention = group.rows;
+				paintScopes();
 				return;
 			}
 			const forms: [string, string, string] =
@@ -610,7 +632,6 @@ const SCOPES = [
 			group.results = [];
 			group.cursor = 0;
 			group.rows = 0;
-			group.episodes = 0;
 			group.count.textContent = '';
 			group.section.hidden = true;
 			setLoadMoreState(group.button, 'done');
@@ -757,13 +778,7 @@ const SCOPES = [
 				// Группа упоминаний могла оказаться пустой: слово нашлось
 				// в названиях выпусков, но не в разговоре. Тогда группы нет,
 				// и счётчик области честно показывает ноль.
-				if (group.key === 'mention') {
-					if (group.rows === 0) group.section.hidden = true;
-					if (group.cursor >= group.results.length) {
-						counts.mention = group.episodes;
-						paintScopes();
-					}
-				}
+				if (group.key === 'mention' && group.rows === 0) group.section.hidden = true;
 			}
 
 			// Область выбрана, а в ней пусто, — при том что в других областях
@@ -796,15 +811,7 @@ const SCOPES = [
 		});
 
 		for (const group of groups) {
-			group.button?.addEventListener('click', async () => {
-				await showMore(group);
-				// Число выпусков с упоминаниями становится точным только тогда,
-				// когда просмотрены все — до этого счётчика области нет.
-				if (group.key === 'mention' && group.cursor >= group.results.length) {
-					counts.mention = group.episodes;
-					paintScopes();
-				}
-			});
+			group.button?.addEventListener('click', () => void showMore(group));
 		}
 
 		// Пришли по ссылке вида /search?q=… — сразу ищем.
