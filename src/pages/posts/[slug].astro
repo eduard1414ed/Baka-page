@@ -566,75 +566,106 @@ const postSearchMeta = [
 			});
 		});
 
+		// Карусель галереи. Листание — это ПРОКРУТКА ТРЕКА, а не подмена картинки:
+		// трек и так прокручивается пальцем, и вторая, своя механика перемещения
+		// разошлась бы с ней — счётчик показывал бы одно, а на экране стояло другое.
 		document.querySelectorAll<HTMLElement>('.gallery-carousel').forEach((carousel) => {
-			const track = carousel.querySelector<HTMLElement>('.carousel-track');
-			const slides = carousel.querySelectorAll('.carousel-slide');
+			const track = carousel.querySelector<HTMLElement>('.gallery-track');
+			const slides = carousel.querySelectorAll<HTMLElement>('.gallery-slide');
+			const counter = carousel.querySelector<HTMLElement>('.gallery-count');
+			const prev = carousel.querySelector<HTMLButtonElement>('.gallery-btn.prev');
+			const next = carousel.querySelector<HTMLButtonElement>('.gallery-btn.next');
 			if (!track || slides.length === 0) return;
 
-			let index = 0;
-			const update = () => {
-				track.style.transform = `translateX(-${index * 100}%)`;
+			const pad = (value: number) => String(value).padStart(2, '0');
+
+			// Какой слайд сейчас, считаем по положению прокрутки: так число
+			// одинаково верно и после нажатия стрелки, и после свайпа.
+			const current = () => Math.round(track.scrollLeft / track.clientWidth);
+
+			const sync = () => {
+				const index = Math.min(Math.max(current(), 0), slides.length - 1);
+				if (counter) counter.textContent = `${pad(index + 1)} / ${pad(slides.length)}`;
+				// Край — выключенная кнопка, а не бесконечная лента: у ленты
+				// не видно, где она кончилась.
+				if (prev) prev.disabled = index === 0;
+				if (next) next.disabled = index === slides.length - 1;
 			};
 
-			carousel.querySelector('.carousel-prev')?.addEventListener('click', () => {
-				index = (index - 1 + slides.length) % slides.length;
-				update();
-			});
-			carousel.querySelector('.carousel-next')?.addEventListener('click', () => {
-				index = (index + 1) % slides.length;
-				update();
-			});
+			const go = (step: number) => {
+				track.scrollTo({ left: (current() + step) * track.clientWidth, behavior: 'smooth' });
+			};
+
+			prev?.addEventListener('click', () => go(-1));
+			next?.addEventListener('click', () => go(1));
+			track.addEventListener('scroll', sync, { passive: true });
+			sync();
 		});
 
-		// Блочный спойлер (абзацы/картинки/галерея) — кнопка с текстом остаётся видна,
-		// раскрытое содержимое появляется под ней.
-		document.querySelectorAll<HTMLElement>('.spoiler:not(.spoiler-inline)').forEach((spoiler) => {
+		// Блочный спойлер (абзацы/картинки/галерея) — кнопка между двумя линиями
+		// остаётся видна, раскрытое содержимое появляется под ней.
+		document.querySelectorAll<HTMLElement>('.spoiler').forEach((spoiler) => {
 			const button = spoiler.querySelector<HTMLButtonElement>('.spoiler-toggle');
-			const template = spoiler.querySelector<HTMLTemplateElement>('.spoiler-content');
-			if (!button || !template) return;
+			const template = spoiler.querySelector<HTMLTemplateElement>('template.spoiler-content');
+			const label = spoiler.querySelector<HTMLElement>('.spoiler-toggle .label');
+			const mark = spoiler.querySelector<HTMLElement>('.spoiler-toggle .mark');
+			if (!button || !template || !label || !mark) return;
 
-			const openLabel = button.textContent ?? 'Показать спойлер';
-			let revealed: HTMLElement | null = null;
+			// Автор пишет только существительное, глагол системный — см.
+			// src/plugins/remark-spoiler.mjs. Второго места, где записано слово,
+			// нет: оно приезжает сюда атрибутом.
+			const noun = spoiler.dataset.label || 'спойлер';
+			let body: HTMLElement | null = null;
+
+			const sync = (open: boolean) => {
+				label.textContent = `${open ? 'Скрыть' : 'Показать'} ${noun}`;
+				mark.textContent = open ? '×' : '+';
+				button.setAttribute('aria-expanded', String(open));
+			};
 
 			button.addEventListener('click', () => {
-				if (!revealed) {
-					revealed = document.createElement('div');
-					revealed.className = 'spoiler-revealed';
-					revealed.appendChild(template.content.cloneNode(true));
-					spoiler.appendChild(revealed);
-				} else {
-					revealed.hidden = !revealed.hidden;
+				if (!body) {
+					body = document.createElement('div');
+					body.className = 'spoiler-body';
+					body.appendChild(template.content.cloneNode(true));
+					spoiler.appendChild(body);
+					sync(true);
+					return;
 				}
 
-				button.textContent = revealed.hidden ? openLabel : 'Скрыть спойлер';
+				body.hidden = !body.hidden;
+				sync(!body.hidden);
 			});
 		});
 
-		// Инлайн-спойлер (слово/фраза) — цветная плашка заменяется текстом на том же
-		// месте по клику, повторный клик по тексту прячет его обратно.
+		// Спойлер на слово или фразу.
+		//
+		// ТЕКСТ ПЕРЕЕЗЖАЕТ ВНУТРЬ КНОПКИ ОДИН РАЗ, ПРИ ЗАГРУЗКЕ, и дальше стоит
+		// на месте: нажатие только снимает с него невидимость. Поэтому строка
+		// не прыгает и абзац не переверстывается — а спрятать текст через display
+		// значило бы дёргать всю страницу при каждом раскрытии.
+		//
+		// В разметку страницы текст при этом не попадает: он лежит в <template>,
+		// а туда не заглядывают ни поисковый робот, ни индекс поиска по сайту.
 		document.querySelectorAll<HTMLElement>('.spoiler-inline').forEach((spoiler) => {
-			const button = spoiler.querySelector<HTMLButtonElement>('.spoiler-toggle');
-			const template = spoiler.querySelector<HTMLTemplateElement>('.spoiler-content');
-			if (!button || !template) return;
+			const button = spoiler.querySelector<HTMLButtonElement>('.spoiler-word');
+			const template = spoiler.querySelector<HTMLTemplateElement>('template.spoiler-content');
+			if (!button || !template || button.childElementCount > 0) return;
 
-			let revealed: HTMLElement | null = null;
-
-			const hide = () => {
-				if (revealed) revealed.hidden = true;
-				button.hidden = false;
-			};
+			const revealed = document.createElement('span');
+			revealed.appendChild(template.content.cloneNode(true));
+			button.appendChild(revealed);
+			// Ширину теперь задаёт сам текст. До этой строки её держала оценка
+			// по числу букв — иначе плашки не было бы видно вовсе.
+			button.style.width = '';
 
 			button.addEventListener('click', () => {
-				if (!revealed) {
-					revealed = document.createElement('span');
-					revealed.className = 'spoiler-revealed';
-					revealed.appendChild(template.content.cloneNode(true));
-					revealed.addEventListener('click', hide);
-					spoiler.insertBefore(revealed, button);
-				}
-
-				revealed.hidden = false;
-				button.hidden = true;
+				const open = button.getAttribute('aria-expanded') !== 'true';
+				button.setAttribute('aria-expanded', String(open));
+				// Раскрытый текст диктор должен прочитать как текст, а не как
+				// подпись кнопки: пока подпись стоит, содержимое ею перекрыто.
+				if (open) button.removeAttribute('aria-label');
+				else button.setAttribute('aria-label', 'Показать скрытый текст');
 			});
 		});
 	}
@@ -916,53 +947,123 @@ const postSearchMeta = [
 		margin-right: var(--sp-2);
 	}
 
-	.content :global(.gallery-grid) {
+	/* ——— Галерея, режим «сетка»: от двух до четырёх картинок ——— */
+
+	/* Одна колонка на телефоне, две выше. Форма селектора у базового правила
+	   и у медиазапроса ОДНА И ТА ЖЕ: разойдись они, одно перебило бы другое
+	   по весу, и число колонок молча перестало бы применяться. */
+	.content > :global(figure.gallery-grid) {
 		display: grid;
-		grid-template-columns: repeat(2, 1fr);
+		grid-template-columns: 1fr;
 		gap: var(--sp-2);
+		margin-block: var(--sp-12);
+	}
+
+	@media (min-width: 621px) {
+		.content > :global(figure.gallery-grid) {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	.content :global(.gallery-item) {
+		/* Плитка сетки — миниатюра: кадрируется, а целиком картинка
+		   открывается по нажатию. Слайд карусели, наоборот, не режется —
+		   там картинка и есть материал, см. ниже. */
+		aspect-ratio: 16 / 9;
+		overflow: hidden;
+		background: var(--line-soft);
 	}
 
 	.content :global(.gallery-item .figure-zoom) {
-		aspect-ratio: 1 / 1;
+		height: 100%;
 	}
 
-	.content :global(.gallery-item .figure-zoom img) {
+	.content :global(.gallery-item img) {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
 	}
 
-	.content :global(.carousel-viewport) {
-		position: relative;
-		overflow: hidden;
+	/* Подпись общая на всю галерею — во всю её ширину. */
+	.content > :global(figure.gallery-grid figcaption) {
+		grid-column: 1 / -1;
 	}
 
-	.content :global(.carousel-track) {
+	/* ——— Галерея, режим «карусель»: пять картинок и больше ——— */
+
+	.content > :global(figure.gallery-carousel) {
+		margin-block: var(--sp-12);
+	}
+
+	/* Технический слой над каруселью: слева подпись блока, справа счётчик.
+	   Полужирная тут только подпись; счётчик — данные, а данные в техническом
+	   слое набираются обычным весом. */
+	.content :global(.gallery-head) {
 		display: flex;
-		align-items: flex-start;
-		transition: transform var(--transition-fast);
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: var(--sp-2) var(--sp-4);
+		margin-block: 0 var(--sp-3);
+		font-family: var(--font-tech);
+		font-size: var(--technical);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--muted);
 	}
 
-	.content :global(.carousel-slide) {
+	.content :global(.gallery-kicker) {
+		font-weight: 600;
+	}
+
+	.content :global(.gallery-count) {
+		/* Цифры одной ширины: иначе счётчик дёргается при листании. */
+		font-variant-numeric: tabular-nums;
+	}
+
+	.content :global(.gallery-stage) {
+		position: relative;
+	}
+
+	/* ЕДИНСТВЕННОЕ МЕСТО НА САЙТЕ С ГОРИЗОНТАЛЬНЫМ СКРОЛЛОМ (§4.4), и он
+	   заперт внутри трека. Слайд занимает всю ширину трека, поэтому на 320 px
+	   он читается целиком и своего скролла внутри не заводит. */
+	.content :global(.gallery-track) {
+		display: flex;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		/* Полосу прокрутки не показываем: о том, что тут листают, говорят
+		   стрелки и счётчик, а полоса под картинкой рвёт нижнюю линию блока. */
+		scrollbar-width: none;
+	}
+
+	.content :global(.gallery-track::-webkit-scrollbar) {
+		width: 0;
+		height: 0;
+	}
+
+	.content :global(.gallery-slide) {
 		flex: 0 0 100%;
+		scroll-snap-align: start;
 	}
 
-	.content :global(.carousel-slide .figure-zoom) {
-		aspect-ratio: 4 / 3;
+	.content :global(.gallery-slide .figure-zoom) {
+		/* Рамка держит высоту трека одинаковой, а сама картинка вписывается
+		   в неё целиком: §9 требует от слайда исходного соотношения, и обрезать
+		   его нельзя — это то, что автор показывает. */
+		aspect-ratio: 16 / 9;
+		background: var(--line-soft);
 	}
 
-	.content :global(.carousel-slide .figure-zoom img) {
+	.content :global(.gallery-slide img) {
 		width: 100%;
 		height: 100%;
-		object-fit: cover;
+		object-fit: contain;
 	}
 
-	/* Стрелки карусели. Здесь жили два цвета мимо палитры — белый знак
-	   и полупрозрачная чёрная подложка под ним, рассчитанные на тёмную тему.
-	   На бумаге такая кнопка исчезала бы на светлом кадре, поэтому она стала
-	   обычным контролом системы: бумага, чернила, граница контрола. */
-	.content :global(.carousel-prev),
-	.content :global(.carousel-next) {
+	/* Стрелки листания. Цель 44, на широком экране выносятся за трек,
+	   на узком лежат поверх его краёв. */
+	.content :global(.gallery-btn) {
 		position: absolute;
 		top: 50%;
 		transform: translateY(-50%);
@@ -978,90 +1079,155 @@ const postSearchMeta = [
 		justify-content: center;
 	}
 
-	.content :global(.carousel-prev:hover),
-	.content :global(.carousel-next:hover) {
+	.content :global(.gallery-btn:hover:not(:disabled)) {
 		border-color: var(--accent-text);
 		color: var(--accent-text);
 	}
 
-	.content :global(.carousel-prev) {
+	.content :global(.gallery-btn:disabled) {
+		color: var(--muted);
+		border-color: var(--line);
+		cursor: default;
+	}
+
+	.content :global(.gallery-btn.prev) {
 		left: var(--sp-2);
 	}
 
-	.content :global(.carousel-next) {
+	.content :global(.gallery-btn.next) {
 		right: var(--sp-2);
 	}
 
-	/* Спойлеры переоформляются в части 9 вместе с галереей — здесь только
-	   переезд на новую шкалу отступов. */
+	/* ВЫНОС СТРЕЛОК ЗА ТРЕК НАЧИНАЕТСЯ НЕ С 1101, А С 1121 — и это посчитано,
+	   а не выбрано. От 1101 оболочка сайта шириной `100% - 64px`, трек — 1000,
+	   значит сбоку от него свободно 32 + (ширина окна − 1064) / 2. Стрелке
+	   нужно 58, и это набирается только с 1116 px. Поставь мы 1101 из системы —
+	   в полосе 1101…1115 стрелка вылезала бы за край страницы и сама создавала
+	   горизонтальный скролл, который на сайте запрещено прятать. */
+	@media (min-width: 1121px) {
+		.content :global(.gallery-btn.prev) {
+			left: -58px;
+		}
+
+		.content :global(.gallery-btn.next) {
+			right: -58px;
+		}
+	}
+
+	/* ——— Спойлер: блок ——— */
+
+	/* Ширину даёт общее правило `.content > *` — читальная колонка, а не экран:
+	   спойлер часть текста, и кнопка во всю ширину страницы читалась бы
+	   как отдельная секция. */
 	.content :global(.spoiler) {
-		margin-block: var(--sp-6);
+		margin-block: var(--sp-8);
+		border-top: 1px solid var(--line);
+		border-bottom: 1px solid var(--line);
 	}
 
 	.content :global(.spoiler-toggle) {
-		padding: var(--sp-2) var(--sp-4);
-		border: 1px solid var(--line-strong);
+		width: 100%;
+		min-height: 56px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--sp-4);
+		padding: 0;
+		border: 0;
 		background: transparent;
-		color: var(--accent-text);
-		font-size: var(--caption);
-		letter-spacing: 0.06em;
+		font-family: var(--font-tech);
+		font-size: var(--technical);
+		letter-spacing: 0.08em;
 		text-transform: uppercase;
+		color: var(--accent-text);
+		text-align: left;
 		cursor: pointer;
-		transition: border-color var(--transition-fast);
+		transition: color var(--transition-fast);
 	}
 
 	.content :global(.spoiler-toggle:hover) {
-		border-color: var(--accent-text);
+		color: var(--ink);
 	}
 
-	.content :global(.spoiler-revealed) {
-		display: block;
-		margin-block: var(--sp-4) 0;
-		padding: var(--sp-4);
-		border-left: 2px solid var(--accent-brand);
-		background: var(--accent-soft);
+	.content :global(.spoiler-toggle .label) {
+		flex: 1;
 	}
 
-	/* Спойлер на слово/фразу — прямо в строке текста, без своего блока. */
-	.content :global(.spoiler-inline) {
-		margin-block: 0;
+	.content :global(.spoiler-toggle .mark) {
+		font-size: 16px;
+		line-height: 1;
 	}
 
-	.content :global(.spoiler-inline .spoiler-toggle) {
-		/* Ширина задана инлайн-стилем (см. remark-spoiler.mjs) — под длину
-		   спрятанного текста. Сплошная плашка вместо кнопки с надписью. */
-		height: 1em;
-		vertical-align: -0.15em;
-		padding: 0;
-		border: none;
-		background: var(--accent-brand);
+	/* Своего `display` у раскрытого куска нет намеренно: он и так блочный,
+	   а правило с `display` перебило бы атрибут `hidden` по весу — те самые
+	   грабли, что описаны в CLAUDE.md и ловятся scripts/check-hidden.mjs. */
+	.content :global(.spoiler-body) {
+		padding-block: 0 var(--sp-6);
 	}
 
-	.content :global(.spoiler-inline .spoiler-toggle[hidden]) {
-		display: none;
-	}
-
-	.content :global(.spoiler-inline .spoiler-revealed) {
-		display: inline;
-		margin-block: 0;
-		padding: 0 var(--sp-1);
-		cursor: pointer;
-		border-left: none;
-		background: var(--accent-soft);
-	}
-
-	/* Без этого атрибут hidden не срабатывает: правила выше задают display
-	   с более высоким приоритетом, чем встроенный стиль браузера для [hidden]. */
-	.content :global(.spoiler-revealed[hidden]) {
-		display: none;
-	}
-
-	.content :global(.spoiler-revealed > :first-child) {
+	.content :global(.spoiler-body > :first-child) {
 		margin-block-start: 0;
 	}
 
-	.content :global(.spoiler-revealed > :last-child) {
+	.content :global(.spoiler-body > :last-child) {
 		margin-block-end: 0;
+	}
+
+	/* ——— Спойлер: слово внутри фразы ——— */
+
+	/* Текст затирается плашкой брендового цвета ровно своей длины и остаётся
+	   на месте — при раскрытии он лишь становится видимым. Поэтому строка
+	   не прыгает и абзац не переверстывается. */
+	.content :global(.spoiler-word) {
+		position: relative;
+		/* Плашка не переносится по словам, значит на узком экране длинная фраза
+		   вылезла бы за край и создала горизонтальный скролл — тот самый,
+		   который на сайте запрещено прятать. */
+		max-width: 100%;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		font: inherit;
+		color: inherit;
+		cursor: pointer;
+	}
+
+	/* До того как скрипт перенёс текст внутрь, кнопка пуста — и без своей
+	   высоты плашки не было бы видно вовсе. */
+	.content :global(.spoiler-word:empty) {
+		height: 1em;
+		vertical-align: -0.15em;
+	}
+
+	.content :global(.spoiler-word > span) {
+		visibility: hidden;
+	}
+
+	.content :global(.spoiler-word::before) {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: var(--accent-brand);
+		transition: opacity var(--transition-fast);
+	}
+
+	.content :global(.spoiler-word:hover::before) {
+		opacity: 0.82;
+	}
+
+	.content :global(.spoiler-word[aria-expanded='true'] > span) {
+		visibility: visible;
+	}
+
+	.content :global(.spoiler-word[aria-expanded='true']::before) {
+		content: none;
+	}
+
+	/* Раскрытое слово остаётся помеченным — иначе непонятно, что это было
+	   спрятано и что нажатие вернёт плашку обратно. */
+	.content :global(.spoiler-word[aria-expanded='true']) {
+		background: var(--accent-soft);
+		box-shadow: 0 0 0 2px var(--accent-soft);
 	}
 
 	.content :global(.video-wrap) {
@@ -1257,7 +1423,8 @@ const postSearchMeta = [
 		   рисует markdown, метки Astro на ней нет, и селектор с меткой
 		   не совпал бы ни с чем. */
 		.content > :global(figure.figure-full figcaption),
-		.content > :global(figure.gallery figcaption) {
+		.content > :global(figure.gallery figcaption),
+		.content > :global(figure.gallery .gallery-head) {
 			padding-inline: var(--gutter);
 		}
 	}

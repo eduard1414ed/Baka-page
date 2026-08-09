@@ -50,7 +50,13 @@
 				fields: [
 					{ label: 'Файл', name: 'src', widget: 'image' },
 					{ label: 'Альт-текст (для незрячих и поиска)', name: 'alt', widget: 'string' },
-					{ label: 'Подпись под картинкой', name: 'caption', widget: 'string', required: false },
+					{
+						label: 'Подпись под картинкой',
+						name: 'caption',
+						widget: 'string',
+						required: false,
+						hint: 'Если несколько картинок стоят подряд, сайт собирает из них галерею — и подпись у неё одна на весь блок: берётся у первой заполненной. Альт-текст остаётся у каждой картинки свой.',
+					},
 					{
 						label: 'Ширина',
 						name: 'width',
@@ -107,11 +113,31 @@
 			// Спойлер — два простых маркера вместо одного составного блока: начало
 			// и конец, а между ними — обычный текст/картинки редактируются как
 			// везде. Разбирает и прячет их src/plugins/remark-spoiler.mjs.
+
+			// ПОДПИСЬ КНОПКИ СОБИРАЕТСЯ ИЗ ДВУХ ЧАСТЕЙ: автор пишет только
+			// существительное, глагол подставляет сайт («Показать финал» /
+			// «Скрыть финал»). Отдай мы автору всю строку — подписи разъехались бы
+			// по формулировкам, и кнопка перестала бы читаться как один элемент.
+			//
+			// Глагол в начале снимаем: до части 9 в этом поле лежала вся строка
+			// целиком, и у старых постов там написано «Показать спойлер».
+			// МЕНЯЕТЕ ТУТ — ПОПРАВЬТЕ И В src/plugins/remark-spoiler.mjs
+			// (функция spoilerNoun): импортировать оттуда админка не умеет.
+			const spoilerNoun = (label) => String(label ?? '').trim().replace(/^\s*(?:показать|скрыть|раскрыть|открыть|спрятать)(?:\s+|$)/i, '').trim();
+
 			CMS.registerEditorComponent({
 				id: 'spoiler-start',
 				label: 'Спойлер: начало',
 				icon: 'visibility_off',
-				fields: [{ label: 'Текст кнопки', name: 'label', widget: 'string', required: false }],
+				fields: [
+					{
+						label: 'Подпись кнопки',
+						name: 'label',
+						widget: 'string',
+						required: false,
+						hint: 'Одно существительное: «финал», «твист 12 серии». Глагол сайт подставит сам: «Показать финал» / «Скрыть финал». Оставите пустым — будет «спойлер».',
+					},
+				],
 				pattern: /^::spoiler-start\{([^\n]*)\}$/,
 				fromBlock: (match) => {
 					const attrs = {};
@@ -122,14 +148,19 @@
 						attrs[m[1]] = m[2].replaceAll('&quot;', '"');
 					}
 
-					return attrs;
+					return { ...attrs, label: spoilerNoun(attrs.label) };
 				},
-				toBlock: (data) => `\n::spoiler-start{label="${escapeAttr(data.label || 'Показать спойлер')}"}\n`,
+				toBlock: (data) => {
+					const noun = spoilerNoun(data.label);
+					// Пусто — пишем маркер без подписи, а не выдуманное слово:
+					// «спойлер» подставит сайт, и второго места с этим словом не будет.
+					return noun ? `\n::spoiler-start{label="${escapeAttr(noun)}"}\n` : '\n::spoiler-start{}\n';
+				},
 				// Первая строка без тега — см. isBlankData выше.
 				toPreview: (data) =>
 					isBlankData(data)
 						? '▾ начало спойлера'
-						: `<div style="opacity:0.6;font-size:0.875rem">▾ начало спойлера («${escapeHtml(data.label || 'Показать спойлер')}»)</div>`,
+						: `<div style="opacity:0.6;font-size:0.875rem">▾ начало спойлера («Показать ${escapeHtml(spoilerNoun(data.label) || 'спойлер')}»)</div>`,
 			});
 
 			CMS.registerEditorComponent({

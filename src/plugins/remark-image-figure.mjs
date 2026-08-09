@@ -95,9 +95,8 @@ const figNumber = (n) => (n < 10 ? `0${n}` : String(n));
  * `FIG. 03`, — и читатель принял бы это за ошибку вёрстки: он всё равно
  * не знает, сколько картинок между ними пропущено.
  *
- * Экспортируется ради проверки: случай «галерея занимает несколько номеров»
- * в живых данных пока не возникает (общая подпись у галереи появится в части 9),
- * а проверить его надо сейчас — иначе диапазоны и ведущий ноль останутся
+ * Экспортируется ради проверки: галереи в живых данных пока подписей не имеют,
+ * а диапазоны и ведущий ноль проверить надо — иначе они останутся
  * непроверенными до того дня, когда их некому будет вспомнить.
  */
 export function numberFigures(units) {
@@ -132,45 +131,114 @@ function singleFigureData(item) {
 	return { hName: 'figure', hProperties: { class: item.isFull ? 'figure figure-full' : 'figure' }, hChildren: children };
 }
 
+/**
+ * ПОДПИСЬ, ИСТОЧНИК И ССЫЛКА У ГАЛЕРЕИ ОДНИ НА ВЕСЬ БЛОК, а не у каждой
+ * картинки (тз/08, §9.2). Полей под это заводить не пришлось — они у картинки
+ * уже есть; берём первые заполненные.
+ *
+ * Если подписей несколько, лишние ПОКАЗАТЬ НЕГДЕ, и мы говорим об этом
+ * в сборку: тихо потерянный текст автор не найдёт никогда.
+ *
+ * Альт остаётся у каждой картинки своим: это единственное, что читает вслух
+ * экранный диктор, и общий на четыре картинки он не описывает ни одной.
+ */
+function blockCaptionItem(items, onWarn) {
+	const captions = items.filter((item) => item.caption);
+	const sources = items.filter((item) => item.sourceUrl);
+
+	if (captions.length > 1) onWarn(`подписей ${captions.length}, показана первая («${captions[0].caption}»)`);
+	if (sources.length > 1) onWarn(`ссылок на источник ${sources.length}, показана первая`);
+
+	return {
+		caption: captions[0]?.caption ?? '',
+		sourceLabel: sources[0]?.sourceLabel ?? '',
+		sourceUrl: sources[0]?.sourceUrl ?? '',
+	};
+}
+
 // Несколько блоков "изображение с подписью" подряд, без текста между ними,
-// автоматически становятся одной галереей: сеткой (до 5 картинок) или
-// каруселью со стрелочками (больше 5). У каждой картинки — своя подпись.
-function groupFigureData(items) {
+// автоматически становятся одной галереей: сеткой (до четырёх картинок) или
+// каруселью с листанием (пять и больше). Подпись общая, см. blockCaptionItem.
+//
+// КАРУСЕЛЬ — ЕДИНСТВЕННОЕ МЕСТО НА САЙТЕ С ГОРИЗОНТАЛЬНЫМ СКРОЛЛОМ (§4.4),
+// и скролл живёт только внутри трека. Слайд занимает всю его ширину, поэтому
+// на 320 px он читается целиком и вложенного скролла внутри слайда нет.
+function groupFigureData(items, onWarn) {
 	const isCarousel = items.length > CAROUSEL_THRESHOLD;
 
-	const sizes = isCarousel ? '(max-width: 700px) 100vw, 700px' : '(max-width: 700px) 50vw, 350px';
+	// Слайд карусели занимает всю ширину трека (до 1000), плитка сетки —
+	// половину её на широком экране.
+	const sizes = isCarousel ? '(max-width: 1000px) 100vw, 1000px' : '(max-width: 620px) 100vw, 500px';
 
-	const itemNodes = items.map((item) => {
-		const children = [buildLink(item, sizes)];
-		const caption = buildCaption(item);
-		if (caption) children.push(caption);
-		return { type: 'element', tagName: 'div', properties: { class: isCarousel ? 'carousel-slide' : 'gallery-item' }, children };
-	});
+	const itemNodes = items.map((item) => ({
+		type: 'element',
+		tagName: 'div',
+		properties: { class: isCarousel ? 'gallery-slide' : 'gallery-item' },
+		children: [buildLink(item, sizes)],
+	}));
 
-	const body = isCarousel
-		? {
-				type: 'element',
-				tagName: 'div',
-				properties: { class: 'carousel-viewport' },
-				children: [
-					{ type: 'element', tagName: 'div', properties: { class: 'carousel-track' }, children: itemNodes },
-					{
-						type: 'element',
-						tagName: 'button',
-						properties: { type: 'button', class: 'carousel-prev', 'aria-label': 'Предыдущее изображение' },
-						children: [text('‹')],
+	const children = [];
+
+	if (isCarousel) {
+		// Технический слой над каруселью: слева подпись блока, справа счётчик.
+		// Счётчик живой — его ведёт скрипт страницы; в разметке стоит первый кадр,
+		// чтобы без скрипта строка не оказалась пустой.
+		children.push({
+			type: 'element',
+			tagName: 'div',
+			// В поиск шапка не идёт: «[ галерея ]01 / 06» это подпись органов
+			// управления, а не текст материала, и в цитате она читалась бы мусором.
+			// Подпись самой галереи стоит ниже, в figcaption, и индексируется.
+			properties: { class: 'gallery-head', 'data-pagefind-ignore': '' },
+			children: [
+				{ type: 'element', tagName: 'span', properties: { class: 'gallery-kicker' }, children: [text('[ галерея ]')] },
+				{
+					type: 'element',
+					tagName: 'span',
+					properties: { class: 'gallery-count' },
+					children: [text(`01 / ${String(items.length).padStart(2, '0')}`)],
+				},
+			],
+		});
+
+		children.push({
+			type: 'element',
+			tagName: 'div',
+			properties: { class: 'gallery-stage' },
+			children: [
+				{
+					type: 'element',
+					tagName: 'button',
+					properties: {
+						type: 'button',
+						class: 'gallery-btn prev',
+						'aria-label': 'Предыдущее изображение',
+						disabled: true,
+						'data-pagefind-ignore': '',
 					},
-					{
-						type: 'element',
-						tagName: 'button',
-						properties: { type: 'button', class: 'carousel-next', 'aria-label': 'Следующее изображение' },
-						children: [text('›')],
-					},
-				],
-			}
-		: { type: 'element', tagName: 'div', properties: { class: 'gallery-grid' }, children: itemNodes };
+					children: [text('‹')],
+				},
+				{ type: 'element', tagName: 'div', properties: { class: 'gallery-track' }, children: itemNodes },
+				{
+					type: 'element',
+					tagName: 'button',
+					properties: { type: 'button', class: 'gallery-btn next', 'aria-label': 'Следующее изображение', 'data-pagefind-ignore': '' },
+					children: [text('›')],
+				},
+			],
+		});
+	} else {
+		children.push(...itemNodes);
+	}
 
-	return { hName: 'figure', hProperties: { class: isCarousel ? 'figure gallery gallery-carousel' : 'figure gallery' }, hChildren: [body] };
+	const caption = buildCaption(blockCaptionItem(items, onWarn));
+	if (caption) children.push(caption);
+
+	return {
+		hName: 'figure',
+		hProperties: { class: isCarousel ? 'figure gallery gallery-carousel' : 'figure gallery gallery-grid' },
+		hChildren: children,
+	};
 }
 
 /**
@@ -185,7 +253,11 @@ function groupFigureData(items) {
  * и сдвинулся бы от любой вставки.
  */
 export default function remarkImageFigure() {
-	return (tree) => {
+	return (tree, file) => {
+		const warnGallery = (what) => {
+			console.warn(`[галерея] ${file?.path ?? 'пост'}: у галереи одна подпись на блок, а ${what}.`);
+		};
+
 		// Иллюстрации материала в порядке следования по тексту — для сквозной
 		// нумерации подписей. Собираются за тот же проход, что и сами блоки:
 		// второй обход дерева пришлось бы держать в согласии с первым.
@@ -205,13 +277,15 @@ export default function remarkImageFigure() {
 					units.push({ figcaption, images: 1, captioned: Boolean(figcaption) });
 					newChildren.push(run[0].node);
 				} else {
-					run[0].node.data = groupFigureData(run.map((r) => r.item));
-					// Общей подписи у галереи пока нет — она появится в части 9
-					// вместе с самой галереей, и тогда галерея начнёт занимать
-					// столько номеров, сколько в ней картинок, подписываясь
-					// диапазоном. Счётчик это уже умеет: `images` он прибавляет
-					// целиком, а не по единице.
-					units.push({ figcaption: null, images: run.length, captioned: false });
+					run[0].node.data = groupFigureData(
+						run.map((r) => r.item),
+						warnGallery,
+					);
+					// Галерея занимает столько номеров, сколько в ней картинок,
+					// и подписывается диапазоном — `FIG. 02–05`. Счётчик это умеет
+					// с части 5: `images` он прибавляет целиком, а не по единице.
+					const figcaption = run[0].node.data.hChildren.find((child) => child.tagName === 'figcaption') ?? null;
+					units.push({ figcaption, images: run.length, captioned: Boolean(figcaption) });
 					newChildren.push(run[0].node);
 				}
 				run = [];
