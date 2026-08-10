@@ -6,6 +6,12 @@ draft: true
 description: ''
 cover: ''
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+timecodes: ''
+pullMedia: true
 tgId: 4130
 tgUrl: https://t.me/podcastbaka/4130
 ---
