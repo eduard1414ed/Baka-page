@@ -15,6 +15,7 @@
 //   node scripts/anime-quotes.test.mjs
 
 import { buildAnimeMatcher, findMentions } from '../src/lib/animeMentions.mjs';
+import { readAnimeCollection } from './anime-cases-lib.mjs';
 
 let failed = 0;
 
@@ -38,7 +39,10 @@ const catalog = (strict) => [
 	{ id: 'dandadan', data: { titleRu: 'Дандадан', titleOriginal: 'Dandadan' } },
 ];
 
-const ids = (text, strict) => findMentions(text, buildAnimeMatcher(catalog(strict))).map((m) => m.id);
+// `quotes: 'apply'` — тексты постов, галочка действует. Ниже отдельным разделом
+// проверяется, что в живой речи (`ignore`) она не действует.
+const ids = (text, strict) =>
+	findMentions(text, buildAnimeMatcher(catalog(strict), { quotes: 'apply' })).map((m) => m.id);
 
 console.log('\n=== ГАЛОЧКА ВКЛЮЧЕНА: ЧТО НАХОДИТСЯ ===');
 
@@ -71,6 +75,40 @@ for (const [text, why] of shouldNotFind) {
 	check(`${why}: ${text}`, found.length === 0, found.length ? `а нашлось: ${found.join(', ')}` : 'молчит');
 }
 
+console.log('\n=== ЛАТИНИЦА ГАЛОЧКЕ НЕ ПОДЧИНЯЕТСЯ ===');
+{
+	// Опасность, от которой галочка защищает, — совпадение с обычным РУССКИМ
+	// словом. «Jujutsu Kaisen» им не бывает, а в кавычки автор его не ставит:
+	// у «Кэйон!» на латиницу приходится 31 упоминание из 35 без кавычек.
+	const found = ids('в коллаборации с аниме Jujutsu Kaisen', true);
+	check('оригинальное название находится без кавычек даже при включённой галочке', found.includes('jujutsu'), found.join(', ') || 'НЕ НАШЛОСЬ');
+}
+
+console.log('\n=== В ЖИВОЙ РЕЧИ ГАЛОЧКА НЕ ДЕЙСТВУЕТ ===');
+{
+	// Замер 11 августа 2026: в постах 74 % упоминаний в кавычках, в расшифровках
+	// 30 %. Действуй галочка и там — у «Акиры» ушли бы 9 ложных упоминаний
+	// в постах вместе с 30 верными в разговоре.
+	const speech = 'И вот тут монстр появляется на сороковой минуте, и это лучшая сцена';
+	const spoken = findMentions(speech, buildAnimeMatcher(catalog(true), { quotes: 'ignore' })).map((m) => m.id);
+	const written = ids(speech, true);
+	check('в расшифровке название без кавычек находится', spoken.includes('monster'), spoken.join(', ') || 'НЕ НАШЛОСЬ');
+	check('а в тексте поста то же самое — нет', written.length === 0, written.join(', ') || 'молчит');
+}
+
+console.log('\n=== ГДЕ ДЕЙСТВУЕТ ГАЛОЧКА — ВЫЗЫВАЮЩИЙ ОБЯЗАН СКАЗАТЬ ===');
+{
+	// Забудь вызывающий этот ответ — и галочка молча перестала бы действовать
+	// в целом разделе сайта, а выглядело бы это как «всё хорошо».
+	let threw = false;
+	try {
+		buildAnimeMatcher(catalog(true));
+	} catch {
+		threw = true;
+	}
+	check('без ответа матчер не строится, а падает', threw, threw ? 'упал' : 'МОЛЧА СОБРАЛСЯ');
+}
+
 console.log('\n=== ГАЛОЧКА ВЫКЛЮЧЕНА: ВСЁ КАК БЫЛО ===');
 
 for (const [text] of shouldNotFind.slice(0, 2)) {
@@ -94,6 +132,42 @@ console.log('\n=== КАВЫЧКИ НИЧЕГО НЕ ДОКАЗЫВАЮТ САМ�
 	const text = 'Смотрел на «Кинопоиске», читал «Афишу», листал «Мир фантастики»';
 	const found = ids(text, true);
 	check('фраза в кавычках, которой нет в справочнике, упоминанием не становится', found.length === 0, found.join(', ') || 'молчит');
+}
+
+// ─── На настоящем справочнике ──────────────────────────────────────────────
+//
+// ЗАЧЕМ ЭТО ОТДЕЛЬНО ОТ ВЫДУМАННЫХ ТАЙТЛОВ ВЫШЕ. Проверить галочку по собранной
+// папке `dist/` НЕЛЬЗЯ: все девять ложных «Акир» лежат в черновиках, а у
+// черновиков страниц нет вовсе. Подлог это показал прямо — сняли галочку,
+// пересобрали, и проверка по `dist/` осталась зелёной. То есть провалиться она
+// не может ни при какой поломке, и «ок» от неё не значит ничего.
+// А тут — значит: строки взяты из архива, справочник настоящий.
+
+console.log('\n=== НАСТОЯЩИЙ СПРАВОЧНИК, НАСТОЯЩИЕ ФРАЗЫ ИЗ АРХИВА ===');
+{
+	const real = (await readAnimeCollection()).map((entry) => ({ id: entry.data.id, data: entry.data }));
+	const post = buildAnimeMatcher(real, { quotes: 'apply' });
+	const speech = buildAnimeMatcher(real, { quotes: 'ignore' });
+	const found = (text, matcher = post) => findMentions(text, matcher).map((m) => m.id);
+
+	const cases = [
+		['«Я и Дьявольский блюз» написал Акира Хирата, автор популярного тайтла', 'akira', false, 'имя человека, а не тайтл'],
+		['Написал оригинальный саундтрек Акира Ямаока, известный по музыке для Silent Hill', 'akira', false, 'ещё одно имя человека'],
+		['Здесь будут: Сербия, Астробой, «Акира», Аниматрица и немного Наруто', 'akira', true, 'в кавычках — это тайтл'],
+		['триллер о кошачьем апокалипсисе, долгожданный второй сезон', 'apocalypse-hotel', false, 'обычное слово'],
+		['за это лето вышли «Зомби-апокалипсис», «Темное собрание»', 'apocalypse-hotel', false, 'кавычки есть, но вокруг ЧУЖОГО названия'],
+		['При работе над «Апокалипсис: Отелем» собралась команда', 'apocalypse-hotel', true, 'падеж полного названия из «Вариантов написания»'],
+		['Создание «Апокалипсис: Отеля» было долгим процессом', 'apocalypse-hotel', true, 'то же, родительный'],
+	];
+
+	for (const [text, id, want, why] of cases) {
+		const hit = found(text).includes(id);
+		check(`${want ? 'находит' : 'молчит '} — ${why}: ${text}`, hit === want, hit ? `нашлось ${id}` : 'молчит');
+	}
+
+	// А в живой речи те же самые фразы находиться обязаны: галочка туда не лезет.
+	const spoken = found('Мы обсуждаем, как Акира стал культовым фильмом', speech);
+	check('в живой речи «Акира» без кавычек находится по-прежнему', spoken.includes('akira'), spoken.join(', ') || 'НЕ НАШЛОСЬ');
 }
 
 console.log(

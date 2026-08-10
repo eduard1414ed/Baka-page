@@ -39,7 +39,7 @@ import { hasUsableTimecodes } from '../../lib/transcript.mjs';
 import { applyPostOverrides } from '../../lib/transcriptOverrides.mjs';
 import { buildAnimeMatcher } from '../../lib/animeMentions.mjs';
 import { makeExceptionFilter } from '../../lib/mentionExceptions.mjs';
-import { animeMentionedIn } from '../../lib/animeMentionIndex.mjs';
+import { animeMentionedIn, animeMentionedInPostText } from '../../lib/animeMentionIndex.mjs';
 import { resolveEpisodeCover } from '../../lib/episodeCover.mjs';
 import { isPublished } from '../../lib/publishing.mjs';
 import { getPostTiming } from '../../lib/postTiming.mjs';
@@ -245,26 +245,37 @@ const bonusDeck = isBonus ? ownDescription : null;
 // из них не было главным.
 const timing = await getPostTiming(post);
 
-// Марки тайтлов под текстом. Показываем и то, что стоит в поле `anime` поста
-// (разметка в тексте, тз/03), и то, что прозвучало в расшифровке (тз/05, шаг 5):
-// без второго выходила несогласица — на странице тайтла выпуск есть,
-// а на странице выпуска тайтла нет.
+// Марки тайтлов под текстом. Источников ТРИ, и все три обязательны, потому что
+// связь двусторонняя: пропусти любой — и на странице тайтла материал есть,
+// а на странице материала тайтла нет.
+//   1. поле «Тайтлы поста» — то, что отметили руками (тз/03);
+//   2. текст самого поста — широкая разметка (хвост 44, часть B этапа 11):
+//      раз название в тексте стало ссылкой, марка под текстом обязана быть;
+//   3. расшифровка выпуска — то, что прозвучало вслух (тз/05, шаг 5).
 //
-// Порядок: сначала тайтлы поста, потом найденные в расшифровке, по первому
-// упоминанию. Повторы убираем.
+// Порядок именно такой, повторы убираем. Спрашиваем про текст поста НЕ СВОИМ
+// кодом, а `animeMentionedInPostText` — тем же, которым это спрашивает указатель
+// для страницы тайтла: две копии ответили бы по-разному, и несогласица вернулась
+// бы с другой стороны.
 //
 // Тайтл может быть размечен в тексте до того, как робот донабрал его в справочник
 // (см. тз/03-тайтлы.md) — тогда ссылки ещё нет, getEntry вернёт undefined,
 // такие просто не показываем в марках, не ломая страницу.
+const animeList = await getCollection('anime');
+
 const mentionTimes = showTranscript
 	? animeMentionedIn(
 			transcriptData,
-			buildAnimeMatcher(await getCollection('anime')),
+			buildAnimeMatcher(animeList, { quotes: 'ignore' }),
 			makeExceptionFilter(post.data.mentionsHidden),
 		)
 	: new Map();
 
-const animeIds = [...new Set([...(anime ?? []).map((ref: { id: string }) => ref.id), ...mentionTimes.keys()])];
+const inTextIds = animeMentionedInPostText(post, buildAnimeMatcher(animeList, { quotes: 'apply' }));
+
+const animeIds = [
+	...new Set([...(anime ?? []).map((ref: { id: string }) => ref.id), ...inTextIds, ...mentionTimes.keys()]),
+];
 const animeEntries = (await Promise.all(animeIds.map((id) => getEntry('anime', id)))).filter(Boolean);
 
 // ——— Что видно в поиске и в превью при отправке ссылки (тз/06, шаги 7–10) ———

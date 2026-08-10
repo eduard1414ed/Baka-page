@@ -110,7 +110,15 @@ export async function main() {
 	// Матчер строим ТОТ ЖЕ, что и сборка, и на нём же считаем. Свой список
 	// названий тут был бы третьей копией правила «по чему ищем» — той самой,
 	// из-за которой чинится хвост 45.
-	const matcher = buildAnimeMatcher(entries.map((e) => ({ id: e.data.id, data: e.data })));
+	//
+	// `quotes: 'ignore'` — то есть галочки НЕ применяем, и это весь смысл отчёта:
+	// он меряет, СКОЛЬКО галочка отняла бы. Применяй он их — у тайтла с уже
+	// включённой галочкой строка «без кавычек» стала бы нулём, и отчёт перестал
+	// бы отвечать на свой единственный вопрос.
+	const matcher = buildAnimeMatcher(
+		entries.map((e) => ({ id: e.data.id, data: e.data })),
+		{ quotes: 'ignore' },
+	);
 
 	// Какие из названий тайтла — кусок до двоеточия. Известная болячка проекта:
 	// «Апокалипсис: Отель» ловится словом «апокалипсис», и надо знать, сколько
@@ -144,17 +152,10 @@ export async function main() {
 		return stats.get(id);
 	};
 
-	// Пост → какие тайтлы в нём нашлись и первое место каждого. Ссылкой станет
-	// первое упоминание, и считать надо его, а не все позиции: иначе число
-	// «новых ссылок» окажется больше, чем ссылок на страницах.
-	const foundInPost = new Map();
-
 	for (const post of posts) {
-		const first = new Map();
 		for (const mention of findMentions(post.text, matcher)) {
 			const quoted = isQuotedAt(post.text, mention.start, mention.end);
 			const piece = post.text.slice(mention.start, mention.end);
-			const isPrefix = prefixNames.has(mention.id + ' ' + fold(piece));
 
 			const stat = bump(mention.id);
 			if (quoted) stat.inQuotes++;
@@ -162,12 +163,35 @@ export async function main() {
 				stat.plain++;
 				if (isLatin(piece)) stat.plainLatin++;
 			}
-			if (isPrefix) stat.prefix++;
+			if (prefixNames.has(mention.id + ' ' + fold(piece))) stat.prefix++;
 			if (!quoted && stat.samples.length < 4) stat.samples.push(`${post.id}: …${around(post.text, mention.start, mention.end)}…`);
+		}
+	}
 
-			if (!first.has(mention.id)) {
-				first.set(mention.id, { piece, quoted, isPrefix, where: around(post.text, mention.start, mention.end) });
-			}
+	// А ВОТ РАЗМЕТКУ ПОСТОВ СЧИТАЕМ УЖЕ С ГАЛОЧКАМИ (`quotes: 'apply'`), потому
+	// что здесь вопрос другой: не «сколько отняла бы галочка», а «что правда
+	// встанет ссылкой на странице». Считай мы это тем же матчером, что таблицу
+	// выше, — отчёт называл бы ссылки, которых на сайте нет.
+	//
+	// Ссылкой становится ПЕРВОЕ упоминание тайтла в посте, поэтому берём его,
+	// а не все позиции: иначе число вышло бы больше, чем ссылок на страницах.
+	const linkMatcher = buildAnimeMatcher(
+		entries.map((e) => ({ id: e.data.id, data: e.data })),
+		{ quotes: 'apply' },
+	);
+
+	const foundInPost = new Map();
+	for (const post of posts) {
+		const first = new Map();
+		for (const mention of findMentions(post.text, linkMatcher)) {
+			if (first.has(mention.id)) continue;
+			const piece = post.text.slice(mention.start, mention.end);
+			first.set(mention.id, {
+				piece,
+				quoted: isQuotedAt(post.text, mention.start, mention.end),
+				isPrefix: prefixNames.has(mention.id + ' ' + fold(piece)),
+				where: around(post.text, mention.start, mention.end),
+			});
 		}
 		foundInPost.set(post.id, first);
 	}
@@ -235,12 +259,17 @@ export async function main() {
 	say();
 	say('  название                        признак               в кавычках  без кавычек  из них латиницей');
 	for (const c of candidates) {
-		const name = (c.entry.data.titleRu ?? c.entry.data.id).slice(0, 30).padEnd(30);
+		const on = c.entry.data.strictQuotes === true;
+		const name = ((on ? '✔ ' : '  ') + (c.entry.data.titleRu ?? c.entry.data.id)).slice(0, 32).padEnd(32);
 		const mark = (c.hint.words === 1 && c.hint.why[0].startsWith('одно слово') ? 'одно короткое слово' : 'обычные слова').padEnd(20);
 		say(
 			`  ${name}  ${mark}  ${String(c.post.inQuotes + c.tr.inQuotes).padStart(9)}  ${String(c.loss).padStart(11)}  ${String(c.lossLatin).padStart(16)}`,
 		);
 	}
+	say();
+	say('Галочкой ✔ помечены те, у кого она УЖЕ включена: у них «без кавычек» — это');
+	say('не «отсечётся», а «уже отсечено», и цифра оставлена нарочно, чтобы решение');
+	say('можно было пересмотреть.');
 
 	say();
 	say(`=== 2. ЧТО ИМЕННО ОТСЕЧЁТСЯ У ПЕРВЫХ ${Math.min(showCount, candidates.length)} ===`);
@@ -273,8 +302,9 @@ export async function main() {
 
 	say();
 	say('=== 3. ШИРОКАЯ РАЗМЕТКА ПОСТОВ (хвост 44) ===');
-	say('Если искать в текстах постов ВСЕ названия справочника, а не только те,');
-	say('что стоят в поле «Тайтлы поста»:');
+	say('Ссылки, которых при узкой разметке не было бы: тайтла нет в поле «Тайтлы');
+	say('поста», а название стоит в тексте. Считано С УЧЁТОМ галочек — это то,');
+	say('что правда встанет ссылкой на странице.');
 	say();
 	say(`  новых ссылок — ${newLinks.length} в ${postsTouched.size} ${plural(postsTouched.size, 'посте', 'постах', 'постах')};`);
 	say(`  из них в опубликованных постах — ${published.length} (${new Set(published.map((l) => l.post.id)).size} ${plural(new Set(published.map((l) => l.post.id)).size, 'пост', 'поста', 'постов')}), остальное черновики;`);

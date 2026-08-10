@@ -1,31 +1,36 @@
-import { readFileSync, existsSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { visit } from 'unist-util-visit';
 import { buildAnimeMatcher, findMentions } from '../lib/animeMentions.mjs';
 
 const ANIME_CONTENT_DIR = new URL('../content/anime/', import.meta.url);
 
-// Карточка тайтла читается один раз на сборку: постов 1594, а тайтлов 53,
-// и один и тот же файл иначе читался бы с диска сотни раз.
-const cache = new Map();
+// Справочник читается ОДИН раз на сборку и матчер строится тоже один: постов
+// 1594, тайтлов 53, и перечитывать одно другим значило бы сотни лишних
+// обращений к диску. Внутри одной сборки справочник не меняется.
+let matcherCache = null;
 
-function loadAnimeEntry(id) {
-	if (cache.has(id)) return cache.get(id);
+function animeMatcher() {
+	if (matcherCache) return matcherCache;
 
-	const path = fileURLToPath(new URL(`${id}.json`, ANIME_CONTENT_DIR));
-	let entry = null;
-
-	if (existsSync(path)) {
+	const entries = [];
+	for (const file of readdirSync(fileURLToPath(ANIME_CONTENT_DIR))) {
+		if (!file.endsWith('.json')) continue;
 		try {
-			entry = { id, data: JSON.parse(readFileSync(path, 'utf8')) };
+			const data = JSON.parse(readFileSync(fileURLToPath(new URL(file, ANIME_CONTENT_DIR)), 'utf8'));
+			if (data?.id) entries.push({ id: data.id, data });
 		} catch {
-			entry = null;
+			// Кривой файл справочника — не повод уронить разметку всех постов;
+			// на нём всё равно упадёт схема коллекции, и скажет об этом внятно.
 		}
 	}
 
-	cache.set(id, entry);
-	return entry;
+	// `apply`: это ТЕКСТЫ ПОСТОВ, тут галочка «только в кавычках» действует.
+	matcherCache = buildAnimeMatcher(entries, { quotes: 'apply' });
+	return matcherCache;
 }
+
+const catalogIds = () => new Set(animeMatcher().map((name) => name.id));
 
 function autoLinkNode(id, text) {
 	return {
@@ -48,11 +53,19 @@ function autoLinkNode(id, text) {
  * Первое упоминание каждого id в посте становится ссылкой на /anime/id,
  * повторные — обычный текст (см. тз/03-тайтлы.md, п. 4).
  *
- * Тайтлы, которые есть в поле `anime` поста (например, проставлены вручную
- * до появления кнопки «Аниме», как в «Знакомьтесь: Ёдзи Такэсигэ»), но нигде
- * не отмечены меткой в тексте, доразмечаются сами: ищем в тексте первое
- * упоминание названия тайтла и превращаем его в такую же ссылку — руками
- * расставлять метки по старым постам не нужно.
+ * ИЩЕТСЯ ВЕСЬ СПРАВОЧНИК, А НЕ ТОЛЬКО ТАЙТЛЫ ЭТОГО ПОСТА (хвост 44, решение
+ * заказчика 11 августа 2026). Любое название из справочника, встреченное
+ * в тексте, становится ссылкой — ровно так же, как это давно работает
+ * в расшифровках выпусков. Раньше искались только тайтлы, стоящие в поле
+ * «Тайтлы поста», то есть разметка требовала, чтобы тайтл сначала отметили
+ * руками, — а весь смысл в обратном.
+ *
+ * Замер перед включением: 410 новых ссылок в 318 постах, ложных 15 (3,7 %),
+ * и все 15 у двух тайтлов — «Апокалипсис: Отель» (ловилось слово «апокалипсис»)
+ * и «Акира» (имена людей: Акира Хирата, Акира Ямаока). Оба получили галочку
+ * «только в кавычках», и это единственный способ отменить ложную ссылку в посте:
+ * поштучной отмены, как в расшифровках, у поста нет — там якорь стоит на номере
+ * реплики, а реплик у поста не бывает.
  *
  * ПО ЧЕМУ ИЩЕМ — НЕ НАШЕ ДЕЛО, И ЭТО ГЛАВНОЕ ПРАВИЛО ЭТОГО ФАЙЛА.
  * Список названий и правило совпадения берутся у `src/lib/animeMentions.mjs`,
@@ -68,9 +81,8 @@ function autoLinkNode(id, text) {
  * в карточке. Заметить копию было нельзя: варианты заполнены у двух тайтлов
  * из 53, и расхождению негде было случиться (СТАТУС.md, хвост 45).
  *
- * ЧТО ОСТАЛОСЬ СВОИМ. Два правила, и оба про пост, а не про названия:
- * ищем только тайтлы, стоящие в поле «Тайтлы поста» (а не весь справочник,
- * как в расшифровках), и размечаем только первое упоминание каждого.
+ * ЧТО ОСТАЛОСЬ СВОИМ. Одно правило, и оно про пост, а не про названия:
+ * ссылкой становится ПЕРВОЕ упоминание каждого тайтла, дальше обычный текст.
  *
  * `::anime-ref{id="" source="" source-id=""}` — служебная метка без видимого
  * текста, ничего не выводит на странице. Ставит поле «Тайтлы поста» в CMS
@@ -107,23 +119,15 @@ export default function remarkAnime() {
 			return index;
 		});
 
-		const frontmatterAnime = file.data?.astro?.frontmatter?.anime;
-		if (!Array.isArray(frontmatterAnime)) return;
-
-		const pending = new Set();
-		const entries = [];
-		for (const id of frontmatterAnime) {
-			if (seen.has(id) || pending.has(id)) continue;
-			const entry = loadAnimeEntry(id);
-			if (!entry) continue;
-			pending.add(id);
-			entries.push(entry);
-		}
-
-		if (pending.size === 0) return;
-
-		let matcher = buildAnimeMatcher(entries);
+		// Кого ещё можно разметить: весь справочник минус то, что уже отмечено
+		// меткой в тексте руками. Тайтл из поля «Тайтлы поста» отдельного
+		// упоминания тут не требует — он и так входит в справочник.
+		const matcher = animeMatcher();
 		if (matcher.length === 0) return;
+
+		const pending = catalogIds();
+		for (const id of seen) pending.delete(id);
+		if (pending.size === 0) return;
 
 		// ССЫЛКУ ВНУТРЬ ССЫЛКИ СТАВИТЬ НЕЛЬЗЯ. Название тайтла запросто окажется
 		// подписью авторской ссылки («читайте про Атаку титанов»), и обёрнутое
@@ -153,7 +157,6 @@ export default function remarkAnime() {
 
 			parent.children.splice(index, 1, ...replacement);
 			pending.delete(hit.id);
-			matcher = matcher.filter((entry) => entry.id !== hit.id);
 
 			return index;
 		});

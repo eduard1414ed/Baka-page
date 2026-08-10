@@ -29,7 +29,10 @@ export async function getStaticPaths() {
 
 	// Матчер и названия считаем один раз на всю сборку, а не по разу на каждый
 	// из 107 выпусков: справочник у всех один и тот же.
-	const matcher = buildAnimeMatcher(animeList);
+	// Живая речь расшифровок: галочка «только в кавычках» тут не действует.
+	// Админка обязана показывать РОВНО те упоминания, которые попадут
+	// на страницу, иначе галочки отмены встанут не на те места.
+	const matcher = buildAnimeMatcher(animeList, { quotes: 'ignore' });
 	const titles = Object.fromEntries(animeList.map((item) => [item.id, item.data.titleRu || item.data.titleOriginal]));
 
 	return transcripts.map((entry) => ({

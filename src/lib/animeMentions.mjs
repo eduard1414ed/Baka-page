@@ -147,14 +147,40 @@ function searchNames(title) {
  * названий, обязан получить и её. Иначе один вызывающий её учтёт, другой нет,
  * и на сайте ссылка появится там, где заказчик её запретил.
  *
+ * ГДЕ ОНА ДЕЙСТВУЕТ — ОБЯЗАН СКАЗАТЬ ВЫЗЫВАЮЩИЙ, и молчание тут запрещено.
+ *   `quotes: 'apply'`  — действует. Тексты постов: их пишут, а не говорят,
+ *                        и кавычки в них правда стоят.
+ *   `quotes: 'ignore'` — не действует. Живая речь расшифровок (кавычек в ней
+ *                        не бывает) и отчёты разведки, которые как раз меряют,
+ *                        сколько галочка отняла бы.
+ *
+ * Замер 11 августа 2026, из-за которого это стало двумя разными ответами:
+ * в текстах постов 74 % упоминаний стоят в кавычках, а в расшифровках только
+ * 30 %. Включи галочку и там — и у «Акиры» ушли бы 9 ложных упоминаний
+ * в постах ВМЕСТЕ с 30 верными в разговоре. Плюс в расшифровках поштучная
+ * отмена упоминания уже есть, а в постах нет ничего (СТАТУС.md, хвост 44).
+ * Решение заказчика 11 августа 2026.
+ *
+ * Значения по умолчанию тут нет намеренно: забудь вызывающий этот ответ —
+ * и галочка молча перестала бы действовать (или начала действовать) в целом
+ * разделе сайта, а выглядело бы это как «всё хорошо».
+ *
  * @param {{ id: string, data: { titleRu?: string, titleOriginal: string, aliases?: string[], aliasesAuto?: string[], strictQuotes?: boolean } }[]} entries
+ * @param {{ quotes: 'apply' | 'ignore' }} options
  */
-export function buildAnimeMatcher(entries) {
+export function buildAnimeMatcher(entries, options) {
+	if (options?.quotes !== 'apply' && options?.quotes !== 'ignore') {
+		throw new Error(
+			"buildAnimeMatcher: скажите, действует ли тут галочка «только в кавычках» — { quotes: 'apply' } для текстов постов, { quotes: 'ignore' } для живой речи и отчётов.",
+		);
+	}
+	const applyQuotes = options.quotes === 'apply';
+
 	const names = [];
 	const seen = new Set();
 
 	for (const entry of entries) {
-		const strict = entry.data?.strictQuotes === true;
+		const strictTitle = applyQuotes && entry.data?.strictQuotes === true;
 
 		for (const title of [
 			entry.data?.titleRu,
@@ -170,6 +196,14 @@ export function buildAnimeMatcher(entries) {
 				const key = entry.id + ' ' + folded;
 				if (seen.has(key)) continue;
 				seen.add(key);
+				// ГАЛОЧКА ДЕЙСТВУЕТ ТОЛЬКО НА РУССКИЕ НАЗВАНИЯ. Опасность, от которой
+				// она защищает, — совпадение с обычным РУССКИМ словом; «K-On!»,
+				// «Shirobako», «Jujutsu Kaisen» и «Bleach» обычным русским словом
+				// не бывают, а в кавычки автор их почти не ставит. Замер: у «Кэйон!»
+				// на латиницу приходится 31 упоминание из 35 без кавычек, у «Белого
+				// ящика» — 15 из 16. Без этой оговорки галочка отнимала бы заведомо
+				// безопасное. Решение заказчика 11 августа 2026.
+				const strict = strictTitle && /\p{Script=Cyrillic}/u.test(raw);
 				names.push({ id: entry.id, name: raw, folded, strict });
 			}
 		}

@@ -936,7 +936,8 @@ async function main() {
 	const entries = readdirSync(animeDir)
 		.filter((n) => n.endsWith('.json'))
 		.map((n) => ({ id: basename(n, '.json'), data: JSON.parse(readFileSync(join(animeDir, n), 'utf8')) }));
-	const matcher = buildAnimeMatcher(entries);
+	// Тексты постов: галочка «только в кавычках» действует.
+	const matcher = buildAnimeMatcher(entries, { quotes: 'apply' });
 
 	const known = knownIds(postsDir);
 
