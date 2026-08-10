@@ -23,6 +23,7 @@
 // а не json, — ровно те же две причины, что у обложек выпусков: см. подробное
 // объяснение в src/lib/episodeCover.mjs.
 import CUTOUT_IDS from '../data/coverCutouts.mjs';
+import { variantBase } from './imageVariants.mjs';
 
 /** Два размера, не больше — правило проекта. Холст квадратный, 1200. */
 export const CUTOUT_WIDTHS = [640, 1200];
@@ -30,7 +31,18 @@ export const CUTOUT_WIDTHS = [640, 1200];
 const KNOWN = new Set(CUTOUT_IDS);
 
 /**
- * Ключ картинки, загруженной в админку: "/images/uploads/Пони.png" → "Пони".
+ * Ключ картинки, загруженной в админку: "/images/uploads/Пони.png" → "Пони-png".
+ *
+ * РАСШИРЕНИЕ ВХОДИТ В КЛЮЧ, И УБИРАТЬ ЕГО НЕЛЬЗЯ. Раньше оно отбрасывалось,
+ * и `4.png` с `4.jpeg` получали один ключ на двоих — то есть одного вырезанного
+ * персонажа на две разные картинки. Такая пара в загрузках уже лежала, и до беды
+ * не дошло только потому, что обе оказались не квадратными и персонажа у них
+ * нет вовсе. Ровно та же болезнь на именах сжатых копий успела сработать
+ * по-настоящему: в галерее опубликованной заметки встали чужие картинки.
+ * Вылечено 10 августа 2026 разом в обоих местах.
+ *
+ * Ключ считает `variantBase` — та же функция, что даёт имена сжатым копиям.
+ * Своя формула здесь означала бы четвёртую копию одного правила.
  *
  * У выпусков ключ другой — id картинки с хостинга подкаста, его считает
  * `coverIdFromUrl` в episodeCover.mjs. Два источника, два ключа, одна папка:
@@ -40,9 +52,7 @@ const KNOWN = new Set(CUTOUT_IDS);
  */
 export function cutoutIdForUpload(cover) {
 	if (typeof cover !== 'string' || !cover.startsWith('/images/uploads/')) return null;
-	const name = decodeURIComponent(cover.slice('/images/uploads/'.length));
-	const dot = name.lastIndexOf('.');
-	return dot === -1 ? name : name.slice(0, dot);
+	return variantBase(decodeURIComponent(cover.slice('/images/uploads/'.length)));
 }
 
 /** Есть ли для этого ключа вырезанный персонаж. */

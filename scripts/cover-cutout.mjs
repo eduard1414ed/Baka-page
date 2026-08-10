@@ -30,6 +30,7 @@ import path from 'node:path';
 import sharp from 'sharp';
 import { fetchFeedItems } from '../src/lib/podcastFeed.mjs';
 import { coverIdFromUrl } from '../src/lib/episodeCover.mjs';
+import { cutoutIdForUpload } from '../src/lib/coverCutout.mjs';
 
 // ────────────────────────────────────────────────────────────────────────────
 // ЧИСЛА, КОТОРЫЕ КРУТИТ ЗАКАЗЧИК. Все здесь, одним блоком (тз/12, таблица).
@@ -296,9 +297,12 @@ async function collectCovers() {
 		const match = text.match(/^cover:\s*['"]?(\/images\/uploads\/[^'"\n]+?)['"]?\s*$/m);
 		if (!match) continue;
 
+		// Ключ считает ОБЩАЯ функция, а не своя формула рядом. Здесь лежала
+		// копия правила, и она молча теряла расширение — как и две другие
+		// копии в проекте. Цена такой потери: `4.png` и `4.jpeg` получают
+		// одного персонажа на двоих.
 		const name = decodeURIComponent(match[1].slice('/images/uploads/'.length));
-		const dot = name.lastIndexOf('.');
-		const id = dot === -1 ? name : name.slice(0, dot);
+		const id = cutoutIdForUpload(match[1]);
 		if (found.has(id)) continue;
 
 		const titleMatch = text.match(/^title:\s*['"]?(.+?)['"]?\s*$/m);
