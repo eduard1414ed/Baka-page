@@ -29,6 +29,11 @@ import { fileURLToPath } from 'node:url';
 import { slugify } from '../src/lib/slug.mjs';
 import { buildAnimeMatcher, findMentions } from '../src/lib/animeMentions.mjs';
 import { manualTelegramPosts } from '../src/data/telegramImported.mjs';
+// Имена файлов и раскладка картинок вокруг текста — общие с роботом подгрузки
+// (scripts/telegram-photos.mjs, задача 7.2). Второй копии этого правила быть
+// не должно: посты, привезённые сразу с картинками, и посты, догруженные
+// позже, обязаны выглядеть одинаково.
+import { photoFileName, photoSrc, withPhotos, savePhoto } from '../src/lib/telegramPhotos.mjs';
 
 // ——— Настройки разбора ———
 
@@ -386,8 +391,14 @@ function frontmatter(fields) {
 	return `---\n${lines.join('\n')}\n---\n`;
 }
 
-/** Фотографии поста по порядку: первая — обложка, остальные — галерея. */
-const photosOf = (post) => post.members.filter((m) => m.photo).map((m) => ({ id: m.id, file: m.photo }));
+/**
+ * Фотографии поста по порядку: первая — обложка, остальные — галерея.
+ *
+ * Экспортируется, потому что тем же способом их ищет робот подгрузки
+ * (scripts/telegram-photos.mjs): пост он находит по номеру, а какие снимки
+ * к нему относятся — вопрос склейки альбома, и ответ на него должен быть один.
+ */
+export const photosOf = (post) => post.members.filter((m) => m.photo).map((m) => ({ id: m.id, file: m.photo }));
 
 export function buildPost(post, { matcher = [] } = {}) {
 	const entities = post.caption.text_entities ?? [];
@@ -424,18 +435,13 @@ export function buildPost(post, { matcher = [] } = {}) {
  * Поставь ему галочку — и он навсегда останется в ленте голым заголовком,
  * хотя к нему приложено шесть снимков.
  */
-export function renderPost(built, { cover = '', gallery = [] } = {}) {
-	// РАСКЛАДКА АЛЬБОМА: первая картинка идёт И в обложку, И первой строкой
-	// текста; остальные встают ПОСЛЕ текста одним блоком. Решение заказчика
-	// 10 августа 2026 — так он выкладывает посты руками.
-	//
-	// Первая картинка в теле не пропадёт: правило «показанное в шапке
-	// из текста убирается» (remark-episode-cover.mjs) действует только
-	// у выпусков и бонусов, а привезённые посты — заметки. Обложка им нужна
-	// для ленты и для превью ссылки, на самой странице она не показывается,
-	// поэтому дублирования на экране не будет.
-	const block = (src) => `::image{src="${src}" alt=""}`;
-	const text = [cover && block(cover), built.body, gallery.map(block).join('\n')].filter(Boolean).join('\n\n');
+export function renderPost(built, { files = [] } = {}) {
+	// РАСКЛАДКА АЛЬБОМА живёт в общем `withPhotos` (src/lib/telegramPhotos.mjs):
+	// первая картинка идёт И в обложку, И первой строкой текста, остальные
+	// встают ПОСЛЕ текста одним блоком. Решение заказчика 10 августа 2026 —
+	// так он выкладывает посты руками. То же правило применяет робот подгрузки
+	// картинок, и второй копии у него быть не должно.
+	const { cover, text } = withPhotos(built.body, files);
 
 	return (
 		frontmatter({
@@ -486,7 +492,6 @@ export function knownIds(postsDir) {
 // ——— Картинки ———
 
 async function fetchPhotos(built, exportDir, uploadsDir) {
-	const sharp = (await import('sharp')).default;
 	if (!existsSync(uploadsDir)) mkdirSync(uploadsDir, { recursive: true });
 
 	const written = [];
@@ -496,11 +501,11 @@ async function fetchPhotos(built, exportDir, uploadsDir) {
 			console.log(`  ! нет файла ${photo.file} — картинка пропущена`);
 			continue;
 		}
-		const name = `tg-${photo.id}.jpg`;
-		// 1000 px по длинной стороне: столько же, сколько заказчик уменьшает
-		// снимки перед загрузкой в админку (см. «болячки», картинки в репозитории).
-		await sharp(from).resize({ width: 1000, height: 1000, fit: 'inside', withoutEnlargement: true }).jpeg({ quality: 82 }).toFile(join(uploadsDir, name));
-		written.push(`/images/uploads/${name}`);
+		// Имя файла и уменьшение до 1000 px — общие с роботом подгрузки
+		// (src/lib/telegramPhotos.mjs). Разойдись имена, робот считал бы уже
+		// привезённую картинку новой и тащил бы её заново каждое нажатие.
+		await savePhoto(from, join(uploadsDir, photoFileName(photo.id)));
+		written.push(photoSrc(photo.id));
 	}
 	return written;
 }
@@ -663,16 +668,9 @@ async function main() {
 	// ——— Запись ———
 	let written = 0;
 	for (const built of fresh) {
-		let cover = '';
-		let gallery = [];
+		const files = photoIds.has(built.id) && built.photos.length ? await fetchPhotos(built, exportDir, uploadsDir) : [];
 
-		if (photoIds.has(built.id) && built.photos.length) {
-			const files = await fetchPhotos(built, exportDir, uploadsDir);
-			cover = files[0] ?? '';
-			gallery = files.slice(1);
-		}
-
-		writeFileSync(join(postsDir, `${built.slug}.md`), renderPost(built, { cover, gallery }), 'utf8');
+		writeFileSync(join(postsDir, `${built.slug}.md`), renderPost(built, { files }), 'utf8');
 		written += 1;
 	}
 
