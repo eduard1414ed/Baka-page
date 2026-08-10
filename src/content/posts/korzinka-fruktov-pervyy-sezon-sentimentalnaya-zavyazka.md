@@ -1,0 +1,27 @@
+---
+title: Корзинка фруктов. Первый сезон | Сентиментальная завязка
+date: 2026-04-02
+category: bonus
+draft: true
+description: ''
+cover: ''
+noCover: false
+tgId: 3868
+tgUrl: https://t.me/podcastbaka/3868
+bonusLinks:
+  boosty: https://boosty.to/bakapodcast/posts/0760345e-e280-4fa5-89da-d0e8d89cf440?share=success_publish_link
+  patreon: https://www.patreon.com/posts/korzinka-fruktov-154578824?utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=postshare_creator&utm_content=join_link
+  tgClosed: ''
+  vkDonat: https://vk.com/wall-211086713_2492
+---
+
+Наши руки наконец-то добрались до ремейка культового сёдзё начала нулевых. В этом выпуске обсуждаем самое начало — первый сезон.
+
+Справилась ли студия TMS Entertainment с адаптацией? Как сериал невольно обманывает ожидания? И за что стоит любить Тору Хонду?
+
+**Где слушать?**
+
+🌕 [Boosty (за рубли)](https://boosty.to/bakapodcast/posts/0760345e-e280-4fa5-89da-d0e8d89cf440?share=success_publish_link)
+🌖 [VK Donat (за рубли)](https://vk.com/wall-211086713_2492)
+🌓 [Patreon (за валюту)](https://www.patreon.com/posts/korzinka-fruktov-154578824?utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=postshare_creator&utm_content=join_link)
+🌑 [Закрытый Telegram-канал](https://t.me/tribute/app?startapp=s26z)
