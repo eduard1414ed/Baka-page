@@ -4,17 +4,19 @@ date: 2026-08-03
 category: note
 draft: true
 description: ''
-cover: ''
+cover: /images/uploads/tg-4130.jpg
 noCover: false
 externalUrl: ''
 externalSource: ''
 adLabel: ''
 anime: []
 timecodes: ''
-pullMedia: true
+pullMedia: false
 tgId: 4130
 tgUrl: https://t.me/podcastbaka/4130
 ---
+
+::image{src="/images/uploads/tg-4130.jpg" alt=""}
 
 Вспомнил тут в связи с выходом нового «Человека-паука» такую историю. В 1970 году журнал Monthly Shōnen Magazine решил перейти на еженедельный формат выхода (и даже переименовался на какое-то время).
 
@@ -29,3 +31,7 @@ tgUrl: https://t.me/podcastbaka/4130
 Изначально японский «Человек-паук» не снискал популярность. Тем не менее, тома манги переиздавались четырежды, а в конце 90-х их перевели на английский и выпустили в США под лейблом Marvel Comics.
 
 Так что официально японский «Человек-паук» существует где-то на Земле под номером 70019.
+
+::image{src="/images/uploads/tg-4131.jpg" alt=""}
+::image{src="/images/uploads/tg-4132.jpg" alt=""}
+::image{src="/images/uploads/tg-4133.jpg" alt=""}
