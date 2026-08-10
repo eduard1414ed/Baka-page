@@ -9,10 +9,17 @@
 // чем оно ляжет в сто файлов.
 //
 //   --export=<папка>   папка ChatExport_… с result.json и photos/ (обязателен)
-//   --last=100         сколько ПОСЛЕДНИХ постов взять (по умолчанию 100)
+//   --year=2022        порция: все посты этого года
+//   --last=100         порция: столько ПОСЛЕДНИХ постов
+//   --all              порция: весь архив (для замеров, не для записи)
 //   --write            записать черновики в src/content/posts/
 //   --photos=4013,…    забрать картинки только у этих постов (номера сообщений)
 //   --out=<папка>      куда писать посты (по умолчанию src/content/posts)
+//
+// ПОРЦИЮ НАДО НАЗВАТЬ ЯВНО: без --year, --last или --all скрипт отказывается
+// работать. Раньше у --last было умолчание в сотню постов, и это ровно та мина,
+// на которой в проекте уже подрывались: человек забыл ключ, скрипт молча взял
+// не то, что тот имел в виду, и отчитался бодро. Отказ громче умолчания.
 //
 // ЧЕГО ЭТОТ СКРИПТ НЕ ДЕЛАЕТ И НЕ ДОЛЖЕН. Не публикует (у всех `draft: true`),
 // не размечает тайтлы в тексте (только подсказка в `animeSuggested`), не трогает
@@ -211,6 +218,33 @@ export function groupAlbums(messages) {
 	return posts;
 }
 
+// ——— Порция ———
+
+/**
+ * Год поста. Берётся у ПОДПИСИ, как и дата в самом файле поста (`buildPost`),
+ * — чтобы порция и содержимое привезённых файлов говорили об одном и том же.
+ */
+export const postYear = (post) => post.caption.date.slice(0, 4);
+
+/**
+ * Какие посты берём в этот прогон.
+ *
+ * ПОЧЕМУ ПОРЦИЯМИ ПО ГОДАМ, А НЕ ВСЁ РАЗОМ. Ошибку на пяти сотнях постов
+ * человек ещё способен разглядеть в отчёте и отменить одним откатом коммита;
+ * на полутора тысячах — уже нет. Год выбран потому, что канал за четыре года
+ * менялся: в 2022-м посты помечены тегами автора и оформлены иначе, чем в 2026-м,
+ * и правила разбора, выведенные из последней сотни, на раннем архиве стоит
+ * посмотреть отдельно.
+ *
+ * УМОЛЧАНИЯ ЗДЕСЬ НЕТ НАРОЧНО: не назвал порцию — ничего не получил.
+ */
+export function selectPosts(posts, { year = null, last = null, all = false } = {}) {
+	if (all) return posts;
+	if (year) return posts.filter((post) => postYear(post) === String(year));
+	if (last) return posts.slice(-last);
+	return null;
+}
+
 // ——— Заголовок ———
 
 /**
@@ -271,6 +305,76 @@ const escapeText = (text) =>
 		// Решётка и «больше» в начале строки — заголовок и цитата markdown.
 		.replace(/^([ \t]*)([#>])/gm, '$1\\$2');
 
+// Знак препинания В ПОНИМАНИИ MARKDOWN. Список не выдуман: это ровно то,
+// что CommonMark называет punctuation, — вся пунктуация ASCII плюс юникодная
+// категория P. Эмодзи сюда НЕ входит (у него категория S), и это не мелочь:
+// именно поэтому `🔸**«Пресвятые отроки»**` жирным не становится, а `— **«…»**`
+// становится.
+const ASCII_PUNCT = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';
+const isPunct = (ch) => Boolean(ch) && (ASCII_PUNCT.includes(ch) || /\p{P}/u.test(ch));
+const isSpace = (ch) => !ch || /\s/u.test(ch);
+
+/**
+ * Обернуть кусок в знаки разметки так, чтобы разметка НА САМОМ ДЕЛЕ сработала.
+ *
+ * Знаки markdown чувствительны к тому, что стоит вплотную к ним, и обе беды
+ * ниже нашлись только на архиве — на последней сотне постов не видно ни одной.
+ *
+ * ПЕРВОЕ: ПРОБЕЛЫ ПЕРЕЕЗЖАЮТ НАРУЖУ, А НЕ ПРОПАДАЮТ. `** текст **` жирным
+ * не станет, поэтому пробелы с краёв убрать надо — но убрать их СОВСЕМ значит
+ * потерять авторский текст, и потеря эта незаметная. Замер: 103 поста, где
+ * подзаголовок набран жирным ВМЕСТЕ с переводом строки после него
+ * (`bold("Как выглядит?\n\n")`); старое правило склеивало их в
+ * `**Как выглядит?**Рисовала аниме…`, теряя и пробел, и границу абзаца.
+ * У ссылок та же болезнь кончается хуже: `[Похороны Короля Роз\n\n](адрес)`
+ * ссылкой не становится ВОВСЕ — пустая строка заканчивает абзац, и читатель
+ * видит на странице квадратную скобку и голый адрес. Таких ссылок 52.
+ *
+ * ВТОРОЕ: ЗНАК ПРЕПИНАНИЯ НА КРАЮ ТОЖЕ ПЕРЕЕЗЖАЕТ, НО ТОЛЬКО КОГДА МЕШАЕТ.
+ * Пара `**` не открывается, если слева от неё буква, а сразу справа — знак
+ * препинания: «пятница**, 4 июля**» остаётся на странице звёздочками. Условие
+ * взято у самого CommonMark (left-flanking / right-flanking), а не выдумано,
+ * поэтому `**«Атака титанов»**` после пробела разметку сохраняет — там она
+ * работает и трогать её незачем. Случаев в архиве девять.
+ *
+ * @param prevChar символ, уже выведенный перед этим куском
+ * @param nextChar первый символ того, что пойдёт следом
+ */
+function marked(text, open, close, prevChar, nextChar) {
+	let core = text;
+	let before = '';
+	let after = '';
+
+	// Пробелы с краёв — наружу. Зовётся после КАЖДОГО переезда знака препинания,
+	// иначе за вынесенной запятой внутри останется пробел, и пара `**` снова
+	// не откроется: «пятница,** 4 июля**» ровно так и выглядело.
+	const spacesOut = () => {
+		const [, lead, middle, trail] = core.match(/^(\s*)([\s\S]*?)(\s*)$/);
+		before += lead;
+		core = middle;
+		after = trail + after;
+	};
+	spacesOut();
+
+	const leftOf = () => (before ? before.at(-1) : prevChar);
+	while (core && isPunct(core[0]) && !isSpace(leftOf()) && !isPunct(leftOf())) {
+		before += core[0];
+		core = core.slice(1);
+		spacesOut();
+	}
+
+	const rightOf = () => (after ? after[0] : nextChar);
+	while (core && isPunct(core.at(-1)) && !isSpace(rightOf()) && !isPunct(rightOf())) {
+		after = core.at(-1) + after;
+		core = core.slice(0, -1);
+		spacesOut();
+	}
+
+	// Внутри не осталось ничего, кроме знаков препинания, — размечать нечего.
+	if (!core) return escapeText(text);
+	return `${escapeText(before)}${open}${escapeText(core)}${close}${escapeText(after)}`;
+}
+
 /**
  * Разметка телеграма → markdown. Соответствие взято из тз/тз-7.1.
  *
@@ -280,25 +384,32 @@ const escapeText = (text) =>
  * прятал шутку от глаза, а не текст от поисковика.
  */
 export function entitiesToMarkdown(entities) {
+	const list = entities ?? [];
 	let out = '';
 
-	for (const entity of entities ?? []) {
+	for (let index = 0; index < list.length; index += 1) {
+		const entity = list[index];
 		const text = entity.text ?? '';
 		const inner = escapeText(text);
+		// Что стоит вплотную слева и справа — от этого зависит, сработает ли
+		// разметка вообще (см. `marked`). Справа берётся первый непустой сосед:
+		// пустые сущности телеграм ставит охотно.
+		const prevChar = out.at(-1);
+		const nextChar = list.slice(index + 1).map((e) => e.text ?? '').join('')[0];
 
 		switch (entity.type) {
 			case 'bold':
-				out += text.trim() ? `**${inner.trim()}**` : text;
+				out += marked(text, '**', '**', prevChar, nextChar);
 				break;
 			case 'italic':
-				out += text.trim() ? `*${inner.trim()}*` : text;
+				out += marked(text, '*', '*', prevChar, nextChar);
 				break;
 			case 'strikethrough':
-				out += text.trim() ? `~~${inner.trim()}~~` : text;
+				out += marked(text, '~~', '~~', prevChar, nextChar);
 				break;
 			case 'underline':
 				// Подчёркивания в markdown нет; курсив — ближайшее по смыслу.
-				out += text.trim() ? `*${inner.trim()}*` : text;
+				out += marked(text, '*', '*', prevChar, nextChar);
 				break;
 			case 'code':
 				out += '`' + text.replace(/`/g, '') + '`';
@@ -316,7 +427,9 @@ export function entitiesToMarkdown(entities) {
 					'\n';
 				break;
 			case 'text_link':
-				out += `[${inner}](${entity.href})`;
+				// У ссылки скобка сама по себе знак препинания, поэтому переезд
+				// пунктуации ей не нужен — но пробелы наружу нужны так же.
+				out += marked(text, '[', `](${entity.href})`, '(', ')');
 				break;
 			case 'link':
 			case 'mention':
@@ -661,13 +774,25 @@ async function main() {
 	const root = fileURLToPath(new URL('..', import.meta.url));
 	const postsDir = arg('out', join(root, 'src/content/posts'));
 	const uploadsDir = join(root, 'public/images/uploads');
-	const last = Number(arg('last', '100'));
 	const write = has('write');
 	const photoIds = new Set((arg('photos', '') || '').split(',').filter(Boolean).map(Number));
 
+	const year = arg('year');
+	const last = arg('last') ? Number(arg('last')) : null;
 	const data = JSON.parse(readFileSync(join(exportDir, 'result.json'), 'utf8'));
 	const allPosts = groupAlbums(data.messages);
-	const posts = allPosts.slice(-last);
+	const posts = selectPosts(allPosts, { year, last, all: has('all') });
+
+	if (!posts) {
+		console.error('Не названа порция. Нужен один из ключей: --year=2022, --last=100 или --all.');
+		process.exit(1);
+	}
+	if (!posts.length) {
+		console.error(`Порция пустая: постов за ${year ?? 'этот отрезок'} в экспорте нет.`);
+		process.exit(1);
+	}
+
+	const portion = year ? `${year} год` : last ? `последние ${last} постов` : 'весь архив';
 
 	// Справочник тайтлов — для подсказки `animeSuggested`. Разметку в тексте
 	// импорт не делает: подтверждает тайтлы человек.
@@ -681,7 +806,7 @@ async function main() {
 
 	console.log(`Экспорт: ${exportDir}`);
 	console.log(`Сообщений ${data.messages.length}, постов после склейки альбомов ${allPosts.length}.`);
-	console.log(`Взято последних постов: ${posts.length} (с ${posts[0].id} по ${posts.at(-1).id}).`);
+	console.log(`ПОРЦИЯ: ${portion} — постов ${posts.length} (№${posts[0].id}…№${posts.at(-1).id}, ${posts[0].caption.date.slice(0, 10)}…${posts.at(-1).caption.date.slice(0, 10)}).`);
 	console.log(write ? '\nРЕЖИМ ЗАПИСИ: черновики будут созданы.\n' : '\nРАЗВЕДКА: не пишется ничего.\n');
 
 	const skipped = [];
@@ -757,11 +882,13 @@ async function main() {
 	console.log(`\n=== АЛЬБОМЫ (склеены догадкой — сверьте глазами): ${albums.length} ===`);
 	for (const album of albums) {
 		const reason = skipReason(album);
+		// ОДНОЙ СТРОКОЙ НА АЛЬБОМ, а не двумя: сверять их заказчик будет глазами,
+		// а в архиве таких групп 436 — на двух строках список перестаёт читаться.
 		console.log(
-			`  ${album.caption.date.slice(0, 16).replace('T', ' ')}  №${album.id}  фото ${album.members.length}` +
-				`  [${album.members.map((m) => m.id).join(',')}]${reason ? '  — пропущен: ' + reason.split(' (')[0] : ''}`,
+			`  ${album.caption.date.slice(0, 16).replace('T', ' ')}  №${album.id}  вложений ${album.members.length}` +
+				`  [${album.members.map((m) => m.id).join(',')}]${reason ? '  — пропущен: ' + reason.split(' (')[0] : ''}` +
+				`  «${squeeze(plainOf(album.caption.text_entities)).slice(0, 60)}…»`,
 		);
-		console.log(`      «${squeeze(plainOf(album.caption.text_entities)).slice(0, 70)}…»`);
 	}
 
 	// Одинокое вложение без подписи — либо честный снимок без слов, либо
@@ -782,10 +909,20 @@ async function main() {
 
 	const inner = fresh.reduce((sum, b) => sum + b.innerLinks, 0);
 	const photos = fresh.reduce((sum, b) => sum + b.photos.length, 0);
+	const bonuses = fresh.filter((b) => b.category === 'bonus').length;
+	// Все числа отчёта СЧИТАЮТСЯ здесь и берутся из переменных. Число, вписанное
+	// в текст словами, переживает правку того, что оно описывает, и начинает
+	// врать рядом с посчитанным — за проект такое уже случалось.
 	console.log('\n=== ЦИФРЫ ===');
+	console.log(`  порция: ${portion}, постов в ней ${posts.length}`);
 	console.log(`  разобрано постов: ${fresh.length}`);
+	console.log(`    из них бонусов: ${bonuses}, заметок: ${fresh.length - bonuses}`);
+	console.log(`    без заголовка: ${noTitle.length}`);
+	console.log(`    с дописанным номером (заголовок повторяется): ${clashes.length}`);
 	console.log(`  пропущено: ${skipped.length}`);
-	console.log(`  уже на сайте: ${already.length}`);
+	console.log(`  уже на сайте, заводить заново не будем: ${already.length}`);
+	console.log(`  альбомов (склеены догадкой): ${albums.length}`);
+	console.log(`  одиноких вложений без подписи: ${lonely.length}`);
 	console.log(`  фотографий у разобранного: ${photos}`);
 	console.log(`  ссылок внутрь канала: ${inner} (переписывать их — задача 7.3)`);
 	console.log(`  подсказок по тайтлам: ${fresh.reduce((s, b) => s + b.suggested.length, 0)}`);

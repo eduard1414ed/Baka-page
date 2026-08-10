@@ -19,9 +19,24 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { unified } from 'unified';
+import remarkParse from 'remark-parse';
+import remarkGfm from 'remark-gfm';
+import { toString as mdToString } from 'mdast-util-to-string';
 import { slugify } from '../src/lib/slug.mjs';
 import { toPlainText } from '../src/lib/plainText.mjs';
-import { extractTitle, titleLineTail, groupAlbums, buildPost, entitiesToMarkdown, bodyEntities } from './telegram-import.mjs';
+import {
+	extractTitle,
+	titleLineTail,
+	groupAlbums,
+	buildPost,
+	entitiesToMarkdown,
+	bodyEntities,
+	selectPosts,
+	postYear,
+	skipReason,
+	plainOf,
+} from './telegram-import.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const arg = (name, fallback = null) => {
@@ -150,6 +165,112 @@ function slugProblems(cases) {
 			problems.push(`пост ${expected}.md на диске не найден — образец для сверки устарел`);
 		}
 	}
+	return problems;
+}
+
+// ——— Текст доехал целиком: ни буквы не потеряно, ни пробела не съедено ———
+//
+// САМАЯ СИЛЬНАЯ ИЗ ПРОВЕРОК РАЗБОРА, потому что она спрашивает не «правильно ли
+// написан markdown», а «то же ли самое увидит читатель». Разметку снимает ТОТ ЖЕ
+// движок, которым собирается сайт (remark + gfm), а не своё регулярное выражение:
+// своё дважды соврало на живых данных — на подписи ссылки с квадратной скобкой
+// внутри и на адресе, где есть скобки. Движок разбирает и то, и другое верно.
+//
+// Она и нашла две поломки, невидимые на последней сотне постов: пробелы
+// и переводы строк, съеденные `.trim()` внутри разметки (103 поста), и ссылки,
+// развалившиеся о пустую строку в подписи (52 штуки). Обе чинит `marked`
+// в telegram-import.mjs.
+const md = unified().use(remarkParse).use(remarkGfm);
+
+const flat = (text) => String(text).replace(/\s+/g, ' ').trim();
+
+// ЕДИНСТВЕННОЕ, ЧЕГО СРАВНЕНИЕ НАРОЧНО НЕ ВИДИТ, И ЭТО НАЗВАНО ЗДЕСЬ ОДНОЙ
+// СТРОЧКОЙ, а не спрятано в снисходительное сравнение. Маркер списка («1.»,
+// «—», «•») в начале строки в markdown становится РАЗМЕТКОЙ: номер рисует уже
+// страница, в самом тексте его нет. Так задумано — escapeText нарочно
+// не экранирует начало строки, потому что автор писал именно список.
+// Настоящих списков в архиве 36.
+//
+// СНИМАЕТСЯ С ОБЕИХ СТОРОН, и это важно: у части постов автор набрал номер
+// ЖИРНЫМ (`**1.** Большой выпуск`), списком такое не становится, и номер
+// остаётся текстом. Снимай мы маркер только с телеграмной стороны — проверка
+// объявила бы поломкой одиннадцать здоровых постов.
+const dropListMarks = (text) => text.replace(/^[ \t]*(?:\d+[.)]|[-*+•])[ \t]+/gm, '');
+
+// Список и цитата — тоже блоки, и их строки нельзя склеивать в одну: без
+// разделителя «Ветер крепчает» и «Призрак в доспехах» слипаются, и проверка
+// объявляет поломкой здоровый список.
+const BLOCK_PARENTS = new Set(['root', 'blockquote', 'list', 'listItem']);
+const nodeText = (node) =>
+	BLOCK_PARENTS.has(node.type) ? node.children.map(nodeText).join('\n') : mdToString(node);
+
+/** Что увидит читатель: markdown разобран и разметка снята. */
+const readable = (markdown) => flat(dropListMarks(nodeText(md.parse(markdown))));
+
+function textProblems(allPosts, render) {
+	const problems = [];
+
+	for (const post of allPosts) {
+		if (skipReason(post)) continue;
+		const entities = post.caption.text_entities ?? [];
+		const body = bodyEntities(entities, extractTitle(entities));
+		const want = flat(dropListMarks(plainOf(body)));
+		const got = readable(render(body));
+		if (want === got) continue;
+
+		let i = 0;
+		while (i < want.length && want[i] === got[i]) i += 1;
+		problems.push(
+			`пост №${post.id} (${post.caption.date.slice(0, 10)}) читается иначе, чем в телеграме:\n` +
+				`      было:  …${want.slice(Math.max(0, i - 30), i + 30)}…\n` +
+				`      стало: …${got.slice(Math.max(0, i - 30), i + 30)}…`,
+		);
+	}
+
+	return problems;
+}
+
+// ——— Порции по годам: никого не потеряли и никого не задвоили ———
+//
+// Архив везётся годами, отдельным коммитом на порцию. Значит у отбора ровно две
+// обязанности, и обе проверяются здесь на ЖИВОМ архиве, а не на выдуманном:
+//
+//   1. Порции всех годов вместе дают ВЕСЬ архив, и ни один пост не попадает
+//      в две сразу. Это главная проверка: потерянный пост не появится нигде,
+//      и заметить его пропажу будет некому — в отчёте порции его просто нет.
+//   2. Год порции совпадает с датой, которая ЛЯЖЕТ В ФАЙЛ поста. Дату файла
+//      считает `buildPost` своим путём, поэтому это не пересказ фильтра:
+//      сломай `postYear` — и порция разойдётся с содержимым привезённых файлов,
+//      а первая проверка этого не заметит вовсе (пост никуда не денется,
+//      он просто уедет в чужой коммит).
+//
+// Отбор передаётся ПАРАМЕТРОМ ровно затем, чтобы самопроверка могла подсунуть
+// сломанный и убедиться, что это ловится.
+function portionProblems(allPosts, select) {
+	const problems = [];
+	const years = [...new Set(allPosts.map(postYear))].sort();
+	const seen = new Map();
+
+	for (const year of years) {
+		for (const post of select(allPosts, { year })) {
+			if (seen.has(post.id)) {
+				problems.push(`пост №${post.id} попал сразу в две порции: ${seen.get(post.id)} и ${year}`);
+				continue;
+			}
+			seen.set(post.id, year);
+
+			const fileYear = buildPost(post).date.slice(0, 4);
+			if (fileYear !== year) {
+				problems.push(`пост №${post.id} едет в порции ${year}, а в файле у него дата ${buildPost(post).date}`);
+			}
+		}
+	}
+
+	for (const post of allPosts) {
+		if (!seen.has(post.id)) problems.push(`пост №${post.id} (${post.caption.date.slice(0, 10)}) не попал ни в одну порцию`);
+	}
+	if (seen.size !== allPosts.length) problems.push(`в порциях постов ${seen.size}, а в архиве ${allPosts.length}`);
+
 	return problems;
 }
 
@@ -290,7 +411,8 @@ async function main() {
 	}
 
 	const messages = JSON.parse(readFileSync(join(exportDir, 'result.json'), 'utf8')).messages;
-	const post = groupAlbums(messages).find((p) => p.id === 4143);
+	const allPosts = groupAlbums(messages);
+	const post = allPosts.find((p) => p.id === 4143);
 	if (!post) {
 		console.error('В экспорте нет сообщения 4143 — сверять не с чем.');
 		process.exit(1);
@@ -300,7 +422,7 @@ async function main() {
 	const publishedFile = readFileSync(join(root, 'src/content/posts/narisuy-eto-potom-umri.md'), 'utf8');
 	const publishedBody = publishedFile.split(/^---$/m).slice(2).join('---');
 
-	const bonusPost = groupAlbums(messages).find((p) => p.id === 4142);
+	const bonusPost = allPosts.find((p) => p.id === 4142);
 	if (!bonusPost) {
 		console.error('В экспорте нет сообщения 4142 — бонусный пост сверять не с чем.');
 		process.exit(1);
@@ -318,6 +440,8 @@ async function main() {
 		found += report('адреса страниц против настоящих файлов постов', slugProblems(SLUG_CASES));
 		found += report('пост 4143 против опубликованного на сайте', post4143Problems(built, publishedBody));
 		found += report('бонус 4142 против собранного вами руками', post4142Problems(bonusBuilt, bonusFile));
+		found += report('порции по годам на живом архиве', portionProblems(allPosts, selectPosts));
+		found += report('текст доехал целиком — весь архив, слово в слово', textProblems(allPosts, entitiesToMarkdown));
 
 		console.log(
 			found === 0
@@ -390,6 +514,52 @@ async function main() {
 		{
 			name: 'бонус 4142: ссылка на Boosty потерялась',
 			problems: post4142Problems({ ...bonusBuilt, bonusLinks: { ...bonusBuilt.bonusLinks, boosty: '' } }, bonusFile),
+		},
+		// ПОДЛОГИ ТЕКСТА — ЭТО РОВНО ТО, КАК РАЗБОР БЫЛ НАПИСАН ДО 10 АВГУСТА 2026.
+		// Не выдуманная поломка, а настоящая, прожившая в коде от задачи 7.1:
+		// на последней сотне постов она не проявлялась почти никак, а на архиве
+		// испортила бы 103 поста и 52 ссылки. Проверка обязана видеть её.
+		{
+			name: 'текст: пробелы съедены внутри разметки (как было до починки)',
+			problems: textProblems(allPosts, (entities) =>
+				(entities ?? [])
+					.map((e) => (e.type === 'bold' && (e.text ?? '').trim() ? `**${e.text.trim()}**` : (e.text ?? '')))
+					.join(''),
+			),
+		},
+		{
+			name: 'текст: подпись ссылки развалилась о пустую строку (как было до починки)',
+			problems: textProblems(allPosts, (entities) =>
+				(entities ?? []).map((e) => (e.type === 'text_link' ? `[${e.text}](${e.href})` : (e.text ?? ''))).join(''),
+			),
+		},
+		{
+			name: 'текст: у каждого поста потерян последний абзац',
+			problems: textProblems(allPosts, (entities) => entitiesToMarkdown(entities).split('\n\n').slice(0, -1).join('\n\n')),
+		},
+		// ПОДЛОГИ ОТБОРА НАПИСАНЫ ТАК, КАК ЭТО ПИШУТ В ЖИЗНИ, а не так, как удобно
+		// проверке. Первые три — настоящие способы промахнуться с годом; четвёртый
+		// проверяет ВТОРУЮ половину проверки отдельно: пост, уехавший в чужую
+		// порцию, не теряется и не двоится, и первая половина о нём промолчит.
+		{
+			name: 'порции: год взят диапазоном дат, а верхняя граница без времени',
+			problems: portionProblems(allPosts, (posts, { year }) =>
+				posts.filter((p) => p.caption.date >= `${year}-01-01` && p.caption.date <= `${year}-12-31`),
+			),
+		},
+		{
+			name: 'порции: год сравнивается числом, а из ключа приходит строка',
+			problems: portionProblems(allPosts, (posts, { year }) => posts.filter((p) => postYear(p) === Number(year))),
+		},
+		{
+			name: 'порции: отбор отдаёт весь архив каждому году',
+			problems: portionProblems(allPosts, (posts) => posts),
+		},
+		{
+			name: 'порции: один пост уехал в чужой год',
+			problems: portionProblems(allPosts, (posts, { year }) =>
+				posts.filter((p) => (p.id === 5 ? year === '2023' : postYear(p) === String(year))),
+			),
 		},
 		{
 			name: 'бонус 4142: метка «поделиться» отрезана от адреса',
