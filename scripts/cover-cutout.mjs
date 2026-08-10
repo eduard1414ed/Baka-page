@@ -340,6 +340,46 @@ async function collectCovers() {
 	return all;
 }
 
+/**
+ * Отсеять всё, что робот уже видел. ЕДИНСТВЕННОЕ место, где решается вопрос
+ * «это новое или нет», — чтобы разведка и запись отвечали на него одинаково.
+ *
+ * Правило разное для двух источников, и вот почему:
+ *
+ * - **Обложки выпусков** лежат у Mave, и узнать их отпечаток можно только
+ *   скачав картинку. Качать 208 МБ каждое утро ради ответа «ничего
+ *   не изменилось» — это и есть «гонять архив заново», чего делать нельзя.
+ *   Поэтому знакомую по журналу обложку выпуска не трогаем вовсе.
+ * - **Загруженные руками** лежат у нас на диске. Отпечаток стоит
+ *   миллисекунду, и это единственный способ заметить, что картинку
+ *   перезалили в админке под тем же именем.
+ *
+ * @param {boolean} refetch Спросить хостинг заново и про выпуски тоже. Это
+ *        ручная команда --recheck: она и существует ради того дня, когда Mave
+ *        подменит картинку по прежнему адресу.
+ */
+async function onlyUnseen(covers, { refetch = false } = {}) {
+	const log = await readLog();
+	const out = [];
+
+	for (const cover of covers) {
+		const entry = log[cover.id];
+		if (!entry) { out.push(cover); continue; }
+		if (entry.status === 'исключён вручную') continue;
+		if (cover.kind === 'episode' && !refetch) continue;
+
+		try {
+			if (fingerprint(await loadSource(cover, { refetch })) !== entry.hash) out.push(cover);
+		} catch {
+			// Спросить не вышло — считаем незнакомой и отдаём дальше: там
+			// о сбое связи скажут вслух и в журнал ничего не запишут.
+			out.push(cover);
+		}
+	}
+
+	return out;
+}
+
 /** Путь к оригиналу: у выпусков — в кэше, у загруженных руками — прямо в проекте. */
 function sourcePath(cover) {
 	return cover.kind === 'episode' ? path.join(CACHE_DIR, `${cover.id}.jpg`) : cover.src;
@@ -1128,11 +1168,11 @@ const isExcluded = (id) => EXCLUDE.includes(id) || EXCLUDE.some((prefix) => id.s
  * @param {boolean} options.force   Записать вопреки отметке «на проверку».
  *        Это ручная починка: посмотрели глазами, решили, что годится.
  * @param {boolean} options.refetch Спросить хостинг заново, минуя кэш.
- * @param {boolean} options.respectLog Пропускать то, чей отпечаток уже
- *        в журнале. Включено у робота, выключено у ручного прогона: сказали
- *        «обработай эту» — значит обработай, а не рассуждай.
+ *
+ * Что попало в список — решает onlyUnseen выше, а не эта функция: сказали
+ * «обработай эту» — значит обработай, а не рассуждай.
  */
-async function write(covers, { strict = false, force = false, refetch = false, respectLog = false } = {}) {
+async function write(covers, { strict = false, force = false, refetch = false } = {}) {
 	await mkdir(fileURLToPath(CUTOUT_DIR), { recursive: true });
 
 	const log = await readLog();
@@ -1140,7 +1180,6 @@ async function write(covers, { strict = false, force = false, refetch = false, r
 	/** Не применённое — из этого собирается письмо. */
 	const left = [];
 	let skipped = 0;
-	let unchanged = 0;
 	let bytes = 0;
 
 	for (const [index, cover] of covers.entries()) {
@@ -1171,11 +1210,6 @@ async function write(covers, { strict = false, force = false, refetch = false, r
 
 		const hash = fingerprint(source);
 		const before = log[cover.id];
-		if (respectLog && before && before.hash === hash) {
-			unchanged += 1;
-			continue;
-		}
-
 		const result = await processCover(cover, source);
 
 		// Что попадает на сайт. Отметка «на проверку» проходит только там, где
@@ -1255,11 +1289,11 @@ async function write(covers, { strict = false, force = false, refetch = false, r
 
 	const inLog = await writeLog(log);
 
-	console.log(`\nЗаписано: ${done.length}. Пропущено: ${skipped}. Уже было, отпечаток тот же: ${unchanged}.`);
+	console.log(`\nЗаписано: ${done.length}. Пропущено: ${skipped}.`);
 	console.log(`В списке для сайта: ${complete.length}. В журнале обработки: ${inLog}.`);
 	console.log(`Файлов в public/cutout/: ${complete.length * OUT_WIDTHS.length}, вес нового ${mb(bytes)}.`);
 
-	return { done, left, unchanged };
+	return { done, left };
 }
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -1396,24 +1430,17 @@ async function main() {
 
 	let list = only ? covers.filter((c) => c.id.startsWith(only.slice('--only='.length))) : covers;
 
-	if (onlyNew) {
-		const log = await readLog();
-		// ЧТО СЧИТАЕТСЯ НОВЫМ.
-		//
-		// Обложки выпусков — только незнакомые. Перекачивать весь архив каждое
-		// утро ради отпечатков и есть «гонять архив заново»: 208 МБ и минуты
-		// чужого трафика в день за ответ «ничего не изменилось».
-		//
-		// Загруженные руками — все до одной. Их исходник лежит у нас на диске,
-		// отпечаток стоит миллисекунду, а перезалить картинку под тем же именем
-		// в админке можно в любой день — и только по отпечатку это видно.
-		list = list.filter((cover) => cover.kind === 'upload' || !log[cover.id]);
+	if (onlyNew || recheck) {
+		if (recheck) {
+			console.log(`\nСпрашиваю хостинг заново про все обложки выпусков — это ${mb(list.length * 1_400_000)} трафика.`);
+		}
+		list = await onlyUnseen(list, { refetch: recheck });
 
 		if (list.length === 0) {
-			console.log('\nНовых обложек нет — журнал знает про все. Ничего не делаю.');
+			console.log('\nНовых обложек нет — журнал знает про все, отпечатки совпали. Ничего не делаю.');
 			return;
 		}
-		console.log(`\nНовых обложек к разбору: ${list.length}.`);
+		console.log(`\nОбложек к разбору: ${list.length}.`);
 	}
 
 	if (process.argv.includes('--write')) {
@@ -1423,8 +1450,8 @@ async function main() {
 			// у него некому. Ручной прогон по-прежнему пишет и её.
 			strict: onlyNew,
 			force,
-			refetch: recheck,
-			respectLog: onlyNew || recheck,
+			// Перекачивать второй раз незачем: onlyUnseen уже обновил кэш.
+			refetch: false,
 		});
 		if (notify) await writeNotice(notify.slice('--notify='.length), result.left);
 		return;
