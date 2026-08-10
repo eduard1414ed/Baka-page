@@ -11,6 +11,15 @@
 // Лечится `:not([hidden])` в самом правиле раскладки — и вот это проверяется
 // здесь, разбором собранного CSS, а не чтением исходников.
 //
+// РАВНЫЙ ВЕС ТОЖЕ ПЕРЕБИВАЕТ. Правило из одного класса весит ровно столько же,
+// сколько `[hidden]`, и тогда решает порядок: побеждает то, что стоит ПОЗЖЕ.
+// Такие правила пишет `global.css` (в сборке `:global(.x)` становится голым
+// `.x`), а сам сброс `[hidden]{display:none}` стоит в его начале — то есть
+// любое более позднее `.x{display:grid}` его перебьёт. До 10 августа 2026
+// проверка сравнивала вес СТРОГО больше и этот случай пропускала молча.
+// Порядок здесь считается по-настоящему: стили каждой страницы склеиваются
+// так, как их применит браузер, — `<link>` и `<style>` по ходу разметки.
+//
 // Запуск: node scripts/check-hidden.mjs   (после `npm run build`)
 
 import { readFileSync, readdirSync, statSync } from 'node:fs';
@@ -51,23 +60,29 @@ const heavier = (a, b) => a[0] !== b[0] ? a[0] > b[0] : a[1] !== b[1] ? a[1] > b
  * то есть врёт в сторону «всё хорошо». Библиотеку поиска пропускаем: её
  * стилями сайт не пользуется вовсе.
  */
-function cssRules() {
+function cssRules(html) {
 	const rules = [];
 	const sources = [];
-	for (const file of walk(DIST).filter((f) => !f.includes('pagefind'))) {
-		if (file.endsWith('.css')) {
-			sources.push(readFileSync(file, 'utf8'));
-		} else if (file.endsWith('.html')) {
-			const html = readFileSync(file, 'utf8');
-			for (const style of html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)) sources.push(style[1]);
+	// Порядок ровно тот, в каком браузер применит стили этой страницы.
+	for (const m of html.matchAll(/<link[^>]+rel="stylesheet"[^>]*>|<style[^>]*>([\s\S]*?)<\/style>/g)) {
+		if (m[1] !== undefined) {
+			sources.push(m[1]);
+			continue;
 		}
+		const href = m[0].match(/href="([^"]+)"/)?.[1];
+		if (!href || href.includes('pagefind') || /^https?:/.test(href)) continue;
+		try {
+			sources.push(readFileSync(join(DIST, href.replace(/^\//, '')), 'utf8'));
+		} catch { /* нет такого файла — пропускаем */ }
 	}
+	let order = 0;
 	for (const source of sources) {
 		const css = source.replace(/@media[^{]*\{/g, '');
 		for (const match of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
 			const selectors = match[1].trim();
 			if (selectors.startsWith('@')) continue;
-			for (const selector of selectors.split(',')) rules.push([selector.trim(), match[2]]);
+			for (const selector of selectors.split(',')) rules.push([selector.trim(), match[2], order]);
+			order++;
 		}
 	}
 	return rules;
@@ -75,13 +90,18 @@ function cssRules() {
 
 // Насколько весит `[hidden]{display:none}` из global.css — с этим и сравниваем.
 const HIDDEN_WEIGHT = [0, 1, 0];
-
-const rules = cssRules().filter(([, decls]) => /(?:^|;)\s*display\s*:/.test(decls));
+const sameWeight = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
 
 const problems = [];
 
-for (const page of walk(DIST).filter((f) => f.endsWith('.html'))) {
+for (const page of walk(DIST).filter((f) => f.endsWith('.html') && !f.includes('pagefind'))) {
 	const html = readFileSync(page, 'utf8');
+	const rules = cssRules(html).filter(([, decls]) => /(?:^|;)\s*display\s*:/.test(decls));
+
+	// Где на этой странице стоит сам сброс — с ним и сравниваем порядок.
+	const reset = rules.find(
+		([selector, decls]) => /^\[hidden\]$/.test(selector) && /display\s*:\s*none/.test(decls),
+	);
 
 	// Открывающие теги с атрибутом `hidden` (не `data-hidden`, не внутри значения).
 	for (const tag of html.matchAll(/<(\w+)((?:\s+[^\s=>]+(?:=(?:"[^"]*"|'[^']*'|[^\s>]+))?)*)\s*\/?>/g)) {
@@ -92,7 +112,7 @@ for (const page of walk(DIST).filter((f) => f.endsWith('.html'))) {
 		const classes = classAttr.split(/\s+/).filter(Boolean);
 		if (classes.length === 0) continue;
 
-		for (const [selector, decls] of rules) {
+		for (const [selector, decls, order] of rules) {
 			// Правило про этот элемент, только если его последняя часть —
 			// один из классов элемента и в ней нет ничего, кроме классов.
 			const last = selector.split(/[\s>+~]+/).pop() ?? '';
@@ -104,8 +124,15 @@ for (const page of walk(DIST).filter((f) => f.endsWith('.html'))) {
 			// Правило само прячет — не беда.
 			if (/(?:^|;)\s*display\s*:\s*none/.test(decls)) continue;
 
-			if (heavier(specificity(selector), HIDDEN_WEIGHT)) {
-				problems.push(`${page}: <${tag[1]} class="${classAttr}" hidden> перебивается правилом ${selector}`);
+			const weight = specificity(selector);
+			const byWeight = heavier(weight, HIDDEN_WEIGHT);
+			// Равный вес решается порядком: позже — значит сильнее.
+			const byOrder = Boolean(reset) && sameWeight(weight, HIDDEN_WEIGHT) && order > reset[2];
+			if (byWeight || byOrder) {
+				problems.push(
+					`${page}: <${tag[1]} class="${classAttr}" hidden> перебивается правилом ${selector}` +
+						` (${byWeight ? 'по весу' : 'равный вес, стоит позже сброса'})`,
+				);
 			}
 		}
 	}
