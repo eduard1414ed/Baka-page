@@ -8,6 +8,7 @@ cover: /images/uploads/Пони.png
 noCover: false
 externalUrl: ''
 externalSource: ''
+adLabel: ''
 mentionsHidden: ''
 speakers: ''
 corrections: ''
