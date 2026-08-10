@@ -4,6 +4,11 @@
 //   node scripts/cover-cutout.mjs             РАЗВЕДКА: прогон без записи в репозиторий
 //   node scripts/cover-cutout.mjs --write     ЗАПИСЬ: положить готовое в public/cutout/
 //
+//   node scripts/cover-cutout.mjs --new --write     ТОЛЬКО НОВОЕ — это зовёт робот
+//   node scripts/cover-cutout.mjs --seed            завести журнал по уже сделанному
+//   node scripts/cover-cutout.mjs --recheck         спросить у Mave, не подменили ли
+//   node scripts/cover-cutout.mjs --only=X --write --force   записать вопреки отметке
+//
 // Разведка ничего не записывает в репозиторий: готовые картинки ложатся
 // во временную папку вне гита, на экран идёт отчёт с отметками «чисто» или
 // «на проверку», рядом собирается страница со всеми парами «было — стало».
@@ -20,6 +25,7 @@
 import { mkdir, readdir, readFile, writeFile, rm } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 import path from 'node:path';
 import sharp from 'sharp';
 import { fetchFeedItems } from '../src/lib/podcastFeed.mjs';
@@ -187,9 +193,73 @@ const POSTS_DIR = new URL('src/content/posts/', ROOT);
 const UPLOADS_DIR = new URL('public/images/uploads/', ROOT);
 const CUTOUT_DIR = new URL('public/cutout/', ROOT);
 const CUTOUT_MANIFEST = new URL('src/data/coverCutouts.mjs', ROOT);
+const CUTOUT_LOG = new URL('src/data/coverCutoutLog.mjs', ROOT);
 
 const kb = (bytes) => `${(bytes / 1024).toFixed(0)} КБ`;
 const mb = (bytes) => `${(bytes / 1024 / 1024).toFixed(1)} МБ`;
+
+// ────────────────────────────────────────────────────────────────────────────
+// ЖУРНАЛ ОБРАБОТКИ (src/data/coverCutoutLog.mjs)
+// ────────────────────────────────────────────────────────────────────────────
+//
+// Зачем он нужен. Робот ходит каждое утро, и ему надо отвечать на два вопроса:
+// «эту обложку я уже видел?» и «архив трогать нельзя». Ответ по НАЛИЧИЮ ФАЙЛА
+// в public/cutout/ на оба вопроса врёт:
+//
+//   1. У обложки, которую вырезать не удалось, файла нет — и робот брался бы
+//      за неё каждое утро заново, каждое утро с тем же результатом и с новой
+//      строчкой в письме.
+//   2. Вы чините плохо вырезанного персонажа УДАЛЕНИЕМ ФАЙЛА (так задумано,
+//      см. src/lib/coverCutout.mjs). Робот, считающий по файлам, вернул бы его
+//      на место следующим же утром.
+//
+// Поэтому в журнале лежит ОТПЕЧАТОК ИСХОДНОЙ картинки: короткая сумма от её
+// байтов. Совпал — трогать нечего, что бы ни лежало в папке. Не совпал —
+// картинку подменили, и вот тогда надо вырезать заново.
+//
+// Статусы по-русски нарочно: этот файл читают глазами, когда спрашивают
+// «а почему у этого выпуска обычная обложка».
+
+/** Отпечаток исходной картинки. Шестнадцати знаков хватает: их 18 миллиардов миллиардов. */
+function fingerprint(buffer) {
+	return createHash('sha256').update(buffer).digest('hex').slice(0, 16);
+}
+
+/** Журнал с диска. Нет файла — пустой журнал, это законное состояние. */
+async function readLog() {
+	if (!existsSync(fileURLToPath(CUTOUT_LOG))) return {};
+	const module = await import(`${CUTOUT_LOG.href}?v=${Date.now()}`);
+	return { ...module.default };
+}
+
+async function writeLog(log) {
+	const ids = Object.keys(log).sort();
+	const line = (id) => {
+		const entry = log[id];
+		const parts = [`status: ${JSON.stringify(entry.status)}`, `hash: ${JSON.stringify(entry.hash)}`];
+		if (entry.why) parts.push(`why: ${JSON.stringify(entry.why)}`);
+		return `\t${JSON.stringify(id)}: { ${parts.join(', ')} },`;
+	};
+
+	await writeFile(fileURLToPath(CUTOUT_LOG), [
+		'// Журнал обработки обложек — что робот уже видел и чем это кончилось.',
+		'// Ключ тот же, что у обложки: у выпусков — id картинки с хостинга подкаста,',
+		'// у загруженных руками — имя файла без расширения.',
+		'//',
+		'// hash — отпечаток ИСХОДНОЙ картинки. Совпал с тем, что лежит у хостинга, —',
+		'// значит обложка та же самая и делать нечего. Не совпал — картинку подменили,',
+		'// и её надо вырезать заново.',
+		'//',
+		'// Файл пишет scripts/cover-cutout.mjs, руками не править. Зачем он вообще',
+		'// нужен — объяснение в самом скрипте, раздел «ЖУРНАЛ ОБРАБОТКИ».',
+		'export default {',
+		...ids.map(line),
+		'};',
+		'',
+	].join('\n'), 'utf8');
+
+	return ids.length;
+}
 
 // ────────────────────────────────────────────────────────────────────────────
 // ОТКУДА БЕРЁМ ОБЛОЖКИ
@@ -244,6 +314,14 @@ async function collectCovers() {
 	// молча делал бы три обложки из ста сорока одной и печатал бодрый отчёт:
 	// ложь ровно в сторону «всё хорошо». Берём список из кэша скачанного
 	// и говорим об этом громко.
+	if (fromFeed === 0) {
+		// Сказать надо ВСЕГДА, а не только когда есть чем подменить: у робота
+		// временной папки нет вовсе, и без этой строчки прогон, не увидевший
+		// ни одного выпуска, выглядел бы точно так же, как прогон, которому
+		// нечего было делать.
+		console.log('ВНИМАНИЕ: RSS не ответил — обложек выпусков в этом прогоне не будет.');
+	}
+
 	if (fromFeed === 0 && existsSync(CACHE_DIR)) {
 		const cached = (await readdir(CACHE_DIR)).filter((f) => f.endsWith('.jpg'));
 		for (const file of cached) {
@@ -251,7 +329,7 @@ async function collectCovers() {
 			if (found.has(id)) continue;
 			found.set(id, { id, kind: 'episode', src: path.join(CACHE_DIR, file), title: id });
 		}
-		console.log(`ВНИМАНИЕ: RSS не ответил. Беру ${cached.length} обложек из кэша ${CACHE_DIR}.`);
+		console.log(`Беру ${cached.length} обложек из кэша ${CACHE_DIR}.`);
 		console.log('Новых выпусков, появившихся после последнего --fetch, в этом прогоне нет.');
 	}
 
@@ -265,6 +343,35 @@ async function collectCovers() {
 /** Путь к оригиналу: у выпусков — в кэше, у загруженных руками — прямо в проекте. */
 function sourcePath(cover) {
 	return cover.kind === 'episode' ? path.join(CACHE_DIR, `${cover.id}.jpg`) : cover.src;
+}
+
+/**
+ * Байты исходной обложки — из кэша, а если её там нет, скачать с хостинга.
+ *
+ * Оригинал в репозиторий не кладём никогда (CLAUDE.md): временная папка живёт
+ * вне проекта, а у робота она и вовсе умирает вместе с прогоном.
+ *
+ * @param {boolean} refetch Спросить хостинг заново, даже если в кэше лежит.
+ *        Нужно одному режиму — `--recheck`: он и существует ради того, чтобы
+ *        узнать, не подменили ли картинку по прежнему адресу.
+ */
+async function loadSource(cover, { refetch = false } = {}) {
+	const cached = sourcePath(cover);
+
+	if (cover.kind === 'upload') return readFile(cached);
+	if (!refetch && existsSync(cached)) return readFile(cached);
+
+	// Когда RSS не ответил, collectCovers подставляет путь в кэш вместо адреса —
+	// качать в этом случае нечего и незачем.
+	if (!cover.src.startsWith('http')) return readFile(cover.src);
+
+	const response = await fetch(cover.src);
+	if (!response.ok) throw new Error(`хостинг ответил ${response.status}`);
+	const buffer = Buffer.from(await response.arrayBuffer());
+
+	await mkdir(CACHE_DIR, { recursive: true });
+	await writeFile(cached, buffer);
+	return buffer;
 }
 
 /**
@@ -800,9 +907,11 @@ async function composeCanvas(grey, colour, mask, W, H, box) {
  *   'check' — сделана, но просит посмотреть глазами;
  *   'ok'    — чисто.
  */
-async function processCover(cover) {
-	const file = sourcePath(cover);
-	if (!existsSync(file)) return { status: 'skip', reasons: ['оригинал не скачан'] };
+async function processCover(cover, source) {
+	// Работаем по БАЙТАМ, а не по пути к файлу: у робота оригинала на диске нет
+	// вовсе, он скачивает его в память и тут же забывает.
+	const file = source ?? (existsSync(sourcePath(cover)) ? await readFile(sourcePath(cover)) : null);
+	if (!file) return { status: 'skip', reasons: ['оригинал не скачан'] };
 
 	const { data: grey, info } = await sharp(file).greyscale().raw().toBuffer({ resolveWithObject: true });
 	const W = info.width;
@@ -899,14 +1008,27 @@ ${section('Не по шаблону — не трогаем', rows.filter((r) =>
 `;
 }
 
-async function scout(covers) {
+async function scout(covers, { refetch = false } = {}) {
 	await rm(SCOUT_DIR, { recursive: true, force: true });
 	await mkdir(path.join(SCOUT_DIR, 'было'), { recursive: true });
 	await mkdir(path.join(SCOUT_DIR, 'стало'), { recursive: true });
 
 	const rows = [];
 	for (const [index, cover] of covers.entries()) {
-		const result = await processCover(cover);
+		// Оригинал берём в память — и разведка по обложке, которой ещё нет
+		// в кэше, работает так же, как по архивной. Это нужно ровно для того,
+		// чтобы можно было посмотреть НОВЫЙ выпуск, ничего не записывая.
+		let source = null;
+		let trouble = null;
+		try {
+			source = await loadSource(cover, { refetch });
+		} catch (error) {
+			trouble = `не смог получить оригинал: ${error.message}`;
+		}
+
+		const result = source
+			? await processCover(cover, source)
+			: { status: 'skip', reasons: [trouble] };
 		rows.push({ ...cover, ...result });
 
 		if (result.canvas) {
@@ -915,9 +1037,8 @@ async function scout(covers) {
 			await sharp(result.canvas).webp({ quality: WEBP_QUALITY })
 				.toFile(path.join(SCOUT_DIR, 'стало', `${cover.id}.webp`));
 		}
-		const src = sourcePath(cover);
-		if (existsSync(src)) {
-			await sharp(src).resize(400, 400, { fit: 'contain', background: '#F8F6F0' })
+		if (source) {
+			await sharp(source).resize(400, 400, { fit: 'contain', background: '#F8F6F0' })
 				.jpeg({ quality: 80 }).toFile(path.join(SCOUT_DIR, 'было', `${cover.id}.jpg`));
 		}
 
@@ -986,8 +1107,10 @@ function printReport(rows) {
 // ЗАПИСЬ
 // ────────────────────────────────────────────────────────────────────────────
 
+const isExcluded = (id) => EXCLUDE.includes(id) || EXCLUDE.some((prefix) => id.startsWith(prefix));
+
 /**
- * Положить готовые картинки в public/cutout/ и переписать список.
+ * Положить готовые картинки в public/cutout/, переписать список и журнал.
  *
  * Список — отдельным js-файлом по тому же приёму, что у обложек выпусков:
  * этот модуль читает и сборщик Astro, и обычный node, а проверка файла
@@ -995,23 +1118,80 @@ function printReport(rows) {
  *
  * Идёт ОТДЕЛЬНЫМ ключом и отдельным запуском — то же правило, что у разбора
  * таймкодов: сначала посмотреть глазами, потом записывать.
+ *
+ * @param {object} options
+ * @param {boolean} options.strict  Записывать ТОЛЬКО «чисто». Так ходит робот:
+ *        глаз у него нет, а отметка «на проверку» — это просьба посмотреть,
+ *        и посмотреть некому. Сомнительный результат хуже обычной обложки
+ *        (тз/12): персонаж с куском подписи или дырой в контуре останется
+ *        на сайте навсегда, потому что заметить его будет некому.
+ * @param {boolean} options.force   Записать вопреки отметке «на проверку».
+ *        Это ручная починка: посмотрели глазами, решили, что годится.
+ * @param {boolean} options.refetch Спросить хостинг заново, минуя кэш.
+ * @param {boolean} options.respectLog Пропускать то, чей отпечаток уже
+ *        в журнале. Включено у робота, выключено у ручного прогона: сказали
+ *        «обработай эту» — значит обработай, а не рассуждай.
  */
-async function write(covers) {
+async function write(covers, { strict = false, force = false, refetch = false, respectLog = false } = {}) {
 	await mkdir(fileURLToPath(CUTOUT_DIR), { recursive: true });
 
+	const log = await readLog();
 	const done = [];
+	/** Не применённое — из этого собирается письмо. */
+	const left = [];
 	let skipped = 0;
+	let unchanged = 0;
 	let bytes = 0;
 
 	for (const [index, cover] of covers.entries()) {
-		if (EXCLUDE.includes(cover.id) || EXCLUDE.some((id) => cover.id.startsWith(id))) {
-			console.log(`[${index + 1}/${covers.length}] ${cover.id.slice(0, 8)} — в списке исключений, пропускаю`);
+		const head = `[${index + 1}/${covers.length}] ${cover.id.slice(0, 8)}`;
+
+		if (isExcluded(cover.id)) {
+			console.log(`${head} — в списке исключений, пропускаю`);
+			// Отпечаток исключённой обложки не нужен и её саму качать незачем:
+			// решение «эту не трогаем» принято вами и от картинки не зависит.
+			log[cover.id] = { status: 'исключён вручную', hash: '' };
 			skipped += 1;
 			continue;
 		}
 
-		const result = await processCover(cover);
-		if (!result.canvas) {
+		let source;
+		try {
+			source = await loadSource(cover, { refetch });
+		} catch (error) {
+			// Сеть отвалилась — В ЖУРНАЛ НЕ ПИШЕМ. Иначе одна неудачная минута
+			// навсегда убедила бы робота, что эту обложку он уже разбирал:
+			// назавтра он бы её не тронул, и выпуск молча остался бы с рамкой.
+			// Не смогла — пропустила, не сломала.
+			console.error(`${head} — не смог получить оригинал: ${error.message}`);
+			left.push({ cover, kind: 'error', why: `не смог получить оригинал: ${error.message}` });
+			skipped += 1;
+			continue;
+		}
+
+		const hash = fingerprint(source);
+		const before = log[cover.id];
+		if (respectLog && before && before.hash === hash) {
+			unchanged += 1;
+			continue;
+		}
+
+		const result = await processCover(cover, source);
+
+		// Что попадает на сайт. Отметка «на проверку» проходит только там, где
+		// есть кому проверить: у ручного прогона (по умолчанию) или по прямому
+		// требованию --force.
+		const applied = Boolean(result.canvas) && (result.status === 'ok' || force || !strict);
+
+		if (!applied) {
+			const why = result.reasons.join('; ') || 'вырезать не удалось';
+			log[cover.id] = {
+				status: result.status === 'check' ? 'на проверку' : 'не по шаблону',
+				hash,
+				why,
+			};
+			left.push({ cover, kind: result.status === 'check' ? 'check' : 'skip', why });
+			console.log(`${head} — НЕ ПРИМЕНЕНО: ${why}`);
 			skipped += 1;
 			continue;
 		}
@@ -1024,8 +1204,10 @@ async function write(covers) {
 			bytes += info.size;
 		}
 
+		log[cover.id] = { status: 'готов', hash };
+		if (result.status === 'check') log[cover.id].why = `записан вопреки отметке: ${result.reasons.join('; ')}`;
 		done.push(cover.id);
-		console.log(`[${index + 1}/${covers.length}] ${cover.id.slice(0, 8)} — записан`);
+		console.log(`${head} — записан${result.status === 'check' ? ' (вопреки отметке «на проверку»)' : ''}`);
 	}
 
 	// Список пишем по НАСТОЯЩЕМУ содержимому папки, а не по итогу прогона:
@@ -1056,8 +1238,121 @@ async function write(covers) {
 		'',
 	].join('\n'), 'utf8');
 
-	console.log(`\nЗаписано: ${done.length}. Пропущено: ${skipped}. В списке: ${complete.length}.`);
-	console.log(`Файлов в public/cutout/: ${complete.length * OUT_WIDTHS.length}, вес ${mb(bytes)}.`);
+	const inLog = await writeLog(log);
+
+	console.log(`\nЗаписано: ${done.length}. Пропущено: ${skipped}. Уже было, отпечаток тот же: ${unchanged}.`);
+	console.log(`В списке для сайта: ${complete.length}. В журнале обработки: ${inLog}.`);
+	console.log(`Файлов в public/cutout/: ${complete.length * OUT_WIDTHS.length}, вес нового ${mb(bytes)}.`);
+
+	return { done, left, unchanged };
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// ПИСЬМО ЗАКАЗЧИКУ И ЗАВЕДЕНИЕ ЖУРНАЛА
+// ────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Текст для задачи на GitHub — она же письмо на почту.
+ *
+ * Пишется ТОЛЬКО когда что-то не применено. Робот работает, когда заказчика
+ * нет, и всё, что он делает молча, замечается через недели: тихо подставить
+ * исходную обложку и промолчать нельзя (тз/12). Удачная вырезка, наоборот,
+ * молчит — её видно на сайте, и письмо о ней было бы шумом.
+ *
+ * Формат тот же, что у расшифровки (scripts/transcribe/auto.py): первая
+ * строка — заголовок задачи, дальше через пустую строку тело.
+ *
+ * @returns {Promise<boolean>} было ли о чём писать
+ */
+async function writeNotice(file, left) {
+	if (left.length === 0) return false;
+
+	const title = left.length === 1
+		? `Обложка не обработана: ${left[0].cover.title}`
+		: `Обложек не обработано: ${left.length}`;
+
+	const lines = [];
+	for (const { cover, kind, why } of left) {
+		lines.push(`### 🖼 ${cover.title}`);
+		lines.push('');
+		lines.push(`- **На сайте осталась обычная обложка** — с рамкой и надписью. Это не поломка, а запасной путь: лучше обложка как есть, чем персонаж с куском подписи или дырой в контуре.`);
+		lines.push(`- Причина: ${why}`);
+		lines.push(`- Ключ обложки: \`${cover.id}\``);
+
+		if (kind === 'check') {
+			lines.push('- Вырезать **получилось**, но результат сомнительный, и посмотреть было некому.');
+			lines.push('  Посмотреть и, если годится, применить:');
+			lines.push('');
+			lines.push('  ```');
+			lines.push(`  node scripts/cover-cutout.mjs --only=${cover.id}`);
+			lines.push(`  node scripts/cover-cutout.mjs --only=${cover.id} --write --force`);
+			lines.push('  ```');
+			lines.push('');
+			lines.push('  Первая команда только покажет («было — стало»), вторая применит.');
+		} else if (kind === 'skip') {
+			lines.push('- Эта обложка нарисована **не по шаблону «БАКА!»** — вырезать из неё нечего, и так и задумано. Делать ничего не нужно.');
+		} else {
+			lines.push('- Это сбой связи, а не обложки. Робот попробует ещё раз сам, завтра утром.');
+		}
+		lines.push('');
+	}
+
+	await writeFile(file, `${title}\n\n${lines.join('\n')}`, 'utf8');
+	console.log(`\nТекст письма записан: ${file} (${left.length} шт.).`);
+	return true;
+}
+
+/**
+ * Завести журнал по тому, что уже сделано, — разово.
+ *
+ * Без этого шага робот в первое же утро счёл бы новым ВЕСЬ АРХИВ и полез бы
+ * перегонять 141 обложку, чего делать нельзя. Ничего не записывает в
+ * public/cutout/ и алгоритм ради статуса гоняет вхолостую: у того, что уже
+ * применено на сайте, статус берётся с сайта, а причина считается только
+ * для непринятого — чтобы в журнале стояло, ПОЧЕМУ у выпуска обычная обложка.
+ */
+async function seedLog(covers) {
+	const applied = new Set((await import(CUTOUT_MANIFEST.href)).default);
+	const log = {};
+	let missing = 0;
+
+	console.log(`\nЗавожу журнал по ${covers.length} обложкам. В репозиторий из картинок не записывается ничего.\n`);
+
+	for (const [index, cover] of covers.entries()) {
+		const head = `[${index + 1}/${covers.length}] ${cover.id.slice(0, 8)}`;
+
+		if (isExcluded(cover.id)) {
+			log[cover.id] = { status: 'исключён вручную', hash: '' };
+			console.log(`${head} — исключён вручную`);
+			continue;
+		}
+
+		let source;
+		try {
+			source = await loadSource(cover);
+		} catch (error) {
+			console.error(`${head} — оригинала нет: ${error.message}`);
+			missing += 1;
+			continue;
+		}
+
+		const hash = fingerprint(source);
+
+		if (applied.has(cover.id)) {
+			log[cover.id] = { status: 'готов', hash };
+			console.log(`${head} — готов`);
+			continue;
+		}
+
+		const result = await processCover(cover, source);
+		const why = result.reasons.join('; ') || 'вырезать не удалось';
+		log[cover.id] = { status: result.status === 'check' ? 'на проверку' : 'не по шаблону', hash, why };
+		console.log(`${head} — не применён: ${why}`);
+	}
+
+	const total = await writeLog(log);
+	console.log(`\nВ журнале ${total} обложек. Оригинал не нашёлся у ${missing}.`);
+	console.log('Всё, что в журнале, робот трогать не будет.');
 }
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -1070,17 +1365,55 @@ async function main() {
 		return;
 	}
 
+	if (process.argv.includes('--seed')) {
+		await seedLog(covers);
+		return;
+	}
+
 	const only = process.argv.find((a) => a.startsWith('--only='));
-	const list = only ? covers.filter((c) => c.id.startsWith(only.slice('--only='.length))) : covers;
+	const notify = process.argv.find((a) => a.startsWith('--notify='));
+	const onlyNew = process.argv.includes('--new');
+	const recheck = process.argv.includes('--recheck');
+	const force = process.argv.includes('--force');
+
+	let list = only ? covers.filter((c) => c.id.startsWith(only.slice('--only='.length))) : covers;
+
+	if (onlyNew) {
+		const log = await readLog();
+		// ЧТО СЧИТАЕТСЯ НОВЫМ.
+		//
+		// Обложки выпусков — только незнакомые. Перекачивать весь архив каждое
+		// утро ради отпечатков и есть «гонять архив заново»: 208 МБ и минуты
+		// чужого трафика в день за ответ «ничего не изменилось».
+		//
+		// Загруженные руками — все до одной. Их исходник лежит у нас на диске,
+		// отпечаток стоит миллисекунду, а перезалить картинку под тем же именем
+		// в админке можно в любой день — и только по отпечатку это видно.
+		list = list.filter((cover) => cover.kind === 'upload' || !log[cover.id]);
+
+		if (list.length === 0) {
+			console.log('\nНовых обложек нет — журнал знает про все. Ничего не делаю.');
+			return;
+		}
+		console.log(`\nНовых обложек к разбору: ${list.length}.`);
+	}
 
 	if (process.argv.includes('--write')) {
 		console.log(`\nЗАПИСЬ: ${list.length} обложек в public/cutout/.\n`);
-		await write(list);
+		const result = await write(list, {
+			// Робот записывает только «чисто»: смотреть на отметку «на проверку»
+			// у него некому. Ручной прогон по-прежнему пишет и её.
+			strict: onlyNew,
+			force,
+			refetch: recheck,
+			respectLog: onlyNew || recheck,
+		});
+		if (notify) await writeNotice(notify.slice('--notify='.length), result.left);
 		return;
 	}
 
 	console.log(`\nРазведка: ${list.length} обложек. Пишу во временную папку ${SCOUT_DIR}.\n`);
-	printReport(await scout(list));
+	printReport(await scout(list, { refetch: recheck }));
 }
 
 main().catch((error) => {
