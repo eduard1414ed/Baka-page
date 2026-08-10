@@ -8,6 +8,33 @@
 	</head>
 	<body>
 		<script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js" type="module"></script>
+		<script>
+			// ССЫЛКА НА СЛУЖЕБНУЮ СТРАНИЦУ РОБОТА (/admin/tools/).
+			//
+			// Своих пунктов меню Sveltia не заводит, а страница нужна именно
+			// рядом с админкой — иначе за ней придётся ходить на GitHub.
+			// Поэтому это обычная ссылка поверх интерфейса, а НЕ компонент CMS:
+			// свои компоненты в этом проекте дважды ломали данные и один раз
+			// вставку текста, а ссылке доступ к данным не нужен вовсе.
+			//
+			// Если однажды она начнёт перекрывать что-то нужное — удалите этот
+			// блок целиком, страница останется доступной по адресу.
+			document.addEventListener('DOMContentLoaded', () => {
+				const link = document.createElement('a');
+				link.href = '/admin/tools/';
+				link.textContent = 'Робот ↗';
+				link.title = 'Запустить добор выпусков, не дожидаясь утра';
+				link.style.cssText = [
+					'position:fixed', 'left:12px', 'bottom:12px', 'z-index:9999',
+					'font:600 12px/1 "IBM Plex Mono", Menlo, monospace',
+					'letter-spacing:.08em', 'text-transform:uppercase',
+					'color:#a64e65', 'background:#f8f6f0',
+					'border:1px solid #cbc6bc', 'padding:10px 12px',
+					'text-decoration:none',
+				].join(';');
+				document.body.append(link);
+			});
+		</script>
 		<script type="module">
 			// Кавычка ломает разбор синтаксиса блока ::image{...}, поэтому в записанном
 			// в файл тексте её заменяют на &quot;. Обратную замену делает плагин
