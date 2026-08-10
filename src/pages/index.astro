@@ -37,19 +37,24 @@ const posts = (await getCollection('posts', ({ data }) => isPublished(data))).so
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 
-// Какие категории считаются выпуском подкаста, знает content.config —
-// оттуда и берём, а не пишем список руками. Бонус попадает сюда сам.
-const slots = pickHomeSlots(posts, { podcastCategories: categoriesShownIn('podcast') });
-
-// Картинки и подводки редакционных слотов. Считаются теми же функциями, что
-// у карточки в ленте: правило «из чего берётся обложка» и правило «подводка
-// обрывается на первом спойлере» должны жить в одном месте на весь сайт.
-const featured = [slots.hero, ...slots.sidebar, slots.podcast, slots.second, slots.third].filter(Boolean);
-
+// Картинки карточек. Считаются теми же функциями, что у карточки в ленте:
+// правило «из чего берётся обложка» должно жить в одном месте на весь сайт.
+//
+// СЧИТАЮТСЯ ДО РАСКЛАДКИ ПО СЛОТАМ, а не после, — потому что правый слот
+// второго ряда материал без картинки не берёт вовсе, и решить это можно
+// только зная ответ заранее. По сети это ничего не стоит: фид подкаста
+// качается один раз за сборку и лежит в памяти (podcastFeed.mjs).
 const media = new Map<string, Awaited<ReturnType<typeof getCardMedia>>>();
-for (const post of featured) {
+for (const post of posts) {
 	media.set(post.id, await getCardMedia(post));
 }
+
+// Какие категории считаются выпуском подкаста, знает content.config —
+// оттуда и берём, а не пишем список руками. Бонус попадает сюда сам.
+const slots = pickHomeSlots(posts, {
+	podcastCategories: categoriesShownIn('podcast'),
+	hasMedia: (post) => Boolean(media.get(post.id)),
+});
 
 const deckOf = (post: any) => postDescription(post, '', { maxLength: 240 });
 
