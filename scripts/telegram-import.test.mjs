@@ -51,6 +51,9 @@ const SELFTEST = process.argv.includes('--selftest');
 
 // ——— Случаи заголовка, написанные ЖИВЫМ СИНТАКСИСОМ ———
 //
+// Сколько их — СЧИТАЕТСЯ, а не пишется в подпись словами: число, вписанное
+// руками, переживает добавление случая и начинает врать рядом с посчитанным.
+//
 // То есть ровно так, как их пишет telegram в text_entities, а не так, как
 // удобно проверке. Подлог, повторяющий формулировку правила, проверяет
 // не правило, а собственную аккуратность.
@@ -120,6 +123,15 @@ const TITLE_CASES = [
 		name: 'эмодзи внутри самого заголовка снимается',
 		entities: [plain('☀️ '), bold('Это главная премьера лета? 🌸'), plain('\n\nХранитель камфорного дерева.')],
 		title: 'Это главная премьера лета?',
+		tail: '',
+	},
+	{
+		// Мягкий перенос и нулевой пробел приезжают, когда заголовок скопирован
+		// с веб-страницы. В телеграме их не видно; у нас они рвут АДРЕС посреди
+		// слова, и адрес этот навсегда.
+		name: 'мягкий перенос и нулевой пробел в заголовке снимаются',
+		entities: [plain('\u{1F4FA} '), bold('Лучшие аниме-сериа\u00ADлы\u200B 2024 года'), plain('\n\nОбновляемый список.')],
+		title: 'Лучшие аниме-сериалы 2024 года',
 		tail: '',
 	},
 	{
@@ -295,6 +307,31 @@ function headProblems(allPosts, render) {
 		if (skipReason(post)) continue;
 		const built = buildPost(post);
 		problems.push(...frontmatterProblems(built, render(built)));
+	}
+	return problems;
+}
+
+// ——— Невидимых знаков в заголовке быть не должно ———
+//
+// Мягкий перенос (U+00AD) и нулевой пробел приезжают вместе с заголовком,
+// скопированным с чужого сайта: сайты расставляют перенос, чтобы браузер знал,
+// где рвать слово. В телеграме их не видно, а у нас видно дважды — АДРЕС
+// СТРАНИЦЫ получает тире посреди слова («бой­кое» → `boy-koe`), и это навсегда,
+// адрес уходит в карту сайта; а поиск перестаёт находить слово, потому что
+// «бой­кое» и «бойкое» для движка разные.
+//
+// Замер: 12 заголовков архива, все — копии заголовков с сайтов.
+// Соединителя U+200D в списке нет: он держит вместе составные эмодзи.
+const INVISIBLE_CHARS = /[\u00AD\u200B\u2060\uFEFF]/u;
+
+function invisibleProblems(allPosts, extract) {
+	const problems = [];
+	for (const post of allPosts) {
+		if (skipReason(post)) continue;
+		const title = extract(post.caption.text_entities ?? [])?.title;
+		if (title && INVISIBLE_CHARS.test(title)) {
+			problems.push(`№${post.id}: в заголовке невидимый знак — «${title}» даст адрес «${slugify(title)}»`);
+		}
 	}
 	return problems;
 }
@@ -540,12 +577,13 @@ async function main() {
 	if (!SELFTEST) {
 		console.log('ПРОВЕРКИ РАЗБОРА ТЕЛЕГРАМА\n');
 		let found = 0;
-		found += report('правило заголовка, 11 подложенных случаев', titleProblems(TITLE_CASES));
+		found += report(`правило заголовка, ${TITLE_CASES.length} подложенных случаев`, titleProblems(TITLE_CASES));
 		found += report('адреса страниц против настоящих файлов постов', slugProblems(SLUG_CASES));
 		found += report('пост 4143 против опубликованного на сайте', post4143Problems(built, publishedBody));
 		found += report('бонус 4142 против собранного вами руками', post4142Problems(bonusBuilt, bonusFile));
 		found += report('снимки без подписи не оторваны от своего поста', orphanProblems(messages, groupAlbums));
 		found += report('шапка каждого поста архива читается', headProblems(allPosts, (b) => renderPost(b)));
+		found += report('невидимых знаков в заголовках нет', invisibleProblems(allPosts, extractTitle));
 		found += report('дата написана так же, как её пишет админка', dateFormatProblems(allPosts, (b) => renderPost(b)));
 		found += report('порции по годам на живом архиве', portionProblems(allPosts, selectPosts));
 		found += report('текст доехал целиком — весь архив, слово в слово', textProblems(allPosts, entitiesToMarkdown));
@@ -662,6 +700,18 @@ async function main() {
 			problems: dateFormatProblems(allPosts, (b) =>
 				renderPost(b).replace(/^date: (.+)$/m, "date: '$1'"),
 			),
+		},
+		{
+			name: 'заголовок: невидимые знаки не снимаются (как было до починки)',
+			problems: invisibleProblems(allPosts, (entities) => {
+				const got = extractTitle(entities);
+				if (!got) return null;
+				// Возвращаем заголовок таким, каким он был БЕЗ уборки невидимых
+				// знаков: берём их обратно из исходных сущностей.
+				const raw = (entities ?? []).map((e) => e.text ?? '').join('').split('\n')[0];
+				const hidden = raw.match(/[\u00AD\u200B\u2060\uFEFF]/gu);
+				return { ...got, title: got.title + (hidden ? hidden.join('') : '') };
+			}),
 		},
 		// ПОДЛОГИ ТЕКСТА — ЭТО РОВНО ТО, КАК РАЗБОР БЫЛ НАПИСАН ДО 10 АВГУСТА 2026.
 		// Не выдуманная поломка, а настоящая, прожившая в коде от задачи 7.1:
