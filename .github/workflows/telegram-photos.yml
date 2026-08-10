@@ -1,0 +1,106 @@
+name: Забрать картинки постов из телеграма
+
+# Задача 7.2. У поста есть галочка «Забрать картинки с сервера». Заказчик
+# ставит её в админке и сохраняет; админка коммитит файл поста, и на этот
+# коммит срабатывает робот: находит пост по номеру сообщения, забирает его
+# фотографии с Hetzner, уменьшает до 1000 px, кладёт в репозиторий, расставляет
+# по правилу задачи 7.1 (первая — в обложку и первой строкой текста, остальные
+# блоком после текста), снимает галочку и коммитит.
+#
+# ПОЧЕМУ НА КОММИТ, А НЕ ПО РАСПИСАНИЮ. Расписание означало бы ожидание до
+# суток: поставил галочку утром — картинки завтра. Кнопки же у нас быть
+# не может, Sveltia живёт в браузере (см. tz/7.2 и public/admin/config.yml).
+#
+# ПОЧЕМУ ОН НЕ ЗАПУСКАЕТ САМ СЕБЯ. Две причины, и вторая надёжнее первой.
+# Первая: GitHub нарочно не запускает воркфлоу на коммиты, сделанные встроенным
+# токеном GITHUB_TOKEN, — а робот коммитит именно им. Вторая, настоящая: работа
+# робота идеемпотентна. Он берётся только за посты с галочкой, а последнее, что
+# делает с постом, — эту галочку снимает. Даже сработай он на собственный
+# коммит, он не нашёл бы ни одного поста и вышел бы через секунду, не сходив
+# на сервер вовсе.
+#
+# ДОСТУП К СЕРВЕРУ — НЕ КЛЮЧОМ ROOT. В секрете TG_EXPORT_SSH_KEY лежит ключ
+# отдельного жильца `tgexport`: он заперт в /srv/telegram-export, командной
+# строки не имеет вовсе и не может записать туда ничего. Ключ root дал бы
+# роботу всю машину ради чтения одной папки.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/content/posts/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: telegram-photos
+  cancel-in-progress: false
+
+jobs:
+  photos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm ci
+
+      - name: Ключ от сервера и его отпечаток
+        env:
+          TG_EXPORT_SSH_KEY: ${{ secrets.TG_EXPORT_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$TG_EXPORT_SSH_KEY" > ~/.ssh/tgexport
+          chmod 600 ~/.ssh/tgexport
+          # Отпечаток сервера записан ЗДЕСЬ, а не добирается на месте
+          # (ssh-keyscan): иначе робот здоровался бы с кем угодно, кто ответит
+          # по этому адресу, и подменённые картинки уехали бы в репозиторий.
+          # Открытый ключ сервера — не секрет, его отдаёт сам сервер.
+          printf '%s\n' '167.233.251.252 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIImjjkepNXFCFtVwxzc/n2kTJbs/yobJValscyxUvFhJ' >> ~/.ssh/known_hosts
+
+      - name: Забрать картинки помеченных постов
+        run: |
+          node scripts/telegram-photos.mjs \
+            --remote=tgexport@167.233.251.252:/ChatExport_2026-08-10 \
+            --key="$HOME/.ssh/tgexport" \
+            --write \
+            --notify=notify-photos.md
+
+      - name: Закоммитить привезённое
+        run: |
+          git config user.name "baka-tg-photos-bot"
+          git config user.email "actions@users.noreply.github.com"
+          # public/images/uploads — сами картинки, уже уменьшенные до 1000 px.
+          # Уменьшение делается ДО коммита нарочно: попавшее в git остаётся
+          # в его истории навсегда, и «потом пережмём» не работает.
+          git add src/content/posts public/images/uploads
+          if git diff --cached --quiet; then
+            echo "Забирать было нечего."
+          else
+            git commit -m "Забрать картинки постов из телеграма"
+            git pull --rebase origin main
+            git push
+          fi
+
+      - name: Написать на почту, если что-то не вышло
+        # Задача в репозитории с исполнителем — GitHub сам шлёт письмо тому,
+        # на кого её назначили. Отдельная почтовая служба и пароли не нужны.
+        # Письма об удачной работе нет намеренно: её видно в админке, а письмо
+        # «всё хорошо» через неделю перестают читать вместе с остальными.
+        if: always() && hashFiles('notify-photos.md') != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "$(head -n 1 notify-photos.md)" \
+            --body "$(tail -n +3 notify-photos.md)" \
+            --assignee eduard1414ed
