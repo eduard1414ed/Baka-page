@@ -4,13 +4,13 @@ date: 2026-07-29
 category: note
 draft: true
 description: ''
-cover: ''
+cover: /images/uploads/tg-4121.jpg
 noCover: false
 externalUrl: ''
 externalSource: ''
 adLabel: ''
 timecodes: ''
-pullMedia: true
+pullMedia: false
 tgId: 4121
 tgUrl: https://t.me/podcastbaka/4121
 anime:
@@ -19,6 +19,8 @@ anime:
   - oshi-no-ko
   - yoru-no-kurage-wa-oyogenai
 ---
+
+::image{src="/images/uploads/tg-4121.jpg" alt="" width="column"}
 
 В этом сезоне выходит сериал, который очевидно черпает вдохновение из :anime[«Монолога фармацевта»]{id="kusuriya-no-hitorigoto" source="shikimori" source-id="54492"}. Но делает это достаточно неплохо, чтобы быть самостоятельным произведением.
 
