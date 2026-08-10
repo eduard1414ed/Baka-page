@@ -322,6 +322,24 @@ export function missedOnPage(webPosts, { lastSeenId, botSeen, known }) {
 }
 
 /**
+ * С какого мгновения считать молчание бота.
+ *
+ * ЗДЕСЬ БЫЛА ДЫРА, И РОВНО ТА, ОТ КОТОРОЙ ЗАЩИЩАЛО САМО ПРАВИЛО. Отметка
+ * ставилась, только когда бот что-то принёс, — а значит у бота, который
+ * не приносил НИ РАЗУ (выкинули из канала, не выдали прав, завели второго
+ * читателя очереди), считать было не от чего, и предупреждение «молчит дольше
+ * недели» не сработало бы никогда. То есть заслон против ответа «ничего
+ * не найдено» сам молчал бы в самом плохом случае.
+ *
+ * Поэтому при первом же заходе отметка ставится всё равно: с этого мгновения
+ * и пойдёт отсчёт.
+ */
+export function markLastPost(previous, gotMessages, nowISO) {
+	if (gotMessages) return nowISO;
+	return previous ?? nowISO;
+}
+
+/**
  * До какого обновления можно подтвердить очередь.
  *
  * Подтверждение необратимо: телеграм стирает подтверждённое. Поэтому оно
@@ -731,7 +749,7 @@ async function main() {
 	writeState(stateFile, {
 		offset: nextOffset,
 		lastSeenId,
-		lastPostAt: botMessages.length ? new Date().toISOString() : state.lastPostAt,
+		lastPostAt: markLastPost(state.lastPostAt, botMessages.length > 0, new Date().toISOString()),
 		lastRunAt: new Date().toISOString(),
 		albums: trimmed,
 	});

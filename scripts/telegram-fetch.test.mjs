@@ -39,6 +39,7 @@ import {
 	confirmUpTo,
 	seenUpTo,
 	appendPhotos,
+	markLastPost,
 	readState,
 	writeState,
 	hideToken,
@@ -624,6 +625,25 @@ export function hrefProblems(decode = decodeHref) {
 	return problems;
 }
 
+/**
+ * Отсчёт молчания бота начинается с ПЕРВОГО захода, а не с первого поста.
+ *
+ * Иначе у бота, который не принёс ни разу (выкинули из канала, не выдали прав),
+ * считать было бы не от чего — и правило «молчит дольше недели» не сработало бы
+ * ровно в том случае, ради которого написано.
+ */
+export function silenceProblems(mark = markLastPost) {
+	const problems = [];
+	const now = '2026-08-10T20:00:00.000Z';
+	const before = '2026-08-01T10:00:00.000Z';
+
+	if (mark(null, false, now) !== now) problems.push('первый заход без постов не начал отсчёт молчания — считать будет не от чего');
+	if (mark(null, true, now) !== now) problems.push('первый заход с постами не поставил отметку');
+	if (mark(before, true, now) !== now) problems.push('пришли посты, а отметка осталась старой');
+	if (mark(before, false, now) !== before) problems.push('заход без постов сдвинул отметку — молчание обнулялось бы каждые шесть часов');
+	return problems;
+}
+
 /** Токен не должен попасть ни в одну строку вывода. */
 export function tokenProblems(hide = hideToken) {
 	const token = '1234567890:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw';
@@ -694,6 +714,7 @@ async function main() {
 	bad += show('дописывание снимков в уже заведённый пост', appendProblems());
 	bad += show('токен не попадает в вывод', tokenProblems());
 	bad += show('адрес со страницы канала раскодируется дважды', hrefProblems());
+	bad += show('отсчёт молчания бота начинается с первого захода', silenceProblems());
 
 	if (messages) {
 		const { problems, checked } = roundtripProblems(messages);
@@ -818,6 +839,14 @@ function selftest({ messages, pages, webPosts }) {
 				writeFileSync(file, `---\n${head}\n---\n\n${body}\n\n${srcs.map((s) => `::image{src="${s}" alt="" width="column"}`).join('\n')}\n`, 'utf8');
 				return { added: srcs.length };
 			}),
+		},
+		{
+			name: 'отсчёт молчания начинается с первого ПОСТА — у бота, молчавшего всегда, он не начнётся',
+			problems: silenceProblems((previous, got, now) => (got ? now : previous)),
+		},
+		{
+			name: 'отметка молчания сдвигается каждым заходом — молчание обнуляется само',
+			problems: silenceProblems((previous, got, now) => now),
 		},
 		{
 			name: 'токен печатается в ошибке как есть',
