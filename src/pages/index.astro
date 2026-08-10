@@ -254,7 +254,7 @@ const catalogMarks = shuffled.slice(0, CATALOG_POOL);
 
 				{
 					hasThirdRow && (
-						<section class="third-row" class:list={{ 'no-notes': !hasNotes }}>
+						<section class="third-row" class:list={{ 'no-notes': !hasNotes, 'no-feature': !slots.third }}>
 							{slots.third && (
 								<article class="video-feature">
 									{media.get(slots.third.id) && (
@@ -726,6 +726,18 @@ const catalogMarks = shuffled.slice(0, CATALOG_POOL);
 		   То же и когда во втором ряду выпал один из двух слотов. */
 		.third-row.no-notes .video-feature {
 			grid-column: 1 / 13;
+		}
+
+		/* А ЭТО ЗЕРКАЛЬНЫЙ СЛУЧАЙ, И ОН ПОЯВИЛСЯ ВМЕСТЕ С ЗАПРЕТОМ на материал
+		   без обложки в левом слоте третьего ряда: подходящего может не найтись
+		   вовсе, и тогда заметки остались бы в колонках 8…13 с пустой половиной
+		   слева. Пустая половина читается поломкой вёрстки, поэтому список
+		   занимает всю ширину и теряет вертикальную линию — ей больше нечего
+		   отделять. */
+		.third-row.no-feature .notes-index {
+			grid-column: 1 / 13;
+			border-left: 0;
+			padding-left: 0;
 		}
 
 		.feature-row.single .podcast-feature,
