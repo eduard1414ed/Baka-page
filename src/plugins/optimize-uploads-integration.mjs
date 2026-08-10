@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import sharp from 'sharp';
-import { IMAGE_WIDTHS, isOptimizableImage, getOgVariantSrc } from '../lib/imageVariants.mjs';
+import { IMAGE_WIDTHS, isOptimizableImage, getOgVariantSrc, variantBase } from '../lib/imageVariants.mjs';
 import { OG_BACKGROUND } from '../lib/ogImage.mjs';
 
 const UPLOADS_DIR = 'images/uploads';
@@ -65,8 +65,12 @@ export default function optimizeUploadsIntegration() {
 				for (const entry of entries) {
 					if (!isOptimizableImage(entry)) continue;
 
-					const ext = path.extname(entry);
-					const base = entry.slice(0, -ext.length);
+					// Имя копий считает ОДНА функция на обе стороны: страница
+					// просит файл по этому имени (getImageVariantSrcs), сборка
+					// его по нему же создаёт. Своя формула здесь означала бы,
+					// что однажды страница попросит один файл, а сборка сделает
+					// другой, — и картинка пропадёт молча, без единой ошибки.
+					const base = variantBase(entry);
 					const filePath = fileURLToPath(new URL(entry, uploadsUrl));
 					const buffer = await readFile(filePath);
 
