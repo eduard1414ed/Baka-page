@@ -38,6 +38,8 @@ import {
 	plainOf,
 	ALBUM_ID_GAP,
 	ALBUM_SECONDS_GAP,
+	renderPost,
+	frontmatterProblems,
 } from './telegram-import.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
@@ -273,6 +275,30 @@ function orphanProblems(messages, group) {
 	return problems;
 }
 
+// ——— Шапка каждого поста архива обязана читаться ———
+//
+// КРИВАЯ ШАПКА РОНЯЕТ СБОРКУ ВСЕГО САЙТА, а не себя одну: Astro читает
+// коллекцию целиком и падает на первом же файле. Поэтому проверка идёт
+// по всему архиву, а не по образцу.
+//
+// Оплачена упавшей сборкой 10 августа 2026: правило кавычек не видело
+// двоеточия в КОНЦЕ заголовка, и 70 постов-серий («Обзор всех аниме зимы:»,
+// «Если вы еще не смотрели «Рок-тихоню»:») клали сайт. В последней сотне
+// постов задачи 7.1 таких заголовков не было ни одного.
+//
+// Спрашивает она не своё правило, а сам js-yaml — тот же, которым читает
+// сборка, — и сверяет не «разобралось без ошибки», а ЧТО разобралось: YAML
+// умеет молча прочитать строку числом или датой.
+function headProblems(allPosts, render) {
+	const problems = [];
+	for (const post of allPosts) {
+		if (skipReason(post)) continue;
+		const built = buildPost(post);
+		problems.push(...frontmatterProblems(built, render(built)));
+	}
+	return problems;
+}
+
 // ——— Порции по годам: никого не потеряли и никого не задвоили ———
 //
 // Архив везётся годами, отдельным коммитом на порцию. Значит у отбора ровно две
@@ -484,6 +510,7 @@ async function main() {
 		found += report('пост 4143 против опубликованного на сайте', post4143Problems(built, publishedBody));
 		found += report('бонус 4142 против собранного вами руками', post4142Problems(bonusBuilt, bonusFile));
 		found += report('снимки без подписи не оторваны от своего поста', orphanProblems(messages, groupAlbums));
+		found += report('шапка каждого поста архива читается', headProblems(allPosts, (b) => renderPost(b)));
 		found += report('порции по годам на живом архиве', portionProblems(allPosts, selectPosts));
 		found += report('текст доехал целиком — весь архив, слово в слово', textProblems(allPosts, entitiesToMarkdown));
 
@@ -584,6 +611,15 @@ async function main() {
 				}
 				return posts;
 			}),
+		},
+		{
+			// РОВНО ТА ПОЛОМКА, ЧТО УРОНИЛА СБОРКУ: заголовок с двоеточием
+			// на конце записан без кавычек. Для YAML это начало вложенного
+			// словаря, и файл перестаёт читаться целиком.
+			name: 'шапка: заголовок записан без кавычек (как было до починки)',
+			problems: headProblems(allPosts, (b) =>
+				renderPost(b).replace(/^title: '(.*)'$/m, (_, t) => 'title: ' + t.replace(/''/g, "'")),
+			),
 		},
 		// ПОДЛОГИ ТЕКСТА — ЭТО РОВНО ТО, КАК РАЗБОР БЫЛ НАПИСАН ДО 10 АВГУСТА 2026.
 		// Не выдуманная поломка, а настоящая, прожившая в коде от задачи 7.1:

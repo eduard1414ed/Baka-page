@@ -33,6 +33,9 @@
 import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from 'node:fs';
 import { join, basename, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+// Тот же разбор YAML, которым сборка читает шапку поста. Своего писать нельзя:
+// вопрос «прочитается ли это» имеет ровно один правильный источник ответа.
+import yaml from 'js-yaml';
 import { slugify } from '../src/lib/slug.mjs';
 import { buildAnimeMatcher, findMentions } from '../src/lib/animeMentions.mjs';
 import { manualTelegramPosts } from '../src/data/telegramImported.mjs';
@@ -626,9 +629,35 @@ export function innerLinks(entities) {
 
 // ——— Сборка поста ———
 
+/**
+ * Значение в шапку поста: кавычки ставятся, только когда без них YAML прочтёт
+ * не то. Так пишет и админка, и с ней это сверено побайтно — лишняя кавычка
+ * дала бы правку на весь файл при первом же сохранении.
+ *
+ * ДВОЕТОЧИЕ В КОНЦЕ СТРОКИ — ОТДЕЛЬНАЯ СТРОЧКА, И ОНА ОПЛАЧЕНА УПАВШЕЙ
+ * СБОРКОЙ. Прежнее правило искало `: ` (двоеточие с пробелом) и потому
+ * не видело двоеточия, стоящего последним знаком: заголовок «Обзор всех аниме
+ * зимы:» превращался в `title: Обзор всех аниме зимы:`, а для YAML это начало
+ * вложенного словаря. Сборка ВСЕГО САЙТА падала с «bad indentation of
+ * a mapping entry». Таких заголовков в архиве 70, и все — в постах-сериях
+ * («Обзор всех аниме зимы:», «Если вы еще не смотрели «Рок-тихоню»:»).
+ *
+ * Ни одного из них не было в последней сотне постов задачи 7.1, поэтому мина
+ * пролежала до первой же порции архива.
+ */
 const yamlString = (value) => {
 	const text = String(value ?? '');
-	const needsQuotes = text === '' || /^[\s>|*&!%@`#-]|[:#]\s|\s$|['"]/.test(text);
+	const needsQuotes =
+		text === '' ||
+		// Знак в начале, который YAML читает как указатель.
+		/^[\s>|*&!%@`#\-?:,[\]{}]/.test(text) ||
+		// Двоеточие с пробелом внутри строки — или в самом её конце.
+		/[:#]\s/.test(text) ||
+		text.endsWith(':') ||
+		/\s$/.test(text) ||
+		/['"]/.test(text) ||
+		// Строка, которую YAML прочтёт числом, датой, «да/нет» или пустотой.
+		/^(?:[-+]?\d[\d_.eE+-]*|true|false|yes|no|on|off|null|~)$/i.test(text);
 	return needsQuotes ? `'${text.replace(/'/g, "''")}'` : text;
 };
 
@@ -733,6 +762,53 @@ export function renderPost(built, { files = [] } = {}) {
 		text +
 		'\n'
 	);
+}
+
+// ——— Шапка обязана читаться ———
+
+/**
+ * Прочитать шапку готового файла ТЕМ ЖЕ разбором, которым её читает сборка,
+ * и сверить с тем, что мы туда клали.
+ *
+ * ЭТО ЗАСЛОН, А НЕ УКРАШЕНИЕ. Кривая шапка роняет сборку ВСЕГО САЙТА, а не
+ * один пост: Astro читает коллекцию целиком и падает на первом же файле.
+ * Своё правило кавычек уже соврало один раз — оно не видело двоеточия
+ * в конце заголовка, и 70 постов архива положили бы сайт. Правило починено,
+ * но верить ему на слово больше нельзя: пусть отвечает сам js-yaml.
+ *
+ * Сверяется не только «разобралось без ошибки», но и ЧТО разобралось: YAML
+ * умеет прочитать строку числом или датой, не поругавшись ни на что.
+ *
+ * @returns {string[]} список бед; пусто — всё читается
+ */
+export function frontmatterProblems(built, text) {
+	const head = text.split(/^---$/m)[1];
+	let parsed;
+	try {
+		parsed = yaml.load(head);
+	} catch (error) {
+		return [`№${built.id} (${built.slug}): шапка не читается — ${String(error.message).split('\n')[0]}`];
+	}
+
+	const problems = [];
+	const same = (field, want, got) => {
+		if (got !== want) problems.push(`№${built.id} (${built.slug}): поле «${field}» прочиталось как ${JSON.stringify(got)}, а клали ${JSON.stringify(want)}`);
+	};
+
+	same('title', built.title, parsed.title);
+	same('category', built.category, parsed.category);
+	same('tgId', built.id, parsed.tgId);
+	same('tgUrl', `https://t.me/${CHANNEL}/${built.id}`, parsed.tgUrl);
+	same('draft', true, parsed.draft);
+	// Дату YAML читает датой — это и нужно; сверяем сам день.
+	const date = parsed.date instanceof Date ? parsed.date.toISOString().slice(0, 10) : String(parsed.date);
+	same('date', built.date, date);
+
+	for (const [id, url] of Object.entries(built.bonusLinks ?? {})) {
+		same(`bonusLinks.${id}`, url, parsed.bonusLinks?.[id]);
+	}
+
+	return problems;
 }
 
 // ——— Что уже импортировано ———
@@ -959,11 +1035,30 @@ async function main() {
 	}
 
 	// ——— Запись ———
-	let written = 0;
+	//
+	// СНАЧАЛА ВСЯ ПОРЦИЯ СОБИРАЕТСЯ В ПАМЯТИ И ПРОВЕРЯЕТСЯ, и только потом
+	// ложится на диск. Кривая шапка роняет сборку ВСЕГО САЙТА, и половина
+	// записанной порции — худшее из состояний: сайт лежит, а что именно
+	// его положило, надо искать среди сотен новых файлов.
+	const prepared = [];
+	const broken = [];
 	for (const built of fresh) {
 		const files = photoIds.has(built.id) && built.photos.length ? await fetchPhotos(built, exportDir, uploadsDir) : [];
+		const text = renderPost(built, { files });
+		broken.push(...frontmatterProblems(built, text));
+		prepared.push({ built, text });
+	}
 
-		writeFileSync(join(postsDir, `${built.slug}.md`), renderPost(built, { files }), 'utf8');
+	if (broken.length) {
+		console.error(`\nШАПКА НЕ ЧИТАЕТСЯ У ${broken.length} ПОСТОВ — НЕ ЗАПИСАНО НИЧЕГО.`);
+		console.error('Такой файл роняет сборку всего сайта, а не себя одного.\n');
+		for (const line of broken) console.error(`  • ${line}`);
+		process.exit(1);
+	}
+
+	let written = 0;
+	for (const { built, text } of prepared) {
+		writeFileSync(join(postsDir, `${built.slug}.md`), text, 'utf8');
 		written += 1;
 	}
 
