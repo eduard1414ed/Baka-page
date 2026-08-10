@@ -80,19 +80,34 @@ const social = platformsOfKind('social');
 }
 
 <style>
-	/* Зазора между строчками нет: их разделяют линии, а не воздух.
+	/* НА УЗКОМ ЭКРАНЕ БЛОК СЖАТ ДО ТРЁХ ССЫЛОК В РЯД, БЕЗ ОПИСАНИЙ.
+	   Решение заказчика 10 августа 2026: столбиком из трёх строк с описаниями
+	   блок занимал почти весь экран телефона, а сказать ему нужно немного —
+	   вот три места, где нас можно найти.
+
 	   Линию сверху блок рисует себе сам — так же, как её рисуют себе секции
 	   «О проекте» и редакционные ряды главной. Двух линий на стыке от этого
 	   не выходит: у соседей снизу линии нет. */
 	.social-strip {
 		display: grid;
-		gap: 0;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		column-gap: var(--sp-2);
+		row-gap: 0;
 		padding: var(--sp-8) 0;
 		border-top: 1px solid var(--line);
 	}
 
+	/* ЛИНИЮ НАД РЯДОМ РИСУЕТ ШАПКА БЛОКА, А НЕ САМИ ССЫЛКИ. Раньше её рисовал
+	   каждый `.social-link` своим `border-top`, и в столбик это давало по линии
+	   на строчку. В ряду те же три границы разорвались бы на три отрезка
+	   по зазорам сетки — ровно та беда, из-за которой в архиве линии рисуются
+	   псевдоэлементом. Здесь достаточно одной непрерывной: она принадлежит
+	   шапке. Вертикальных между столбцами нет нарочно — они встретились бы
+	   с этой углом, а углы превращают блок в таблицу (§5). */
 	.social-intro {
+		grid-column: 1 / -1;
 		padding-bottom: 20px;
+		border-bottom: 1px solid var(--line);
 	}
 
 	.social-intro h2 {
@@ -109,14 +124,22 @@ const social = platformsOfKind('social');
 		/* Цель нажатия набирается высотой самой строки: 18 + 18 сверху и снизу
 		   плюс текст — заведомо больше 44 px даже без описания. */
 		padding: 18px 0;
-		border-top: 1px solid var(--line);
 		text-decoration: none;
 	}
 
+	/* ПЕРЕНОС РАЗРЕШЁН НАРОЧНО, И ЭТО НЕ СТРАХОВКА, А РАСЧЁТ. «TELEGRAM ↗»
+	   по метрикам Inter — 95 px (подпись 12 px с трекингом 0.08em, стрелка 16
+	   и зазор), а столбец на экране 320 отдаёт 89. Не разреши мы перенос,
+	   строка либо вылезла бы за столбец, либо порвала слово на «TELEGRA / M» —
+	   на сайте стоит `overflow-wrap: anywhere`, и он именно это и сделал бы.
+	   С переносом стрелка на самых узких экранах просто уходит под подпись,
+	   а с 360 встаёт рядом с ней. Ни одно слово не рвётся ни на какой ширине.
+	   Зазор столбцов взят `--sp-2`, а не `--sp-3`, ровно из этого расчёта. */
 	.social-name {
 		display: flex;
+		flex-wrap: wrap;
 		justify-content: space-between;
-		gap: var(--sp-4);
+		gap: var(--sp-1) var(--sp-4);
 		font-size: var(--caption);
 		font-weight: 600;
 		letter-spacing: 0.08em;
@@ -131,7 +154,12 @@ const social = platformsOfKind('social');
 		font-size: 16px;
 	}
 
+	/* Описания на узком экране нет: блок сжат до трёх имён в ряд, и объяснять
+	   ему нечем — места нет. Из разметки строчка при этом не убрана: она
+	   принадлежит площадке (`desc` в platforms.js), а не экрану, и на широком
+	   возвращается правилом в медиазапросе ниже. */
 	.social-desc {
+		display: none;
 		font-size: var(--body-sm);
 		line-height: 1.5;
 		color: var(--muted);
@@ -156,13 +184,15 @@ const social = platformsOfKind('social');
 		.social-intro {
 			grid-column: 1 / 4;
 			padding: 0 var(--sp-6) 0 0;
+			/* Линия шапки — только для сжатого ряда: здесь её роль играют
+			   вертикальные границы столбцов, и вместе они дали бы угол. */
+			border-bottom: 0;
 		}
 
 		.social-link {
 			grid-column: span 3;
 			min-height: 78px;
 			padding: var(--sp-1) 18px var(--sp-1) 22px;
-			border-top: 0;
 			border-left: 1px solid var(--line);
 			transition: background var(--transition-fast);
 		}
@@ -172,7 +202,9 @@ const social = platformsOfKind('social');
 			background: var(--accent-soft);
 		}
 
+		/* Описание возвращается: в колонке 3/12 ему есть где встать. */
 		.social-desc {
+			display: block;
 			max-width: 18em;
 		}
 
