@@ -12,5 +12,11 @@
 	"sourceAliases": [
 		"The Camphorwood Custodian",
 		"The Keeper of the Camphor Tree"
+	],
+	"aliasesAuto": [
+		"Хранителя камфорного дерева",
+		"Хранителю камфорного дерева",
+		"Хранителем камфорного дерева",
+		"Хранителе камфорного дерева"
 	]
 }

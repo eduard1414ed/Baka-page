@@ -12,5 +12,11 @@
 	"sourceAliases": [
 		"About the Movement of the Earth",
 		"Orb: On the Movements of the Earth"
+	],
+	"aliasesAuto": [
+		"О движении Земель",
+		"О движении Землям",
+		"О движении Землями",
+		"О движении Землях"
 	]
 }

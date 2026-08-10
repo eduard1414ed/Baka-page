@@ -261,6 +261,26 @@
 				<p class="status" id="run-status"></p>
 			</section>
 
+			<section id="cases-section" hidden>
+				<h2>Падежные формы тайтлов</h2>
+				<p>
+					Названия из справочника ищутся в расшифровках во всех падежах:
+					«в&nbsp;Ходячем замке» находится само, вписывать вариант руками не нужно.
+					Формы считаются, когда робот заводит новый тайтл, — эта кнопка
+					нужна, только если вы поправили русское название у старых.
+				</p>
+				<p>
+					<strong>Сначала отчёт, потом применение</strong>: первая кнопка ничего
+					не меняет, она присылает письмо — сколько форм насчиталось, у каких
+					тайтлов и сколько новых упоминаний это даст. Вторая записывает.
+				</p>
+				<div class="row">
+					<button id="cases-dry">Посчитать и прислать отчёт</button>
+					<button class="secondary" id="cases-write">Применить посчитанное</button>
+				</div>
+				<p class="status" id="cases-status"></p>
+			</section>
+
 			<section id="last-section" hidden>
 				<h2>Последние походы</h2>
 				<ul class="list" id="runs"></ul>
@@ -296,6 +316,11 @@
 			const OWNER = 'eduard1414ed';
 			const REPO = 'Baka-page';
 			const WORKFLOW = 'sync-episodes.yml';
+			// Пересчёт падежных форм (тз/11, часть A) — свой воркфлоу и своя пара
+			// кнопок. Отдельный, а не общий с добором выпусков, потому что
+			// у добора есть цена в деньгах и отсчёт между нажатиями, а у этого
+			// нет ни того, ни другого.
+			const CASES_WORKFLOW = 'anime-cases.yml';
 			const AUTH_ORIGIN = 'https://baki-cms-auth.eduard1414ed.workers.dev';
 
 			/** Реже этого кнопка не даётся. Каждое нажатие — возможные деньги. */
@@ -318,6 +343,10 @@
 				issues: $('issues'),
 				issuesEmpty: $('issues-empty'),
 				refresh: $('refresh'),
+				casesSection: $('cases-section'),
+				casesDry: $('cases-dry'),
+				casesWrite: $('cases-write'),
+				casesStatus: $('cases-status'),
 			};
 
 			// Токен держим в памяти вкладки: закрыли — забылся. В localStorage
@@ -593,6 +622,44 @@
 				setTimeout(refresh, 4000);
 			}
 
+			// ── Пересчёт падежных форм ──────────────────────────────────────────
+			//
+			// Денег не стоит и ничего не расшифровывает, поэтому отсчёта между
+			// нажатиями тут нет. Единственное, чего нельзя, — звать второй раз,
+			// пока идёт первый: два пересчёта разом писали бы в одни файлы.
+			async function runCases(write) {
+				el.casesDry.disabled = true;
+				el.casesWrite.disabled = true;
+				el.casesStatus.className = 'status';
+				el.casesStatus.textContent = write ? 'Прошу применить посчитанное…' : 'Прошу посчитать…';
+
+				const response = await api(`/repos/${OWNER}/${REPO}/actions/workflows/${CASES_WORKFLOW}/dispatches`, {
+					method: 'POST',
+					// GitHub ждёт значения полей строками, даже если поле — галочка.
+					body: JSON.stringify({ ref: 'main', inputs: { write: write ? 'true' : 'false' } }),
+				});
+
+				if (response.status !== 204) {
+					el.casesStatus.className = 'status bad';
+					el.casesStatus.textContent = `GitHub ответил кодом ${response.status}. Попробуйте ещё раз через минуту.`;
+					el.casesDry.disabled = false;
+					el.casesWrite.disabled = false;
+					return;
+				}
+
+				el.casesStatus.innerHTML = write
+					? '<strong>Применяю.</strong> Через минуту-другую формы будут в справочнике, а на почту придёт письмо с отчётом. На сайте они появятся со следующей выкладкой.'
+					: '<strong>Считаю.</strong> Минуту-другую. Отчёт придёт письмом и появится ниже, в списке «Что робот рассказывал», — записано при этом не будет ничего.';
+
+				// Кнопки открываем обратно не сразу: прогон длится около минуты,
+				// и нажатие в эту секунду означало бы два пересчёта разом.
+				setTimeout(() => {
+					el.casesDry.disabled = false;
+					el.casesWrite.disabled = false;
+					refresh();
+				}, 90000);
+			}
+
 			async function start() {
 				try {
 					const { login: who } = await checkRights();
@@ -600,6 +667,7 @@
 					el.authError.hidden = true;
 					el.login.textContent = 'Войти заново';
 					el.runSection.hidden = false;
+					el.casesSection.hidden = false;
 					el.lastSection.hidden = false;
 					el.issuesSection.hidden = false;
 					await refresh();
@@ -613,6 +681,8 @@
 			el.login.addEventListener('click', login);
 			el.run.addEventListener('click', runRobot);
 			el.refresh.addEventListener('click', refresh);
+			el.casesDry.addEventListener('click', () => runCases(false));
+			el.casesWrite.addEventListener('click', () => runCases(true));
 
 			if (token) start();
 		</script>

@@ -15,5 +15,9 @@
 	],
 	"sourceAliases": [
 		"Howl's Moving Castle"
+	],
+	"aliasesAuto": [
+		"Ходячему замку",
+		"Ходячим замком"
 	]
 }

@@ -11,5 +11,11 @@
 	"url": "https://shikimori.io/animes/58878-sayonara-lara",
 	"sourceAliases": [
 		"Goodbye, Lara"
+	],
+	"aliasesAuto": [
+		"Прощай, Лары",
+		"Прощай, Ларе",
+		"Прощай, Лару",
+		"Прощай, Ларой"
 	]
 }

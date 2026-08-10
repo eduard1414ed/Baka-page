@@ -1,0 +1,84 @@
+name: Падежные формы тайтлов
+
+# Пересчёт поля «Падежные формы» (aliasesAuto) по всему справочнику —
+# тз/11, часть A. Зовётся кнопкой со страницы /admin/tools/, по расписанию
+# не ходит: пересчитывать нечего, пока не поменялись русские названия
+# или правила склонения.
+#
+# ДВА ЗАПУСКА, А НЕ ОДИН. Без галочки — только отчёт: сколько форм, у каких
+# тайтлов, сколько новых упоминаний это даст и какие формы стоит посмотреть
+# глазами. С галочкой — запись. Причина та же, что у таймкодов и у вырезки
+# персонажей: формы включаются на весь архив разом, и увидеть этот прыжок
+# надо ДО него.
+#
+# Отчёт приходит задачей на GitHub — она же письмо на почту, и она же видна
+# на /admin/tools/ в списке «Что робот рассказывал».
+#
+# НОВЫЕ ТАЙТЛЫ СЮДА НЕ ХОДЯТ: им формы считает робот добора (sync-anime)
+# в тот же миг, когда заводит карточку. Этот прогон нужен только всему
+# справочнику сразу.
+
+on:
+  workflow_dispatch:
+    inputs:
+      write:
+        description: 'Применить посчитанное (без галочки — только отчёт, ничего не записывается)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: anime-cases
+  cancel-in-progress: false
+
+jobs:
+  cases:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm ci
+
+      # Проверки идут ПЕРЕД работой, а не после: пересчёт правит справочник,
+      # и запускать его сломанной морфологией нельзя. Подлоги внутри проверок
+      # ронят их нарочно — «всё сошлось» без них ничего не значит.
+      - name: Проверить склонение
+        run: node scripts/anime-cases.test.mjs
+
+      - name: Посчитать формы
+        run: |
+          node scripts/anime-cases.mjs ${{ inputs.write && '--write' || '' }} | tee report.txt
+
+      - name: Закоммитить, если что-то изменилось
+        if: inputs.write
+        run: |
+          git config user.name "baka-anime-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add src/content/anime
+          if git diff --cached --quiet; then
+            echo "Формы не изменились — коммитить нечего."
+          else
+            git commit -m "Пересчитать падежные формы названий"
+            git pull --rebase origin main
+            git push
+          fi
+
+      - name: Прислать отчёт письмом
+        if: always() && hashFiles('report.txt') != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Тело задачи у GitHub ограничено 65 536 знаками, а полный список
+          # всех новых упоминаний длиннее. В письмо идёт свод и разбор,
+          # он же печатается в лог прогона целиком.
+          gh issue create \
+            --title "${{ inputs.write && 'Падежные формы пересчитаны и применены' || 'Падежные формы: отчёт, ничего не записано' }}" \
+            --body "$(head -c 60000 report.txt)" \
+            --assignee eduard1414ed
