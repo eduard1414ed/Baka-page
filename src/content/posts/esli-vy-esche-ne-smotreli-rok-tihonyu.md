@@ -10,11 +10,11 @@ tgId: 922
 tgUrl: https://t.me/podcastbaka/922
 ---
 
-1. [Краткий текстовый обзор](https://t.me/podcastbaka/678)
+1. [Краткий текстовый обзор](/posts/obzor-vseh-novyh-anime-oseni-rok-tihonya/)
 
-2. [Анимация лиц в сериале](https://t.me/podcastbaka/679)
+2. [Анимация лиц в сериале](/posts/tg-2022-10-19-679/)
 
-3. [Операторская работа в аниме](https://t.me/podcastbaka/644)
+3. [Операторская работа в аниме](/posts/polnyy-vostorg/)
 
 4. [Отсылки к «Фури-Кури](https://t.me/podcastbaka/707)»
 

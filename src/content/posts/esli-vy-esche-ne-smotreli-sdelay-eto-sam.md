@@ -10,8 +10,8 @@ tgId: 920
 tgUrl: https://t.me/podcastbaka/920
 ---
 
-1. [Краткий текстовый обзор](https://t.me/podcastbaka/634)
+1. [Краткий текстовый обзор](/posts/obzor-vseh-novyh-anime-oseni-sdelay-eto-sam/)
 
-2. [Концепт-арты сериала](https://t.me/podcastbaka/635)
+2. [Концепт-арты сериала](/posts/tg-2022-10-07-635/)
 
 #полезное

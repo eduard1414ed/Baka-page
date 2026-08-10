@@ -18,4 +18,4 @@ tgUrl: https://t.me/podcastbaka/601
 
 Снимать его будет та же студия CloverWorks.
 
-Если вы ещё не слушали — [советую наш выпуск про первый сезон и полнометражный фильм «Глупого свина](https://t.me/podcastbaka/107)». Надеюсь, поможет немного отвлечься. #прочее
+Если вы ещё не слушали — [советую наш выпуск про первый сезон и полнометражный фильм «Глупого свина](/posts/etot-glupyy-svin-ne-ponimaet-mechtu-devochki-zayki-kak-eto-anime-obmanyvaet-ozhidaniya-i-chto-takoe-zdorovye-otnosheniya/)». Надеюсь, поможет немного отвлечься. #прочее

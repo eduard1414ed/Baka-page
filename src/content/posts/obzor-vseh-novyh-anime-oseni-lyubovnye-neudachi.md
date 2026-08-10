@@ -10,7 +10,7 @@ tgId: 736
 tgUrl: https://t.me/podcastbaka/736
 ---
 
-Бывают хорошие гаремники. Например, «[Пять невест](https://t.me/podcastbaka/490)» или «[Торадора](https://t.me/podcastbaka/8)» (хотя я бы не называл его гаремником, но пусть будет).
+Бывают хорошие гаремники. Например, «[Пять невест](/posts/poryadkovye-nomera/)» или «[Торадора](/posts/toradora-razbiraem-vseh-glavnyh-personazhey-i-pytaemsya-reshit-luchshee-li-eto-romanticheskoe-anime/)» (хотя я бы не называл его гаремником, но пусть будет).
 
 А есть гаремники плохие. Главное различие — в достоверности происходящего.
 

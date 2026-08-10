@@ -26,8 +26,8 @@ tgUrl: https://t.me/podcastbaka/753
 
 7. [Госпожа Кагуя - Лучшая романтическая комедия](https://youtu.be/8SDnxqHJkWM)
 
-8. [Кагуя — приглашённая звезда](https://t.me/podcastbaka/442)
+8. [Кагуя — приглашённая звезда](/posts/kaguya-priglashyonnaya-zvezda/)
 
-9. [Госпожа Кагуя и аниматор с Филиппин](https://t.me/podcastbaka/270)
+9. [Госпожа Кагуя и аниматор с Филиппин](/posts/gospozha-kaguya-i-animator-s-filippin/)
 
 #полезное
