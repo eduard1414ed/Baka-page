@@ -9,6 +9,7 @@ noCover: false
 externalUrl: https://t-j.ru/anime-summer-2026/
 externalSource: Т—Ж
 adLabel: ''
+timecodes: ''
 tgId: 4087
 tgUrl: https://t.me/podcastbaka/4087
 anime:
