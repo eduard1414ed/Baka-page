@@ -2,7 +2,6 @@
 title: Кто такие цугаи?
 date: 2026-05-11
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

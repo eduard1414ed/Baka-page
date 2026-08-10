@@ -2,7 +2,6 @@
 title: Итоги просмотра всех аниме лета
 date: 2026-07-15
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

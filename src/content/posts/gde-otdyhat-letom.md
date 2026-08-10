@@ -2,7 +2,6 @@
 title: Где отдыхать летом?
 date: 2026-06-25
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

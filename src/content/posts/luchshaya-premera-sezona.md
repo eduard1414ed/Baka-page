@@ -2,7 +2,6 @@
 title: Лучшая премьера сезона
 date: 2026-04-13
 category: note
-categoryGuessed: false
 draft: false
 description: ''
 cover: /images/uploads/tg-3887.jpg

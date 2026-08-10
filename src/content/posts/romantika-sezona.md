@@ -2,7 +2,6 @@
 title: Романтика сезона
 date: 2026-04-15
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

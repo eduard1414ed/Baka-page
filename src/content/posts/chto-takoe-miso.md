@@ -2,7 +2,6 @@
 title: Что такое мисо?
 date: 2026-06-09
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

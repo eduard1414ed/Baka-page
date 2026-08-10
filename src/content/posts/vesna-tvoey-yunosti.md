@@ -2,7 +2,6 @@
 title: Весна твоей юности
 date: 2026-05-21
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

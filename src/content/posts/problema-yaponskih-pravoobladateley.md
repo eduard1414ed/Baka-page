@@ -2,7 +2,6 @@
 title: Проблема японских правообладателей
 date: 2026-07-09
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

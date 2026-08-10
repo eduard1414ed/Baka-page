@@ -2,7 +2,6 @@
 title: Лучшие аниме-сериалы 2026 года
 date: 2026-07-06
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

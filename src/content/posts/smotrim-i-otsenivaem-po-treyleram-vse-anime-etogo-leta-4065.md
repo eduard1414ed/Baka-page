@@ -2,7 +2,6 @@
 title: Смотрим (и оцениваем по трейлерам) все аниме этого лета!
 date: 2026-07-10
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

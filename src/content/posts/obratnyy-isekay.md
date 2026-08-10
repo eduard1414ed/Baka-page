@@ -2,7 +2,6 @@
 title: Обратный исекай?
 date: 2026-04-21
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

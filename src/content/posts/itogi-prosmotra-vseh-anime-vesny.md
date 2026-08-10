@@ -2,7 +2,6 @@
 title: Итоги просмотра всех аниме весны
 date: 2026-04-06
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

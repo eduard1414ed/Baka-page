@@ -2,7 +2,6 @@
 title: Размерчики, размеры, размерища
 date: 2026-07-30
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

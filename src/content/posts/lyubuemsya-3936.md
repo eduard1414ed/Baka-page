@@ -2,7 +2,6 @@
 title: Любуемся!
 date: 2026-05-13
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

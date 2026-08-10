@@ -2,7 +2,6 @@
 title: Привет, Лара!
 date: 2026-07-21
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

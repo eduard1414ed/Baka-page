@@ -2,7 +2,6 @@
 title: Это все игра слов!
 date: 2026-05-15
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

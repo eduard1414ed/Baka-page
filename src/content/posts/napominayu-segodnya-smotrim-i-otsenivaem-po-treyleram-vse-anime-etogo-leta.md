@@ -2,7 +2,6 @@
 title: Напоминаю! Сегодня смотрим (и оцениваем по трейлерам) все аниме этого лета
 date: 2026-07-12
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

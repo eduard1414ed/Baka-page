@@ -2,7 +2,6 @@
 title: Китайские комиксы и романы
 date: 2026-04-10
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: /images/uploads/tg-3884.jpg

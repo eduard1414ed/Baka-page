@@ -2,7 +2,6 @@
 title: Что такое гиас?
 date: 2026-05-29
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

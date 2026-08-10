@@ -2,7 +2,6 @@
 title: Лучшее забытое стимпанк-аниме
 date: 2026-05-18
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

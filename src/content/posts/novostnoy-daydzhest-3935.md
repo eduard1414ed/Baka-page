@@ -2,7 +2,6 @@
 title: Новостной дайджест
 date: 2026-05-12
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

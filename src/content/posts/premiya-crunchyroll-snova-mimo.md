@@ -2,7 +2,6 @@
 title: Премия Crunchyroll — снова мимо?
 date: 2026-05-26
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

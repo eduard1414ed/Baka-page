@@ -2,7 +2,6 @@
 title: 10 самых ожидаемых аниме весны 2026 года
 date: 2026-04-16
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

@@ -2,7 +2,6 @@
 title: Напоминаю! Сегодня смотрим (и оцениваем по трейлерам) все аниме этой весны
 date: 2026-04-03
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

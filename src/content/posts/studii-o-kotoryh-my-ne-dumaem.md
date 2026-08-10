@@ -2,7 +2,6 @@
 title: Студии, о которых мы не думаем
 date: 2026-05-20
 category: note
-categoryGuessed: false
 draft: false
 description: ''
 cover: /images/uploads/tg-3946.jpg

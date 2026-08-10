@@ -2,7 +2,6 @@
 title: Обои и календари
 date: 2026-06-01
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

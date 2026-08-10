@@ -2,7 +2,6 @@
 title: Операторская работа в K-On!
 date: 2026-06-24
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

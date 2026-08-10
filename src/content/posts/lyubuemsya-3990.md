@@ -2,7 +2,6 @@
 title: Любуемся!
 date: 2026-06-03
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: /images/uploads/tg-3990.jpg

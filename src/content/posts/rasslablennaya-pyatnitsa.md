@@ -2,7 +2,6 @@
 title: Расслабленная пятница
 date: 2026-06-05
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

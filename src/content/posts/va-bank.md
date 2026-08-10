@@ -2,7 +2,6 @@
 title: Ва-банк!
 date: 2026-05-08
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

@@ -2,7 +2,6 @@
 title: Манга про Человека-паука?
 date: 2026-08-03
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

@@ -2,7 +2,6 @@
 title: Полсезона туда, полсезона сюда
 date: 2026-06-16
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

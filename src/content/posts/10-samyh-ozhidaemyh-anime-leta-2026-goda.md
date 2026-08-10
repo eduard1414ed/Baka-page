@@ -2,7 +2,6 @@
 title: 10 самых ожидаемых аниме лета 2026 года
 date: 2026-07-17
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

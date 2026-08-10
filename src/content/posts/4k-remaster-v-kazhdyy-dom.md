@@ -2,7 +2,6 @@
 title: 4К-ремастер в каждый дом
 date: 2026-08-04
 category: note
-categoryGuessed: false
 draft: false
 description: ''
 cover: ''

@@ -2,7 +2,6 @@
 title: Манга как видеоигра
 date: 2026-05-27
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

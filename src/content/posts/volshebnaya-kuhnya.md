@@ -2,7 +2,6 @@
 title: Волшебная кухня
 date: 2026-05-06
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

@@ -2,7 +2,6 @@
 title: Главная новость года!
 date: 2026-07-01
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

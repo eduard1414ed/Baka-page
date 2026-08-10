@@ -2,7 +2,6 @@
 title: Отмена эфира
 date: 2026-06-28
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

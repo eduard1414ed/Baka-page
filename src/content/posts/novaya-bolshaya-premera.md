@@ -2,7 +2,6 @@
 title: Новая большая премьера!
 date: 2026-06-08
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

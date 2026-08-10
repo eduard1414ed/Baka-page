@@ -2,7 +2,6 @@
 title: Красота на мечах
 date: 2026-07-28
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

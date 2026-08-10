@@ -2,7 +2,6 @@
 title: Какими получились первые две серии «Ателье колдовских колпаков»?
 date: 2026-04-08
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

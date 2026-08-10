@@ -2,7 +2,6 @@
 title: Творческая свобода
 date: 2026-04-29
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

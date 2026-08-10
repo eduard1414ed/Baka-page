@@ -2,7 +2,6 @@
 title: Усы, лапы и хвост
 date: 2026-07-08
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

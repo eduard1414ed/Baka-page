@@ -2,7 +2,6 @@
 title: 'Знакомьтесь: Матсуо Косэки'
 date: 2026-06-17
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

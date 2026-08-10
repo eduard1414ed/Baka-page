@@ -2,7 +2,6 @@
 title: А вот и лето
 date: 2026-06-02
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

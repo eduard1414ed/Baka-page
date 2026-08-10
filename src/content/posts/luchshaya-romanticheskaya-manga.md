@@ -2,7 +2,6 @@
 title: Лучшая романтическая манга
 date: 2026-05-05
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''

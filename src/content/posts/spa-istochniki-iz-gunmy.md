@@ -2,7 +2,6 @@
 title: Спа-источники из Гунмы
 date: 2026-06-15
 category: note
-categoryGuessed: true
 draft: true
 description: ''
 cover: ''
