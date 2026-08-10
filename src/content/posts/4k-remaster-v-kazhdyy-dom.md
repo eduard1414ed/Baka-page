@@ -4,17 +4,19 @@ date: 2026-08-04
 category: note
 draft: false
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/tg-4134.jpg
+noCover: false
 externalUrl: ''
 externalSource: ''
 adLabel: ''
 anime: []
 timecodes: ''
-pullMedia: true
+pullMedia: false
 tgId: 4134
 tgUrl: https://t.me/podcastbaka/4134
 ---
+
+::image{src="/images/uploads/tg-4134.jpg" alt="" width="column"}
 
 Я тут задался вопросом, а как студии делают ремастеры старых аниме в 4К-разрешении? Используют AI, сканируют заново пленку или вообще ищут оригинальные кадры? Оказалось, что бывает очень по-разному.
 
