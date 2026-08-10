@@ -176,6 +176,18 @@ export function sectionOf(id: string): string {
 // в любом необязательном поле, и схема обязана это пережить.
 const emptyToUndefined = (value: unknown) => (value === '' || value === null ? undefined : value);
 
+// Галочка «Черновик» лечится ОСОБО, и вот почему.
+//
+// Остальным полям «ничего» безопасно читать как «поля нет»: обложки нет,
+// описания нет, ссылок нет. У черновика отсутствие поля значит ОПУБЛИКОВАН —
+// так стоит у старых постов, заведённых до появления галочки. Пропусти мы
+// «ничего» через обычную поправку, стёртое значение тихо опубликовало бы
+// неготовый материал, и заметить это было бы некому.
+//
+// Поэтому «ничего» читается как «черновик» — в безопасную сторону. Отсутствие
+// поля по-прежнему значит «опубликован», это разные случаи.
+const draftFlag = z.preprocess((value) => (value === '' || value === null ? true : value), z.boolean().default(false));
+
 const optionalDate = z.preprocess(emptyToUndefined, z.coerce.date().optional());
 const optionalNumber = z.preprocess(emptyToUndefined, z.number().optional());
 const optionalUrl = z.preprocess(emptyToUndefined, z.string().url().optional());
@@ -211,10 +223,10 @@ const posts = defineCollection({
 			// просто забыли поставить. Нужен ленте: заметка должна выглядеть
 			// заголовком в строку, а не карточкой с дырой на месте картинки
 			// (окончательный вид — этап дизайна).
-			noCover: z.boolean().default(false),
+			noCover: z.preprocess(emptyToUndefined, z.boolean().default(false)),
 			youtube: optionalUrl,
-			video: z.string().optional(),
-			audioGuid: z.string().optional(),
+			video: z.preprocess(emptyToUndefined, z.string().optional()),
+			audioGuid: z.preprocess(emptyToUndefined, z.string().optional()),
 			// Пост-ссылка на чужой сайт (тз/10, задача 2). ПРИЗНАК, А НЕ КАТЕГОРИЯ:
 			// работает поверх любой, обычно поверх «Статьи».
 			//
@@ -269,7 +281,7 @@ const posts = defineCollection({
 			// Схеме тут проверять нечего — и это правильно: строгая проверка
 			// уронила бы сборку ВСЕГО сайта от одной кривой строки. Мусор
 			// отсеивается при разборе и называется в логе.
-			timecodes: z.string().optional(),
+			timecodes: z.preprocess(emptyToUndefined, z.string().optional()),
 			// Имя файла расшифровки в src/content/transcripts/ (без .json).
 			// Обычно заполнять не нужно: у выпусков подкаста расшифровка находится
 			// сама по audioGuid — файл называется тем же guid. Поле нужно там, где
@@ -278,23 +290,23 @@ const posts = defineCollection({
 			// от него же берётся длительность в строке рядом с датой
 			// (см. src/lib/postTiming.mjs); без него длительность взять неоткуда
 			// и метки просто не будет.
-			transcript: z.string().optional(),
+			transcript: z.preprocess(emptyToUndefined, z.string().optional()),
 			// Имена голосов, вписанные руками в админке, одной строкой:
 			// 'speaker_0=Эд; speaker_1=Ксюша'. Побеждают автоматические имена
 			// из файла расшифровки. Почему строкой и почему в посте —
 			// см. src/lib/speakerNames.mjs.
-			speakers: z.string().optional(),
+			speakers: z.preprocess(emptyToUndefined, z.string().optional()),
 			// Подтверждённые руками исправления названий в расшифровке, одной
 			// строкой: '9|Фринен|Фрирен'. Пусто = не исправлено ничего, и это
 			// нормальное состояние — предложения из transcripts/*.corrections.json
 			// применяются только отмеченные. См. src/lib/nameCorrections.mjs.
-			corrections: z.string().optional(),
+			corrections: z.preprocess(emptyToUndefined, z.string().optional()),
 			// Что убрано из упоминаний руками, одной строкой:
 			// 'monster:* k-on:12,45.1'. Пусто = не убрано ничего, это обычное
 			// состояние. Разбор и правила — src/lib/mentionExceptions.mjs.
-			mentionsHidden: z.string().optional(),
-			script: z.string().optional(),
-			draft: z.boolean().default(false),
+			mentionsHidden: z.preprocess(emptyToUndefined, z.string().optional()),
+			script: z.preprocess(emptyToUndefined, z.string().optional()),
+			draft: draftFlag,
 			// Когда пост должен появиться на сайте — независимая ось от `date`
 			// (см. тз/09-отложенный-постинг.md). Пусто = ни на что не влияет.
 			// Обычный сценарий: галочка «Черновик» стоит, а publishAt задаёт время —
@@ -304,7 +316,7 @@ const posts = defineCollection({
 			publishAt: optionalDate,
 			// Пока проставляется вручную в файле поста. Автозаполнение из разметки
 			// названий в тексте — следующий шаг (см. тз/03-тайтлы.md).
-			anime: z.array(reference('anime')).optional(),
+			anime: z.preprocess(emptyToUndefined, z.array(reference('anime')).optional()),
 		}),
 });
 
@@ -320,13 +332,13 @@ const anime = defineCollection({
 		sourceId: z.number(),
 		// У AniList не бывает русских названий — тогда titleRu пустой,
 		// на страницах тайтла это явно помечено, вписывается вручную.
-		titleRu: z.string().optional(),
+		titleRu: z.preprocess(emptyToUndefined, z.string().optional()),
 		titleOriginal: z.string(),
 		year: optionalNumber,
-		studio: z.string().optional(),
+		studio: z.preprocess(emptyToUndefined, z.string().optional()),
 		// Путь к обложке в public/anime/ — см. src/lib/animePoster.mjs.
-		poster: z.string().optional(),
-		synopsis: z.string().optional(),
+		poster: z.preprocess(emptyToUndefined, z.string().optional()),
+		synopsis: z.preprocess(emptyToUndefined, z.string().optional()),
 		url: optionalUrl,
 		// Варианты написания, по которым упоминания ищутся наравне с titleRu
 		// и titleOriginal: падежи («Ходячего замка»), как говорят вслух («K-On!»
@@ -334,20 +346,20 @@ const anime = defineCollection({
 		// в админке, ни Shikimori, ни AniList их не отдают — поэтому обновление
 		// справочника их не трогает. Зеркало исключений упоминаний: варианты
 		// упоминания добавляют, исключения убирают.
-		aliases: z.array(z.string()).default([]),
+		aliases: z.preprocess(emptyToUndefined, z.array(z.string()).default([])),
 		// Альтернативные названия, как их знает источник (раздел Shikimori
 		// «Альтернативные названия»). ПО НИМ УПОМИНАНИЯ НЕ ИЩУТСЯ — это только
 		// подсказки к полю выше: в админке они показываются кнопкой «добавить».
 		// Молча пускать их в поиск нельзя, среди них попадается мусор вроде
 		// «K-ON! Season 1», а плохой вариант даёт ложные упоминания сразу
 		// по всему архиву и незаметно.
-		sourceAliases: z.array(z.string()).default([]),
+		sourceAliases: z.preprocess(emptyToUndefined, z.array(z.string()).default([])),
 		// Какие поля правлены руками. Обновление из Shikimori/AniList такое поле
 		// не перезаписывает, а пишет в лог, что данные из API проигнорированы
 		// (scripts/anime-lib.mjs). Признак по каждому полю отдельно, а не на всю
 		// карточку — так и сказано в CLAUDE.md: описание заказчик переписывает
 		// своими словами, а обложку хочет обновлять автоматически.
-		manual: z.array(z.enum(['titleRu', 'synopsis', 'poster'])).default([]),
+		manual: z.preprocess(emptyToUndefined, z.array(z.enum(['titleRu', 'synopsis', 'poster'])).default([])),
 	}),
 });
 
@@ -423,18 +435,22 @@ const pages = defineCollection({
 		hosts: z
 			.array(
 				z.object({
-					name: z.string().optional(),
-					role: z.string().optional(),
+					name: z.preprocess(emptyToUndefined, z.string().optional()),
+					role: z.preprocess(emptyToUndefined, z.string().optional()),
 					// Путь к загруженной картинке: '/images/uploads/ed.jpg'.
 					// Сжатые копии делает сборка, см. src/lib/imageVariants.mjs.
 					photo: z.preprocess(emptyToUndefined, z.string().optional()),
 					url: z.preprocess(emptyToUndefined, z.string().optional()),
-					bio: z.string().optional(),
-					urlLabel: z.string().optional(),
+					bio: z.preprocess(emptyToUndefined, z.string().optional()),
+					urlLabel: z.preprocess(emptyToUndefined, z.string().optional()),
 				}),
 			)
-			.default([]),
-		supportNote: z.string().optional(),
+			// Опустошив список в админке, Sveltia пишет «ничего» (null), а не
+			// пустой список: .default() этого не переживает, он срабатывает
+			// только на отсутствие поля. См. emptyToUndefined выше.
+			.nullish()
+			.transform((value) => value ?? []),
+		supportNote: z.preprocess(emptyToUndefined, z.string().optional()),
 		contactEmail: z.preprocess(emptyToUndefined, z.string().optional()),
 
 		// --- Остальные поля страницы «О проекте» (тз/10.4) ---
@@ -444,11 +460,11 @@ const pages = defineCollection({
 		// ПОЛЕЙ ПРО ЧАТ ЗДЕСЬ НЕТ, и это не забывчивость: чат переехал
 		// в блок «Ещё немного нас» и живёт теперь записью в platforms.js —
 		// он место, куда приходят, а не способ написать нам лично.
-		hostsNote: z.string().optional(),
-		listenNote: z.string().optional(),
-		socialNote: z.string().optional(),
-		supportTitle: z.string().optional(),
-		contactText: z.string().optional(),
+		hostsNote: z.preprocess(emptyToUndefined, z.string().optional()),
+		listenNote: z.preprocess(emptyToUndefined, z.string().optional()),
+		socialNote: z.preprocess(emptyToUndefined, z.string().optional()),
+		supportTitle: z.preprocess(emptyToUndefined, z.string().optional()),
+		contactText: z.preprocess(emptyToUndefined, z.string().optional()),
 
 		// --- Поля страницы «Поддержать» (тз/08, часть 10.1) ---
 		//
@@ -467,24 +483,32 @@ const pages = defineCollection({
 		// не носит: чтобы попасть в неё правилом, странице пришлось бы описать
 		// этот вид второй раз у себя — и две копии одного вида разошлись бы,
 		// как это уже трижды случалось в проекте. Отдельное поле стоит дешевле.
-		lead: z.string().optional(),
-		benefitsNote: z.string().optional(),
+		lead: z.preprocess(emptyToUndefined, z.string().optional()),
+		benefitsNote: z.preprocess(emptyToUndefined, z.string().optional()),
 		benefits: z
 			.array(
 				z.object({
-					text: z.string().optional(),
+					text: z.preprocess(emptyToUndefined, z.string().optional()),
 				}),
 			)
-			.default([]),
-		altText: z.string().optional(),
+			// Опустошив список в админке, Sveltia пишет «ничего» (null), а не
+			// пустой список: .default() этого не переживает, он срабатывает
+			// только на отсутствие поля. См. emptyToUndefined выше.
+			.nullish()
+			.transform((value) => value ?? []),
+		altText: z.preprocess(emptyToUndefined, z.string().optional()),
 		altLinks: z
 			.array(
 				z.object({
-					label: z.string().optional(),
+					label: z.preprocess(emptyToUndefined, z.string().optional()),
 					url: z.preprocess(emptyToUndefined, z.string().optional()),
 				}),
 			)
-			.default([]),
+			// Опустошив список в админке, Sveltia пишет «ничего» (null), а не
+			// пустой список: .default() этого не переживает, он срабатывает
+			// только на отсутствие поля. См. emptyToUndefined выше.
+			.nullish()
+			.transform((value) => value ?? []),
 	}),
 });
 
