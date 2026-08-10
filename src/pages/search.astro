@@ -1411,11 +1411,12 @@ const SCOPES = [
 
 	/* ГЕОМЕТРИЮ КАРТИНКИ ЗАДАЁТ МАТЕРИАЛ, А НЕ МЕСТО: обложка выпуска всегда
 	   квадрат, остальное — кадр 16:9. То же правило, что в PostMedia.astro. */
+	/* Плашки за картинкой нет — та же причина, что в PostMedia.astro:
+	   обложка выпуска это вырезанный персонаж на прозрачном фоне. */
 	.group-list :global(.material-thumb) {
 		width: 100%;
 		aspect-ratio: 16 / 9;
 		overflow: hidden;
-		background: var(--line-soft);
 	}
 
 	.group-list :global(.material-thumb.is-square) {

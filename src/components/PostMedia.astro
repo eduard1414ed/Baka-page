@@ -54,11 +54,14 @@ const shape = sectionOf(post.data.category) === 'podcast' ? 'square' : 'wide';
 }
 
 <style>
+	/* ПЛАШКИ ЗА КАРТИНКОЙ НЕТ, И ЭТО НАРОЧНО. Обложка выпуска теперь
+	   вырезанный персонаж на прозрачном фоне (тз/12), и подложка стала бы
+	   серым прямоугольником вокруг него. Пока обложки были непрозрачными,
+	   её не видел никто. Фон слота — бумага страницы. */
 	.post-media {
 		display: block;
 		position: relative;
 		overflow: hidden;
-		background: var(--line-soft);
 	}
 
 	.post-media img {

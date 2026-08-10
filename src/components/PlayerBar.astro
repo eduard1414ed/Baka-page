@@ -677,13 +677,14 @@
 		gap: var(--sp-3);
 	}
 
+	/* Плашки за картинкой нет — та же причина, что в PostMedia.astro:
+	   обложка выпуска это вырезанный персонаж на прозрачном фоне. */
 	.mini-cover {
 		width: 44px;
 		height: 44px;
 		display: grid;
 		place-items: center;
 		overflow: hidden;
-		background: var(--line-soft);
 	}
 
 	.mini-cover img {
