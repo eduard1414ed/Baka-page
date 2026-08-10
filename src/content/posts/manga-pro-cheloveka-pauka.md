@@ -16,7 +16,8 @@ tgId: 4130
 tgUrl: https://t.me/podcastbaka/4130
 ---
 
-::image{src="/images/uploads/tg-4130.jpg" alt=""}
+::image{src="/images/uploads/tg-4130.jpg" alt="" width="column"}
+
 
 Вспомнил тут в связи с выходом нового «Человека-паука» такую историю. В 1970 году журнал Monthly Shōnen Magazine решил перейти на еженедельный формат выхода (и даже переименовался на какое-то время).
 
@@ -32,6 +33,13 @@ tgUrl: https://t.me/podcastbaka/4130
 
 Так что официально японский «Человек-паук» существует где-то на Земле под номером 70019.
 
-::image{src="/images/uploads/tg-4131.jpg" alt=""}
-::image{src="/images/uploads/tg-4132.jpg" alt=""}
-::image{src="/images/uploads/tg-4133.jpg" alt=""}
+
+::image{src="/images/uploads/tg-4131.jpg" alt="" width="column"}
+
+
+
+::image{src="/images/uploads/tg-4132.jpg" alt="" width="column"}
+
+
+
+::image{src="/images/uploads/tg-4133.jpg" alt="" width="column"}
