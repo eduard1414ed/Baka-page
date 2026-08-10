@@ -1184,14 +1184,29 @@ async function write(covers, { strict = false, force = false, refetch = false, r
 		const applied = Boolean(result.canvas) && (result.status === 'ok' || force || !strict);
 
 		if (!applied) {
+			// КАРТИНКУ ПОДМЕНИЛИ, А НОВАЯ НЕ ПОДДАЛАСЬ. Персонаж, вырезанный
+			// из ПРЕЖНЕЙ картинки, лежит на месте и будет показываться дальше —
+			// то есть на сайте останется фигура, которой на обложке уже нет.
+			// Такого персонажа убираем: выпуск честно вернётся к своей нынешней
+			// обложке. При первом знакомстве с обложкой (записи в журнале нет)
+			// не трогаем ничего — там и удалять нечего, а если файл всё же лежит,
+			// он приехал из чужого коммита и не наше дело его сносить.
+			let dropped = false;
+			if (before && before.hash !== hash) {
+				for (const width of OUT_WIDTHS) {
+					const file = fileURLToPath(new URL(`${encodeURIComponent(cover.id)}-${width}w.webp`, CUTOUT_DIR));
+					if (existsSync(file)) { await rm(file); dropped = true; }
+				}
+			}
+
 			const why = result.reasons.join('; ') || 'вырезать не удалось';
 			log[cover.id] = {
 				status: result.status === 'check' ? 'на проверку' : 'не по шаблону',
 				hash,
 				why,
 			};
-			left.push({ cover, kind: result.status === 'check' ? 'check' : 'skip', why });
-			console.log(`${head} — НЕ ПРИМЕНЕНО: ${why}`);
+			left.push({ cover, kind: result.status === 'check' ? 'check' : 'skip', why, dropped });
+			console.log(`${head} — НЕ ПРИМЕНЕНО: ${why}${dropped ? ' (прежний персонаж убран — картинку подменили)' : ''}`);
 			skipped += 1;
 			continue;
 		}
@@ -1272,10 +1287,13 @@ async function writeNotice(file, left) {
 		: `Обложек не обработано: ${left.length}`;
 
 	const lines = [];
-	for (const { cover, kind, why } of left) {
+	for (const { cover, kind, why, dropped } of left) {
 		lines.push(`### 🖼 ${cover.title}`);
 		lines.push('');
 		lines.push(`- **На сайте осталась обычная обложка** — с рамкой и надписью. Это не поломка, а запасной путь: лучше обложка как есть, чем персонаж с куском подписи или дырой в контуре.`);
+		if (dropped) {
+			lines.push('- ⚠️ **Картинку у этого выпуска подменили**, а новая не поддалась. Прежний вырезанный персонаж убран: он был сделан из старой картинки и показывал бы то, чего на обложке уже нет.');
+		}
 		lines.push(`- Причина: ${why}`);
 		lines.push(`- Ключ обложки: \`${cover.id}\``);
 
