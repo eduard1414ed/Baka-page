@@ -12,6 +12,7 @@ import remarkAnime from './src/plugins/remark-anime.mjs';
 import remarkTimecode from './src/plugins/remark-timecode.mjs';
 import optimizeUploadsIntegration from './src/plugins/optimize-uploads-integration.mjs';
 import ogImagesIntegration from './src/plugins/og-images-integration.mjs';
+import postLinksIntegration from './src/plugins/post-links-integration.mjs';
 import { SITE_URL } from './src/lib/site.mjs';
 
 // https://astro.build/config
@@ -24,7 +25,9 @@ export default defineConfig({
 	// ПОРЯДОК ВАЖЕН: Astro выполняет хуки сборки по очереди, а картинки превью
 	// рисуются в том числе из jpeg-копий, которые создаёт первый шаг.
 	// Поменяете местами — превью выпусков останутся без исходников.
-	integrations: [optimizeUploadsIntegration(), ogImagesIntegration()],
+	// Третий ничего не делает с файлами — только говорит вслух про ссылки
+	// в никуда у опубликованных постов, поэтому его место в списке безразлично.
+	integrations: [optimizeUploadsIntegration(), ogImagesIntegration(), postLinksIntegration()],
 	markdown: {
 		// Порядок важен: спойлер должен видеть уже сгруппированные картинки/галереи.
 		remarkPlugins: [
