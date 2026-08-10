@@ -6,6 +6,7 @@ draft: true
 description: ''
 cover: ''
 noCover: false
+pullMedia: true
 tgId: 3923
 tgUrl: https://t.me/podcastbaka/3923
 ---
