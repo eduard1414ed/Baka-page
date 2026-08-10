@@ -67,9 +67,27 @@ const KEEP_COLOR = false;
 /** Во сколько раз первый кусок обязан быть крупнее второго. Норма по архиву — 37. */
 const MIN_GAP = 10;
 
+/**
+ * Какой доли самого крупного куска хватает, чтобы кусок тоже считался фигурой.
+ *
+ * Шаг 4 в ТЗ звучит «оставить самый крупный связный кусок», и написан он ради
+ * того, чтобы отвалились надпись «БАКА!», кана и вертикальная подпись. С этим
+ * он справляется, но заодно выбрасывает ВТОРУЮ ФИГУРУ, если в кадре двое:
+ * у обложки 1e0dd09a девушка весит 70 % от парня и пропадала целиком.
+ *
+ * Порог из замера по архиву: у двух обложек с двумя фигурами второй кусок
+ * это 70 % и 59 % от первого, у всех остальных 111 — 9 % и меньше (следующий
+ * по величине разрыв 11-кратный). Четверть попадает ровно в эту пропасть.
+ *
+ * Вторым условием кусок обязан лежать ВНУТРИ рамки: настоящее отличие
+ * персонажа от подписи не в размере, а в этом. Надпись и кана стоят выше
+ * рамки целиком.
+ */
+const MIN_SECOND_PIECE = 0.25;
+
 /** Допустимая доля площади фигуры от площади внутри рамки. */
 const MIN_AREA = 0.05;
-const MAX_AREA = 0.60;
+const MAX_AREA = 0.70;
 
 // ── распознавание шаблона ───────────────────────────────────────────────────
 //
@@ -104,10 +122,43 @@ const MIN_LINE = 0.13;
  */
 const SQUARE_TOLERANCE = 0.05;
 
+/**
+ * Насколько яркость светлого куска внутри рамки может отличаться от бумаги,
+ * чтобы он считался фоном, а не нутром фигуры.
+ *
+ * Признак «сколько кусок касается кромки» не годится вовсе: замер по архиву
+ * дал сплошную ленту от 5 до 25 % без единого разрыва, и карманы фона были
+ * там вперемешку с одеждой. Годится другой: внутренний фон — это БУКВАЛЬНО
+ * та же бумага, а всё нарисованное от неё отличается.
+ *
+ * Замер по 597 кускам: у кусков, содержащих угол рамки (то есть заведомо
+ * фона), отличие от эталона 0 или 1 в 154 случаях из 160. У остальных либо
+ * тоже 0–1 (это карманы фона, 60 кусков), либо сразу 10–12 — белая одежда,
+ * нарисованная чистым 255 при бумаге 244.
+ *
+ * НО ОДНОЙ ЯРКОСТИ МАЛО: кусок обязан ещё и КАСАТЬСЯ КРОМКИ рамки. Кожа лица
+ * нарисована ровно цветом бумаги, и правило по одной яркости выбрасывало её —
+ * а вместе с ней осиротели глаза и рот: они становились отдельными кусочками,
+ * оторванными от фигуры, и отваливались как мусор. У Наруто в очках от лица
+ * не осталось ничего. Фон обязан быть связан с краем; что заперто внутри
+ * фигуры, фоном быть не может.
+ */
+const PAPER_TOLERANCE = 2;
+
 // ── служебное ───────────────────────────────────────────────────────────────
 
 /** Ширины готовых файлов. Два размера, не больше — правило проекта. */
 const OUT_WIDTHS = [640, 1200];
+
+/**
+ * Качество webp. Формат вместо PNG из ТЗ — решение заказчика 10 августа 2026.
+ *
+ * Замер: PNG на 1200 px весит 313 КБ, на весь архив в двух размерах 46 МБ;
+ * webp — 58 и 29 КБ, на архив 12 МБ. Прозрачность webp держит, и сайт уже
+ * отдаёт webp везде. Качество 82 от PNG на пятикратном увеличении контура
+ * не отличается, 95 стоит ещё 40 % веса ни за что.
+ */
+const WEBP_QUALITY = 82;
 
 // Обе папки — во временной, а не в проекте: в гит из этой работы попадает
 // только сам скрипт. Путь простой и одинаковый на всех запусках, чтобы
@@ -176,8 +227,26 @@ async function collectCovers() {
 		});
 	}
 
-	console.log(`Обложек выпусков из RSS: ${fromFeed}. Загруженных руками (бонусы и прочее): ${found.size - fromFeed}.`);
-	return [...found.values()];
+	// RSS может не ответить — сеть, чужой сервер, что угодно. Тогда прогон
+	// молча делал бы три обложки из ста сорока одной и печатал бодрый отчёт:
+	// ложь ровно в сторону «всё хорошо». Берём список из кэша скачанного
+	// и говорим об этом громко.
+	if (fromFeed === 0 && existsSync(CACHE_DIR)) {
+		const cached = (await readdir(CACHE_DIR)).filter((f) => f.endsWith('.jpg'));
+		for (const file of cached) {
+			const id = file.slice(0, -4);
+			if (found.has(id)) continue;
+			found.set(id, { id, kind: 'episode', src: path.join(CACHE_DIR, file), title: id });
+		}
+		console.log(`ВНИМАНИЕ: RSS не ответил. Беру ${cached.length} обложек из кэша ${CACHE_DIR}.`);
+		console.log('Новых выпусков, появившихся после последнего --fetch, в этом прогоне нет.');
+	}
+
+	const all = [...found.values()];
+	const episodes = all.filter((c) => c.kind === 'episode').length;
+	console.log(`Обложек выпусков: ${episodes}. Загруженных руками (бонусы и прочее): ${all.length - episodes}.`);
+	if (all.length === 0) throw new Error('Обложек не нашлось ни в RSS, ни в кэше — делать нечего.');
+	return all;
 }
 
 /** Путь к оригиналу: у выпусков — в кэше, у загруженных руками — прямо в проекте. */
@@ -357,15 +426,22 @@ function backgroundLevel(grey, W, H) {
 }
 
 /**
- * Стереть рамку полосой ±ERASE, но только там, где по обе стороны от неё фон.
+ * Убрать рамку из маски полосой ±ERASE, но только там, где по обе стороны
+ * от неё фон.
  *
  * Полосой, а не линией: у линии есть серый ореол сглаживания, он не чёрный
- * и не фон. Сотрёшь только линию — ореол останется тонким кольцом и запечатает
- * внутреннюю область: заливка снаружи внутрь не пройдёт, и в «персонажа»
- * попадёт весь фон вместе с подписью.
+ * и не фон. Уберёшь только линию — ореол останется тонким кольцом и попадёт
+ * в фигуру ободком.
  *
- * Где персонаж пересекает рамку — не трогаем: дыра в контуре пустила бы
- * заливку внутрь фигуры.
+ * Где персонаж пересекает рамку — не трогаем: разрыв отрезал бы всё, что
+ * вылезло наружу (замер по архиву: заметно вылезает 98 фигур из 112).
+ *
+ * ЭТОТ ШАГ ИДЁТ ПОСЛЕ ЗАЛИВКИ, а не до неё, как написано в ТЗ. Порядок из ТЗ
+ * съедал белую одежду: фигура обрезана рамкой снизу, то есть контур у неё
+ * внизу разомкнут, и по стёртой рамке заливка входила внутрь фигуры. Белая
+ * рубашка от фона по яркости не отличается вовсе (фон 248, рубашка 250–255),
+ * поэтому разливалась по ней целиком — на красной подложке сквозь одежду
+ * было видно подложку. При целой рамке входить некуда.
  *
  * @returns {{erased:number, kept:number}} сколько позиций стёрли и сколько
  *          оставили. «Оставили» = там персонаж пересекает рамку — и это число
@@ -373,7 +449,7 @@ function backgroundLevel(grey, W, H) {
  *          в перпендикулярную линию, и без этой оговорки счётчик отвечал бы
  *          «фигура вылезала за рамку» про все 112 обложек подряд.
  */
-function eraseFrame(grey, W, H, frame, bg) {
+function eraseFrame(grey, bgMask, W, H, frame, bg) {
 	const isBg = (value) => Math.abs(value - bg) <= BG_TOLERANCE;
 	let erased = 0;
 	let kept = 0;
@@ -395,7 +471,7 @@ function eraseFrame(grey, W, H, frame, bg) {
 			const above = grey[Math.max(0, c - PROBE) * W + x];
 			const below = grey[Math.min(H - 1, c + PROBE) * W + x];
 			if (!isBg(above) || !isBg(below)) { if (!inCornerX(x)) kept += 1; continue; }
-			for (let y = Math.max(0, c - ERASE); y <= Math.min(H - 1, c + ERASE); y += 1) grey[y * W + x] = bg;
+			for (let y = Math.max(0, c - ERASE); y <= Math.min(H - 1, c + ERASE); y += 1) bgMask[y * W + x] = 1;
 			erased += 1;
 		}
 	}
@@ -408,7 +484,7 @@ function eraseFrame(grey, W, H, frame, bg) {
 			const leftPx = grey[row + Math.max(0, c - PROBE)];
 			const rightPx = grey[row + Math.min(W - 1, c + PROBE)];
 			if (!isBg(leftPx) || !isBg(rightPx)) { if (!inCornerY(y)) kept += 1; continue; }
-			for (let x = Math.max(0, c - ERASE); x <= Math.min(W - 1, c + ERASE); x += 1) grey[row + x] = bg;
+			for (let x = Math.max(0, c - ERASE); x <= Math.min(W - 1, c + ERASE); x += 1) bgMask[row + x] = 1;
 			erased += 1;
 		}
 	}
@@ -421,15 +497,20 @@ function eraseFrame(grey, W, H, frame, bg) {
 // ────────────────────────────────────────────────────────────────────────────
 
 /**
- * Разлив фона от краёв картинки внутрь.
+ * Разлив фона от краёв картинки и от фона ВНУТРИ рамки.
  *
  * Именно разливом, а не «все светлые пиксели прозрачные»: иначе пропали бы
  * белая рубашка, светлые чулки и блики — всё, что светлое, но заперто внутри
  * контура.
  *
+ * Рамка на этом шаге ЦЕЛАЯ, поэтому от краёв картинки внутрь заливка не
+ * попадает — её пускают отдельным засевом по кольцу сразу внутри рамки.
+ * Кольцом, а не одной точкой: фигура делит внутренний фон на несколько кусков
+ * (обычно над плечами и под руками), и каждый надо засеять своим семенем.
+ *
  * @returns {Uint8Array} 1 — фон, 0 — не фон.
  */
-function floodBackground(grey, W, H, bg) {
+function floodBackground(grey, W, H, bg, frame) {
 	const isBg = (value) => Math.abs(value - bg) <= BG_TOLERANCE;
 	const mask = new Uint8Array(W * H);
 	const stack = new Int32Array(W * H);
@@ -454,6 +535,83 @@ function floodBackground(grey, W, H, bg) {
 		if (y < H - 1) push(index + W);
 	}
 
+	// Фон ВНУТРИ рамки. Просто засеять его по кромке нельзя: персонаж обрезан
+	// рамкой, его светлая одежда выходит на ту же кромку не отделённая ничем,
+	// и семя оказывается ВНУТРИ фигуры. Ровно это и съедало белые блузки.
+	//
+	// Отличаем ЯРКОСТЬЮ: внутренний фон — та же бумага, что снаружи, а всё
+	// нарисованное от неё отличается. Эталон бумаги берём не снаружи рамки
+	// (у части обложек внутри она светлее), а из куска, который содержит УГОЛ
+	// рамки: угол — заведомо фон, персонаж туда не достаёт.
+	//
+	// Отступ РОВНО в полосу стирания, ни пикселем больше. Зазор между полосой
+	// и этой областью остался бы кольцом чистого фона, не помеченным ни одним
+	// из двух шагов: оно прилипает к фигуре там, где та выходит за рамку,
+	// и вокруг персонажа появляется тонкий прямоугольник. Домыть его заливкой
+	// нельзя — она тут же утечёт в фигуру через ту же стёртую полосу.
+	// Ореол сглаживания линии шириной ровно в пиксель (замер: 159 при фоне 245,
+	// следующий пиксель уже 236), полоса ±6 перекрывает его с запасом.
+	const inset = ERASE;
+	const x0 = Math.round(frame.left) + inset;
+	const x1 = Math.round(frame.right) - inset;
+	const y0 = Math.round(frame.top) + inset;
+	const y1 = Math.round(frame.bottom) - inset;
+
+	const labels = new Int32Array(W * H).fill(-1);
+	const pieces = [];
+	const bins = new Int32Array(256);
+
+	for (let sy = y0; sy <= y1; sy += 1) {
+		for (let sx = x0; sx <= x1; sx += 1) {
+			const seed = sy * W + sx;
+			if (labels[seed] !== -1 || !isBg(grey[seed])) continue;
+
+			labels[seed] = seed;
+			stack[top++] = seed;
+			let size = 0;
+			let corner = false;
+			let touch = 0;
+			bins.fill(0);
+
+			while (top > 0) {
+				const index = stack[--top];
+				const x = index % W;
+				const y = (index - x) / W;
+				size += 1;
+				bins[grey[index]] += 1;
+				if (y === y0 || y === y1 || x === x0 || x === x1) touch += 1;
+				if ((y === y0 || y === y1) && (x === x0 || x === x1)) corner = true;
+
+				const step = (nx, ny) => {
+					if (nx < x0 || nx > x1 || ny < y0 || ny > y1) return;
+					const next = ny * W + nx;
+					if (labels[next] !== -1 || !isBg(grey[next])) return;
+					labels[next] = seed;
+					stack[top++] = next;
+				};
+				step(x - 1, y); step(x + 1, y); step(x, y - 1); step(x, y + 1);
+			}
+
+			let seen = 0;
+			let median = 0;
+			for (let v = 0; v < 256; v += 1) { seen += bins[v]; if (seen >= size / 2) { median = v; break; } }
+			pieces.push({ label: seed, size, corner, touch, median });
+		}
+	}
+
+	// Эталон бумаги — самый крупный кусок с углом. Такой есть у всех обложек
+	// архива (замер: обложек без единого светлого угла — ноль), но если
+	// когда-нибудь не окажется, берём самый крупный кусок вообще: он и будет
+	// фоном с наибольшей вероятностью.
+	const anchor = pieces.filter((p) => p.corner).sort((a, b) => b.size - a.size)[0]
+		?? pieces.slice().sort((a, b) => b.size - a.size)[0];
+	if (!anchor) return mask;
+
+	const isPaper = new Set(pieces.filter((p) => p.corner).map((p) => p.label));
+	for (let index = 0; index < W * H; index += 1) {
+		if (labels[index] !== -1 && isPaper.has(labels[index])) mask[index] = 1;
+	}
+
 	return mask;
 }
 
@@ -465,9 +623,14 @@ function floodBackground(grey, W, H, bg) {
  * Связные куски того, что не фон. Персонаж крупнее подписей в десятки раз,
  * поэтому надпись «БАКА!», кана и вертикальная подпись отваливаются сами.
  *
- * @returns {{best:Uint8Array, box:{x0,y0,x1,y1}, first:number, second:number}}
+ * Оставляем не один кусок, а самый крупный ПЛЮС всё, что не мельче четверти
+ * от него и лежит внутри рамки: иначе из кадра с двумя людьми уезжает один.
+ * Почему именно так — в комментарии к MIN_SECOND_PIECE.
+ *
+ * @returns {{best:Uint8Array, box:{x0,y0,x1,y1}, first:number, second:number,
+ *            kept:number}}
  */
-function largestPiece(bgMask, W, H) {
+function largestPiece(bgMask, W, H, frame) {
 	const labels = new Int32Array(W * H).fill(-1);
 	const stack = new Int32Array(W * H);
 	const sizes = [];
@@ -514,10 +677,36 @@ function largestPiece(bgMask, W, H) {
 	const [winner, first] = order[0];
 	const second = order[1] ? order[1][1] : 0;
 
-	const best = new Uint8Array(W * H);
-	for (let i = 0; i < W * H; i += 1) if (labels[i] === winner) best[i] = 1;
+	/** Какая доля прямоугольника куска попала внутрь рамки. */
+	const insideShare = (box) => {
+		const w = Math.max(0, Math.min(box.x1, frame.right) - Math.max(box.x0, frame.left));
+		const h = Math.max(0, Math.min(box.y1, frame.bottom) - Math.max(box.y0, frame.top));
+		const area = (box.x1 - box.x0) * (box.y1 - box.y0);
+		return area > 0 ? (w * h) / area : 0;
+	};
 
-	return { best, box: boxes[winner], first, second };
+	const winners = new Set([winner]);
+	for (const [index, size] of order.slice(1)) {
+		if (size < first * MIN_SECOND_PIECE) break; // список отсортирован, дальше только мельче
+		if (insideShare(boxes[index]) > 0.5) winners.add(index);
+	}
+
+	const figures = winners.size;
+
+	const best = new Uint8Array(W * H);
+	const box = { x0: W, y0: H, x1: 0, y1: 0 };
+	for (let i = 0; i < W * H; i += 1) {
+		if (!winners.has(labels[i])) continue;
+		best[i] = 1;
+	}
+	for (const index of winners) {
+		box.x0 = Math.min(box.x0, boxes[index].x0);
+		box.y0 = Math.min(box.y0, boxes[index].y0);
+		box.x1 = Math.max(box.x1, boxes[index].x1);
+		box.y1 = Math.max(box.y1, boxes[index].y1);
+	}
+
+	return { best, box, first, second, figures };
 }
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -612,9 +801,11 @@ async function processCover(cover) {
 	if (!frame) return { status: 'skip', reasons: ['рамка не найдена — обложка не по шаблону'], W, H };
 
 	const bg = backgroundLevel(grey, W, H);
-	const { erased, kept } = eraseFrame(grey, W, H, frame, bg);
-	const bgMask = floodBackground(grey, W, H, bg);
-	const piece = largestPiece(bgMask, W, H);
+	// Порядок: СНАЧАЛА заливка при целой рамке, ПОТОМ уборка рамки из маски.
+	// Почему не наоборот, как в ТЗ, — в комментарии к eraseFrame.
+	const bgMask = floodBackground(grey, W, H, bg, frame);
+	const { erased, kept } = eraseFrame(grey, bgMask, W, H, frame, bg);
+	const piece = largestPiece(bgMask, W, H, frame);
 	if (!piece) return { status: 'skip', reasons: ['внутри рамки ничего не осталось'], W, H };
 
 	// Цвет читаем ОТДЕЛЬНО и только если он нужен: искали и вырезали по серой
@@ -631,7 +822,11 @@ async function processCover(cover) {
 	const touchesEdge = piece.box.x0 === 0 || piece.box.y0 === 0 || piece.box.x1 === W - 1 || piece.box.y1 === H - 1;
 
 	const reasons = [];
-	if (gap < MIN_GAP) reasons.push(`разрыв кусков ${gap.toFixed(1)}× (норма от ${MIN_GAP})`);
+	if (gap < MIN_GAP) {
+		reasons.push(piece.figures > 1
+			? `в кадре ${piece.figures} фигуры, оставлены обе — посмотрите`
+			: `разрыв кусков ${gap.toFixed(1)}× (норма от ${MIN_GAP})`);
+	}
 	if (touchesEdge) reasons.push('фигура касается края исходника');
 	if (areaShare < MIN_AREA) reasons.push(`фигура мелкая, ${(areaShare * 100).toFixed(1)} % рамки`);
 	if (areaShare > MAX_AREA) reasons.push(`фигура крупная, ${(areaShare * 100).toFixed(1)} % рамки`);
@@ -654,7 +849,7 @@ function reportPage(rows) {
 	<figure class="${r.status}">
 		<div class="pair">
 			<img src="было/${r.id}.jpg" alt="">
-			${r.canvas ? `<img src="стало/${r.id}.png" alt="">` : '<p class="none">не трогаем</p>'}
+			${r.canvas ? `<img src="стало/${r.id}.webp" alt="">` : '<p class="none">не трогаем</p>'}
 		</div>
 		<figcaption>
 			<b>${r.title.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</b><br>
@@ -702,7 +897,10 @@ async function scout(covers) {
 		rows.push({ ...cover, ...result });
 
 		if (result.canvas) {
-			await writeFile(path.join(SCOUT_DIR, 'стало', `${cover.id}.png`), result.canvas);
+			// Пишем ровно тем форматом, каким поедет на сайт: смотреть надо
+			// на то, что будет, а не на его PNG-двойника.
+			await sharp(result.canvas).webp({ quality: WEBP_QUALITY })
+				.toFile(path.join(SCOUT_DIR, 'стало', `${cover.id}.webp`));
 		}
 		const src = sourcePath(cover);
 		if (existsSync(src)) {
