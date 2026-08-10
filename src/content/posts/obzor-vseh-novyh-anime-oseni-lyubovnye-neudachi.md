@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех новых аниме осени: «Любовные неудачи»'
-date: '2022-11-16'
+date: 2022-11-16
 category: note
 draft: true
 description: ''

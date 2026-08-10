@@ -1,6 +1,6 @@
 ---
 title: 'Если вы еще (вдруг) не смотрели «Человека-бензопилу»:'
-date: '2022-12-31'
+date: 2022-12-31
 category: note
 draft: true
 description: ''

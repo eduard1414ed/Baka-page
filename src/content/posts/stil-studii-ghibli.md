@@ -1,6 +1,6 @@
 ---
 title: Стиль студии Ghibli
-date: '2022-08-18'
+date: 2022-08-18
 category: note
 draft: true
 description: ''

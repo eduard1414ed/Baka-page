@@ -1,6 +1,6 @@
 ---
 title: Операторская работа в K-On!
-date: '2022-08-04'
+date: 2022-08-04
 category: note
 draft: true
 description: ''

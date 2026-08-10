@@ -1,6 +1,6 @@
 ---
 title: Все продолжения «Шаман Кинга»
-date: '2022-09-23'
+date: 2022-09-23
 category: note
 draft: true
 description: ''

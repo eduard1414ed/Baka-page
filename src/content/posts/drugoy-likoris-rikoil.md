@@ -1,6 +1,6 @@
 ---
 title: Другой «Ликорис Рикоил»
-date: '2022-07-31'
+date: 2022-07-31
 category: note
 draft: true
 description: ''

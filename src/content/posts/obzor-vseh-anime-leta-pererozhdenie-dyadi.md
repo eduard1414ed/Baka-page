@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех аниме лета: «Перерождение дяди»'
-date: '2022-08-12'
+date: 2022-08-12
 category: note
 draft: true
 description: ''

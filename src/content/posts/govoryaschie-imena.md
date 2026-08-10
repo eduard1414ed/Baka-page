@@ -1,6 +1,6 @@
 ---
 title: Говорящие имена
-date: '2022-09-06'
+date: 2022-09-06
 category: note
 draft: true
 description: ''

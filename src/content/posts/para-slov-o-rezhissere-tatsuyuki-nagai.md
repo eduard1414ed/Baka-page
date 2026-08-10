@@ -1,6 +1,6 @@
 ---
 title: Пара слов о режиссере Тацуюки Нагаи
-date: '2022-06-06'
+date: 2022-06-06
 category: note
 draft: true
 description: ''

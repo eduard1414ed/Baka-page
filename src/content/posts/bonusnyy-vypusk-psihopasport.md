@@ -1,6 +1,6 @@
 ---
 title: Бонусный выпуск | Психопаспорт
-date: '2022-08-11'
+date: 2022-08-11
 category: bonus
 draft: true
 description: ''

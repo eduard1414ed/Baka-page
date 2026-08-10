@@ -1,6 +1,6 @@
 ---
 title: Бонусный выпуск | Песнь ночных сов
-date: '2022-11-25'
+date: 2022-11-25
 category: bonus
 draft: true
 description: ''

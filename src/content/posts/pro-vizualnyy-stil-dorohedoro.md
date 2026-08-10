@@ -1,6 +1,6 @@
 ---
 title: Про визуальный стиль «Дорохедоро»
-date: '2022-10-03'
+date: 2022-10-03
 category: note
 draft: true
 description: ''

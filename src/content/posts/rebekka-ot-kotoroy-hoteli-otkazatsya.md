@@ -1,6 +1,6 @@
 ---
 title: Ребекка, от которой хотели отказаться
-date: '2022-09-20'
+date: 2022-09-20
 category: note
 draft: true
 description: ''

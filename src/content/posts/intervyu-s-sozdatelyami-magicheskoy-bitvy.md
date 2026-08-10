@@ -1,6 +1,6 @@
 ---
 title: Интервью с создателями «Магической битвы»
-date: '2022-08-10'
+date: 2022-08-10
 category: note
 draft: true
 description: ''

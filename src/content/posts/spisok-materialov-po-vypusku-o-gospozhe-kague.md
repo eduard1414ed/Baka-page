@@ -1,6 +1,6 @@
 ---
 title: Список материалов по выпуску о «Госпоже Кагуе»
-date: '2022-11-24'
+date: 2022-11-24
 category: note
 draft: true
 description: ''

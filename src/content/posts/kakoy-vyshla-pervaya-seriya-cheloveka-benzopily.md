@@ -1,6 +1,6 @@
 ---
 title: Какой вышла первая серия «Человека-бензопилы»?
-date: '2022-10-12'
+date: 2022-10-12
 category: note
 draft: true
 description: ''

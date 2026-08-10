@@ -1,6 +1,6 @@
 ---
 title: Подборка хэллоуинских серий
-date: '2022-10-28'
+date: 2022-10-28
 category: note
 draft: true
 description: ''

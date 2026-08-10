@@ -1,6 +1,6 @@
 ---
 title: 'Обзор от подписчика: манга «Эйр Гир»'
-date: '2022-08-06'
+date: 2022-08-06
 category: note
 draft: true
 description: ''

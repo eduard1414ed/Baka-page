@@ -1,6 +1,6 @@
 ---
 title: Анонсирован второй сезон «Винланда»
-date: '2022-06-08'
+date: 2022-06-08
 category: note
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Как китайцы флексят своими опенингами
-date: '2022-05-17'
+date: 2022-05-17
 category: note
 draft: true
 description: ''

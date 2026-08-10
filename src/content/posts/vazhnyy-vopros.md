@@ -1,6 +1,6 @@
 ---
 title: Важный вопрос!
-date: '2022-08-07'
+date: 2022-08-07
 category: note
 draft: true
 description: ''

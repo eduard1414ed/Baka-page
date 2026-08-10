@@ -1,6 +1,6 @@
 ---
 title: Школьный бейсбол
-date: '2022-08-15'
+date: 2022-08-15
 category: note
 draft: true
 description: ''

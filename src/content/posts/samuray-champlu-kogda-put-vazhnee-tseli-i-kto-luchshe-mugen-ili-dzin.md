@@ -1,6 +1,6 @@
 ---
 title: Самурай Чамплу | Когда путь важнее цели и кто лучше, Муген или Дзин?
-date: '2022-05-14'
+date: 2022-05-14
 category: note
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Манга про русскую девочку
-date: '2022-07-22'
+date: 2022-07-22
 category: note
 draft: true
 description: ''

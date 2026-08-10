@@ -1,6 +1,6 @@
 ---
 title: Детали, которые никто не увидит
-date: '2022-08-03'
+date: 2022-08-03
 category: note
 draft: true
 description: ''

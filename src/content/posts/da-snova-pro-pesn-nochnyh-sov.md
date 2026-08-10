@@ -1,6 +1,6 @@
 ---
 title: Да, снова про «Песнь ночных сов»
-date: '2022-08-26'
+date: 2022-08-26
 category: note
 draft: true
 description: ''

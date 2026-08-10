@@ -1,6 +1,6 @@
 ---
 title: Статья о том, как организован ко-продакшн Spy x Family
-date: '2022-05-15'
+date: 2022-05-15
 category: note
 draft: true
 description: ''

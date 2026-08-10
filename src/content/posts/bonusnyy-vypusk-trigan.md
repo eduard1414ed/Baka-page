@@ -1,6 +1,6 @@
 ---
 title: Бонусный выпуск | Триган
-date: '2022-12-02'
+date: 2022-12-02
 category: bonus
 draft: true
 description: ''

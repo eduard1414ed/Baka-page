@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех новых аниме осени: «Рок-тихоня»'
-date: '2022-10-19'
+date: 2022-10-19
 category: note
 draft: true
 description: ''

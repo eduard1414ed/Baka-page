@@ -1,6 +1,6 @@
 ---
 title: Кстати, мы много говорили в выпуске о манге «Шаман Кинг»
-date: '2022-09-22'
+date: 2022-09-22
 category: note
 draft: true
 description: ''

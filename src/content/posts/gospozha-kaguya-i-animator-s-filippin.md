@@ -1,6 +1,6 @@
 ---
 title: Госпожа Кагуя и аниматор с Филиппин
-date: '2022-06-30'
+date: 2022-06-30
 category: note
 draft: true
 description: ''

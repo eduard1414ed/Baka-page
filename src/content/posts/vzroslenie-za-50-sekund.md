@@ -1,6 +1,6 @@
 ---
 title: Взросление за 50 секунд
-date: '2022-06-24'
+date: 2022-06-24
 category: note
 draft: true
 description: ''

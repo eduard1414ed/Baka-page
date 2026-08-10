@@ -1,6 +1,6 @@
 ---
 title: Что общего между «Бездомным богом» и «Атакой титанов»?
-date: '2022-06-10'
+date: 2022-06-10
 category: note
 draft: true
 description: ''

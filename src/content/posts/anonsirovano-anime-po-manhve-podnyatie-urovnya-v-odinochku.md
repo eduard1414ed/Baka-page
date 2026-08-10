@@ -1,6 +1,6 @@
 ---
 title: Анонсировано аниме по манхве «Поднятие уровня в одиночку»
-date: '2022-07-04'
+date: 2022-07-04
 category: note
 draft: true
 description: ''

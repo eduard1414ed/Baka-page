@@ -1,6 +1,6 @@
 ---
 title: Смешной повод для смешной рекомендации
-date: '2022-06-11'
+date: 2022-06-11
 category: note
 draft: true
 description: ''

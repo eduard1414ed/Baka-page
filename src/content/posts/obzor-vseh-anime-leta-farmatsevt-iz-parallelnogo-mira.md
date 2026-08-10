@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех аниме лета: «Фармацевт из параллельного мира»'
-date: '2022-07-21'
+date: 2022-07-21
 category: note
 draft: true
 description: ''

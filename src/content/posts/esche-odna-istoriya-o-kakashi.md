@@ -1,6 +1,6 @@
 ---
 title: Еще одна история о Какаши
-date: '2022-08-11'
+date: 2022-08-11
 category: note
 draft: true
 description: ''

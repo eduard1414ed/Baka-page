@@ -1,6 +1,6 @@
 ---
 title: Ранобэ про русскую школьницу стало хитом в Японии
-date: '2022-05-14'
+date: 2022-05-14
 category: note
 draft: true
 description: ''

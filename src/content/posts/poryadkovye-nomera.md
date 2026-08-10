@@ -1,6 +1,6 @@
 ---
 title: Порядковые номера
-date: '2022-08-28'
+date: 2022-08-28
 category: note
 draft: true
 description: ''

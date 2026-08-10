@@ -1,6 +1,6 @@
 ---
 title: Смещённый финал
-date: '2022-09-05'
+date: 2022-09-05
 category: note
 draft: true
 description: ''

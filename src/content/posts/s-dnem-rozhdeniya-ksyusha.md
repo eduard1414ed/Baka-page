@@ -1,6 +1,6 @@
 ---
 title: С днем рождения, Ксюша!
-date: '2022-10-22'
+date: 2022-10-22
 category: note
 draft: true
 description: ''

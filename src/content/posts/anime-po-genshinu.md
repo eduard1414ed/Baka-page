@@ -1,6 +1,6 @@
 ---
 title: Аниме по Геншину?
-date: '2022-09-19'
+date: 2022-09-19
 category: note
 draft: true
 description: ''

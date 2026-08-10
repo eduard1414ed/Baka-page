@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех аниме лета: «Гарем рабов в лабиринте другого мира»'
-date: '2022-08-05'
+date: 2022-08-05
 category: note
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Розыгрыш японского издания манги «Человек-Бензопила»
-date: '2022-12-01'
+date: 2022-12-01
 category: note
 draft: true
 description: ''

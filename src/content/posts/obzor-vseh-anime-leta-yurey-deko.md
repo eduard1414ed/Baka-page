@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех аниме лета: Юрэй Деко'
-date: '2022-07-16'
+date: 2022-07-16
 category: note
 draft: true
 description: ''

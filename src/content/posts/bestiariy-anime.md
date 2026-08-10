@@ -1,6 +1,6 @@
 ---
 title: Бестиарий аниме
-date: '2022-08-16'
+date: 2022-08-16
 category: note
 draft: true
 description: ''

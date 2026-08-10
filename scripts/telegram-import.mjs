@@ -647,19 +647,34 @@ export function innerLinks(entities) {
  */
 const yamlString = (value) => {
 	const text = String(value ?? '');
-	const needsQuotes =
-		text === '' ||
-		// Знак в начале, который YAML читает как указатель.
-		/^[\s>|*&!%@`#\-?:,[\]{}]/.test(text) ||
-		// Двоеточие с пробелом внутри строки — или в самом её конце.
-		/[:#]\s/.test(text) ||
-		text.endsWith(':') ||
-		/\s$/.test(text) ||
-		/['"]/.test(text) ||
-		// Строка, которую YAML прочтёт числом, датой, «да/нет» или пустотой.
-		/^(?:[-+]?\d[\d_.eE+-]*|true|false|yes|no|on|off|null|~)$/i.test(text);
-	return needsQuotes ? `'${text.replace(/'/g, "''")}'` : text;
+
+	// ПРЕЖНЕЕ ПРАВИЛО ОСТАЁТСЯ КАК ЕСТЬ — оно сверено с админкой побайтно
+	// (задача 7.1: заказчик сохранил привезённый пост, и коммит пришёл пустой).
+	// Тронь его — и первое же сохранение в админке дало бы правку на пустом
+	// месте у каждого из привезённых постов.
+	const asBefore = text === '' || /^[\s>|*&!%@`#-]|[:#]\s|\s$|['"]/.test(text);
+
+	// А ВОТ ЭТО ДОБАВЛЕНО, и добавлено не списком знаков, а вопросом к самому
+	// разбору: «прочитается ли обратно ровно то, что мы кладём?». Список знаков
+	// уже соврал один раз — он не видел двоеточия в конце заголовка, и 70 постов
+	// положили сборку всего сайта. Перечислять указатели YAML по памяти можно
+	// бесконечно; спросить разбор — один раз.
+	let readsBack;
+	try {
+		readsBack = yaml.load(`v: ${text}`)?.v;
+	} catch {
+		readsBack = null; // не прочиталось вовсе — значит кавычки нужны
+	}
+
+	return asBefore || readsBack !== text ? `'${text.replace(/'/g, "''")}'` : text;
 };
+
+// ПОЛЯ, КОТОРЫЕ YAML ОБЯЗАН ПРОЧИТАТЬ НЕ СТРОКОЙ. Дата в шапке — дата, и
+// админка пишет её без кавычек: `date: 2026-07-30`. Пропусти её через правило
+// выше — и она закавычится (обратно-то она читается датой, а не строкой),
+// а первое же сохранение в админке дало бы правку на пустом месте у каждого
+// привезённого поста. Наступили 10 августа 2026 на порции 2023 года.
+const RAW_FIELDS = new Set(['date']);
 
 function frontmatter(fields) {
 	const lines = [];
@@ -676,7 +691,7 @@ function frontmatter(fields) {
 			// сохранении.
 			lines.push(`${key}:`);
 			for (const [name, item] of Object.entries(value)) lines.push(`  ${name}: ${yamlString(item)}`);
-		} else if (typeof value === 'boolean' || typeof value === 'number') {
+		} else if (typeof value === 'boolean' || typeof value === 'number' || RAW_FIELDS.has(key)) {
 			lines.push(`${key}: ${value}`);
 		} else {
 			lines.push(`${key}: ${yamlString(value)}`);

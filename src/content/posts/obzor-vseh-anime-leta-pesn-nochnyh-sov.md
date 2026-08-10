@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех аниме лета: «Песнь ночных сов»'
-date: '2022-07-19'
+date: 2022-07-19
 category: note
 draft: true
 description: ''

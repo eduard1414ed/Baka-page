@@ -1,6 +1,6 @@
 ---
 title: Минутка восхищения
-date: '2022-08-09'
+date: 2022-08-09
 category: note
 draft: true
 description: ''

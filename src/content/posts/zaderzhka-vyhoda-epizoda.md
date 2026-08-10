@@ -1,6 +1,6 @@
 ---
 title: Задержка выхода эпизода
-date: '2022-12-14'
+date: 2022-12-14
 category: note
 draft: true
 description: ''

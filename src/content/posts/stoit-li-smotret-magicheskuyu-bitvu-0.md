@@ -1,6 +1,6 @@
 ---
 title: Стоит ли смотреть «Магическую битву 0»
-date: '2022-10-06'
+date: 2022-10-06
 category: note
 draft: true
 description: ''

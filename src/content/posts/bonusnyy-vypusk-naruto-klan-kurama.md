@@ -1,6 +1,6 @@
 ---
 title: Бонусный выпуск | Наруто. Клан Курама
-date: '2022-05-14'
+date: 2022-05-14
 category: bonus
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Афиша четвертого сезона «Баки!»
-date: '2022-05-30'
+date: 2022-05-30
 category: note
 draft: true
 description: ''

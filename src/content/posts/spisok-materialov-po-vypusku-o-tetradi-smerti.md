@@ -1,6 +1,6 @@
 ---
 title: Список материалов по выпуску о «Тетради смерти»
-date: '2022-06-22'
+date: 2022-06-22
 category: note
 draft: true
 description: ''

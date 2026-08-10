@@ -1,6 +1,6 @@
 ---
 title: Оценка качества обслуживания
-date: '2022-11-06'
+date: 2022-11-06
 category: note
 draft: true
 description: ''

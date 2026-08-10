@@ -1,6 +1,6 @@
 ---
 title: 'Другие Киры: ещё две истории из мира «Тетради смерти»'
-date: '2022-06-25'
+date: 2022-06-25
 category: note
 draft: true
 description: ''

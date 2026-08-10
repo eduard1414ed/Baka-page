@@ -1,6 +1,6 @@
 ---
 title: Обзор аниме Omoide no Marnie («Воспоминания о Марни»)
-date: '2022-05-14'
+date: 2022-05-14
 category: note
 draft: true
 description: ''

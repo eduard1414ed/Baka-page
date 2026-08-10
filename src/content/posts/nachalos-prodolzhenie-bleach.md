@@ -1,6 +1,6 @@
 ---
 title: Началось продолжение Bleach
-date: '2022-10-11'
+date: 2022-10-11
 category: note
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: «Блич» вернулся 10 лет спустя
-date: '2022-11-03'
+date: 2022-11-03
 category: note
 draft: true
 description: ''

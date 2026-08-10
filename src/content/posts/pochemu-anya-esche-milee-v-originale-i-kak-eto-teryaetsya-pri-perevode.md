@@ -1,6 +1,6 @@
 ---
 title: Почему Аня еще милее в оригинале и как это теряется при переводе?
-date: '2022-08-02'
+date: 2022-08-02
 category: note
 draft: true
 description: ''

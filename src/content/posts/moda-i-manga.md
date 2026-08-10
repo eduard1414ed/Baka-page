@@ -1,6 +1,6 @@
 ---
 title: Мода и манга
-date: '2022-08-17'
+date: 2022-08-17
 category: note
 draft: true
 description: ''

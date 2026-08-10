@@ -1,6 +1,6 @@
 ---
 title: Бонусный выпуск | В лес, где мерцают светлячки
-date: '2022-12-23'
+date: 2022-12-23
 category: bonus
 draft: true
 description: ''

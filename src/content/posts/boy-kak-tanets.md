@@ -1,6 +1,6 @@
 ---
 title: Бой как танец
-date: '2022-08-31'
+date: 2022-08-31
 category: note
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Первая номинация — «Лучшие персонажи»
-date: '2022-12-26'
+date: 2022-12-26
 category: note
 draft: true
 description: ''

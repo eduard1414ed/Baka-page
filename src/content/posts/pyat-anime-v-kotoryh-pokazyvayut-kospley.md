@@ -1,6 +1,6 @@
 ---
 title: Пять аниме, в которых показывают косплей
-date: '2022-07-14'
+date: 2022-07-14
 category: note
 draft: true
 description: ''

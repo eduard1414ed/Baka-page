@@ -1,6 +1,6 @@
 ---
 title: Все что угодно вместо глаз
-date: '2022-09-15'
+date: 2022-09-15
 category: note
 draft: true
 description: ''

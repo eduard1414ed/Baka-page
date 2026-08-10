@@ -1,6 +1,6 @@
 ---
 title: Объявлены победители премии в области научной фантастики Seiun Awards
-date: '2022-08-30'
+date: 2022-08-30
 category: note
 draft: true
 description: ''

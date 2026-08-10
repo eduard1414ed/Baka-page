@@ -1,6 +1,6 @@
 ---
 title: Порко Россо | За что мы любим Хаяо Миядзаки и как не стать свиньей?
-date: '2022-05-14'
+date: 2022-05-14
 category: note
 draft: true
 description: ''

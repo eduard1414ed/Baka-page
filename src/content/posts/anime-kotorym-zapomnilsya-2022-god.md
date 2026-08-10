@@ -1,6 +1,6 @@
 ---
 title: Аниме, которым запомнился 2022 год
-date: '2022-12-27'
+date: 2022-12-27
 category: note
 draft: true
 description: ''

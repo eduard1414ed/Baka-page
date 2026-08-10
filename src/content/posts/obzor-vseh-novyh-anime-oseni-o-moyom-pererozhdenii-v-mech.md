@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех новых аниме осени: «О моём перерождении в меч»'
-date: '2022-10-09'
+date: 2022-10-09
 category: note
 draft: true
 description: ''

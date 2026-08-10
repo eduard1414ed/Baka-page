@@ -1,6 +1,6 @@
 ---
 title: Фанаты огурцов
-date: '2022-07-24'
+date: 2022-07-24
 category: note
 draft: true
 description: ''

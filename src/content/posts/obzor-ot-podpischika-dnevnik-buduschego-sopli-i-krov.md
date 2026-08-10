@@ -1,6 +1,6 @@
 ---
 title: 'Обзор от подписчика: «Дневник будущего. Сопли и кровь»'
-date: '2022-08-21'
+date: 2022-08-21
 category: note
 draft: true
 description: ''

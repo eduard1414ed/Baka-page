@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех аниме весны:'
-date: '2022-05-15'
+date: 2022-05-15
 category: note
 draft: true
 description: ''

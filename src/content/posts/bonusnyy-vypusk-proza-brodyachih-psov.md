@@ -1,6 +1,6 @@
 ---
 title: Бонусный выпуск | Проза бродячих псов
-date: '2022-12-09'
+date: 2022-12-09
 category: bonus
 draft: true
 description: ''

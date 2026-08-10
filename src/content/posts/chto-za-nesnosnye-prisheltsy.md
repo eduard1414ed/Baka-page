@@ -1,6 +1,6 @@
 ---
 title: Что за «Несносные пришельцы»?
-date: '2022-10-15'
+date: 2022-10-15
 category: note
 draft: true
 description: ''

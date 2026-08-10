@@ -1,6 +1,6 @@
 ---
 title: Ну и альтернативная номинация — «Аниме года»
-date: '2022-12-31'
+date: 2022-12-31
 category: note
 draft: true
 description: ''

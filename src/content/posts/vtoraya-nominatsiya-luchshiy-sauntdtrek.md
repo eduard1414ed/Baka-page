@@ -1,6 +1,6 @@
 ---
 title: Вторая номинация — «Лучший саунтдтрек»
-date: '2022-12-27'
+date: 2022-12-27
 category: note
 draft: true
 description: ''

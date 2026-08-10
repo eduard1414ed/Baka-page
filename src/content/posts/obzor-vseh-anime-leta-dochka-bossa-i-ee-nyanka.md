@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех аниме лета: «Дочка босса и ее нянька»'
-date: '2022-08-15'
+date: 2022-08-15
 category: note
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Список полезных материалов по аниме Миядзаки
-date: '2022-05-14'
+date: 2022-05-14
 category: note
 draft: true
 description: ''

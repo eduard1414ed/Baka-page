@@ -1,6 +1,6 @@
 ---
 title: Паприка | Как снимает Сатоси Кон и почему это так нравится Нолану?
-date: '2022-05-14'
+date: 2022-05-14
 category: note
 draft: true
 description: ''

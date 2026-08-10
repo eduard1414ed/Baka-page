@@ -1,6 +1,6 @@
 ---
 title: Канал с бонусными эпизодами
-date: '2022-10-27'
+date: 2022-10-27
 category: note
 draft: true
 description: ''

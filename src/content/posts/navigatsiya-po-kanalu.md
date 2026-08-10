@@ -1,6 +1,6 @@
 ---
 title: 'Навигация по каналу:'
-date: '2022-05-15'
+date: 2022-05-15
 category: note
 draft: true
 description: ''

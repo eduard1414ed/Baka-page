@@ -1,6 +1,6 @@
 ---
 title: Наследственность
-date: '2022-09-14'
+date: 2022-09-14
 category: note
 draft: true
 description: ''

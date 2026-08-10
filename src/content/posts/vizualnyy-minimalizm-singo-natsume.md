@@ -1,6 +1,6 @@
 ---
 title: Визуальный минимализм Синго Нацумэ
-date: '2022-07-28'
+date: 2022-07-28
 category: note
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Какое аниме стоит посмотреть всем творческим людям?
-date: '2022-05-14'
+date: 2022-05-14
 category: note
 draft: true
 description: ''

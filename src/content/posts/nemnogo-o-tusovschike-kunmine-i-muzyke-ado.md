@@ -1,6 +1,6 @@
 ---
 title: Немного о «Тусовщике Кунмине» и музыке Ado
-date: '2022-06-27'
+date: 2022-06-27
 category: note
 draft: true
 description: ''

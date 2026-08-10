@@ -1,6 +1,6 @@
 ---
 title: Бонусный эпизод | Голубой период
-date: '2022-06-16'
+date: 2022-06-16
 category: bonus
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Маленькие детали
-date: '2022-07-23'
+date: 2022-07-23
 category: note
 draft: true
 description: ''

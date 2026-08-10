@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех аниме лета:'
-date: '2022-07-11'
+date: 2022-07-11
 category: note
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Потрясающе красивые арты
-date: '2022-06-16'
+date: 2022-06-16
 category: note
 draft: true
 description: ''

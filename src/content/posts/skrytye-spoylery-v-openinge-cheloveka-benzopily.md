@@ -1,6 +1,6 @@
 ---
 title: Скрытые спойлеры в опенинге «Человека-бензопилы»
-date: '2022-10-25'
+date: 2022-10-25
 category: note
 draft: true
 description: ''

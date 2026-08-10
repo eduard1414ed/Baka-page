@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех новых аниме осени: «Время ниндзя»'
-date: '2022-10-30'
+date: 2022-10-30
 category: note
 draft: true
 description: ''

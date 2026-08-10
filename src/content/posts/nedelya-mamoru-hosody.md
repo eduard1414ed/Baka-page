@@ -1,6 +1,6 @@
 ---
 title: Неделя Мамору Хосоды
-date: '2022-05-27'
+date: 2022-05-27
 category: note
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Пять оригинальных пляжных эпизодов
-date: '2022-07-30'
+date: 2022-07-30
 category: note
 draft: true
 description: ''

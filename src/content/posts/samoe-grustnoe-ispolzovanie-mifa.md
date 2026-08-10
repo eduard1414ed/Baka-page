@@ -1,6 +1,6 @@
 ---
 title: Самое грустное использование мифа
-date: '2022-09-01'
+date: 2022-09-01
 category: note
 draft: true
 description: ''

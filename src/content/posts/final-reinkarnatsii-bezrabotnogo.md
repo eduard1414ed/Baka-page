@@ -1,6 +1,6 @@
 ---
 title: Финал «Реинкарнации безработного»
-date: '2022-11-30'
+date: 2022-11-30
 category: note
 draft: true
 description: ''

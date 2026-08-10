@@ -1,6 +1,6 @@
 ---
 title: Хорошая новость для фанатов Bleach
-date: '2022-08-06'
+date: 2022-08-06
 category: note
 draft: true
 description: ''

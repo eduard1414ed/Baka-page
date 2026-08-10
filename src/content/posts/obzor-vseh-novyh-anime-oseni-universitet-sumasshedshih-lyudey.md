@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех новых аниме осени: «Университет сумасшедших людей»'
-date: '2022-11-07'
+date: 2022-11-07
 category: note
 draft: true
 description: ''

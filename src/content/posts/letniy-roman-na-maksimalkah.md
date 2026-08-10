@@ -1,6 +1,6 @@
 ---
 title: Летний роман на максималках
-date: '2022-07-05'
+date: 2022-07-05
 category: note
 draft: true
 description: ''

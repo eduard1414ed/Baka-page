@@ -1,6 +1,6 @@
 ---
 title: Список материалов по выпуску о «Человеке-Бензопиле»
-date: '2022-12-22'
+date: 2022-12-22
 category: note
 draft: true
 description: ''

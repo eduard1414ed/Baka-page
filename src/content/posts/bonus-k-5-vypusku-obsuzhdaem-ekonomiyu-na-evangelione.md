@@ -1,6 +1,6 @@
 ---
 title: Бонус к 5 выпуску | Обсуждаем экономию на Евангелионе
-date: '2022-05-14'
+date: 2022-05-14
 category: bonus
 draft: true
 description: ''

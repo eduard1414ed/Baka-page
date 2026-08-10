@@ -1,6 +1,6 @@
 ---
 title: Бонусный эпизод | Патэма наоборот
-date: '2022-11-04'
+date: 2022-11-04
 category: bonus
 draft: true
 description: ''

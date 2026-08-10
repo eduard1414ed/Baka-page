@@ -1,6 +1,6 @@
 ---
 title: Как дела у «Баки»?
-date: '2022-12-30'
+date: 2022-12-30
 category: note
 draft: true
 description: ''

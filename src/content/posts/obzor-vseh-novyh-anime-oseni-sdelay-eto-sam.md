@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех новых аниме осени: «Сделай это сам!»'
-date: '2022-10-07'
+date: 2022-10-07
 category: note
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Ангел и демон
-date: '2022-09-03'
+date: 2022-09-03
 category: note
 draft: true
 description: ''

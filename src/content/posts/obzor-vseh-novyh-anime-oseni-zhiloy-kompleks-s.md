@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех новых аниме осени: «Жилой комплекс С»'
-date: '2022-11-14'
+date: 2022-11-14
 category: note
 draft: true
 description: ''

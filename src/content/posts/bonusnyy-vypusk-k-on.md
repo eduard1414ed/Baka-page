@@ -1,6 +1,6 @@
 ---
 title: Бонусный выпуск | K-On!
-date: '2022-08-04'
+date: 2022-08-04
 category: bonus
 draft: true
 description: ''

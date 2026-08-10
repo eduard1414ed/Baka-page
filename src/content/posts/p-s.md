@@ -1,6 +1,6 @@
 ---
 title: P.S.
-date: '2022-12-09'
+date: 2022-12-09
 category: note
 draft: true
 description: ''

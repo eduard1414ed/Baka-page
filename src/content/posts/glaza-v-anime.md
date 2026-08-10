@@ -1,6 +1,6 @@
 ---
 title: Глаза в аниме
-date: '2022-06-23'
+date: 2022-06-23
 category: note
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех аниме лета: «Буттигирэ!»'
-date: '2022-08-20'
+date: 2022-08-20
 category: note
 draft: true
 description: ''

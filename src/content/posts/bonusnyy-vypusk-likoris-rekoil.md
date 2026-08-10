@@ -1,6 +1,6 @@
 ---
 title: Бонусный выпуск | Ликорис Рекоил
-date: '2022-10-14'
+date: 2022-10-14
 category: bonus
 draft: true
 description: ''

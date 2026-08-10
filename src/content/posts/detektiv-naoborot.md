@@ -1,6 +1,6 @@
 ---
 title: Детектив наоборот
-date: '2022-06-19'
+date: 2022-06-19
 category: note
 draft: true
 description: ''

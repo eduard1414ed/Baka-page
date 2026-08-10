@@ -1,6 +1,6 @@
 ---
 title: Список полезных материалов к выпускам по «Стальному алхимику»
-date: '2022-05-14'
+date: 2022-05-14
 category: note
 draft: true
 description: ''

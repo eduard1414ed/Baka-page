@@ -1,6 +1,6 @@
 ---
 title: Бонусный эпизод | Волчьи дети Амэ и Юки
-date: '2022-06-23'
+date: 2022-06-23
 category: bonus
 draft: true
 description: ''

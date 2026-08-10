@@ -1,6 +1,6 @@
 ---
 title: Бонусный выпуск | Дорохедоро
-date: '2022-07-21'
+date: 2022-07-21
 category: bonus
 draft: true
 description: ''

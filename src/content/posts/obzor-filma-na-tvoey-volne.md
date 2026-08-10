@@ -1,6 +1,6 @@
 ---
 title: Обзор фильма «На твоей волне»
-date: '2022-05-14'
+date: 2022-05-14
 category: note
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Бонусный выпуск | Аниме нашего детства
-date: '2022-05-15'
+date: 2022-05-15
 category: bonus
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Первые впечатления от аниме по Cyberpunk
-date: '2022-09-14'
+date: 2022-09-14
 category: note
 draft: true
 description: ''

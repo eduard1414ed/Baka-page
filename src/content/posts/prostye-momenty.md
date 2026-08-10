@@ -1,6 +1,6 @@
 ---
 title: Простые моменты
-date: '2022-11-05'
+date: 2022-11-05
 category: note
 draft: true
 description: ''

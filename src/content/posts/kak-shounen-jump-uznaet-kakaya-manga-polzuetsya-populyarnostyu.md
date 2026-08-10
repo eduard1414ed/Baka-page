@@ -1,6 +1,6 @@
 ---
 title: Как Shounen Jump узнает, какая манга пользуется популярностью?
-date: '2022-12-27'
+date: 2022-12-27
 category: note
 draft: true
 description: ''

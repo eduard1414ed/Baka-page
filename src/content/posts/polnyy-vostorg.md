@@ -1,6 +1,6 @@
 ---
 title: Полный восторг
-date: '2022-10-09'
+date: 2022-10-09
 category: note
 draft: true
 description: ''

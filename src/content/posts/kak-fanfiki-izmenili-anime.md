@@ -1,6 +1,6 @@
 ---
 title: Как фанфики изменили аниме?
-date: '2022-05-14'
+date: 2022-05-14
 category: note
 draft: true
 description: ''

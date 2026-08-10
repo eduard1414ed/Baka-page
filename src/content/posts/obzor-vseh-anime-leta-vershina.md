@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех аниме лета: Вершина!'
-date: '2022-07-07'
+date: 2022-07-07
 category: note
 draft: true
 description: ''

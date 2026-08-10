@@ -1,6 +1,6 @@
 ---
 title: А вот что бывает, если в аниме добавляют плохой CGI
-date: '2022-09-07'
+date: 2022-09-07
 category: note
 draft: true
 description: ''

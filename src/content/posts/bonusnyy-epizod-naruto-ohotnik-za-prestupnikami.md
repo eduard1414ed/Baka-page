@@ -1,6 +1,6 @@
 ---
 title: Бонусный эпизод | Наруто. Охотник за преступниками
-date: '2022-05-14'
+date: 2022-05-14
 category: bonus
 draft: true
 description: ''

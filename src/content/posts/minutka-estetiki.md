@@ -1,6 +1,6 @@
 ---
 title: Минутка эстетики
-date: '2022-11-29'
+date: 2022-11-29
 category: note
 draft: true
 description: ''

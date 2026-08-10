@@ -1,6 +1,6 @@
 ---
 title: Проработка аниме
-date: '2022-06-21'
+date: 2022-06-21
 category: note
 draft: true
 description: ''

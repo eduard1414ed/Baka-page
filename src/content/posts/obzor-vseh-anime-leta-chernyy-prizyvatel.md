@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех аниме лета: «Черный призыватель»'
-date: '2022-08-05'
+date: 2022-08-05
 category: note
 draft: true
 description: ''

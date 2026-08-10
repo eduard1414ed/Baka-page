@@ -1,6 +1,6 @@
 ---
 title: Список полезных материалов по аниме
-date: '2022-08-11'
+date: 2022-08-11
 category: note
 draft: true
 description: ''

@@ -299,6 +299,41 @@ function headProblems(allPosts, render) {
 	return problems;
 }
 
+// ——— Дату пишем так же, как её пишет админка ———
+//
+// БЕЗ КАВЫЧЕК: `date: 2026-08-09`. Образец берётся не из памяти, а из файла,
+// который написала САМА Sveltia, — и если она однажды станет писать иначе,
+// проверка скажет об этом, а не будет молча держать устаревшее правило.
+//
+// Оплачено: правило кавычек научили спрашивать сам разбор YAML — «прочитается
+// ли обратно ровно то, что кладём?» — и дата честно ответила «нет, я читаюсь
+// датой». Она закавычилась у всех 776 привезённых постов, схема это пережила,
+// сборка прошла, и увидеть подмену можно было только глазами в файле. Цена —
+// правка на пустом месте у каждого поста при первом же сохранении в админке.
+const ADMIN_SAMPLE = 'src/content/posts/narisuy-eto-potom-umri.md';
+const PLAIN_DATE = /^date: \d{4}-\d{2}-\d{2}$/;
+
+function dateFormatProblems(allPosts, render) {
+	const problems = [];
+
+	const sample = readFileSync(join(root, ADMIN_SAMPLE), 'utf8').split(/^---$/m)[1] ?? '';
+	const theirs = sample.split('\n').find((line) => line.startsWith('date:'));
+	if (!theirs) problems.push(`в образце ${ADMIN_SAMPLE} нет строки даты — сверять не с чем`);
+	else if (!PLAIN_DATE.test(theirs)) problems.push(`админка пишет дату иначе: «${theirs}» — правило устарело`);
+
+	for (const post of allPosts) {
+		if (skipReason(post)) continue;
+		const built = buildPost(post);
+		const ours = render(built).split(/^---$/m)[1].split('\n').find((line) => line.startsWith('date:'));
+		if (!PLAIN_DATE.test(ours)) {
+			problems.push(`№${built.id}: дата написана как «${ours}», а админка пишет её без кавычек`);
+			break; // одного примера довольно: беда общая, а не у одного поста
+		}
+	}
+
+	return problems;
+}
+
 // ——— Порции по годам: никого не потеряли и никого не задвоили ———
 //
 // Архив везётся годами, отдельным коммитом на порцию. Значит у отбора ровно две
@@ -511,6 +546,7 @@ async function main() {
 		found += report('бонус 4142 против собранного вами руками', post4142Problems(bonusBuilt, bonusFile));
 		found += report('снимки без подписи не оторваны от своего поста', orphanProblems(messages, groupAlbums));
 		found += report('шапка каждого поста архива читается', headProblems(allPosts, (b) => renderPost(b)));
+		found += report('дата написана так же, как её пишет админка', dateFormatProblems(allPosts, (b) => renderPost(b)));
 		found += report('порции по годам на живом архиве', portionProblems(allPosts, selectPosts));
 		found += report('текст доехал целиком — весь архив, слово в слово', textProblems(allPosts, entitiesToMarkdown));
 
@@ -619,6 +655,12 @@ async function main() {
 			name: 'шапка: заголовок записан без кавычек (как было до починки)',
 			problems: headProblems(allPosts, (b) =>
 				renderPost(b).replace(/^title: '(.*)'$/m, (_, t) => 'title: ' + t.replace(/''/g, "'")),
+			),
+		},
+		{
+			name: 'шапка: дата закавычена (как вышло на порции 2023 года)',
+			problems: dateFormatProblems(allPosts, (b) =>
+				renderPost(b).replace(/^date: (.+)$/m, "date: '$1'"),
 			),
 		},
 		// ПОДЛОГИ ТЕКСТА — ЭТО РОВНО ТО, КАК РАЗБОР БЫЛ НАПИСАН ДО 10 АВГУСТА 2026.

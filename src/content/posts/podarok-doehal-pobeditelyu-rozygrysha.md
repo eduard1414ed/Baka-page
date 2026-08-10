@@ -1,6 +1,6 @@
 ---
 title: Подарок доехал победителю розыгрыша
-date: '2022-08-31'
+date: 2022-08-31
 category: note
 draft: true
 description: ''

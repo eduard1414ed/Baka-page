@@ -1,6 +1,6 @@
 ---
 title: Бонусный эпизод. Наруто | Селение Звезды
-date: '2022-05-14'
+date: 2022-05-14
 category: bonus
 draft: true
 description: ''

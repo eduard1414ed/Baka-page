@@ -1,6 +1,6 @@
 ---
 title: Очень-очень надеюсь на это аниме
-date: '2022-08-01'
+date: 2022-08-01
 category: note
 draft: true
 description: ''

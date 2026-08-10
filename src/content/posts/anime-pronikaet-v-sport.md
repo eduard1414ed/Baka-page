@@ -1,6 +1,6 @@
 ---
 title: Аниме проникает в спорт
-date: '2022-11-15'
+date: 2022-11-15
 category: note
 draft: true
 description: ''

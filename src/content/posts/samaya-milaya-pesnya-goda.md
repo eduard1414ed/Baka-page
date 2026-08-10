@@ -1,6 +1,6 @@
 ---
 title: Самая милая песня года
-date: '2022-06-20'
+date: 2022-06-20
 category: note
 draft: true
 description: ''

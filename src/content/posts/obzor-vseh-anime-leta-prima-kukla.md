@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех аниме лета: «Прима-кукла»'
-date: '2022-08-25'
+date: 2022-08-25
 category: note
 draft: true
 description: ''

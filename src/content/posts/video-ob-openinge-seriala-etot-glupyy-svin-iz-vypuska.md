@@ -1,6 +1,6 @@
 ---
 title: 'Видео об опенинге сериала «Этот глупый свин» из выпуска:'
-date: '2022-05-15'
+date: 2022-05-15
 category: note
 draft: true
 description: ''

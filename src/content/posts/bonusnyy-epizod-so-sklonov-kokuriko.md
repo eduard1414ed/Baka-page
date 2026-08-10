@@ -1,6 +1,6 @@
 ---
 title: Бонусный эпизод | Со склонов Кокурико
-date: '2022-08-18'
+date: 2022-08-18
 category: bonus
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Аниме как мейнстрим
-date: '2022-07-09'
+date: 2022-07-09
 category: note
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Канал про мультфильмы
-date: '2022-08-23'
+date: 2022-08-23
 category: note
 draft: true
 description: ''

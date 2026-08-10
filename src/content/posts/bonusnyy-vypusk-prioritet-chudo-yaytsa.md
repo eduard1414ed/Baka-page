@@ -1,6 +1,6 @@
 ---
 title: Бонусный выпуск | Приоритет чудо-яйца
-date: '2022-11-11'
+date: 2022-11-11
 category: bonus
 draft: true
 description: ''

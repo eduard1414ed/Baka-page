@@ -1,6 +1,6 @@
 ---
 title: Бонусный выпуск | Фури Кури
-date: '2022-10-21'
+date: 2022-10-21
 category: bonus
 draft: true
 description: ''

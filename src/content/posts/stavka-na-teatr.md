@@ -1,6 +1,6 @@
 ---
 title: Ставка на театр
-date: '2022-08-22'
+date: 2022-08-22
 category: note
 draft: true
 description: ''

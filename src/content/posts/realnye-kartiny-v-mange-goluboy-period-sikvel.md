@@ -1,6 +1,6 @@
 ---
 title: Реальные картины в манге «Голубой период». Сиквел
-date: '2022-06-27'
+date: 2022-06-27
 category: note
 draft: true
 description: ''

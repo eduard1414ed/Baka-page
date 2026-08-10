@@ -1,6 +1,6 @@
 ---
 title: Можете ли вы или другой иностранец выпускать мангу в shounen jump и других журналах?
-date: '2022-05-14'
+date: 2022-05-14
 category: note
 draft: true
 description: ''

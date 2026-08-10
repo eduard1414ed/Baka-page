@@ -1,6 +1,6 @@
 ---
 title: Продолжая разговор о талантах
-date: '2022-09-13'
+date: 2022-09-13
 category: note
 draft: true
 description: ''

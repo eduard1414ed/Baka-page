@@ -1,6 +1,6 @@
 ---
 title: Невероятные раскадровки Сатоси Кона
-date: '2022-09-20'
+date: 2022-09-20
 category: note
 draft: true
 description: ''

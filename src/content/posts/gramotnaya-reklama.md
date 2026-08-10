@@ -1,6 +1,6 @@
 ---
 title: Грамотная реклама
-date: '2022-07-04'
+date: 2022-07-04
 category: note
 draft: true
 description: ''

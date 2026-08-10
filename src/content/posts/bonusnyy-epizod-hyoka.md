@@ -1,6 +1,6 @@
 ---
 title: Бонусный эпизод | Хёка
-date: '2022-07-07'
+date: 2022-07-07
 category: bonus
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Небольшой перенос нового сезона «Баки!»
-date: '2022-09-30'
+date: 2022-09-30
 category: note
 draft: true
 description: ''

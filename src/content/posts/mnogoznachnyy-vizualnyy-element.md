@@ -1,6 +1,6 @@
 ---
 title: Многозначный визуальный элемент
-date: '2022-09-02'
+date: 2022-09-02
 category: note
 draft: true
 description: ''

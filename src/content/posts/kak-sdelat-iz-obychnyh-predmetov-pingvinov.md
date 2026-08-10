@@ -1,6 +1,6 @@
 ---
 title: Как сделать из обычных предметов — пингвинов?
-date: '2022-07-26'
+date: 2022-07-26
 category: note
 draft: true
 description: ''

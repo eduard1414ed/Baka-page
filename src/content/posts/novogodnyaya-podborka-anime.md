@@ -1,6 +1,6 @@
 ---
 title: Новогодняя подборка аниме
-date: '2022-12-29'
+date: 2022-12-29
 category: note
 draft: true
 description: ''

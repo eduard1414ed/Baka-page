@@ -1,6 +1,6 @@
 ---
 title: Как дзёсэй-манга может стать популярной?
-date: '2022-09-19'
+date: 2022-09-19
 category: note
 draft: true
 description: ''

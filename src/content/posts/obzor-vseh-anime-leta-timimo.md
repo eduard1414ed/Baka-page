@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех аниме лета: «Тимимо»'
-date: '2022-07-29'
+date: 2022-07-29
 category: note
 draft: true
 description: ''

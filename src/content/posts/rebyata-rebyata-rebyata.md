@@ -1,6 +1,6 @@
 ---
 title: Ребята, ребята, ребята
-date: '2022-10-08'
+date: 2022-10-08
 category: note
 draft: true
 description: ''

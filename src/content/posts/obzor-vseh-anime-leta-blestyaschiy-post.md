@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех аниме лета: «Блестящий пост»'
-date: '2022-08-26'
+date: 2022-08-26
 category: note
 draft: true
 description: ''

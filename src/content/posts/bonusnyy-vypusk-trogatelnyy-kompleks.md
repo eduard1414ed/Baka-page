@@ -1,6 +1,6 @@
 ---
 title: Бонусный выпуск | Трогательный комплекс
-date: '2022-11-18'
+date: 2022-11-18
 category: bonus
 draft: true
 description: ''

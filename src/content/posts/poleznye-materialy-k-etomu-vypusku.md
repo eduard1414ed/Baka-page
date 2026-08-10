@@ -1,6 +1,6 @@
 ---
 title: 'Полезные материалы к этому выпуску:'
-date: '2022-08-24'
+date: 2022-08-24
 category: note
 draft: true
 description: ''

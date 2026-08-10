@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех аниме лета: Ликорис Рикоил'
-date: '2022-07-03'
+date: 2022-07-03
 category: note
 draft: true
 description: ''

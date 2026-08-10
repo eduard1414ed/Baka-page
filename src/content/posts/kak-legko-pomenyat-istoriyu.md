@@ -1,6 +1,6 @@
 ---
 title: Как легко поменять историю?
-date: '2022-11-22'
+date: 2022-11-22
 category: note
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Всегда знал, что между Акамару и Наруто много общего
-date: '2022-07-01'
+date: 2022-07-01
 category: note
 draft: true
 description: ''

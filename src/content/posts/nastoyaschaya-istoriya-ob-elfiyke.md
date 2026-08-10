@@ -1,6 +1,6 @@
 ---
 title: Настоящая история об эльфийке
-date: '2022-09-12'
+date: 2022-09-12
 category: note
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Реверс-инжениринг
-date: '2022-12-06'
+date: 2022-12-06
 category: note
 draft: true
 description: ''

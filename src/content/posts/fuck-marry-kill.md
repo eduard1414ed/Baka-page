@@ -1,6 +1,6 @@
 ---
 title: Fuck, Marry, Kill
-date: '2022-12-10'
+date: 2022-12-10
 category: note
 draft: true
 description: ''

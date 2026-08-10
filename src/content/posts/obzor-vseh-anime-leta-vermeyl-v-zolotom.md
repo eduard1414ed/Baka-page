@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех аниме лета: «Вермейл в золотом»'
-date: '2022-08-02'
+date: 2022-08-02
 category: note
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Бонусный выпуск | Девочка покорившая время
-date: '2022-06-02'
+date: 2022-06-02
 category: bonus
 draft: true
 description: ''

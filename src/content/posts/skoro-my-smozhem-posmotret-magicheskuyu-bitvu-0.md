@@ -1,6 +1,6 @@
 ---
 title: Скоро мы сможем посмотреть «Магическую битву 0»
-date: '2022-08-07'
+date: 2022-08-07
 category: note
 draft: true
 description: ''

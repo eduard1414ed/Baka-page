@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех аниме лета: «Аюму всё равно станет ближе»'
-date: '2022-07-27'
+date: 2022-07-27
 category: note
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Третья номинация — «Лучшая анимация»
-date: '2022-12-31'
+date: 2022-12-31
 category: note
 draft: true
 description: ''

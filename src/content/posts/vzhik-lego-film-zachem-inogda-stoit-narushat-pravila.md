@@ -1,6 +1,6 @@
 ---
 title: Вжик. Лего Фильм | Зачем иногда стоит нарушать правила?
-date: '2022-05-14'
+date: 2022-05-14
 category: note
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Неснятый фильм Ghibli
-date: '2022-11-08'
+date: 2022-11-08
 category: note
 draft: true
 description: ''

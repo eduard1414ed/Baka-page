@@ -1,6 +1,6 @@
 ---
 title: 'Обзор всех аниме лета: «Богиня идола-мерзавца»'
-date: '2022-08-13'
+date: 2022-08-13
 category: note
 draft: true
 description: ''

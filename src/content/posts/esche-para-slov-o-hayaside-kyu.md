@@ -1,6 +1,6 @@
 ---
 title: Еще пара слов о Хаясиде Кю
-date: '2022-10-04'
+date: 2022-10-04
 category: note
 draft: true
 description: ''

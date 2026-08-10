@@ -1,6 +1,6 @@
 ---
 title: «Жизнь девушки-карателя» — очень изобретательный сериал
-date: '2022-06-09'
+date: 2022-06-09
 category: note
 draft: true
 description: ''

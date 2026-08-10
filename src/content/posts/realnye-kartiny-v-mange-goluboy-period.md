@@ -1,6 +1,6 @@
 ---
 title: Реальные картины в манге «Голубой период»
-date: '2022-06-17'
+date: 2022-06-17
 category: note
 draft: true
 description: ''

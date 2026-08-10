@@ -1,6 +1,6 @@
 ---
 title: Ремейки в аниме
-date: '2022-09-16'
+date: 2022-09-16
 category: note
 draft: true
 description: ''

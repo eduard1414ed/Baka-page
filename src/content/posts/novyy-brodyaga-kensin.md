@@ -1,6 +1,6 @@
 ---
 title: Новый «Бродяга Кэнсин»
-date: '2022-12-20'
+date: 2022-12-20
 category: note
 draft: true
 description: ''

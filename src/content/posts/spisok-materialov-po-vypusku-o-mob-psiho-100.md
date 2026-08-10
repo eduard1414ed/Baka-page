@@ -1,6 +1,6 @@
 ---
 title: Список материалов по выпуску о «Моб Психо 100»
-date: '2022-12-01'
+date: 2022-12-01
 category: note
 draft: true
 description: ''

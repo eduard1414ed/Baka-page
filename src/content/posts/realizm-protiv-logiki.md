@@ -1,6 +1,6 @@
 ---
 title: Реализм против логики
-date: '2022-12-19'
+date: 2022-12-19
 category: note
 draft: true
 description: ''

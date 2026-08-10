@@ -1,6 +1,6 @@
 ---
 title: Посылка от XL Media
-date: '2022-08-08'
+date: 2022-08-08
 category: note
 draft: true
 description: ''

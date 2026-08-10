@@ -1,6 +1,6 @@
 ---
 title: Наруто. Возвращение Итачи. Поиски Цунаде | Почему Итачи — bad boy, а Кисаме — такая акула?
-date: '2022-05-14'
+date: 2022-05-14
 category: note
 draft: true
 description: ''

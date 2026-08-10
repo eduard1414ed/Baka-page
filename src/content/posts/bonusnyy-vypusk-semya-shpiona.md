@@ -1,6 +1,6 @@
 ---
 title: Бонусный выпуск | Семья шпиона
-date: '2022-07-28'
+date: 2022-07-28
 category: bonus
 draft: true
 description: ''

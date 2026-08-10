@@ -1,6 +1,6 @@
 ---
 title: Места из «Клинка, рассекающего демонов» в реальной жизни
-date: '2022-10-18'
+date: 2022-10-18
 category: note
 draft: true
 description: ''

@@ -1,6 +1,6 @@
 ---
 title: Бонусный выпуск | Дети моря
-date: '2022-10-28'
+date: 2022-10-28
 category: bonus
 draft: true
 description: ''

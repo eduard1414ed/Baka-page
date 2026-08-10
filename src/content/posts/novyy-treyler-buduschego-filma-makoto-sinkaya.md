@@ -1,6 +1,6 @@
 ---
 title: Новый трейлер будущего фильма Макото Синкая
-date: '2022-07-15'
+date: 2022-07-15
 category: note
 draft: true
 description: ''

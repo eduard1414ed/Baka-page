@@ -1,6 +1,6 @@
 ---
 title: Ранний дизайн персонажей в «Ковбое Бибопе»
-date: '2022-08-25'
+date: 2022-08-25
 category: note
 draft: true
 description: ''

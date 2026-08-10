@@ -1,6 +1,6 @@
 ---
 title: Операторская работа в «Семье шпиона»
-date: '2022-06-06'
+date: 2022-06-06
 category: note
 draft: true
 description: ''
