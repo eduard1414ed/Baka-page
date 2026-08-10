@@ -1598,6 +1598,65 @@
 
 			CMS.registerFieldType('alias-list', AliasListControl, AliasListPreview);
 
+			// Поле «Падежные формы» в разделе «Аниме» (тз/11, часть A).
+			//
+			// ТОЛЬКО ПОКАЗЫВАЕТ. Ни `onChange`, ни поля ввода тут нет намеренно:
+			// формы считает морфология (scripts/anime-cases-lib.mjs), и любая
+			// правка руками была бы стёрта ближайшим пересчётом. Что надо
+			// добавить своё — идёт строкой выше, в «Варианты написания»:
+			// то поле не перезаписывается никогда.
+			//
+			// ЗАЧЕМ ВООБЩЕ ПОКАЗЫВАТЬ. Иначе непонятно, почему упоминание вдруг
+			// нашлось — и почему у одного тайтла нашлось, а у другого нет.
+			const AutoAliasListControl = createClass({
+				render() {
+					const items = toPlainArray(this.props.value).map((item) => String(item));
+
+					if (items.length === 0) {
+						return h(
+							'div',
+							{ id: this.props.forID, style: hintStyle },
+							'Пока ничего. Морфология не берётся за несклоняемые названия («Акира», «Наруто») ' +
+								'и за названия-предложения — их формы дописываются вручную полем выше.',
+						);
+					}
+
+					return h(
+						'div',
+						{ id: this.props.forID },
+						items.map((name) =>
+							h(
+								'span',
+								{
+									key: name,
+									style: {
+										display: 'inline-block',
+										padding: '2px 6px',
+										marginRight: '6px',
+										marginBottom: '6px',
+										background: '#f2f2f2',
+										borderRadius: '4px',
+										fontSize: '13px',
+										color: '#555',
+										maxWidth: '100%',
+										wordBreak: 'break-word',
+									},
+								},
+								name,
+							),
+						),
+					);
+				},
+			});
+
+			const AutoAliasListPreview = createClass({
+				render() {
+					return h('span', {}, toPlainArray(this.props.value).join(', '));
+				},
+			});
+
+			CMS.registerFieldType('auto-alias-list', AutoAliasListControl, AutoAliasListPreview);
+
 			function extractAnimeIdsFromBody(body) {
 				const ids = [];
 				const re = /:anime\[[^\]]*\]\{id="([^"]+)"/g;

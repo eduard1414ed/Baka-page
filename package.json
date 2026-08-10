@@ -21,6 +21,7 @@
     "unist-util-visit": "^5.1.0"
   },
   "devDependencies": {
+    "az": "^0.2.3",
     "wrangler": "^4.119.0"
   }
 }

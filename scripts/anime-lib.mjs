@@ -6,6 +6,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { ANIME_POSTER_WIDTHS } from '../src/lib/animePoster.mjs';
+import { initMorph, computeAliasesAuto } from './anime-cases-lib.mjs';
 
 export const ROOT = new URL('../', import.meta.url);
 export const ANIME_CONTENT_DIR = new URL('src/content/anime/', ROOT);
@@ -135,6 +136,17 @@ export async function writeAnimeEntry(slug, source, result) {
 		await downloadPoster(result.posterUrl, slug);
 	}
 
+	// Падежные формы (тз/11, часть A). Считаются здесь же, где заводится тайтл,
+	// — так робот sync-anime получает их сразу, без второго прохода. Ручные
+	// «Варианты написания» при этом передаются внутрь: форма, уже вписанная
+	// человеком, второй раз не предлагается.
+	await initMorph();
+	const aliasesAuto = computeAliasesAuto({
+		titleRu,
+		titleOriginal: result.titleOriginal,
+		aliases: previous?.aliases ?? [],
+	});
+
 	const entry = {
 		id: slug,
 		source: source.id,
@@ -150,6 +162,12 @@ export async function writeAnimeEntry(slug, source, result) {
 		// существуют — они живут только у нас, поэтому переносятся из прежнего
 		// файла как есть, без всяких условий.
 		...(previous?.aliases?.length && { aliases: previous.aliases }),
+		// А падежные формы, наоборот, считаются заново прямо здесь, из того
+		// titleRu, который только что решился строкой выше: русское название
+		// могло приехать из источника впервые или измениться, и формы обязаны
+		// пойти за ним. Считать их отдельным шагом после записи значило бы
+		// переписать файл дважды и завести второе место, где живёт это правило.
+		...(aliasesAuto.length && { aliasesAuto }),
 		// А альтернативные названия, наоборот, целиком приходят из источника
 		// и обновляются вместе с остальными данными: в поиск они не идут,
 		// портить ими нечего.
