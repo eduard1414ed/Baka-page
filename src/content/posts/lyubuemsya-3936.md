@@ -1,0 +1,16 @@
+---
+title: Любуемся!
+date: 2026-05-13
+category: note
+categoryGuessed: true
+draft: true
+description: ''
+cover: ''
+noCover: false
+tgId: 3936
+tgUrl: https://t.me/podcastbaka/3936
+---
+
+Сегодня в рубрике с красивыми картинками наброски японской художницы [かりや](https://www.instagram.com/kry_aia/?hl=ja) (Hitomi Kariya).
+
+Она работала над ремейком «Несносных пришельцев» и  «Суперпринцессой Кагуей», рисует много рекламы для японских компаний. Но мне больше всего нравится смотреть на ее минималистичные скетчи. А вам как?
