@@ -7,6 +7,10 @@ draft: true
 description: ''
 cover: ''
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 tgId: 4123
 tgUrl: https://t.me/podcastbaka/4123
 ---
