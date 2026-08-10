@@ -218,6 +218,58 @@ function post4143Problems(built, publishedBody) {
 	return problems;
 }
 
+// ——— Бонус: разбор поста 4142 против того, что заказчик собрал руками ———
+//
+// САМАЯ СИЛЬНАЯ ПРОВЕРКА ИЗ ВОЗМОЖНЫХ. «Девушки-пони» — единственный бонусный
+// пост на сайте, и заказчик сделал его РУКАМИ из телеграм-поста №4142: сам
+// выбрал категорию, сам разложил ссылки по строкам поля «Ссылки площадок»,
+// сам оставил «Закрытый TG-канал» пустым. Значит правильный ответ известен
+// заранее и написан не мной. Разбор обязан повторить его буква в букву.
+
+/** Четыре строки `bonusLinks` из готового файла поста. */
+function bonusLinksFromFile(file) {
+	const block = file.match(/^bonusLinks:\n((?:[ \t]+\S+:.*\n)+)/m);
+	if (!block) return null;
+
+	const links = {};
+	for (const line of block[1].split('\n').filter(Boolean)) {
+		const match = line.match(/^\s+(\w+):\s*(.*)$/);
+		if (!match) continue;
+		links[match[1]] = match[2].replace(/^'(.*)'$/, '$1').trim();
+	}
+	return links;
+}
+
+function post4142Problems(built, publishedFile) {
+	const problems = [];
+
+	if (built.category !== 'bonus') problems.push(`категория разобрана как «${built.category}», а пост бонусный`);
+
+	const theirs = bonusLinksFromFile(publishedFile);
+	if (!theirs) {
+		problems.push('в посте «Девушки-пони» больше нет блока bonusLinks — образец для сверки устарел');
+		return problems;
+	}
+
+	const ours = built.bonusLinks ?? {};
+	for (const id of Object.keys(theirs)) {
+		// Сравнение СТРОГОЕ, посимвольное. Смягчать его нельзя: у Patreon
+		// в метке «поделиться» стоит `copyLink` с прописной буквой, и вся
+		// разница между «адрес сохранён» и «адрес испорчен» — ровно в ней.
+		if ((ours[id] ?? '') !== theirs[id]) {
+			problems.push(`строка «${id}»:\n      наша:  ${ours[id] || '(пусто)'}\n      ваша:  ${theirs[id] || '(пусто)'}`);
+		}
+	}
+
+	// Спрашиваем отдельно и прямо: сравнение выше промолчало бы, окажись
+	// у нас лишняя строка, которой в вашем файле нет вовсе.
+	for (const id of Object.keys(ours)) {
+		if (!(id in theirs)) problems.push(`в разборе завелась лишняя строка «${id}»`);
+	}
+
+	return problems;
+}
+
 // ——— Запуск ———
 
 function report(name, problems) {
@@ -248,12 +300,24 @@ async function main() {
 	const publishedFile = readFileSync(join(root, 'src/content/posts/narisuy-eto-potom-umri.md'), 'utf8');
 	const publishedBody = publishedFile.split(/^---$/m).slice(2).join('---');
 
+	const bonusPost = groupAlbums(messages).find((p) => p.id === 4142);
+	if (!bonusPost) {
+		console.error('В экспорте нет сообщения 4142 — бонусный пост сверять не с чем.');
+		process.exit(1);
+	}
+	const bonusBuilt = buildPost(bonusPost);
+	const bonusFile = readFileSync(
+		join(root, 'src/content/posts/devushki-poni-seraya-zolushka-v-chem-sekret-populyarnosti.md'),
+		'utf8',
+	);
+
 	if (!SELFTEST) {
 		console.log('ПРОВЕРКИ РАЗБОРА ТЕЛЕГРАМА\n');
 		let found = 0;
 		found += report('правило заголовка, 11 подложенных случаев', titleProblems(TITLE_CASES));
 		found += report('адреса страниц против настоящих файлов постов', slugProblems(SLUG_CASES));
 		found += report('пост 4143 против опубликованного на сайте', post4143Problems(built, publishedBody));
+		found += report('бонус 4142 против собранного вами руками', post4142Problems(bonusBuilt, bonusFile));
 
 		console.log(
 			found === 0
@@ -304,6 +368,35 @@ async function main() {
 		{
 			name: 'пост 4143: абзац потерян целиком',
 			problems: post4143Problems({ ...built, body: built.body.split('\n\n').slice(0, -1).join('\n\n') }, publishedBody),
+		},
+		{
+			name: 'бонус 4142: категория съехала на «Заметку»',
+			problems: post4142Problems({ ...bonusBuilt, category: 'note' }, bonusFile),
+		},
+		{
+			name: 'бонус 4142: адрес приведён к нижнему регистру (copyLink → copylink)',
+			problems: post4142Problems(
+				{ ...bonusBuilt, bonusLinks: Object.fromEntries(Object.entries(bonusBuilt.bonusLinks).map(([k, v]) => [k, v.toLowerCase()])) },
+				bonusFile,
+			),
+		},
+		{
+			name: 'бонус 4142: в «Закрытый TG-канал» вписан общий адрес',
+			problems: post4142Problems(
+				{ ...bonusBuilt, bonusLinks: { ...bonusBuilt.bonusLinks, tgClosed: 'https://t.me/tribute/app?startapp=s26z' } },
+				bonusFile,
+			),
+		},
+		{
+			name: 'бонус 4142: ссылка на Boosty потерялась',
+			problems: post4142Problems({ ...bonusBuilt, bonusLinks: { ...bonusBuilt.bonusLinks, boosty: '' } }, bonusFile),
+		},
+		{
+			name: 'бонус 4142: метка «поделиться» отрезана от адреса',
+			problems: post4142Problems(
+				{ ...bonusBuilt, bonusLinks: { ...bonusBuilt.bonusLinks, boosty: bonusBuilt.bonusLinks.boosty.split('?')[0] } },
+				bonusFile,
+			),
 		},
 	];
 

@@ -29,6 +29,9 @@ import { fileURLToPath } from 'node:url';
 import { slugify } from '../src/lib/slug.mjs';
 import { buildAnimeMatcher, findMentions } from '../src/lib/animeMentions.mjs';
 import { manualTelegramPosts } from '../src/data/telegramImported.mjs';
+// Общие адреса площадок поддержки. Нужны затем, чтобы НЕ вписывать их в пост:
+// поле `bonusLinks` хранит только своё, а пустая строка означает «взять отсюда».
+import { platformsOfKind } from '../src/data/platforms.js';
 // Имена файлов и раскладка картинок вокруг текста — общие с роботом подгрузки
 // (scripts/telegram-photos.mjs, задача 7.2). Второй копии этого правила быть
 // не должно: посты, привезённые сразу с картинками, и посты, догруженные
@@ -43,15 +46,60 @@ const CHANNEL = 'podcastbaka';
 // самостоятельный материал: «вышел выпуск, слушайте там-то». Импортировать его
 // значило бы завести на сайте вторую запись о том, что на сайте уже есть.
 // Решение заказчика; каждый такой пост всё равно называется в отчёте.
-const ANNOUNCE_HOSTS = [
+//
+// Список ЭКСПОРТИРУЕТСЯ, потому что его меряет разведка задачи 7.4
+// (scripts/telegram-announce-audit.mjs). Своей копии у неё быть не должно:
+// копия разъехалась бы, и замер отвечал бы про правило, которого нет.
+//
+// ДВЕ СТРОКИ ЭТОГО СПИСКА ИСПРАВЛЕНЫ ПО ЗАМЕРУ АРХИВА (задача 7.4).
+//
+// Было `mave.digital` — на Mave живёт не только наш подкаст, и строка забирала
+// походы в гости в ЧУЖИЕ подкасты: «Эффект Эмметта Брауна» и «2D Деды».
+// Стало `baka.mave.digital` — наш и только наш.
+//
+// Было `open.spotify` — на Spotify лежит не только подкаст, и строка забирала
+// заметки о музыке («Музыка мечты» про саундтрек «Фрирен», дважды).
+// Замер всех ссылок архива: `/show/` — 7 раз (это мы), `/album/` и `/playlist/`
+// — 3 раза (это музыка). Порог виден сам, стало `open.spotify.com/show/`.
+// Цена: один пост 2022 года со ссылкой на ПЛЕЙЛИСТ выпусков (№26) приедет
+// лишним черновиком. Это дешёвая сторона ошибки, и она выбрана нарочно.
+//
+// `music.yandex` и `podcasts.apple` не тронуты: замер не нашёл ни одного поста,
+// потерянного из-за них. Сужать строку без доказанной ошибки незачем.
+export const ANNOUNCE_HOSTS = [
 	'bakapodcast.com',
-	'boosty.to',
-	'patreon.com',
-	'mave.digital',
+	'baka.mave.digital',
 	'music.yandex',
 	'podcasts.apple',
-	'open.spotify',
+	'open.spotify.com/show/',
 	'vk.com/podcast',
+];
+
+// АНОНС БОНУСНОГО ВЫПУСКА — НЕ АНОНС, А ЗАГОТОВКА МАТЕРИАЛА, И ВОТ ПОЧЕМУ.
+//
+// Правило площадок называлось «материал уже есть на сайте, второй записи
+// не нужно». Замер архива (задача 7.4) показал, что 132 поста из 147 отнятых —
+// это анонсы БОНУСНЫХ выпусков, которых на сайте нет и взяться им неоткуда:
+// они лежат на Boosty и Patreon. При этом на сайте под них построена целая
+// категория «Бонус» с плашкой подписки, а «Девушки-пони» заказчик сделал
+// РУКАМИ ровно из такого поста.
+//
+// Поэтому Boosty и Patreon переехали из списка анонсов сюда: пост с такой
+// ссылкой не выбрасывается, а приезжает черновиком категории «Бонус».
+// Решение заказчика 10 августа 2026.
+const BONUS_HOSTS = ['boosty.to', 'patreon.com'];
+
+// Какая ссылка из поста в какую строку поля «Ссылки площадок» (`bonusLinks`).
+// Ключи — те же `id`, что у площадок поддержки в src/data/platforms.js;
+// третьей копии этого списка быть не должно.
+//
+// `t.me` берётся ТОЛЬКО у tribute: в бонусных постах попадаются и ссылки
+// на сам канал, и на чужие каналы, и закрытой подпиской они не являются.
+const BONUS_FIELDS = [
+	['boosty', ['boosty.to']],
+	['patreon', ['patreon.com']],
+	['tgClosed', ['t.me/tribute']],
+	['vkDonat', ['vk.com/', 'vk.ru/']],
 ];
 
 // АНОНС ВИДЕОЭССЕ УЗНАЁТСЯ ПО ДВУМ ССЫЛКАМ СРАЗУ, а не по одной.
@@ -62,7 +110,7 @@ const ANNOUNCE_HOSTS = [
 // БЕЗ pc.st стоит у девяти постов, и все девять обычные заметки («Любуемся!»,
 // «Новостной дайджест», разбор чужого ролика с канала Aniplex). Отсеивай
 // по одному ютюбу — и вместе с четырьмя анонсами уехали бы эти девять.
-const VIDEOESSAY_ANNOUNCE = [
+export const VIDEOESSAY_ANNOUNCE = [
 	['youtube.com', 'youtu.be'],
 	['pc.st'],
 ];
@@ -95,17 +143,28 @@ const stripEmoji = (text) => text.replace(EMOJI, '');
 const squeeze = (text) => text.replace(/[ \t ]+/g, ' ').trim();
 
 /** Все куски текста сообщения одной строкой, без разметки. */
-const plainOf = (entities) => (entities ?? []).map((e) => e.text ?? '').join('');
+export const plainOf = (entities) => (entities ?? []).map((e) => e.text ?? '').join('');
 
-/** Адреса, на которые ведёт сообщение: и ссылки словом, и голые адреса. */
-function urlsOf(entities) {
+/**
+ * Адреса, на которые ведёт сообщение, КАК ОНИ НАПИСАНЫ: и ссылки словом,
+ * и голые адреса.
+ *
+ * РЕГИСТР ЗДЕСЬ НЕ ТРОГАЕТСЯ НАРОЧНО. Адрес, который уедет в поле поста,
+ * обязан совпадать с оригиналом побайтно: у Patreon в метке «поделиться»
+ * стоит `copyLink`, и приведённый к нижнему регистру адрес — уже другой адрес.
+ * Для СРАВНЕНИЯ регистр не нужен, и этим занимается `urlsOf` ниже.
+ */
+export function rawUrlsOf(entities) {
 	const out = [];
 	for (const e of entities ?? []) {
 		if (e.type === 'text_link' && e.href) out.push(e.href);
 		if (e.type === 'link') out.push(e.text ?? '');
 	}
-	return out.map((u) => u.toLowerCase());
+	return out;
 }
+
+/** Те же адреса в нижнем регистре — для поиска площадок в них. */
+export const urlsOf = (entities) => rawUrlsOf(entities).map((u) => u.toLowerCase());
 
 // ——— Склейка альбомов ———
 
@@ -321,6 +380,12 @@ export function titleLineTail(entities, title) {
 
 // ——— Отсев ———
 
+/** Анонс бонусного выпуска: ссылка на Boosty или Patreon. */
+export function isBonus(entities) {
+	const urls = urlsOf(entities);
+	return BONUS_HOSTS.some((host) => urls.some((url) => url.includes(host)));
+}
+
 /** Причина, по которой пост не импортируется. `null` — импортируется. */
 export function skipReason(post) {
 	for (const m of post.members) {
@@ -333,6 +398,12 @@ export function skipReason(post) {
 	const entities = post.caption.text_entities ?? [];
 	if (!plainOf(entities).trim()) return 'сообщение без текста';
 
+	// БОНУС ПРОВЕРЯЕТСЯ РАНЬШЕ ОБОИХ ПРАВИЛ АНОНСА — иначе пост с ссылкой
+	// и на Boosty, и на площадку подкаста ушёл бы в отсев, хотя это заготовка
+	// материала. Замер архива: постов, где бонус спорит с правилом видеоэссе,
+	// ноль, но порядок всё равно назван явно — данные меняются, порядок нет.
+	if (isBonus(entities)) return null;
+
 	const urls = urlsOf(entities);
 	const hit = ANNOUNCE_HOSTS.find((host) => urls.some((url) => url.includes(host)));
 	if (hit) return `анонс уже существующего материала (ссылка на ${hit})`;
@@ -344,22 +415,69 @@ export function skipReason(post) {
 }
 
 /**
- * Категория привезённого поста. Всегда «Заметка».
+ * Категория привезённого поста: «Бонус» или «Заметка».
  *
- * УГАДЫВАТЬ БОЛЬШЕ НЕЧЕГО, И ЭТО СЛЕДСТВИЕ ПРАВИЛА ОБ АНОНСАХ. Раньше ссылка
- * на ютюб давала «видеоэссе». После того как анонсы видеоэссе перестали
- * импортироваться вовсе, эта догадка срабатывала бы ровно на тех девяти
- * постах, где ютюб стоит по другому поводу, — то есть промахивалась бы
- * всегда. Правило, которое право в нуле случаев из девяти, — не правило.
+ * ЭТО НЕ ДОГАДКА, А ПРИЗНАК. Прежняя догадка про видеоэссе смотрела на ссылку
+ * на ютюб и промахивалась в девяти случаях из девяти — её убрали 10 августа
+ * 2026 вместе с полем «угадал робот». Здесь другое: ссылка на Boosty или
+ * Patreon стоит в посте потому, что выпуск лежит ТАМ, а бонус — это ровно
+ * «выпуск за подпиской». Замер архива: из 132 постов с такой ссылкой анонсами
+ * бонусов оказались все, кроме пяти служебных («Скидки!», «Новый подкаст!»),
+ * и те пять заказчик увидит черновиками.
  *
- * Функция оставлена, а не выброшена: категория всё равно должна называться
- * в одном месте. А признака «угадал робот» в посте больше нет — он был заведён
- * под догадку и ушёл вместе с ней; правило этапа 7 «категория предлагается,
- * а не проставляется молча» держит теперь галочка «Черновик», без которой
- * ни один такой пост на сайт не попадёт. Решение заказчика 10 августа 2026.
+ * Что человек категорию ещё не подтвердил, по-прежнему говорит галочка
+ * «Черновик»: она стоит у всех привезённых постов без исключения.
  */
-export function guessCategory() {
-	return 'note';
+export function guessCategory(entities) {
+	return isBonus(entities) ? 'bonus' : 'note';
+}
+
+/**
+ * Адреса для поля «Ссылки площадок» бонусного поста (`bonusLinks`).
+ *
+ * ПИШЕТСЯ ТОЛЬКО ТО, ЧТО ОТЛИЧАЕТСЯ ОТ ОБЩЕГО АДРЕСА ПЛОЩАДКИ. Так устроено
+ * само поле (`bonusSupportLinks` в src/data/platforms.js): пустая строка
+ * значит «взять адрес оттуда». Впиши сюда общий адрес — и в 130 постах
+ * заведётся копия, которая замёрзнет навсегда и отстанет при первой же смене
+ * ссылки. Это то же правило, по которому у выпусков не хранится длительность.
+ *
+ * ПРОВЕРЕНО НЕ РАССУЖДЕНИЕМ, А ВАШЕЙ РУКОЙ: пост «Девушки-пони» вы собрали
+ * из телеграм-поста №4142 сами — и вписали адреса Boosty, Patreon и VK,
+ * а «Закрытый TG-канал» оставили пустым, потому что ссылка на tribute
+ * в посте общая. Разбор повторяет это решение, а не своё.
+ */
+export function bonusLinksOf(entities) {
+	const urls = rawUrlsOf(entities);
+	const defaults = new Map(platformsOfKind('support').map((p) => [p.id, normalizeLink(p.url)]));
+	const links = {};
+
+	for (const [id, hosts] of BONUS_FIELDS) {
+		const own = urls.find(
+			(url) => hosts.some((host) => url.toLowerCase().includes(host)) && normalizeLink(url) !== defaults.get(id),
+		);
+		links[id] = own ?? '';
+	}
+
+	return links;
+}
+
+/**
+ * Адрес без того, что не меняет, куда он ведёт.
+ *
+ * Нужен ровно для одного вопроса: «это общий адрес площадки или свой?».
+ * `http://patreon.com/bakapodcast` и `https://www.patreon.com/bakapodcast` —
+ * одно и то же место, а метки «поделиться» (`?share=`, `utm_*`, `si=`)
+ * у каждой копии ссылки свои. Не приведи их к одному виду — и общий адрес
+ * из старого поста уехал бы в поле как «свой».
+ */
+function normalizeLink(url) {
+	return String(url)
+		.toLowerCase()
+		.replace(/^https?:\/\//, '')
+		.replace(/^www\./, '')
+		.replace(/[?&](share|si|dl_branch|utm_[a-z_]+)=[^&]*/g, '')
+		.replace(/[?&]$/, '')
+		.replace(/\/+$/, '');
 }
 
 /** Сколько ссылок ведёт внутрь самого канала (задача 7.3, здесь только счёт). */
@@ -382,6 +500,14 @@ function frontmatter(fields) {
 			if (!value.length) continue;
 			lines.push(`${key}:`);
 			for (const item of value) lines.push(`  - ${item}`);
+		} else if (value && typeof value === 'object') {
+			// Вложенный блок — сейчас это только `bonusLinks`. Пишется ЦЕЛИКОМ,
+			// со всеми четырьмя строками, в том числе пустыми: ровно так его
+			// пишет админка (сверено с постом «Девушки-пони»), и расхождение
+			// хоть в одной строке дало бы правку на весь файл при первом же
+			// сохранении.
+			lines.push(`${key}:`);
+			for (const [name, item] of Object.entries(value)) lines.push(`  ${name}: ${yamlString(item)}`);
 		} else if (typeof value === 'boolean' || typeof value === 'number') {
 			lines.push(`${key}: ${value}`);
 		} else {
@@ -416,6 +542,7 @@ export function buildPost(post, { matcher = [] } = {}) {
 		title: title?.title ?? '',
 		body,
 		category: guessCategory(entities),
+		bonusLinks: isBonus(entities) ? bonusLinksOf(entities) : null,
 		photos: photosOf(post),
 		suggested,
 		innerLinks: innerLinks(entities),
@@ -458,6 +585,9 @@ export function renderPost(built, { files = [] } = {}) {
 			noCover: built.photos.length === 0,
 			tgId: built.id,
 			tgUrl: `https://t.me/${CHANNEL}/${built.id}`,
+			// Только у бонусов: у заметки этого поля быть не должно вовсе,
+			// иначе оно врало бы про устройство поста.
+			...(built.bonusLinks ? { bonusLinks: built.bonusLinks } : {}),
 			animeSuggested: built.suggested,
 		}) +
 		'\n' +
