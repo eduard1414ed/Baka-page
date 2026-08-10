@@ -52,17 +52,17 @@ const FLAG = 'pullMedia';
 // изменений. Пересобери мы файл своим кодом, расхождение хоть в пробеле дало бы
 // правку на весь файл при первом же сохранении в админке.
 
-function splitFrontmatter(raw) {
+export function splitFrontmatter(raw) {
 	const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/);
 	return match ? { head: match[1], body: raw.slice(match[0].length) } : null;
 }
 
-const unquote = (value) => String(value ?? '').trim().replace(/^'([\s\S]*)'$/, '$1').replace(/^"([\s\S]*)"$/, '$1');
+export const unquote = (value) => String(value ?? '').trim().replace(/^'([\s\S]*)'$/, '$1').replace(/^"([\s\S]*)"$/, '$1');
 
-const field = (head, key) => head.match(new RegExp(`^${key}:[ \\t]*(.*)$`, 'm'))?.[1] ?? null;
+export const field = (head, key) => head.match(new RegExp(`^${key}:[ \\t]*(.*)$`, 'm'))?.[1] ?? null;
 
 /** Заменить значение поля; поля нет — вписать перед «якорем» или в конец. */
-function setField(head, key, value, anchor = 'noCover') {
+export function setField(head, key, value, anchor = 'noCover') {
 	const line = new RegExp(`^${key}:.*$`, 'm');
 	if (line.test(head)) return head.replace(line, `${key}: ${value}`);
 
@@ -77,7 +77,7 @@ function setField(head, key, value, anchor = 'noCover') {
 // компьютере) и сервер по sftp (робот). Логика разбора не должна знать,
 // откуда приехал файл.
 
-function localSource(dir) {
+export function localSource(dir) {
 	return {
 		label: dir,
 		json: (rel) => JSON.parse(readFileSync(join(dir, rel), 'utf8')),
@@ -102,7 +102,7 @@ function localSource(dir) {
  * же ненайденный файл оборвал бы скачивание остальных, и вместо «нет одной
  * картинки» вышло бы «нет ни одной».
  */
-function remoteSource(remote, key) {
+export function remoteSource(remote, key) {
 	const cut = remote.lastIndexOf(':');
 	if (cut === -1) throw new Error('--remote пишется как логин@адрес:/папка');
 	const target = remote.slice(0, cut);
