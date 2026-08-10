@@ -6,7 +6,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { ANIME_POSTER_WIDTHS } from '../src/lib/animePoster.mjs';
-import { initMorph, computeAliasesAuto } from './anime-cases-lib.mjs';
+import { initMorph, computeAliasesAuto, strictQuotesHint } from './anime-cases-lib.mjs';
 
 export const ROOT = new URL('../', import.meta.url);
 export const ANIME_CONTENT_DIR = new URL('src/content/anime/', ROOT);
@@ -162,6 +162,11 @@ export async function writeAnimeEntry(slug, source, result) {
 		// существуют — они живут только у нас, поэтому переносятся из прежнего
 		// файла как есть, без всяких условий.
 		...(previous?.aliases?.length && { aliases: previous.aliases }),
+		// Галочка «только в кавычках» — тоже решение человека, и в источниках
+		// её не существует. Не перенеси её здесь — и ближайшее обновление данных
+		// тихо сняло бы запрет, поставленный руками: ссылки вернулись бы туда,
+		// где заказчик их запретил, а причину искали бы в вёрстке.
+		...(previous?.strictQuotes === true && { strictQuotes: true }),
 		// А падежные формы, наоборот, считаются заново прямо здесь, из того
 		// titleRu, который только что решился строкой выше: русское название
 		// могло приехать из источника впервые или измениться, и формы обязаны
@@ -181,6 +186,21 @@ export async function writeAnimeEntry(slug, source, result) {
 
 	if (kept.length > 0) {
 		console.log(`  правлено руками, данные из ${source.label} для этих полей проигнорированы: ${kept.join(', ')}`);
+	}
+
+	// ПОДСКАЗКА ПРО ГАЛОЧКУ «ТОЛЬКО В КАВЫЧКАХ» (тз/11, B.2) — ровно в тот миг,
+	// когда тайтл заводится, и ТОЛЬКО подсказкой. Сами не включаем ничего:
+	// «Наруто» и «Монстр» формально одинаковы, а по существу нет, и решение
+	// это редакторское. Строчка уходит в отчёт робота, то есть в задачу
+	// на GitHub и письмо на почту.
+	if (titleRu && previous?.strictQuotes !== true) {
+		const hint = strictQuotesHint(titleRu);
+		if (hint) {
+			console.log(
+				`  ⚑ «${titleRu}»: ${hint.why.join('; ')}. Стоит подумать о галочке «Линковать только внутри кавычек» ` +
+					`в админке, иначе название будет ловиться в любом тексте.`,
+			);
+		}
 	}
 
 	return entry;

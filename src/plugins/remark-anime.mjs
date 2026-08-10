@@ -1,21 +1,30 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { visit } from 'unist-util-visit';
+import { buildAnimeMatcher, findMentions } from '../lib/animeMentions.mjs';
 
 const ANIME_CONTENT_DIR = new URL('../content/anime/', import.meta.url);
-const MIN_NAME_LENGTH = 2;
 
-function loadAnimeNames(id) {
+// Карточка тайтла читается один раз на сборку: постов 1594, а тайтлов 53,
+// и один и тот же файл иначе читался бы с диска сотни раз.
+const cache = new Map();
+
+function loadAnimeEntry(id) {
+	if (cache.has(id)) return cache.get(id);
+
 	const path = fileURLToPath(new URL(`${id}.json`, ANIME_CONTENT_DIR));
-	if (!existsSync(path)) return [];
+	let entry = null;
 
-	try {
-		const data = JSON.parse(readFileSync(path, 'utf8'));
-		const names = [data.titleRu, data.titleOriginal].filter((name) => name && name.length >= MIN_NAME_LENGTH);
-		return [...new Set(names)];
-	} catch {
-		return [];
+	if (existsSync(path)) {
+		try {
+			entry = { id, data: JSON.parse(readFileSync(path, 'utf8')) };
+		} catch {
+			entry = null;
+		}
 	}
+
+	cache.set(id, entry);
+	return entry;
 }
 
 function autoLinkNode(id, text) {
@@ -41,12 +50,27 @@ function autoLinkNode(id, text) {
  *
  * Тайтлы, которые есть в поле `anime` поста (например, проставлены вручную
  * до появления кнопки «Аниме», как в «Знакомьтесь: Ёдзи Такэсигэ»), но нигде
- * не отмечены меткой в тексте, доразмечаются сами: ищем в обычном тексте первое
- * упоминание названия тайтла (русского или оригинального) и превращаем его
- * в такую же ссылку — руками расставлять метки по старым постам не нужно.
- * Ищется точное совпадение текста: название в другом падеже («Ходячего замка»
- * вместо «Ходячий замок») не найдётся — тогда стоит вручную отметить его
- * кнопкой «Аниме» в редакторе или полем «Тайтлы поста».
+ * не отмечены меткой в тексте, доразмечаются сами: ищем в тексте первое
+ * упоминание названия тайтла и превращаем его в такую же ссылку — руками
+ * расставлять метки по старым постам не нужно.
+ *
+ * ПО ЧЕМУ ИЩЕМ — НЕ НАШЕ ДЕЛО, И ЭТО ГЛАВНОЕ ПРАВИЛО ЭТОГО ФАЙЛА.
+ * Список названий и правило совпадения берутся у `src/lib/animeMentions.mjs`,
+ * того же кода, которым размечаются расшифровки выпусков. Значит сюда сами
+ * собой приходят: оба списка вариантов написания (ручной `aliases` и падежный
+ * `aliasesAuto`), кусок названия до двоеточия, нечувствительность к регистру
+ * и к «е»/«ё», границы слова и галочка «только в кавычках».
+ *
+ * ДО ЭТАПА 11, ЧАСТИ B, ЗДЕСЬ ЛЕЖАЛА СВОЯ КОПИЯ ЭТОГО ПРАВИЛА — и она была
+ * разъехавшейся: искала только `titleRu` и `titleOriginal`, точным совпадением
+ * буква в букву, о вариантах написания не знала вовсе. «в Ходячем замке»
+ * в посте ссылкой не становилось, хотя ровно эта форма записана у тайтла
+ * в карточке. Заметить копию было нельзя: варианты заполнены у двух тайтлов
+ * из 53, и расхождению негде было случиться (СТАТУС.md, хвост 45).
+ *
+ * ЧТО ОСТАЛОСЬ СВОИМ. Два правила, и оба про пост, а не про названия:
+ * ищем только тайтлы, стоящие в поле «Тайтлы поста» (а не весь справочник,
+ * как в расшифровках), и размечаем только первое упоминание каждого.
  *
  * `::anime-ref{id="" source="" source-id=""}` — служебная метка без видимого
  * текста, ничего не выводит на странице. Ставит поле «Тайтлы поста» в CMS
@@ -86,35 +110,52 @@ export default function remarkAnime() {
 		const frontmatterAnime = file.data?.astro?.frontmatter?.anime;
 		if (!Array.isArray(frontmatterAnime)) return;
 
-		const pending = new Map();
+		const pending = new Set();
+		const entries = [];
 		for (const id of frontmatterAnime) {
-			if (seen.has(id)) continue;
-			const names = loadAnimeNames(id);
-			if (names.length > 0) pending.set(id, names);
+			if (seen.has(id) || pending.has(id)) continue;
+			const entry = loadAnimeEntry(id);
+			if (!entry) continue;
+			pending.add(id);
+			entries.push(entry);
 		}
 
 		if (pending.size === 0) return;
 
+		let matcher = buildAnimeMatcher(entries);
+		if (matcher.length === 0) return;
+
+		// ССЫЛКУ ВНУТРЬ ССЫЛКИ СТАВИТЬ НЕЛЬЗЯ. Название тайтла запросто окажется
+		// подписью авторской ссылки («читайте про Атаку титанов»), и обёрнутое
+		// нашим `<a>` оно дало бы вложенные ссылки: разметка недопустимая, а на
+		// странице у слова пропадает нажатие целиком. До части B случай был
+		// почти невозможен (искалось точное совпадение с названием), теперь
+		// ищутся ещё и падежные формы, и он стал обычным.
+		const insideLink = new Set();
+		visit(tree, ['link', 'linkReference'], (node) => {
+			visit(node, 'text', (child) => insideLink.add(child));
+		});
+
 		visit(tree, 'text', (node, index, parent) => {
 			if (!parent || typeof index !== 'number' || pending.size === 0) return;
+			if (insideLink.has(node)) return;
 
-			for (const [id, names] of pending) {
-				const name = names.find((candidate) => node.value.includes(candidate));
-				if (!name) continue;
+			const hit = findMentions(node.value, matcher).find((mention) => pending.has(mention.id));
+			if (!hit) return;
 
-				const pos = node.value.indexOf(name);
-				const before = node.value.slice(0, pos);
-				const after = node.value.slice(pos + name.length);
+			const before = node.value.slice(0, hit.start);
+			const after = node.value.slice(hit.end);
 
-				const replacement = [];
-				if (before) replacement.push({ type: 'text', value: before });
-				replacement.push(autoLinkNode(id, name));
-				if (after) replacement.push({ type: 'text', value: after });
+			const replacement = [];
+			if (before) replacement.push({ type: 'text', value: before });
+			replacement.push(autoLinkNode(hit.id, node.value.slice(hit.start, hit.end)));
+			if (after) replacement.push({ type: 'text', value: after });
 
-				parent.children.splice(index, 1, ...replacement);
-				pending.delete(id);
-				return index;
-			}
+			parent.children.splice(index, 1, ...replacement);
+			pending.delete(hit.id);
+			matcher = matcher.filter((entry) => entry.id !== hit.id);
+
+			return index;
 		});
 	};
 }
