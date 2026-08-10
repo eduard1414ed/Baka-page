@@ -1,7 +1,7 @@
 ---
 title: Как создаются «Цугаи загробного мира»?
 date: 2026-06-10
-category: videoessay
+category: note
 categoryGuessed: true
 draft: true
 description: ''

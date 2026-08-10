@@ -1,7 +1,7 @@
 ---
 title: Новостной дайджест
 date: 2026-04-17
-category: videoessay
+category: note
 categoryGuessed: true
 draft: true
 description: ''

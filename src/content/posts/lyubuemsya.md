@@ -1,7 +1,7 @@
 ---
 title: Любуемся!
 date: 2026-04-14
-category: videoessay
+category: note
 categoryGuessed: true
 draft: true
 description: ''

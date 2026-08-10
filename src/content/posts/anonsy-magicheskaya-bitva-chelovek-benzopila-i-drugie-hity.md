@@ -1,7 +1,7 @@
 ---
 title: 'Анонсы: «Магическая битва», «Человек-бензопила» и другие хиты'
 date: 2026-06-22
-category: videoessay
+category: note
 categoryGuessed: true
 draft: true
 description: ''
