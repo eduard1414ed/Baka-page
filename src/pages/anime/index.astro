@@ -183,8 +183,14 @@ const crumbs = breadcrumbsSchema([{ name: 'Каталог аниме', path: '/a
 		pointer-events: none;
 	}
 
+	/* ЗАМЕНА СНЯТОМУ `outline` ОБЯЗАНА БЫТЬ ДВОЙНОЙ. Рамки контролов у нас
+	   осознанно бледные (1.57:1, решение 9 августа), и один только цвет рамки
+	   в 1 px человек с клавиатуры не видит. Внутренняя тень удваивает линию —
+	   ровно как у поля поиска по сайту (`.s-input`, src/pages/search.astro).
+	   Третьего вида фокуса у полей не бывает: меняете тут — правьте все три. */
 	.search-box:focus {
 		border-color: var(--accent-text);
+		box-shadow: inset 0 0 0 1px var(--accent-text);
 		outline: none;
 	}
 

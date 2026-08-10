@@ -16,7 +16,17 @@
 // Запуск: node scripts/check-edges.mjs            — все страницы, ключевые ширины
 //         node scripts/check-edges.mjs 1440        — одна ширина
 //         node scripts/check-edges.mjs --page dist/posts/ep-102/index.html
-//         node scripts/check-edges.mjs --selftest  — самопроверка подлогом
+//         node scripts/check-edges.mjs --targets   — цели нажатия меньше 44
+//
+// САМОПРОВЕРКА ДЕЛАЕТСЯ РУКАМИ, флага для неё нет. Раньше в этой строке был
+// обещан `--selftest`, которого в коде не существовало вовсе: скрипт молча
+// игнорировал флаг и печатал обычный отчёт — то есть на вопрос «а ты вообще
+// умеешь находить?» отвечал «всё хорошо». Убрано 10 августа 2026.
+// Как проверить за минуту: дописать в конец `dist/_astro/Layout.*.css` строку
+// `.footer.footer{margin-left:77px}`, прогнать — подвал обязан уехать в свою
+// группу «левый край 137», — и вернуть файл из копии. Второй подлог,
+// `padding-left:77px`, двигает только содержимое: коробка остаётся на 60,
+// а рядом появляется пометка «[содержимое 137…]».
 
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
@@ -297,24 +307,53 @@ const LONGHAND = {
 	'border-width': ['border-top-width', 'border-right-width', 'border-bottom-width', 'border-left-width'],
 };
 
+/**
+ * Режет значение по пробелам ВЕРХНЕГО УРОВНЯ. `calc(var(--x) * -1)` — это одна
+ * часть, а не три: обычный `split(/\s+/)` рвал её внутри скобок.
+ *
+ * НАСТУПИЛИ 10 августа 2026. `margin-inline: calc(var(--gutter) * -1)`
+ * (вынос картинки до краёв экрана) распадался на «calc(var(--gutter)», разбор
+ * получал огрызок без закрывающей скобки и уходил в бесконечную рекурсию:
+ * скрипт ПАДАЛ целиком на ширинах 620 и 390, то есть треть замера не делалась
+ * вовсе. Заметно это только по коду возврата — до падения он успевал напечатать
+ * почти весь отчёт, и на глаз прогон выглядел удачным.
+ */
+function splitParts(value) {
+	const out = [];
+	let depth = 0;
+	let buf = '';
+	for (const ch of value.trim()) {
+		if (ch === '(') depth++;
+		else if (ch === ')') depth--;
+		if (depth === 0 && /\s/.test(ch)) {
+			if (buf) out.push(buf);
+			buf = '';
+			continue;
+		}
+		buf += ch;
+	}
+	if (buf) out.push(buf);
+	return out;
+}
+
 function expandShorthand(prop, value, out) {
 	if (prop === 'margin-inline' || prop === 'padding-inline') {
 		const base = prop.split('-')[0];
-		const v = value.trim().split(/\s+/);
+		const v = splitParts(value);
 		out[base + '-left'] = v[0];
 		out[base + '-right'] = v[1] ?? v[0];
 		return true;
 	}
 	if (prop === 'inset-inline-start') { out['left-offset'] = value; return true; }
 	if (LONGHAND[prop]) {
-		const v = value.trim().split(/\s+/);
+		const v = splitParts(value);
 		const [t, r, b, l] = [v[0], v[1] ?? v[0], v[2] ?? v[0], v[3] ?? v[1] ?? v[0]];
 		const names = LONGHAND[prop];
 		out[names[0]] = t; out[names[1]] = r; out[names[2]] = b; out[names[3]] = l;
 		return true;
 	}
 	if (prop === 'border' || prop === 'border-left' || prop === 'border-right') {
-		const w = value.trim().split(/\s+/)[0];
+		const w = splitParts(value)[0];
 		const px = /^[\d.]+px$/.test(w) ? w : (/none/.test(value) ? '0' : '1px');
 		if (prop === 'border') { out['border-left-width'] = px; out['border-right-width'] = px; }
 		if (prop === 'border-left') out['border-left-width'] = px;
@@ -322,7 +361,7 @@ function expandShorthand(prop, value, out) {
 		return true;
 	}
 	if (prop === 'gap' || prop === 'grid-gap') {
-		const v = value.trim().split(/\s+/);
+		const v = splitParts(value);
 		out['column-gap'] = v[1] ?? v[0];
 		return true;
 	}
@@ -437,7 +476,12 @@ function length(value, basis, vars, fontSize = 16) {
 	if (v === '' || v === 'auto' || v === 'none' || v === 'inherit') return v === 'auto' ? 'auto' : null;
 	if (v === '0') return 0;
 
+	// Страховка от огрызка выражения. Незакрытая скобка («calc(18px») заставляет
+	// разбор пересобирать сама себя и уводит в бесконечную рекурсию — скрипт
+	// падает целиком, а не пропускает одно место. Уж лучше честное «не знаю».
+	let depth = 0;
 	const evalExpr = (expr) => {
+		if (++depth > 40) return null;
 		// min()/max()/clamp() — считаем каждый аргумент и берём нужный.
 		expr = expr.trim();
 		const fn = expr.match(/^(min|max|clamp)\((.*)\)$/is);
