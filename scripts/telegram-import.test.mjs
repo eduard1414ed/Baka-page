@@ -36,6 +36,8 @@ import {
 	postYear,
 	skipReason,
 	plainOf,
+	ALBUM_ID_GAP,
+	ALBUM_SECONDS_GAP,
 } from './telegram-import.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
@@ -225,6 +227,47 @@ function textProblems(allPosts, render) {
 				`      было:  …${want.slice(Math.max(0, i - 30), i + 30)}…\n` +
 				`      стало: …${got.slice(Math.max(0, i - 30), i + 30)}…`,
 		);
+	}
+
+	return problems;
+}
+
+// ——— Молчащая пачка не может стоять вплотную к подписанной ———
+//
+// САМАЯ ДОРОГАЯ ИЗ НАЙДЕННЫХ ОШИБОК, и нашёл её заказчик, а не проверка:
+// в 2022–2023 подпись альбома часто доставалась не первому снимку, а второму
+// или пятому. Склейка умела прирастать только вперёд, поэтому молчащие снимки
+// оставались отдельной пачкой, выбрасывались как «сообщение без текста»,
+// а посту доставался один снимок из четырёх. Цена — 28 альбомов и 95 снимков.
+//
+// Признак ровно такой: пачка БЕЗ подписи стоит вплотную (по времени и номеру)
+// к следующей, у которой подпись есть. Такого быть не должно: телеграм
+// не отправляет два альбома в одну секунду подряд.
+//
+// Провалиться она может — и проваливалась: на прежней склейке находит все 28.
+function orphanProblems(messages, group) {
+	const problems = [];
+	const posts = group(messages);
+
+	for (let i = 0; i < posts.length - 1; i += 1) {
+		const pack = posts[i];
+		const next = posts[i + 1];
+		const tail = pack.members.at(-1);
+		const head = next.members[0];
+
+		const silent = !plainOf(pack.caption.text_entities).trim();
+		const media = pack.members.every((m) => m.photo || m.media_type || m.file);
+		const near =
+			head.id > tail.id &&
+			head.id - tail.id <= ALBUM_ID_GAP &&
+			Number(head.date_unixtime) - Number(tail.date_unixtime) <= ALBUM_SECONDS_GAP;
+
+		if (silent && media && near && plainOf(next.caption.text_entities).trim() && (head.photo || head.media_type || head.file)) {
+			problems.push(
+				`пачка без подписи [${pack.members.map((m) => m.id).join(',')}] стоит вплотную к посту №${next.id} — ` +
+					`это его же снимки, у которых подпись пришла позже`,
+			);
+		}
 	}
 
 	return problems;
@@ -440,6 +483,7 @@ async function main() {
 		found += report('адреса страниц против настоящих файлов постов', slugProblems(SLUG_CASES));
 		found += report('пост 4143 против опубликованного на сайте', post4143Problems(built, publishedBody));
 		found += report('бонус 4142 против собранного вами руками', post4142Problems(bonusBuilt, bonusFile));
+		found += report('снимки без подписи не оторваны от своего поста', orphanProblems(messages, groupAlbums));
 		found += report('порции по годам на живом архиве', portionProblems(allPosts, selectPosts));
 		found += report('текст доехал целиком — весь архив, слово в слово', textProblems(allPosts, entitiesToMarkdown));
 
@@ -514,6 +558,32 @@ async function main() {
 		{
 			name: 'бонус 4142: ссылка на Boosty потерялась',
 			problems: post4142Problems({ ...bonusBuilt, bonusLinks: { ...bonusBuilt.bonusLinks, boosty: '' } }, bonusFile),
+		},
+		{
+			// ПРЕЖНЯЯ СКЛЕЙКА, слово в слово: прирастать умеет только вперёд,
+			// подпись обязана быть у первого сообщения пачки. Это не выдуманная
+			// поломка, а та, что прожила в коде от задачи 7.1 до 10 августа 2026.
+			name: 'альбомы: подпись обязана стоять первой (как было до починки)',
+			problems: orphanProblems(messages, (list) => {
+				const posts = [];
+				for (const message of list) {
+					const last = posts.at(-1);
+					const prev = last?.members.at(-1);
+					const own = (message.text_entities ?? []).map((e) => e.text ?? '').join('').trim();
+					const media = Boolean(message.photo || message.media_type || message.file);
+					const near =
+						prev &&
+						message.id > prev.id &&
+						message.id - prev.id <= ALBUM_ID_GAP &&
+						Number(message.date_unixtime) - Number(prev.date_unixtime) <= ALBUM_SECONDS_GAP;
+					if (near && !own && media && message.type === 'message') {
+						last.members.push(message);
+						continue;
+					}
+					posts.push({ id: message.id, members: [message], caption: message });
+				}
+				return posts;
+			}),
 		},
 		// ПОДЛОГИ ТЕКСТА — ЭТО РОВНО ТО, КАК РАЗБОР БЫЛ НАПИСАН ДО 10 АВГУСТА 2026.
 		// Не выдуманная поломка, а настоящая, прожившая в коде от задачи 7.1:

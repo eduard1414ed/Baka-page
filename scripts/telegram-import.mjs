@@ -137,8 +137,8 @@ export const VIDEOESSAY_ANNOUNCE = [
 // выглядящая как нормальная работа.
 //
 // Разбег по номеру замер подтвердил: 1 — 1689 раз, 2 — 4 раза, дальше 11.
-const ALBUM_ID_GAP = 3;
-const ALBUM_SECONDS_GAP = 2;
+export const ALBUM_ID_GAP = 3;
+export const ALBUM_SECONDS_GAP = 2;
 
 // Эмодзи, модификаторы тона кожи, флаги и склейки — всё, что не буква.
 const EMOJI = /[\p{Extended_Pictographic}\u{1F1E6}-\u{1F1FF}\u{1F3FB}-\u{1F3FF}️‍⃣]/gu;
@@ -192,6 +192,23 @@ const hasText = (message) => Boolean(plainOf(message.text_entities).trim());
  * как обычный, а видео всплыло бы отдельной строчкой отсева, и связь между
  * ними увидеть было бы нельзя.
  *
+ * ПОДПИСЬ БЫВАЕТ НЕ НА ПЕРВОМ СООБЩЕНИИ, и это стоило 95 фотографий.
+ * В 2022–2023 автор часто отправлял альбом так, что текст доставался ВТОРОМУ
+ * или пятому снимку, а не первому: №356 молчит, №357 несёт подпись, обе
+ * отправлены в одну и ту же секунду. Правило, умеющее прирастать только
+ * ВПЕРЁД, оставляло молчащие снимки отдельной пачкой — та выбрасывалась
+ * как «сообщение без текста», — а посту доставался один снимок из четырёх.
+ * Замер архива: 28 альбомов, 95 снимков, все в 2022–2023; с 2024 года автор
+ * ставит подпись первой, и потому на последней сотне постов задачи 7.1
+ * не было видно ни одного случая. Нашёл заказчик, проглядев список одиноких
+ * вложений: №356, №563, №675.
+ *
+ * Поэтому пачка, у которой подписи ЕЩЁ НЕТ, забирает себе первое же
+ * подписанное вложение по соседству и берёт его текст. Номер поста при этом
+ * становится номером ПОДПИСИ, а не первого снимка: `tgId` обязан указывать
+ * на то сообщение, из которого взят текст, — иначе уже привезённые посты
+ * перестали бы узнаваться и завелись бы вторым файлом.
+ *
  * @param {object[]} messages
  * @returns {{ id: number, members: object[], caption: object }[]}
  */
@@ -207,9 +224,18 @@ export function groupAlbums(messages) {
 			message.id - prev.id <= ALBUM_ID_GAP &&
 			Number(message.date_unixtime) - Number(prev.date_unixtime) <= ALBUM_SECONDS_GAP;
 
-		if (near && !hasText(message) && hasMedia(message) && message.type === 'message') {
-			last.members.push(message);
-			continue;
+		if (near && hasMedia(message) && message.type === 'message') {
+			if (!hasText(message)) {
+				last.members.push(message);
+				continue;
+			}
+			// Подпись пришла позже снимков — пачка ждала её и забирает.
+			if (!hasText(last.caption)) {
+				last.members.push(message);
+				last.caption = message;
+				last.id = message.id;
+				continue;
+			}
 		}
 
 		posts.push({ id: message.id, members: [message], caption: message });
