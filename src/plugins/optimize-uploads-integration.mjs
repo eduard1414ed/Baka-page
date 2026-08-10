@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import sharp from 'sharp';
 import { IMAGE_WIDTHS, isOptimizableImage, getOgVariantSrc } from '../lib/imageVariants.mjs';
+import { OG_BACKGROUND } from '../lib/ogImage.mjs';
 
 const UPLOADS_DIR = 'images/uploads';
 
@@ -128,8 +129,14 @@ export default function optimizeUploadsIntegration() {
 						continue;
 					}
 
+					// `flatten` на бумагу обязателен, даже если исходник сейчас
+					// без прозрачности: у jpeg прозрачности нет, и sharp кладёт
+					// прозрачные места НА ЧЁРНОЕ. Проверено подстановкой:
+					// без этой строки угол картинки выходит 53,53,53, с ней —
+					// бумажный. Персонаж в телеграме пропал бы на чёрном фоне.
 					await sharp(await readFile(sourcePath))
 						.resize({ width: OG_WIDTH, withoutEnlargement: true })
+						.flatten({ background: OG_BACKGROUND })
 						.jpeg({ quality: 82 })
 						.toFile(outPath);
 					episodeOg += 1;

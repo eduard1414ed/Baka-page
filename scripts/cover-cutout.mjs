@@ -2,6 +2,7 @@
 //
 //   node scripts/cover-cutout.mjs --fetch     скачать оригиналы во временную папку
 //   node scripts/cover-cutout.mjs             РАЗВЕДКА: прогон без записи в репозиторий
+//   node scripts/cover-cutout.mjs --write     ЗАПИСЬ: положить готовое в public/cutout/
 //
 // Разведка ничего не записывает в репозиторий: готовые картинки ложатся
 // во временную папку вне гита, на экран идёт отчёт с отметками «чисто» или
@@ -165,6 +166,16 @@ const WEBP_QUALITY = 82;
 // заказчику было куда заглянуть, — os.tmpdir() на маке прячется в /var/folders
 // с нечитаемым именем.
 
+/**
+ * Обложки, которые НЕ применяем, даже если скрипт их обработал.
+ *
+ * `3a8d5148` — контур персонажа нарисован цветом (зелёным и жёлтым по белому),
+ * в серой копии он от бумаги неотличим, и заливка проходит сквозь него как
+ * сквозь пустоту. Вырезать эту обложку описанным способом нельзя в принципе;
+ * выпуск остаётся с обычной обложкой. Решение заказчика 10 августа 2026.
+ */
+const EXCLUDE = ['3a8d5148'];
+
 /** Куда кладём скачанные оригиналы. Вне репозитория. */
 const CACHE_DIR = '/tmp/baka-covers';
 
@@ -174,6 +185,8 @@ const SCOUT_DIR = '/tmp/baka-cutout';
 const ROOT = new URL('../', import.meta.url);
 const POSTS_DIR = new URL('src/content/posts/', ROOT);
 const UPLOADS_DIR = new URL('public/images/uploads/', ROOT);
+const CUTOUT_DIR = new URL('public/cutout/', ROOT);
+const CUTOUT_MANIFEST = new URL('src/data/coverCutouts.mjs', ROOT);
 
 const kb = (bytes) => `${(bytes / 1024).toFixed(0)} КБ`;
 const mb = (bytes) => `${(bytes / 1024 / 1024).toFixed(1)} МБ`;
@@ -970,6 +983,84 @@ function printReport(rows) {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
+// ЗАПИСЬ
+// ────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Положить готовые картинки в public/cutout/ и переписать список.
+ *
+ * Список — отдельным js-файлом по тому же приёму, что у обложек выпусков:
+ * этот модуль читает и сборщик Astro, и обычный node, а проверка файла
+ * на диске из сборки молча отвечает «нет» (см. src/lib/episodeCover.mjs).
+ *
+ * Идёт ОТДЕЛЬНЫМ ключом и отдельным запуском — то же правило, что у разбора
+ * таймкодов: сначала посмотреть глазами, потом записывать.
+ */
+async function write(covers) {
+	await mkdir(fileURLToPath(CUTOUT_DIR), { recursive: true });
+
+	const done = [];
+	let skipped = 0;
+	let bytes = 0;
+
+	for (const [index, cover] of covers.entries()) {
+		if (EXCLUDE.includes(cover.id) || EXCLUDE.some((id) => cover.id.startsWith(id))) {
+			console.log(`[${index + 1}/${covers.length}] ${cover.id.slice(0, 8)} — в списке исключений, пропускаю`);
+			skipped += 1;
+			continue;
+		}
+
+		const result = await processCover(cover);
+		if (!result.canvas) {
+			skipped += 1;
+			continue;
+		}
+
+		for (const width of OUT_WIDTHS) {
+			const info = await sharp(result.canvas)
+				.resize({ width, withoutEnlargement: true })
+				.webp({ quality: WEBP_QUALITY })
+				.toFile(fileURLToPath(new URL(`${encodeURIComponent(cover.id)}-${width}w.webp`, CUTOUT_DIR)));
+			bytes += info.size;
+		}
+
+		done.push(cover.id);
+		console.log(`[${index + 1}/${covers.length}] ${cover.id.slice(0, 8)} — записан`);
+	}
+
+	// Список пишем по НАСТОЯЩЕМУ содержимому папки, а не по итогу прогона:
+	// иначе он отстанет от диска, если файлы приехали из чужого коммита.
+	const files = await readdir(fileURLToPath(CUTOUT_DIR));
+	const seen = new Map();
+	for (const file of files) {
+		const match = file.match(/^(.+)-(\d+)w\.webp$/);
+		if (!match) continue;
+		const id = decodeURIComponent(match[1]);
+		if (!seen.has(id)) seen.set(id, new Set());
+		seen.get(id).add(Number(match[2]));
+	}
+	const complete = [...seen.entries()]
+		.filter(([, widths]) => OUT_WIDTHS.every((w) => widths.has(w)))
+		.map(([id]) => id)
+		.sort();
+
+	await writeFile(fileURLToPath(CUTOUT_MANIFEST), [
+		'// Список вырезанных персонажей в public/cutout/ — по тому же ключу,',
+		'// что и обложка: у выпусков это id картинки с хостинга подкаста,',
+		'// у загруженных руками — имя файла без расширения.',
+		'// Файл создаётся скриптом scripts/cover-cutout.mjs --write, руками не править.',
+		'// Зачем он нужен и почему это js, а не json — src/lib/coverCutout.mjs.',
+		'export default [',
+		...complete.map((id) => `\t${JSON.stringify(id)},`),
+		'];',
+		'',
+	].join('\n'), 'utf8');
+
+	console.log(`\nЗаписано: ${done.length}. Пропущено: ${skipped}. В списке: ${complete.length}.`);
+	console.log(`Файлов в public/cutout/: ${complete.length * OUT_WIDTHS.length}, вес ${mb(bytes)}.`);
+}
+
+// ────────────────────────────────────────────────────────────────────────────
 
 async function main() {
 	const covers = await collectCovers();
@@ -981,6 +1072,12 @@ async function main() {
 
 	const only = process.argv.find((a) => a.startsWith('--only='));
 	const list = only ? covers.filter((c) => c.id.startsWith(only.slice('--only='.length))) : covers;
+
+	if (process.argv.includes('--write')) {
+		console.log(`\nЗАПИСЬ: ${list.length} обложек в public/cutout/.\n`);
+		await write(list);
+		return;
+	}
 
 	console.log(`\nРазведка: ${list.length} обложек. Пишу во временную папку ${SCOUT_DIR}.\n`);
 	printReport(await scout(list));

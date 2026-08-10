@@ -9,6 +9,7 @@
 
 import { getOgVariantSrc, getImageVariantSrcs, isOptimizableImage } from './imageVariants.mjs';
 import { getEpisodeCoverOgSrc } from './episodeCover.mjs';
+import { cutoutSrcs, cutoutSocialSource, cutoutIdForUpload } from './coverCutout.mjs';
 
 /** Свой блок картинки из редактора админки: ::image{src="…" alt="…"}. */
 const DIRECTIVE_RE = /^::image\{[^}]*\bsrc="([^"]+)"/m;
@@ -50,6 +51,13 @@ export function firstImageInBody(body) {
  */
 export function coverSrcs(cover) {
 	if (!cover) return null;
+
+	// Вырезанный персонаж, если он для этой обложки есть (тз/12). У бонуса
+	// обложка загружается в админку руками, но нарисована она по тому же
+	// шаблону «БАКА!», что и обложки выпусков, и обрабатывается так же.
+	const cutout = cutoutSrcs(cutoutIdForUpload(cover));
+	if (cutout) return cutout;
+
 	// Картинка с чужого сервера или формат, который мы не жмём (svg, gif) —
 	// как есть, лишь бы не битая ссылка.
 	if (/^https?:\/\//.test(cover) || !isOptimizableImage(cover)) {
@@ -80,6 +88,12 @@ export function coverSrcs(cover) {
 export function toSocialImage(src) {
 	if (!src) return null;
 	if (/^https?:\/\//.test(src)) return src;
+
+	// Вырезанный персонаж (тз/12): на бумагу его положит сборка, рисующая
+	// картинку 1200×630. Отдельная jpeg-копия для таких обложек не нужна.
+	const cutout = cutoutSocialSource(cutoutIdForUpload(src));
+	if (cutout) return cutout;
+
 	if (src.startsWith('/images/uploads/')) return getOgVariantSrc(src);
 	// Что-то ещё из public/ — отдаём как есть, если это не webp.
 	return /\.webp$/i.test(src) ? null : src;

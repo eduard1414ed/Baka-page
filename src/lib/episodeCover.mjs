@@ -29,6 +29,7 @@
 // который сборщик Astro понимает иначе. Обычный js-модуль читается одинаково
 // и там и там — тот же приём, что у src/data/platforms.js.
 import COVER_IDS from '../data/episodeCovers.mjs';
+import { cutoutSrcs, cutoutSocialSource } from './coverCutout.mjs';
 
 export const EPISODE_COVER_WIDTHS = [640, 1280];
 
@@ -90,6 +91,13 @@ export function getEpisodeCoverSrcs(url) {
  * @returns {string | null} null, если своей копии обложки ещё нет.
  */
 export function getEpisodeCoverOgSrc(url) {
+	// Есть вырезанный персонаж — в превью идёт он, и своя jpeg-копия обложки
+	// для этого выпуска не делается вовсе. На бумагу его кладёт та же сборка,
+	// что рисует картинку 1200×630: прозрачный файл в телеграме может лечь
+	// на чёрное, и персонаж пропадёт совсем.
+	const cutout = cutoutSocialSource(coverIdFromUrl(url));
+	if (cutout) return cutout;
+
 	if (!hasLocalEpisodeCover(url)) return null;
 	return `/episodes/${coverIdFromUrl(url)}-og.jpg`;
 }
@@ -107,9 +115,19 @@ export function hasLocalEpisodeCover(url) {
 /**
  * Готовый набор для вывода: локальные сжатые файлы, если они есть, иначе
  * исходная ссылка на хостинг подкаста.
+ *
+ * ПЕРВЫМ ДЕЛОМ — ВЫРЕЗАННЫЙ ПЕРСОНАЖ, если он есть (тз/12). Подстановка живёт
+ * ЗДЕСЬ, а не у каждого, кто показывает обложку: эту функцию зовут и карточка
+ * в ленте (postCardMedia.mjs), и шапка страницы выпуска, и картинка в теле
+ * поста (remark-episode-cover.mjs). Три копии правила разъехались бы молча,
+ * и персонаж появился бы, скажем, в ленте, а на странице осталась бы рамка.
+ *
  * @returns {{src:string, srcset:string|null}}
  */
 export function resolveEpisodeCover(url) {
+	const cutout = cutoutSrcs(coverIdFromUrl(url));
+	if (cutout) return cutout;
+
 	if (!hasLocalEpisodeCover(url)) return { src: url, srcset: null };
 
 	const srcs = getEpisodeCoverSrcs(url);
