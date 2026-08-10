@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 import remarkDirective from 'remark-directive';
 import remarkImageFigure from './src/plugins/remark-image-figure.mjs';
 import remarkEpisodeCover from './src/plugins/remark-episode-cover.mjs';
+import remarkAdLabel from './src/plugins/remark-ad-label.mjs';
 import remarkSpoiler from './src/plugins/remark-spoiler.mjs';
 import remarkVideo from './src/plugins/remark-video.mjs';
 import remarkLinkList from './src/plugins/remark-link-list.mjs';
@@ -38,6 +39,12 @@ export default defineConfig({
 			// плагин стоял после — тогда он умел убирать только markdown-картинку
 			// с хостинга подкаста, а её remarkImageFigure и не трогает.
 			remarkEpisodeCover,
+			// Маркировка рекламы из поля поста. МЕЖДУ ЭТИМИ ДВУМЯ И НИГДЕ БОЛЬШЕ:
+			// после remarkEpisodeCover — чтобы не встать под обложку выпуска,
+			// которую тот только что убрал из тела; до remarkImageFigure —
+			// чтобы `::image` и `::video` были ещё директивами и медиа можно было
+			// отличить от текста. Зачем это нужно — в шапке самого плагина.
+			remarkAdLabel,
 			remarkImageFigure,
 			remarkVideo,
 			// Собирает подряд идущие `::link` в одну врезку — до спойлера,

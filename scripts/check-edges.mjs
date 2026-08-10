@@ -381,7 +381,7 @@ const WANTED = new Set([
 	'display', 'width', 'max-width', 'min-width', 'box-sizing',
 	'margin-left', 'margin-right', 'padding-left', 'padding-right',
 	'border-left-width', 'border-right-width',
-	'grid-template-columns', 'column-gap', 'grid-column', 'position',
+	'grid-template-columns', 'column-gap', 'grid-column', 'position', 'float',
 	// Для оценки цели нажатия (режим --targets).
 	'height', 'min-height', 'padding-top', 'padding-bottom',
 	'font-size', 'line-height', 'inset', 'top', 'bottom', 'left', 'right',
@@ -664,10 +664,25 @@ function layout(root, rules, vars, viewport) {
 		let width;
 
 		let exact = box.exact !== false;
+		// Почему число неточное — говорит сам замер, а не читатель отчёта:
+		// причин уже несколько, и они разные.
+		let why = null;
+
+		// ВЫНУТОЕ ИЗ ПОТОКА БЛОЧНОЙ МОДЕЛЬЮ НЕ СЧИТАЕТСЯ ВОВСЕ. У закреплённого
+		// или абсолютного блока ширину задаёт содержимое вместе с `left`/`right`,
+		// а не колонка родителя, — и скрипт молча выдавал ему ширину родителя.
+		// Так были посчитаны кнопка «наверх» (90 px по тексту против «во всю
+		// оболочку» в отчёте) и ссылка «Перейти к содержимому». Число тут
+		// остаётся для порядка, но помечено: верить ему нельзя.
+		const positioned = /^(fixed|absolute)$/i.test(resolveVars(style.position ?? '', vars).trim());
+		if (positioned) {
+			exact = false;
+			why = 'вынут из потока — ширину задают содержимое и left/right';
+		}
 		if (gridInfo) {
 			// Ребёнок грида: колонка по `grid-column` либо по порядку.
 			const { tracks, gap, startLeft } = gridInfo;
-			if (tracks.exact === false) exact = false;
+			if (tracks.exact === false) { exact = false; why = 'дорожка грида по содержимому'; }
 			let colStart = gridInfo.auto;
 			let span = 1;
 			const gc = style['grid-column'];
@@ -690,7 +705,7 @@ function layout(root, rules, vars, viewport) {
 			// Явно названа колонка — считаем точно; авторазмещение считать
 			// нечем: браузер раскладывает по заполненности рядов, а рядов
 			// мы не знаем. Такие места помечаем неточными.
-			if (!gc || /auto/.test(resolveVars(gc, vars))) exact = false;
+			if (!gc || /auto/.test(resolveVars(gc, vars))) { exact = false; why = why ?? 'авторазмещение в гриде'; }
 			colStart = Math.max(0, Math.min(colStart, tracks.length - 1));
 			span = Math.max(1, Math.min(span, tracks.length - colStart));
 			gridInfo.auto = colStart + span;
@@ -701,6 +716,19 @@ function layout(root, rules, vars, viewport) {
 			left = x + (ml === 'auto' || ml === null ? 0 : ml);
 			width = w - (ml === 'auto' || ml === null ? 0 : ml) - (mr === 'auto' || mr === null ? 0 : mr);
 		} else {
+			// ПЛАВАЮЩИЙ БЛОК СТОИТ НЕ ТАМ, ГДЕ СЧИТАЕТ ОБЫЧНАЯ БЛОЧНАЯ МОДЕЛЬ.
+			// Он вынут из потока, боковые `auto` у него обращаются в ноль,
+			// и прижимается он к своему краю контейнера. Без этой ветки маркировка
+			// рекламы (единственный float на сайте, `.ad-mark`) выдавалась
+			// посередине колонки — 597…843 при настоящих 1094…1340: число
+			// правдоподобное и потому опасное. Правдоподобное число хуже пропуска.
+			//
+			// ТОЧНЫМ ЕГО ВСЁ РАВНО НЕ СЧИТАЕМ: два плавающих блока подряд встают
+			// друг рядом с другом или переносятся по высоте, а высот этот скрипт
+			// не знает вовсе. Для одного блока ответ верный, для двух — уже нет,
+			// и говорить об этом обязан он сам, а не следующий читатель отчёта.
+			const floatSide = resolveVars(style.float ?? '', vars).trim();
+			const floating = floatSide === 'left' || floatSide === 'right';
 			const available = box.contentWidth;
 			const declaredWidth = resolve('width');
 			let w = declaredWidth === 'auto' || declaredWidth === null
@@ -711,7 +739,13 @@ function layout(root, rules, vars, viewport) {
 			const minW = resolve('min-width');
 			if (typeof minW === 'number') w = Math.max(w, minW);
 			w = Math.max(0, Math.min(w, available));
-			if (ml === 'auto' && mr === 'auto') left = box.contentLeft + (available - w) / 2;
+			if (floating) {
+				exact = false;
+				why = 'плавающий блок — считается один, два встали бы иначе';
+				left = floatSide === 'right'
+					? box.contentLeft + available - w - (mr === 'auto' ? 0 : mr ?? 0)
+					: box.contentLeft + (ml === 'auto' ? 0 : ml ?? 0);
+			} else if (ml === 'auto' && mr === 'auto') left = box.contentLeft + (available - w) / 2;
 			else if (ml === 'auto') left = box.contentLeft + available - w;
 			else left = box.contentLeft + (ml ?? 0);
 			width = w;
@@ -730,6 +764,7 @@ function layout(root, rules, vars, viewport) {
 			width: round(width),
 			style,
 			exact,
+			why,
 		};
 		out.push(record);
 
@@ -740,6 +775,7 @@ function layout(root, rules, vars, viewport) {
 			contentLeft,
 			contentWidth,
 			exact: exact && !/flex|inline-flex/.test(displayResolved),
+			why: /flex|inline-flex/.test(displayResolved) ? 'ребёнок flex — ширину задаёт содержимое' : why,
 		};
 		if (/grid/.test(displayResolved)) {
 			const gap = resolve('column-gap') ?? 0;
@@ -987,7 +1023,7 @@ for (const page of pages) {
 				seen.add(key);
 				const inner = r.contentLeft !== r.left || r.contentRight !== r.right
 					? `  [содержимое ${r.contentLeft}…${r.contentRight}]` : '';
-				const mark = r.exact ? '' : '   ≈ (дорожка грида по содержимому — точно не считается)';
+				const mark = r.exact ? '' : `   ≈ (${r.why ?? 'блочной моделью не считается'} — точно не считается)`;
 				console.log(`      ${name(r.el)}   ${r.left}…${r.right}  (ширина ${round(r.right - r.left)})${inner}${mark}`);
 			}
 		}
