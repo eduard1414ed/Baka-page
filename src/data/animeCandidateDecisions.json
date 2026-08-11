@@ -4267,5 +4267,17 @@
 			"Жозе, тигр и рыба"
 		],
 		"at": "2026-08-11T19:02:54.504Z"
+	},
+	{
+		"id": "cand:60009",
+		"what": "create",
+		"sourceId": 60009,
+		"source": "shikimori",
+		"slug": "chuuzenji-sensei-mononoke-kougiroku-sensei-ga-nazo-wo-hodoit",
+		"title": "Журнал мононокэ, автор Тюдзэндзи",
+		"phrases": [
+			"Журнал мононокэ, автор Тюдзэндзи"
+		],
+		"at": "2026-08-11T19:02:57.653Z"
 	}
 ]
