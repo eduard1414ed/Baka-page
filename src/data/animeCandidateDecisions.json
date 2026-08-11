@@ -3148,5 +3148,41 @@
 			"Единственному мне, кто тебя любил"
 		],
 		"at": "2026-08-11T16:00:45.880Z"
+	},
+	{
+		"id": "cand:11111",
+		"what": "create",
+		"sourceId": 11111,
+		"source": "shikimori",
+		"slug": "another",
+		"title": "Иная",
+		"phrases": [
+			"Иная"
+		],
+		"at": "2026-08-11T16:00:48.298Z"
+	},
+	{
+		"id": "cand:50709",
+		"what": "create",
+		"sourceId": 50709,
+		"source": "shikimori",
+		"slug": "lycoris-recoil",
+		"title": "Ликорис Рикоил",
+		"phrases": [
+			"Ликорис Рикоил"
+		],
+		"at": "2026-08-11T16:00:49.447Z"
+	},
+	{
+		"id": "cand:39753",
+		"what": "create",
+		"sourceId": 39753,
+		"source": "shikimori",
+		"slug": "omoi-omoware-furi-furare",
+		"title": "Любит — не любит",
+		"phrases": [
+			"Любит, не любит"
+		],
+		"at": "2026-08-11T16:00:50.082Z"
 	}
 ]
