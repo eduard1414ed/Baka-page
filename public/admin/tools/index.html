@@ -272,7 +272,14 @@
 				padding: 0;
 			}
 
-			ul.rows li {
+			/* `:not([hidden])` тут обязателен, и это те самые грабли, что сработали
+			   в проекте трижды: атрибут `hidden` весит один селектор, а это
+			   правило — класс плюс два тега, и `display: flex` его перебил бы.
+			   Строки прячет поиск по списку, поэтому без оговорки фильтр
+			   не скрывал бы ничего. `scripts/check-hidden.mjs` этого места
+			   не видит: он ищет `hidden` в РАЗМЕТКЕ и только у элементов
+			   с классом, а тут атрибут ставит скрипт. */
+			ul.rows li:not([hidden]) {
 				border-top: 1px solid var(--line-soft);
 				padding: 12px 0;
 				display: flex;
@@ -446,7 +453,7 @@
 				<p class="counts" id="cand-counts"></p>
 
 				<div class="row">
-					<button id="apply">Применить решения</button>
+					<button id="apply" disabled>Применить решения</button>
 					<span class="tech" id="apply-note"></span>
 				</div>
 				<p class="status" id="apply-status"></p>
