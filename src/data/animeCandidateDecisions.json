@@ -2508,5 +2508,17 @@
 			"Инуяся"
 		],
 		"at": "2026-08-11T15:18:57.371Z"
+	},
+	{
+		"id": "cand:52020",
+		"what": "create",
+		"sourceId": 52020,
+		"source": "shikimori",
+		"slug": "sekai-no-owari-ni-shiba-inu-to",
+		"title": "Конец света с сиба-ину",
+		"phrases": [
+			"Конец света с Сиба-Ину"
+		],
+		"at": "2026-08-11T15:18:59.255Z"
 	}
 ]
