@@ -8208,5 +8208,14 @@
 		"at": "2026-08-11T20:09:07.158Z",
 		"result": "вписано в «sono-bisque-doll-wa-koi-wo-suru»: Фарфорой куклы",
 		"applied": "2026-08-11T20:09:46.854Z"
+	},
+	{
+		"id": "ph:Шипуденом",
+		"what": "alias",
+		"animeId": "naruto-shippuuden",
+		"phrases": [
+			"Шипуденом"
+		],
+		"at": "2026-08-11T20:12:17.575Z"
 	}
 ]
