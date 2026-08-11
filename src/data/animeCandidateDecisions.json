@@ -709,5 +709,18 @@
 		"at": "2026-08-11T12:09:57.428Z",
 		"result": "заведён: src/content/anime/do-it-yourself.json",
 		"applied": "2026-08-11T12:10:41.968Z"
+	},
+	{
+		"id": "cand:22135",
+		"what": "create",
+		"sourceId": 22135,
+		"source": "shikimori",
+		"slug": "ping-pong-the-animation",
+		"title": "Пинг-понг",
+		"phrases": [
+			"Пинг-понг",
+			"Пинг Понг"
+		],
+		"at": "2026-08-11T12:13:23.618Z"
 	}
 ]
