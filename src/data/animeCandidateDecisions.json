@@ -8120,5 +8120,41 @@
 		"at": "2026-08-11T20:05:16.187Z",
 		"result": "вписано в «seishun-buta-yarou-wa-bunny-girl-senpai-no-yume-wo-minai»: Глупого свина",
 		"applied": "2026-08-11T20:06:06.667Z"
+	},
+	{
+		"id": "ph:Фарфоровой кукле",
+		"what": "alias",
+		"animeId": "sono-bisque-doll-wa-koi-wo-suru",
+		"phrases": [
+			"Фарфоровой кукле"
+		],
+		"at": "2026-08-11T20:09:01.739Z"
+	},
+	{
+		"id": "ph:Мою фарфоровую куклу",
+		"what": "alias",
+		"animeId": "sono-bisque-doll-wa-koi-wo-suru",
+		"phrases": [
+			"Мою фарфоровую куклу"
+		],
+		"at": "2026-08-11T20:09:02.607Z"
+	},
+	{
+		"id": "ph:Фарфоровой куклы",
+		"what": "alias",
+		"animeId": "sono-bisque-doll-wa-koi-wo-suru",
+		"phrases": [
+			"Фарфоровой куклы"
+		],
+		"at": "2026-08-11T20:09:03.174Z"
+	},
+	{
+		"id": "ph:Фарфоровую куклу",
+		"what": "alias",
+		"animeId": "sono-bisque-doll-wa-koi-wo-suru",
+		"phrases": [
+			"Фарфоровую куклу"
+		],
+		"at": "2026-08-11T20:09:03.674Z"
 	}
 ]
