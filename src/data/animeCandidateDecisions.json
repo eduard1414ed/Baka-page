@@ -2451,5 +2451,14 @@
 		"at": "2026-08-11T15:03:58.552Z",
 		"result": "заведён: src/content/anime/kimi-ni-todoke.json",
 		"applied": "2026-08-11T15:05:07.334Z"
+	},
+	{
+		"id": "cand:21899",
+		"what": "alias",
+		"animeId": "gintama",
+		"phrases": [
+			"Гинтамы"
+		],
+		"at": "2026-08-11T15:18:38.938Z"
 	}
 ]
