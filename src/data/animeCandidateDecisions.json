@@ -1554,5 +1554,17 @@
 			"Мелочей жизни"
 		],
 		"at": "2026-08-11T14:01:46.040Z"
+	},
+	{
+		"id": "cand:58059",
+		"what": "create",
+		"sourceId": 58059,
+		"source": "shikimori",
+		"slug": "tsue-to-tsurugi-no-wistoria",
+		"title": "Меч и жезл Вистории",
+		"phrases": [
+			"Меч и жезл Вистории"
+		],
+		"at": "2026-08-11T14:01:47.389Z"
 	}
 ]
