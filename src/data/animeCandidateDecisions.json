@@ -3971,18 +3971,6 @@
 		"at": "2026-08-11T18:35:08.644Z"
 	},
 	{
-		"id": "cand:62604",
-		"what": "create",
-		"sourceId": 62604,
-		"source": "shikimori",
-		"slug": "otaku-ni-yasashii-gal-wa-inai",
-		"title": "Где те девушки, что были бы добры к отаку?",
-		"phrases": [
-			"Где те девушки, что были бы добры к отаку?"
-		],
-		"at": "2026-08-11T18:35:13.327Z"
-	},
-	{
 		"id": "cand:998",
 		"what": "create",
 		"sourceId": 998,
