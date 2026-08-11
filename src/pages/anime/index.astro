@@ -90,6 +90,25 @@ const crumbs = breadcrumbsSchema([{ name: 'Каталог аниме', path: '/a
 					</select>
 					<span class="speed-face" id="catalog-sort-face" aria-hidden="true">по порядку добавления</span>
 				</span>
+				{/* НАПРАВЛЕНИЕ — ТА ЖЕ ОБЁРТКА, ЧТО У ВЫБОРА РЯДОМ: видимая плашка
+				    и прозрачный контрол поверх неё. Второго описания вида тут нет
+				    ни строчки — рамка, кегль, наведение и обводка фокуса приходят
+				    из `.speed-wrap`/`.speed-face`, здесь задан только квадрат 44.
+
+				    КНОПКА НАЗЫВАЕТ СВОЁ СОСТОЯНИЕ СЛОВАМИ, а не одной стрелкой:
+				    сама подпись невидима (у прозрачного слоя `opacity: 0`), но её
+				    читает экранный диктор, и она же стоит подсказкой под мышью.
+				    Начальное значение написано в разметке, а не проставляется
+				    скриптом: до его загрузки кнопка обязана говорить правду. */}
+				<span class="speed-wrap dir-control">
+					<button
+						class="speed"
+						type="button"
+						id="catalog-dir"
+						title="Порядок: по возрастанию. Нажмите, чтобы перевернуть"
+					>Порядок: по возрастанию. Нажмите, чтобы перевернуть</button>
+					<span class="speed-face" id="catalog-dir-face" aria-hidden="true">↑</span>
+				</span>
 			</div>
 		</div>
 
@@ -222,6 +241,16 @@ const crumbs = breadcrumbsSchema([{ name: 'Каталог аниме', path: '/a
 		padding-right: 30px;
 	}
 
+	/* Квадрат под стрелку. Кегль, рамку и цвет описывать нечем — они уже
+	   описаны у плашки выбора рядом; тут только размер, и он равен цели
+	   нажатия: прозрачная кнопка растянута по всей обёртке (`.speed`,
+	   `inset: 0`), поэтому 44×44 это и есть зона нажатия, а не размер знака. */
+	.dir-control .speed-face {
+		width: 44px;
+		height: 44px;
+		padding: 0;
+	}
+
 	.sort-control::after {
 		content: '▾';
 		position: absolute;
@@ -237,10 +266,17 @@ const crumbs = breadcrumbsSchema([{ name: 'Каталог аниме', path: '/a
 	/* Правила, прятавшего подпись «Сортировка» на узком экране, тут больше нет:
 	   подписи не стало вовсе, а мёртвое правило пережило бы память о том,
 	   зачем оно. */
+	/* На узком выбор занимает строку целиком, а квадрат направления остаётся
+	   квадратом: он стоит рядом, и растянуть его значило бы отдать пол-экрана
+	   одной стрелке. Поэтому ширину тут забирает не `width: 100%` у обоих,
+	   а гибкость у одного. */
 	@media (max-width: 520px) {
-		.sort,
-		.sort-control {
+		.sort {
 			width: 100%;
+		}
+
+		.sort-control {
+			flex: 1 1 auto;
 		}
 
 		.sort-control .speed-face {
@@ -305,11 +341,13 @@ const crumbs = breadcrumbsSchema([{ name: 'Каталог аниме', path: '/a
 		const input = document.getElementById('catalog-search') as HTMLInputElement | null;
 		const sort = document.getElementById('catalog-sort') as HTMLSelectElement | null;
 		const face = document.getElementById('catalog-sort-face');
+		const dir = document.getElementById('catalog-dir') as HTMLButtonElement | null;
+		const dirFace = document.getElementById('catalog-dir-face');
 		const count = document.getElementById('catalog-count');
 		const empty = document.getElementById('catalog-empty');
 		const emptyText = document.getElementById('catalog-empty-text');
 		const more = document.getElementById('catalog-more') as HTMLButtonElement | null;
-		if (!grid || !input || !sort || !count || !empty || !more) return;
+		if (!grid || !input || !sort || !count || !empty || !more || !dir) return;
 
 		const stamps = Array.from(grid.querySelectorAll<HTMLElement>('.cat-stamp'));
 		// Размер порции и формы числительного приходят из разметки — оттуда же,
@@ -329,6 +367,30 @@ const crumbs = breadcrumbsSchema([{ name: 'Каталог аниме', path: '/a
 			mentions: (a, b) => num(b, 'mentions') - num(a, 'mentions'),
 		};
 
+		// КАКОЙ ПОРЯДОК У СОРТИРОВКИ ПРЯМОЙ — НЕ ВЫБОР ЭТОГО ФАЙЛА, а §16.1
+		// дизайн-системы: у года и упоминаний сверху стоят свежие и частые,
+		// у порядка добавления и алфавита — первые и «А». Кнопка ПЕРЕВОРАЧИВАЕТ
+		// этот порядок, а не назначает его заново: иначе выбор «по году» начал бы
+		// показывать сверху 1988-й, и это было бы уже другой сортировкой.
+		// Отсюда и подпись — она считается из пары «что выбрано» и «перевёрнуто
+		// ли», а не хранится словом.
+		const NATURAL: Record<string, 'up' | 'down'> = {
+			order: 'up',
+			title: 'up',
+			year: 'down',
+			mentions: 'down',
+		};
+		let reversed = false;
+
+		function drawDirection() {
+			const natural = NATURAL[sort!.value] ?? 'up';
+			const up = reversed ? natural === 'down' : natural === 'up';
+			const label = `Порядок: по ${up ? 'возрастанию' : 'убыванию'}. Нажмите, чтобы перевернуть`;
+			dir!.textContent = label;
+			dir!.title = label;
+			if (dirFace) dirFace.textContent = up ? '↑' : '↓';
+		}
+
 		function apply() {
 			const query = foldCatalog(input!.value.trim());
 			const matched = query ? stamps.filter((el) => String(el.dataset.search).includes(query)) : stamps.slice();
@@ -336,7 +398,12 @@ const crumbs = breadcrumbsSchema([{ name: 'Каталог аниме', path: '/a
 			// Порядок меняем в самой разметке, а не свойством `order`: иначе
 			// человек с клавиатуры и экранный диктор шли бы по каталогу
 			// в одном порядке, а глаза видели другой.
-			matched.sort(comparators[sort!.value] ?? comparators.order);
+			// Знак у сравнения, а не `reverse()` после сортировки: обратный ход
+			// перевернул бы и равные между собой марки, и тайтлы одного года
+			// перетасовывались бы от нажатия к нажатию без всякой причины.
+			const compare = comparators[sort!.value] ?? comparators.order;
+			const sign = reversed ? -1 : 1;
+			matched.sort((a, b) => sign * compare(a, b));
 			for (const el of matched) grid!.appendChild(el);
 
 			const visible = matched.slice(0, shown);
@@ -371,6 +438,16 @@ const crumbs = breadcrumbsSchema([{ name: 'Каталог аниме', path: '/a
 		input.addEventListener('input', reset);
 		sort.addEventListener('change', () => {
 			if (face) face.textContent = sort.options[sort.selectedIndex]?.text ?? '';
+			// Направление при смене сортировки СОХРАНЯЕТСЯ — перевёрнутое
+			// остаётся перевёрнутым. Меняется только подпись: «по возрастанию»
+			// у алфавита и у года — это разные вещи.
+			drawDirection();
+			reset();
+		});
+
+		dir.addEventListener('click', () => {
+			reversed = !reversed;
+			drawDirection();
 			reset();
 		});
 
@@ -381,6 +458,10 @@ const crumbs = breadcrumbsSchema([{ name: 'Каталог аниме', path: '/a
 			apply();
 		});
 
+		// Подпись направления считается и на старте — тем же кодом, что и после
+		// нажатия. Написанное в разметке при этом не выброшено: до загрузки
+		// скрипта оно единственное, что у кнопки есть.
+		drawDirection();
 		apply();
 	}
 
