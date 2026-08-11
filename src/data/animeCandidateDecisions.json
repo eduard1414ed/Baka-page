@@ -6545,5 +6545,14 @@
 			"Гуррен Лаганном"
 		],
 		"at": "2026-08-11T19:56:02.050Z"
+	},
+	{
+		"id": "ph:Гуррен-Лаганном",
+		"what": "alias",
+		"animeId": "tengen-toppa-gurren-lagann-ore-no-gurren-wa-pikka-pika",
+		"phrases": [
+			"Гуррен-Лаганном"
+		],
+		"at": "2026-08-11T19:56:03.350Z"
 	}
 ]
