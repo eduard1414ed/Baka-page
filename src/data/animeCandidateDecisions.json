@@ -989,5 +989,17 @@
 			"Лето, когда погас свет"
 		],
 		"at": "2026-08-11T12:23:06.344Z"
+	},
+	{
+		"id": "cand:59846",
+		"what": "create",
+		"sourceId": 59846,
+		"source": "shikimori",
+		"slug": "saigo-ni-hitotsu-dake-onegai-shitemo-yoroshii-deshou-ka",
+		"title": "Могу я попросить ещё кое-что?",
+		"phrases": [
+			"Могу я попросить ещё кое-что?"
+		],
+		"at": "2026-08-11T12:23:13.841Z"
 	}
 ]
