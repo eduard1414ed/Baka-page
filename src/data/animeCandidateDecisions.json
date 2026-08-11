@@ -1658,5 +1658,29 @@
 		"at": "2026-08-11T14:02:05.140Z",
 		"result": "заведён: src/content/anime/yuusha-kei-ni-shosu-choubatsu-yuusha-9004-tai-keimu-kiroku.json",
 		"applied": "2026-08-11T14:03:27.591Z"
+	},
+	{
+		"id": "cand:52505",
+		"what": "create",
+		"sourceId": 52505,
+		"source": "shikimori",
+		"slug": "dark-gathering",
+		"title": "Тёмное собрание",
+		"phrases": [
+			"Темное собрание"
+		],
+		"at": "2026-08-11T14:04:38.057Z"
+	},
+	{
+		"id": "cand:60371",
+		"what": "create",
+		"sourceId": 60371,
+		"source": "shikimori",
+		"slug": "seihantai-na-kimi-to-boku",
+		"title": "Ты и я — полные противоположности",
+		"phrases": [
+			"Ты и я — полные противоположности"
+		],
+		"at": "2026-08-11T14:04:39.122Z"
 	}
 ]
