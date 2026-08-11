@@ -4605,5 +4605,17 @@
 		"at": "2026-08-11T19:07:37.470Z",
 		"result": "заведён: src/content/anime/monster.json",
 		"applied": "2026-08-11T19:09:13.247Z"
+	},
+	{
+		"id": "cand:51837",
+		"what": "create",
+		"sourceId": 51837,
+		"source": "shikimori",
+		"slug": "saikin-yatotta-maid-ga-ayashii",
+		"title": "Моя новая горничная очень подозрительна",
+		"phrases": [
+			"Моя новая горничная очень подозрительна"
+		],
+		"at": "2026-08-11T19:22:22.586Z"
 	}
 ]
