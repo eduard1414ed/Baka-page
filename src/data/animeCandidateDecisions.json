@@ -8755,5 +8755,29 @@
 			"Haireta, haireta, haireta, haireta, haireta"
 		],
 		"at": "2026-08-11T20:15:13.728Z"
+	},
+	{
+		"id": "ph:Controversial",
+		"what": "stop",
+		"phrases": [
+			"Controversial"
+		],
+		"at": "2026-08-11T20:15:16.345Z"
+	},
+	{
+		"id": "ph:Цурунэ",
+		"what": "stop",
+		"phrases": [
+			"Цурунэ"
+		],
+		"at": "2026-08-11T20:15:17.511Z"
+	},
+	{
+		"id": "ph:Химатэн!",
+		"what": "stop",
+		"phrases": [
+			"Химатэн!"
+		],
+		"at": "2026-08-11T20:15:18.077Z"
 	}
 ]
