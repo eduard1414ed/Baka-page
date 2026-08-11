@@ -1442,7 +1442,9 @@
 		"phrases": [
 			"Хвост Феи"
 		],
-		"at": "2026-08-11T14:01:13.223Z"
+		"at": "2026-08-11T14:01:13.223Z",
+		"result": "заведён: src/content/anime/fairy-tail.json",
+		"applied": "2026-08-11T14:02:57.403Z"
 	},
 	{
 		"id": "cand:338",
@@ -1455,7 +1457,9 @@
 			"Роза Версаля",
 			"Розы Версаля"
 		],
-		"at": "2026-08-11T14:01:14.589Z"
+		"at": "2026-08-11T14:01:14.589Z",
+		"result": "заведён: src/content/anime/versailles-no-bara.json",
+		"applied": "2026-08-11T14:02:59.298Z"
 	},
 	{
 		"id": "cand:59205",
@@ -1469,7 +1473,9 @@
 			"Клеватесс",
 			"Клеватесс: Король демонических зверей, младенец и герой-нежить"
 		],
-		"at": "2026-08-11T14:01:17.290Z"
+		"at": "2026-08-11T14:01:17.290Z",
+		"result": "заведён: src/content/anime/clevatess-majuu-no-ou-to-akago-to-shikabane-no-yuusha.json",
+		"applied": "2026-08-11T14:03:01.896Z"
 	},
 	{
 		"id": "cand:57",
@@ -1481,7 +1487,9 @@
 		"phrases": [
 			"Бек"
 		],
-		"at": "2026-08-11T14:01:20.623Z"
+		"at": "2026-08-11T14:01:20.623Z",
+		"result": "заведён: src/content/anime/beck.json",
+		"applied": "2026-08-11T14:03:03.758Z"
 	},
 	{
 		"id": "cand:44270",
@@ -1493,7 +1501,9 @@
 		"phrases": [
 			"Госпожа Кагуя"
 		],
-		"at": "2026-08-11T14:01:21.939Z"
+		"at": "2026-08-11T14:01:21.939Z",
+		"result": "заведён: src/content/anime/he-wei-dao-x-hui-yeda-xiaojie-xiangyao-wo-gaobai.json",
+		"applied": "2026-08-11T14:03:05.623Z"
 	},
 	{
 		"id": "cand:14813",
@@ -1505,7 +1515,9 @@
 		"phrases": [
 			"Как и ожидалось моя школьная романтическая жизнь не удалась"
 		],
-		"at": "2026-08-11T14:01:23.706Z"
+		"at": "2026-08-11T14:01:23.706Z",
+		"result": "заведён: src/content/anime/yahari-ore-no-seishun-love-comedy-wa-machigatteiru.json",
+		"applied": "2026-08-11T14:03:07.649Z"
 	},
 	{
 		"id": "cand:61501",
@@ -1517,7 +1529,9 @@
 		"phrases": [
 			"Канан до чёртиков проста"
 		],
-		"at": "2026-08-11T14:01:29.489Z"
+		"at": "2026-08-11T14:01:29.489Z",
+		"result": "заведён: src/content/anime/kanan-sama-wa-akumade-choroi.json",
+		"applied": "2026-08-11T14:03:09.944Z"
 	},
 	{
 		"id": "cand:934",
@@ -1529,7 +1543,9 @@
 		"phrases": [
 			"Когда плачут цикады"
 		],
-		"at": "2026-08-11T14:01:31.990Z"
+		"at": "2026-08-11T14:01:31.990Z",
+		"result": "заведён: src/content/anime/higurashi-no-naku-koro-ni.json",
+		"applied": "2026-08-11T14:03:11.884Z"
 	},
 	{
 		"id": "cand:60852",
@@ -1541,7 +1557,9 @@
 		"phrases": [
 			"Ледяная стена"
 		],
-		"at": "2026-08-11T14:01:37.256Z"
+		"at": "2026-08-11T14:01:37.256Z",
+		"result": "заведён: src/content/anime/koori-no-jouheki.json",
+		"applied": "2026-08-11T14:03:14.219Z"
 	},
 	{
 		"id": "cand:10165",
@@ -1553,7 +1571,9 @@
 		"phrases": [
 			"Мелочей жизни"
 		],
-		"at": "2026-08-11T14:01:46.040Z"
+		"at": "2026-08-11T14:01:46.040Z",
+		"result": "заведён: src/content/anime/nichijou.json",
+		"applied": "2026-08-11T14:03:16.215Z"
 	},
 	{
 		"id": "cand:58059",
@@ -1565,7 +1585,9 @@
 		"phrases": [
 			"Меч и жезл Вистории"
 		],
-		"at": "2026-08-11T14:01:47.389Z"
+		"at": "2026-08-11T14:01:47.389Z",
+		"result": "заведён: src/content/anime/tsue-to-tsurugi-no-wistoria.json",
+		"applied": "2026-08-11T14:03:18.264Z"
 	},
 	{
 		"id": "cand:58492",
@@ -1577,7 +1599,9 @@
 		"phrases": [
 			"Моно"
 		],
-		"at": "2026-08-11T14:01:49.273Z"
+		"at": "2026-08-11T14:01:49.273Z",
+		"result": "заведён: src/content/anime/mono.json",
+		"applied": "2026-08-11T14:03:20.119Z"
 	},
 	{
 		"id": "cand:58197",
@@ -1589,7 +1613,9 @@
 		"phrases": [
 			"Ночь живых кошаков"
 		],
-		"at": "2026-08-11T14:01:53.223Z"
+		"at": "2026-08-11T14:01:53.223Z",
+		"result": "заведён: src/content/anime/nyaight-of-the-living-cat.json",
+		"applied": "2026-08-11T14:03:21.984Z"
 	},
 	{
 		"id": "cand:49891",
@@ -1601,7 +1627,9 @@
 		"phrases": [
 			"О моем перерождении в меч"
 		],
-		"at": "2026-08-11T14:01:56.307Z"
+		"at": "2026-08-11T14:01:56.307Z",
+		"result": "заведён: src/content/anime/tensei-shitara-ken-deshita.json",
+		"applied": "2026-08-11T14:03:23.854Z"
 	},
 	{
 		"id": "cand:47917",
@@ -1613,7 +1641,9 @@
 		"phrases": [
 			"Одинокий рокер"
 		],
-		"at": "2026-08-11T14:02:02.057Z"
+		"at": "2026-08-11T14:02:02.057Z",
+		"result": "заведён: src/content/anime/bocchi-the-rock.json",
+		"applied": "2026-08-11T14:03:25.716Z"
 	},
 	{
 		"id": "cand:56009",
@@ -1625,6 +1655,8 @@
 		"phrases": [
 			"Приговорённый быть героем"
 		],
-		"at": "2026-08-11T14:02:05.140Z"
+		"at": "2026-08-11T14:02:05.140Z",
+		"result": "заведён: src/content/anime/yuusha-kei-ni-shosu-choubatsu-yuusha-9004-tai-keimu-kiroku.json",
+		"applied": "2026-08-11T14:03:27.591Z"
 	}
 ]
