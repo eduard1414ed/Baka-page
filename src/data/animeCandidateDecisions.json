@@ -988,7 +988,9 @@
 		"phrases": [
 			"Лето, когда погас свет"
 		],
-		"at": "2026-08-11T12:23:06.344Z"
+		"at": "2026-08-11T12:23:06.344Z",
+		"result": "заведён: src/content/anime/hikaru-ga-shinda-natsu.json",
+		"applied": "2026-08-11T13:39:15.084Z"
 	},
 	{
 		"id": "cand:59846",
@@ -1000,7 +1002,9 @@
 		"phrases": [
 			"Могу я попросить ещё кое-что?"
 		],
-		"at": "2026-08-11T12:23:13.841Z"
+		"at": "2026-08-11T12:23:13.841Z",
+		"result": "заведён: src/content/anime/saigo-ni-hitotsu-dake-onegai-shitemo-yoroshii-deshou-ka.json",
+		"applied": "2026-08-11T13:39:17.705Z"
 	},
 	{
 		"id": "cand:45613",
@@ -1012,7 +1016,9 @@
 		"phrases": [
 			"Моя девушка не только милая"
 		],
-		"at": "2026-08-11T12:23:15.607Z"
+		"at": "2026-08-11T12:23:15.607Z",
+		"result": "заведён: src/content/anime/kawaii-dake-ja-nai-shikimori-san.json",
+		"applied": "2026-08-11T13:39:19.609Z"
 	},
 	{
 		"id": "cand:59517",
@@ -1024,7 +1030,9 @@
 		"phrases": [
 			"Титосэ внутри бутылки рамунэ"
 		],
-		"at": "2026-08-11T12:23:16.691Z"
+		"at": "2026-08-11T12:23:16.691Z",
+		"result": "заведён: src/content/anime/chitose-kun-wa-ramune-bin-no-naka.json",
+		"applied": "2026-08-11T13:39:21.728Z"
 	},
 	{
 		"id": "cand:22319",
@@ -1036,7 +1044,9 @@
 		"phrases": [
 			"Токийский гуль"
 		],
-		"at": "2026-08-11T12:23:18.141Z"
+		"at": "2026-08-11T12:23:18.141Z",
+		"result": "заведён: src/content/anime/tokyo-ghoul.json",
+		"applied": "2026-08-11T13:39:23.625Z"
 	},
 	{
 		"id": "cand:1251",
@@ -1049,7 +1059,9 @@
 			"Надя с загадочного моря",
 			"Нади с загадочного моря"
 		],
-		"at": "2026-08-11T12:23:20.490Z"
+		"at": "2026-08-11T12:23:20.490Z",
+		"result": "заведён: src/content/anime/fushigi-no-umi-no-nadia.json",
+		"applied": "2026-08-11T13:39:25.517Z"
 	},
 	{
 		"id": "cand:28171",
@@ -1062,7 +1074,9 @@
 			"Повар-боец Сома",
 			"Повара-бойца Сома"
 		],
-		"at": "2026-08-11T12:23:39.625Z"
+		"at": "2026-08-11T12:23:39.625Z",
+		"result": "заведён: src/content/anime/shokugeki-no-souma.json",
+		"applied": "2026-08-11T13:39:27.810Z"
 	},
 	{
 		"id": "cand:38101",
@@ -1075,7 +1089,9 @@
 			"Пять невест",
 			"Пять невесть"
 		],
-		"at": "2026-08-11T12:23:41.491Z"
+		"at": "2026-08-11T12:23:41.491Z",
+		"result": "заведён: src/content/anime/5-toubun-no-hanayome.json",
+		"applied": "2026-08-11T13:39:29.685Z"
 	},
 	{
 		"id": "cand:57181",
@@ -1088,7 +1104,9 @@
 			"Голубая шкатулка",
 			"Голубую шкатулку"
 		],
-		"at": "2026-08-11T12:23:48.574Z"
+		"at": "2026-08-11T12:23:48.574Z",
+		"result": "заведён: src/content/anime/ao-no-hako.json",
+		"applied": "2026-08-11T13:39:31.563Z"
 	},
 	{
 		"id": "cand:10622",
@@ -1102,6 +1120,8 @@
 			"Гуррен Лаганном",
 			"Гуррен-Лаганном"
 		],
-		"at": "2026-08-11T12:23:52.491Z"
+		"at": "2026-08-11T12:23:52.491Z",
+		"result": "заведён: src/content/anime/tengen-toppa-gurren-lagann-ore-no-gurren-wa-pikka-pika.json",
+		"applied": "2026-08-11T13:39:33.437Z"
 	}
 ]
