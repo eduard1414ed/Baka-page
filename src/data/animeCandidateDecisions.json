@@ -5642,5 +5642,14 @@
 			"Блю Лок"
 		],
 		"at": "2026-08-11T19:43:27.892Z"
+	},
+	{
+		"id": "ph:Блюз",
+		"what": "alias",
+		"animeId": "yojouhan-time-machine-blues",
+		"phrases": [
+			"Блюз"
+		],
+		"at": "2026-08-11T19:43:33.143Z"
 	}
 ]
