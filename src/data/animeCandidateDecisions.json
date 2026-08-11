@@ -4649,5 +4649,17 @@
 			"Начало"
 		],
 		"at": "2026-08-11T19:22:48.919Z"
+	},
+	{
+		"id": "cand:35062",
+		"what": "create",
+		"sourceId": 35062,
+		"source": "shikimori",
+		"slug": "mahoutsukai-no-yome",
+		"title": "Невеста чародея",
+		"phrases": [
+			"Невеста чародея"
+		],
+		"at": "2026-08-11T19:23:02.552Z"
 	}
 ]
