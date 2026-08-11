@@ -102,13 +102,37 @@ async function toEntry(data) {
 	};
 }
 
+/**
+ * ДЕШЁВЫЙ ПОИСК: один запрос, короткие карточки, без похода за подробностями.
+ *
+ * Нужен сбору кандидатов в тайтлы (тз/11, C.1): там в Shikimori уходят ПОЛТОРЫ
+ * ТЫСЯЧИ фраз в кавычках, и на большинство приходит либо пустота, либо явно
+ * чужой тайтл. Спрашивать подробности у каждой значило бы удвоить число
+ * запросов к чужому сервису ради данных, которые тут же выбросят: полторы
+ * секунды между запросами — условие, на котором мы Shikimori пользуемся.
+ *
+ * Отдаёт РОВНО то, что вернул список, — сверять похожесть названия должен
+ * вызывающий, у него это правило и живёт. Подробности (студия, описание,
+ * обложка) добираются потом, только у прошедших сверку, — `findById`.
+ */
+export async function search(query, limit = 5) {
+	const results = await request(`/api/animes?search=${encodeURIComponent(query)}&limit=${limit}`);
+	return results.map((item) => ({
+		sourceId: item.id,
+		titleRu: item.russian || undefined,
+		titleOriginal: item.name,
+		year: item.aired_on ? Number(item.aired_on.slice(0, 4)) : undefined,
+		url: item.url ? `${BASE}${item.url}` : undefined,
+	}));
+}
+
 // Возвращает найденные данные тайтла или null, если Shikimori ничего не нашёл.
+// Два запроса: поиск по названию и подробности лучшего совпадения.
 export async function find(query) {
-	const results = await request(`/api/animes?search=${encodeURIComponent(query)}&limit=1`);
+	const results = await search(query, 1);
 	if (results.length === 0) return null;
 
-	const data = await request(`/api/animes/${results[0].id}`);
-	return await toEntry(data);
+	return await findById(results[0].sourceId);
 }
 
 // Тайтл уже опознан по id (например, выбран в живом поиске в админке) — без поиска

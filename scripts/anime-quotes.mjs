@@ -19,13 +19,13 @@
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
-import yaml from 'js-yaml';
 import { buildAnimeMatcher, findMentions, fold, isQuotedAt, MIN_PREFIX_LENGTH } from '../src/lib/animeMentions.mjs';
-import { toPlainText } from '../src/lib/plainText.mjs';
 import { initMorph, readAnimeCollection, strictQuotesHint } from './anime-cases-lib.mjs';
+// Тело поста голым текстом и поля шапки — общий код с частью C, чтобы два
+// отчёта об одном архиве не разошлись в числах (scripts/posts-plain.mjs).
+import { readPostsPlain as readPosts } from './posts-plain.mjs';
 
 const ROOT = new URL('../', import.meta.url);
-const POSTS_DIR = new URL('src/content/posts/', ROOT);
 const TRANSCRIPTS_DIR = new URL('src/content/transcripts/', ROOT);
 const REPORT_PATH = new URL('отчёт-кавычки.txt', ROOT);
 
@@ -43,48 +43,6 @@ const plural = (n, one, few, many) => {
 };
 
 // ─── Тексты ────────────────────────────────────────────────────────────────
-
-/**
- * Посты: тело голым текстом плюс два поля шапки.
- *
- * Шапку разбираем ТЕМ ЖЕ js-yaml, которым её читает сборка, а не строчными
- * догадками: `anime` и `draft` решают всё в этом отчёте, и промахнуться в них
- * значит назвать заказчику числа не про его сайт. Тело снимаем `toPlainText` —
- * тем же кодом, которым его снимает сайт для описаний и превью: иначе счёт
- * пошёл бы по адресам ссылок и атрибутам меток, которых читатель не видит.
- */
-async function readPosts() {
-	const files = (await readdir(POSTS_DIR)).filter((name) => name.endsWith('.md'));
-	const out = [];
-
-	for (const file of files) {
-		const raw = await readFile(new URL(file, POSTS_DIR), 'utf8');
-		let front = {};
-		let body = raw;
-
-		if (raw.startsWith('---')) {
-			const end = raw.indexOf('\n---', 3);
-			if (end > 0) {
-				try {
-					front = yaml.load(raw.slice(4, end)) ?? {};
-				} catch {
-					front = {};
-				}
-				body = raw.slice(end + 4);
-			}
-		}
-
-		out.push({
-			id: file.replace(/\.md$/, ''),
-			draft: front.draft === true,
-			tagged: new Set(Array.isArray(front.anime) ? front.anime : []),
-			title: String(front.title ?? file),
-			text: toPlainText(body),
-		});
-	}
-
-	return out;
-}
 
 async function readTranscripts() {
 	const files = (await readdir(TRANSCRIPTS_DIR)).filter((name) => name.endsWith('.json'));
