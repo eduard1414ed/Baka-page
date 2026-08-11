@@ -483,5 +483,17 @@
 		"at": "2026-08-11T12:01:36.810Z",
 		"result": "заведён: src/content/anime/sanda.json",
 		"applied": "2026-08-11T12:02:33.861Z"
+	},
+	{
+		"id": "cand:46569",
+		"what": "create",
+		"sourceId": 46569,
+		"source": "shikimori",
+		"slug": "jigokuraku",
+		"title": "Адский рай",
+		"phrases": [
+			"Адский рай"
+		],
+		"at": "2026-08-11T12:04:22.381Z"
 	}
 ]
