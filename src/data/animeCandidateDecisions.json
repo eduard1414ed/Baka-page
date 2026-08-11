@@ -2628,5 +2628,29 @@
 			"Нет игры — нет жизни"
 		],
 		"at": "2026-08-11T15:19:31.405Z"
+	},
+	{
+		"id": "cand:60254",
+		"what": "create",
+		"sourceId": 60254,
+		"source": "shikimori",
+		"slug": "yano-kun-no-futsuu-no-hibi",
+		"title": "Обычные дни Яно",
+		"phrases": [
+			"Обычные дни Яно"
+		],
+		"at": "2026-08-11T15:19:39.555Z"
+	},
+	{
+		"id": "cand:759",
+		"what": "create",
+		"sourceId": 759,
+		"source": "shikimori",
+		"slug": "tokyo-godfathers",
+		"title": "Однажды в Токио",
+		"phrases": [
+			"Однажды в Токио"
+		],
+		"at": "2026-08-11T15:19:40.522Z"
 	}
 ]
