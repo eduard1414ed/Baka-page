@@ -47,3 +47,6 @@ scripts/transcribe/state.json
 
 # рабочая папка разовых замеров этой сессии
 .tmp-probe/
+
+# лог долгого прогона сбора кандидатов
+.tmp-candidates-run.log
