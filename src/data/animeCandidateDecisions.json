@@ -2911,5 +2911,14 @@
 		"at": "2026-08-11T15:24:17.440Z",
 		"result": "заведён: src/content/anime/shunkashuutou-daikousha-haru-no-mai.json",
 		"applied": "2026-08-11T15:25:24.276Z"
+	},
+	{
+		"id": "cand:52149",
+		"what": "alias",
+		"animeId": "made-in-abyss",
+		"phrases": [
+			"Созданного в Бездне"
+		],
+		"at": "2026-08-11T15:59:53.813Z"
 	}
 ]
