@@ -253,5 +253,61 @@
 		"at": "2026-08-11T11:58:29.426Z",
 		"result": "заведён: src/content/anime/koukaku-kidoutai.json",
 		"applied": "2026-08-11T11:59:12.930Z"
+	},
+	{
+		"id": "cand:205",
+		"what": "create",
+		"sourceId": 205,
+		"source": "shikimori",
+		"slug": "samurai-champloo",
+		"title": "Самурай Чамплу",
+		"phrases": [
+			"Самурай Чамплу",
+			"Самурая Чамплу",
+			"Самурае Чамплу",
+			"Самураем Чамплу"
+		],
+		"at": "2026-08-11T12:00:55.693Z"
+	},
+	{
+		"id": "cand:46352",
+		"what": "create",
+		"sourceId": 46352,
+		"source": "shikimori",
+		"slug": "blue-period",
+		"title": "Голубой период",
+		"phrases": [
+			"Голубой период",
+			"Голубому периоду"
+		],
+		"at": "2026-08-11T12:00:56.378Z"
+	},
+	{
+		"id": "cand:48849",
+		"what": "create",
+		"sourceId": 48849,
+		"source": "shikimori",
+		"slug": "sonny-boy",
+		"title": "Сонни Бой",
+		"phrases": [
+			"Сонни бой",
+			"Сонни боя",
+			"Сонни боем"
+		],
+		"at": "2026-08-11T12:00:57.477Z"
+	},
+	{
+		"id": "cand:12189",
+		"what": "create",
+		"sourceId": 12189,
+		"source": "shikimori",
+		"slug": "hyouka",
+		"title": "Хёка",
+		"phrases": [
+			"Хёка",
+			"Хёки",
+			"Хёку"
+		],
+		"at": "2026-08-11T12:00:58.228Z"
 	}
 ]
