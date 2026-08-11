@@ -2,23 +2,30 @@
 title: Бонусный эпизод | Наруто. Охотник за преступниками
 date: 2022-05-14
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: ''
 noCover: false
-tgId: 45
-tgUrl: https://t.me/podcastbaka/45
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested:
+  - naruto
+timecodes: ''
 bonusLinks:
   boosty: ''
   patreon: https://www.patreon.com/posts/59238168
   tgClosed: ''
   vkDonat: ''
-animeSuggested:
-  - naruto
+tgId: 45
+tgUrl: https://t.me/podcastbaka/45
+anime:
+  - naruto-shinsaku-anime
+  - cowboy-bebop
 ---
 
 Сегодня обсуждаем сразу три арки: «Охотник за преступниками», «Зеленые звери» и «План по самовыживанию».
 
-Почему Наруто выставляют таким глупым? Как филлеры пытаются играть в «Ковбоя Бибопа»? И почему глупость иногда лучше пресности? #бонус
+Почему :anime[Наруто]{id="naruto-shinsaku-anime" source="shikimori" source-id="54688"} выставляют таким глупым? Как филлеры пытаются играть в «Ковбоя Бибопа»? И почему глупость иногда лучше пресности?
 
-Послушать выпуск можно у нас [на патреоне](https://www.patreon.com/posts/59238168) или у нас [в группе в ВК](https://vk.com/podcast.baka)
+::anime-ref{id="cowboy-bebop" source="shikimori" source-id="1"}
