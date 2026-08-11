@@ -191,6 +191,32 @@ export function outcome(run) {
 	);
 }
 
+// ── Коммиты ─────────────────────────────────────────────────────────────────
+//
+// Нужны, чтобы сказать вслух, ЧЕМ кончился поход робота. «Прошёл без сбоев»
+// не отвечает на вопрос «и что привёз»: робот пишет письмо только когда что-то
+// не так, и удачный заход с тремя новыми постами выглядел бы ровно так же,
+// как заход, не нашедший ничего.
+
+/** Коммиты, тронувшие путь, за промежуток времени. Пусто — значит не было. */
+export async function fetchCommits(path, sinceIso, untilIso) {
+	const query = new URLSearchParams({ path, since: sinceIso, until: untilIso, per_page: '10' });
+	const response = await api(`/repos/${OWNER}/${REPO}/commits?${query}`);
+	if (!response.ok) return [];
+	return await response.json();
+}
+
+/**
+ * Файлы одного коммита. GitHub отдаёт не больше 300 штук за раз, поэтому
+ * читающий обязан смотреть на длину: 300 — это, скорее всего, «и ещё сколько-то».
+ */
+export async function fetchCommitFiles(sha) {
+	const response = await api(`/repos/${OWNER}/${REPO}/commits/${sha}`);
+	if (!response.ok) return [];
+	const data = await response.json();
+	return data.files ?? [];
+}
+
 // ── Файлы репозитория ───────────────────────────────────────────────────────
 
 const fromBase64 = (base64) => {

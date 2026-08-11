@@ -30,11 +30,12 @@
 	<body>
 		<div class="page">
 			<p class="kicker">[ служебное ]</p>
-			<h1>Роботы подкаста</h1>
+			<h1>Роботы</h1>
 			<p class="lead">
-				Раз в сутки в 9:00 по Москве робот сам заглядывает в ленту подкаста, заводит
-				черновики новых выпусков, вырезает персонажей с обложек и расшифровывает звук.
-				Здесь его можно позвать раньше и посмотреть, чем кончился прошлый поход.
+				Роботы ходят сами по расписанию и заводят черновики: один — по ленте
+				подкаста, другой — по каналу в телеграме. Здесь их можно позвать раньше
+				срока, посмотреть, чем кончились последние походы, и разобрать кандидатов
+				в тайтлы. На сайт ничто из этого само не попадает: публикуете вы.
 			</p>
 
 			<section id="auth-section">
@@ -51,17 +52,57 @@
 			</section>
 
 			<section id="run-section" hidden>
-				<h2>Позвать робота</h2>
+				<h2>Новые выпуски подкаста</h2>
 				<p>
-					Нажимайте, если выпуск уже вышел, а ждать до утра не хочется.
-					Робот расшифровывает звук, а распознавание стоит денег, поэтому
-					чаще раза в пять минут кнопка не даётся.
+					Робот заглядывает в ленту подкаста, заводит черновики новых выпусков,
+					вырезает персонажей с обложек и расшифровывает звук. Нажимайте, если
+					выпуск уже вышел, а ждать до утра не хочется.
+				</p>
+				<p class="hint">
+					<strong>Сам ходит раз в сутки, в&nbsp;9:00 по Москве.</strong>
+					<span id="run-last"></span>
 				</p>
 				<div class="row">
-					<button id="run">Запустить робота</button>
+					<button id="run">Забрать новые выпуски подкаста</button>
 					<span class="tech" id="run-note"></span>
 				</div>
+				<p class="hint">
+					Распознавание звука стоит денег, поэтому чаще раза в пять минут
+					кнопка не даётся.
+				</p>
 				<p class="status" id="run-status"></p>
+			</section>
+
+			<section id="tg-section" hidden>
+				<h2>Новые посты из телеграма</h2>
+				<p>
+					Робот спрашивает бота, добавленного в канал, разбирает новые посты
+					и кладёт их в черновики вместе с картинками. Все — с галочкой
+					«Черновик»: на сайте не появится ни один, пока вы его не опубликуете.
+				</p>
+				<p class="hint">
+					<strong>Сам ходит четыре раза в сутки — в&nbsp;5:00, 11:00, 17:00
+					и&nbsp;23:00 по Москве.</strong>
+					<span id="tg-last"></span>
+				</p>
+				<div class="row">
+					<button id="tg-run">Забрать новые посты из телеграма</button>
+					<span class="tech" id="tg-note"></span>
+				</div>
+				<p class="hint">
+					Денег этот робот не тратит и звука не расшифровывает, поэтому
+					после похода кнопка открывается через две минуты — ровно столько
+					идёт сам поход. Дольше ждать незачем, но и раньше нажимать
+					бессмысленно: непрочитанное телеграм отдаёт боту ровно один раз,
+					и второй заход подряд привезёт пусто.
+				</p>
+				<p class="status" id="tg-status"></p>
+				<p class="hint">
+					Если бот пропустил пост, робот добирает его со страницы канала
+					и рассказывает об этом письмом. Письмо приходит и от других
+					неприятностей — не приехали картинки, не читается шапка;
+					все они ниже, в «Что робот рассказывал».
+				</p>
 			</section>
 
 			<section id="cases-section" hidden>
@@ -130,15 +171,23 @@
 			import {
 				RU,
 				dispatch,
+				fetchCommitFiles,
+				fetchCommits,
 				fetchIssues,
 				fetchRuns,
 				howLong,
 				isRunning,
 				outcome,
+				plural,
 				setupAuth,
 			} from '/admin/tools/github.js';
 
 			const WORKFLOW = 'sync-episodes.yml';
+			// Второй робот теми же руками: вход, права, запуск и разбор ответов —
+			// всё из github.js, отличается только имя воркфлоу и отсчёт между
+			// нажатиями. Второй копии механизма нет и заводить её нельзя:
+			// разъехавшийся вход выглядел бы как «кнопка не работает».
+			const TG_WORKFLOW = 'telegram-fetch.yml';
 			// Пересчёт падежных форм (тз/11, часть A) — свой воркфлоу и своя пара
 			// кнопок. Отдельный, а не общий с добором выпусков, потому что
 			// у добора есть цена в деньгах и отсчёт между нажатиями, а у этого
@@ -147,6 +196,21 @@
 
 			/** Реже этого кнопка не даётся. Каждое нажатие — возможные деньги. */
 			const COOLDOWN_MS = 5 * 60 * 1000;
+
+			// У телеграм-робота денег нет, поэтому и пятиминутного отсчёта нет:
+			// две минуты — это длина самого похода (установка зависимостей плюс
+			// работа). Больше незачем, а меньше бессмысленно: непрочитанное
+			// телеграм отдаёт боту ровно ОДИН раз, и заход сразу за удачным
+			// привезёт пусто гарантированно.
+			const TG_COOLDOWN_MS = 2 * 60 * 1000;
+
+			// Имя, которым робот телеграма подписывает свои коммиты, —
+			// `.github/workflows/telegram-fetch.yml`, шаг «Закоммитить
+			// привезённое». МЕНЯЕТЕ ТАМ — ПОПРАВЬТЕ И ЗДЕСЬ: по нему страница
+			// отличает работу робота от сохранения поста в админке, которое
+			// падает в ту же папку.
+			const TG_BOT = 'baka-tg-fetch-bot';
+			const POSTS_DIR = 'src/content/posts';
 
 			const $ = (id) => document.getElementById(id);
 			const el = {
@@ -164,6 +228,12 @@
 				issues: $('issues'),
 				issuesEmpty: $('issues-empty'),
 				refresh: $('refresh'),
+				runLast: $('run-last'),
+				tgSection: $('tg-section'),
+				tgRun: $('tg-run'),
+				tgNote: $('tg-note'),
+				tgStatus: $('tg-status'),
+				tgLast: $('tg-last'),
 				casesSection: $('cases-section'),
 				casesDry: $('cases-dry'),
 				casesWrite: $('cases-write'),
@@ -174,6 +244,14 @@
 
 			let polling = false;
 
+			const startedAt = (run) => new Date(run.run_started_at ?? run.created_at);
+
+			/**
+			 * Список походов ОБЩИЙ НА ДВУХ РОБОТОВ, и потому каждая строка
+			 * говорит, чей это был поход. Без пометки список врал бы соседством:
+			 * два робота ходят по разным расписаниям, и «в 11:03 прошёл без
+			 * сбоев» без имени читается как строчка про того, о ком думаешь.
+			 */
 			function drawRuns(runs) {
 				el.runs.innerHTML = '';
 				el.runsEmpty.hidden = runs.length > 0;
@@ -182,7 +260,11 @@
 					const li = document.createElement('li');
 					const when = document.createElement('span');
 					when.className = 'when';
-					when.textContent = RU.format(new Date(run.run_started_at ?? run.created_at));
+					when.textContent = RU.format(startedAt(run));
+
+					const whose = document.createElement('span');
+					whose.className = 'whose';
+					whose.textContent = run.whose;
 
 					const what = document.createElement('span');
 					what.className = 'what';
@@ -196,7 +278,7 @@
 					link.className = 'tech';
 					link.textContent = 'подробно ↗';
 
-					li.append(when, what, link);
+					li.append(when, whose, what, link);
 					el.runs.append(li);
 				}
 			}
@@ -230,7 +312,7 @@
 			 * GitHub, а не по памяти вкладки: перезагрузка страницы не должна
 			 * открывать кнопку заново.
 			 */
-			function gate(runs) {
+			function gate(runs, cooldownMs) {
 				const latest = runs[0];
 				if (!latest) return { can: true, note: '' };
 
@@ -239,8 +321,8 @@
 				}
 
 				const since = Date.now() - new Date(latest.updated_at).getTime();
-				if (since < COOLDOWN_MS) {
-					const left = Math.ceil((COOLDOWN_MS - since) / 1000);
+				if (since < cooldownMs) {
+					const left = Math.ceil((cooldownMs - since) / 1000);
 					const mm = Math.floor(left / 60);
 					const ss = String(left % 60).padStart(2, '0');
 					return { can: false, note: `только что ходил, снова можно через ${mm}:${ss}` };
@@ -249,29 +331,144 @@
 				return { can: true, note: '' };
 			}
 
+			/** Строчка «когда ходил в последний раз» под описанием расписания. */
+			function lastLine(runs) {
+				const latest = runs[0];
+				if (!latest) return 'Ни разу ещё не ходил.';
+				if (isRunning(latest)) return 'Сейчас в пути.';
+				return `В последний раз — ${RU.format(startedAt(latest))}, ${outcome(latest)}.`;
+			}
+
+			// ЧЕМ КОНЧИЛСЯ ПОХОД ТЕЛЕГРАМ-РОБОТА. Письмо он шлёт, только когда
+			// что-то не так, поэтому удачный заход с тремя новыми постами и заход,
+			// не нашедший ничего, выглядят одинаково: «прошёл без сбоев».
+			// Считаем по его собственным коммитам за время похода. Итог
+			// завершённого похода не меняется, поэтому помним его во вкладке
+			// и второй раз не спрашиваем.
+			const hauls = new Map();
+
+			async function tgHaul(run) {
+				if (isRunning(run)) return null;
+				if (hauls.has(run.id)) return hauls.get(run.id);
+
+				const from = startedAt(run).toISOString();
+				// Минута запаса: коммит ложится перед самым концом похода,
+				// и округление времени у GitHub не должно его отрезать.
+				const to = new Date(new Date(run.updated_at).getTime() + 60000).toISOString();
+
+				let added = 0;
+				let changed = 0;
+				let maybeMore = false;
+				const commits = await fetchCommits(POSTS_DIR, from, to);
+				for (const commit of commits) {
+					// Чужое сюда попадает законно: сохранение поста в админке
+					// пишет в ту же папку и могло случиться в эти же секунды.
+					if (commit.commit?.author?.name !== TG_BOT) continue;
+					const files = await fetchCommitFiles(commit.sha);
+					if (files.length >= 300) maybeMore = true;
+					for (const file of files) {
+						if (!file.filename.startsWith(`${POSTS_DIR}/`) || !file.filename.endsWith('.md')) continue;
+						if (file.status === 'added') added += 1;
+						else changed += 1;
+					}
+				}
+
+				const parts = [];
+				if (added) {
+					parts.push(
+						`привёз ${maybeMore ? 'не меньше ' : ''}${added} ${plural(added, 'черновик', 'черновика', 'черновиков')}`,
+					);
+				}
+				// Дописанные снимки — это разорванный альбом, доехавший вторым
+				// заходом. Считать это «ничем» нельзя: работа была.
+				if (changed) {
+					parts.push(`дописал снимки в ${changed} ${plural(changed, 'пост', 'поста', 'постов')}`);
+				}
+				const text = parts.length
+					? `${parts.join(', ')}.`
+					: 'новых постов в канале не нашлось.';
+				hauls.set(run.id, text);
+				return text;
+			}
+
+			/** Письмо, заведённое во время этого похода, — если было. */
+			const letterOf = (run, issues) => {
+				const from = startedAt(run).getTime();
+				const to = new Date(run.updated_at).getTime() + 60000;
+				return issues.find((issue) => {
+					const at = new Date(issue.created_at).getTime();
+					return at >= from && at <= to;
+				});
+			};
+
+			async function drawTelegram(runs, issues) {
+				const { can, note } = gate(runs, TG_COOLDOWN_MS);
+				el.tgRun.disabled = !can;
+				el.tgNote.textContent = note;
+				el.tgLast.textContent = ` ${lastLine(runs)}`;
+
+				const latest = runs[0];
+				if (!latest) return can;
+
+				if (isRunning(latest)) {
+					el.tgStatus.className = 'status';
+					el.tgStatus.innerHTML =
+						'<strong>Робот в пути.</strong> Обычно около двух минут. Если в канале много новых постов с картинками — до пяти.';
+					return can;
+				}
+
+				const haul = await tgHaul(latest);
+				const letter = letterOf(latest, issues);
+				const said = letter
+					? ` И прислал письмо: «${letter.title}» — оно ниже и на почте.`
+					: '';
+				const when = el.tgStatus.dataset.waited === 'yes' ? 'Готово. Поход' : 'Последний поход';
+				el.tgStatus.dataset.waited = '';
+				el.tgStatus.className = latest.conclusion === 'success' ? 'status' : 'status bad';
+				el.tgStatus.innerHTML = `<strong>${when} ${outcome(latest)}:</strong> ${haul}${said}`;
+				return can;
+			}
+
 			async function refresh() {
-				const [runs, issues] = await Promise.all([fetchRuns(WORKFLOW), fetchIssues()]);
-				drawRuns(runs);
+				const [runs, tgRuns, issues] = await Promise.all([
+					fetchRuns(WORKFLOW),
+					fetchRuns(TG_WORKFLOW),
+					fetchIssues(),
+				]);
+
+				// Список общий, поэтому каждому походу приписываем хозяина
+				// и раскладываем по времени: иначе строки шли бы пачками
+				// по воркфлоу, и «последние» оказались бы не последними.
+				const all = [
+					...runs.map((run) => ({ ...run, whose: '[ выпуски ]' })),
+					...tgRuns.map((run) => ({ ...run, whose: '[ телеграм ]' })),
+				]
+					.sort((a, b) => startedAt(b) - startedAt(a))
+					.slice(0, 6);
+				drawRuns(all);
 				drawIssues(issues);
 
-				const { can, note } = gate(runs);
+				const { can, note } = gate(runs, COOLDOWN_MS);
 				el.run.disabled = !can;
 				el.runNote.textContent = note;
+				el.runLast.textContent = ` ${lastLine(runs)}`;
 
-				// Пока робот в пути, обновляемся сами: кнопка, после которой
-				// ничего не происходит, заставляет нажать ещё раз.
-				const running = runs[0] && isRunning(runs[0]);
+				const tgCan = await drawTelegram(tgRuns, issues);
+
+				// Пока хоть один робот в пути, обновляемся сами: кнопка, после
+				// которой ничего не происходит, заставляет нажать ещё раз.
+				const running = (runs[0] && isRunning(runs[0])) || (tgRuns[0] && isRunning(tgRuns[0]));
 				if (running && !polling) {
 					polling = true;
 					setTimeout(async () => { polling = false; await refresh(); }, 5000);
 				}
-				if (!running && !polling && !can) {
+				if (!running && !polling && (!can || !tgCan)) {
 					// Идёт отсчёт до следующего нажатия — обновим, когда истечёт.
 					polling = true;
 					setTimeout(async () => { polling = false; await refresh(); }, 10000);
 				}
 
-				if (running) {
+				if (runs[0] && isRunning(runs[0])) {
 					el.runStatus.innerHTML = '<strong>Робот в пути.</strong> Обычно около минуты. Если он нашёл новый выпуск и расшифровывает его — до пятнадцати минут.';
 				} else if (runs[0] && el.runStatus.dataset.waited === 'yes') {
 					el.runStatus.dataset.waited = '';
@@ -322,6 +519,38 @@
 
 			const runRobot = () => оберегая([el.run], el.runStatus)(runRobotOnce);
 
+			// Тот же заход, что у выпусков, и той же рукой (`dispatch` из
+			// github.js). Отличий два: имя воркфлоу и то, сколько ждать.
+			async function runTelegramOnce() {
+				el.tgRun.disabled = true;
+				el.tgStatus.className = 'status';
+				el.tgStatus.textContent = 'Прошу GitHub позвать робота…';
+
+				const response = await dispatch(TG_WORKFLOW);
+
+				if (response.status !== 204) {
+					const scopes = response.headers.get('x-accepted-oauth-scopes') ?? '';
+					el.tgStatus.className = 'status bad';
+					el.tgStatus.textContent =
+						response.status === 403
+							? `GitHub не дал запустить робота (нет прав${scopes ? `, нужно: ${scopes}` : ''}). Покажите это сообщение разработчику.`
+							: `GitHub ответил кодом ${response.status}. Попробуйте ещё раз через минуту.`;
+					el.tgRun.disabled = false;
+					return;
+				}
+
+				el.tgStatus.dataset.waited = 'yes';
+				el.tgStatus.innerHTML =
+					'<strong>Запуск принят.</strong> Робот выходит в путь, это занимает секунд десять. Весь поход — около двух минут. Дальше следите за этой строчкой, страницу обновлять не нужно.';
+
+				// GitHub заводит запуск не мгновенно, поэтому первый раз
+				// спрашиваем с задержкой — иначе в списке будет прошлый поход
+				// и кнопка откроется снова.
+				setTimeout(refresh, 4000);
+			}
+
+			const runTelegram = () => оберегая([el.tgRun], el.tgStatus)(runTelegramOnce);
+
 			// ── Пересчёт падежных форм ──────────────────────────────────────────
 			//
 			// Денег не стоит и ничего не расшифровывает, поэтому отсчёта между
@@ -366,6 +595,7 @@
 			// где сам список.
 
 			el.run.addEventListener('click', runRobot);
+			el.tgRun.addEventListener('click', runTelegram);
 			el.refresh.addEventListener('click', refresh);
 			el.casesDry.addEventListener('click', () => runCases(false));
 			el.casesWrite.addEventListener('click', () => runCases(true));
@@ -379,6 +609,7 @@
 				errorEl: el.authError,
 				onReady: async () => {
 					el.runSection.hidden = false;
+					el.tgSection.hidden = false;
 					el.casesSection.hidden = false;
 					el.candSection.hidden = false;
 					el.lastSection.hidden = false;
