@@ -20,6 +20,7 @@ import { getCollection } from 'astro:content';
 import { isPublished } from '../lib/publishing.mjs';
 import { isExternalPost, externalSourceName } from '../lib/externalPost.mjs';
 import { postDescription } from '../lib/excerpt.mjs';
+import { animeSearchWords } from '../lib/animeSearch.mjs';
 import { categories, sectionOf } from '../content.config';
 import { SITE_DESCRIPTION } from '../lib/site.mjs';
 
@@ -27,6 +28,16 @@ export const prerender = true;
 
 export const GET: APIRoute = async () => {
 	const posts = await getCollection('posts', ({ data }) => isPublished(data) && isExternalPost(data));
+
+	// СПРАВОЧНИК ТАЙТЛОВ — РАДИ ПОИСКА ПО УПОМЯНУТЫМ АНИМЕ. У внешней статьи
+	// текста у нас нет вовсе: в индекс идут заголовок, описание и площадка.
+	// А тайтлы у неё размечены — тем же полем «Тайтлы поста», что у обычного
+	// материала, — и без них статья не находилась по названию аниме, о котором
+	// она и написана. Слова берутся общей функцией (src/lib/animeSearch.mjs),
+	// той же, что у страницы тайтла и страницы материала: разойдись они,
+	// вписанный в админку вариант написания действовал бы в одних разделах
+	// и молчал в других.
+	const animeById = new Map((await getCollection('anime')).map((entry) => [entry.id, entry]));
 
 	const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -40,14 +51,25 @@ export const GET: APIRoute = async () => {
 		const description = postDescription(post, SITE_DESCRIPTION);
 		const source = externalSourceName(post.data);
 
+		// Тайтла может не оказаться в справочнике: его удалили в админке или
+		// робот ещё не донабрал. Молчим и берём остальные — статья обязана
+		// найтись хотя бы по заголовку, а не выпасть из индекса целиком.
+		const animeWords = (post.data.anime ?? [])
+			.map((ref) => animeById.get(ref.id))
+			.filter(Boolean)
+			.map((entry) => animeSearchWords(entry!.data))
+			.join(' ');
+
 		return {
 			// Адрес чужой статьи. Pagefind его не трогает — результат поиска
 			// поведёт читателя наружу, как и карточка в ленте.
 			url: externalUrl,
 			// Что ищется. Текста у нас нет, поэтому в индекс идёт то, что есть:
 			// заголовок и описание. Название площадки тоже — по запросу
-			// «Кинопоиск» человек ждёт увидеть свои статьи там.
-			content: [title, description, source].filter(Boolean).join('. '),
+			// «Кинопоиск» человек ждёт увидеть свои статьи там. Замыкают строку
+			// названия размеченных тайтлов: они не показываются нигде, только
+			// добавляют совпадения.
+			content: [title, description, source, animeWords].filter(Boolean).join('. '),
 			language: 'ru',
 			meta: {
 				title,

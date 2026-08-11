@@ -20,7 +20,7 @@ import { formatTimecode } from '../../lib/timecode.mjs';
 import { isPublished } from '../../lib/publishing.mjs';
 import { plural } from '../../lib/plural.mjs';
 import { ogUrlForAnime } from '../../lib/ogImage.mjs';
-import { latinSearchForms } from '../../lib/translit.mjs';
+import { animeSearchExtras } from '../../lib/animeSearch.mjs';
 import JsonLd from '../../components/JsonLd.astro';
 import SocialStrip from '../../components/SocialStrip.astro';
 import SupportStrip from '../../components/SupportStrip.astro';
@@ -149,15 +149,13 @@ const searchMeta = [
 //    Shikimori других не отдаёт. Без этой строки «гибли» не находил ни одного
 //    из трёх тайтлов Ghibli.
 //
-// Правило одно на два поиска и живёт в одном месте (src/lib/translit.mjs),
-// второй копии нет. Строка НЕ ПОКАЗЫВАЕТСЯ читателю и только ДОБАВЛЯЕТ
-// совпадения: оригинал остаётся в тексте страницы как есть. Показать её
-// нельзя — «Sousou no Frieren» превращается в «соусоу но фрирен», а человек
-// пишет «Фрирен».
-const latinSource = [titleOriginal, studio].filter(Boolean).join(' ');
-const searchExtras = [...(entry.data.aliases ?? []), ...(latinSource ? latinSearchForms(latinSource) : [])]
-	.filter(Boolean)
-	.join(' ');
+// Правило «по каким словам тайтл находится» живёт в src/lib/animeSearch.mjs,
+// второй копии нет: с 11 августа 2026 те же слова нужны странице материала
+// и записи внешней статьи в индексе. Строка НЕ ПОКАЗЫВАЕТСЯ читателю
+// и только ДОБАВЛЯЕТ совпадения: оригинал остаётся в тексте страницы как есть.
+// Показать её нельзя — «Sousou no Frieren» превращается в «соусоу но фрирен»,
+// а человек пишет «Фрирен».
+const searchExtras = animeSearchExtras(entry.data);
 
 const crumbs = breadcrumbsSchema([
 	{ name: 'Каталог аниме', path: '/anime/' },
