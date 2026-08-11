@@ -374,5 +374,31 @@
 			"Дрейфующий дом"
 		],
 		"at": "2026-08-11T12:01:10.710Z"
+	},
+	{
+		"id": "cand:30276",
+		"what": "create",
+		"sourceId": 30276,
+		"source": "shikimori",
+		"slug": "one-punch-man",
+		"title": "Ванпанчмен",
+		"phrases": [
+			"Ванпанчмена",
+			"Ванпанчмен",
+			"Ванпанчменом"
+		],
+		"at": "2026-08-11T12:01:24.162Z"
+	},
+	{
+		"id": "cand:50416",
+		"what": "create",
+		"sourceId": 50416,
+		"source": "shikimori",
+		"slug": "skip-to-loafer",
+		"title": "Долой безделье!",
+		"phrases": [
+			"Долой безделье!"
+		],
+		"at": "2026-08-11T12:01:25.061Z"
 	}
 ]
