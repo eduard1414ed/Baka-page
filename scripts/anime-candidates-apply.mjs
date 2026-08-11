@@ -37,6 +37,7 @@ import {
 	writeAnimeEntry,
 	borrowPoster,
 	sleep,
+	сПовторами,
 	ANIME_CONTENT_DIR,
 	SHIKIMORI_PAUSE_MS,
 } from './anime-lib.mjs';
@@ -178,7 +179,15 @@ export async function main() {
 				// на котором мы им пользуемся (одно число на проект, хвост 56).
 				if (wentToNetwork) await sleep(SHIKIMORI_PAUSE_MS);
 				wentToNetwork = true;
-				const done = await createAnime(item);
+				// Одна моргнувшая сеть не имеет права стоить заказчику тайтла:
+					// 11 августа `fetch failed` убил «Человека-бензопилу» из четырёх
+					// заведённых, и весь поход кончился красной строчкой на экране.
+					// Паузы короче, чем у сбора кандидатов: тайтлов тут единицы,
+					// а человек ждёт у экрана.
+					const done = await сПовторами(() => createAnime(item), {
+						паузы: [3000, 9000, 27000],
+						назвать: item.title ?? item.slug,
+					});
 				item.result = done.skipped ? done.why : `заведён: src/content/anime/${item.slug}.json`;
 				if (!done.skipped) created.push({ slug: item.slug, title: done.entry.titleRu ?? done.entry.titleOriginal });
 			} else {

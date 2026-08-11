@@ -26,6 +26,7 @@ import { buildAnimeMatcher, collectQuotedPhrases } from '../src/lib/animeMention
 import { freeSlug, slugify } from '../src/lib/animeSlug.mjs';
 import { readPostsPlain, readTranscriptsPlain } from './posts-plain.mjs';
 import { initMorph, readAnimeCollection, inflectTitle } from './anime-cases-lib.mjs';
+import { сПовторами, похоженаСбойСети } from './anime-lib.mjs';
 import {
 	appendCache,
 	bestMatch,
@@ -420,6 +421,78 @@ check(
 await rm(candDir, { recursive: true, force: true });
 
 await rm(dir, { recursive: true, force: true });
+
+// ─── 10. Повтор при сбое сети ───────────────────────────────────────────────
+//
+// 11 августа 2026 один `fetch failed` убил заведение «Человека-бензопилы»:
+// три тайтла завелись, четвёртый нет, и поход заказчика кончился красной
+// строчкой из-за одной моргнувшей сети. Повтор живёт в `anime-lib.mjs` и
+// используется в двух местах — сбором кандидатов и применением решений.
+//
+// Спрашивать его надо на ПОДЛОЖЕННЫХ ошибках: на живых данных сеть подводит
+// раз в сутки, и «пусто» тут не значило бы ничего.
+console.log('\n=== ПОВТОР ПРИ СБОЕ СЕТИ ===\n');
+
+const мигом = { паузы: [1, 1, 1], назвать: 'подлог', сказать: () => {} };
+
+let заходов = 0;
+const сетевая = () => {
+	заходов++;
+	if (заходов < 3) throw Object.assign(new Error('fetch failed'), { cause: new Error('ECONNRESET') });
+	return 'получилось';
+};
+// Ловим сами: выключенный повтор бросит наружу, а тогда остальные случаи
+// этого раздела не спросятся вовсе — проверка обязана досказать до конца.
+let вышло = null;
+try {
+	вышло = await сПовторами(сетевая, мигом);
+} catch (error) {
+	вышло = `УПАЛО: ${error.message}`;
+}
+check(
+	'сетевой сбой переживается — со второго-третьего захода',
+	вышло === 'получилось' && заходов === 3,
+	`заходов ${заходов}, вышло: ${вышло}`,
+);
+
+заходов = 0;
+let ругнулось = null;
+try {
+	await сПовторами(() => {
+		заходов++;
+		throw new Error('тайтла с номером 999 в Shikimori нет (мог быть удалён)');
+	}, мигом);
+} catch (error) {
+	ругнулось = error.message;
+}
+check(
+	'НЕсетевая ошибка повтором не лечится и падает сразу',
+	заходов === 1 && ругнулось?.includes('999'),
+	`заходов ${заходов} (ждали 1), сказано: ${ругнулось}`,
+);
+
+заходов = 0;
+ругнулось = null;
+try {
+	await сПовторами(() => {
+		заходов++;
+		throw new Error('Connect Timeout Error');
+	}, мигом);
+} catch (error) {
+	ругнулось = error.message;
+}
+check(
+	'сеть, отвалившаяся совсем, кричит после всех попыток',
+	заходов === 4 && ругнулось === 'Connect Timeout Error',
+	`заходов ${заходов} (ждали 4: первый плюс три повтора)`,
+);
+
+check('«fetch failed» опознаётся сетевым', похоженаСбойСети(new Error('fetch failed')));
+check('«502 Bad Gateway» опознаётся сетевым', похоженаСбойСети(new Error('502 Bad Gateway')));
+check(
+	'«тайтла нет» сетевым НЕ опознаётся — иначе повтор ждал бы зря',
+	!похоженаСбойСети(new Error('тайтла с номером 1 нет')),
+);
 
 console.log(
 	failed === 0

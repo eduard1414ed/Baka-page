@@ -462,6 +462,45 @@ async function main() {
 		);
 	}
 
+	{
+		// ПАДЕНИЕ ПОХОДА НЕ ЗНАЧИТ «НЕ СДЕЛАНО НИЧЕГО». 11 августа вечером робот
+		// применил четыре решения из пяти и упал на пятом от `fetch failed`;
+		// экран сказал одно слово «сбоем», и это читалось как «пропало всё».
+		const server = makeServer({ putLatency: 100 });
+		const screen = await loadScreen(server);
+		await screen.press('cand:34443', 'stop');
+		await press(screen.el.apply);
+		await sleep(1500);
+
+		// Робот отработал: четыре записаны, пятое не вышло от сети.
+		server.decisions =
+			JSON.stringify(
+				[
+					{ id: 'cand:34443', what: 'stop', applied: '2026-08-11T10:20:00Z' },
+					{ id: 'cand:57334', what: 'create', title: 'Дандадан', applied: '2026-08-11T10:20:10Z' },
+					{ id: 'cand:44511', what: 'create', title: 'Человек-бензопила', error: 'fetch failed' },
+				],
+				null,
+				'\t',
+			) + '\n';
+		server.sha = 'sha-от-робота';
+		if (server.lastRun) {
+			server.lastRun.status = 'completed';
+			server.lastRun.conclusion = 'failure';
+		}
+		await sleep(9000);
+
+		const строчка = String(screen.el.applyStatus.innerHTML ?? '');
+		say(
+			'у сбоя названо, ЧТО именно не вышло и что остальное записано',
+			строчка.includes('Не вышло 1 решение') &&
+				строчка.includes('Человек-бензопила') &&
+				строчка.includes('fetch failed') &&
+				строчка.includes('Остальные применены'),
+			`строчка: «${строчка.replace(/<[^>]+>/g, '').slice(0, 190)}»`,
+		);
+	}
+
 	const bad = cases.filter((item) => !item.ok).length;
 	console.log(bad === 0 ? `\nВсе ${cases.length} проверок прошли.` : `\nНЕ ПРОШЛО: ${bad} из ${cases.length}.`);
 	return bad;

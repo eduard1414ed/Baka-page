@@ -47,7 +47,7 @@ import { freeSlug } from '../src/lib/animeSlug.mjs';
 import { computeAliasesAuto, readAnimeCollection } from './anime-cases-lib.mjs';
 import { readPostsPlain, readTranscriptsPlain } from './posts-plain.mjs';
 // Пауза между запросами к Shikimori — ОДНО ЧИСЛО НА ВЕСЬ ПРОЕКТ (хвост 56).
-import { sleep, SHIKIMORI_PAUSE_MS as PAUSE_MS } from './anime-lib.mjs';
+import { sleep, сПовторами, SHIKIMORI_PAUSE_MS as PAUSE_MS } from './anime-lib.mjs';
 import * as shikimori from './anime-sources/shikimori.mjs';
 import {
 	CANDIDATES_PATH,
@@ -252,6 +252,8 @@ export async function main() {
 	// «Connect Timeout Error» — и выглядел при этом УДАЧНЫМ, потому что упал
 	// node, а оболочка честно напечатала «код возврата 0». Смотреть надо на код
 	// возврата, а не на хвост вывода (CLAUDE.md, «Уроки проекта»).
+	// Сам повтор живёт в `anime-lib.mjs` (`сПовторами`) — там же, откуда его
+	// берёт применение решений: вторая копия разошлась бы молча.
 	const RETRY_PAUSES = [5000, 15000, 45000];
 	// А вот если сеть отвалилась СОВСЕМ, прогон обязан кричать, а не досчитать
 	// до конца с пустыми ответами: пустота от «Shikimori не знает такого тайтла»
@@ -265,32 +267,29 @@ export async function main() {
 		if (cache.has(query)) return cache.get(query);
 		if (noAsk) return null;
 
-		for (let attempt = 0; ; attempt++) {
-			try {
-				const results = await shikimori.search(query, SEARCH_LIMIT);
-				// НА ДИСК СРАЗУ, до любых следующих шагов: прогон идёт больше часа
-				// и прерваться может чем угодно.
-				await appendCache(query, results);
-				cache.set(query, results);
-				failedInRow = 0;
-				askedNow++;
-				await sleep(PAUSE_MS);
-				return results;
-			} catch (error) {
-				if (attempt < RETRY_PAUSES.length) {
-					process.stdout.write(`\n  сеть подвела на «${query}» (${error.message}); жду ${RETRY_PAUSES[attempt] / 1000} с\n`);
-					await sleep(RETRY_PAUSES[attempt]);
-					continue;
-				}
-				failedInRow++;
-				if (failedInRow >= MAX_FAILED_IN_ROW) {
-					throw new Error(
-						`Shikimori не отвечает ${failedInRow} раз подряд — прогон остановлен. ` +
-							`Спрошенное лежит в кэше, запустите заново, когда сеть вернётся.`,
-					);
-				}
-				return null;
+		try {
+			const results = await сПовторами(() => shikimori.search(query, SEARCH_LIMIT), {
+				паузы: RETRY_PAUSES,
+				назвать: query,
+				сказать: (text) => process.stdout.write(`\n${text}\n`),
+			});
+			// НА ДИСК СРАЗУ, до любых следующих шагов: прогон идёт больше часа
+			// и прерваться может чем угодно.
+			await appendCache(query, results);
+			cache.set(query, results);
+			failedInRow = 0;
+			askedNow++;
+			await sleep(PAUSE_MS);
+			return results;
+		} catch (error) {
+			failedInRow++;
+			if (failedInRow >= MAX_FAILED_IN_ROW) {
+				throw new Error(
+					`Shikimori не отвечает ${failedInRow} раз подряд — прогон остановлен. ` +
+						`Спрошенное лежит в кэше, запустите заново, когда сеть вернётся.`,
+				);
 			}
+			return null;
 		}
 	};
 
