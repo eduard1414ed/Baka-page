@@ -2219,5 +2219,41 @@
 			"Аякаси"
 		],
 		"at": "2026-08-11T15:03:02.586Z"
+	},
+	{
+		"id": "cand:7674",
+		"what": "create",
+		"sourceId": 7674,
+		"source": "shikimori",
+		"slug": "bakuman",
+		"title": "Бакуман",
+		"phrases": [
+			"Бакуман"
+		],
+		"at": "2026-08-11T15:03:04.286Z"
+	},
+	{
+		"id": "cand:33",
+		"what": "create",
+		"sourceId": 33,
+		"source": "shikimori",
+		"slug": "kenpuu-denki-berserk",
+		"title": "Берсерк",
+		"phrases": [
+			"Берсерк"
+		],
+		"at": "2026-08-11T15:03:05.486Z"
+	},
+	{
+		"id": "cand:59845",
+		"what": "create",
+		"sourceId": 59845,
+		"source": "shikimori",
+		"slug": "kaoru-hana-wa-rin-to-saku",
+		"title": "Благоухающий цветок расцветает с достоинством",
+		"phrases": [
+			"Благоухающий цветок расцветает с достоинством"
+		],
+		"at": "2026-08-11T15:03:06.320Z"
 	}
 ]
