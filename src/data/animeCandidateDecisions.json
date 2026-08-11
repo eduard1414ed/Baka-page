@@ -348,5 +348,31 @@
 			"Форму голоса"
 		],
 		"at": "2026-08-11T12:01:01.343Z"
+	},
+	{
+		"id": "cand:54900",
+		"what": "create",
+		"sourceId": 54900,
+		"source": "shikimori",
+		"slug": "wind-breaker",
+		"title": "Ветролом",
+		"phrases": [
+			"Ветролом",
+			"Ветролома",
+			"Ветроломе"
+		],
+		"at": "2026-08-11T12:01:09.629Z"
+	},
+	{
+		"id": "cand:49938",
+		"what": "create",
+		"sourceId": 49938,
+		"source": "shikimori",
+		"slug": "ame-wo-tsugeru-hyouryuu-danchi",
+		"title": "Дрейфующий дом",
+		"phrases": [
+			"Дрейфующий дом"
+		],
+		"at": "2026-08-11T12:01:10.710Z"
 	}
 ]
