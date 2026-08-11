@@ -5501,5 +5501,14 @@
 			"Почему"
 		],
 		"at": "2026-08-11T19:39:03.544Z"
+	},
+	{
+		"id": "ph:Алхимика",
+		"what": "alias",
+		"animeId": "fullmetal-alchemist-brotherhood",
+		"phrases": [
+			"Алхимика"
+		],
+		"at": "2026-08-11T19:39:27.310Z"
 	}
 ]
