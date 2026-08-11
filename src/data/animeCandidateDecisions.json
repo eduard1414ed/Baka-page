@@ -2279,5 +2279,29 @@
 			"Вампир не умеет правильно сосать"
 		],
 		"at": "2026-08-11T15:03:09.486Z"
+	},
+	{
+		"id": "cand:182",
+		"what": "create",
+		"sourceId": 182,
+		"source": "shikimori",
+		"slug": "tenkuu-no-escaflowne",
+		"title": "Видение Эскафлона",
+		"phrases": [
+			"Видение Эскафлона"
+		],
+		"at": "2026-08-11T15:03:11.386Z"
+	},
+	{
+		"id": "cand:7592",
+		"what": "create",
+		"sourceId": 7592,
+		"source": "shikimori",
+		"slug": "nurarihyon-no-mago",
+		"title": "Внук Нурарихёна",
+		"phrases": [
+			"Внук Нурарихёна"
+		],
+		"at": "2026-08-11T15:03:12.237Z"
 	}
 ]
