@@ -2183,5 +2183,29 @@
 			"Шрек"
 		],
 		"at": "2026-08-11T15:02:10.856Z"
+	},
+	{
+		"id": "cand:44074",
+		"what": "create",
+		"sourceId": 44074,
+		"source": "shikimori",
+		"slug": "shiguang-dailiren",
+		"title": "Агент времени",
+		"phrases": [
+			"Агент времени"
+		],
+		"at": "2026-08-11T15:02:59.686Z"
+	},
+	{
+		"id": "cand:45653",
+		"what": "create",
+		"sourceId": 45653,
+		"source": "shikimori",
+		"slug": "soredemo-ayumu-wa-yosetekuru",
+		"title": "Аюму всё равно станет ближе",
+		"phrases": [
+			"Аюму всё равно станет ближе"
+		],
+		"at": "2026-08-11T15:03:00.836Z"
 	}
 ]
