@@ -185,15 +185,48 @@ export async function main() {
 
 	// ─── 3. Вопросы Shikimori ────────────────────────────────────────────────
 
+	// СЕТЬ ПОДВОДИТ, И ОДИН ТАЙМАУТ НЕ ИМЕЕТ ПРАВА УБИВАТЬ ЧАСОВОЙ ПРОГОН.
+	// Наступили 11 августа 2026: прогон упал на 450-й фразе из 1980 с
+	// «Connect Timeout Error» — и выглядел при этом УДАЧНЫМ, потому что упал
+	// node, а оболочка честно напечатала «код возврата 0». Смотреть надо на код
+	// возврата, а не на хвост вывода (CLAUDE.md, «Уроки проекта»).
+	const RETRY_PAUSES = [5000, 15000, 45000];
+	// А вот если сеть отвалилась СОВСЕМ, прогон обязан кричать, а не досчитать
+	// до конца с пустыми ответами: пустота от «Shikimori не знает такого тайтла»
+	// в отчёте неотличима от пустоты «интернет кончился».
+	const MAX_FAILED_IN_ROW = 20;
+	let failedInRow = 0;
+
+	/** @returns {Promise<object[]|null>} null — «не спросилось», не путать с [] «спрошено, пусто» */
 	const ask = async (query) => {
 		if (cache.has(query)) return cache.get(query);
-		const results = await shikimori.search(query, SEARCH_LIMIT);
-		// НА ДИСК СРАЗУ, до любых следующих шагов: прогон идёт больше часа
-		// и прерваться может чем угодно.
-		await appendCache(query, results);
-		cache.set(query, results);
-		await sleep(PAUSE_MS);
-		return results;
+
+		for (let attempt = 0; ; attempt++) {
+			try {
+				const results = await shikimori.search(query, SEARCH_LIMIT);
+				// НА ДИСК СРАЗУ, до любых следующих шагов: прогон идёт больше часа
+				// и прерваться может чем угодно.
+				await appendCache(query, results);
+				cache.set(query, results);
+				failedInRow = 0;
+				await sleep(PAUSE_MS);
+				return results;
+			} catch (error) {
+				if (attempt < RETRY_PAUSES.length) {
+					process.stdout.write(`\n  сеть подвела на «${query}» (${error.message}); жду ${RETRY_PAUSES[attempt] / 1000} с\n`);
+					await sleep(RETRY_PAUSES[attempt]);
+					continue;
+				}
+				failedInRow++;
+				if (failedInRow >= MAX_FAILED_IN_ROW) {
+					throw new Error(
+						`Shikimori не отвечает ${failedInRow} раз подряд — прогон остановлен. ` +
+							`Спрошенное лежит в кэше, запустите заново, когда сеть вернётся.`,
+					);
+				}
+				return null;
+			}
+		}
 	};
 
 	const work = limit > 0 ? toAsk.slice(0, limit) : toAsk;
@@ -202,12 +235,26 @@ export async function main() {
 
 	const started = Date.now();
 	const candidates = [];
-	let notFound = 0;
-	let notSimilar = 0;
+	// Фразы, отсеянные ПОСЛЕ вопроса Shikimori. Складываются целиком, а не
+	// считаются числом: «не выбрасывай молча» — всё, что отсеялось не справочником
+	// и не стоп-листом, обязано лежать в отчёте списком, иначе пересчитать его
+	// потом будет нечем.
+	const silent = new Map([
+		[WHY.NOT_FOUND, []],
+		[WHY.NOT_SIMILAR, []],
+	]);
 	let askedSecond = 0;
 
 	for (const [i, item] of work.entries()) {
 		let results = await ask(item.sample);
+
+		// null — не спросилось вовсе (сеть). Это НЕ «не нашлось»: фраза уходит
+		// в свой список и будет спрошена при следующем запуске.
+		if (results === null) {
+			silent.get(WHY.NETWORK).push(item);
+			continue;
+		}
+
 		let match = bestMatch(item.sample, results);
 
 		// ВТОРАЯ ПОПЫТКА — ТОЛЬКО КОГДА НЕ НАШЛОСЬ РОВНО НИЧЕГО. Shikimori
@@ -219,14 +266,17 @@ export async function main() {
 			const guess = nominativeGuess(item.sample);
 			if (guess && guess !== item.sample) {
 				askedSecond++;
-				results = await ask(guess);
-				match = bestMatch(item.sample, results) ?? bestMatch(guess, results);
+				const second = await ask(guess);
+				if (second !== null) {
+					results = second;
+					match = bestMatch(item.sample, results) ?? bestMatch(guess, results);
+				}
 			}
 		}
 
 		if (match) candidates.push({ ...item, match });
-		else if (results.length === 0) notFound++;
-		else notSimilar++;
+		else if (results.length === 0) silent.get(WHY.NOT_FOUND).push(item);
+		else silent.get(WHY.NOT_SIMILAR).push({ ...item, results });
 
 		if ((i + 1) % 25 === 0 || i === work.length - 1) {
 			const per = (Date.now() - started) / (i + 1);
@@ -310,8 +360,8 @@ export async function main() {
 	log();
 	log('=== ЧЕМ КОНЧИЛИСЬ ВОПРОСЫ ===');
 	log(`  ${String(work.length).padStart(5)}  фраз спрошено`);
-	log(`  ${String(notFound).padStart(5)}  ${WHY.NOT_FOUND} (и вторая попытка тоже)`);
-	log(`  ${String(notSimilar).padStart(5)}  ${WHY.NOT_SIMILAR} — ответ есть, но название не сходится`);
+	log(`  ${String(silent.get(WHY.NOT_FOUND).length).padStart(5)}  ${WHY.NOT_FOUND} (и вторая попытка тоже)`);
+	log(`  ${String(silent.get(WHY.NOT_SIMILAR).length).padStart(5)}  ${WHY.NOT_SIMILAR} — ответ есть, но название не сходится`);
 	log(`  ${String(alreadyKnown.length).padStart(5)}  ведут на тайтл, который в справочнике УЖЕ ЕСТЬ (написание, которого нет в его вариантах)`);
 	log(`  ${String(askedSecond).padStart(5)}  фраз пришлось переспросить именительным падежом`);
 	log();
@@ -324,7 +374,8 @@ export async function main() {
 		log(header);
 		for (const row of rows) {
 			log(
-				`  ${String(row.posts.size).padStart(4)} ${plural(row.posts.size, 'пост ', 'поста', 'постов')}  ` +
+				`  ${String(row.posts.size).padStart(4)} ${plural(row.posts.size, 'пост ', 'поста', 'постов')}, ` +
+					`${row.count} ${plural(row.count, 'упоминание', 'упоминания', 'упоминаний')}  ` +
 					`«${row.phrases[0]}»${row.phrases.length > 1 ? ` (и ещё ${row.phrases.length - 1} написание)` : ''}`,
 			);
 			log(
@@ -362,6 +413,20 @@ export async function main() {
 	for (const { sourceId, group } of alreadyKnown) {
 		const id = idBySourceId.get(sourceId);
 		put(`  ${titleById.get(id) ?? id}: ${group.map((g) => `«${g.sample}»`).join(' ')}`);
+	}
+
+	// ОТСЕЯННОЕ ПОСЛЕ ВОПРОСА — СПИСКАМИ, А НЕ ЧИСЛОМ. Тут прячется единственный
+	// способ найти пропущенный тайтл: если Shikimori чего-то не нашёл или ответил
+	// непохожим, это может быть и настоящее аниме с другим русским названием.
+	put('', `=== СПРОШЕНО, НО ${WHY.NOT_FOUND.toUpperCase()}: ${silent.get(WHY.NOT_FOUND).length} ===`);
+	for (const rec of [...silent.get(WHY.NOT_FOUND)].sort((a, b) => b.posts.size - a.posts.size)) {
+		put(`  ${String(rec.posts.size).padStart(4)}  «${rec.sample}»   ${rec.where.join(', ')}`);
+	}
+
+	put('', `=== СПРОШЕНО, ОТВЕТ ЕСТЬ, НО НАЗВАНИЕ НЕ СХОДИТСЯ: ${silent.get(WHY.NOT_SIMILAR).length} ===`);
+	put('Рядом — что именно ответил Shikimori: так видно, не отвергли ли мы верное.');
+	for (const rec of [...silent.get(WHY.NOT_SIMILAR)].sort((a, b) => b.posts.size - a.posts.size)) {
+		put(`  ${String(rec.posts.size).padStart(4)}  «${rec.sample}»  →  ${rec.results.slice(0, 3).map((r) => r.titleRu ?? r.titleOriginal).join(' / ')}`);
 	}
 
 	for (const why of [WHY.IN_CATALOG, WHY.STOPLIST, WHY.NO_LETTERS]) {

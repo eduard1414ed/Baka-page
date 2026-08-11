@@ -70,6 +70,7 @@ export const WHY = {
 	STOPLIST: 'в стоп-листе',
 	NOT_FOUND: 'Shikimori не нашёл ничего',
 	NOT_SIMILAR: 'Shikimori нашёл, но не похоже',
+	NETWORK: 'не спросилось: сеть подвела',
 };
 
 // Единственный отсев ДО Shikimori, кроме справочника и стоп-листа: во фразе
