@@ -11975,5 +11975,30 @@
 			"MONSTER | Full Story, Analysis, and Review Monster: Ending Explained A Guide to Manga"
 		],
 		"at": "2026-08-11T20:43:04.988Z"
+	},
+	{
+		"id": "ph:Heavenly Delusion",
+		"what": "alias",
+		"animeId": "tengoku-daimakyou",
+		"phrases": [
+			"Heavenly Delusion"
+		],
+		"at": "2026-08-11T20:43:34.972Z"
+	},
+	{
+		"id": "ph:Coming at you",
+		"what": "stop",
+		"phrases": [
+			"Coming at you"
+		],
+		"at": "2026-08-11T20:43:36.088Z"
+	},
+	{
+		"id": "ph:c южнокорейской студией",
+		"what": "stop",
+		"phrases": [
+			"c южнокорейской студией"
+		],
+		"at": "2026-08-11T20:43:36.954Z"
 	}
 ]
