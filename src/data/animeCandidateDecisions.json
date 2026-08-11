@@ -622,5 +622,32 @@
 		"at": "2026-08-11T12:04:53.096Z",
 		"result": "заведён: src/content/anime/girls-band-cry.json",
 		"applied": "2026-08-11T12:05:43.837Z"
+	},
+	{
+		"id": "cand:4081",
+		"what": "create",
+		"sourceId": 4081,
+		"source": "shikimori",
+		"slug": "natsume-yuujinchou",
+		"title": "Тетрадь дружбы Нацумэ",
+		"phrases": [
+			"Тетрадь дружбы Нацумэ",
+			"Тетради дружбы Нацумэ"
+		],
+		"at": "2026-08-11T12:09:40.630Z"
+	},
+	{
+		"id": "cand:53393",
+		"what": "create",
+		"sourceId": 53393,
+		"source": "shikimori",
+		"slug": "tengoku-daimakyou",
+		"title": "Иллюзия рая",
+		"phrases": [
+			"Иллюзия рая",
+			"Иллюзии рая",
+			"Иллюзию рая"
+		],
+		"at": "2026-08-11T12:09:41.713Z"
 	}
 ]
