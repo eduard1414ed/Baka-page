@@ -125,5 +125,32 @@
 		"at": "2026-08-11T10:37:07.964Z",
 		"result": "заведён: src/content/anime/shaman-king.json",
 		"applied": "2026-08-11T10:59:51.663Z"
+	},
+	{
+		"id": "cand:1535",
+		"what": "create",
+		"sourceId": 1535,
+		"source": "shikimori",
+		"slug": "death-note",
+		"title": "Тетрадь смерти",
+		"phrases": [
+			"Тетради смерти",
+			"Тетрадь смерти",
+			"Тетрадью смерти"
+		],
+		"at": "2026-08-11T11:33:36.037Z"
+	},
+	{
+		"id": "cand:269",
+		"what": "create",
+		"sourceId": 269,
+		"source": "shikimori",
+		"slug": "bleach",
+		"title": "Блич",
+		"phrases": [
+			"Блич",
+			"Блича"
+		],
+		"at": "2026-08-11T11:33:37.033Z"
 	}
 ]
