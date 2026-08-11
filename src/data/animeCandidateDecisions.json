@@ -2700,5 +2700,17 @@
 		"at": "2026-08-11T15:19:48.872Z",
 		"result": "заведён: src/content/anime/konbini-kareshi.json",
 		"applied": "2026-08-11T15:21:18.618Z"
+	},
+	{
+		"id": "cand:38671",
+		"what": "create",
+		"sourceId": 38671,
+		"source": "shikimori",
+		"slug": "enen-no-shouboutai",
+		"title": "Пламенная бригада пожарных",
+		"phrases": [
+			"Пламенной бригады пожарных"
+		],
+		"at": "2026-08-11T15:22:31.839Z"
 	}
 ]
