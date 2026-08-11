@@ -3,381 +3,34 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Робот — Бака!</title>
+		<title>Роботы — Бака!</title>
 		<meta name="robots" content="noindex, nofollow" />
+		<link rel="stylesheet" href="/admin/tools/tools.css" />
 
 		<!--
-			СЛУЖЕБНАЯ СТРАНИЦА РЯДОМ С АДМИНКОЙ: запустить ежедневного робота
-			руками, не дожидаясь шести утра, и посмотреть, чем кончился прошлый
-			его поход.
+			СЛУЖЕБНАЯ СТРАНИЦА РЯДОМ С АДМИНКОЙ: позвать роботов руками
+			и посмотреть, чем кончился прошлый их поход.
 
 			ПОЧЕМУ ОТДЕЛЬНАЯ СТРАНИЦА, А НЕ КНОПКА ВНУТРИ SVELTIA. Свои
 			компоненты CMS в этом проекте дважды ломали данные (галерея, список
 			тайтлов) и один раз — вставку текста из буфера. Кнопка ничего
 			не редактирует, значит внутри редактора ей делать нечего.
 
-			ПОЧЕМУ ЗДЕСЬ НЕТ НИ ОДНОГО ПАРОЛЯ И НИ ОДНОГО КЛЮЧА. Право нажатия
-			проверяет сам GitHub: страница просит у него токен ровно тем же
-			путём, каким это делает админка (воркер baki-cms-auth), и дальше
-			просто передаёт его в запрос. У кого нет права писать в репозиторий,
-			тот получит от GitHub отказ — что бы он ни открыл в браузере.
-			Распознавание звука стоит денег, поэтому открытой кнопка быть
-			не может.
+			ПОЧЕМУ РАЗБОР КАНДИДАТОВ ЖИВЁТ НА СВОЕЙ ПОДСТРАНИЦЕ. Список там
+			из 1816 строк, и на общей странице он утопил бы собой всё, что
+			стоит ниже, — «Последние походы» и письма робота. Замечено
+			заказчиком в первый же день. Общее у страниц вынесено в файлы
+			`tools.css` и `github.js`; второй копии входа и вида нет.
+
+			ПОЧЕМУ ЗДЕСЬ НЕТ НИ ОДНОГО ПАРОЛЯ И НИ ОДНОГО КЛЮЧА — см. шапку
+			`github.js`: право нажатия проверяет сам GitHub.
 		-->
-
-		<style>
-			/* Шрифты те же, что у сайта. Файлы лежат в public/fonts/ и отдаются
-			   по прямому адресу — эта страница живёт вне сборки Astro, поэтому
-			   объявлены здесь, а не взяты из общего файла стилей. */
-			@font-face {
-				font-family: 'Inter';
-				src: url('/fonts/Inter-Variable.woff2') format('woff2-variations');
-				font-weight: 100 900;
-				font-display: swap;
-			}
-			@font-face {
-				font-family: 'IBM Plex Mono';
-				src: url('/fonts/IBMPlexMono-Regular.woff2') format('woff2');
-				font-weight: 400;
-				font-display: swap;
-			}
-			@font-face {
-				font-family: 'IBM Plex Mono';
-				src: url('/fonts/IBMPlexMono-SemiBold.woff2') format('woff2');
-				font-weight: 600;
-				font-display: swap;
-			}
-
-			/* Значения — из src/styles/tokens.css. Скопированы, а не взяты
-			   ссылкой, по той же причине: страница вне сборки. Меняете палитру
-			   на сайте — поправьте и здесь. */
-			:root {
-				--paper: #f8f6f0;
-				--ink: #151515;
-				--line: #cbc6bc;
-				--line-soft: #dfdbd2;
-				--line-strong: #8f8a82;
-				--accent-text: #a64e65;
-				--muted: #6b6660;
-				--font-body: 'Inter', Arial, Helvetica, sans-serif;
-				--font-tech: 'IBM Plex Mono', Menlo, Consolas, ui-monospace, monospace;
-			}
-
-			* {
-				box-sizing: border-box;
-			}
-
-			body {
-				margin: 0;
-				padding: 40px 24px 80px;
-				background: var(--paper);
-				color: var(--ink);
-				font-family: var(--font-body);
-				font-size: 16px;
-				line-height: 1.5;
-			}
-
-			.page {
-				max-width: 720px;
-				margin-inline: auto;
-			}
-
-			/* Технический слой: моноширинный, капслок, разрядка — как надзаголовки
-			   разделов на сайте. Полужирный, потому что это надзаголовок секции,
-			   а не метастрока. */
-			.kicker {
-				font-family: var(--font-tech);
-				font-size: 12px;
-				font-weight: 600;
-				letter-spacing: 0.12em;
-				text-transform: uppercase;
-				color: var(--muted);
-				margin: 0 0 8px;
-			}
-
-			h1 {
-				font-size: 28px;
-				line-height: 1.2;
-				margin: 0 0 8px;
-			}
-
-			.lead {
-				color: var(--muted);
-				margin: 0 0 32px;
-			}
-
-			section {
-				border-top: 1px solid var(--line);
-				padding-top: 16px;
-				margin-top: 32px;
-			}
-
-			h2 {
-				font-size: 18px;
-				margin: 0 0 12px;
-			}
-
-			/* Кнопка: рамка в пиксель, никаких плашек и теней. */
-			button {
-				font-family: var(--font-tech);
-				font-size: 13px;
-				font-weight: 600;
-				letter-spacing: 0.08em;
-				text-transform: uppercase;
-				color: var(--ink);
-				background: transparent;
-				border: 1px solid var(--line-strong);
-				border-radius: 0;
-				padding: 12px 20px;
-				cursor: pointer;
-				min-height: 44px;
-			}
-
-			button:hover:not(:disabled) {
-				border-color: var(--ink);
-			}
-
-			button:disabled {
-				color: var(--muted);
-				border-color: var(--line);
-				cursor: default;
-			}
-
-			button.secondary {
-				font-weight: 400;
-				padding: 8px 14px;
-				min-height: 36px;
-			}
-
-			.row {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 12px;
-				align-items: baseline;
-			}
-
-			.tech {
-				font-family: var(--font-tech);
-				font-size: 13px;
-				color: var(--muted);
-			}
-
-			.status {
-				margin-top: 16px;
-				font-size: 15px;
-			}
-
-			.status strong {
-				font-weight: 600;
-			}
-
-			.bad {
-				color: var(--accent-text);
-			}
-
-			/* Список запусков: строки, разделённые линиями. Таблицы не заводим —
-			   на телефоне она разъедется. */
-			ul.list {
-				list-style: none;
-				margin: 0;
-				padding: 0;
-			}
-
-			ul.list li {
-				border-top: 1px solid var(--line-soft);
-				padding: 10px 0;
-				display: flex;
-				flex-wrap: wrap;
-				gap: 4px 12px;
-				align-items: baseline;
-			}
-
-			ul.list li:first-child {
-				border-top: 0;
-			}
-
-			.when {
-				font-family: var(--font-tech);
-				font-size: 13px;
-				min-width: 130px;
-			}
-
-			.what {
-				flex: 1 1 260px;
-			}
-
-			a {
-				color: var(--accent-text);
-			}
-
-			.hint {
-				color: var(--muted);
-				font-size: 14px;
-				margin-top: 12px;
-			}
-
-			/* ── Экран кандидатов в тайтлы (тз/11, C.5) ─────────────────────── */
-
-			.warn {
-				border: 1px solid var(--accent-text);
-				padding: 12px 16px;
-				margin: 0 0 16px;
-			}
-
-			.counts {
-				font-family: var(--font-tech);
-				font-size: 13px;
-				color: var(--muted);
-				margin: 0 0 16px;
-			}
-
-			.filter {
-				font-family: var(--font-body);
-				font-size: 15px;
-				width: 100%;
-				max-width: 340px;
-				padding: 10px 12px;
-				border: 1px solid var(--line-strong);
-				border-radius: 0;
-				background: transparent;
-				color: var(--ink);
-				margin-bottom: 8px;
-			}
-
-			.filter:focus-visible {
-				outline: none;
-				border-color: var(--accent-text);
-				box-shadow: inset 0 0 0 1px var(--accent-text);
-			}
-
-			h3 {
-				font-family: var(--font-tech);
-				font-size: 12px;
-				font-weight: 600;
-				letter-spacing: 0.12em;
-				text-transform: uppercase;
-				color: var(--muted);
-				margin: 32px 0 4px;
-			}
-
-			.group-note {
-				color: var(--muted);
-				font-size: 14px;
-				margin: 0 0 8px;
-			}
-
-			ul.rows {
-				list-style: none;
-				margin: 0;
-				padding: 0;
-			}
-
-			/* `:not([hidden])` тут обязателен, и это те самые грабли, что сработали
-			   в проекте трижды: атрибут `hidden` весит один селектор, а это
-			   правило — класс плюс два тега, и `display: flex` его перебил бы.
-			   Строки прячет поиск по списку, поэтому без оговорки фильтр
-			   не скрывал бы ничего. `scripts/check-hidden.mjs` этого места
-			   не видит: он ищет `hidden` в РАЗМЕТКЕ и только у элементов
-			   с классом, а тут атрибут ставит скрипт. */
-			ul.rows li:not([hidden]) {
-				border-top: 1px solid var(--line-soft);
-				padding: 12px 0;
-				display: flex;
-				gap: 12px;
-				align-items: flex-start;
-			}
-
-			/* Обложка приходит с Shikimori и грузится, только когда строка
-			   доехала до экрана: строк почти две тысячи, и тащить у чужого
-			   сервиса две тысячи картинок разом было бы невежливо. */
-			.poster {
-				width: 48px;
-				flex: 0 0 48px;
-				aspect-ratio: 0.7;
-				object-fit: cover;
-				background: var(--line-soft);
-			}
-
-			.row-body {
-				flex: 1 1 auto;
-				min-width: 0;
-			}
-
-			.phrase {
-				font-weight: 600;
-			}
-
-			.found,
-			.gain,
-			.where {
-				font-size: 14px;
-				color: var(--muted);
-				margin-top: 2px;
-			}
-
-			.gain {
-				color: var(--ink);
-			}
-
-			.where {
-				font-family: var(--font-tech);
-				font-size: 12px;
-				word-break: break-all;
-			}
-
-			.acts {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 6px;
-				margin-top: 8px;
-				align-items: center;
-			}
-
-			.acts button {
-				font-size: 12px;
-				font-weight: 400;
-				padding: 7px 12px;
-				min-height: 36px;
-			}
-
-			.decided {
-				font-family: var(--font-tech);
-				font-size: 13px;
-			}
-
-			.decided.pending {
-				color: var(--accent-text);
-			}
-
-			select {
-				font-family: var(--font-body);
-				font-size: 14px;
-				padding: 8px 10px;
-				border: 1px solid var(--line-strong);
-				border-radius: 0;
-				background: transparent;
-				color: var(--ink);
-				max-width: 280px;
-			}
-
-			@media (max-width: 620px) {
-				.page {
-					max-width: none;
-				}
-			}
-
-			/* Ни у одного из скрываемых блоков своего display нет, поэтому
-			   спорить этому правилу не с чем и вес поднимать не надо. */
-			[hidden] {
-				display: none;
-			}
-		</style>
 	</head>
 
 	<body>
 		<div class="page">
 			<p class="kicker">[ служебное ]</p>
-			<h1>Робот добора выпусков</h1>
+			<h1>Роботы подкаста</h1>
 			<p class="lead">
 				Раз в сутки в 9:00 по Москве робот сам заглядывает в ленту подкаста, заводит
 				черновики новых выпусков, вырезает персонажей с обложек и расшифровывает звук.
@@ -434,35 +87,18 @@
 			<section id="cand-section" hidden>
 				<h2>Кандидаты в тайтлы</h2>
 				<p>
-					Это названия аниме, которые встречаются в кавычках в ваших постах,
-					но в справочнике их нет. Собраны из всех постов, включая черновики;
-					дальше список пополняется сам при каждом сохранении черновика —
-					примерно через две минуты после того, как вы нажали «Сохранить».
+					Названия аниме, которые встречаются в кавычках в ваших постах,
+					а в справочнике их нет. Разбор — на отдельной странице: список там
+					длинный, и здесь он загородил бы собой всё остальное.
 				</p>
-
-				<p class="warn">
-					<strong>Заводить всё подряд нельзя.</strong> Каждый новый тайтл начинает
-					искаться во ВСЁМ архиве сразу — и в постах, и в расшифровках, — а вместе
-					с настоящими упоминаниями приходят ложные. Рекорд архива уже 79 ссылок
-					на 133 реплики в одном выпуске. Поэтому: <strong>порциями по 10–20</strong>,
-					и между порциями — попросить меня пересобрать сайт и посмотреть, не рябит ли.
-					У каждой строки написано, что она даст: это и есть та цифра, по которой
-					стоит решать.
+				<p class="counts">
+					Сколько их сейчас — написано на самой странице разбора. Числом тут
+					не пишем нарочно: вписанное словами оно разъедется с настоящим
+					в первый же заход робота, и заметить это будет некому.
 				</p>
-
-				<p class="counts" id="cand-counts"></p>
-
 				<div class="row">
-					<button id="apply" disabled>Применить решения</button>
-					<span class="tech" id="apply-note"></span>
+					<button id="to-candidates">Открыть разбор кандидатов</button>
 				</div>
-				<p class="status" id="apply-status"></p>
-
-				<label for="cand-filter" class="tech">Поиск по списку</label><br />
-				<input class="filter" id="cand-filter" type="search" placeholder="часть фразы или названия" />
-				<p class="hint" id="cand-filter-note"></p>
-
-				<div id="cand-groups"></div>
 			</section>
 
 			<section id="last-section" hidden>
@@ -491,26 +127,23 @@
 		</div>
 
 		<script type="module">
-			// ── Куда ходим ──────────────────────────────────────────────────────
-			//
-			// Репозиторий и воркер входа — те же, что у админки
-			// (public/admin/config.yml, поля repo и base_url). МЕНЯЕТЕ ТАМ —
-			// ПОПРАВЬТЕ И ЗДЕСЬ: эта страница живёт вне сборки и config.yml
-			// не читает.
-			const OWNER = 'eduard1414ed';
-			const REPO = 'Baka-page';
+			import {
+				RU,
+				dispatch,
+				fetchIssues,
+				fetchRuns,
+				howLong,
+				isRunning,
+				outcome,
+				setupAuth,
+			} from '/admin/tools/github.js';
+
 			const WORKFLOW = 'sync-episodes.yml';
 			// Пересчёт падежных форм (тз/11, часть A) — свой воркфлоу и своя пара
 			// кнопок. Отдельный, а не общий с добором выпусков, потому что
 			// у добора есть цена в деньгах и отсчёт между нажатиями, а у этого
 			// нет ни того, ни другого.
 			const CASES_WORKFLOW = 'anime-cases.yml';
-			// Кандидаты в тайтлы (тз/11, часть C). Разбор черновиков идёт сам,
-			// по кнопке зовётся только применение решений.
-			const APPLY_WORKFLOW = 'anime-candidates-apply.yml';
-			const CANDIDATES_FILE = 'src/data/animeCandidates.json';
-			const DECISIONS_FILE = 'src/data/animeCandidateDecisions.json';
-			const AUTH_ORIGIN = 'https://baki-cms-auth.eduard1414ed.workers.dev';
 
 			/** Реже этого кнопка не даётся. Каждое нажатие — возможные деньги. */
 			const COOLDOWN_MS = 5 * 60 * 1000;
@@ -520,7 +153,6 @@
 				login: $('login'),
 				who: $('who'),
 				authError: $('auth-error'),
-				authSection: $('auth-section'),
 				runSection: $('run-section'),
 				lastSection: $('last-section'),
 				issuesSection: $('issues-section'),
@@ -537,151 +169,10 @@
 				casesWrite: $('cases-write'),
 				casesStatus: $('cases-status'),
 				candSection: $('cand-section'),
-				candCounts: $('cand-counts'),
-				candGroups: $('cand-groups'),
-				candFilter: $('cand-filter'),
-				candFilterNote: $('cand-filter-note'),
-				apply: $('apply'),
-				applyNote: $('apply-note'),
-				applyStatus: $('apply-status'),
+				toCandidates: $('to-candidates'),
 			};
 
-			// Токен держим в памяти вкладки: закрыли — забылся. В localStorage
-			// не кладём, это ключ от репозитория.
-			let token = sessionStorage.getItem('baka-gh-token') ?? '';
 			let polling = false;
-
-			// ── Разговор с GitHub ───────────────────────────────────────────────
-
-			async function api(path, options = {}) {
-				const response = await fetch(`https://api.github.com${path}`, {
-					...options,
-					headers: {
-						Authorization: `Bearer ${token}`,
-						Accept: 'application/vnd.github+json',
-						'X-GitHub-Api-Version': '2022-11-28',
-						...(options.headers ?? {}),
-					},
-				});
-				return response;
-			}
-
-			// ── Вход ────────────────────────────────────────────────────────────
-			//
-			// Тот же разговор, что ведёт Sveltia с воркером baki-cms-auth:
-			// окошко присылает «authorizing:github», мы отвечаем тем же словом,
-			// и в ответ приходит токен. Разобрано по коду воркера
-			// (cms-auth/src/index.js), а не по документации.
-
-			function login() {
-				const url = `${AUTH_ORIGIN}/auth?provider=github&site_id=${encodeURIComponent(location.hostname)}`;
-				const popup = window.open(url, 'baka-auth', 'width=760,height=720');
-				if (!popup) {
-					fail('Браузер не дал открыть окно входа. Разрешите всплывающие окна для этого сайта.');
-					return;
-				}
-
-				const onMessage = (event) => {
-					if (event.origin !== AUTH_ORIGIN) return;
-
-					if (event.data === 'authorizing:github') {
-						popup.postMessage('authorizing:github', AUTH_ORIGIN);
-						return;
-					}
-
-					const match = /^authorization:github:(success|error):(.*)$/s.exec(String(event.data ?? ''));
-					if (!match) return;
-
-					window.removeEventListener('message', onMessage);
-					let payload = {};
-					try {
-						payload = JSON.parse(match[2]);
-					} catch {
-						fail('GitHub ответил чем-то непонятным. Попробуйте ещё раз.');
-						return;
-					}
-
-					if (match[1] === 'error' || !payload.token) {
-						fail(`GitHub не пустил: ${payload.error ?? 'неизвестно почему'}`);
-						return;
-					}
-
-					token = payload.token;
-					sessionStorage.setItem('baka-gh-token', token);
-					start();
-				};
-
-				window.addEventListener('message', onMessage);
-			}
-
-			function fail(text) {
-				el.authError.textContent = text;
-				el.authError.hidden = false;
-			}
-
-			/**
-			 * Проверить, что этим токеном вообще можно запускать робота.
-			 *
-			 * Спрашиваем не «кто вы», а «есть ли право писать в репозиторий»:
-			 * именно его требует запуск. Отдельный вопрос — чего хватило токену
-			 * по правам приложения: GitHub перечисляет их в заголовке ответа,
-			 * и если запуск потом откажет, причина будет видна сразу, а не
-			 * в виде молчащей кнопки.
-			 */
-			async function checkRights() {
-				const response = await api(`/repos/${OWNER}/${REPO}`);
-				if (!response.ok) {
-					throw new Error(
-						response.status === 401
-							? 'Вход просрочен — войдите заново.'
-							: `GitHub не отдал репозиторий (код ${response.status}).`,
-					);
-				}
-
-				const repo = await response.json();
-				const scopes = response.headers.get('x-oauth-scopes') ?? '';
-				if (!repo.permissions?.push) {
-					throw new Error('У этой учётной записи нет права писать в репозиторий — запускать робота она не может.');
-				}
-				return { login: repo.owner?.login, scopes };
-			}
-
-			// ── Запуски ─────────────────────────────────────────────────────────
-
-			async function fetchRuns(workflow = WORKFLOW) {
-				const response = await api(`/repos/${OWNER}/${REPO}/actions/workflows/${workflow}/runs?per_page=5`);
-				if (!response.ok) return [];
-				const data = await response.json();
-				return data.workflow_runs ?? [];
-			}
-
-			async function fetchIssues() {
-				const response = await api(`/repos/${OWNER}/${REPO}/issues?state=all&per_page=5`);
-				if (!response.ok) return [];
-				const data = await response.json();
-				// В этой же ручке GitHub отдаёт и запросы на слияние — они нам
-				// не письма робота.
-				return data.filter((item) => !item.pull_request).slice(0, 3);
-			}
-
-			const RU = new Intl.DateTimeFormat('ru-RU', {
-				day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit',
-			});
-
-			const isRunning = (run) => run.status !== 'completed';
-
-			function howLong(run) {
-				const from = new Date(run.run_started_at ?? run.created_at).getTime();
-				const to = isRunning(run) ? Date.now() : new Date(run.updated_at).getTime();
-				const seconds = Math.max(0, Math.round((to - from) / 1000));
-				return seconds < 60 ? `${seconds} с` : `${Math.floor(seconds / 60)} мин ${seconds % 60} с`;
-			}
-
-			function outcome(run) {
-				if (isRunning(run)) return 'идёт прямо сейчас';
-				return { success: 'прошёл без сбоев', failure: 'закончился сбоем', cancelled: 'остановлен' }[run.conclusion]
-					?? run.conclusion;
-			}
 
 			function drawRuns(runs) {
 				el.runs.innerHTML = '';
@@ -759,7 +250,7 @@
 			}
 
 			async function refresh() {
-				const [runs, issues] = await Promise.all([fetchRuns(), fetchIssues()]);
+				const [runs, issues] = await Promise.all([fetchRuns(WORKFLOW), fetchIssues()]);
 				drawRuns(runs);
 				drawIssues(issues);
 
@@ -793,10 +284,7 @@
 				el.run.disabled = true;
 				el.runStatus.textContent = 'Прошу GitHub позвать робота…';
 
-				const response = await api(`/repos/${OWNER}/${REPO}/actions/workflows/${WORKFLOW}/dispatches`, {
-					method: 'POST',
-					body: JSON.stringify({ ref: 'main' }),
-				});
+				const response = await dispatch(WORKFLOW);
 
 				if (response.status !== 204) {
 					const scopes = response.headers.get('x-accepted-oauth-scopes') ?? '';
@@ -830,11 +318,8 @@
 				el.casesStatus.className = 'status';
 				el.casesStatus.textContent = write ? 'Прошу применить посчитанное…' : 'Прошу посчитать…';
 
-				const response = await api(`/repos/${OWNER}/${REPO}/actions/workflows/${CASES_WORKFLOW}/dispatches`, {
-					method: 'POST',
-					// GitHub ждёт значения полей строками, даже если поле — галочка.
-					body: JSON.stringify({ ref: 'main', inputs: { write: write ? 'true' : 'false' } }),
-				});
+				// GitHub ждёт значения полей строками, даже если поле — галочка.
+				const response = await dispatch(CASES_WORKFLOW, { write: write ? 'true' : 'false' });
 
 				if (response.status !== 204) {
 					el.casesStatus.className = 'status bad';
@@ -857,652 +342,32 @@
 				}, 90000);
 			}
 
-			// ── Кандидаты в тайтлы (тз/11, часть C) ─────────────────────────────
-			//
-			// ОТКУДА ЭКРАН БЕРЁТ ДАННЫЕ. Из репозитория по API GitHub, а не с сайта.
-			// Список меняется роботом при каждом сохранении черновика, а сайт
-			// выкладывается руками — с сайта заказчик смотрел бы позавчерашнее.
-			//
-			// ЧТО ЭКРАН ДЕЛАЕТ САМ, А ЧТО НЕТ. Сам он только ЗАПИСЫВАЕТ РЕШЕНИЕ
-			// в отдельный файл — это одна строчка текста, и она ложится
-			// в репозиторий сразу, при нажатии. Исполняет решения робот по кнопке
-			// «Применить»: завести тайтл — это скачать обложку и сжать её в два
-			// размера, в браузере такого нет. А раз одна из трёх кнопок всё равно
-			// требует робота, через него идут и остальные две: иначе правило
-			// «как применяется решение» жило бы в двух местах и разъехалось бы молча.
-			//
-			// ПОЧЕМУ РЕШЕНИЯ ЛОЖАТСЯ В РЕПОЗИТОРИЙ СРАЗУ, А НЕ КОПЯТСЯ ВО ВКЛАДКЕ.
-			// Разобрать сотни строк за присест невозможно (тз/11, C.5), и работа
-			// обязана продолжаться с того места, где брошена. Память вкладки этого
-			// не обещает: закрытая вкладка, чужой компьютер, чистка браузера —
-			// и решения нет. Файл в репозитории переживает всё.
+			// СПИСОК КАНДИДАТОВ ЭТА СТРАНИЦА НЕ ГРУЖАЕТ ВОВСЕ. Файл под восемьсот
+			// килобайт, и качать его ради одной строчки со счётчиком значило бы
+			// платить весом за то, что и так написано словами. Числа живут там же,
+			// где сам список.
 
-			const CAND_GROUPS = [
-				{
-					id: 'candidates',
-					title: 'Кандидаты — тайтлы, которых в справочнике нет',
-					note: 'Название с Shikimori сошлось с фразой. Год и студия стоят рядом нарочно: у «Истребителя демонов» есть тайтл 1994 года с ровно таким же названием, и различить их может только человек.',
-				},
-				{
-					id: 'shortName',
-					title: 'Похоже на разговорное сокращение — смотреть глазами',
-					note: 'Фраза стоит словами ВНУТРИ найденного названия: «Фрирен» внутри «Провожающая в последний путь Фрирен». Кандидатами такие не становятся нарочно — ослабь правило, и «аниме года» сойдётся с «Аниме-историями». Но именно здесь лежит самое ценное: сокращения тайтлов, которые уже заведены. Звёздочка ★ — ровно такой случай.',
-				},
-				{
-					id: 'already',
-					title: 'Ведут на тайтл, который в справочнике уже есть',
-					note: 'Заводить нечего — это просто написание, которого нет в «Вариантах написания» тайтла. Кнопка тут одна: «Это уже есть».',
-				},
-				{
-					id: 'notSimilar',
-					title: 'Ответ есть, но название не сходится',
-					note: 'Рядом — что именно ответил Shikimori: так видно, не отвергли ли мы верное. Самая длинная группа и самая мусорная, но прятать её нельзя: настоящий тайтл с другим русским названием прячется именно тут.',
-				},
-				{
-					id: 'notFound',
-					title: 'Shikimori не нашёл ничего',
-					note: 'Ни по фразе, ни по её же словам в именительном падеже. Обычно это не аниме вовсе.',
-				},
-			];
-
-			let cand = null;
-			let decisions = [];
-			let decisionsSha = null;
-			let animeIndex = [];
-			let saveTimer = null;
-			let saving = false;
-
-			const toBase64 = (text) => {
-				const bytes = new TextEncoder().encode(text);
-				let binary = '';
-				for (let i = 0; i < bytes.length; i += 0x8000) {
-					binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
-				}
-				return btoa(binary);
-			};
-
-			const fromBase64 = (base64) => {
-				const binary = atob(String(base64).replace(/\s/g, ''));
-				return new TextDecoder().decode(Uint8Array.from(binary, (ch) => ch.charCodeAt(0)));
-			};
-
-			/**
-			 * Файл из репозитория. Просим СЫРОЕ содержимое: обычный ответ этой
-			 * ручки — base64 внутри JSON, и он ограничен мегабайтом, а список
-			 * кандидатов уже под восемьсот килобайт и будет расти.
-			 */
-			async function readRepoFile(path) {
-				const response = await api(`/repos/${OWNER}/${REPO}/contents/${path}?ref=main`, {
-					headers: { Accept: 'application/vnd.github.raw' },
-					cache: 'no-store',
-				});
-				if (response.status === 404) return null;
-				if (!response.ok) throw new Error(`GitHub не отдал ${path} (код ${response.status})`);
-				return await response.text();
-			}
-
-			/** Тот же файл, но с отпечатком версии: без него его не перезаписать. */
-			async function readRepoFileMeta(path) {
-				const response = await api(`/repos/${OWNER}/${REPO}/contents/${path}?ref=main`, { cache: 'no-store' });
-				if (response.status === 404) return { text: null, sha: null };
-				if (!response.ok) throw new Error(`GitHub не отдал ${path} (код ${response.status})`);
-				const data = await response.json();
-				return { text: fromBase64(data.content ?? ''), sha: data.sha };
-			}
-
-			async function writeRepoFile(path, text, sha, message) {
-				return await api(`/repos/${OWNER}/${REPO}/contents/${path}`, {
-					method: 'PUT',
-					body: JSON.stringify({ message, content: toBase64(text), branch: 'main', ...(sha ? { sha } : {}) }),
-				});
-			}
-
-			// ── Решения ─────────────────────────────────────────────────────────
-
-			const decisionById = (id) => decisions.find((item) => item.id === id);
-
-			/**
-			 * Слить свои решения с тем, что лежит на GitHub.
-			 *
-			 * Зачем: пометку «применено» ставит робот, и делает он это в тот же
-			 * файл. Перезапиши мы его своей копией вслепую — пометки бы стёрлись,
-			 * и робот применил бы всё во второй раз.
-			 */
-			function mergeDecisions(remote) {
-				const there = new Map(remote.map((item) => [item.id, item]));
-
-				// Своё — как есть, но пометку «применено» берём у робота:
-				// он уже сходил и сделал работу, и второй раз делать её нельзя.
-				const out = decisions.map((mine) => {
-					const other = there.get(mine.id);
-					return other?.applied ? { ...mine, applied: other.applied, result: other.result } : mine;
-				});
-
-				const ours = new Set(out.map((item) => item.id));
-				// Чужое (другая вкладка, робот) — сохраняем. Не сохраняем только
-				// то, что я сам убрал кнопкой «Передумал»: иначе отмена
-				// не пережила бы ни одного столкновения.
-				for (const other of remote) {
-					if (!ours.has(other.id) && !undone.has(other.id)) out.push(other);
-				}
-
-				return out;
-			}
-
-			// Что я отменил кнопкой «Передумал» за этот сеанс. Нужен ровно
-			// при столкновении с чужой записью того же файла.
-			const undone = new Set();
-
-			function scheduleSave() {
-				clearTimeout(saveTimer);
-				el.applyNote.textContent = 'решения сохраняются…';
-				saveTimer = setTimeout(saveDecisions, 1200);
-			}
-
-			async function saveDecisions(attempt = 0) {
-				if (saving) {
-					scheduleSave();
-					return;
-				}
-				saving = true;
-				try {
-					const text = JSON.stringify(decisions, null, '\t') + '\n';
-					const pending = decisions.filter((item) => !item.applied).length;
-					const response = await writeRepoFile(
-						DECISIONS_FILE,
-						text,
-						decisionsSha,
-						`Решения по кандидатам в тайтлы: ${decisions.length}`,
-					);
-
-					if (response.ok) {
-						const data = await response.json();
-						decisionsSha = data.content?.sha ?? decisionsSha;
-						el.applyNote.textContent = pending > 0 ? `решений ждёт применения: ${pending}` : 'всё применено';
-						return;
-					}
-
-					// Кто-то (робот) записал файл раньше — перечитать, слить, повторить.
-					if ((response.status === 409 || response.status === 422) && attempt < 2) {
-						const meta = await readRepoFileMeta(DECISIONS_FILE);
-						decisionsSha = meta.sha;
-						decisions = mergeDecisions(meta.text ? JSON.parse(meta.text) : []);
-						saving = false;
-						await saveDecisions(attempt + 1);
-						return;
-					}
-
-					throw new Error(`GitHub ответил кодом ${response.status}`);
-				} catch (error) {
-					// МОЛЧАТЬ ТУТ НЕЛЬЗЯ. Не сохранившееся решение выглядит точно
-					// так же, как сохранившееся, — строка на экране уже помечена
-					// решённой, а в репозитории её нет.
-					el.applyNote.textContent = '';
-					el.applyStatus.className = 'status bad';
-					el.applyStatus.textContent = `РЕШЕНИЯ НЕ СОХРАНИЛИСЬ: ${error.message}. Не закрывайте вкладку, нажмите любую кнопку ещё раз.`;
-				} finally {
-					saving = false;
-				}
-			}
-
-			// ── Отрисовка ───────────────────────────────────────────────────────
-
-			const rowKey = (row, groupId) => (groupId === 'candidates' ? `cand:${row.sourceId}` : `ph:${row.text}`);
-			const rowPhrases = (row, groupId) => (groupId === 'candidates' ? row.phrases : [row.text]);
-
-			const gainText = (gain) => {
-				if (!gain) return '';
-				const p = gain.posts;
-				const t = gain.transcripts;
-				return (
-					`даст ${p.texts} ${plural(p.texts, 'ссылку', 'ссылки', 'ссылок')} в постах ` +
-					`(${p.live} на сайте сегодня), ${t.mentions} ${plural(t.mentions, 'упоминание', 'упоминания', 'упоминаний')} ` +
-					`в ${t.texts} ${plural(t.texts, 'выпуске', 'выпусках', 'выпусках')} (${t.live} на сайте)`
-				);
-			};
-
-			function plural(n, one, few, many) {
-				const mod10 = n % 10;
-				const mod100 = n % 100;
-				if (mod10 === 1 && mod100 !== 11) return one;
-				if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return few;
-				return many;
-			}
-
-			const titleOf = (id) => {
-				const found = animeIndex.find((entry) => entry.id === id);
-				return found ? found.titleRu || found.titleOriginal : id;
-			};
-
-			/** Ссылка на пост в админке: у черновика своей страницы на сайте нет. */
-			function postLinks(row) {
-				const shown = row.posts ?? [];
-				const more = (row.postsCount ?? shown.length) - shown.length;
-				const box = document.createElement('div');
-				box.className = 'where';
-				box.append('посты: ');
-				shown.forEach((id, i) => {
-					if (i > 0) box.append(', ');
-					const link = document.createElement('a');
-					link.href = `/admin/#/collections/posts/entries/${id}`;
-					link.target = '_blank';
-					link.rel = 'noreferrer';
-					link.textContent = id;
-					box.append(link);
-				});
-				if (more > 0) box.append(` и ещё ${more}`);
-				return box;
-			}
-
-			function drawActions(li, row, groupId) {
-				const acts = li.querySelector('.acts');
-				acts.innerHTML = '';
-				const key = rowKey(row, groupId);
-				const decision = decisionById(key);
-
-				if (decision) {
-					const said = document.createElement('span');
-					said.className = decision.applied ? 'decided' : 'decided pending';
-					const what =
-						decision.what === 'create'
-							? `завести «${decision.title}»`
-							: decision.what === 'alias'
-								? `вписать в «${titleOf(decision.animeId)}»`
-								: 'не аниме';
-					said.textContent = decision.applied ? `сделано: ${what}` : `решено: ${what} — ждёт применения`;
-					acts.append(said);
-
-					if (decision.error) {
-						const bad = document.createElement('span');
-						bad.className = 'decided bad';
-						bad.textContent = ` · не вышло: ${decision.error}`;
-						acts.append(bad);
-					}
-
-					// ОТМЕНА ЕСТЬ, ПОКА РЕШЕНИЕ НЕ ПРИМЕНЕНО. После применения
-					// отменять уже нечего этой кнопкой: тайтл заведён с обложками,
-					// фраза лежит в стоп-листе, — это отдельная работа, и делается
-					// она по просьбе, а не нажатием.
-					if (!decision.applied) {
-						const undo = document.createElement('button');
-						undo.type = 'button';
-						undo.className = 'secondary';
-						undo.dataset.act = 'undo';
-						undo.textContent = 'Передумал';
-						acts.append(undo);
-					}
-					return;
-				}
-
-				const add = (act, label) => {
-					const button = document.createElement('button');
-					button.type = 'button';
-					button.className = 'secondary';
-					button.dataset.act = act;
-					button.textContent = label;
-					acts.append(button);
-				};
-
-				if (groupId === 'candidates') add('create', 'Завести');
-				add('alias', 'Это уже есть');
-				add('stop', 'Не аниме');
-			}
-
-			/** Выбор тайтла для кнопки «Это уже есть». */
-			function drawPicker(li, row, groupId) {
-				const acts = li.querySelector('.acts');
-				acts.innerHTML = '';
-
-				const select = document.createElement('select');
-				const empty = document.createElement('option');
-				empty.value = '';
-				empty.textContent = '— выберите тайтл —';
-				select.append(empty);
-
-				for (const entry of animeIndex) {
-					const option = document.createElement('option');
-					option.value = entry.id;
-					option.textContent = entry.titleRu || entry.titleOriginal;
-					select.append(option);
-				}
-				// Тайтл, который скрипт уже опознал, подставляется сам —
-				// но право переиграть остаётся за человеком.
-				if (row.animeId) select.value = row.animeId;
-
-				const ok = document.createElement('button');
-				ok.type = 'button';
-				ok.className = 'secondary';
-				ok.dataset.act = 'alias-ok';
-				ok.textContent = 'Вписать';
-
-				const cancel = document.createElement('button');
-				cancel.type = 'button';
-				cancel.className = 'secondary';
-				cancel.dataset.act = 'alias-cancel';
-				cancel.textContent = 'Отмена';
-
-				acts.append(select, ok, cancel);
-			}
-
-			function drawRow(row, groupId) {
-				const li = document.createElement('li');
-				li.dataset.key = rowKey(row, groupId);
-				li.dataset.group = groupId;
-
-				const phrases = rowPhrases(row, groupId);
-				const name = row.titleRu || row.titleOriginal || '';
-				li.dataset.find = [...phrases, name, row.animeTitle ?? '', ...(row.answers ?? [])].join(' ').toLowerCase();
-
-				if (row.poster) {
-					const img = document.createElement('img');
-					img.className = 'poster';
-					img.loading = 'lazy';
-					img.src = row.poster;
-					img.alt = '';
-					li.append(img);
-				}
-
-				const body = document.createElement('div');
-				body.className = 'row-body';
-
-				const head = document.createElement('div');
-				head.className = 'phrase';
-				head.textContent =
-					`${phrases.map((p) => `«${p}»`).join(' ')} — ` +
-					`${row.postsCount} ${plural(row.postsCount, 'пост', 'поста', 'постов')}, ` +
-					`${row.count} ${plural(row.count, 'упоминание', 'упоминания', 'упоминаний')}`;
-				body.append(head);
-
-				const found = document.createElement('div');
-				found.className = 'found';
-				if (groupId === 'notFound') {
-					found.textContent = 'Shikimori не знает такого названия.';
-				} else if (groupId === 'notSimilar') {
-					found.textContent = `Shikimori ответил: ${(row.answers ?? []).join(' / ') || '—'}`;
-				} else {
-					const star = row.animeId ? '★ ' : '';
-					found.append(
-						`${star}${name}${row.year ? ` · ${row.year}` : ''}${row.studio ? ` · ${row.studio}` : ''} `,
-					);
-					if (row.url) {
-						const link = document.createElement('a');
-						link.href = row.url;
-						link.target = '_blank';
-						link.rel = 'noreferrer';
-						link.textContent = 'Shikimori ↗';
-						found.append(link);
-					}
-					if (row.animeId) {
-						found.append(` · в справочнике это «${row.animeTitle ?? titleOf(row.animeId)}»`);
-					}
-					if (groupId === 'candidates') found.append(` · адрес будет /anime/${row.slug}/`);
-				}
-				body.append(found);
-
-				if (row.gain) {
-					const gain = document.createElement('div');
-					gain.className = 'gain';
-					gain.textContent = gainText(row.gain);
-					body.append(gain);
-				}
-
-				body.append(postLinks(row));
-
-				const acts = document.createElement('div');
-				acts.className = 'acts';
-				body.append(acts);
-
-				li.append(body);
-				drawActions(li, row, groupId);
-				return li;
-			}
-
-			function drawCandidates() {
-				el.candGroups.innerHTML = '';
-
-				const when = cand.generated ? RU.format(new Date(cand.generated)) : '—';
-				el.candCounts.textContent =
-					`Прочитано постов: ${cand.postsRead}. Кандидатов: ${cand.candidates.length}. ` +
-					`Список собран ${when}.`;
-
-				for (const group of CAND_GROUPS) {
-					const rows = cand[group.id] ?? [];
-					if (rows.length === 0) continue;
-
-					const head = document.createElement('h3');
-					head.textContent = `[ ${group.title}: ${rows.length} ]`;
-					const note = document.createElement('p');
-					note.className = 'group-note';
-					note.textContent = group.note;
-
-					const list = document.createElement('ul');
-					list.className = 'rows';
-					for (const row of rows) list.append(drawRow(row, group.id));
-
-					el.candGroups.append(head, note, list);
-				}
-
-				updateApplyNote();
-			}
-
-			function updateApplyNote() {
-				const pending = decisions.filter((item) => !item.applied);
-				const creates = pending.filter((item) => item.what === 'create').length;
-				el.apply.disabled = pending.length === 0;
-				el.applyNote.textContent = pending.length === 0 ? 'решений пока нет' : `решений ждёт применения: ${pending.length}`;
-
-				// ПРЕДУПРЕЖДЕНИЕ О ПОРЦИЯХ — по числу, а не вообще: заводить два
-				// тайтла и заводить сорок это разные вещи, и сказать об этом надо
-				// в ту секунду, когда сорок набралось.
-				if (creates > 20) {
-					el.applyStatus.className = 'status bad';
-					el.applyStatus.textContent =
-						`Вы отметили ${creates} ${plural(creates, 'тайтл', 'тайтла', 'тайтлов')} к заведению. ` +
-						`Это много: каждый начнёт искаться во всём архиве сразу. Лучше применить порцию в 10–20, ` +
-						`посмотреть, что вышло, и продолжить.`;
-				} else if (el.applyStatus.className === 'status bad' && el.applyStatus.textContent.startsWith('Вы отметили')) {
-					el.applyStatus.className = 'status';
-					el.applyStatus.textContent = '';
-				}
-			}
-
-			function findRow(key) {
-				for (const group of CAND_GROUPS) {
-					for (const row of cand[group.id] ?? []) {
-						if (rowKey(row, group.id) === key) return { row, groupId: group.id };
-					}
-				}
-				return null;
-			}
-
-			el.candGroups.addEventListener('click', (event) => {
-				const button = event.target.closest('button');
-				if (!button) return;
-				const li = button.closest('li');
-				if (!li) return;
-
-				const found = findRow(li.dataset.key);
-				if (!found) return;
-				const { row, groupId } = found;
-				const key = li.dataset.key;
-				const act = button.dataset.act;
-
-				if (act === 'alias') {
-					drawPicker(li, row, groupId);
-					return;
-				}
-				if (act === 'alias-cancel') {
-					drawActions(li, row, groupId);
-					return;
-				}
-
-				if (act === 'undo') {
-					undone.add(key);
-					decisions = decisions.filter((item) => item.id !== key);
-					drawActions(li, row, groupId);
-					updateApplyNote();
-					scheduleSave();
-					return;
-				}
-
-				let decision = null;
-				if (act === 'create') {
-					decision = {
-						id: key,
-						what: 'create',
-						sourceId: row.sourceId,
-						source: 'shikimori',
-						slug: row.slug,
-						title: row.titleRu || row.titleOriginal,
-						phrases: rowPhrases(row, groupId),
-					};
-				} else if (act === 'stop') {
-					decision = { id: key, what: 'stop', phrases: rowPhrases(row, groupId) };
-				} else if (act === 'alias-ok') {
-					const select = li.querySelector('select');
-					if (!select?.value) {
-						select?.focus();
-						return;
-					}
-					decision = { id: key, what: 'alias', animeId: select.value, phrases: rowPhrases(row, groupId) };
-				}
-
-				if (!decision) return;
-				decision.at = new Date().toISOString();
-				undone.delete(key);
-				decisions = decisions.filter((item) => item.id !== key).concat(decision);
-				drawActions(li, row, groupId);
-				updateApplyNote();
-				scheduleSave();
+			el.run.addEventListener('click', runRobot);
+			el.refresh.addEventListener('click', refresh);
+			el.casesDry.addEventListener('click', () => runCases(false));
+			el.casesWrite.addEventListener('click', () => runCases(true));
+			el.toCandidates.addEventListener('click', () => {
+				location.href = '/admin/tools/candidates/';
 			});
 
-			el.candFilter.addEventListener('input', () => {
-				const query = el.candFilter.value.trim().toLowerCase();
-				let shown = 0;
-				let total = 0;
-				for (const li of el.candGroups.querySelectorAll('li')) {
-					total++;
-					const match = !query || li.dataset.find.includes(query);
-					li.hidden = !match;
-					if (match) shown++;
-				}
-				el.candFilterNote.textContent = query ? `показано строк: ${shown} из ${total}` : '';
-			});
-
-			async function loadCandidates() {
-				const [rawCandidates, meta, index] = await Promise.all([
-					readRepoFile(CANDIDATES_FILE),
-					readRepoFileMeta(DECISIONS_FILE),
-					fetch('/anime-index.json').then((res) => (res.ok ? res.json() : [])).catch(() => []),
-				]);
-
-				animeIndex = [...index].sort((a, b) =>
-					(a.titleRu || a.titleOriginal).localeCompare(b.titleRu || b.titleOriginal, 'ru'),
-				);
-
-				if (!rawCandidates) {
-					el.candCounts.textContent = 'Списка кандидатов ещё нет — его собирает робот.';
-					return;
-				}
-
-				cand = JSON.parse(rawCandidates);
-				decisions = meta.text ? JSON.parse(meta.text) : [];
-				decisionsSha = meta.sha;
-				undone.clear();
-				drawCandidates();
-			}
-
-			async function runApply() {
-				el.apply.disabled = true;
-				el.applyStatus.className = 'status';
-				el.applyStatus.textContent = 'Прошу робота применить решения…';
-
-				// Решения могли ещё не долететь до репозитория — робот прочитает
-				// файл, а не вкладку. Дожидаемся записи, и только потом зовём.
-				clearTimeout(saveTimer);
-				await saveDecisions();
-
-				const response = await api(`/repos/${OWNER}/${REPO}/actions/workflows/${APPLY_WORKFLOW}/dispatches`, {
-					method: 'POST',
-					body: JSON.stringify({ ref: 'main' }),
-				});
-
-				if (response.status !== 204) {
-					el.applyStatus.className = 'status bad';
-					el.applyStatus.textContent = `GitHub ответил кодом ${response.status}. Попробуйте ещё раз через минуту.`;
-					el.apply.disabled = false;
-					return;
-				}
-
-				el.applyStatus.innerHTML =
-					'<strong>Робот пошёл применять.</strong> Это занимает минуты полторы-две. ' +
-					'Строчка ниже поменяется сама; страницу обновлять не нужно.';
-				setTimeout(watchApply, 5000);
-			}
-
-			async function watchApply() {
-				const runs = await fetchRuns(APPLY_WORKFLOW);
-				const latest = runs[0];
-				if (!latest) {
-					setTimeout(watchApply, 5000);
-					return;
-				}
-
-				if (isRunning(latest)) {
-					el.applyStatus.innerHTML = `<strong>Робот применяет решения.</strong> Идёт ${howLong(latest)}.`;
-					setTimeout(watchApply, 5000);
-					return;
-				}
-
-				if (latest.conclusion === 'success') {
-					el.applyStatus.innerHTML =
-						'<strong>Готово.</strong> Решения применены, список пересобран. ' +
-						'Чтобы новые тайтлы появились на сайте, скажите мне — я пересоберу и выложу.';
-				} else {
-					el.applyStatus.className = 'status bad';
-					el.applyStatus.innerHTML = `<strong>Поход ${outcome(latest)}.</strong> Подробности — в письме и в списке «Последние походы» ниже. Решения не потерялись, можно нажать ещё раз.`;
-				}
-
-				await loadCandidates();
-				await refresh();
-			}
-
-			async function start() {
-				try {
-					const { login: who } = await checkRights();
-					el.who.textContent = `вход выполнен: ${who ?? 'GitHub'}`;
-					el.authError.hidden = true;
-					el.login.textContent = 'Войти заново';
+			setupAuth({
+				loginButton: el.login,
+				whoSpan: el.who,
+				errorEl: el.authError,
+				onReady: async () => {
 					el.runSection.hidden = false;
 					el.casesSection.hidden = false;
 					el.candSection.hidden = false;
 					el.lastSection.hidden = false;
 					el.issuesSection.hidden = false;
 					await refresh();
-					// Список кандидатов грузится отдельно и после: он весит под
-					// восемьсот килобайт, и ждать его, чтобы показать кнопку
-					// робота, незачем. Своя ошибка у него тоже своя — упасть
-					// он не имеет права на всю страницу.
-					try {
-						await loadCandidates();
-					} catch (error) {
-						el.candCounts.textContent = `Список кандидатов не загрузился: ${error.message}`;
-					}
-				} catch (error) {
-					token = '';
-					sessionStorage.removeItem('baka-gh-token');
-					fail(error.message);
-				}
-			}
-
-			el.login.addEventListener('click', login);
-			el.run.addEventListener('click', runRobot);
-			el.refresh.addEventListener('click', refresh);
-			el.casesDry.addEventListener('click', () => runCases(false));
-			el.casesWrite.addEventListener('click', () => runCases(true));
-			el.apply.addEventListener('click', runApply);
-
-			if (token) start();
+				},
+			});
 		</script>
 	</body>
 </html>

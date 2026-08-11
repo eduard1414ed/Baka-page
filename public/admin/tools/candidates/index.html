@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="ru">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Кандидаты в тайтлы — Бака!</title>
+		<meta name="robots" content="noindex, nofollow" />
+		<link rel="stylesheet" href="/admin/tools/tools.css" />
+
+		<!--
+			РАЗБОР КАНДИДАТОВ В ТАЙТЛЫ (тз/11, часть C, пункт C.5).
+
+			ПОЧЕМУ СВОЯ СТРАНИЦА, А НЕ РАЗДЕЛ НА /admin/tools/. Строк тут 1816,
+			и на общей странице список утопил бы собой всё, что стоит ниже, —
+			«Последние походы» и письма робота. Замечено заказчиком в первый же
+			день. Общее с соседней страницей — вид (`tools.css`) и разговор
+			с GitHub (`github.js`); второй копии ни того, ни другого нет.
+
+			ЧТО ЭТА СТРАНИЦА ДЕЛАЕТ САМА, А ЧТО НЕТ. Сама она только ЗАПИСЫВАЕТ
+			РЕШЕНИЕ в отдельный файл репозитория — это одна строчка текста,
+			и она ложится туда сразу, при нажатии. Исполняет решения робот
+			по кнопке «Применить»: завести тайтл — это скачать обложку и сжать
+			её в два размера, в браузере такого нет. А раз одна из трёх кнопок
+			всё равно требует робота, через него идут и остальные две: иначе
+			правило «как применяется решение» жило бы в двух местах и разъехалось
+			бы молча.
+
+			ПОЧЕМУ РЕШЕНИЯ ЛОЖАТСЯ В РЕПОЗИТОРИЙ СРАЗУ, А НЕ КОПЯТСЯ ВО ВКЛАДКЕ.
+			Разобрать сотни строк за присест невозможно, и работа обязана
+			продолжаться с того места, где брошена. Память вкладки этого
+			не обещает: закрытая вкладка, чужой компьютер, чистка браузера —
+			и решения нет. Файл в репозитории переживает всё.
+		-->
+	</head>
+
+	<body>
+		<div class="page">
+			<p class="kicker">[ служебное ]</p>
+			<h1>Кандидаты в тайтлы</h1>
+			<p class="lead">
+				Названия аниме, которые встречаются в кавычках в ваших постах,
+				но в справочнике их нет. Собраны из всех постов, включая черновики;
+				дальше список пополняется сам при каждом сохранении черновика —
+				примерно через две минуты после того, как вы нажали «Сохранить».
+			</p>
+
+			<section id="auth-section">
+				<h2>Сначала вход</h2>
+				<p>
+					Права проверяет сам GitHub — тот же вход, что и в админке.
+					Никаких отдельных паролей заводить не нужно.
+				</p>
+				<div class="row">
+					<button id="login">Войти через GitHub</button>
+					<span class="tech" id="who"></span>
+				</div>
+				<p class="status bad" id="auth-error" hidden></p>
+			</section>
+
+			<section id="cand-section" hidden>
+				<p class="warn">
+					<strong>Заводить всё подряд нельзя.</strong> Каждый новый тайтл начинает
+					искаться во ВСЁМ архиве сразу — и в постах, и в расшифровках, — а вместе
+					с настоящими упоминаниями приходят ложные. Рекорд архива уже 79 ссылок
+					на 133 реплики в одном выпуске. Поэтому: <strong>порциями по 10–20</strong>,
+					и между порциями — попросить меня пересобрать сайт и посмотреть, не рябит ли.
+					У каждой строки написано, что она даст: это и есть та цифра, по которой
+					стоит решать.
+				</p>
+
+				<p class="counts" id="cand-counts">гружу список…</p>
+
+				<div class="row">
+					<button id="apply" disabled>Применить решения</button>
+					<span class="tech" id="apply-note"></span>
+				</div>
+				<p class="status" id="apply-status"></p>
+
+				<label for="cand-filter" class="tech">Поиск по списку</label><br />
+				<input class="filter" id="cand-filter" type="search" placeholder="часть фразы или названия" />
+				<p class="hint" id="cand-filter-note"></p>
+
+				<div id="cand-groups"></div>
+			</section>
+
+			<section>
+				<h2>Обратно</h2>
+				<p><a href="/admin/tools/">К роботам подкаста</a> · <a href="/admin/">В админку</a></p>
+			</section>
+		</div>
+
+		<script type="module">
+			import {
+				RU,
+				dispatch,
+				fetchRuns,
+				howLong,
+				isRunning,
+				outcome,
+				plural,
+				readRepoFile,
+				readRepoFileMeta,
+				setupAuth,
+				writeRepoFile,
+			} from '/admin/tools/github.js';
+
+			const APPLY_WORKFLOW = 'anime-candidates-apply.yml';
+			const CANDIDATES_FILE = 'src/data/animeCandidates.json';
+			const DECISIONS_FILE = 'src/data/animeCandidateDecisions.json';
+
+			const CAND_GROUPS = [
+				{
+					id: 'candidates',
+					title: 'Кандидаты — тайтлы, которых в справочнике нет',
+					note: 'Название с Shikimori сошлось с фразой. Год и студия стоят рядом нарочно: у «Истребителя демонов» есть тайтл 1994 года с ровно таким же названием, и различить их может только человек.',
+				},
+				{
+					id: 'shortName',
+					title: 'Похоже на разговорное сокращение — смотреть глазами',
+					note: 'Фраза стоит словами ВНУТРИ найденного названия: «Фрирен» внутри «Провожающая в последний путь Фрирен». Кандидатами такие не становятся нарочно — ослабь правило, и «аниме года» сойдётся с «Аниме-историями». Но именно здесь лежит самое ценное: сокращения тайтлов, которые уже заведены. Звёздочка ★ — ровно такой случай.',
+				},
+				{
+					id: 'already',
+					title: 'Ведут на тайтл, который в справочнике уже есть',
+					note: 'Заводить нечего — это просто написание, которого нет в «Вариантах написания» тайтла. Кнопка тут одна: «Это уже есть».',
+				},
+				{
+					id: 'notSimilar',
+					title: 'Ответ есть, но название не сходится',
+					note: 'Рядом — что именно ответил Shikimori: так видно, не отвергли ли мы верное. Самая длинная группа и самая мусорная, но прятать её нельзя: настоящий тайтл с другим русским названием прячется именно тут.',
+				},
+				{
+					id: 'notFound',
+					title: 'Shikimori не нашёл ничего',
+					note: 'Ни по фразе, ни по её же словам в именительном падеже. Обычно это не аниме вовсе.',
+				},
+			];
+
+			const $ = (id) => document.getElementById(id);
+			const el = {
+				login: $('login'),
+				who: $('who'),
+				authError: $('auth-error'),
+				candSection: $('cand-section'),
+				candCounts: $('cand-counts'),
+				candGroups: $('cand-groups'),
+				candFilter: $('cand-filter'),
+				candFilterNote: $('cand-filter-note'),
+				apply: $('apply'),
+				applyNote: $('apply-note'),
+				applyStatus: $('apply-status'),
+			};
+
+			let cand = null;
+			let decisions = [];
+			let decisionsSha = null;
+			let animeIndex = [];
+			let saveTimer = null;
+			let saving = false;
+
+			// Что я отменил кнопкой «Передумал» за этот сеанс. Нужен ровно
+			// при столкновении с чужой записью того же файла.
+			const undone = new Set();
+
+			// ── Решения ─────────────────────────────────────────────────────────
+
+			const decisionById = (id) => decisions.find((item) => item.id === id);
+
+			/**
+			 * Слить свои решения с тем, что лежит на GitHub.
+			 *
+			 * Зачем: пометку «применено» ставит робот, и делает он это в тот же
+			 * файл. Перезапиши мы его своей копией вслепую — пометки бы стёрлись,
+			 * и робот применил бы всё во второй раз.
+			 */
+			function mergeDecisions(remote) {
+				const there = new Map(remote.map((item) => [item.id, item]));
+
+				// Своё — как есть, но пометку «применено» берём у робота:
+				// он уже сходил и сделал работу, и второй раз делать её нельзя.
+				const out = decisions.map((mine) => {
+					const other = there.get(mine.id);
+					return other?.applied ? { ...mine, applied: other.applied, result: other.result } : mine;
+				});
+
+				const ours = new Set(out.map((item) => item.id));
+				// Чужое (другая вкладка, робот) — сохраняем. Не сохраняем только
+				// то, что я сам убрал кнопкой «Передумал»: иначе отмена
+				// не пережила бы ни одного столкновения.
+				for (const other of remote) {
+					if (!ours.has(other.id) && !undone.has(other.id)) out.push(other);
+				}
+
+				return out;
+			}
+
+			function scheduleSave() {
+				clearTimeout(saveTimer);
+				el.applyNote.textContent = 'решения сохраняются…';
+				saveTimer = setTimeout(saveDecisions, 1200);
+			}
+
+			async function saveDecisions(attempt = 0) {
+				if (saving) {
+					scheduleSave();
+					return;
+				}
+				saving = true;
+				try {
+					const text = JSON.stringify(decisions, null, '\t') + '\n';
+					const pending = decisions.filter((item) => !item.applied).length;
+					const response = await writeRepoFile(
+						DECISIONS_FILE,
+						text,
+						decisionsSha,
+						`Решения по кандидатам в тайтлы: ${decisions.length}`,
+					);
+
+					if (response.ok) {
+						const data = await response.json();
+						decisionsSha = data.content?.sha ?? decisionsSha;
+						el.applyNote.textContent = pending > 0 ? `решений ждёт применения: ${pending}` : 'всё применено';
+						return;
+					}
+
+					// Кто-то (робот) записал файл раньше — перечитать, слить, повторить.
+					if ((response.status === 409 || response.status === 422) && attempt < 2) {
+						const meta = await readRepoFileMeta(DECISIONS_FILE);
+						decisionsSha = meta.sha;
+						decisions = mergeDecisions(meta.text ? JSON.parse(meta.text) : []);
+						saving = false;
+						await saveDecisions(attempt + 1);
+						return;
+					}
+
+					throw new Error(`GitHub ответил кодом ${response.status}`);
+				} catch (error) {
+					// МОЛЧАТЬ ТУТ НЕЛЬЗЯ. Не сохранившееся решение выглядит точно
+					// так же, как сохранившееся, — строка на экране уже помечена
+					// решённой, а в репозитории её нет.
+					el.applyNote.textContent = '';
+					el.applyStatus.className = 'status bad';
+					el.applyStatus.textContent = `РЕШЕНИЯ НЕ СОХРАНИЛИСЬ: ${error.message}. Не закрывайте вкладку, нажмите любую кнопку ещё раз.`;
+				} finally {
+					saving = false;
+				}
+			}
+
+			// ── Отрисовка ───────────────────────────────────────────────────────
+
+			const rowKey = (row, groupId) => (groupId === 'candidates' ? `cand:${row.sourceId}` : `ph:${row.text}`);
+			const rowPhrases = (row, groupId) => (groupId === 'candidates' ? row.phrases : [row.text]);
+
+			const gainText = (gain) => {
+				if (!gain) return '';
+				const p = gain.posts;
+				const t = gain.transcripts;
+				return (
+					`даст ${p.texts} ${plural(p.texts, 'ссылку', 'ссылки', 'ссылок')} в постах ` +
+					`(${p.live} на сайте сегодня), ${t.mentions} ${plural(t.mentions, 'упоминание', 'упоминания', 'упоминаний')} ` +
+					`в ${t.texts} ${plural(t.texts, 'выпуске', 'выпусках', 'выпусках')} (${t.live} на сайте)`
+				);
+			};
+
+			const titleOf = (id) => {
+				const found = animeIndex.find((entry) => entry.id === id);
+				return found ? found.titleRu || found.titleOriginal : id;
+			};
+
+			/** Ссылка на пост в админке: у черновика своей страницы на сайте нет. */
+			function postLinks(row) {
+				const shown = row.posts ?? [];
+				const more = (row.postsCount ?? shown.length) - shown.length;
+				const box = document.createElement('div');
+				box.className = 'where';
+				box.append('посты: ');
+				shown.forEach((id, i) => {
+					if (i > 0) box.append(', ');
+					const link = document.createElement('a');
+					link.href = `/admin/#/collections/posts/entries/${id}`;
+					link.target = '_blank';
+					link.rel = 'noreferrer';
+					link.textContent = id;
+					box.append(link);
+				});
+				if (more > 0) box.append(` и ещё ${more}`);
+				return box;
+			}
+
+			function drawActions(li, row, groupId) {
+				const acts = li.querySelector('.acts');
+				acts.innerHTML = '';
+				const key = rowKey(row, groupId);
+				const decision = decisionById(key);
+
+				if (decision) {
+					const said = document.createElement('span');
+					said.className = decision.applied ? 'decided' : 'decided pending';
+					const what =
+						decision.what === 'create'
+							? `завести «${decision.title}»`
+							: decision.what === 'alias'
+								? `вписать в «${titleOf(decision.animeId)}»`
+								: 'не аниме';
+					said.textContent = decision.applied ? `сделано: ${what}` : `решено: ${what} — ждёт применения`;
+					acts.append(said);
+
+					if (decision.error) {
+						const bad = document.createElement('span');
+						bad.className = 'decided bad';
+						bad.textContent = `не вышло: ${decision.error}`;
+						acts.append(bad);
+					}
+
+					// ОТМЕНА ЕСТЬ, ПОКА РЕШЕНИЕ НЕ ПРИМЕНЕНО. После применения
+					// отменять уже нечего этой кнопкой: тайтл заведён с обложками,
+					// фраза лежит в стоп-листе, — это отдельная работа, и делается
+					// она по просьбе, а не нажатием.
+					if (!decision.applied) {
+						const undo = document.createElement('button');
+						undo.type = 'button';
+						undo.className = 'secondary';
+						undo.dataset.act = 'undo';
+						undo.textContent = 'Передумал';
+						acts.append(undo);
+					}
+					return;
+				}
+
+				const add = (act, label) => {
+					const button = document.createElement('button');
+					button.type = 'button';
+					button.className = 'secondary';
+					button.dataset.act = act;
+					button.textContent = label;
+					acts.append(button);
+				};
+
+				if (groupId === 'candidates') add('create', 'Завести');
+				add('alias', 'Это уже есть');
+				add('stop', 'Не аниме');
+			}
+
+			/** Выбор тайтла для кнопки «Это уже есть». */
+			function drawPicker(li, row, groupId) {
+				const acts = li.querySelector('.acts');
+				acts.innerHTML = '';
+
+				const select = document.createElement('select');
+				const empty = document.createElement('option');
+				empty.value = '';
+				empty.textContent = '— выберите тайтл —';
+				select.append(empty);
+
+				for (const entry of animeIndex) {
+					const option = document.createElement('option');
+					option.value = entry.id;
+					option.textContent = entry.titleRu || entry.titleOriginal;
+					select.append(option);
+				}
+				// Тайтл, который скрипт уже опознал, подставляется сам —
+				// но право переиграть остаётся за человеком.
+				if (row.animeId) select.value = row.animeId;
+
+				const ok = document.createElement('button');
+				ok.type = 'button';
+				ok.className = 'secondary';
+				ok.dataset.act = 'alias-ok';
+				ok.textContent = 'Вписать';
+
+				const cancel = document.createElement('button');
+				cancel.type = 'button';
+				cancel.className = 'secondary';
+				cancel.dataset.act = 'alias-cancel';
+				cancel.textContent = 'Отмена';
+
+				acts.append(select, ok, cancel);
+			}
+
+			function drawRow(row, groupId) {
+				const li = document.createElement('li');
+				li.dataset.key = rowKey(row, groupId);
+				li.dataset.group = groupId;
+
+				const phrases = rowPhrases(row, groupId);
+				const name = row.titleRu || row.titleOriginal || '';
+				li.dataset.find = [...phrases, name, row.animeTitle ?? '', ...(row.answers ?? [])].join(' ').toLowerCase();
+
+				if (row.poster) {
+					const img = document.createElement('img');
+					img.className = 'poster';
+					img.loading = 'lazy';
+					img.src = row.poster;
+					img.alt = '';
+					li.append(img);
+				}
+
+				const body = document.createElement('div');
+				body.className = 'row-body';
+
+				const head = document.createElement('div');
+				head.className = 'phrase';
+				head.textContent =
+					`${phrases.map((p) => `«${p}»`).join(' ')} — ` +
+					`${row.postsCount} ${plural(row.postsCount, 'пост', 'поста', 'постов')}, ` +
+					`${row.count} ${plural(row.count, 'упоминание', 'упоминания', 'упоминаний')}`;
+				body.append(head);
+
+				const found = document.createElement('div');
+				found.className = 'found';
+				if (groupId === 'notFound') {
+					found.textContent = 'Shikimori не знает такого названия.';
+				} else if (groupId === 'notSimilar') {
+					found.textContent = `Shikimori ответил: ${(row.answers ?? []).join(' / ') || '—'}`;
+				} else {
+					const star = row.animeId ? '★ ' : '';
+					found.append(`${star}${name}${row.year ? ` · ${row.year}` : ''}${row.studio ? ` · ${row.studio}` : ''} `);
+					if (row.url) {
+						const link = document.createElement('a');
+						link.href = row.url;
+						link.target = '_blank';
+						link.rel = 'noreferrer';
+						link.textContent = 'Shikimori ↗';
+						found.append(link);
+					}
+					if (row.animeId) {
+						found.append(` · в справочнике это «${row.animeTitle ?? titleOf(row.animeId)}»`);
+					}
+					if (groupId === 'candidates') found.append(` · адрес будет /anime/${row.slug}/`);
+				}
+				body.append(found);
+
+				if (row.gain) {
+					const gain = document.createElement('div');
+					gain.className = 'gain';
+					gain.textContent = gainText(row.gain);
+					body.append(gain);
+				}
+
+				body.append(postLinks(row));
+
+				const acts = document.createElement('div');
+				acts.className = 'acts';
+				body.append(acts);
+
+				li.append(body);
+				drawActions(li, row, groupId);
+				return li;
+			}
+
+			function drawCandidates() {
+				el.candGroups.innerHTML = '';
+
+				const when = cand.generated ? RU.format(new Date(cand.generated)) : '—';
+				el.candCounts.textContent =
+					`Прочитано постов: ${cand.postsRead}. Кандидатов: ${cand.candidates.length}. Список собран ${when}.`;
+
+				for (const group of CAND_GROUPS) {
+					const rows = cand[group.id] ?? [];
+					if (rows.length === 0) continue;
+
+					const head = document.createElement('h3');
+					head.textContent = `[ ${group.title}: ${rows.length} ]`;
+					const note = document.createElement('p');
+					note.className = 'group-note';
+					note.textContent = group.note;
+
+					const list = document.createElement('ul');
+					list.className = 'rows';
+					for (const row of rows) list.append(drawRow(row, group.id));
+
+					el.candGroups.append(head, note, list);
+				}
+
+				updateApplyNote();
+			}
+
+			function updateApplyNote() {
+				const pending = decisions.filter((item) => !item.applied);
+				const creates = pending.filter((item) => item.what === 'create').length;
+				el.apply.disabled = pending.length === 0;
+				el.applyNote.textContent = pending.length === 0 ? 'решений пока нет' : `решений ждёт применения: ${pending.length}`;
+
+				// ПРЕДУПРЕЖДЕНИЕ О ПОРЦИЯХ — по числу, а не вообще: заводить два
+				// тайтла и заводить сорок это разные вещи, и сказать об этом надо
+				// в ту секунду, когда сорок набралось.
+				if (creates > 20) {
+					el.applyStatus.className = 'status bad';
+					el.applyStatus.textContent =
+						`Вы отметили ${creates} ${plural(creates, 'тайтл', 'тайтла', 'тайтлов')} к заведению. ` +
+						`Это много: каждый начнёт искаться во всём архиве сразу. Лучше применить порцию в 10–20, ` +
+						`посмотреть, что вышло, и продолжить.`;
+				} else if (el.applyStatus.className === 'status bad' && el.applyStatus.textContent.startsWith('Вы отметили')) {
+					el.applyStatus.className = 'status';
+					el.applyStatus.textContent = '';
+				}
+			}
+
+			function findRow(key) {
+				for (const group of CAND_GROUPS) {
+					for (const row of cand[group.id] ?? []) {
+						if (rowKey(row, group.id) === key) return { row, groupId: group.id };
+					}
+				}
+				return null;
+			}
+
+			el.candGroups.addEventListener('click', (event) => {
+				const button = event.target.closest('button');
+				if (!button) return;
+				const li = button.closest('li');
+				if (!li) return;
+
+				const found = findRow(li.dataset.key);
+				if (!found) return;
+				const { row, groupId } = found;
+				const key = li.dataset.key;
+				const act = button.dataset.act;
+
+				if (act === 'alias') {
+					drawPicker(li, row, groupId);
+					return;
+				}
+				if (act === 'alias-cancel') {
+					drawActions(li, row, groupId);
+					return;
+				}
+
+				if (act === 'undo') {
+					undone.add(key);
+					decisions = decisions.filter((item) => item.id !== key);
+					drawActions(li, row, groupId);
+					updateApplyNote();
+					scheduleSave();
+					return;
+				}
+
+				let decision = null;
+				if (act === 'create') {
+					decision = {
+						id: key,
+						what: 'create',
+						sourceId: row.sourceId,
+						source: 'shikimori',
+						slug: row.slug,
+						title: row.titleRu || row.titleOriginal,
+						phrases: rowPhrases(row, groupId),
+					};
+				} else if (act === 'stop') {
+					decision = { id: key, what: 'stop', phrases: rowPhrases(row, groupId) };
+				} else if (act === 'alias-ok') {
+					const select = li.querySelector('select');
+					if (!select?.value) {
+						select?.focus();
+						return;
+					}
+					decision = { id: key, what: 'alias', animeId: select.value, phrases: rowPhrases(row, groupId) };
+				}
+
+				if (!decision) return;
+				decision.at = new Date().toISOString();
+				undone.delete(key);
+				decisions = decisions.filter((item) => item.id !== key).concat(decision);
+				drawActions(li, row, groupId);
+				updateApplyNote();
+				scheduleSave();
+			});
+
+			el.candFilter.addEventListener('input', () => {
+				const query = el.candFilter.value.trim().toLowerCase();
+				let shown = 0;
+				let total = 0;
+				for (const li of el.candGroups.querySelectorAll('li')) {
+					total++;
+					const match = !query || li.dataset.find.includes(query);
+					li.hidden = !match;
+					if (match) shown++;
+				}
+				el.candFilterNote.textContent = query ? `показано строк: ${shown} из ${total}` : '';
+			});
+
+			async function loadCandidates() {
+				const [rawCandidates, meta, index] = await Promise.all([
+					readRepoFile(CANDIDATES_FILE),
+					readRepoFileMeta(DECISIONS_FILE),
+					fetch('/anime-index.json').then((res) => (res.ok ? res.json() : [])).catch(() => []),
+				]);
+
+				animeIndex = [...index].sort((a, b) =>
+					(a.titleRu || a.titleOriginal).localeCompare(b.titleRu || b.titleOriginal, 'ru'),
+				);
+
+				if (!rawCandidates) {
+					el.candCounts.textContent = 'Списка кандидатов ещё нет — его собирает робот.';
+					return;
+				}
+
+				cand = JSON.parse(rawCandidates);
+				decisions = meta.text ? JSON.parse(meta.text) : [];
+				decisionsSha = meta.sha;
+				undone.clear();
+				drawCandidates();
+			}
+
+			async function runApply() {
+				el.apply.disabled = true;
+				el.applyStatus.className = 'status';
+				el.applyStatus.textContent = 'Прошу робота применить решения…';
+
+				// Решения могли ещё не долететь до репозитория — робот прочитает
+				// файл, а не вкладку. Дожидаемся записи, и только потом зовём.
+				clearTimeout(saveTimer);
+				await saveDecisions();
+
+				const response = await dispatch(APPLY_WORKFLOW);
+
+				if (response.status !== 204) {
+					el.applyStatus.className = 'status bad';
+					el.applyStatus.textContent = `GitHub ответил кодом ${response.status}. Попробуйте ещё раз через минуту.`;
+					el.apply.disabled = false;
+					return;
+				}
+
+				el.applyStatus.innerHTML =
+					'<strong>Робот пошёл применять.</strong> Это занимает минуты полторы-две. ' +
+					'Строчка ниже поменяется сама; страницу обновлять не нужно.';
+				setTimeout(watchApply, 5000);
+			}
+
+			async function watchApply() {
+				const runs = await fetchRuns(APPLY_WORKFLOW);
+				const latest = runs[0];
+				if (!latest) {
+					setTimeout(watchApply, 5000);
+					return;
+				}
+
+				if (isRunning(latest)) {
+					el.applyStatus.innerHTML = `<strong>Робот применяет решения.</strong> Идёт ${howLong(latest)}.`;
+					setTimeout(watchApply, 5000);
+					return;
+				}
+
+				if (latest.conclusion === 'success') {
+					el.applyStatus.innerHTML =
+						'<strong>Готово.</strong> Решения применены, список пересобран. ' +
+						'Чтобы новые тайтлы появились на сайте, скажите мне — я пересоберу и выложу.';
+				} else {
+					el.applyStatus.className = 'status bad';
+					el.applyStatus.innerHTML = `<strong>Поход ${outcome(latest)}.</strong> Подробности — в письме и в списке «Что робот рассказывал» на <a href="/admin/tools/">соседней странице</a>. Решения не потерялись, можно нажать ещё раз.`;
+				}
+
+				await loadCandidates();
+			}
+
+			el.apply.addEventListener('click', runApply);
+
+			setupAuth({
+				loginButton: el.login,
+				whoSpan: el.who,
+				errorEl: el.authError,
+				onReady: async () => {
+					el.candSection.hidden = false;
+					try {
+						await loadCandidates();
+					} catch (error) {
+						el.candCounts.textContent = `Список кандидатов не загрузился: ${error.message}`;
+					}
+				},
+			});
+		</script>
+	</body>
+</html>
