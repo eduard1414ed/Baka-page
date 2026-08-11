@@ -3837,5 +3837,41 @@
 			"Волшебница и злой офицер"
 		],
 		"at": "2026-08-11T18:34:00.433Z"
+	},
+	{
+		"id": "cand:1462",
+		"what": "create",
+		"sourceId": 1462,
+		"source": "shikimori",
+		"slug": "memories",
+		"title": "Воспоминания о будущем",
+		"phrases": [
+			"Воспоминаний о будущем"
+		],
+		"at": "2026-08-11T18:34:06.636Z"
+	},
+	{
+		"id": "cand:21557",
+		"what": "create",
+		"sourceId": 21557,
+		"source": "shikimori",
+		"slug": "omoide-no-marnie",
+		"title": "Воспоминания о Марни",
+		"phrases": [
+			"Воспоминания о Марни"
+		],
+		"at": "2026-08-11T18:34:09.563Z"
+	},
+	{
+		"id": "cand:38903",
+		"what": "create",
+		"sourceId": 38903,
+		"source": "shikimori",
+		"slug": "moonrise",
+		"title": "Восход Луны",
+		"phrases": [
+			"Восход Луны"
+		],
+		"at": "2026-08-11T18:34:22.853Z"
 	}
 ]
