@@ -4219,5 +4219,17 @@
 			"Ёко из Сэнгоку"
 		],
 		"at": "2026-08-11T19:02:43.638Z"
+	},
+	{
+		"id": "cand:58725",
+		"what": "create",
+		"sourceId": 58725,
+		"source": "shikimori",
+		"slug": "ninja-to-koroshiya-no-futarigurashi",
+		"title": "Жизнь ниндзя и убийцы",
+		"phrases": [
+			"Жизнь ниндзя и убийцы"
+		],
+		"at": "2026-08-11T19:02:45.404Z"
 	}
 ]
