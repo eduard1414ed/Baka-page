@@ -11,7 +11,7 @@ externalSource: ''
 adLabel: ''
 anime: []
 timecodes: ''
-pullMedia: true
+pullMedia: false
 tgId: 4
 tgUrl: https://t.me/podcastbaka/4
 ---
