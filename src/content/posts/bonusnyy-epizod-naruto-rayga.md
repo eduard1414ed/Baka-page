@@ -2,23 +2,29 @@
 title: Бонусный эпизод | Наруто. Райга
 date: 2022-05-14
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: ''
 noCover: false
-tgId: 42
-tgUrl: https://t.me/podcastbaka/42
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested:
+  - naruto
+timecodes: ''
 bonusLinks:
   boosty: ''
   patreon: ''
   tgClosed: ''
   vkDonat: ''
-animeSuggested:
+tgId: 42
+tgUrl: https://t.me/podcastbaka/42
+anime:
   - naruto
 ---
 
 И вот мы снова здесь: ругаем очередную филлерную арку «Наруто».
 
-Почему нам обидно за команду Гая? Правда ли, что Тентен — классная? И сколько нужно зубочисток, чтобы стать Мечником Тумана? #бонус
+Почему нам обидно за команду Гая? Правда ли, что Тентен — классная? И сколько нужно зубочисток, чтобы стать Мечником Тумана?
 
-Послушать выпуск можно у нас [на патреоне](https://www.patreon.com/bakapodcast) или у нас [в группе в ВК](https://vk.com/podcast.baka)
+::anime-ref{id="naruto" source="shikimori" source-id="20"}
