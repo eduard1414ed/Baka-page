@@ -156,7 +156,11 @@
 			let decisionsSha = null;
 			let animeIndex = [];
 			let saveTimer = null;
-			let saving = false;
+
+			// Идущая прямо сейчас запись файла решений. Ждать её обязан каждый,
+			// кто хочет записать следом: два PUT одного файла внахлёст разойдутся
+			// отпечатками версии и получат отказ.
+			let savingNow = null;
 
 			// Что я отменил кнопкой «Передумал» за этот сеанс. Нужен ровно
 			// при столкновении с чужой записью того же файла.
@@ -197,53 +201,72 @@
 			function scheduleSave() {
 				clearTimeout(saveTimer);
 				el.applyNote.textContent = 'решения сохраняются…';
-				saveTimer = setTimeout(saveDecisions, 1200);
-			}
-
-			async function saveDecisions(attempt = 0) {
-				if (saving) {
-					scheduleSave();
-					return;
-				}
-				saving = true;
-				try {
-					const text = JSON.stringify(decisions, null, '\t') + '\n';
-					const pending = decisions.filter((item) => !item.applied).length;
-					const response = await writeRepoFile(
-						DECISIONS_FILE,
-						text,
-						decisionsSha,
-						`Решения по кандидатам в тайтлы: ${decisions.length}`,
-					);
-
-					if (response.ok) {
-						const data = await response.json();
-						decisionsSha = data.content?.sha ?? decisionsSha;
-						el.applyNote.textContent = pending > 0 ? `решений ждёт применения: ${pending}` : 'всё применено';
-						return;
-					}
-
-					// Кто-то (робот) записал файл раньше — перечитать, слить, повторить.
-					if ((response.status === 409 || response.status === 422) && attempt < 2) {
-						const meta = await readRepoFileMeta(DECISIONS_FILE);
-						decisionsSha = meta.sha;
-						decisions = mergeDecisions(meta.text ? JSON.parse(meta.text) : []);
-						saving = false;
-						await saveDecisions(attempt + 1);
-						return;
-					}
-
-					throw new Error(`GitHub ответил кодом ${response.status}`);
-				} catch (error) {
+				saveTimer = setTimeout(() => {
 					// МОЛЧАТЬ ТУТ НЕЛЬЗЯ. Не сохранившееся решение выглядит точно
 					// так же, как сохранившееся, — строка на экране уже помечена
 					// решённой, а в репозитории её нет.
-					el.applyNote.textContent = '';
-					el.applyStatus.className = 'status bad';
-					el.applyStatus.textContent = `РЕШЕНИЯ НЕ СОХРАНИЛИСЬ: ${error.message}. Не закрывайте вкладку, нажмите любую кнопку ещё раз.`;
-				} finally {
-					saving = false;
+					saveDecisions().catch(showSaveError);
+				}, 1200);
+			}
+
+			/**
+			 * Записать решения в репозиторий и ДОЖДАТЬСЯ, что они там лежат.
+			 *
+			 * Обещание возвращается только после самой записи — на этом стоит
+			 * кнопка «Применить»: она зовёт робота следующей строчкой, а робот
+			 * читает файл, а не вкладку. Прежняя редакция при занятой записи
+			 * откладывала её на потом и возвращалась НЕМЕДЛЕННО — 11 августа
+			 * робота позвали поверх файла с двумя решениями из пяти, и три
+			 * решения он не увидел вовсе.
+			 *
+			 * Заходы выстраиваются в очередь друг за другом: у GitHub на запись
+			 * файла нужен отпечаток его текущей версии, и два PUT внахлёст
+			 * получили бы отказ.
+			 */
+			function saveDecisions() {
+				clearTimeout(saveTimer);
+				const mine = Promise.resolve(savingNow)
+					.catch(() => {})
+					.then(() => writeDecisions(0));
+				// В очереди держим заведомо неломающееся обещание: чужой сбой
+				// не должен ронять того, кто просто встал следом.
+				savingNow = mine.catch(() => {});
+				return mine;
+			}
+
+			async function writeDecisions(attempt) {
+				const text = JSON.stringify(decisions, null, '\t') + '\n';
+				const pending = decisions.filter((item) => !item.applied).length;
+				const response = await writeRepoFile(
+					DECISIONS_FILE,
+					text,
+					decisionsSha,
+					`Решения по кандидатам в тайтлы: ${decisions.length}`,
+				);
+
+				if (response.ok) {
+					const data = await response.json();
+					decisionsSha = data.content?.sha ?? decisionsSha;
+					el.applyNote.textContent = pending > 0 ? `решений ждёт применения: ${pending}` : 'всё применено';
+					return;
 				}
+
+				// Кто-то (робот) записал файл раньше — перечитать, слить, повторить.
+				if ((response.status === 409 || response.status === 422) && attempt < 2) {
+					const meta = await readRepoFileMeta(DECISIONS_FILE);
+					decisionsSha = meta.sha;
+					decisions = mergeDecisions(meta.text ? JSON.parse(meta.text) : []);
+					await writeDecisions(attempt + 1);
+					return;
+				}
+
+				throw new Error(`GitHub ответил кодом ${response.status}`);
+			}
+
+			function showSaveError(error) {
+				el.applyNote.textContent = '';
+				el.applyStatus.className = 'status bad';
+				el.applyStatus.textContent = `РЕШЕНИЯ НЕ СОХРАНИЛИСЬ: ${error.message}. Не закрывайте вкладку, нажмите любую кнопку ещё раз.`;
 			}
 
 			// ── Отрисовка ───────────────────────────────────────────────────────
@@ -607,37 +630,62 @@
 				el.applyStatus.className = 'status';
 				el.applyStatus.textContent = 'Прошу робота применить решения…';
 
-				// Решения могли ещё не долететь до репозитория — робот прочитает
-				// файл, а не вкладку. Дожидаемся записи, и только потом зовём.
-				clearTimeout(saveTimer);
-				await saveDecisions();
+				// ВЕСЬ ЗАХОД В ОДНОЙ ЛОВУШКЕ. Сорвись он молча — кнопка осталась бы
+				// серой навсегда, и выглядело бы это как «робот всё ещё думает».
+				try {
+					// Решения могли ещё не долететь до репозитория — робот прочитает
+					// файл, а не вкладку. ДОЖИДАЕМСЯ записи, и только потом зовём.
+					// Не сохранилось — не зовём вовсе: робот применил бы старое.
+					await saveDecisions();
 
-				const response = await dispatch(APPLY_WORKFLOW);
+					// Какой поход был последним ДО нашего. Без этого числа экран
+					// принял бы за свой предыдущий поход — тот уже завершён, и он
+					// отчитался бы о чужом исходе через пять секунд после нажатия.
+					const before = (await fetchRuns(APPLY_WORKFLOW, 1))[0]?.id ?? 0;
 
-				if (response.status !== 204) {
+					const response = await dispatch(APPLY_WORKFLOW);
+					if (response.status !== 204) {
+						throw new Error(`GitHub ответил кодом ${response.status}.`);
+					}
+
+					el.applyStatus.innerHTML =
+						'<strong>Робот пошёл применять.</strong> Это занимает минуты полторы-две. ' +
+						'Строчка ниже поменяется сама; страницу обновлять не нужно.';
+					setTimeout(() => watchApply(before, 0), 5000);
+				} catch (error) {
 					el.applyStatus.className = 'status bad';
-					el.applyStatus.textContent = `GitHub ответил кодом ${response.status}. Попробуйте ещё раз через минуту.`;
+					el.applyStatus.textContent =
+						`Робота позвать не вышло: ${error.message} Не применено ничего, ` +
+						`решения на месте — попробуйте ещё раз через минуту.`;
 					el.apply.disabled = false;
-					return;
 				}
-
-				el.applyStatus.innerHTML =
-					'<strong>Робот пошёл применять.</strong> Это занимает минуты полторы-две. ' +
-					'Строчка ниже поменяется сама; страницу обновлять не нужно.';
-				setTimeout(watchApply, 5000);
 			}
 
-			async function watchApply() {
+			// Сколько раз ждём появления похода в списке, прежде чем сказать вслух.
+			// Пять секунд на заход, то есть две минуты: дольше ждать нечего —
+			// GitHub заводит запись о походе за секунды.
+			const WATCH_GIVE_UP = 24;
+
+			async function watchApply(before, tries) {
 				const runs = await fetchRuns(APPLY_WORKFLOW);
-				const latest = runs[0];
+				// Свой поход узнаём по номеру, а не по слову «последний».
+				const latest = runs.find((run) => run.id > before);
 				if (!latest) {
-					setTimeout(watchApply, 5000);
+					if (tries >= WATCH_GIVE_UP) {
+						el.applyStatus.className = 'status bad';
+						el.applyStatus.textContent =
+							'Робот не появился в списке походов за две минуты. Решения на месте, ' +
+							'ничего не применено — нажмите «Применить решения» ещё раз.';
+						el.apply.disabled = false;
+						return;
+					}
+					setTimeout(() => watchApply(before, tries + 1), 5000);
 					return;
 				}
 
 				if (isRunning(latest)) {
 					el.applyStatus.innerHTML = `<strong>Робот применяет решения.</strong> Идёт ${howLong(latest)}.`;
-					setTimeout(watchApply, 5000);
+					setTimeout(() => watchApply(before, tries), 5000);
 					return;
 				}
 
@@ -647,10 +695,18 @@
 						'Чтобы новые тайтлы появились на сайте, скажите мне — я пересоберу и выложу.';
 				} else {
 					el.applyStatus.className = 'status bad';
-					el.applyStatus.innerHTML = `<strong>Поход ${outcome(latest)}.</strong> Подробности — в письме и в списке «Что робот рассказывал» на <a href="/admin/tools/">соседней странице</a>. Решения не потерялись, можно нажать ещё раз.`;
+					el.applyStatus.innerHTML = `<strong>Поход ${outcome(latest)}.</strong> Что успел робот и сохранилось ли это — сказано ПОСЛЕДНЕЙ СТРОКОЙ письма; письма лежат в списке «Что робот рассказывал» на <a href="/admin/tools/">соседней странице</a>. Решения не потерялись, можно нажать ещё раз.`;
 				}
 
-				await loadCandidates();
+				// Список перечитываем в любом случае: применённое обязано уйти
+				// с экрана. А не выйдет перечитать — кнопку всё равно вернуть,
+				// иначе она останется серой навсегда.
+				try {
+					await loadCandidates();
+				} catch (error) {
+					el.candCounts.textContent = `Список кандидатов не перечитался: ${error.message}`;
+					el.apply.disabled = false;
+				}
 			}
 
 			el.apply.addEventListener('click', runApply);

@@ -49,8 +49,23 @@ jobs:
       - name: Проверить правила отбора
         run: node scripts/anime-candidates.test.mjs
 
+      # Три проверки самого применения. Первая гоняет НАСТОЯЩИЙ скрипт экрана
+      # и спрашивает про порядок во времени, вторая — настоящий текст шага
+      # записи в песочнице из git-репозиториев, третья — слияние файла решений.
+      # Всё три поставлены после 11 августа, когда применение легло на первом же
+      # живом нажатии, а прошлые проверки этого не увидели.
+      - name: Проверить применение решений
+        run: |
+          node scripts/candidates-screen.test.mjs
+          node scripts/candidates-save.test.mjs
+          node scripts/anime-candidates-decisions-merge.mjs --selftest
+
+      # `set -o pipefail` — иначе исход берётся у `tee`, а он не падает никогда:
+      # «не вышло 12 решений» роняет скрипт кодом 1, а шаг считается удачным.
       - name: Применить решения
-        run: node scripts/anime-candidates-apply.mjs | tee report.txt
+        run: |
+          set -o pipefail
+          node scripts/anime-candidates-apply.mjs | tee report.txt
 
       # Пересборка списка — всегда, даже если часть решений не применилась:
       # применённое обязано уйти с экрана, иначе заказчик решит его второй раз.
@@ -58,26 +73,95 @@ jobs:
         if: always()
         run: node scripts/anime-candidates.mjs --write --no-ask >> report.txt
 
+      # ЗАПИСЬ — ОТДЕЛЬНАЯ РАБОТА, И ОНА УМЕЕТ НЕ ВЫЙТИ. Вкладка заказчика пишет
+      # в тот же файл решений, пока робот работает свои полторы минуты: 11 августа
+      # `git pull --rebase` встал столкновением ровно на нём и уронил шаг целиком.
+      # Тайтл был заведён, обложки скачаны, письмо ушло бодрое — а в репозитории
+      # не осталось ничего. Теперь столкновение на этом файле — обычное дело:
+      # список решений берётся у вкладки, пометки «применено» возвращаются свои.
       - name: Закоммитить сделанное
+        id: save
         if: always()
         run: |
           git config user.name "baka-anime-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add src/content/anime public/anime src/content/anime-stoplist.json src/data/animeCandidates.json src/data/animeCandidateDecisions.json
-          if git diff --cached --quiet; then
-            echo "Ничего не изменилось."
-          else
-            git commit -m "Применить решения по кандидатам в тайтлы"
-            git pull --rebase origin main
-            git push
+
+          DECISIONS=src/data/animeCandidateDecisions.json
+
+          save_it() {
+            git add src/content/anime public/anime src/content/anime-stoplist.json src/data/animeCandidates.json "$DECISIONS" || return 1
+            if git diff --cached --quiet; then
+              echo "Ничего не изменилось — сохранять нечего." | tee -a report.txt
+              return 0
+            fi
+
+            # Свои пометки — до всякой возни с ветками: при столкновении рабочая
+            # копия файла станет чужой, и взять их будет уже неоткуда.
+            cp "$DECISIONS" /tmp/decisions-mine.json || return 1
+
+            git commit -m "Применить решения по кандидатам в тайтлы" || return 1
+
+            for attempt in 1 2 3; do
+              git fetch origin main || return 1
+
+              if ! GIT_EDITOR=true git rebase origin/main; then
+                # Столкновение бывает ровно на файле решений. Где угодно ещё —
+                # это не наш случай, и разбирать его вслепую нельзя.
+                conflicts=$(git diff --name-only --diff-filter=U | tr '\n' ' ' | sed 's/ *$//')
+                if [ "$conflicts" != "$DECISIONS" ]; then
+                  echo "Столкновение не там, где ждали: [$conflicts]" | tee -a report.txt
+                  git rebase --abort || true
+                  return 1
+                fi
+                # Ступень 2 — то, что лежит на GitHub (список от вкладки).
+                git show :2:"$DECISIONS" > /tmp/decisions-fresh.json || return 1
+                node scripts/anime-candidates-decisions-merge.mjs \
+                  /tmp/decisions-fresh.json /tmp/decisions-mine.json > "$DECISIONS" || return 1
+                git add "$DECISIONS" || return 1
+                # Слияние могло совпасть с тем, что уже лежит на GitHub, —
+                # тогда коммиту нечего нести, и `--continue` откажется работать.
+                if git diff --cached --quiet && git diff --quiet; then
+                  git rebase --skip || return 1
+                else
+                  GIT_EDITOR=true git rebase --continue || return 1
+                fi
+              fi
+
+              if git push; then
+                echo "" | tee -a report.txt
+                echo "✓ ЗАПИСАНО В РЕПОЗИТОРИЙ, коммит $(git rev-parse --short HEAD)." | tee -a report.txt
+                return 0
+              fi
+              echo "Запись не прошла (попытка $attempt из 3) — захожу заново."
+            done
+            return 1
+          }
+
+          if save_it; then
+            echo "saved=yes" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
 
+          echo "" | tee -a report.txt
+          echo "✗✗ СДЕЛАННОЕ НЕ СОХРАНИЛОСЬ В РЕПОЗИТОРИИ — НЕ ПРИМЕНЕНО НИЧЕГО." | tee -a report.txt
+          echo "Всё, что написано выше, робот сделал у себя и выбросил вместе с машиной." | tee -a report.txt
+          echo "Нажмите «Применить решения» ещё раз — решения на месте, дублей не будет." | tee -a report.txt
+          exit 1
+
+      # ЗАГОЛОВОК ПИСЬМА ГОВОРИТ ИСХОД. Прежний был один на все случаи, и письмо
+      # о выброшенной работе выглядело в списке ровно как письмо об удачной.
       - name: Прислать отчёт письмом
         if: always() && hashFiles('report.txt') != ''
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SAVED: ${{ steps.save.outputs.saved }}
         run: |
+          if [ "$SAVED" = "yes" ]; then
+            TITLE="Решения по кандидатам применены"
+          else
+            TITLE="Решения по кандидатам НЕ ПРИМЕНИЛИСЬ — ничего не сохранено"
+          fi
           gh issue create \
-            --title "Решения по кандидатам применены" \
+            --title "$TITLE" \
             --body "$(head -c 60000 report.txt)" \
             --assignee eduard1414ed

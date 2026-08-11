@@ -280,7 +280,20 @@
 				return runs;
 			}
 
-			async function runRobot() {
+			// ВЕСЬ ЗАХОД В ОДНОЙ ЛОВУШКЕ. Сорвись он молча — например, пропал
+			// интернет, — кнопка осталась бы серой навсегда, и выглядело бы это
+			// как «робот идёт», хотя не позван никто.
+			const оберегая = (кнопки, строчка) => async (заход) => {
+				try {
+					await заход();
+				} catch (error) {
+					строчка.className = 'status bad';
+					строчка.textContent = `Робота позвать не вышло: ${error.message}. Попробуйте ещё раз через минуту.`;
+					for (const кнопка of кнопки) кнопка.disabled = false;
+				}
+			};
+
+			async function runRobotOnce() {
 				el.run.disabled = true;
 				el.runStatus.textContent = 'Прошу GitHub позвать робота…';
 
@@ -307,12 +320,14 @@
 				setTimeout(refresh, 4000);
 			}
 
+			const runRobot = () => оберегая([el.run], el.runStatus)(runRobotOnce);
+
 			// ── Пересчёт падежных форм ──────────────────────────────────────────
 			//
 			// Денег не стоит и ничего не расшифровывает, поэтому отсчёта между
 			// нажатиями тут нет. Единственное, чего нельзя, — звать второй раз,
 			// пока идёт первый: два пересчёта разом писали бы в одни файлы.
-			async function runCases(write) {
+			async function runCasesOnce(write) {
 				el.casesDry.disabled = true;
 				el.casesWrite.disabled = true;
 				el.casesStatus.className = 'status';
@@ -341,6 +356,9 @@
 					refresh();
 				}, 90000);
 			}
+
+			const runCases = (write) =>
+				оберегая([el.casesDry, el.casesWrite], el.casesStatus)(() => runCasesOnce(write));
 
 			// СПИСОК КАНДИДАТОВ ЭТА СТРАНИЦА НЕ ГРУЖАЕТ ВОВСЕ. Файл под восемьсот
 			// килобайт, и качать его ради одной строчки со счётчиком значило бы
