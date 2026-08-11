@@ -4845,5 +4845,29 @@
 			"Путь домохозяина"
 		],
 		"at": "2026-08-11T19:27:41.645Z"
+	},
+	{
+		"id": "cand:48363",
+		"what": "create",
+		"sourceId": 48363,
+		"source": "shikimori",
+		"slug": "rpg-fudousan",
+		"title": "РПГ недвижимость",
+		"phrases": [
+			"РПГ Недвижимость"
+		],
+		"at": "2026-08-11T19:27:55.929Z"
+	},
+	{
+		"id": "cand:59632",
+		"what": "create",
+		"sourceId": 59632,
+		"source": "shikimori",
+		"slug": "mattaku-saikin-no-tantei-to-kitara",
+		"title": "С нынешними детективами ничего не поделаешь",
+		"phrases": [
+			"С нынешними детективами ничего не поделаешь"
+		],
+		"at": "2026-08-11T19:27:57.045Z"
 	}
 ]
