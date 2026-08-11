@@ -2303,5 +2303,29 @@
 			"Внук Нурарихёна"
 		],
 		"at": "2026-08-11T15:03:12.237Z"
+	},
+	{
+		"id": "cand:2848",
+		"what": "create",
+		"sourceId": 2848,
+		"source": "shikimori",
+		"slug": "kappa-no-coo-to-natsuyasumi",
+		"title": "Волшебное лето",
+		"phrases": [
+			"Волшебное лето"
+		],
+		"at": "2026-08-11T15:03:14.936Z"
+	},
+	{
+		"id": "cand:56980",
+		"what": "create",
+		"sourceId": 56980,
+		"source": "shikimori",
+		"slug": "karasu-wa-aruji-wo-erabanai",
+		"title": "Ворон не выбирает господина",
+		"phrases": [
+			"Ворон не выбирает господина"
+		],
+		"at": "2026-08-11T15:03:15.836Z"
 	}
 ]
