@@ -4399,5 +4399,17 @@
 			"Кэрол и Тьюсдей"
 		],
 		"at": "2026-08-11T19:05:56.720Z"
+	},
+	{
+		"id": "cand:49304",
+		"what": "create",
+		"sourceId": 49304,
+		"source": "shikimori",
+		"slug": "seiken-densetsu-legend-of-mana-the-teardrop-crystal",
+		"title": "Легенда о святом мече: Легенда маны — Каплевидный кристалл",
+		"phrases": [
+			"Легенду о святом мече"
+		],
+		"at": "2026-08-11T19:06:01.120Z"
 	}
 ]
