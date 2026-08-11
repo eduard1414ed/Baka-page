@@ -138,7 +138,9 @@
 			"Тетрадь смерти",
 			"Тетрадью смерти"
 		],
-		"at": "2026-08-11T11:33:36.037Z"
+		"at": "2026-08-11T11:33:36.037Z",
+		"result": "заведён: src/content/anime/death-note.json",
+		"applied": "2026-08-11T11:34:12.090Z"
 	},
 	{
 		"id": "cand:269",
@@ -151,7 +153,9 @@
 			"Блич",
 			"Блича"
 		],
-		"at": "2026-08-11T11:33:37.033Z"
+		"at": "2026-08-11T11:33:37.033Z",
+		"result": "заведён: src/content/anime/bleach.json",
+		"applied": "2026-08-11T11:34:13.995Z"
 	},
 	{
 		"id": "cand:5114",
@@ -167,6 +171,8 @@
 			"FULLMETAL ALCHEMIST: BROTHERHOOD",
 			"Стальной алхимик: Братство"
 		],
-		"at": "2026-08-11T11:33:39.675Z"
+		"at": "2026-08-11T11:33:39.675Z",
+		"result": "заведён: src/content/anime/fullmetal-alchemist-brotherhood.json",
+		"applied": "2026-08-11T11:34:15.907Z"
 	}
 ]
