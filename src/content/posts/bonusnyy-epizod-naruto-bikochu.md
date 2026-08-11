@@ -6,19 +6,25 @@ draft: true
 description: ''
 cover: ''
 noCover: false
-tgId: 38
-tgUrl: https://t.me/podcastbaka/38
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested:
+  - naruto
+timecodes: ''
 bonusLinks:
   boosty: ''
   patreon: ''
   tgClosed: ''
   vkDonat: ''
-animeSuggested:
+tgId: 38
+tgUrl: https://t.me/podcastbaka/38
+anime:
   - naruto
 ---
 
 В этом эпизоде мы наконец-то (!) остались довольны филлерной аркой, потому что нам показали команду №8.
 
-Кто лучший командир: Шикамару или Шино? Как Наруто влюбился в Хинату? И насколько бесполезен Киба? #бонус
+Кто лучший командир: Шикамару или Шино? Как Наруто влюбился в Хинату? И насколько бесполезен Киба?
 
-Послушать выпуск можно у нас [на патреоне](https://www.patreon.com/bakapodcast) или у нас [в группе в ВК](https://vk.com/podcast.baka)
+::anime-ref{id="naruto" source="shikimori" source-id="20"}
