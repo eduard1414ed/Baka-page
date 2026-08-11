@@ -5,6 +5,7 @@ category: note
 draft: true
 description: ''
 cover: ''
+pullMedia: true
 noCover: false
 tgId: 4025
 tgUrl: https://t.me/podcastbaka/4025

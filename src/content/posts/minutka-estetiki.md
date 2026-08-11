@@ -5,6 +5,7 @@ category: note
 draft: true
 description: ''
 cover: ''
+pullMedia: true
 noCover: false
 tgId: 760
 tgUrl: https://t.me/podcastbaka/760

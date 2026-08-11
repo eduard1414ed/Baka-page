@@ -5,6 +5,7 @@ category: note
 draft: true
 description: ''
 cover: ''
+pullMedia: true
 noCover: false
 tgId: 1837
 tgUrl: https://t.me/podcastbaka/1837

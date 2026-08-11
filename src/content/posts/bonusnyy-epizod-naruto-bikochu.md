@@ -5,6 +5,7 @@ category: bonus
 draft: true
 description: ''
 cover: ''
+pullMedia: true
 noCover: false
 externalUrl: ''
 externalSource: ''

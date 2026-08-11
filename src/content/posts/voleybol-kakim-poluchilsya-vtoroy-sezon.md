@@ -5,6 +5,7 @@ category: bonus
 draft: true
 description: ''
 cover: ''
+pullMedia: true
 noCover: false
 tgId: 2839
 tgUrl: https://t.me/podcastbaka/2839

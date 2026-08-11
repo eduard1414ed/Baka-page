@@ -5,6 +5,7 @@ category: bonus
 draft: true
 description: ''
 cover: ''
+pullMedia: true
 noCover: false
 tgId: 1969
 tgUrl: https://t.me/podcastbaka/1969
