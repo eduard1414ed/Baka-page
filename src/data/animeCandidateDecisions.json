@@ -4207,5 +4207,17 @@
 			"Дьяволёнок"
 		],
 		"at": "2026-08-11T19:02:41.736Z"
+	},
+	{
+		"id": "cand:56242",
+		"what": "create",
+		"sourceId": 56242,
+		"source": "shikimori",
+		"slug": "sengoku-youko-yonaoshi-kyoudai-hen",
+		"title": "Ёко из Сэнгоку",
+		"phrases": [
+			"Ёко из Сэнгоку"
+		],
+		"at": "2026-08-11T19:02:43.638Z"
 	}
 ]
