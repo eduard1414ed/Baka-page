@@ -3753,5 +3753,17 @@
 			"Ветра амнезии"
 		],
 		"at": "2026-08-11T18:33:25.573Z"
+	},
+	{
+		"id": "cand:59160",
+		"what": "create",
+		"sourceId": 59160,
+		"source": "shikimori",
+		"slug": "wind-breaker-season-2",
+		"title": "Ветролом 2",
+		"phrases": [
+			"Ветролом 2"
+		],
+		"at": "2026-08-11T18:33:28.774Z"
 	}
 ]
