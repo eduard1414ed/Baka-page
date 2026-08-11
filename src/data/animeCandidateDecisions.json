@@ -1924,5 +1924,30 @@
 			"Бобобо-бо Бо-бобо"
 		],
 		"at": "2026-08-11T14:08:06.507Z"
+	},
+	{
+		"id": "cand:59791",
+		"what": "create",
+		"sourceId": 59791,
+		"source": "shikimori",
+		"slug": "ruri-no-houseki",
+		"title": "Драгоценности Рури",
+		"phrases": [
+			"Драгоценности Рури",
+			"Драгоценностей Рури"
+		],
+		"at": "2026-08-11T14:08:08.091Z"
+	},
+	{
+		"id": "cand:433",
+		"what": "create",
+		"sourceId": 433,
+		"source": "shikimori",
+		"slug": "kumo-no-mukou-yakusoku-no-basho",
+		"title": "За облаками",
+		"phrases": [
+			"За облаками"
+		],
+		"at": "2026-08-11T14:08:09.058Z"
 	}
 ]
