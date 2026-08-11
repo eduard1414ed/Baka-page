@@ -30,6 +30,7 @@ import { parseTimecodeList } from '../../lib/timecode.mjs';
 import { findEpisodeByGuid } from '../../lib/podcastFeed.mjs';
 import { formatPostDate } from '../../lib/postDate.mjs';
 import { episodeNumber } from '../../lib/postMeta.mjs';
+import { animeSearchWords } from '../../lib/animeSearch.mjs';
 import AnimeBadge from '../../components/AnimeBadge.astro';
 import ContentHeader from '../../components/ContentHeader.astro';
 import PostKicker from '../../components/PostKicker.astro';
@@ -277,6 +278,10 @@ const animeIds = [
 	...new Set([...(anime ?? []).map((ref: { id: string }) => ref.id), ...inTextIds, ...mentionTimes.keys()]),
 ];
 const animeEntries = (await Promise.all(animeIds.map((id) => getEntry('anime', id)))).filter(Boolean);
+
+// Слова упомянутых тайтлов для поиска — невидимой строкой в конце статьи,
+// см. комментарий у самой строки ниже.
+const animeSearchField = animeEntries.map((entry) => animeSearchWords(entry!.data)).join(' ');
 
 // ——— Что видно в поиске и в превью при отправке ссылки (тз/06, шаги 7–10) ———
 
@@ -592,6 +597,28 @@ const postSearchMeta = [
 					</nav>
 				)
 			}
+			{/* НЕВИДИМОЕ ПОЛЕ ПОИСКА: НАЗВАНИЯ УПОМЯНУТЫХ ТАЙТЛОВ (11 августа 2026).
+			    Марки тайтлов выше помечены `data-pagefind-ignore` — они органы
+			    навигации, и в цитате выдачи читались бы мусором. Но вместе с ними
+			    из поиска выпадали и сами названия: тайтл, проставленный РУКОЙ
+			    в поле «Тайтлы поста», в тексте материала может не встречаться
+			    ни разу, и материал не находился по нему вовсе. Заказчик вправе
+			    ждать обратного: он проставил тайтл затем, чтобы связь работала.
+
+			    Слова те же, что у страницы тайтла и у внешней статьи, и берутся
+			    общей функцией (src/lib/animeSearch.mjs) — вписанный в админку
+			    вариант написания обязан действовать во всех трёх местах разом.
+
+			    СТОИТ ПОСЛЕДНИМ, И ЭТО ВАЖНО ДВАЖДЫ. Во-первых, так строка
+			    не попадает в начало отрывка выдачи. Во-вторых, у неё свой `id`,
+			    и по нему страница поиска отличает совпадение «в тайтлах» от
+			    совпадения в тексте: первое ставит материал в выдачу, но цитатой
+			    не становится — читать «Блич Bleach блич» незачем. */}
+			{animeSearchField && (
+				<span id="anime-words" class="visually-hidden" aria-hidden="true">
+					{animeSearchField}
+				</span>
+			)}
 		</article>
 
 		{/* ДВА ХВОСТОВЫХ БЛОКА — ЗА ПРЕДЕЛАМИ `<article>`, и это не оформление,
