@@ -1986,5 +1986,17 @@
 			"Гносия"
 		],
 		"at": "2026-08-11T14:08:27.324Z"
+	},
+	{
+		"id": "cand:12531",
+		"what": "create",
+		"sourceId": 12531,
+		"source": "shikimori",
+		"slug": "sakamichi-no-apollon",
+		"title": "Дети на холме",
+		"phrases": [
+			"Дети на холме"
+		],
+		"at": "2026-08-11T14:08:28.559Z"
 	}
 ]
