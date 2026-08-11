@@ -4423,5 +4423,17 @@
 			"Ловцах забытых голосов"
 		],
 		"at": "2026-08-11T19:06:09.337Z"
+	},
+	{
+		"id": "cand:1412",
+		"what": "create",
+		"sourceId": 1412,
+		"source": "shikimori",
+		"slug": "lupin-iii",
+		"title": "Люпен III",
+		"phrases": [
+			"Люпен III"
+		],
+		"at": "2026-08-11T19:06:23.137Z"
 	}
 ]
