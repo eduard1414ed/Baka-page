@@ -309,5 +309,44 @@
 			"Хёку"
 		],
 		"at": "2026-08-11T12:00:58.228Z"
+	},
+	{
+		"id": "cand:32182",
+		"what": "create",
+		"sourceId": 32182,
+		"source": "shikimori",
+		"slug": "mob-psycho-100",
+		"title": "Моб Психо 100",
+		"phrases": [
+			"Моб Психо 100"
+		],
+		"at": "2026-08-11T12:00:59.443Z"
+	},
+	{
+		"id": "cand:20583",
+		"what": "create",
+		"sourceId": 20583,
+		"source": "shikimori",
+		"slug": "haikyuu",
+		"title": "Волейбол!!",
+		"phrases": [
+			"Волейбол",
+			"Волейбола"
+		],
+		"at": "2026-08-11T12:01:00.277Z"
+	},
+	{
+		"id": "cand:28851",
+		"what": "create",
+		"sourceId": 28851,
+		"source": "shikimori",
+		"slug": "koe-no-katachi",
+		"title": "Форма голоса",
+		"phrases": [
+			"Формы Голоса",
+			"Форма голоса",
+			"Форму голоса"
+		],
+		"at": "2026-08-11T12:01:01.343Z"
 	}
 ]
