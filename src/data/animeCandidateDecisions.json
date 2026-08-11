@@ -3612,7 +3612,9 @@
 		"phrases": [
 			"Бойца Баки"
 		],
-		"at": "2026-08-11T18:31:59.892Z"
+		"at": "2026-08-11T18:31:59.892Z",
+		"result": "заведён: src/content/anime/grappler-baki.json",
+		"applied": "2026-08-11T18:38:35.157Z"
 	},
 	{
 		"id": "cand:50425",
@@ -3624,7 +3626,9 @@
 		"phrases": [
 			"Больше, чем пара, меньше, чем любовники"
 		],
-		"at": "2026-08-11T18:32:06.890Z"
+		"at": "2026-08-11T18:32:06.890Z",
+		"result": "заведён: src/content/anime/fuufu-ijou-koibito-miman.json",
+		"applied": "2026-08-11T18:38:37.214Z"
 	},
 	{
 		"id": "cand:1824",
@@ -3636,7 +3640,9 @@
 		"phrases": [
 			"Босоногий Гэн"
 		],
-		"at": "2026-08-11T18:32:10.161Z"
+		"at": "2026-08-11T18:32:10.161Z",
+		"result": "заведён: src/content/anime/hadashi-no-gen.json",
+		"applied": "2026-08-11T18:38:39.145Z"
 	},
 	{
 		"id": "cand:45",
@@ -3648,7 +3654,9 @@
 		"phrases": [
 			"Бродяга Кэнсин"
 		],
-		"at": "2026-08-11T18:32:16.410Z"
+		"at": "2026-08-11T18:32:16.410Z",
+		"result": "заведён: src/content/anime/rurouni-kenshin-meiji-kenkaku-romantan.json",
+		"applied": "2026-08-11T18:38:41.096Z"
 	},
 	{
 		"id": "cand:51371",
@@ -3660,7 +3668,9 @@
 		"phrases": [
 			"Буттигирэ!"
 		],
-		"at": "2026-08-11T18:32:20.778Z"
+		"at": "2026-08-11T18:32:20.778Z",
+		"result": "заведён: src/content/anime/bucchigire.json",
+		"applied": "2026-08-11T18:38:43.024Z"
 	},
 	{
 		"id": "cand:55717",
@@ -3672,7 +3682,9 @@
 		"phrases": [
 			"Бывший герой, которого прозвали неудачником и выгнали из дома, решил жить самостоятельно"
 		],
-		"at": "2026-08-11T18:32:30.864Z"
+		"at": "2026-08-11T18:32:30.864Z",
+		"result": "заведён: src/content/anime/dekisokonai-to-yobareta-motoeiyuu-wa-jikka-kara-tsuihou-sare.json",
+		"applied": "2026-08-11T18:38:44.970Z"
 	},
 	{
 		"id": "cand:4094",
@@ -3680,7 +3692,9 @@
 		"phrases": [
 			"Бэтмена"
 		],
-		"at": "2026-08-11T18:32:58.315Z"
+		"at": "2026-08-11T18:32:58.315Z",
+		"result": "в стоп-лист: Бэтмена",
+		"applied": "2026-08-11T18:38:44.971Z"
 	},
 	{
 		"id": "cand:31490",
@@ -3692,7 +3706,9 @@
 		"phrases": [
 			"Ван-Пис: Золото"
 		],
-		"at": "2026-08-11T18:33:09.841Z"
+		"at": "2026-08-11T18:33:09.841Z",
+		"result": "заведён: src/content/anime/one-piece-film-gold.json",
+		"applied": "2026-08-11T18:38:46.936Z"
 	},
 	{
 		"id": "cand:52816",
@@ -3704,7 +3720,9 @@
 		"phrases": [
 			"Ведьма и чудовище"
 		],
-		"at": "2026-08-11T18:33:13.695Z"
+		"at": "2026-08-11T18:33:13.695Z",
+		"result": "заведён: src/content/anime/majo-to-yajuu.json",
+		"applied": "2026-08-11T18:38:48.874Z"
 	},
 	{
 		"id": "cand:3356",
@@ -3716,7 +3734,9 @@
 		"phrases": [
 			"Ведьма Салли"
 		],
-		"at": "2026-08-11T18:33:16.614Z"
+		"at": "2026-08-11T18:33:16.614Z",
+		"result": "заведён: src/content/anime/mahoutsukai-sally.json",
+		"applied": "2026-08-11T18:38:50.788Z"
 	},
 	{
 		"id": "cand:51213",
@@ -3728,7 +3748,9 @@
 		"phrases": [
 			"Вермейл в золотом"
 		],
-		"at": "2026-08-11T18:33:19.821Z"
+		"at": "2026-08-11T18:33:19.821Z",
+		"result": "заведён: src/content/anime/kinsou-no-vermeil-gakeppuchi-majutsushi-wa-saikyou-no-yakusa.json",
+		"applied": "2026-08-11T18:38:52.738Z"
 	},
 	{
 		"id": "cand:50760",
@@ -3740,7 +3762,9 @@
 		"phrases": [
 			"Вершина!"
 		],
-		"at": "2026-08-11T18:33:23.482Z"
+		"at": "2026-08-11T18:33:23.482Z",
+		"result": "заведён: src/content/anime/teppen.json",
+		"applied": "2026-08-11T18:38:54.684Z"
 	},
 	{
 		"id": "cand:1793",
@@ -3752,7 +3776,9 @@
 		"phrases": [
 			"Ветра амнезии"
 		],
-		"at": "2026-08-11T18:33:25.573Z"
+		"at": "2026-08-11T18:33:25.573Z",
+		"result": "заведён: src/content/anime/kaze-no-na-wa-amnesia.json",
+		"applied": "2026-08-11T18:38:56.599Z"
 	},
 	{
 		"id": "cand:59160",
@@ -3764,7 +3790,9 @@
 		"phrases": [
 			"Ветролом 2"
 		],
-		"at": "2026-08-11T18:33:28.774Z"
+		"at": "2026-08-11T18:33:28.774Z",
+		"result": "заведён: src/content/anime/wind-breaker-season-2.json",
+		"applied": "2026-08-11T18:38:58.984Z"
 	},
 	{
 		"id": "cand:61917",
@@ -3776,7 +3804,9 @@
 		"phrases": [
 			"Вечность Югурэ"
 		],
-		"at": "2026-08-11T18:33:32.484Z"
+		"at": "2026-08-11T18:33:32.484Z",
+		"result": "заведён: src/content/anime/towa-no-yuugure.json",
+		"applied": "2026-08-11T18:39:01.322Z"
 	},
 	{
 		"id": "cand:46095",
@@ -3788,7 +3818,9 @@
 		"phrases": [
 			"Виви: Песнь флюоритового глаза"
 		],
-		"at": "2026-08-11T18:33:37.350Z"
+		"at": "2026-08-11T18:33:37.350Z",
+		"result": "заведён: src/content/anime/vivy-fluorite-eye-s-song.json",
+		"applied": "2026-08-11T18:39:03.227Z"
 	},
 	{
 		"id": "cand:54284",
@@ -3800,7 +3832,9 @@
 		"phrases": [
 			"Витубер"
 		],
-		"at": "2026-08-11T18:33:47.286Z"
+		"at": "2026-08-11T18:33:47.286Z",
+		"result": "заведён: src/content/anime/vtuber-nandaga-haishin-kiri-wasuretara-densetsu-ni-natteta.json",
+		"applied": "2026-08-11T18:39:05.141Z"
 	},
 	{
 		"id": "cand:64380",
@@ -3812,7 +3846,9 @@
 		"phrases": [
 			"Влюбляйтесь, поддельные ангелы"
 		],
-		"at": "2026-08-11T18:33:55.073Z"
+		"at": "2026-08-11T18:33:55.073Z",
+		"result": "заведён: src/content/anime/koiseyo-mayakashi-tenshi-domo.json",
+		"applied": "2026-08-11T18:39:07.295Z"
 	},
 	{
 		"id": "cand:52193",
@@ -3824,7 +3860,9 @@
 		"phrases": [
 			"Войне горничных Акибы"
 		],
-		"at": "2026-08-11T18:33:58.124Z"
+		"at": "2026-08-11T18:33:58.124Z",
+		"result": "заведён: src/content/anime/akiba-meido-sensou.json",
+		"applied": "2026-08-11T18:39:09.213Z"
 	},
 	{
 		"id": "cand:57217",
@@ -3836,7 +3874,9 @@
 		"phrases": [
 			"Волшебница и злой офицер"
 		],
-		"at": "2026-08-11T18:34:00.433Z"
+		"at": "2026-08-11T18:34:00.433Z",
+		"result": "заведён: src/content/anime/katsute-mahou-shoujo-to-aku-wa-tekitai-shiteita.json",
+		"applied": "2026-08-11T18:39:11.117Z"
 	},
 	{
 		"id": "cand:1462",
@@ -3848,7 +3888,9 @@
 		"phrases": [
 			"Воспоминаний о будущем"
 		],
-		"at": "2026-08-11T18:34:06.636Z"
+		"at": "2026-08-11T18:34:06.636Z",
+		"result": "заведён: src/content/anime/memories.json",
+		"applied": "2026-08-11T18:39:13.111Z"
 	},
 	{
 		"id": "cand:21557",
@@ -3860,7 +3902,9 @@
 		"phrases": [
 			"Воспоминания о Марни"
 		],
-		"at": "2026-08-11T18:34:09.563Z"
+		"at": "2026-08-11T18:34:09.563Z",
+		"result": "заведён: src/content/anime/omoide-no-marnie.json",
+		"applied": "2026-08-11T18:39:15.007Z"
 	},
 	{
 		"id": "cand:38903",
@@ -3872,7 +3916,9 @@
 		"phrases": [
 			"Восход Луны"
 		],
-		"at": "2026-08-11T18:34:22.853Z"
+		"at": "2026-08-11T18:34:22.853Z",
+		"result": "заведён: src/content/anime/moonrise.json",
+		"applied": "2026-08-11T18:39:16.907Z"
 	},
 	{
 		"id": "cand:51098",
@@ -3884,7 +3930,9 @@
 		"phrases": [
 			"Время ниндзя"
 		],
-		"at": "2026-08-11T18:34:31.338Z"
+		"at": "2026-08-11T18:34:31.338Z",
+		"result": "заведён: src/content/anime/shinobi-no-ittoki.json",
+		"applied": "2026-08-11T18:39:18.808Z"
 	},
 	{
 		"id": "cand:55774",
@@ -3896,7 +3944,9 @@
 		"phrases": [
 			"Время пыток, принцесса!"
 		],
-		"at": "2026-08-11T18:34:33.755Z"
+		"at": "2026-08-11T18:34:33.755Z",
+		"result": "заведён: src/content/anime/himesama-goumon-no-jikan-desu.json",
+		"applied": "2026-08-11T18:39:20.708Z"
 	},
 	{
 		"id": "cand:60316",
@@ -3908,7 +3958,9 @@
 		"phrases": [
 			"Всё тот же невзрачный боец"
 		],
-		"at": "2026-08-11T18:34:36.446Z"
+		"at": "2026-08-11T18:34:36.446Z",
+		"result": "заведён: src/content/anime/busamen-gachi-fighter.json",
+		"applied": "2026-08-11T18:39:22.951Z"
 	},
 	{
 		"id": "cand:61943",
@@ -3920,7 +3972,9 @@
 		"phrases": [
 			"Вторая юность Хайбары"
 		],
-		"at": "2026-08-11T18:34:43.857Z"
+		"at": "2026-08-11T18:34:43.857Z",
+		"result": "заведён: src/content/anime/haibara-kun-no-tsuyokute-seishun-new-game.json",
+		"applied": "2026-08-11T18:39:25.117Z"
 	},
 	{
 		"id": "cand:55887",
@@ -3932,7 +3986,9 @@
 		"phrases": [
 			"Вы правда женитесь?"
 		],
-		"at": "2026-08-11T18:34:46.014Z"
+		"at": "2026-08-11T18:34:46.014Z",
+		"result": "заведён: src/content/anime/kekkon-suru-tte-hontou-desu-ka.json",
+		"applied": "2026-08-11T18:39:27.016Z"
 	},
 	{
 		"id": "cand:7661",
@@ -3944,7 +4000,9 @@
 		"phrases": [
 			"Вынос гигантов"
 		],
-		"at": "2026-08-11T18:34:53.974Z"
+		"at": "2026-08-11T18:34:53.974Z",
+		"result": "заведён: src/content/anime/giant-killing.json",
+		"applied": "2026-08-11T18:39:28.911Z"
 	},
 	{
 		"id": "cand:54617",
@@ -3956,7 +4014,9 @@
 		"phrases": [
 			"Выходной Господина Злодея"
 		],
-		"at": "2026-08-11T18:34:56.983Z"
+		"at": "2026-08-11T18:34:56.983Z",
+		"result": "заведён: src/content/anime/kyuujitsu-no-warumono-san.json",
+		"applied": "2026-08-11T18:39:30.810Z"
 	},
 	{
 		"id": "cand:44524",
@@ -3968,7 +4028,9 @@
 		"phrases": [
 			"Гарем рабов в лабиринте другого мира"
 		],
-		"at": "2026-08-11T18:35:08.644Z"
+		"at": "2026-08-11T18:35:08.644Z",
+		"result": "заведён: src/content/anime/isekai-meikyuu-de-harem-wo.json",
+		"applied": "2026-08-11T18:39:32.711Z"
 	},
 	{
 		"id": "cand:998",
@@ -3980,7 +4042,9 @@
 		"phrases": [
 			"Голубое семя"
 		],
-		"at": "2026-08-11T18:35:18.091Z"
+		"at": "2026-08-11T18:35:18.091Z",
+		"result": "заведён: src/content/anime/blue-seed.json",
+		"applied": "2026-08-11T18:39:34.625Z"
 	},
 	{
 		"id": "cand:1107",
@@ -3992,7 +4056,9 @@
 		"phrases": [
 			"Город чудищ"
 		],
-		"at": "2026-08-11T18:35:21.028Z"
+		"at": "2026-08-11T18:35:21.028Z",
+		"result": "заведён: src/content/anime/youjuu-toshi.json",
+		"applied": "2026-08-11T18:39:36.526Z"
 	},
 	{
 		"id": "cand:37999",
@@ -4004,7 +4070,9 @@
 		"phrases": [
 			"Госпожа Кагуя: В любви как на войне"
 		],
-		"at": "2026-08-11T18:35:23.391Z"
+		"at": "2026-08-11T18:35:23.391Z",
+		"result": "заведён: src/content/anime/kaguya-sama-wa-kokurasetai-tensai-tachi-no-renai-zunousen.json",
+		"applied": "2026-08-11T18:39:38.427Z"
 	},
 	{
 		"id": "cand:35847",
@@ -4016,7 +4084,9 @@
 		"phrases": [
 			"Гридмен"
 		],
-		"at": "2026-08-11T18:35:36.779Z"
+		"at": "2026-08-11T18:35:36.779Z",
+		"result": "заведён: src/content/anime/ssss-gridman.json",
+		"applied": "2026-08-11T18:39:40.334Z"
 	},
 	{
 		"id": "cand:18617",
@@ -4028,7 +4098,9 @@
 		"phrases": [
 			"Девушки и танки. Фильм"
 		],
-		"at": "2026-08-11T18:36:41.529Z"
+		"at": "2026-08-11T18:36:41.529Z",
+		"result": "заведён: src/content/anime/girls-panzer-movie.json",
+		"applied": "2026-08-11T18:39:42.240Z"
 	},
 	{
 		"id": "cand:29",
@@ -4040,7 +4112,9 @@
 		"phrases": [
 			"Дзипанга"
 		],
-		"at": "2026-08-11T18:37:00.511Z"
+		"at": "2026-08-11T18:37:00.511Z",
+		"result": "заведён: src/content/anime/zipang.json",
+		"applied": "2026-08-11T18:39:44.146Z"
 	},
 	{
 		"id": "cand:10620",
@@ -4052,7 +4126,9 @@
 		"phrases": [
 			"Дневник будущего"
 		],
-		"at": "2026-08-11T18:37:04.786Z"
+		"at": "2026-08-11T18:37:04.786Z",
+		"result": "заведён: src/content/anime/mirai-nikki-tv.json",
+		"applied": "2026-08-11T18:39:46.042Z"
 	},
 	{
 		"id": "cand:501",
@@ -4064,7 +4140,9 @@
 		"phrases": [
 			"Дораэмон"
 		],
-		"at": "2026-08-11T18:37:35.854Z"
+		"at": "2026-08-11T18:37:35.854Z",
+		"result": "заведён: src/content/anime/doraemon.json",
+		"applied": "2026-08-11T18:39:47.930Z"
 	},
 	{
 		"id": "cand:37520",
@@ -4076,7 +4154,9 @@
 		"phrases": [
 			"Дороро"
 		],
-		"at": "2026-08-11T18:37:39.095Z"
+		"at": "2026-08-11T18:37:39.095Z",
+		"result": "заведён: src/content/anime/dororo.json",
+		"applied": "2026-08-11T18:39:49.851Z"
 	},
 	{
 		"id": "cand:49776",
@@ -4088,6 +4168,8 @@
 		"phrases": [
 			"Дочка босса и ее нянька"
 		],
-		"at": "2026-08-11T18:37:50.414Z"
+		"at": "2026-08-11T18:37:50.414Z",
+		"result": "заведён: src/content/anime/kumichou-musume-to-sewagakari.json",
+		"applied": "2026-08-11T18:39:51.755Z"
 	}
 ]
