@@ -634,7 +634,9 @@
 			"Тетрадь дружбы Нацумэ",
 			"Тетради дружбы Нацумэ"
 		],
-		"at": "2026-08-11T12:09:40.630Z"
+		"at": "2026-08-11T12:09:40.630Z",
+		"result": "заведён: src/content/anime/natsume-yuujinchou.json",
+		"applied": "2026-08-11T12:10:32.171Z"
 	},
 	{
 		"id": "cand:53393",
@@ -648,7 +650,9 @@
 			"Иллюзии рая",
 			"Иллюзию рая"
 		],
-		"at": "2026-08-11T12:09:41.713Z"
+		"at": "2026-08-11T12:09:41.713Z",
+		"result": "заведён: src/content/anime/tengoku-daimakyou.json",
+		"applied": "2026-08-11T12:10:34.193Z"
 	},
 	{
 		"id": "cand:54744",
@@ -660,7 +664,9 @@
 		"phrases": [
 			"Аля иногда кокетничает со мной по-русски"
 		],
-		"at": "2026-08-11T12:09:43.246Z"
+		"at": "2026-08-11T12:09:43.246Z",
+		"result": "заведён: src/content/anime/tokidoki-bosotto-russia-go-de-dereru-tonari-no-alya-san.json",
+		"applied": "2026-08-11T12:10:36.117Z"
 	},
 	{
 		"id": "cand:31964",
@@ -672,7 +678,9 @@
 		"phrases": [
 			"Моя геройская академия"
 		],
-		"at": "2026-08-11T12:09:51.395Z"
+		"at": "2026-08-11T12:09:51.395Z",
+		"result": "заведён: src/content/anime/boku-no-hero-academia.json",
+		"applied": "2026-08-11T12:10:38.034Z"
 	},
 	{
 		"id": "cand:416",
@@ -684,7 +692,9 @@
 		"phrases": [
 			"Порко Россо"
 		],
-		"at": "2026-08-11T12:09:55.330Z"
+		"at": "2026-08-11T12:09:55.330Z",
+		"result": "заведён: src/content/anime/kurenai-no-buta.json",
+		"applied": "2026-08-11T12:10:39.951Z"
 	},
 	{
 		"id": "cand:48542",
@@ -696,6 +706,8 @@
 		"phrases": [
 			"Сделай это сам!"
 		],
-		"at": "2026-08-11T12:09:57.428Z"
+		"at": "2026-08-11T12:09:57.428Z",
+		"result": "заведён: src/content/anime/do-it-yourself.json",
+		"applied": "2026-08-11T12:10:41.968Z"
 	}
 ]
