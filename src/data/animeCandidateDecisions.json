@@ -3112,5 +3112,17 @@
 			"Пощади меня, великий господин!"
 		],
 		"at": "2026-08-11T16:00:40.364Z"
+	},
+	{
+		"id": "cand:52347",
+		"what": "create",
+		"sourceId": 52347,
+		"source": "shikimori",
+		"slug": "shangri-la-frontier-kusoge-hunter-kamige-ni-idoman-to-su",
+		"title": "Рубеж Шангри-Ла: Любитель игрошлака бросает вызов топ-игре",
+		"phrases": [
+			"Рубеж Шангри-Ла"
+		],
+		"at": "2026-08-11T16:00:42.765Z"
 	}
 ]
