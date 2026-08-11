@@ -152,6 +152,8 @@ const similarity = [
 	['Строки', 'Строка', true, 'цена правила: короткое обычное слово может сойтись — на то и стоп-лист'],
 	['Чук и Гик', 'Чук и Гек', false, 'слово короче четырёх букв обязано совпадать буква в букву'],
 	['Кэйон!', 'Кэйон', true, 'восклицательный знак — не буква и не слово'],
+	['Баку', 'Бакуман', false, 'РАЗНИЦА В ДЛИНЕ: четыре буквы совпали, но слово втрое длиннее — это не падеж'],
+	['Гандам', 'Гандам: Объединение I', false, 'то же самое, и кусок до двоеточия тут не спасает'],
 ];
 
 for (const [phrase, name, want, why] of similarity) {
@@ -174,6 +176,25 @@ check('пустая выдача — не кандидат', bestMatch('Кусо
 // он «Стальной алхимик: Братство».
 const withColon = [{ sourceId: 9, titleRu: 'Стальной алхимик: Братство', titleOriginal: 'Fullmetal Alchemist: Brotherhood', year: 2009 }];
 check('название сравнивается и куском до двоеточия', bestMatch('Стального алхимика', withColon)?.sourceId === 9);
+
+// ВСЯ СЕРИЯ В ОДНОЙ ВЫДАЧЕ — это НАСТОЯЩИЙ ответ Shikimori на «Синюю тюрьму»,
+// скопированный из кэша прогона 11 августа 2026. Настоящий тайтл (2022) стоит
+// в нём ЧЕТВЁРТЫМ, а первым — часть, у которой года ещё нет вовсе.
+const blueLock = [
+	{ sourceId: 61743, titleRu: 'Синяя тюрьма: Блю Лок — Лига неоэгоистов', titleOriginal: 'Blue Lock: Neo Egoist League', year: undefined },
+	{ sourceId: 57433, titleRu: 'Синяя тюрьма: Блю Лок против юношеской сборной Японии', titleOriginal: 'Blue Lock vs. U-20 Japan', year: 2024 },
+	{ sourceId: 55071, titleRu: 'Синяя тюрьма: Блю Лок — Эпизод с Наги', titleOriginal: 'Blue Lock: Episode Nagi', year: 2024 },
+	{ sourceId: 49596, titleRu: 'Синяя тюрьма: Блю Лок', titleOriginal: 'Blue Lock', year: 2022 },
+];
+check('из серии берётся ОРИГИНАЛ, а не первый в выдаче', bestMatch('Синяя тюрьма', blueLock)?.year === 2022, String(bestMatch('Синяя тюрьма', blueLock)?.titleRu));
+
+// И тут же — почему подзаголовок отделяется не только двоеточием: настоящее
+// название оригинала «Гуррен-Лаганн, пронзающий небеса», через запятую.
+const gurren = [
+	{ sourceId: 2001, titleRu: 'Гуррен-Лаганн, пронзающий небеса', titleOriginal: 'Tengen Toppa Gurren Lagann', year: 2007 },
+	{ sourceId: 4155, titleRu: 'Гуррен-Лаганн: Параллельные миры 2', titleOriginal: 'Tengen Toppa Gurren Lagann: Parallel Works 2', year: 2010 },
+];
+check('подзаголовок через ЗАПЯТУЮ тоже отрезается', bestMatch('Гуррен-Лаганн', gurren)?.sourceId === 2001, String(bestMatch('Гуррен-Лаганн', gurren)?.titleRu));
 
 // ─── 5. Вторая попытка именительным падежом ─────────────────────────────────
 

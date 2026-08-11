@@ -184,7 +184,12 @@ function lemmas(word) {
 function sameWord(a, b) {
 	if (a === b) return true;
 	const prefix = commonPrefix(a, b);
-	if (prefix >= MIN_STEM && prefix >= Math.min(a.length, b.length) - MAX_ENDING) return true;
+	// РАЗНИЦА В ДЛИНЕ БОЛЬШЕ ДВУХ БУКВ — ЭТО УЖЕ ДРУГОЕ СЛОВО, а не падеж.
+	// Без этой оговорки короткое слово сходилось с любым длинным, которое
+	// с него начинается: «Баку!» ловило «Бакуман» — четыре буквы совпали,
+	// и допуска на хвост хватило. Поймано на живой выдаче Shikimori.
+	const sameLength = Math.abs(a.length - b.length) <= 2;
+	if (sameLength && prefix >= MIN_STEM && prefix >= Math.min(a.length, b.length) - MAX_ENDING) return true;
 
 	// Длину тут не ограничиваем НАРОЧНО, хотя первым делом хочется: замер
 	// показал, что коротким словом бывает голова названия — «Бездомного бога»
@@ -238,32 +243,75 @@ export function sameTitle(phrase, name) {
 // упоминаний (MIN_PREFIX_LENGTH из animeMentions.mjs, копии числа быть
 // не должно): в архиве говорят «Стальной алхимик», а на Shikimori он
 // «Стальной алхимик: Братство».
+// Подзаголовок у Shikimori отделяется не только двоеточием: «Гуррен-Лаганн,
+// пронзающий небеса», «Призрак в доспехах — Невинность». Порог длины взят
+// у поиска упоминаний, а вот список разделителей тут СВОЙ, и это не копия
+// правила: там вопрос «по чему искать упоминания в тексте», здесь — «похож ли
+// ответ поисковика на фразу». Второй вопрос имеет право быть шире.
+const SUBTITLE = /[:,—–]/;
+
 function nameVariants(result) {
 	const out = [];
 	for (const name of [result.titleRu, result.titleOriginal]) {
 		if (!name) continue;
-		out.push(name);
-		const colon = name.indexOf(':');
-		if (colon >= MIN_PREFIX_LENGTH) out.push(name.slice(0, colon).trim());
+		out.push({ name, whole: true });
+		const at = name.search(SUBTITLE);
+		if (at >= MIN_PREFIX_LENGTH) out.push({ name: name.slice(0, at).trim(), whole: false });
 	}
 	return out;
 }
 
+// Насколько хорошо ответ подошёл фразе. Больше — лучше, 0 — не подошёл вовсе.
+function score(phrase, result) {
+	let best = 0;
+	for (const { name, whole } of nameVariants(result)) {
+		const exact = fold(phrase) === fold(name);
+		const value = exact ? (whole ? 4 : 3) : sameTitle(phrase, name) ? (whole ? 2 : 1) : 0;
+		if (value > best) best = value;
+	}
+	return best;
+}
+
 /**
- * Первый похожий ответ из выдачи Shikimori — или null.
+ * Лучший ответ из выдачи Shikimori — или null.
  *
- * Смотрим ВСЮ выдачу, а не первую строчку: замер 11 августа 2026 показал, что
+ * СМОТРИМ ВСЮ ВЫДАЧУ, А НЕ ПЕРВУЮ СТРОЧКУ: замер 11 августа 2026 показал, что
  * на «Тетради смерти» правильная «Тетрадь смерти» приходит ВТОРОЙ, а первым
  * стоит «Смертельный бильярд». Спрашивай мы только первую — потеряли бы тайтл
  * и не узнали бы об этом.
+ *
+ * И БЕРЁМ НЕ ПЕРВЫЙ ПОДОШЕДШИЙ, А САМЫЙ ТОЧНЫЙ. Совпадение буква в букву
+ * сильнее совпадения по падежу, а полное название сильнее куска до двоеточия.
+ * Первая редакция брала первый подошедший — и «Гуррен-Лаганн» уезжал
+ * на «Гуррен-Лаганн: Параллельные миры 2», а «Призрака в доспехах» на «Призрак
+ * в доспехах: Вознесение», потому что сиквелы у Shikimori в выдаче стоят выше.
+ * Ошибка эта тихая: тайтл выглядит найденным, а завёлся бы не тот.
+ *
+ * ПРИ РАВНОМ СЧЁТЕ ПОБЕЖДАЕТ САМЫЙ РАННИЙ ГОД — то есть оригинал, а не его
+ * продолжения и спешлы. На «Синюю тюрьму» Shikimori отвечает пятью частями
+ * серии, и настоящая («Синяя тюрьма: Блю Лок», 2022) стоит в выдаче четвёртой;
+ * на «Гуррен-Лаганн» — тем же порядком. Года нет вовсе (анонс без даты) —
+ * такой ответ уходит в конец: у анонса и года ещё нет, а у оригинала он есть.
+ *
+ * РАЗЛИЧИТЬ ВСЁ ЭТО ПРАВИЛО НЕ МОЖЕТ И НЕ ДОЛЖНО. У «Истребителя демонов»
+ * есть тайтл 1994 года с ровно таким названием, и он победит современный
+ * по точности совпадения. Поэтому у кандидата в отчёте стоят год, студия
+ * и ссылка: решение — за человеком, а не за счётом.
  */
 export function bestMatch(phrase, results) {
+	let best = null;
+	let bestScore = 0;
+
 	for (const result of results ?? []) {
-		for (const name of nameVariants(result)) {
-			if (sameTitle(phrase, name)) return { ...result, matchedName: name };
+		const value = score(phrase, result);
+		if (value === 0) continue;
+		if (value > bestScore || (value === bestScore && (result.year ?? Infinity) < (best.year ?? Infinity))) {
+			bestScore = value;
+			best = result;
 		}
 	}
-	return null;
+
+	return best ? { ...best, exact: bestScore >= 3 } : null;
 }
 
 // ─── Вторая попытка: именительный падеж ────────────────────────────────────
