@@ -2048,5 +2048,29 @@
 		"at": "2026-08-11T14:08:35.558Z",
 		"result": "заведён: src/content/anime/oniichan-wa-oshimai.json",
 		"applied": "2026-08-11T14:09:39.054Z"
+	},
+	{
+		"id": "cand:51552",
+		"what": "create",
+		"sourceId": 51552,
+		"source": "shikimori",
+		"slug": "watashi-no-shiawase-na-kekkon",
+		"title": "Мой счастливый брак",
+		"phrases": [
+			"Мой счастливый брак"
+		],
+		"at": "2026-08-11T14:33:31.364Z"
+	},
+	{
+		"id": "cand:40716",
+		"what": "create",
+		"sourceId": 40716,
+		"source": "shikimori",
+		"slug": "kakushigoto",
+		"title": "Скрытые вещи",
+		"phrases": [
+			"Скрытые вещи"
+		],
+		"at": "2026-08-11T14:33:32.397Z"
 	}
 ]
