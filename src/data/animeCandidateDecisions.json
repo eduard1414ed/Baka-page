@@ -3437,5 +3437,29 @@
 			"Ангел по соседству"
 		],
 		"at": "2026-08-11T18:26:28.712Z"
+	},
+	{
+		"id": "cand:31374",
+		"what": "create",
+		"sourceId": 31374,
+		"source": "shikimori",
+		"slug": "shingeki-kyojin-chuugakkou",
+		"title": "Атака! Титаны средней школы",
+		"phrases": [
+			"Атака! Титаны средней школы"
+		],
+		"at": "2026-08-11T18:26:43.273Z"
+	},
+	{
+		"id": "cand:54603",
+		"what": "create",
+		"sourceId": 54603,
+		"source": "shikimori",
+		"slug": "bakeneko-anzu-chan",
+		"title": "Бакэнэко Андзу",
+		"phrases": [
+			"Бакэнэко Андзу"
+		],
+		"at": "2026-08-11T18:26:53.583Z"
 	}
 ]
