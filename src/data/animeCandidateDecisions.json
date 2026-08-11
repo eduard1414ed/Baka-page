@@ -3983,18 +3983,6 @@
 		"at": "2026-08-11T18:35:13.327Z"
 	},
 	{
-		"id": "cand:61217",
-		"what": "create",
-		"sourceId": 61217,
-		"source": "shikimori",
-		"slug": "yuusha-no-kuzu",
-		"title": "Герой-мерзавец",
-		"phrases": [
-			"Герой-мерзавец"
-		],
-		"at": "2026-08-11T18:35:14.924Z"
-	},
-	{
 		"id": "cand:998",
 		"what": "create",
 		"sourceId": 998,
