@@ -3379,27 +3379,15 @@
 		"at": "2026-08-11T18:24:42.254Z"
 	},
 	{
-		"id": "cand:55825",
+		"id": "cand:46093",
 		"what": "create",
-		"sourceId": 55825,
+		"sourceId": 46093,
 		"source": "shikimori",
-		"slug": "jigokuraku-2nd-season",
-		"title": "Адский рай 2",
+		"slug": "shiroi-suna-no-aquatope",
+		"title": "Акватоп белого песка",
 		"phrases": [
-			"Адский рай 2"
+			"Акватоп белого песка"
 		],
-		"at": "2026-08-11T18:25:40.596Z"
-	},
-	{
-		"id": "cand:2012",
-		"what": "create",
-		"sourceId": 2012,
-		"source": "shikimori",
-		"slug": "jigoku-sensei-nube",
-		"title": "Адский учитель Нубэ",
-		"phrases": [
-			"Адский учитель Нубэ"
-		],
-		"at": "2026-08-11T18:25:46.480Z"
+		"at": "2026-08-11T18:25:50.599Z"
 	}
 ]
