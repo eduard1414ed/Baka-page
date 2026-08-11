@@ -12,6 +12,15 @@ export const ROOT = new URL('../', import.meta.url);
 export const ANIME_CONTENT_DIR = new URL('src/content/anime/', ROOT);
 export const ANIME_PUBLIC_DIR = new URL('public/anime/', ROOT);
 
+// ПАУЗА МЕЖДУ ЗАПРОСАМИ К ЧУЖОМУ ИСТОЧНИКУ — ОДНО ЧИСЛО НА ВЕСЬ ПРОЕКТ.
+//
+// Вежливость к Shikimori — не украшение, а условие, на котором мы им
+// пользуемся, и числу тут место одно. До 11 августа 2026 их было два:
+// 1500 мс в `fetch-anime.mjs` и 1200 мс в `sync-anime.mjs` (хвост 56).
+// Разъехались они молча и, разумеется, в сторону «спрашиваем чаще, чем
+// договаривались». Взято большее.
+export const SHIKIMORI_PAUSE_MS = 1500;
+
 export async function downloadPoster(posterUrl, slug) {
 	const response = await fetch(posterUrl);
 	if (!response.ok) {

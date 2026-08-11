@@ -16,17 +16,17 @@
 // Полные списки ложатся в `отчёт-кавычки.txt` рядом с проектом: широких ссылок
 // сотни, в переписке они не читаются. Файл в репозиторий не идёт (.gitignore).
 
-import { readdir, readFile, writeFile } from 'node:fs/promises';
+import { writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import { buildAnimeMatcher, findMentions, fold, isQuotedAt, MIN_PREFIX_LENGTH } from '../src/lib/animeMentions.mjs';
 import { initMorph, readAnimeCollection, strictQuotesHint } from './anime-cases-lib.mjs';
-// Тело поста голым текстом и поля шапки — общий код с частью C, чтобы два
-// отчёта об одном архиве не разошлись в числах (scripts/posts-plain.mjs).
-import { readPostsPlain as readPosts } from './posts-plain.mjs';
+// Тело поста голым текстом, поля шапки и чтение расшифровок — общий код
+// с частью C, чтобы два отчёта об одном архиве не разошлись в числах
+// (scripts/posts-plain.mjs).
+import { readPostsPlain as readPosts, readTranscriptsPlain as readTranscripts } from './posts-plain.mjs';
 
 const ROOT = new URL('../', import.meta.url);
-const TRANSCRIPTS_DIR = new URL('src/content/transcripts/', ROOT);
 const REPORT_PATH = new URL('отчёт-кавычки.txt', ROOT);
 
 const arg = (name, fallback) => {
@@ -43,16 +43,6 @@ const plural = (n, one, few, many) => {
 };
 
 // ─── Тексты ────────────────────────────────────────────────────────────────
-
-async function readTranscripts() {
-	const files = (await readdir(TRANSCRIPTS_DIR)).filter((name) => name.endsWith('.json'));
-	const out = [];
-	for (const file of files) {
-		const data = JSON.parse(await readFile(new URL(file, TRANSCRIPTS_DIR), 'utf8'));
-		out.push({ id: file.replace(/\.json$/, ''), replicas: data.replicas ?? [] });
-	}
-	return out;
-}
 
 const around = (text, start, end) =>
 	text.slice(Math.max(0, start - 45), end + 45).replace(/\s+/g, ' ').trim();

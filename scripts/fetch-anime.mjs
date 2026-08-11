@@ -15,14 +15,17 @@
 
 import * as shikimori from './anime-sources/shikimori.mjs';
 import * as anilist from './anime-sources/anilist.mjs';
-import { writeAnimeEntry, borrowPoster, sleep } from './anime-lib.mjs';
+import { writeAnimeEntry, borrowPoster, sleep, SHIKIMORI_PAUSE_MS } from './anime-lib.mjs';
 
 // Порядок = приоритет поиска. Чтобы добавить третий источник — написать
 // модуль такой же формы (id, label, find(query), findById(sourceId)) и дописать
 // его в список, больше нигде ничего менять не нужно.
 const SOURCES = [shikimori, anilist];
 
-const PAUSE_MS = 1500; // пауза между тайтлами — источники ограничивают частоту запросов.
+// Пауза между тайтлами — источники ограничивают частоту запросов. Число одно
+// на весь проект и лежит в anime-lib.mjs (хвост 56): раньше их было два,
+// и они молча разъехались.
+const PAUSE_MS = SHIKIMORI_PAUSE_MS;
 
 async function findAcrossSources(query) {
 	for (const source of SOURCES) {

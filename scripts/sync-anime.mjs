@@ -23,10 +23,12 @@
 import { readdir, readFile, access } from 'node:fs/promises';
 import * as shikimori from './anime-sources/shikimori.mjs';
 import * as anilist from './anime-sources/anilist.mjs';
-import { writeAnimeEntry, borrowPoster, sleep, ANIME_CONTENT_DIR } from './anime-lib.mjs';
+import { writeAnimeEntry, borrowPoster, sleep, ANIME_CONTENT_DIR, SHIKIMORI_PAUSE_MS } from './anime-lib.mjs';
 
 const SOURCES_BY_ID = { shikimori, anilist };
-const PAUSE_MS = 1200;
+// Пауза между тайтлами — одно число на весь проект (хвост 56). Тут стояло
+// 1200 против 1500 в fetch-anime.mjs; взято большее.
+const PAUSE_MS = SHIKIMORI_PAUSE_MS;
 
 const POSTS_DIR = new URL('../src/content/posts/', import.meta.url);
 
