@@ -35,7 +35,7 @@
 export const telegramFeed = {
 	"offset": 0,
 	"lastSeenId": 4149,
-	"lastPostAt": null,
-	"lastRunAt": "2026-08-10T20:29:44.114Z",
+	"lastPostAt": "2026-08-11T03:26:16.904Z",
+	"lastRunAt": "2026-08-11T03:26:16.904Z",
 	"albums": {}
 };
