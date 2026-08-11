@@ -4182,7 +4182,9 @@
 		"phrases": [
 			"Дочь моей мачехи"
 		],
-		"at": "2026-08-11T19:02:32.106Z"
+		"at": "2026-08-11T19:02:32.106Z",
+		"result": "заведён: src/content/anime/mamahaha-no-tsurego-ga-motokano-datta.json",
+		"applied": "2026-08-11T19:08:18.419Z"
 	},
 	{
 		"id": "cand:53730",
@@ -4194,7 +4196,9 @@
 		"phrases": [
 			"Другой мир не может противостоять силе мгновенной смерти"
 		],
-		"at": "2026-08-11T19:02:38.820Z"
+		"at": "2026-08-11T19:02:38.820Z",
+		"result": "заведён: src/content/anime/sokushi-cheat-ga-saikyou-sugite-isekai-no-yatsura-ga-marude-.json",
+		"applied": "2026-08-11T19:08:20.380Z"
 	},
 	{
 		"id": "cand:8194",
@@ -4206,7 +4210,9 @@
 		"phrases": [
 			"Дьяволёнок"
 		],
-		"at": "2026-08-11T19:02:41.736Z"
+		"at": "2026-08-11T19:02:41.736Z",
+		"result": "заведён: src/content/anime/akuma-kun.json",
+		"applied": "2026-08-11T19:08:22.170Z"
 	},
 	{
 		"id": "cand:56242",
@@ -4218,7 +4224,9 @@
 		"phrases": [
 			"Ёко из Сэнгоку"
 		],
-		"at": "2026-08-11T19:02:43.638Z"
+		"at": "2026-08-11T19:02:43.638Z",
+		"result": "заведён: src/content/anime/sengoku-youko-yonaoshi-kyoudai-hen.json",
+		"applied": "2026-08-11T19:08:24.100Z"
 	},
 	{
 		"id": "cand:58725",
@@ -4230,7 +4238,9 @@
 		"phrases": [
 			"Жизнь ниндзя и убийцы"
 		],
-		"at": "2026-08-11T19:02:45.404Z"
+		"at": "2026-08-11T19:02:45.404Z",
+		"result": "заведён: src/content/anime/ninja-to-koroshiya-no-futarigurashi.json",
+		"applied": "2026-08-11T19:08:25.887Z"
 	},
 	{
 		"id": "cand:52481",
@@ -4242,7 +4252,9 @@
 		"phrases": [
 			"Жизнь с моей сводной сестрой"
 		],
-		"at": "2026-08-11T19:02:46.953Z"
+		"at": "2026-08-11T19:02:46.953Z",
+		"result": "заведён: src/content/anime/gimai-seikatsu.json",
+		"applied": "2026-08-11T19:08:27.681Z"
 	},
 	{
 		"id": "cand:51306",
@@ -4254,7 +4266,9 @@
 		"phrases": [
 			"Жилой комплекс С"
 		],
-		"at": "2026-08-11T19:02:51.737Z"
+		"at": "2026-08-11T19:02:51.737Z",
+		"result": "заведён: src/content/anime/c-danchi.json",
+		"applied": "2026-08-11T19:08:29.463Z"
 	},
 	{
 		"id": "cand:40787",
@@ -4266,7 +4280,9 @@
 		"phrases": [
 			"Жозе, тигр и рыба"
 		],
-		"at": "2026-08-11T19:02:54.504Z"
+		"at": "2026-08-11T19:02:54.504Z",
+		"result": "заведён: src/content/anime/josee-to-tora-to-sakana-tachi.json",
+		"applied": "2026-08-11T19:08:31.256Z"
 	},
 	{
 		"id": "cand:743",
@@ -4278,7 +4294,9 @@
 		"phrases": [
 			"Здесь слышен океан"
 		],
-		"at": "2026-08-11T19:03:26.837Z"
+		"at": "2026-08-11T19:03:26.837Z",
+		"result": "заведён: src/content/anime/umi-ga-kikoeru.json",
+		"applied": "2026-08-11T19:08:33.052Z"
 	},
 	{
 		"id": "cand:49556",
@@ -4290,7 +4308,9 @@
 		"phrases": [
 			"Игры с нулевым счетом"
 		],
-		"at": "2026-08-11T19:03:45.119Z"
+		"at": "2026-08-11T19:03:45.119Z",
+		"result": "заведён: src/content/anime/love-all-play.json",
+		"applied": "2026-08-11T19:08:34.837Z"
 	},
 	{
 		"id": "cand:7311",
@@ -4302,7 +4322,9 @@
 		"phrases": [
 			"Исчезновение Харухи Судзумии"
 		],
-		"at": "2026-08-11T19:04:12.021Z"
+		"at": "2026-08-11T19:04:12.021Z",
+		"result": "заведён: src/content/anime/suzumiya-haruhi-no-shoushitsu.json",
+		"applied": "2026-08-11T19:08:36.626Z"
 	},
 	{
 		"id": "cand:50185",
@@ -4314,7 +4336,9 @@
 		"phrases": [
 			"Клуб белых воротничков"
 		],
-		"at": "2026-08-11T19:05:03.787Z"
+		"at": "2026-08-11T19:05:03.787Z",
+		"result": "заведён: src/content/anime/ryman-s-club.json",
+		"applied": "2026-08-11T19:08:38.414Z"
 	},
 	{
 		"id": "cand:20057",
@@ -4326,7 +4350,9 @@
 		"phrases": [
 			"Космический Денди"
 		],
-		"at": "2026-08-11T19:05:18.454Z"
+		"at": "2026-08-11T19:05:18.454Z",
+		"result": "заведён: src/content/anime/space-dandy.json",
+		"applied": "2026-08-11T19:08:40.290Z"
 	},
 	{
 		"id": "cand:1650",
@@ -4338,7 +4364,9 @@
 		"phrases": [
 			"Космический линкор Ямато"
 		],
-		"at": "2026-08-11T19:05:20.821Z"
+		"at": "2026-08-11T19:05:20.821Z",
+		"result": "заведён: src/content/anime/uchuu-senkan-yamato.json",
+		"applied": "2026-08-11T19:08:42.155Z"
 	},
 	{
 		"id": "cand:3545",
@@ -4350,7 +4378,9 @@
 		"phrases": [
 			"Котикамэ"
 		],
-		"at": "2026-08-11T19:05:27.704Z"
+		"at": "2026-08-11T19:05:27.704Z",
+		"result": "заведён: src/content/anime/kochira-katsushikaku-kameari-kouenmae-hashutsujo.json",
+		"applied": "2026-08-11T19:08:43.944Z"
 	},
 	{
 		"id": "cand:51815",
@@ -4362,7 +4392,9 @@
 		"phrases": [
 			"Кубо не прощает меня — моба"
 		],
-		"at": "2026-08-11T19:05:41.770Z"
+		"at": "2026-08-11T19:05:41.770Z",
+		"result": "заведён: src/content/anime/kubo-san-wa-mob-wo-yurusanai.json",
+		"applied": "2026-08-11T19:08:45.797Z"
 	},
 	{
 		"id": "cand:53446",
@@ -4374,7 +4406,9 @@
 		"phrases": [
 			"Кулинарные скитания в параллельном мире"
 		],
-		"at": "2026-08-11T19:05:48.353Z"
+		"at": "2026-08-11T19:05:48.353Z",
+		"result": "заведён: src/content/anime/tondemo-skill-de-isekai-hourou-meshi.json",
+		"applied": "2026-08-11T19:08:47.718Z"
 	},
 	{
 		"id": "cand:9617",
@@ -4386,7 +4420,9 @@
 		"phrases": [
 			"Кэйон в кино!"
 		],
-		"at": "2026-08-11T19:05:53.403Z"
+		"at": "2026-08-11T19:05:53.403Z",
+		"result": "заведён: src/content/anime/k-on-movie.json",
+		"applied": "2026-08-11T19:08:49.508Z"
 	},
 	{
 		"id": "cand:37435",
@@ -4398,7 +4434,9 @@
 		"phrases": [
 			"Кэрол и Тьюсдей"
 		],
-		"at": "2026-08-11T19:05:56.720Z"
+		"at": "2026-08-11T19:05:56.720Z",
+		"result": "заведён: src/content/anime/carole-tuesday.json",
+		"applied": "2026-08-11T19:08:51.366Z"
 	},
 	{
 		"id": "cand:49304",
@@ -4410,7 +4448,9 @@
 		"phrases": [
 			"Легенду о святом мече"
 		],
-		"at": "2026-08-11T19:06:01.120Z"
+		"at": "2026-08-11T19:06:01.120Z",
+		"result": "заведён: src/content/anime/seiken-densetsu-legend-of-mana-the-teardrop-crystal.json",
+		"applied": "2026-08-11T19:08:53.163Z"
 	},
 	{
 		"id": "cand:9760",
@@ -4422,7 +4462,9 @@
 		"phrases": [
 			"Ловцах забытых голосов"
 		],
-		"at": "2026-08-11T19:06:09.337Z"
+		"at": "2026-08-11T19:06:09.337Z",
+		"result": "заведён: src/content/anime/hoshi-wo-ou-kodomo.json",
+		"applied": "2026-08-11T19:08:54.956Z"
 	},
 	{
 		"id": "cand:1412",
@@ -4434,7 +4476,9 @@
 		"phrases": [
 			"Люпен III"
 		],
-		"at": "2026-08-11T19:06:23.137Z"
+		"at": "2026-08-11T19:06:23.137Z",
+		"result": "заведён: src/content/anime/lupin-iii.json",
+		"applied": "2026-08-11T19:08:56.744Z"
 	},
 	{
 		"id": "cand:50891",
@@ -4446,7 +4490,9 @@
 		"phrases": [
 			"Люцифер и бисквитный молот"
 		],
-		"at": "2026-08-11T19:06:26.404Z"
+		"at": "2026-08-11T19:06:26.404Z",
+		"result": "заведён: src/content/anime/hoshi-no-samidare.json",
+		"applied": "2026-08-11T19:08:58.538Z"
 	},
 	{
 		"id": "cand:51009",
@@ -4458,7 +4504,9 @@
 		"phrases": [
 			"Магическая битва 2"
 		],
-		"at": "2026-08-11T19:06:30.519Z"
+		"at": "2026-08-11T19:06:30.519Z",
+		"result": "заведён: src/content/anime/jujutsu-kaisen-2nd-season.json",
+		"applied": "2026-08-11T19:09:00.433Z"
 	},
 	{
 		"id": "cand:617",
@@ -4470,7 +4518,9 @@
 		"phrases": [
 			"Манускрипт ниндзя"
 		],
-		"at": "2026-08-11T19:06:37.587Z"
+		"at": "2026-08-11T19:06:37.587Z",
+		"result": "заведён: src/content/anime/juubee-ninpuuchou.json",
+		"applied": "2026-08-11T19:09:02.243Z"
 	},
 	{
 		"id": "cand:31646",
@@ -4482,7 +4532,9 @@
 		"phrases": [
 			"Мартовский лев"
 		],
-		"at": "2026-08-11T19:06:40.753Z"
+		"at": "2026-08-11T19:06:40.753Z",
+		"result": "заведён: src/content/anime/3-gatsu-no-lion.json",
+		"applied": "2026-08-11T19:09:04.029Z"
 	},
 	{
 		"id": "cand:16",
@@ -4494,7 +4546,9 @@
 		"phrases": [
 			"Мед и клевер"
 		],
-		"at": "2026-08-11T19:06:44.336Z"
+		"at": "2026-08-11T19:06:44.336Z",
+		"result": "заведён: src/content/anime/hachimitsu-to-clover.json",
+		"applied": "2026-08-11T19:09:05.903Z"
 	},
 	{
 		"id": "cand:50461",
@@ -4506,7 +4560,9 @@
 		"phrases": [
 			"Мир отомэ-игр"
 		],
-		"at": "2026-08-11T19:07:00.553Z"
+		"at": "2026-08-11T19:07:00.553Z",
+		"result": "заведён: src/content/anime/otome-game-sekai-wa-mob-ni-kibishii-sekai-desu.json",
+		"applied": "2026-08-11T19:09:07.707Z"
 	},
 	{
 		"id": "cand:578",
@@ -4518,7 +4574,9 @@
 		"phrases": [
 			"Могила светлячков"
 		],
-		"at": "2026-08-11T19:07:11.753Z"
+		"at": "2026-08-11T19:07:11.753Z",
+		"result": "заведён: src/content/anime/hotaru-no-haka.json",
+		"applied": "2026-08-11T19:09:09.661Z"
 	},
 	{
 		"id": "cand:52092",
@@ -4530,7 +4588,9 @@
 		"phrases": [
 			"Мой домашний герой"
 		],
-		"at": "2026-08-11T19:07:15.986Z"
+		"at": "2026-08-11T19:07:15.986Z",
+		"result": "заведён: src/content/anime/my-home-hero.json",
+		"applied": "2026-08-11T19:09:11.455Z"
 	},
 	{
 		"id": "cand:19",
@@ -4542,6 +4602,8 @@
 		"phrases": [
 			"Монстр"
 		],
-		"at": "2026-08-11T19:07:37.470Z"
+		"at": "2026-08-11T19:07:37.470Z",
+		"result": "заведён: src/content/anime/monster.json",
+		"applied": "2026-08-11T19:09:13.247Z"
 	}
 ]
