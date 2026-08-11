@@ -8876,5 +8876,22 @@
 			"Нейромангака"
 		],
 		"at": "2026-08-11T20:15:40.677Z"
+	},
+	{
+		"id": "ph:Кагуе",
+		"what": "alias",
+		"animeId": "kaguya-sama-wa-kokurasetai-tensai-tachi-no-renai-zunousen",
+		"phrases": [
+			"Кагуе"
+		],
+		"at": "2026-08-11T20:16:09.426Z"
+	},
+	{
+		"id": "ph:Иноекино",
+		"what": "stop",
+		"phrases": [
+			"Иноекино"
+		],
+		"at": "2026-08-11T20:16:10.479Z"
 	}
 ]
