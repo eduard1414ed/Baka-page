@@ -8156,5 +8156,41 @@
 			"Фарфоровую куклу"
 		],
 		"at": "2026-08-11T20:09:03.674Z"
+	},
+	{
+		"id": "ph:Моя фарфоровая кукла",
+		"what": "alias",
+		"animeId": "sono-bisque-doll-wa-koi-wo-suru",
+		"phrases": [
+			"Моя фарфоровая кукла"
+		],
+		"at": "2026-08-11T20:09:05.007Z"
+	},
+	{
+		"id": "ph:Моей фарфоровой куклы",
+		"what": "alias",
+		"animeId": "sono-bisque-doll-wa-koi-wo-suru",
+		"phrases": [
+			"Моей фарфоровой куклы"
+		],
+		"at": "2026-08-11T20:09:05.541Z"
+	},
+	{
+		"id": "ph:Моя фарфоровая кукла влюбилась",
+		"what": "alias",
+		"animeId": "sono-bisque-doll-wa-koi-wo-suru",
+		"phrases": [
+			"Моя фарфоровая кукла влюбилась"
+		],
+		"at": "2026-08-11T20:09:06.041Z"
+	},
+	{
+		"id": "ph:Фарфорой куклы",
+		"what": "alias",
+		"animeId": "sono-bisque-doll-wa-koi-wo-suru",
+		"phrases": [
+			"Фарфорой куклы"
+		],
+		"at": "2026-08-11T20:09:07.158Z"
 	}
 ]
