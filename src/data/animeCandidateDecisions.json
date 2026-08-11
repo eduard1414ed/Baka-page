@@ -3124,5 +3124,29 @@
 			"Рубеж Шангри-Ла"
 		],
 		"at": "2026-08-11T16:00:42.765Z"
+	},
+	{
+		"id": "cand:49834",
+		"what": "create",
+		"sourceId": 49834,
+		"source": "shikimori",
+		"slug": "boku-ga-aishita-subete-no-kimi-e",
+		"title": "Для каждой тебя, что я раньше любил",
+		"phrases": [
+			"Для каждой тебя, что я раньше любил"
+		],
+		"at": "2026-08-11T16:00:44.930Z"
+	},
+	{
+		"id": "cand:49835",
+		"what": "create",
+		"sourceId": 49835,
+		"source": "shikimori",
+		"slug": "kimi-wo-aishita-hitori-no-boku-e",
+		"title": "Единственному мне, кто тебя любил",
+		"phrases": [
+			"Единственному мне, кто тебя любил"
+		],
+		"at": "2026-08-11T16:00:45.880Z"
 	}
 ]
