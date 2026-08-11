@@ -861,5 +861,18 @@
 		"at": "2026-08-11T12:13:47.782Z",
 		"result": "заведён: src/content/anime/tokyo-revengers.json",
 		"applied": "2026-08-11T12:14:36.131Z"
+	},
+	{
+		"id": "cand:58939",
+		"what": "create",
+		"sourceId": 58939,
+		"source": "shikimori",
+		"slug": "sakamoto-days",
+		"title": "Дни Сакамото",
+		"phrases": [
+			"Дни Сакамото",
+			"Дней Сакамото"
+		],
+		"at": "2026-08-11T12:17:57.420Z"
 	}
 ]
