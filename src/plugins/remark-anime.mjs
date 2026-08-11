@@ -2,6 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { visit } from 'unist-util-visit';
 import { buildAnimeMatcher, findMentions } from '../lib/animeMentions.mjs';
+import { parseMentionExceptions } from '../lib/mentionExceptions.mjs';
 
 const ANIME_CONTENT_DIR = new URL('../content/anime/', import.meta.url);
 
@@ -153,14 +154,42 @@ export default function remarkAnime() {
 	return (tree, file) => {
 		const seen = new Set();
 		const known = catalogIds();
-		const isDraft = file.data?.astro?.frontmatter?.draft === true;
-		const postId = file.data?.astro?.frontmatter?.title ?? file.path ?? 'пост без заголовка';
+		const frontmatter = file.data?.astro?.frontmatter ?? {};
+		const isDraft = frontmatter.draft === true;
+		const postId = frontmatter.title ?? file.path ?? 'пост без заголовка';
+
+		// ОТМЕНА ЛОЖНОЙ ССЫЛКИ В ЭТОМ ПОСТЕ (хвост 50, решение заказчика
+		// 11 августа 2026). Запись «убрать тайтл целиком» из поля «Упоминания
+		// тайтлов» (`animeId:*`) действует не только в расшифровке, но и в тексте:
+		// название остаётся обычным текстом.
+		//
+		// ЯКОРЬ — «ТАЙТЛ × ПОСТ», И ПОЗИЦИЯ В ТЕКСТЕ ТУТ НЕ ГОДИТСЯ. В расшифровке
+		// якорь стоит на номере реплики и позиции в ней, и работает это потому,
+		// что текст расшифровки руками не правят. Тело поста правят в админке
+		// постоянно — позиция сдвинулась бы молча. А «тайтл × пост» достаточен:
+		// ссылкой становится ПЕРВОЕ упоминание тайтла, то есть на пост приходится
+		// ровно одна ссылка на тайтл.
+		//
+		// ПОШТУЧНЫЕ ЯКОРЯ (`k-on:12,45.83`) сюда не относятся вовсе: они про
+		// номера реплик, а реплик у поста нет.
+		//
+		// ТО ЖЕ САМОЕ ОБЯЗАН СПРОСИТЬ `animeMentionedInPostText`, иначе ссылка
+		// из текста пропала бы, а пост на странице тайтла остался.
+		const hiddenHere = new Set(parseMentionExceptions(frontmatter.mentionsHidden).hiddenAnime);
 
 		visit(tree, 'textDirective', (node, index, parent) => {
 			if (node.name !== 'anime' || !parent || typeof index !== 'number') return;
 
 			const id = node.attributes?.id;
 			if (!id) return;
+
+			// Тайтл убран из этого поста руками — даже размеченный кнопкой
+			// «Аниме» остаётся текстом. Иначе отмена работала бы только
+			// на автоматической разметке, и это выглядело бы поломкой.
+			if (hiddenHere.has(id)) {
+				parent.children.splice(index, 1, ...node.children);
+				return index;
+			}
 
 			// Такого тайтла в справочнике нет — оставляем текст текстом.
 			if (!known.has(id)) {
@@ -194,6 +223,7 @@ export default function remarkAnime() {
 
 		const pending = catalogIds();
 		for (const id of seen) pending.delete(id);
+		for (const id of hiddenHere) pending.delete(id);
 		if (pending.size === 0) return;
 
 		// ССЫЛКУ ВНУТРЬ ССЫЛКИ СТАВИТЬ НЕЛЬЗЯ. Название тайтла запросто окажется

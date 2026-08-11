@@ -7,7 +7,7 @@
 
 import { groupReplicas, hasUsableTimecodes } from './transcript.mjs';
 import { buildAnimeMatcher, collectMentions, findMentions } from './animeMentions.mjs';
-import { makeExceptionFilter } from './mentionExceptions.mjs';
+import { makeExceptionFilter, parseMentionExceptions } from './mentionExceptions.mjs';
 import { applyPostOverrides } from './transcriptOverrides.mjs';
 import { toPlainText } from './plainText.mjs';
 
@@ -36,8 +36,21 @@ function warnAboutLost(id, lost) {
 	console.warn(
 		`[упоминания] ${id}: исключение не сработало — привязка потерялась, ` +
 			`упоминание осталось на странице (${lost.join('; ')}). ` +
-			`Проверьте блок «Упоминания в транскрипте» у этого поста в админке.`,
+			`Проверьте блок «Упоминания тайтлов» у этого поста в админке.`,
 	);
+}
+
+// КАКИЕ ТАЙТЛЫ УБРАНЫ ИЗ ЭТОГО ПОСТА РУКАМИ — одно место на всех, кто
+// спрашивает (хвост 50). Разбор строки кэшируется по самой строке: постов
+// 1595, а строка у них почти всегда пустая и одна и та же.
+const EMPTY = new Set();
+const hiddenCache = new Map();
+
+export function animeHiddenInPost(post) {
+	const raw = post?.data?.mentionsHidden ?? '';
+	if (!raw) return EMPTY;
+	if (!hiddenCache.has(raw)) hiddenCache.set(raw, new Set(parseMentionExceptions(raw).hiddenAnime));
+	return hiddenCache.get(raw);
 }
 
 /**
@@ -63,11 +76,36 @@ function warnAboutLost(id, lost) {
  * разорванное название он находит. МЕНЯЕТЕ ЗДЕСЬ — ПОСМОТРИТЕ И В ПЛАГИН
  * (src/plugins/remark-anime.mjs).
  *
+ * ОТМЕНЁННЫЕ ТАЙТЛЫ СЮДА НЕ ПОПАДАЮТ (хвост 50). Запись «убрать тайтл целиком»
+ * из поля «Упоминания тайтлов» действует и здесь, и в плагине разметки. Спроси
+ * её только плагин — ссылка из текста пропала бы, а пост на странице тайтла
+ * остался, и вышла бы та же несогласица, ради которой чинился хвост 44,
+ * только с другой стороны.
+ *
+ * ФИЛЬТР ОБЯЗАН ПЕРЕДАТЬ ВЫЗЫВАЮЩИЙ, и молчание тут запрещено — как у галочки
+ * «только в кавычках». Причина не в церемонии: у поста с расшифровкой фильтр
+ * ОДИН на обе половины (текст и живая речь), потому что он же считает, какие
+ * правила ни разу не сработали (`lost()`). Построй мы тут свой экземпляр —
+ * правило, сработавшее в тексте, для расшифровки осталось бы «потерянным»,
+ * и сборка ругалась бы на здоровое поле.
+ *
+ * @param {{ isHidden: (id: string, replica: number, offset: number) => boolean }} exceptions
  * @returns {string[]} id тайтлов, в порядке первого упоминания
  */
-export function animeMentionedInPostText(post, matcher) {
+export function animeMentionedInPostText(post, matcher, exceptions) {
+	if (typeof exceptions?.isHidden !== 'function') {
+		throw new Error(
+			'animeMentionedInPostText: передайте фильтр исключений — makeExceptionFilter(post.data.mentionsHidden). ' +
+				'Без него отменённый тайтл остался бы на странице тайтла, хотя ссылки в тексте уже нет.',
+		);
+	}
+
 	const found = findMentions(toPlainText(post.body ?? ''), matcher);
-	return [...new Set(found.map((mention) => mention.id))];
+	// Реплики и позиции у текста поста нет — якорь тут «тайтл × пост», то есть
+	// работает только запись `animeId:*`. Позиция не годится: тело поста правят
+	// в админке, и она сдвинулась бы молча.
+	const kept = found.filter((mention) => !exceptions.isHidden(mention.id, -1, -1));
+	return [...new Set(kept.map((mention) => mention.id))];
 }
 
 /**
@@ -82,13 +120,21 @@ export function buildMentionIndex({ posts, transcripts, animeList }) {
 	const byTranscriptId = new Map(transcripts.map((entry) => [entry.id, entry]));
 	const index = new Map();
 
+	// ФИЛЬТР ИСКЛЮЧЕНИЙ — ОДИН НА ПОСТ, А НЕ ПО ОДНОМУ НА ПОЛОВИНУ. Он же считает,
+	// какие правила ни разу не сработали (`lost()`), и правило, снявшее тайтл
+	// в ТЕКСТЕ поста, обязано считаться сработавшим и для расшифровки — иначе
+	// сборка ругалась бы «правило потерялось» на здоровое поле (хвост 50).
+	const filters = new Map(posts.map((post) => [post.id, makeExceptionFilter(post.data.mentionsHidden)]));
+	// Чьи правила уже проверены на «сработало ли» — см. второй цикл и хвост ниже.
+	const checked = new Set();
+
 	// ТЕКСТ ПОСТА — ТАКОЕ ЖЕ УПОМИНАНИЕ, КАК ЗВУЧАЩЕЕ В ВЫПУСКЕ (хвост 44).
 	// Без этого широкая разметка постов дала бы ссылку из поста на страницу
 	// тайтла, а на самой странице тайтла этого поста не было бы: читатель
 	// нажимает и попадает в список, где его же поста нет.
 	// Таймкодов у текста не бывает — отсюда пустой список времён.
 	for (const post of posts) {
-		for (const animeId of animeMentionedInPostText(post, postMatcher)) {
+		for (const animeId of animeMentionedInPostText(post, postMatcher, filters.get(post.id))) {
 			const perPost = index.get(animeId) ?? new Map();
 			if (!perPost.has(post.id)) perPost.set(post.id, []);
 			index.set(animeId, perPost);
@@ -103,7 +149,7 @@ export function buildMentionIndex({ posts, transcripts, animeList }) {
 		// и ссылаться на минуту внутри них не на что.
 		if (!transcript || !hasUsableTimecodes(transcript.data)) continue;
 
-		const filter = makeExceptionFilter(post.data.mentionsHidden);
+		const filter = filters.get(post.id);
 		// Подтверждённые исправления названий меняют текст, а значит и то, что
 		// в нём находится. Считать по неисправленному нельзя: тайтл нашёлся бы
 		// на странице выпуска, но не на своей собственной.
@@ -116,6 +162,17 @@ export function buildMentionIndex({ posts, transcripts, animeList }) {
 		}
 
 		warnAboutLost(transcriptId, filter.lost());
+		checked.add(post.id);
+	}
+
+	// У ПОСТА БЕЗ РАСШИФРОВКИ ПОТЕРЯННОЕ ПРАВИЛО НЕ СПРАШИВАЛ НИКТО — до хвоста
+	// 50 такого поста и быть не могло: поле работало только в расшифровках.
+	// Теперь может, и молчать тут нельзя: вписанное в поле «уберите этот тайтл»
+	// про тайтл, которого в тексте нет, иначе просто ничего не сделало бы,
+	// а человек считал бы, что сделало. Ломаться громко лучше, чем тихо врать.
+	for (const post of posts) {
+		if (checked.has(post.id)) continue;
+		warnAboutLost(post.id, filters.get(post.id).lost());
 	}
 
 	return index;
@@ -148,6 +205,13 @@ export function postsForAnime(animeId, posts, index) {
 	const perPost = index.get(animeId) ?? new Map();
 
 	return posts
+		// ОТМЕНА СИЛЬНЕЕ ПОЛЯ «ТАЙТЛЫ ПОСТА» (хвост 50). Пост попадает сюда двумя
+		// путями — по найденному упоминанию и по отметке руками, — и убрать надо
+		// оба сразу. Уберём только первый — ссылка из текста исчезнет, а пост
+		// на странице тайтла останется: ровно та несогласица, ради которой
+		// чинился хвост 44. Поле при этом заполняется САМО при сохранении поста,
+		// так что «отметил и тут же отменил» — обычное дело, а не противоречие.
+		.filter((post) => !animeHiddenInPost(post).has(animeId))
 		.filter((post) => perPost.has(post.id) || (post.data.anime ?? []).some((ref) => ref.id === animeId))
 		.map((post) => ({ post, times: perPost.get(post.id) ?? [] }))
 		.sort((a, b) => b.post.data.date.valueOf() - a.post.data.date.valueOf());

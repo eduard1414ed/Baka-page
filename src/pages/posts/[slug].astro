@@ -40,7 +40,7 @@ import { hasUsableTimecodes } from '../../lib/transcript.mjs';
 import { applyPostOverrides } from '../../lib/transcriptOverrides.mjs';
 import { buildAnimeMatcher } from '../../lib/animeMentions.mjs';
 import { makeExceptionFilter } from '../../lib/mentionExceptions.mjs';
-import { animeMentionedIn, animeMentionedInPostText } from '../../lib/animeMentionIndex.mjs';
+import { animeHiddenInPost, animeMentionedIn, animeMentionedInPostText } from '../../lib/animeMentionIndex.mjs';
 import { resolveEpisodeCover } from '../../lib/episodeCover.mjs';
 import { isPublished } from '../../lib/publishing.mjs';
 import { getPostTiming } from '../../lib/postTiming.mjs';
@@ -264,19 +264,25 @@ const timing = await getPostTiming(post);
 // такие просто не показываем в марках, не ломая страницу.
 const animeList = await getCollection('anime');
 
+// Фильтр исключений ОДИН на обе половины — и на живую речь, и на текст поста:
+// одно поле, одно правило (см. animeMentionIndex.mjs, хвост 50).
+const exceptions = makeExceptionFilter(post.data.mentionsHidden);
+
 const mentionTimes = showTranscript
-	? animeMentionedIn(
-			transcriptData,
-			buildAnimeMatcher(animeList, { quotes: 'ignore' }),
-			makeExceptionFilter(post.data.mentionsHidden),
-		)
+	? animeMentionedIn(transcriptData, buildAnimeMatcher(animeList, { quotes: 'ignore' }), exceptions)
 	: new Map();
 
-const inTextIds = animeMentionedInPostText(post, buildAnimeMatcher(animeList, { quotes: 'apply' }));
+const inTextIds = animeMentionedInPostText(post, buildAnimeMatcher(animeList, { quotes: 'apply' }), exceptions);
+
+// Отменённый тайтл убирается и из отметок руками: поле «Тайтлы поста»
+// заполняется САМО при сохранении, поэтому «отметил и тут же отменил» —
+// обычное дело. То же самое делает `postsForAnime` на странице тайтла,
+// и это одна и та же функция `animeHiddenInPost`, а не две проверки.
+const hiddenHere = animeHiddenInPost(post);
 
 const animeIds = [
 	...new Set([...(anime ?? []).map((ref: { id: string }) => ref.id), ...inTextIds, ...mentionTimes.keys()]),
-];
+].filter((id) => !hiddenHere.has(id));
 const animeEntries = (await Promise.all(animeIds.map((id) => getEntry('anime', id)))).filter(Boolean);
 
 // Слова упомянутых тайтлов для поиска — невидимой строкой в конце статьи,
