@@ -3613,5 +3613,53 @@
 			"Бойца Баки"
 		],
 		"at": "2026-08-11T18:31:59.892Z"
+	},
+	{
+		"id": "cand:50425",
+		"what": "create",
+		"sourceId": 50425,
+		"source": "shikimori",
+		"slug": "fuufu-ijou-koibito-miman",
+		"title": "Больше чем пара, меньше чем любовники",
+		"phrases": [
+			"Больше, чем пара, меньше, чем любовники"
+		],
+		"at": "2026-08-11T18:32:06.890Z"
+	},
+	{
+		"id": "cand:1824",
+		"what": "create",
+		"sourceId": 1824,
+		"source": "shikimori",
+		"slug": "hadashi-no-gen",
+		"title": "Босоногий Гэн",
+		"phrases": [
+			"Босоногий Гэн"
+		],
+		"at": "2026-08-11T18:32:10.161Z"
+	},
+	{
+		"id": "cand:45",
+		"what": "create",
+		"sourceId": 45,
+		"source": "shikimori",
+		"slug": "rurouni-kenshin-meiji-kenkaku-romantan",
+		"title": "Бродяга Кэнсин",
+		"phrases": [
+			"Бродяга Кэнсин"
+		],
+		"at": "2026-08-11T18:32:16.410Z"
+	},
+	{
+		"id": "cand:51371",
+		"what": "create",
+		"sourceId": 51371,
+		"source": "shikimori",
+		"slug": "bucchigire",
+		"title": "Буттигирэ!",
+		"phrases": [
+			"Буттигирэ!"
+		],
+		"at": "2026-08-11T18:32:20.778Z"
 	}
 ]
