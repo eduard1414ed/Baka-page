@@ -3717,5 +3717,17 @@
 			"Ведьма Салли"
 		],
 		"at": "2026-08-11T18:33:16.614Z"
+	},
+	{
+		"id": "cand:51213",
+		"what": "create",
+		"sourceId": 51213,
+		"source": "shikimori",
+		"slug": "kinsou-no-vermeil-gakeppuchi-majutsushi-wa-saikyou-no-yakusa",
+		"title": "Вермейл в золотом: Сильнейший маг проходит через магический мир с сильнейшей катастрофой",
+		"phrases": [
+			"Вермейл в золотом"
+		],
+		"at": "2026-08-11T18:33:19.821Z"
 	}
 ]
