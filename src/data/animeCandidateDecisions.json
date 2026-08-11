@@ -1001,5 +1001,29 @@
 			"Могу я попросить ещё кое-что?"
 		],
 		"at": "2026-08-11T12:23:13.841Z"
+	},
+	{
+		"id": "cand:45613",
+		"what": "create",
+		"sourceId": 45613,
+		"source": "shikimori",
+		"slug": "kawaii-dake-ja-nai-shikimori-san",
+		"title": "Моя девушка не только милая",
+		"phrases": [
+			"Моя девушка не только милая"
+		],
+		"at": "2026-08-11T12:23:15.607Z"
+	},
+	{
+		"id": "cand:59517",
+		"what": "create",
+		"sourceId": 59517,
+		"source": "shikimori",
+		"slug": "chitose-kun-wa-ramune-bin-no-naka",
+		"title": "Титосэ внутри бутылки рамунэ",
+		"phrases": [
+			"Титосэ внутри бутылки рамунэ"
+		],
+		"at": "2026-08-11T12:23:16.691Z"
 	}
 ]
