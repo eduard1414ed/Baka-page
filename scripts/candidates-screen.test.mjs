@@ -32,6 +32,7 @@ const GITHUB_JS = new URL('public/admin/tools/github.js', ROOT);
 
 const DECISIONS_FILE = 'src/data/animeCandidateDecisions.json';
 const CANDIDATES_FILE = 'src/data/animeCandidates.json';
+const HIDDEN_FILE = 'src/data/animeCandidateHidden.json';
 const OWNER = 'eduard1414ed';
 const REPO = 'Baka-page';
 
@@ -59,8 +60,13 @@ const CANDIDATES = {
 
 function makeServer(options = {}) {
 	const server = {
-		decisions: '[]\n',
-		sha: 'sha-0',
+		// ФАЙЛОВ У ЭКРАНА ТРИ, И ЭТО НЕ МЕЛОЧЬ ПОДДЕЛКИ. Решения и скрытые
+		// лежат ОТДЕЛЬНО друг от друга, и хранилище тут такое же: одна запись
+		// не имеет права задеть чужой файл. Список кандидатов держим полем —
+		// его переписывает робот, и проверка «скрытое пережило пересбор»
+		// подменяет его целиком.
+		files: new Map([[DECISIONS_FILE, { text: '[]\n', sha: 'sha-0' }]]),
+		candidates: JSON.parse(JSON.stringify(CANDIDATES)),
 		shaCounter: 0,
 		putLatency: 400,
 		putStatus: null, // насильный отказ на следующую запись
@@ -71,6 +77,23 @@ function makeServer(options = {}) {
 		runAppearsAfter: 0, // через сколько миллисекунд поход появится в списке
 		nextRunId: 1000,
 		...options,
+	};
+
+	// Проверки ниже говорят про файл решений двумя короткими словами
+	// (`server.decisions`, `server.sha`) — они описывают случившиеся 11 августа
+	// поломки, и переписывать их ради второго файла значило бы переписывать
+	// показания. Поэтому старые имена остались, а за ними хранилище файлов.
+	Object.defineProperty(server, 'decisions', {
+		get: () => server.files.get(DECISIONS_FILE)?.text ?? null,
+		set: (text) => server.files.set(DECISIONS_FILE, { text, sha: server.files.get(DECISIONS_FILE)?.sha ?? 'sha-0' }),
+	});
+	Object.defineProperty(server, 'sha', {
+		get: () => server.files.get(DECISIONS_FILE)?.sha ?? null,
+		set: (sha) => server.files.set(DECISIONS_FILE, { text: server.files.get(DECISIONS_FILE)?.text ?? '[]\n', sha }),
+	});
+	server.hidden = () => {
+		const text = server.files.get(HIDDEN_FILE)?.text;
+		return text ? JSON.parse(text) : null;
 	};
 
 	server.fetch = async (url, init = {}) => {
@@ -92,12 +115,15 @@ function makeServer(options = {}) {
 			const file = decodeURIComponent(path.slice(`/repos/${OWNER}/${REPO}/contents/`.length).split('?')[0]);
 
 			if (method === 'GET') {
-				if (file === CANDIDATES_FILE) return new Response(JSON.stringify(CANDIDATES), { status: 200 });
-				if (file !== DECISIONS_FILE) return new Response('нет такого', { status: 404 });
+				if (file === CANDIDATES_FILE) return new Response(JSON.stringify(server.candidates), { status: 200 });
+				const now = server.files.get(file);
+				// Файла нет вовсе — так отвечает GitHub про ещё не заведённый
+				// файл скрытых, и экран обязан это пережить.
+				if (!now) return new Response('нет такого', { status: 404 });
 				const raw = String(init.headers?.Accept ?? '').includes('raw');
-				if (raw) return new Response(server.decisions, { status: 200 });
+				if (raw) return new Response(now.text, { status: 200 });
 				return new Response(
-					JSON.stringify({ content: Buffer.from(server.decisions, 'utf8').toString('base64'), sha: server.sha }),
+					JSON.stringify({ content: Buffer.from(now.text, 'utf8').toString('base64'), sha: now.sha }),
 					{ status: 200 },
 				);
 			}
@@ -112,13 +138,16 @@ function makeServer(options = {}) {
 					return new Response('{}', { status });
 				}
 				// Отпечаток версии не сошёлся — ровно так GitHub отвечает,
-				// когда файл записал кто-то другой.
-				if ((body.sha ?? null) !== server.sha) return new Response('{}', { status: 409 });
+				// когда файл записал кто-то другой. У ещё не заведённого файла
+				// отпечатка нет ни у него, ни в запросе.
+				const now = server.files.get(file) ?? null;
+				if ((body.sha ?? null) !== (now?.sha ?? null)) return new Response('{}', { status: 409 });
 
-				server.decisions = Buffer.from(body.content, 'base64').toString('utf8');
-				server.sha = `sha-${++server.shaCounter}`;
-				server.writes.push({ text: server.decisions, message: body.message });
-				return new Response(JSON.stringify({ content: { sha: server.sha } }), { status: 200 });
+				const text = Buffer.from(body.content, 'base64').toString('utf8');
+				const sha = `sha-${++server.shaCounter}`;
+				server.files.set(file, { text, sha });
+				server.writes.push({ file, text, message: body.message });
+				return new Response(JSON.stringify({ content: { sha } }), { status: 200 });
 			}
 		}
 
@@ -171,6 +200,13 @@ async function loadScreen(server, { patch } = {}) {
 		applyNote: document_.getElementById('apply-note'),
 		applyStatus: document_.getElementById('apply-status'),
 		groups: document_.getElementById('cand-groups'),
+		counts: document_.getElementById('cand-counts'),
+	};
+	const headings = () => el.groups.querySelectorAll('h3').map((node) => node.textContent);
+	const acts = (key) => {
+		const li = el.groups.querySelectorAll('li').find((node) => node.dataset.key === key);
+		if (!li) throw new Error(`строки ${key} на экране нет`);
+		return li.querySelectorAll('button').map((node) => node.dataset.act);
 	};
 	const rowByKey = (key) => el.groups.querySelectorAll('li').find((li) => li.dataset.key === key);
 	const button = (key, act) => {
@@ -180,7 +216,7 @@ async function loadScreen(server, { patch } = {}) {
 		if (!found) throw new Error(`у строки ${key} нет кнопки «${act}»`);
 		return found;
 	};
-	return { el, rowByKey, button, press: (key, act) => press(button(key, act)) };
+	return { el, rowByKey, button, headings, acts, press: (key, act) => press(button(key, act)) };
 }
 
 // ── Проверки ────────────────────────────────────────────────────────────────
@@ -213,6 +249,27 @@ async function проверитьГонку(patch) {
 
 	const call = server.dispatches[0];
 	return { server, screen, call };
+}
+
+/**
+ * СКРЫТИЕ. Нажимаем «Скрыть» у первой строки и даём записи доехать.
+ *
+ * Ключ строки берётся у ПЕРВОЙ строки подложенных данных, а не вписан именем:
+ * вписанное имя протухает от чужой работы — на этом уже подорвались 11 августа,
+ * когда «Баки!» ушло в стоп-лист и перестало быть кандидатом.
+ */
+const ПЕРВЫЙ_КЛЮЧ = `cand:${ROWS[0].sourceId}`;
+
+async function сценарийСкрытия(patch) {
+	const server = makeServer({ putLatency: 100 });
+	const screen = await loadScreen(server, { patch });
+	const счётДо = screen.el.counts.textContent;
+	const заголовкиДо = screen.headings();
+
+	await screen.press(ПЕРВЫЙ_КЛЮЧ, 'hide');
+	await sleep(2500);
+
+	return { server, screen, счётДо, заголовкиДо };
 }
 
 async function main() {
@@ -350,6 +407,74 @@ async function main() {
 		);
 	}
 
+	{
+		// «СКРЫТЬ» — НЕ РЕШЕНИЕ. Главное про эту кнопку: файл решений она
+		// не трогает вовсе, и робот применения о ней не узнаёт ничем.
+		const { server, screen, счётДо, заголовкиДо } = await сценарийСкрытия();
+
+		say(
+			'скрытие не пишет ни слова в файл решений и не открывает «Применить»',
+			JSON.parse(server.decisions).length === 0 && screen.el.apply.disabled === true,
+			`в файле решений записей: ${JSON.parse(server.decisions).length} (ждали 0); ` +
+				`кнопка «Применить» серая: ${screen.el.apply.disabled}`,
+		);
+
+		say(
+			'скрытое записано своим файлом',
+			JSON.stringify(server.hidden()) === JSON.stringify([ПЕРВЫЙ_КЛЮЧ]),
+			`в файле скрытых: ${JSON.stringify(server.hidden())}`,
+		);
+
+		const заголовки = screen.headings();
+		say(
+			'строка уехала в раздел «Скрытые», и там у неё одна кнопка — вернуть',
+			screen.acts(ПЕРВЫЙ_КЛЮЧ).join(',') === 'unhide' &&
+				заголовки.some((text) => text.includes('Скрытые: 1')),
+			`кнопки строки: [${screen.acts(ПЕРВЫЙ_КЛЮЧ).join(', ')}]; заголовки: ${заголовки.join(' | ')}`,
+		);
+
+		// 2.5 из задания: скрытие убирает с глаз, а не из подсчётов. Заголовок
+		// группы обязан по-прежнему считать ВСЕ свои строки.
+		const былоВГруппе = заголовкиДо[0];
+		const сталоВГруппе = заголовки[0];
+		say(
+			'счётчики от скрытия не поменялись',
+			счётДо === screen.el.counts.textContent && сталоВГруппе.startsWith(былоВГруппе),
+			`счёт сверху: «${счётДо}» → «${screen.el.counts.textContent}»; ` +
+				`заголовок группы: «${былоВГруппе}» → «${сталоВГруппе}»`,
+		);
+
+		// ОБРАТИМО. Вернули — строка снова живая, файл скрытых пуст.
+		await screen.press(ПЕРВЫЙ_КЛЮЧ, 'unhide');
+		await sleep(2500);
+		say(
+			'возврат работает: строка снова решается, скрытых не осталось',
+			screen.acts(ПЕРВЫЙ_КЛЮЧ).includes('stop') && JSON.stringify(server.hidden()) === '[]',
+			`кнопки строки: [${screen.acts(ПЕРВЫЙ_КЛЮЧ).join(', ')}]; в файле скрытых: ${JSON.stringify(server.hidden())}`,
+		);
+	}
+
+	{
+		// ПЕРЕСБОР СПИСКА. Робот переписывает `animeCandidates.json` ЦЕЛИКОМ
+		// после каждого применения и после каждого сохранения черновика.
+		// Скрытое обязано это пережить — на похожем в проекте уже подрывались:
+		// пометка «применено» терялась ровно так.
+		const { server } = await сценарийСкрытия();
+
+		server.candidates = {
+			...JSON.parse(JSON.stringify(CANDIDATES)),
+			generated: '2026-08-12T07:00:00.000Z',
+			candidates: [...ROWS].reverse(),
+		};
+
+		const снова = await loadScreen(server);
+		say(
+			'скрытое пережило пересбор списка',
+			снова.acts(ПЕРВЫЙ_КЛЮЧ).join(',') === 'unhide',
+			`после пересбора кнопки строки: [${снова.acts(ПЕРВЫЙ_КЛЮЧ).join(', ')}] (ждали одну «unhide»)`,
+		);
+	}
+
 	const bad = cases.filter((item) => !item.ok).length;
 	console.log(bad === 0 ? `\nВсе ${cases.length} проверок прошли.` : `\nНЕ ПРОШЛО: ${bad} из ${cases.length}.`);
 	return bad;
@@ -371,29 +496,95 @@ const СЛОМАННОЕ_ОЖИДАНИЕ = `
 			}
 `;
 
-async function selftest() {
-	console.log('=== САМОПРОВЕРКА: ПОДЛОЖЕН СЛОМАННЫЙ КОД 11 АВГУСТА ===\n');
+/** Подмена куска текста в скрипте страницы. Не нашли — молчать нельзя. */
+function подменить(source, что, чем, зачем) {
+	if (!source.includes(что)) throw new Error(`в скрипте страницы нет «${что}» — подлог «${зачем}» не встал`);
+	return source.replace(что, чем);
+}
 
-	const patch = (source) => {
-		const from = source.indexOf('\t\t\tfunction saveDecisions()');
-		if (from < 0) throw new Error('в скрипте страницы нет функции saveDecisions — подлог не встал');
-		const to = source.indexOf('\t\t\tasync function writeDecisions(', from);
-		if (to < 0) throw new Error('в скрипте страницы нет writeDecisions — подлог не встал');
-		return source.slice(0, from) + СЛОМАННОЕ_ОЖИДАНИЕ + source.slice(to);
+async function selftest() {
+	console.log('=== САМОПРОВЕРКА: ПОДЛОЖЕН СЛОМАННЫЙ КОД ===\n');
+	let плохо = 0;
+	const спросить = (что, поймано, детали) => {
+		if (!поймано) плохо += 1;
+		console.log(`  ${поймано ? 'ок  ' : 'СБОЙ'}  ${что}\n        ${детали}\n`);
 	};
 
-	const { server, call } = await проверитьГонку(patch);
-	const inFile = call ? JSON.parse(call.decisionsAtCall) : [];
-	const поймано = !(Boolean(call) && inFile.length === 2);
+	// ── Подлог 1: настоящий сломанный код 11 августа, слово в слово ──────────
+	{
+		const patch = (source) => {
+			const from = source.indexOf('\t\t\tfunction saveDecisions()');
+			if (from < 0) throw new Error('в скрипте страницы нет функции saveDecisions — подлог не встал');
+			const to = source.indexOf('\t\t\tasync function writeDecisions(', from);
+			if (to < 0) throw new Error('в скрипте страницы нет writeDecisions — подлог не встал');
+			return source.slice(0, from) + СЛОМАННОЕ_ОЖИДАНИЕ + source.slice(to);
+		};
 
-	console.log(`  робота позвали ${server.dispatches.length} раз(а)`);
-	console.log(`  решений в файле на тот миг: ${inFile.length} (при здоровом коде — 2)`);
+		const { server, call } = await проверитьГонку(patch);
+		const inFile = call ? JSON.parse(call.decisionsAtCall) : [];
+		спросить(
+			'«робот позван ПОСЛЕ записи» краснеет на сломанном ожидании',
+			!(Boolean(call) && inFile.length === 2),
+			`робота позвали ${server.dispatches.length} раз(а), решений в файле на тот миг: ${inFile.length} (при здоровом коде — 2)`,
+		);
+	}
+
+	// ── Подлог 2: скрытое положено к решениям, в тот же файл ─────────────────
+	//
+	// Ровно та ошибка, ради которой файлов два: робот применения споткнулся бы
+	// о запись, которую не умеет исполнять.
+	{
+		const patch = (source) =>
+			подменить(
+				source,
+				"const HIDDEN_FILE = 'src/data/animeCandidateHidden.json';",
+				'const HIDDEN_FILE = DECISIONS_FILE;',
+				'скрытое лежит вместе с решениями',
+			);
+
+		const { server } = await сценарийСкрытия(patch);
+		const вФайлеРешений = JSON.parse(server.decisions).length;
+		спросить(
+			'«скрытие не пишет в файл решений» краснеет, когда файл один',
+			вФайлеРешений !== 0,
+			`в файле решений после скрытия записей: ${вФайлеРешений} (при здоровом коде — 0)`,
+		);
+	}
+
+	// ── Подлог 3: скрытое живёт во вкладке, на GitHub не уезжает ─────────────
+	//
+	// Выглядит безупречно ровно до перезагрузки страницы: строка уехала вниз,
+	// счётчик посчитал, а назавтра всё вернулось.
+	{
+		const patch = (source) =>
+			подменить(
+				source,
+				'saveHidden().catch(showHiddenError);',
+				'/* подлог: запись выброшена */;',
+				'скрытое никуда не пишется',
+			);
+
+		const { server } = await сценарийСкрытия(patch);
+		server.candidates = {
+			...JSON.parse(JSON.stringify(CANDIDATES)),
+			generated: '2026-08-12T07:00:00.000Z',
+			candidates: [...ROWS].reverse(),
+		};
+		const снова = await loadScreen(server, { patch });
+		const кнопки = снова.acts(ПЕРВЫЙ_КЛЮЧ).join(',');
+		спросить(
+			'«скрытое пережило пересбор» краснеет, когда оно не записывается',
+			кнопки !== 'unhide',
+			`после пересбора кнопки строки: [${кнопки}] (при здоровом коде — одна «unhide»)`,
+		);
+	}
+
 	console.log(
-		поймано
-			? '\n  ок    ПРОВЕРКА КРАСНЕЕТ НА СЛОМАННОМ КОДЕ — значит она умеет находить.'
-			: '\n  СБОЙ  проверка НЕ ЗАМЕТИЛА сломанного кода. Она бесполезна.',
+		плохо === 0
+			? '  ВСЕ ТРИ ПОДЛОГА ПОЙМАНЫ — проверка умеет находить.'
+			: `  НЕ ПОЙМАНО ПОДЛОГОВ: ${плохо}. Эти проверки бесполезны.`,
 	);
-	return поймано ? 0 : 1;
+	return плохо;
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {

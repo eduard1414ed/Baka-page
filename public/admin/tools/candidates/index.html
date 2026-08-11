@@ -30,6 +30,14 @@
 			продолжаться с того места, где брошена. Память вкладки этого
 			не обещает: закрытая вкладка, чужой компьютер, чистка браузера —
 			и решения нет. Файл в репозитории переживает всё.
+
+			«СКРЫТЬ» — НЕ РЕШЕНИЕ, И ПОТОМУ ЛЕЖИТ В ДРУГОМ ФАЙЛЕ. Оно ничего
+			не заводит, ничего не пишет в стоп-лист и роботу применения
+			не показывается вовсе: положи мы его к решениям — робот споткнулся
+			бы о запись, которую не умеет исполнять. Свой файл нужен и по второй
+			причине: список кандидатов робот переписывает ЦЕЛИКОМ при каждом
+			пересборе, и всё, что лежало бы внутри него, воскресало бы после
+			каждого прогона.
 		-->
 	</head>
 
@@ -79,6 +87,8 @@
 				<label for="cand-filter" class="tech">Поиск по списку</label><br />
 				<input class="filter" id="cand-filter" type="search" placeholder="часть фразы или названия" />
 				<p class="hint" id="cand-filter-note"></p>
+				<!-- Появляется, только когда скрытое не записалось на GitHub. -->
+				<p class="status bad" id="hide-status" hidden></p>
 
 				<div id="cand-groups"></div>
 			</section>
@@ -107,6 +117,10 @@
 			const APPLY_WORKFLOW = 'anime-candidates-apply.yml';
 			const CANDIDATES_FILE = 'src/data/animeCandidates.json';
 			const DECISIONS_FILE = 'src/data/animeCandidateDecisions.json';
+			// ОТДЕЛЬНЫЙ ФАЙЛ, И ЭТО ГЛАВНОЕ В НЁМ. Тут лежат только ключи строк,
+			// убранных с глаз. Робот применения этого файла не читает вовсе
+			// и читать не должен: скрытие ничего не применяет.
+			const HIDDEN_FILE = 'src/data/animeCandidateHidden.json';
 
 			const CAND_GROUPS = [
 				{
@@ -149,6 +163,7 @@
 				apply: $('apply'),
 				applyNote: $('apply-note'),
 				applyStatus: $('apply-status'),
+				hideStatus: $('hide-status'),
 			};
 
 			let cand = null;
@@ -156,6 +171,18 @@
 			let decisionsSha = null;
 			let animeIndex = [];
 			let saveTimer = null;
+
+			// Ключи строк, убранных с глаз. Живут своим файлом — см. шапку
+			// страницы: скрытие не решение, и робот его не видит.
+			let hidden = new Set();
+			let hiddenSha = null;
+			let hiddenSaving = null;
+			let hiddenTimer = null;
+
+			// Что я вернул из скрытых за этот сеанс. Нужен ровно при столкновении
+			// с чужой записью того же файла: без него возврат не пережил бы
+			// столкновения — ровно как «Передумал» у решений.
+			const unhidden = new Set();
 
 			// Идущая прямо сейчас запись файла решений. Ждать её обязан каждый,
 			// кто хочет записать следом: два PUT одного файла внахлёст разойдутся
@@ -269,6 +296,71 @@
 				el.applyStatus.textContent = `РЕШЕНИЯ НЕ СОХРАНИЛИСЬ: ${error.message}. Не закрывайте вкладку, нажмите любую кнопку ещё раз.`;
 			}
 
+			// ── Скрытые с глаз ──────────────────────────────────────────────────
+			//
+			// ПОЧЕМУ ЗАПИСЬ НЕ ТА ЖЕ, ЧТО У РЕШЕНИЙ. Механика похожа (пауза, очередь,
+			// повтор при столкновении), а правило слияния РАЗНОЕ, и оно тут главное.
+			// В файл решений пишут двое — вкладка и робот, — поэтому там «кто
+			// в списке» берётся у вкладки, а «что с ним случилось» у робота.
+			// В этот файл пишет только вкладка, и слияние простое: чужое
+			// прибавляем, своё возвращённое не воскрешаем. Свести их в одну
+			// функцию значило бы завести ветку «а чей это файл» внутри записи —
+			// то есть спрятать разницу, ради которой файлов и стало два.
+
+			function scheduleHiddenSave() {
+				clearTimeout(hiddenTimer);
+				// МОЛЧАТЬ ТУТ НЕЛЬЗЯ, как и у решений: не записавшееся скрытие
+				// выглядит на экране точно так же, как записавшееся, — строка уже
+				// уехала вниз, а в репозитории её нет, и завтра она вернётся.
+				hiddenTimer = setTimeout(() => {
+					saveHidden().catch(showHiddenError);
+				}, 1200);
+			}
+
+			/** Заходы за один файл встают в очередь, а не отменяют друг друга. */
+			function saveHidden() {
+				clearTimeout(hiddenTimer);
+				const mine = Promise.resolve(hiddenSaving)
+					.catch(() => {})
+					.then(() => writeHidden(0));
+				hiddenSaving = mine.catch(() => {});
+				return mine;
+			}
+
+			async function writeHidden(attempt) {
+				const text = JSON.stringify([...hidden].sort(), null, '\t') + '\n';
+				const response = await writeRepoFile(HIDDEN_FILE, text, hiddenSha, `Скрытые кандидаты: ${hidden.size}`);
+
+				if (response.ok) {
+					const data = await response.json();
+					hiddenSha = data.content?.sha ?? hiddenSha;
+					el.hideStatus.hidden = true;
+					return;
+				}
+
+				// Записал кто-то другой (соседняя вкладка) — перечитать, слить,
+				// повторить. Слияние тут одно: чужое скрытое сохраняем, своё
+				// возвращённое обратно не поднимаем.
+				if ((response.status === 409 || response.status === 422) && attempt < 2) {
+					const meta = await readRepoFileMeta(HIDDEN_FILE);
+					hiddenSha = meta.sha;
+					for (const key of meta.text ? JSON.parse(meta.text) : []) {
+						if (!unhidden.has(key)) hidden.add(key);
+					}
+					await writeHidden(attempt + 1);
+					return;
+				}
+
+				throw new Error(`GitHub ответил кодом ${response.status}`);
+			}
+
+			function showHiddenError(error) {
+				el.hideStatus.hidden = false;
+				el.hideStatus.textContent =
+					`СКРЫТОЕ НЕ СОХРАНИЛОСЬ: ${error.message}. На решения это не влияет — они лежат в другом файле; ` +
+					`но убранные строки вернутся, когда вы откроете страницу заново.`;
+			}
+
 			// ── Отрисовка ───────────────────────────────────────────────────────
 
 			const rowKey = (row, groupId) => (groupId === 'candidates' ? `cand:${row.sourceId}` : `ph:${row.text}`);
@@ -310,11 +402,27 @@
 				return box;
 			}
 
-			function drawActions(li, row, groupId) {
+			function drawActions(li, row, groupId, where = 'list') {
 				const acts = li.querySelector('.acts');
 				acts.innerHTML = '';
 				const key = rowKey(row, groupId);
 				const decision = decisionById(key);
+
+				// В разделе скрытых кнопка ровно одна, и она возвращает строку
+				// обратно. Решать прямо оттуда нельзя нарочно: скрытое — это то,
+				// с чем я сейчас не разбираюсь, а не то, что я почти решил.
+				if (where === 'hidden') {
+					const said = document.createElement('span');
+					said.className = 'decided';
+					said.textContent = 'убрано с глаз';
+					const back = document.createElement('button');
+					back.type = 'button';
+					back.className = 'secondary quiet';
+					back.dataset.act = 'unhide';
+					back.textContent = 'Вернуть';
+					acts.append(said, back);
+					return;
+				}
 
 				if (decision) {
 					const said = document.createElement('span');
@@ -362,6 +470,18 @@
 				if (groupId === 'candidates') add('create', 'Завести');
 				add('alias', 'Это уже есть');
 				add('stop', 'Не аниме');
+
+				// «СКРЫТЬ» СЛАБЕЕ ТРЁХ СОСЕДЕЙ И ВЫГЛЯДИТ СЛАБЕЕ. Рядом стоит
+				// «Не аниме» — решение навсегда, фраза уходит в стоп-лист, — и спутать
+				// их нельзя ни глазом, ни рукой: у этой нет рамки, подпись строчными
+				// и обычным шрифтом, а называет она не исход, а действие с экраном.
+				const hide = document.createElement('button');
+				hide.type = 'button';
+				hide.className = 'secondary quiet';
+				hide.dataset.act = 'hide';
+				hide.textContent = 'Скрыть';
+				hide.title = 'Убрать строку вниз, в раздел «Скрытые». Ничего не решает и не применяется.';
+				acts.append(hide);
 			}
 
 			/** Выбор тайтла для кнопки «Это уже есть». */
@@ -400,7 +520,7 @@
 				acts.append(select, ok, cancel);
 			}
 
-			function drawRow(row, groupId) {
+			function drawRow(row, groupId, where = 'list') {
 				const li = document.createElement('li');
 				li.dataset.key = rowKey(row, groupId);
 				li.dataset.group = groupId;
@@ -467,7 +587,7 @@
 				body.append(acts);
 
 				li.append(body);
-				drawActions(li, row, groupId);
+				drawActions(li, row, groupId, where);
 				return li;
 			}
 
@@ -478,24 +598,55 @@
 				el.candCounts.textContent =
 					`Прочитано постов: ${cand.postsRead}. Кандидатов: ${cand.candidates.length}. Список собран ${when}.`;
 
+				// Скрытые собираются по дороге и уезжают своим разделом вниз.
+				// Из СЧЁТА они при этом не выпадают: числа на этой странице
+				// отвечают на вопрос «сколько их всего», а не «сколько я готов
+				// сейчас смотреть», и меняться от уборки с глаз им нельзя.
+				const hiddenRows = [];
+
 				for (const group of CAND_GROUPS) {
 					const rows = cand[group.id] ?? [];
 					if (rows.length === 0) continue;
 
+					const mine = rows.filter((row) => hidden.has(rowKey(row, group.id)));
+					for (const row of mine) hiddenRows.push({ row, groupId: group.id });
+
 					const head = document.createElement('h3');
-					head.textContent = `[ ${group.title}: ${rows.length} ]`;
+					head.textContent =
+						`[ ${group.title}: ${rows.length} ]` + (mine.length ? ` · скрыто ${mine.length}` : '');
 					const note = document.createElement('p');
 					note.className = 'group-note';
 					note.textContent = group.note;
 
 					const list = document.createElement('ul');
 					list.className = 'rows';
-					for (const row of rows) list.append(drawRow(row, group.id));
+					for (const row of rows) {
+						if (!hidden.has(rowKey(row, group.id))) list.append(drawRow(row, group.id));
+					}
+
+					el.candGroups.append(head, note, list);
+				}
+
+				if (hiddenRows.length > 0) {
+					const head = document.createElement('h3');
+					head.textContent = `[ Скрытые: ${hiddenRows.length} ]`;
+					const note = document.createElement('p');
+					note.className = 'group-note';
+					note.textContent =
+						'Строки, убранные с глаз кнопкой «Скрыть». Это не решение: ничего не заведено, ' +
+						'ничего не отправлено в стоп-лист, робот применения их не видит. Любую можно вернуть обратно.';
+
+					const list = document.createElement('ul');
+					list.className = 'rows';
+					for (const { row, groupId } of hiddenRows) list.append(drawRow(row, groupId, 'hidden'));
 
 					el.candGroups.append(head, note, list);
 				}
 
 				updateApplyNote();
+				// Список перерисован целиком, а в поиске могло быть набрано слово:
+				// без этого его находки пропали бы после первого же нажатия.
+				applyFilter();
 			}
 
 			function updateApplyNote() {
@@ -549,6 +700,24 @@
 					return;
 				}
 
+				// СКРЫТЬ И ВЕРНУТЬ. Решения тут не заводится ни одного, файл
+				// решений не трогается вовсе, кнопка «Применить» не шевелится.
+				if (act === 'hide' || act === 'unhide') {
+					if (act === 'hide') {
+						hidden.add(key);
+						unhidden.delete(key);
+					} else {
+						hidden.delete(key);
+						unhidden.add(key);
+					}
+					// Строка переезжает между разделами, а вместе с ней меняются
+					// счётчик скрытых и пометка у группы — проще перерисовать
+					// список целиком, чем держать три правки в трёх местах.
+					drawCandidates();
+					scheduleHiddenSave();
+					return;
+				}
+
 				if (act === 'undo') {
 					undone.add(key);
 					decisions = decisions.filter((item) => item.id !== key);
@@ -589,7 +758,12 @@
 				scheduleSave();
 			});
 
-			el.candFilter.addEventListener('input', () => {
+			/**
+			 * Поиск по списку. Скрытые строки он ищет наравне с остальными:
+			 * они никуда не делись, а лежат ниже, — и число «из скольких»
+			 * от уборки с глаз не меняется.
+			 */
+			function applyFilter() {
 				const query = el.candFilter.value.trim().toLowerCase();
 				let shown = 0;
 				let total = 0;
@@ -600,12 +774,17 @@
 					if (match) shown++;
 				}
 				el.candFilterNote.textContent = query ? `показано строк: ${shown} из ${total}` : '';
-			});
+			}
+
+			el.candFilter.addEventListener('input', applyFilter);
 
 			async function loadCandidates() {
-				const [rawCandidates, meta, index] = await Promise.all([
+				const [rawCandidates, meta, hiddenMeta, index] = await Promise.all([
 					readRepoFile(CANDIDATES_FILE),
 					readRepoFileMeta(DECISIONS_FILE),
+					// Своего файла может ещё не быть вовсе — тогда `text` пустой,
+					// `sha` пустой, и первое же скрытие его заведёт.
+					readRepoFileMeta(HIDDEN_FILE),
 					fetch('/anime-index.json').then((res) => (res.ok ? res.json() : [])).catch(() => []),
 				]);
 
@@ -622,6 +801,14 @@
 				decisions = meta.text ? JSON.parse(meta.text) : [];
 				decisionsSha = meta.sha;
 				undone.clear();
+
+				// СКРЫТОЕ ПЕРЕЖИВАЕТ ПЕРЕСБОР СПИСКА ровно потому, что читается
+				// отсюда, а не из самого списка: робот переписывает
+				// `animeCandidates.json` целиком, а этот файл не трогает никто.
+				hidden = new Set(hiddenMeta.text ? JSON.parse(hiddenMeta.text) : []);
+				hiddenSha = hiddenMeta.sha;
+				unhidden.clear();
+
 				drawCandidates();
 			}
 
