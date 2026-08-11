@@ -36,6 +36,7 @@ import {
 	WHY,
 	appendCache,
 	bestMatch,
+	looksLikeShortName,
 	hasLetters,
 	initMorph,
 	nominativeGuess,
@@ -242,6 +243,8 @@ export async function main() {
 	const silent = new Map([
 		[WHY.NOT_FOUND, []],
 		[WHY.NOT_SIMILAR, []],
+		[WHY.SHORT_NAME, []],
+		[WHY.NETWORK, []],
 	]);
 	let askedSecond = 0;
 
@@ -274,9 +277,17 @@ export async function main() {
 			}
 		}
 
-		if (match) candidates.push({ ...item, match });
-		else if (results.length === 0) silent.get(WHY.NOT_FOUND).push(item);
-		else silent.get(WHY.NOT_SIMILAR).push({ ...item, results });
+		if (match) {
+			candidates.push({ ...item, match });
+		} else if (results.length === 0) {
+			silent.get(WHY.NOT_FOUND).push(item);
+		} else {
+			// Фраза — кусок названия («Фрирен» из «…путь Фрирен»)? Тогда она
+			// не мусор, а разговорное сокращение, и лежать ей отдельно.
+			const short = looksLikeShortName(item.sample, results);
+			if (short) silent.get(WHY.SHORT_NAME).push({ ...item, short, results });
+			else silent.get(WHY.NOT_SIMILAR).push({ ...item, results });
+		}
 
 		if ((i + 1) % 25 === 0 || i === work.length - 1) {
 			const per = (Date.now() - started) / (i + 1);
@@ -362,6 +373,7 @@ export async function main() {
 	log(`  ${String(work.length).padStart(5)}  фраз спрошено`);
 	log(`  ${String(silent.get(WHY.NOT_FOUND).length).padStart(5)}  ${WHY.NOT_FOUND} (и вторая попытка тоже)`);
 	log(`  ${String(silent.get(WHY.NOT_SIMILAR).length).padStart(5)}  ${WHY.NOT_SIMILAR} — ответ есть, но название не сходится`);
+	log(`  ${String(silent.get(WHY.SHORT_NAME).length).padStart(5)}  ${WHY.SHORT_NAME} («Фрирен» вместо «Провожающая в последний путь Фрирен») — СМОТРЕТЬ ГЛАЗАМИ`);
 	log(`  ${String(alreadyKnown.length).padStart(5)}  ведут на тайтл, который в справочнике УЖЕ ЕСТЬ (написание, которого нет в его вариантах)`);
 	log(`  ${String(askedSecond).padStart(5)}  фраз пришлось переспросить именительным падежом`);
 	log();
@@ -397,7 +409,10 @@ export async function main() {
 	// ─── Полные списки в файл ────────────────────────────────────────────────
 
 	const out = [...say];
-	const put = (line = '') => out.push(line);
+	// Принимает НЕСКОЛЬКО строк: первая редакция брала одну, а звалась с двумя
+	// («пустая строка» плюс заголовок раздела) — и все подписи разделов в файле
+	// молча пропали, а списки остались. Ошибки при этом не было никакой.
+	const put = (...lines) => out.push(...(lines.length ? lines : ['']));
 
 	put('', `=== ВСЕ КАНДИДАТЫ ПО ЧАСТОТЕ: ${list.length} ===`);
 	for (const row of list) {
@@ -421,6 +436,25 @@ export async function main() {
 	put('', `=== СПРОШЕНО, НО ${WHY.NOT_FOUND.toUpperCase()}: ${silent.get(WHY.NOT_FOUND).length} ===`);
 	for (const rec of [...silent.get(WHY.NOT_FOUND)].sort((a, b) => b.posts.size - a.posts.size)) {
 		put(`  ${String(rec.posts.size).padStart(4)}  «${rec.sample}»   ${rec.where.join(', ')}`);
+	}
+
+	put('', `=== ПОХОЖЕ НА РАЗГОВОРНОЕ СОКРАЩЕНИЕ — СМОТРЕТЬ ГЛАЗАМИ: ${silent.get(WHY.SHORT_NAME).length} ===`);
+	put('Фраза стоит СЛОВАМИ внутри найденного названия: «Фрирен» внутри «Провожающая');
+	put('в последний путь Фрирен». Кандидатами они не стали нарочно — ослабь правило,');
+	put('и «аниме года» сойдётся с «Аниме-историями». Но тут же лежит самое ценное:');
+	put('сокращения тайтлов, КОТОРЫЕ УЖЕ В СПРАВОЧНИКЕ, — их надо вписать');
+	put('в «Варианты написания», и ссылки появятся сразу по всему архиву.');
+	for (const rec of [...silent.get(WHY.SHORT_NAME)].sort((a, b) => b.posts.size - a.posts.size)) {
+		// «УЖЕ В СПРАВОЧНИКЕ» ИЩЕМ ПО ВСЕЙ ВЫДАЧЕ, А НЕ ПО ПЕРВОМУ СОВПАВШЕМУ.
+		// У «Фрирен» первым подходит сиквел («Золотая земля»), а сам тайтл —
+		// третьим: пометка не встала бы у самой дорогой строки отчёта.
+		const mine = (rec.results ?? []).find((r) => knownSourceIds.has(r.sourceId));
+		const shown = mine ?? rec.short;
+		put(
+			`  ${String(rec.posts.size).padStart(4)}  «${rec.sample}»  →  ${shown.titleRu ?? shown.titleOriginal}` +
+				`${mine ? '   ★ ТАЙТЛ УЖЕ В СПРАВОЧНИКЕ — впишите фразу в «Варианты написания»' : ''}`,
+		);
+		put(`        посты: ${[...rec.posts].slice(0, 6).join(', ')}${rec.posts.size > 6 ? ' …' : ''}`);
 	}
 
 	put('', `=== СПРОШЕНО, ОТВЕТ ЕСТЬ, НО НАЗВАНИЕ НЕ СХОДИТСЯ: ${silent.get(WHY.NOT_SIMILAR).length} ===`);
