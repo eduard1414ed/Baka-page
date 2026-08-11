@@ -3909,5 +3909,29 @@
 			"Всё тот же невзрачный боец"
 		],
 		"at": "2026-08-11T18:34:36.446Z"
+	},
+	{
+		"id": "cand:61943",
+		"what": "create",
+		"sourceId": 61943,
+		"source": "shikimori",
+		"slug": "haibara-kun-no-tsuyokute-seishun-new-game",
+		"title": "Вторая юность Хайбары",
+		"phrases": [
+			"Вторая юность Хайбары"
+		],
+		"at": "2026-08-11T18:34:43.857Z"
+	},
+	{
+		"id": "cand:55887",
+		"what": "create",
+		"sourceId": 55887,
+		"source": "shikimori",
+		"slug": "kekkon-suru-tte-hontou-desu-ka",
+		"title": "Вы правда женитесь?",
+		"phrases": [
+			"Вы правда женитесь?"
+		],
+		"at": "2026-08-11T18:34:46.014Z"
 	}
 ]
