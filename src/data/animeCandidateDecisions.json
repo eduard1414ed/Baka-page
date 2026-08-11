@@ -4171,5 +4171,17 @@
 		"at": "2026-08-11T18:37:50.414Z",
 		"result": "заведён: src/content/anime/kumichou-musume-to-sewagakari.json",
 		"applied": "2026-08-11T18:39:51.755Z"
+	},
+	{
+		"id": "cand:49470",
+		"what": "create",
+		"sourceId": 49470,
+		"source": "shikimori",
+		"slug": "mamahaha-no-tsurego-ga-motokano-datta",
+		"title": "Дочь моей мачехи — моя бывшая девушка",
+		"phrases": [
+			"Дочь моей мачехи"
+		],
+		"at": "2026-08-11T19:02:32.106Z"
 	}
 ]
