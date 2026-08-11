@@ -3873,5 +3873,29 @@
 			"Восход Луны"
 		],
 		"at": "2026-08-11T18:34:22.853Z"
+	},
+	{
+		"id": "cand:51098",
+		"what": "create",
+		"sourceId": 51098,
+		"source": "shikimori",
+		"slug": "shinobi-no-ittoki",
+		"title": "Время ниндзя",
+		"phrases": [
+			"Время ниндзя"
+		],
+		"at": "2026-08-11T18:34:31.338Z"
+	},
+	{
+		"id": "cand:55774",
+		"what": "create",
+		"sourceId": 55774,
+		"source": "shikimori",
+		"slug": "himesama-goumon-no-jikan-desu",
+		"title": "Время пыток, принцесса!",
+		"phrases": [
+			"Время пыток, принцесса!"
+		],
+		"at": "2026-08-11T18:34:33.755Z"
 	}
 ]
