@@ -22,16 +22,21 @@ import { mkdtemp, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { collectQuotedPhrases } from '../src/lib/animeMentions.mjs';
+import { buildAnimeMatcher, collectQuotedPhrases } from '../src/lib/animeMentions.mjs';
+import { freeSlug, slugify } from '../src/lib/animeSlug.mjs';
+import { readPostsPlain, readTranscriptsPlain } from './posts-plain.mjs';
 import { initMorph, readAnimeCollection, inflectTitle } from './anime-cases-lib.mjs';
 import {
 	appendCache,
 	bestMatch,
 	hasLetters,
+	measureGain,
 	nominativeGuess,
 	normalizePhrase,
 	phraseKey,
+	prepareTexts,
 	readCache,
+	readCandidates,
 	readStoplist,
 	sameTitle,
 } from './anime-candidates-lib.mjs';
@@ -271,6 +276,148 @@ await appendCache('битая', [], cachePath);
 await writeFile(cachePath, (await readCache(cachePath)) && '{ не json\n' + JSON.stringify({ q: 'целая', results: [] }) + '\n', 'utf8');
 const afterJunk = await readCache(cachePath);
 check('битая строчка кэша пропускается, целые читаются', afterJunk.size === 1 && afterJunk.has('целая'), `записей ${afterJunk.size}`);
+
+// ─── 8. ЗАМЕР: ЧТО ДАСТ РЕШЕНИЕ ─────────────────────────────────────────────
+//
+// САМАЯ ОПАСНАЯ ЧАСТЬ ЭКРАНА. Число «даст 74 ссылки» человек читает как
+// измерение и решает по нему, заводить тайтл или нет. Сломайся замер — он
+// ответит нулём, и это будет выглядеть как «безобидный тайтл, можно заводить».
+//
+// ПОЭТОМУ ЗАМЕР ОБЯЗАН ВОСПРОИЗВЕСТИ УЖЕ ИЗВЕСТНОЕ ЧИСЛО. 11 августа 2026
+// заказчику назвали прибавку от вписывания «Фрирен» в «Варианты написания»:
+// +57 упоминаний в постах и +192 в расшифровках, посчитанные ОТДЕЛЬНЫМ
+// прогоном. Фраза с тех пор вписана, и теперь тот же вопрос задаётся модели:
+// уберём «Фрирен» из вариантов у себя в памяти — и посмотрим, назовёт ли она
+// те же числа. Не назовёт — верить остальным 840 строкам нельзя.
+
+console.log('\n=== ЗАМЕР ПРИБАВКИ: ВОСПРОИЗВОДИТ ЛИ ОН ИЗВЕСТНОЕ ЧИСЛО ===');
+
+const posts = await readPostsPlain();
+const transcripts = await readTranscriptsPlain();
+const liveGuids = new Set(posts.filter((p) => !p.draft && p.guid).map((p) => p.guid));
+
+const postTexts = prepareTexts(posts.map((p) => ({ id: p.id, text: p.text, live: !p.draft })));
+const trTexts = prepareTexts(
+	transcripts.map((t) => ({
+		id: t.id,
+		text: t.replicas.map((r) => r.text ?? '').join('\n'),
+		live: liveGuids.has(t.id),
+	})),
+);
+
+// Справочник БЕЗ «Фрирен» в вариантах — то состояние, в котором замер делался
+// в прошлой сессии. Правим копию в памяти, файлов не трогаем.
+const FRIEREN = 'sousou-no-frieren';
+const withoutFrieren = entries.map((e) => ({
+	id: e.data.id,
+	data:
+		e.data.id === FRIEREN
+			? { ...e.data, aliases: (e.data.aliases ?? []).filter((a) => a.toLowerCase() !== 'фрирен') }
+			: e.data,
+}));
+
+const baseNoFrieren = buildAnimeMatcher(withoutFrieren, { quotes: 'ignore' });
+const baseNoFrierenPosts = buildAnimeMatcher(withoutFrieren, { quotes: 'apply' });
+
+const gainPosts = measureGain({ aliases: ['Фрирен'] }, baseNoFrierenPosts, postTexts, 'apply');
+const gainTr = measureGain({ aliases: ['Фрирен'] }, baseNoFrieren, trTexts, 'ignore');
+
+check(
+	'«Фрирен» в постах: замер повторил названное заказчику (57 упоминаний)',
+	gainPosts.mentions === 57,
+	`посчитано ${gainPosts.mentions} упоминаний в ${gainPosts.texts} постах`,
+);
+check(
+	'«Фрирен» в расшифровках: замер повторил названное заказчику (192 упоминания)',
+	gainTr.mentions === 192,
+	`посчитано ${gainTr.mentions} упоминаний в ${gainTr.texts} выпусках`,
+);
+
+// А ТЕПЕРЬ — СПРАВОЧНИК КАК ЕСТЬ, С УЖЕ ВПИСАННОЙ «Фрирен». Прибавка обязана
+// быть НУЛЁМ: вписанное второй раз не даёт ничего. Без этой половины первая
+// ничего не значит — замер, который всегда отвечает большим числом, так же
+// бесполезен, как замер, который всегда отвечает нулём.
+const baseReal = buildAnimeMatcher(entries.map((e) => ({ id: e.data.id, data: e.data })), { quotes: 'ignore' });
+const already = measureGain({ aliases: ['Фрирен'] }, baseReal, trTexts, 'ignore');
+check(
+	'вписанное второй раз даёт ноль — упоминание уже забрал живой справочник',
+	already.mentions === 0,
+	`посчитано ${already.mentions}`,
+);
+
+// Выдуманного названия в архиве нет — и замер обязан ответить нулём, а не
+// «чем-нибудь». Строка из тех, что молчат: без неё правило «находит» проверено,
+// а правило «не находит лишнего» — нет.
+const nonsense = measureGain({ aliases: ['Квазимоторный шлагбаум'] }, baseReal, postTexts, 'apply');
+check('выдуманного названия в архиве нет — ноль', nonsense.mentions === 0 && nonsense.texts === 0);
+
+// ДЛИННОЕ НАЗВАНИЕ ЗАБИРАЕТ КУСОК ТЕКСТА, И КОРОТКОЕ ВНУТРИ НЕГО НЕ СЧИТАЕТСЯ.
+// Ровно из-за этого замер идёт по живому справочнику, а не в одиночку: мерь мы
+// «Фрирен» без него — она насчитала бы себе и те места, где стоит полное
+// название и ссылка уже есть.
+const alone = measureGain({ aliases: ['Фрирен'] }, [], trTexts, 'ignore');
+check(
+	'без справочника «Фрирен» насчитывает СЕБЕ БОЛЬШЕ — значит справочник в замере не для красоты',
+	alone.mentions > gainTr.mentions,
+	`в одиночку ${alone.mentions} против ${gainTr.mentions} рядом со справочником`,
+);
+
+// ─── 9. АДРЕС ТАЙТЛА ────────────────────────────────────────────────────────
+
+console.log('\n=== АДРЕС БУДУЩЕЙ СТРАНИЦЫ ТАЙТЛА ===');
+
+// Настоящие адреса справочника: правило обязано выдавать ровно их, иначе
+// тайтл, заведённый кнопкой, ляжет по другому адресу, чем тот же тайтл,
+// заведённый из редактора поста.
+check('латиница как есть', slugify('Sousou no Frieren') === 'sousou-no-frieren');
+check('латиница со знаками', slugify('Jujutsu Kaisen') === 'jujutsu-kaisen');
+check('кириллица транслитерируется', slugify('Провожающая в последний путь Фрирен') === 'provozhayuschaya-v-posledniy-put-friren');
+check('пустое название не даёт пустого адреса', slugify('') === 'anime');
+check('занятый адрес получает номер', freeSlug('Dandadan', new Set(['dandadan'])) === 'dandadan-2');
+
+// ─── 10. ДАННЫЕ ЭКРАНА ЧИТАЮТСЯ ОБРАТНО ─────────────────────────────────────
+//
+// Файл `src/data/animeCandidates.json` — не только то, что видит заказчик,
+// но и ПАМЯТЬ РОБОТА: по нему он понимает, о чём уже спрашивал Shikimori.
+// Прочитайся он неправильно — робот при каждом сохранении черновика гнал бы
+// в чужой сервис полторы тысячи вопросов заново, и заметить это было бы
+// некому: список на экране выглядел бы точно так же.
+
+console.log('\n=== ДАННЫЕ ЭКРАНА ЧИТАЮТСЯ ОБРАТНО ===');
+
+const candDir = await mkdtemp(join(tmpdir(), 'baka-cand-'));
+const candAt = (name) => pathToFileURL(join(candDir, name));
+
+const emptyRead = await readCandidates(candAt('нет.json'));
+check('файла нет вовсе — пустая память, без падения', emptyRead.outcomes.size === 0);
+
+await writeFile(join(candDir, 'битый.json'), '{ не json', 'utf8');
+let candBroke = false;
+try {
+	await readCandidates(candAt('битый.json'));
+} catch {
+	candBroke = true;
+}
+check('НЕЧИТАЕМЫЙ файл роняет громко, а не считается пустым', candBroke);
+
+const real = await readCandidates();
+check('живой файл прочитался', real.outcomes.size > 0, `исходов ${real.outcomes.size}`);
+check('обложки и студии пережили чтение', real.details.size > 0, `тайтлов с подробностями ${real.details.size}`);
+check(
+	'кандидат помнится кандидатом — «Баки!» ведёт на свой тайтл',
+	real.outcomes.get(phraseKey('Баки!'))?.kind === 'candidate',
+);
+check(
+	'разговорное сокращение помнится сокращением, а не кандидатом',
+	real.outcomes.get(phraseKey('Евангелиона'))?.kind === 'short',
+);
+check(
+	'ВСЕ спрошенные фразы помнятся — иначе робот спросит их заново',
+	real.outcomes.size >= 1900,
+	`исходов ${real.outcomes.size} при 1978 спрошенных`,
+);
+
+await rm(candDir, { recursive: true, force: true });
 
 await rm(dir, { recursive: true, force: true });
 

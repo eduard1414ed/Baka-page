@@ -23,10 +23,22 @@
 
 import { readFile, appendFile, mkdir } from 'node:fs/promises';
 import Az from 'az';
-import { fold, MIN_PREFIX_LENGTH } from '../src/lib/animeMentions.mjs';
+import { buildAnimeMatcher, findMentions, fold, MIN_PREFIX_LENGTH } from '../src/lib/animeMentions.mjs';
 import { initMorph } from './anime-cases-lib.mjs';
 
 export const STOPLIST_PATH = new URL('../src/content/anime-stoplist.json', import.meta.url);
+
+// ЧТО ВИДИТ ЭКРАН КАНДИДАТОВ — обычный JSON в репозитории. Страница
+// /admin/tools/ читает его у GitHub по API, а не с сайта: файл меняется робо́том
+// при каждом сохранении черновика, а сайт выкладывается руками, и с сайта
+// заказчик смотрел бы позавчерашний список.
+export const CANDIDATES_PATH = new URL('../src/data/animeCandidates.json', import.meta.url);
+
+// ЧТО РЕШИЛ ЗАКАЗЧИК — второй файл, и это не прихоть. Первый пишут только
+// прогоны, второй только экран: у двух писателей два файла, и столкнуться
+// им негде. Держи мы всё в одном — сохранение решения и добор новых фраз
+// дрались бы за один и тот же файл, а проиграл бы тот, кто медленнее.
+export const DECISIONS_PATH = new URL('../src/data/animeCandidateDecisions.json', import.meta.url);
 
 // Ответы Shikimori: прогон по архиву идёт больше часа, и повторный запуск
 // не имеет права спрашивать одно и то же заново (тз/11, C.6). Папка рядом
@@ -116,6 +128,122 @@ export async function readStoplist(path = STOPLIST_PATH) {
 
 	const phrases = data.map((item) => String(item ?? '')).filter((item) => item.trim());
 	return { keys: new Set(phrases.map(phraseKey)), phrases };
+}
+
+// ─── Что уже разобрано: данные экрана как память робота ────────────────────
+
+/**
+ * Прочитать `src/data/animeCandidates.json` и разложить его обратно в исходы
+ * по фразам.
+ *
+ * ЗАЧЕМ ЭТО НУЖНО, ЕСЛИ ЕСТЬ КЭШ ОТВЕТОВ. Кэш `.tmp-shikimori/` лежит рядом
+ * с проектом и в репозиторий не идёт — у робота на GitHub его нет вовсе.
+ * А знать, о чём уже спрашивали, робот обязан: иначе каждое сохранение
+ * черновика гнало бы в Shikimori одни и те же полторы тысячи фраз (тз/11, C.3).
+ * Поэтому разобранный исход живёт в репозитории вместе с данными экрана.
+ *
+ * ЧЕГО ЭТОТ ФАЙЛ НЕ УМЕЕТ: пересчитать похожесть по новым правилам. Сырой
+ * выдачи в нём нет — она осталась в кэше. Поменяли правило похожести — гоните
+ * полный прогон на машине, где кэш лежит, а не ждите, что робот пересчитает.
+ *
+ * ОТСУТСТВИЕ ФАЙЛА ЗАКОННО (первый прогон), а НЕЧИТАЕМЫЙ роняет громко:
+ * принятый молча за пустоту, он означал бы, что весь архив спрашивают заново.
+ */
+export async function readCandidates(path = CANDIDATES_PATH) {
+	const empty = { outcomes: new Map(), details: new Map(), raw: null };
+
+	let raw;
+	try {
+		raw = await readFile(path, 'utf8');
+	} catch (error) {
+		if (error.code === 'ENOENT') return empty;
+		throw error;
+	}
+	if (!raw.trim()) return empty;
+
+	const data = JSON.parse(raw);
+	const outcomes = new Map();
+	const details = new Map();
+
+	for (const row of data.candidates ?? []) {
+		const match = {
+			sourceId: row.sourceId,
+			titleRu: row.titleRu ?? undefined,
+			titleOriginal: row.titleOriginal,
+			year: row.year ?? undefined,
+			url: row.url ?? undefined,
+		};
+		details.set(row.sourceId, {
+			titleRu: row.titleRu ?? undefined,
+			titleOriginal: row.titleOriginal,
+			year: row.year ?? undefined,
+			studio: row.studio ?? undefined,
+			posterUrl: row.poster ?? undefined,
+			url: row.url ?? undefined,
+		});
+		for (const phrase of row.phrases ?? []) outcomes.set(phraseKey(phrase), { kind: 'candidate', match });
+	}
+
+	for (const row of data.already ?? []) {
+		outcomes.set(phraseKey(row.text), {
+			kind: 'candidate',
+			match: {
+				sourceId: row.sourceId,
+				titleRu: row.titleRu ?? undefined,
+				titleOriginal: row.titleOriginal,
+				year: row.year ?? undefined,
+				url: row.url ?? undefined,
+			},
+		});
+	}
+
+	for (const row of data.shortName ?? []) {
+		outcomes.set(phraseKey(row.text), {
+			kind: 'short',
+			match: {
+				sourceId: row.sourceId,
+				titleRu: row.titleRu ?? undefined,
+				titleOriginal: row.titleOriginal,
+				year: row.year ?? undefined,
+				url: row.url ?? undefined,
+			},
+			// От всей выдачи хранятся одни номера: что за тайтл под номером,
+			// спрашивается у справочника, а не у файла (см. `resultIds`
+			// в scripts/anime-candidates.mjs).
+			results: (row.resultIds ?? []).map((sourceId) => ({ sourceId })),
+		});
+	}
+
+	for (const row of data.notSimilar ?? []) {
+		outcomes.set(phraseKey(row.text), { kind: 'notsimilar', answers: row.answers ?? [] });
+	}
+
+	for (const row of data.notFound ?? []) {
+		outcomes.set(phraseKey(row.text), { kind: 'notfound' });
+	}
+
+	return { outcomes, details, raw: data };
+}
+
+/**
+ * Решения заказчика с экрана. Пустой файл и отсутствие файла законны —
+ * это обычное состояние до первого нажатия.
+ */
+export async function readDecisions(path = DECISIONS_PATH) {
+	let raw;
+	try {
+		raw = await readFile(path, 'utf8');
+	} catch (error) {
+		if (error.code === 'ENOENT') return [];
+		throw error;
+	}
+	if (!raw.trim()) return [];
+
+	const data = JSON.parse(raw);
+	if (!Array.isArray(data)) {
+		throw new Error(`Решения ${path}: ожидался список, а лежит ${typeof data}.`);
+	}
+	return data;
 }
 
 // ─── Похоже ли то, что нашёл Shikimori ─────────────────────────────────────
@@ -398,6 +526,83 @@ export function nominativeGuess(phrase) {
 }
 
 export { initMorph };
+
+// ─── Замер: что даст решение ДО того, как его примут ───────────────────────
+//
+// ТРЕБОВАНИЕ ЗАКАЗЧИКА 11 АВГУСТА 2026: «прежде чем я нажму „Завести“ или „Это
+// уже есть“, я должен видеть, что это даст». В прошлой сессии эти числа
+// («Фрирен» +57/+192, «Цугаи» три ложных из пяти) считались отдельными
+// прогонами по просьбе — теперь считаются у каждой строки заранее.
+//
+// СЧИТАЕМ НАСТОЯЩИМ `findMentions`, А НЕ СВОИМ ПОИСКОМ. Своя проверка
+// совпадения была бы второй копией правила «что считается упоминанием» — той
+// самой, из-за которой чинился хвост 45, — и разошлась бы с сайтом молча:
+// заказчику назвали бы прибавку, которой на сайте не случится.
+//
+// ЗАЧЕМ ТУТ СПРАВОЧНИК. Новое название конкурирует со старыми: длинное имя
+// забирает кусок текста, и короткое внутри него уже не считается. Мерь мы
+// в одиночку — «Фрирен» насчитала бы себе и те места, где стоит «Провожающая
+// в последний путь Фрирен» и ссылка уже есть.
+//
+// ПОЧЕМУ ЭТО НЕ МЕДЛЕННО. Прямой счёт — 843 решения на 1736 текстов через
+// матчер из двухсот названий — это четверть миллиарда поисков подстроки.
+// Поэтому сначала грубый вопрос «встречается ли вообще» по готовой свёрнутой
+// копии текста, и полный разбор идёт только там, где ответ «да»: у одного
+// названия это два-три текста из полутора тысяч.
+
+/** id, под которым в матчер кладётся примеряемое название. У тайтла такого не бывает. */
+export const PROBE_ID = ' проба';
+
+/**
+ * Тексты к замеру: свёрнутая копия считается один раз, а не на каждое решение.
+ *
+ * @param {{ id: string, text: string, live: boolean }[]} texts
+ */
+export function prepareTexts(texts) {
+	return texts.map((item) => ({ ...item, folded: fold(item.text) }));
+}
+
+/**
+ * Сколько упоминаний даст новое название.
+ *
+ * @param {{ titleRu?: string, titleOriginal?: string, aliases?: string[], aliasesAuto?: string[] }} probe
+ *        карточка, какой она станет: для нового тайтла — его названия,
+ *        для варианта написания — одна строка в `aliases`.
+ * @param {object[]} baseMatcher матчер живого справочника (той же строгости
+ *        по кавычкам, что и место, где считаем).
+ * @param {ReturnType<typeof prepareTexts>} texts
+ * @param {'apply'|'ignore'} quotes действует ли тут галочка «только в кавычках»
+ * @returns {{ mentions: number, texts: number, live: number }}
+ *          `mentions` — всего упоминаний, `texts` — в скольких постах
+ *          (или выпусках), `live` — сколько из них видно на сайте сегодня.
+ */
+export function measureGain(probe, baseMatcher, texts, quotes) {
+	const extra = buildAnimeMatcher([{ id: PROBE_ID, data: probe }], { quotes });
+	if (extra.length === 0) return { mentions: 0, texts: 0, live: 0 };
+
+	const wanted = extra.map((item) => item.folded);
+	const merged = [...baseMatcher, ...extra].sort((a, b) => b.folded.length - a.folded.length);
+
+	let mentions = 0;
+	let hit = 0;
+	let live = 0;
+
+	for (const item of texts) {
+		// Грубый вопрос по свёрнутой копии. Пропустить настоящее упоминание он
+		// не может: `findMentions` тоже начинает с поиска этой самой подстроки,
+		// просто потом ещё проверяет границы слова и кавычки.
+		if (!wanted.some((name) => item.folded.includes(name))) continue;
+
+		const found = findMentions(item.text, merged).filter((m) => m.id === PROBE_ID).length;
+		if (found === 0) continue;
+
+		mentions += found;
+		hit++;
+		if (item.live) live++;
+	}
+
+	return { mentions, texts: hit, live };
+}
 
 // ─── Кэш ответов Shikimori ─────────────────────────────────────────────────
 
