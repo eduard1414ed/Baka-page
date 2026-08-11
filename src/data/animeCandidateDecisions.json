@@ -1123,5 +1123,19 @@
 		"at": "2026-08-11T12:23:52.491Z",
 		"result": "заведён: src/content/anime/tengen-toppa-gurren-lagann-ore-no-gurren-wa-pikka-pika.json",
 		"applied": "2026-08-11T13:39:33.437Z"
+	},
+	{
+		"id": "cand:42310",
+		"what": "create",
+		"sourceId": 42310,
+		"source": "shikimori",
+		"slug": "cyberpunk-edgerunners",
+		"title": "Киберпанк: Бегущие по краю",
+		"phrases": [
+			"Киберпанк",
+			"Киберпанк: Бегущие по краю",
+			"Киберпанком"
+		],
+		"at": "2026-08-11T13:43:33.952Z"
 	}
 ]
