@@ -3789,5 +3789,17 @@
 			"Виви: Песнь флюоритового глаза"
 		],
 		"at": "2026-08-11T18:33:37.350Z"
+	},
+	{
+		"id": "cand:54284",
+		"what": "create",
+		"sourceId": 54284,
+		"source": "shikimori",
+		"slug": "vtuber-nandaga-haishin-kiri-wasuretara-densetsu-ni-natteta",
+		"title": "Витубер: Я стала популярной после того, как забыла выключить стрим",
+		"phrases": [
+			"Витубер"
+		],
+		"at": "2026-08-11T18:33:47.286Z"
 	}
 ]
