@@ -4,12 +4,14 @@ date: 2024-07-02
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2224.jpg
+pullMedia: false
 noCover: false
 tgId: 2224
 tgUrl: https://t.me/podcastbaka/2224
 ---
+
+::image{src="/images/uploads/tg-2224.jpg" alt="" width="column"}
 
 Любое аниме несет в себе наследие традиционного японского искусства. Но иногда эта связь видна особенно ярко. Собрал несколько таких тайтлов:
 

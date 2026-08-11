@@ -4,12 +4,14 @@ date: 2023-09-15
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1509.jpg
+pullMedia: false
 noCover: false
 tgId: 1509
 tgUrl: https://t.me/podcastbaka/1509
 ---
+
+::image{src="/images/uploads/tg-1509.jpg" alt="" width="column"}
 
 В новом выпуске «Омнибуса и танкобона» мы с Ваней мельком упомянули, что возможно первым супергероем можно считать японского персонажа — Ōgon Bat.
 

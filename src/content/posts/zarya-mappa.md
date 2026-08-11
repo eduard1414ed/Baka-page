@@ -4,8 +4,8 @@ date: 2025-11-07
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3463.jpg
+pullMedia: false
 noCover: false
 tgId: 3463
 tgUrl: https://t.me/podcastbaka/3463
@@ -13,6 +13,8 @@ animeSuggested:
   - jujutsu-kaisen
   - shingeki-no-kyojin
 ---
+
+::image{src="/images/uploads/tg-3463.jpg" alt="" width="column"}
 
 Мало кто помнит, но вообще-то «Дети на холме» — это первое аниме студии MAPPA. Сегодня мы знаем эту студию как хитмейкеров: «Магическая битва», «Человек-бензопила», «Атака титанов».
 

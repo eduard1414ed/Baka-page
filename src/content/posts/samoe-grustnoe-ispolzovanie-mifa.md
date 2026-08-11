@@ -4,14 +4,16 @@ date: 2022-09-01
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-502.jpg
+pullMedia: false
 noCover: false
 tgId: 502
 tgUrl: https://t.me/podcastbaka/502
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-502.jpg" alt="" width="column"}
 
 «Наруто» переполнен отсылками на культуру Японии. Начиная от самого образа ниндзя и феодального государства, заканчивая именами божеств в качестве названий техник.
 
@@ -24,3 +26,5 @@ animeSuggested:
 И если в мифах победить умибодзу можно было, только обхитрив, то в «Наруто» все заканчивается обнимашками и взрывными свитками.
 
 Печально, что такой образ был полностью профукан. #заметки
+
+::image{src="/images/uploads/tg-503.jpg" alt="" width="column"}

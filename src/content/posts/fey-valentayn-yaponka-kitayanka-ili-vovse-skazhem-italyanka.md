@@ -4,14 +4,16 @@ date: 2023-06-02
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1289.jpg
+pullMedia: false
 noCover: false
 tgId: 1289
 tgUrl: https://t.me/podcastbaka/1289
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-1289.jpg" alt="" width="column"}
 
 Когда мы говорим об аниме — мы редко думаем о том, к какой расе принадлежат герои из него. Никого не смущает афроамериканец Киллер Би из «Наруто» или очевидные параллели с Германией в «Атаке Титанов».
 

@@ -4,12 +4,14 @@ date: 2023-09-28
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1528.jpg
+pullMedia: false
 noCover: false
 tgId: 1528
 tgUrl: https://t.me/podcastbaka/1528
 ---
+
+::image{src="/images/uploads/tg-1528.jpg" alt="" width="column"}
 
 Что общего между комиксами и велосипедами, чем франко-бельгийские комиксы отличаются от французских, и что такое «девятое искусство».
 

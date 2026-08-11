@@ -4,8 +4,8 @@ date: 2025-11-06
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3462.jpg
+pullMedia: false
 noCover: false
 tgId: 3462
 tgUrl: https://t.me/podcastbaka/3462
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2090
 ---
+
+::image{src="/images/uploads/tg-3462.jpg" alt="" width="column"}
 
 В новом бонусном эпизоде мы обсудим романтическую повседневность, с которой началась история студии MAPPA, «Дети на холме».
 

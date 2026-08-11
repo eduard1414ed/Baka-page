@@ -4,12 +4,14 @@ date: 2026-07-06
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-4060.jpg
+pullMedia: false
 noCover: false
 tgId: 4060
 tgUrl: https://t.me/podcastbaka/4060
 ---
+
+::image{src="/images/uploads/tg-4060.jpg" alt="" width="column"}
 
 Весенний сезон закончился, а значит самое время обновить список лучших аниме года.
 

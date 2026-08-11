@@ -4,12 +4,14 @@ date: 2022-09-21
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-593.jpg
+pullMedia: false
 noCover: false
 tgId: 593
 tgUrl: https://t.me/podcastbaka/593
 ---
+
+::image{src="/images/uploads/tg-593.jpg" alt="" width="column"}
 
 Уже завтра выйдет наш совместный эпизод с «Поп-девичником!» про «Шаман Кинга», и сперва я хотел сделать здесь наше обычное сравнение манги и аниме.
 

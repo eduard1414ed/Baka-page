@@ -4,12 +4,14 @@ date: 2023-01-18
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-956.jpg
+pullMedia: false
 noCover: false
 tgId: 956
 tgUrl: https://t.me/podcastbaka/956
 ---
+
+::image{src="/images/uploads/tg-956.jpg" alt="" width="column"}
 
 Все еще досматриваю аниме осени и добрался наконец-то до второго сезона «У Коми проблемы с общением». И мне в глаза бросилась очевидная параллель между Коми и Боччи-тян из «Рок-тихони».
 

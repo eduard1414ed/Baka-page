@@ -4,14 +4,16 @@ date: 2024-02-27
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1959.jpg
+pullMedia: false
 noCover: false
 tgId: 1959
 tgUrl: https://t.me/podcastbaka/1959
 animeSuggested:
   - jujutsu-kaisen
 ---
+
+::image{src="/images/uploads/tg-1959.jpg" alt="" width="column"}
 
 Зимой 2024 года в рунете стали появляться абсурдные мемы про Сатору Годжо, героя аниме «Магическая битва».
 

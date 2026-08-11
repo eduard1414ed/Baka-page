@@ -4,12 +4,14 @@ date: 2025-10-30
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3446.jpg
+pullMedia: false
 noCover: false
 tgId: 3446
 tgUrl: https://t.me/podcastbaka/3446
 ---
+
+::image{src="/images/uploads/tg-3446.jpg" alt="" width="column"}
 
 Мне нравится, что в японской мифологии почти любой предмет может оказаться смертельно-опасным ёкаем или призраком. Если ты недостаточно внимателен.
 

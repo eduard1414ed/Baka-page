@@ -4,12 +4,14 @@ date: 2023-07-05
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1354.jpg
+pullMedia: false
 noCover: false
 tgId: 1354
 tgUrl: https://t.me/podcastbaka/1354
 ---
+
+::image{src="/images/uploads/tg-1354.jpg" alt="" width="column"}
 
 Сасаки — уставший офисный работник, который проживает каждый скучный  напряжённый день в ожидании одного и того же: похода в продуктовый. Ведь там есть Ямада, жизнерадостная продавщица, которая поднимает ему настроение.
 
@@ -24,3 +26,5 @@ tgUrl: https://t.me/podcastbaka/1354
 Главный минус манги — ее ежемесячный график выхода. Почти за год с премьеры вышло всего 28 глав (на русский переведена 21 из них).
 
 Я проглотил их за один вечер и теперь очень хочу еще #обзор
+
+::image{src="/images/uploads/tg-1355.jpg" alt="" width="column"}

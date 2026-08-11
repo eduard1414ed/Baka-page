@@ -4,12 +4,14 @@ date: 2023-02-15
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1036.jpg
+pullMedia: false
 noCover: false
 tgId: 1036
 tgUrl: https://t.me/podcastbaka/1036
 ---
+
+::image{src="/images/uploads/tg-1036.jpg" alt="" width="column"}
 
 Я вам [рассказывал про курс](https://levelvan.ru/courses/japancourse?promo=baka&utm_source=baka&utm_medium=baka&utm_content=japancourse&utm_campaign=blogger_baka_japancourse) на выходных — и в нем, кстати, есть моя любимая история про самурая.
 

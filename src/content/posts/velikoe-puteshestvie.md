@@ -4,12 +4,14 @@ date: 2023-08-16
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1440.jpg
+pullMedia: false
 noCover: false
 tgId: 1440
 tgUrl: https://t.me/podcastbaka/1440
 ---
+
+::image{src="/images/uploads/tg-1440.jpg" alt="" width="column"}
 
 Когда я учился в Литературном институте, примерно половину времени занимали занятия собственно по литературе, а другая половина была посвящена языку. Откуда появились знакомые нам слова? Как они связываются в предложения? Почему некоторые из них исчезают, а другие появляются?
 

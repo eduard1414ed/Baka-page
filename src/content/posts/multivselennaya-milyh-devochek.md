@@ -4,12 +4,14 @@ date: 2023-01-13
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-939.jpg
+pullMedia: false
 noCover: false
 tgId: 939
 tgUrl: https://t.me/podcastbaka/939
 ---
+
+::image{src="/images/uploads/tg-939.jpg" alt="" width="column"}
 
 Я еще в прошлом году (неделю назад) обещал [у нас в чате](https://t.me/bakapodcast) рассказать о том, как связаны сериалы «Рок-тихоня» и «Медленная петля».
 

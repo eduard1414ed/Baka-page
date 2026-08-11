@@ -4,12 +4,14 @@ date: 2025-10-24
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3441.jpg
+pullMedia: false
 noCover: false
 tgId: 3441
 tgUrl: https://t.me/podcastbaka/3441
 ---
+
+::image{src="/images/uploads/tg-3441.jpg" alt="" width="column"}
 
 «Позитивный негативный рыбак» — аниме не только о рыбалке (гляньте новое эссе!), но и о ней тоже. Поэтому если вдруг оно вас завлекло именно этой темой, я собрал еще пять тайтлов, которые посвящены ловле рыбы:
 

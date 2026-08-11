@@ -4,14 +4,16 @@ date: 2023-11-29
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1692.jpg
+pullMedia: false
 noCover: false
 tgId: 1692
 tgUrl: https://t.me/podcastbaka/1692
 animeSuggested:
   - dorohedoro
 ---
+
+::image{src="/images/uploads/tg-1692.jpg" alt="" width="column"}
 
 В [нашем бонусном выпуске](/posts/bonusnyy-vypusk-dorohedoro/) я рассказывал, что мне не очень понравился сериал «Дорохедоро», пока Ксюша безостановочно им восторгалась. Но на чем мы сошлись — что рисовка оригинальной манги невероятно стильная.
 
@@ -28,3 +30,11 @@ animeSuggested:
 В итоге у нее накопилось больше 20 записных книжек с заметками и картинками.
 
 Для издания Dorohedoro Gengaten 2020 она как раз показала часть иллюстраций, которых не было на страницах оригинальной манги. #заметки
+
+::image{src="/images/uploads/tg-1693.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1694.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1695.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1696.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1697.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1698.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1699.jpg" alt="" width="column"}

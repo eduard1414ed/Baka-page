@@ -4,12 +4,14 @@ date: 2024-08-02
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2291.jpg
+pullMedia: false
 noCover: false
 tgId: 2291
 tgUrl: https://t.me/podcastbaka/2291
 ---
+
+::image{src="/images/uploads/tg-2291.jpg" alt="" width="column"}
 
 Коллеги из канала «[Покебол с предсказаниями](http://t.me/penpenwork)» перевели довольно милое [интервью](https://dzen.ru/a/ZqPAIl3lYm7d70E-) сэйю Мэгуми Хан и Саки Фудзиты, которые сыграли роли Ноко и Коси в главном мем-тайтле сезона.
 

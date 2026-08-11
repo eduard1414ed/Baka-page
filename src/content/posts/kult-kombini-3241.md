@@ -4,12 +4,14 @@ date: 2025-08-05
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3241.jpg
+pullMedia: false
 noCover: false
 tgId: 3241
 tgUrl: https://t.me/podcastbaka/3241
 ---
+
+::image{src="/images/uploads/tg-3241.jpg" alt="" width="column"}
 
 Есть множество образов, которые у людей ассоциируются с Японией. Самураи, скоростные поезда, странная реклама. Но есть и еще один, о котором говорят не так часто, — комбини.
 

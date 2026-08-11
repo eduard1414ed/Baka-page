@@ -4,8 +4,8 @@ date: 2022-11-11
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-731.jpg
+pullMedia: false
 noCover: false
 tgId: 731
 tgUrl: https://t.me/podcastbaka/731
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-731.jpg" alt="" width="column"}
 
 Как это аниме смело показывает травму? Почему его стоит посмотреть всем подросткам? И что пошло не так при производстве Wonder Egg Priority?
 

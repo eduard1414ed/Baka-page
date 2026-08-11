@@ -4,8 +4,8 @@ date: 2024-04-26
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2074.jpg
+pullMedia: false
 noCover: false
 tgId: 2074
 tgUrl: https://t.me/podcastbaka/2074
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-2074.jpg" alt="" width="column"}
 
 Одежда, захватывающая мир. Отсылки на историю объединения Японии. Безбашенный экшен. И много-много-много фан-сервиса.
 

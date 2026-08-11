@@ -4,8 +4,8 @@ date: 2022-12-23
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-837.jpg
+pullMedia: false
 noCover: false
 tgId: 837
 tgUrl: https://t.me/podcastbaka/837
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-837.jpg" alt="" width="column"}
 
 В последнем бонусном выпуске сезона мы решили обсудить историю про летний роман с духами.
 

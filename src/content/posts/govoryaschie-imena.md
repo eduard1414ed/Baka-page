@@ -4,14 +4,16 @@ date: 2022-09-06
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-527.jpg
+pullMedia: false
 noCover: false
 tgId: 527
 tgUrl: https://t.me/podcastbaka/527
 animeSuggested:
   - akira
 ---
+
+::image{src="/images/uploads/tg-527.jpg" alt="" width="column"}
 
 В классической литературе говорящие имена — очень частый приём, который позволяет быстро угадывать характеры героев или их скрытые мотивы.
 

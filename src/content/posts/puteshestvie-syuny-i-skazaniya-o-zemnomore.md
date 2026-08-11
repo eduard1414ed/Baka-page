@@ -4,12 +4,14 @@ date: 2023-02-21
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1050.jpg
+pullMedia: false
 noCover: false
 tgId: 1050
 tgUrl: https://t.me/podcastbaka/1050
 ---
+
+::image{src="/images/uploads/tg-1050.jpg" alt="" width="column"}
 
 «Сказания о Земноморье» — полнометражный фильм студии Ghibli и первая режиссерская картина Горо Миядзаки, сына Хайяо Миядзаки.
 
@@ -26,3 +28,8 @@ tgUrl: https://t.me/podcastbaka/1050
 Впрочем, Хаяйо это пришлось не по душе. На протяжении всего производства «Сказаний», они с сыном не разговаривали. А во время предпросмотра аниме, Хаяйо вышел из зала посреди фильма покурить, потому что ему «казалось, что это тянется вечность».
 
 Учитывая это, кажется символичным, что «Сказания» начинаются со сцены убийства подростком своего отца. #заметки
+
+::image{src="/images/uploads/tg-1051.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1052.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1053.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1054.jpg" alt="" width="column"}

@@ -4,8 +4,8 @@ date: 2022-05-15
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-110.jpg
+pullMedia: false
 noCover: false
 tgId: 110
 tgUrl: https://t.me/podcastbaka/110
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-110.jpg" alt="" width="column"}
 
 Главное аниме этой зимы — какое оно? Простая романтика, заполненная фан-сервисом? Или что-то более серьезное и достойное внимания?
 

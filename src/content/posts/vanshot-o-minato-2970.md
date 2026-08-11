@@ -4,14 +4,16 @@ date: 2025-05-16
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2970.jpg
+pullMedia: false
 noCover: false
 tgId: 2970
 tgUrl: https://t.me/podcastbaka/2970
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-2970.jpg" alt="" width="column"}
 
 В [недавнем выпуске про арку Джирайи](https://t.me/podcastbaka/2953) мы обсуждали с Ксюшей, что в ней нам впервые показывают маму Наруто, Кушину. И что нас это очень радует.
 

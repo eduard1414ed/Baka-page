@@ -4,8 +4,8 @@ date: 2024-10-28
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2474.jpg
+pullMedia: false
 noCover: false
 tgId: 2474
 tgUrl: https://t.me/podcastbaka/2474
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-2474.jpg" alt="" width="column"}
 
 Как всегда в межсезонье подготовил для вас небольшой бонус с новой мангой, которую советую почитать.
 

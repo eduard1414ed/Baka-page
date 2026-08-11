@@ -4,8 +4,8 @@ date: 2025-06-02
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3002.jpg
+pullMedia: false
 noCover: false
 tgId: 3002
 tgUrl: https://t.me/podcastbaka/3002
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_1807
 ---
+
+::image{src="/images/uploads/tg-3002.jpg" alt="" width="column"}
 
 Уже июнь, а значит самое время собрать рекомендации новой манги, которая начала выходить в этом году.
 

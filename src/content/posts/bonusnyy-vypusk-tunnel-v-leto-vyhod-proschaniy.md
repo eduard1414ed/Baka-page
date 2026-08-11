@@ -4,8 +4,8 @@ date: 2024-08-13
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2314.jpg
+pullMedia: false
 noCover: false
 tgId: 2314
 tgUrl: https://t.me/podcastbaka/2314
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-2314.jpg" alt="" width="column"}
 
 В этот раз мы решили обсудить новый полнометражный фильм — про романтику и путешествия во времени.
 

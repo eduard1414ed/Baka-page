@@ -4,12 +4,14 @@ date: 2023-01-16
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-943.jpg
+pullMedia: false
 noCover: false
 tgId: 943
 tgUrl: https://t.me/podcastbaka/943
 ---
+
+::image{src="/images/uploads/tg-943.jpg" alt="" width="column"}
 
 В нашей премии за лучший саундтрек прошлого года [победило](/posts/vtoraya-nominatsiya-luchshiy-saundtrek/) аниме Call of the Night. Во многом, благодаря песням группы Creepy Nuts, которые звучат в опенинге, эндинге и даже внутри некоторых серий.
 

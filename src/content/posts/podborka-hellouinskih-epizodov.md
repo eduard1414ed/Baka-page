@@ -4,14 +4,16 @@ date: 2024-10-29
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2475.jpg
+pullMedia: false
 noCover: false
 tgId: 2475
 tgUrl: https://t.me/podcastbaka/2475
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-2475.jpg" alt="" width="column"}
 
 Хэллоуин не так широко распространен в Японии, как в США и Канаде. Однако традиционные для американских мультфильмов тематические хэллоуинские серии можно встретить и в аниме:
 

@@ -4,12 +4,14 @@ date: 2025-11-04
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3459.jpg
+pullMedia: false
 noCover: false
 tgId: 3459
 tgUrl: https://t.me/podcastbaka/3459
 ---
+
+::image{src="/images/uploads/tg-3459.jpg" alt="" width="column"}
 
 Все еще нахожусь под впечатлением от фильма по «Человеку-бензопиле». И больше всего думаю о том, как много там классных режиссерских решений.
 
@@ -18,3 +20,5 @@ tgUrl: https://t.me/podcastbaka/3459
 Этот образ создает ощущение, что за героями (а еще за тобой, зрителем) все время кто-то следит. Особенно, когда в этот круг оказываются заключены сами персонажи, как будто их снимает скрытая камера.
 
 И чтобы не спойлерить вам фильм, просто намекну, что это вовсе не случайность.
+
+::image{src="/images/uploads/tg-3460.jpg" alt="" width="column"}

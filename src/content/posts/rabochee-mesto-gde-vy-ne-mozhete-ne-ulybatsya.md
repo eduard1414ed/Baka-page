@@ -4,14 +4,16 @@ date: 2025-12-03
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3527.jpg
+pullMedia: false
 noCover: false
 tgId: 3527
 tgUrl: https://t.me/podcastbaka/3527
 animeSuggested:
   - egao-no-taenai-shokuba-desu
 ---
+
+::image{src="/images/uploads/tg-3527.jpg" alt="" width="column"}
 
 Я падок на аниме и мангу про создание аниме и манги. Поэтому не мог пройти мимо нового сериала «Рабочее место, где вы не можете не улыбаться».
 

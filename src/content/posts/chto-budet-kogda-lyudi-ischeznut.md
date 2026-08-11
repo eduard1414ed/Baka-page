@@ -4,14 +4,16 @@ date: 2025-06-04
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3009.jpg
+pullMedia: false
 noCover: false
 tgId: 3009
 tgUrl: https://t.me/podcastbaka/3009
 animeSuggested:
   - apocalypse-hotel
 ---
+
+::image{src="/images/uploads/tg-3009.jpg" alt="" width="column"}
 
 Когда-то давно был такой фильм от канала Discovery — там рассказывали, как, если исчезнут люди, постепенно города превратятся в джунгли или пустыни и по ним расселятся дикие животные.
 

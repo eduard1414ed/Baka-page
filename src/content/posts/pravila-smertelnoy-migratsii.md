@@ -4,12 +4,14 @@ date: 2026-01-21
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3649.jpg
+pullMedia: false
 noCover: false
 tgId: 3649
 tgUrl: https://t.me/podcastbaka/3649
 ---
+
+::image{src="/images/uploads/tg-3649.jpg" alt="" width="column"}
 
 Если вы видели новую серию «Магической битвы», вы знаете, что там началась так называемая «Смертельная миграция». Вот только ее правила, которые объясняли весь эпизод, довольно запутанные. Давайте попробуем разобраться:
 

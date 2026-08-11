@@ -4,12 +4,14 @@ date: 2023-03-14
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1103.jpg
+pullMedia: false
 noCover: false
 tgId: 1103
 tgUrl: https://t.me/podcastbaka/1103
 ---
+
+::image{src="/images/uploads/tg-1103.jpg" alt="" width="column"}
 
 Одной из главных субкультур конца прошлого века в Японии были байкеры — босудзоку.
 

@@ -4,14 +4,16 @@ date: 2022-08-11
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-441.jpg
+pullMedia: false
 noCover: false
 tgId: 441
 tgUrl: https://t.me/podcastbaka/441
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-441.jpg" alt="" width="column"}
 
 В [новом выпуске](/posts/naruto-kakashi-gayden-kakim-bylo-detstvo-kakashi-i-za-chto-umer-deydara/) подкаста мы поговорили об истории детства Какаши, которые нам показали в «Наруто Шипудене». Но слишком много Какаши не бывает, правильно?
 

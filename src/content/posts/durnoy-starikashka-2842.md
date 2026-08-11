@@ -4,12 +4,14 @@ date: 2025-03-25
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2842.jpg
+pullMedia: false
 noCover: false
 tgId: 2842
 tgUrl: https://t.me/podcastbaka/2842
 ---
+
+::image{src="/images/uploads/tg-2842.jpg" alt="" width="column"}
 
 Все вы уже наверно видели эту фотку: Хидэаки Анно стоит на крыльце с Хаяо Миядзаки. На самом деле этих двух великих режиссеров связывает долгая история.
 

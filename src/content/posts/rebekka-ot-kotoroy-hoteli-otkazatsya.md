@@ -4,12 +4,14 @@ date: 2022-09-20
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-592.jpg
+pullMedia: false
 noCover: false
 tgId: 592
 tgUrl: https://t.me/podcastbaka/592
 ---
+
+::image{src="/images/uploads/tg-592.jpg" alt="" width="column"}
 
 Я [в нашем чате](https://t.me/bakapodcast) на выходных обещал рассказать историю про создание всеми полюбившейся Ребекки из Cyberpunk: Edgerunners. Исполняю.
 

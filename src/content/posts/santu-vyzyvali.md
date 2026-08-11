@@ -4,12 +4,14 @@ date: 2025-10-14
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3415.jpg
+pullMedia: false
 noCover: false
 tgId: 3415
 tgUrl: https://t.me/podcastbaka/3415
 ---
+
+::image{src="/images/uploads/tg-3415.jpg" alt="" width="column"}
 
 Мои ощущения подтвердились. Самый интересный релиз этой осени — это «Санда».
 
@@ -22,3 +24,9 @@ tgUrl: https://t.me/podcastbaka/3415
 Первые две серии ощущаются пока больше как безумный фан. Но учитывая, что оригинальную мангу написала Пару Итагаки, создательница «Выдающихся зверей», скорее все в «Санде» будет и более глубокий социальный подтекст. О кризисе рождаемости в Японии и ценности детей.
 
 В общем, это мы точно смотрим. Советую!
+
+::image{src="/images/uploads/tg-3416.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3417.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3418.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3419.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3420.jpg" alt="" width="column"}

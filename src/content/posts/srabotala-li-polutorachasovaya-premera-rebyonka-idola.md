@@ -4,14 +4,16 @@ date: 2023-04-18
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1195.jpg
+pullMedia: false
 noCover: false
 tgId: 1195
 tgUrl: https://t.me/podcastbaka/1195
 animeSuggested:
   - oshi-no-ko
 ---
+
+::image{src="/images/uploads/tg-1195.jpg" alt="" width="column"}
 
 «Ребенок идола» или «Одаренное дитя» — это манга, написанная Акой Акасакой («[Госпожа Кагуя](https://t.me/podcastbaka/750)») и проиллюстрированная Мэнго Ёкояри. Она успешно выходит в самом крупном сэйнен-журнале уже три года.
 

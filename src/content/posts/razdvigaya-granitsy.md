@@ -4,12 +4,14 @@ date: 2024-06-05
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2165.jpg
+pullMedia: false
 noCover: false
 tgId: 2165
 tgUrl: https://t.me/podcastbaka/2165
 ---
+
+::image{src="/images/uploads/tg-2165.jpg" alt="" width="column"}
 
 Я много хвалил «Фрирен» за умелое распределение сил аниматоров и привлечение к работе талантливых специалистов. Так вот, «Подземелье вкусностей» — заслуживает за это не меньшей похвалы. Потрясающее качество каждую серию.
 
@@ -22,3 +24,9 @@ tgUrl: https://t.me/podcastbaka/2165
 Здесь и работа с глубиной кадра, когда нужно разместить сразу группу персонажей. И создание акцентов с помощью светотени. И даже коллажные приемы, как будто это обложка на YouTube.
 
 Круто, когда в студии ты можешь попробовать себя в разных ролях и проявить свои таланты. #заметки
+
+::image{src="/images/uploads/tg-2166.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2167.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2168.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2169.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2170.jpg" alt="" width="column"}

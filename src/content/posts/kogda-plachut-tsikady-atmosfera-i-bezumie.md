@@ -4,8 +4,8 @@ date: 2025-04-03
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2859.jpg
+pullMedia: false
 noCover: false
 tgId: 2859
 tgUrl: https://t.me/podcastbaka/2859
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_1737
 ---
+
+::image{src="/images/uploads/tg-2859.jpg" alt="" width="column"}
 
 В этот раз мы обсуждаем тайтл, который у нас заказал подписчик! Это культовое аниме начала нулевых — «Когда плачут цикады».
 

@@ -4,12 +4,14 @@ date: 2022-05-14
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-39.jpg
+pullMedia: false
 noCover: false
 tgId: 39
 tgUrl: https://t.me/podcastbaka/39
 ---
+
+::image{src="/images/uploads/tg-39.jpg" alt="" width="column"}
 
 Сюжет рассказывает о мальчике Юру из далекой горной деревни. Уже в первой главе на деревню совершают нападение и убивают почти всех жителей — и герой вынужден бежать в так называемые «нижние земли».
 

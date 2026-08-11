@@ -4,12 +4,14 @@ date: 2022-06-08
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-204.jpg
+pullMedia: false
 noCover: false
 tgId: 204
 tgUrl: https://t.me/podcastbaka/204
 ---
+
+::image{src="/images/uploads/tg-204.jpg" alt="" width="column"}
 
 В этом эпизоде мы обсудим фильм 2015 года — «Сердцу хочется кричать» от режиссера «Торадоры».
 

@@ -4,12 +4,14 @@ date: 2022-05-15
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-149.jpg
+pullMedia: false
 noCover: false
 tgId: 149
 tgUrl: https://t.me/podcastbaka/149
 ---
+
+::image{src="/images/uploads/tg-149.jpg" alt="" width="column"}
 
 что я советую посмотреть в итоге?
 

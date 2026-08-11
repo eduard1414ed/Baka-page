@@ -4,12 +4,14 @@ date: 2024-10-10
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2456.jpg
+pullMedia: false
 noCover: false
 tgId: 2456
 tgUrl: https://t.me/podcastbaka/2456
 ---
+
+::image{src="/images/uploads/tg-2456.jpg" alt="" width="column"}
 
 Летний сезон завершился, а значит пора обновить наш ультимативный список лучших аниме года.
 

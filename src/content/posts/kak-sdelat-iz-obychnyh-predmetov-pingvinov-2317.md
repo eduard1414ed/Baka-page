@@ -4,12 +4,14 @@ date: 2024-08-15
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2317.jpg
+pullMedia: false
 noCover: false
 tgId: 2317
 tgUrl: https://t.me/podcastbaka/2317
 ---
+
+::image{src="/images/uploads/tg-2317.jpg" alt="" width="column"}
 
 Такая нетривиальная задача стояла перед режиссером Исидой Хироясой при работе над его первым полнометражным фильмом — «Тайная жизнь пингвинов».
 
@@ -20,3 +22,5 @@ tgUrl: https://t.me/podcastbaka/2317
 А в артбуке по «Пингвинам» есть несколько страниц, посвященных только тому, как именно предметы превращаются в пингвинов. Через какие стадии проходит анимация, и даже как меняется скелет животных во время этих превращений.
 
 У нас есть целых два эпизода про работы Хироясы, если вы хотите узнать про него побольше: [подкаст про «Тайную жизнь пингвинов»](/posts/taynaya-zhizn-pingvinov-luchshiy-li-eto-film-dlya-detey-i-dolzhna-li-nas-smuschat-grud/) и [видеоэссе про «Дрейфующий дом»](https://t.me/podcastbaka/2274)
+
+::image{src="/images/uploads/tg-2318.jpg" alt="" width="column"}

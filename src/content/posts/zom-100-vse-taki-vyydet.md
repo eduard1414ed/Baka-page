@@ -4,14 +4,16 @@ date: 2023-11-14
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1653.jpg
+pullMedia: false
 noCover: false
 tgId: 1653
 tgUrl: https://t.me/podcastbaka/1653
 animeSuggested:
   - apocalypse-hotel
 ---
+
+::image{src="/images/uploads/tg-1653.jpg" alt="" width="column"}
 
 Помните, я [рассказывал](/posts/zom-100-v-plohoy-kompanii/) о том, что «Зомби-апокалипсис и список из ста дел» постоянно откладывают и даже могут вообще не выпустить? Тогда мои прогнозы, к сожалению, сбылись. И за лето сериал так и не успел выйти.
 

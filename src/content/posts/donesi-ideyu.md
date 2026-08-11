@@ -4,12 +4,14 @@ date: 2023-05-10
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1254.jpg
+pullMedia: false
 noCover: false
 tgId: 1254
 tgUrl: https://t.me/podcastbaka/1254
 ---
+
+::image{src="/images/uploads/tg-1254.jpg" alt="" width="column"}
 
 Основной инструмент режиссера аниме — это раскадровки. Именно они показывают аниматорам, что и как рисовать.
 
@@ -18,3 +20,5 @@ tgUrl: https://t.me/podcastbaka/1254
 И оба варианта полностью исполняют свою задачу. Нельзя сказать, что один вариант лучше другого.
 
 И мне очень нравится этот пример, потому что он освобождает. Даже если вы делаете что-то не так красиво, как другие, главное чтобы это работало. #заметки
+
+::image{src="/images/uploads/tg-1255.jpg" alt="" width="column"}

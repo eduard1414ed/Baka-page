@@ -4,12 +4,14 @@ date: 2024-08-19
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2324.jpg
+pullMedia: false
 noCover: false
 tgId: 2324
 tgUrl: https://t.me/podcastbaka/2324
 ---
+
+::image{src="/images/uploads/tg-2324.jpg" alt="" width="column"}
 
 ...
 

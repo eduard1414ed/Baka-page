@@ -4,12 +4,14 @@ date: 2024-12-10
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2586.jpg
+pullMedia: false
 noCover: false
 tgId: 2586
 tgUrl: https://t.me/podcastbaka/2586
 ---
+
+::image{src="/images/uploads/tg-2586.jpg" alt="" width="column"}
 
 Кстати, говоря о популярности манги. Одна из известных особенностей самого журнала Shounen Jump, произведения из которого занимают значительную часть вчерашнего топа, состоит в том, что издатели холоднокровно закрывают любую мангу, которая оказывается недостаточно популярной.
 

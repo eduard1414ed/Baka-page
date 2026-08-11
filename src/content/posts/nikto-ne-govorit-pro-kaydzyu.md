@@ -4,14 +4,16 @@ date: 2024-05-08
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2113.jpg
+pullMedia: false
 noCover: false
 tgId: 2113
 tgUrl: https://t.me/podcastbaka/2113
 animeSuggested:
   - jujutsu-kaisen
 ---
+
+::image{src="/images/uploads/tg-2113.jpg" alt="" width="column"}
 
 Главной премьерой этого весеннего сезона должен был стать новый сёнен от Shonen Jump — «Кайдзю номер восемь». Но вот уже вышло четыре эпизода, а интернет молчит.
 

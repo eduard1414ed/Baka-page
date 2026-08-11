@@ -4,14 +4,16 @@ date: 2023-05-09
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1248.jpg
+pullMedia: false
 noCover: false
 tgId: 1248
 tgUrl: https://t.me/podcastbaka/1248
 animeSuggested:
   - dorohedoro
 ---
+
+::image{src="/images/uploads/tg-1248.jpg" alt="" width="column"}
 
 В 1986 году издательство Kodansha запустило новый журнал — Afternoon. В него отправляли всю ту мангу, которая не проходила по формату в флагманский журнал Morning.
 
@@ -30,3 +32,8 @@ animeSuggested:
 А с ростом интереса к более взрослым историям, аниме по манге из Afternoon стали выходить регулярно и привлекать большую аудиторию. В этом году уже четыре онгоинга — это экранизации произведений из Afternoon. «Сага о Винланде», «Великая небесная стена», «Долой безделье!» и «Галактика по соседству» (последнее выходило в дочернем журнале Afternoon — good! Afternoon)
 
 Так всего за 30 лет Afternoon прошел путь от лоликона к Винланду. #заметки
+
+::image{src="/images/uploads/tg-1249.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1250.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1251.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1252.jpg" alt="" width="column"}

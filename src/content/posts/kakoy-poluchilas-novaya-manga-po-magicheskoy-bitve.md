@@ -4,14 +4,16 @@ date: 2026-03-16
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3815.jpg
+pullMedia: false
 noCover: false
 tgId: 3815
 tgUrl: https://t.me/podcastbaka/3815
 animeSuggested:
   - jujutsu-kaisen
 ---
+
+::image{src="/images/uploads/tg-3815.jpg" alt="" width="column"}
 
 «Магическая Битва. Модуль» выходит с сентября прошлого года, сценарий к ней пишет сам Геге Акутами, а за рисунок отвечает Юдзи Ивасаки («Академия Шифра»).
 

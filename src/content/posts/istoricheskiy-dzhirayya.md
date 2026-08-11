@@ -4,14 +4,16 @@ date: 2025-02-07
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2734.jpg
+pullMedia: false
 noCover: false
 tgId: 2734
 tgUrl: https://t.me/podcastbaka/2734
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-2734.jpg" alt="" width="column"}
 
 В XIX веке в Японии была популярна серия рассказов о ниндзя, который владел магией и мог призывать жаб.
 
@@ -22,3 +24,5 @@ animeSuggested:
 Этих героев звали Джирайя, Цунаде и Орочимару соответственно. А сборник историй о них называется «Джирайя моногатари» или «Сказание о храбром Джирайе». В нем 43 главы, но сюжет там так и не был доведен до финала.
 
 Как вы понимаете, этот сюжет, персонажи и даже их способности сильно повлияли на Масаси Кисимото и на мангу «Наруто».
+
+::image{src="/images/uploads/tg-2735.jpg" alt="" width="column"}

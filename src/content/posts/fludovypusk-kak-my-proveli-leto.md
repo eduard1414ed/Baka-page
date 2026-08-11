@@ -4,8 +4,8 @@ date: 2025-08-21
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3269.jpg
+pullMedia: false
 noCover: false
 tgId: 3269
 tgUrl: https://t.me/podcastbaka/3269
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_1964
 ---
+
+::image{src="/images/uploads/tg-3269.jpg" alt="" width="column"}
 
 Лето подходит к концу, а значит пришло время написать сочинение о том, что мы делали все эти три месяца. Только вместо текста у нас, конечно, эпизод подкаста.
 

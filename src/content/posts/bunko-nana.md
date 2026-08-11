@@ -4,8 +4,8 @@ date: 2026-03-02
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3769.jpg
+pullMedia: false
 noCover: false
 tgId: 3769
 tgUrl: https://t.me/podcastbaka/3769
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2433
 ---
+
+::image{src="/images/uploads/tg-3769.jpg" alt="" width="column"}
 
 Чуть опоздали с февральским выпуском «Бунко!», но зато каким он вышел!  Вместе с главной фанаткой Ай Ядзавы, [крисгринпис](http://t.me/krisgreenpeace), мы обсудили одну из самых популярных манг начала нулевых.
 

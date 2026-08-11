@@ -4,12 +4,14 @@ date: 2026-04-08
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3881.jpg
+pullMedia: false
 noCover: false
 tgId: 3881
 tgUrl: https://t.me/podcastbaka/3881
 ---
+
+::image{src="/images/uploads/tg-3881.jpg" alt="" width="column"}
 
 Осенью я [предсказывал,](https://t.me/podcastbaka/3489) что у «Ателье колдовских колпаков» есть все шансы стать главным аниме 2026 года. Изменилось ли мое мнение после выхода первых серий?
 

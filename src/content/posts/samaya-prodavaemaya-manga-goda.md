@@ -4,14 +4,16 @@ date: 2024-12-09
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2585.jpg
+pullMedia: false
 noCover: false
 tgId: 2585
 tgUrl: https://t.me/podcastbaka/2585
 animeSuggested:
   - jujutsu-kaisen
 ---
+
+::image{src="/images/uploads/tg-2585.jpg" alt="" width="column"}
 
 Oricon опубликовал итоги продаж за год. В топ-10 попали восемь сёнэнов и два сейнэна. На первом месте с приличным отрывом, конечно, «Магическая битва».
 

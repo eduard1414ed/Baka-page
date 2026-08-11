@@ -4,8 +4,8 @@ date: 2025-04-09
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2868.jpg
+pullMedia: false
 noCover: false
 tgId: 2868
 tgUrl: https://t.me/podcastbaka/2868
@@ -13,6 +13,8 @@ animeSuggested:
   - chi-chikyuu-no-undou-ni-tsuite
   - hyakuemu
 ---
+
+::image{src="/images/uploads/tg-2868.jpg" alt="" width="column"}
 
 Мангака Uoto сейчас на виду благодаря успеху аниме «О движении Земли». Но на самом это не первая работа молодого автора. До этого из-под его руки вышла манга о легкой атлетике — «Стометровка». И я думаю, что могу ее посоветовать.
 

@@ -4,14 +4,16 @@ date: 2022-08-06
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-419.jpg
+pullMedia: false
 noCover: false
 tgId: 419
 tgUrl: https://t.me/podcastbaka/419
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-419.jpg" alt="" width="column"}
 
 Ходят слухи, что в работе над отдельными эпизодами нового сезона будет задействован аниматор Хироюки Ямасита.
 

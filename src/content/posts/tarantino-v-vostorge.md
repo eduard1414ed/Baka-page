@@ -4,15 +4,26 @@ date: 2026-01-29
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3664.jpg
+pullMedia: false
 noCover: false
 tgId: 3664
 tgUrl: https://t.me/podcastbaka/3664
 ---
+
+::image{src="/images/uploads/tg-3664.jpg" alt="" width="column"}
 
 Сёта Госёдзоно, режиссер «Магической битвы», [продолжает использовать](/posts/nastoyaschee-iskusstvo/) новый сезон как площадку для того, чтобы отдавать дань уважения любимым произведениям. И если в опенинге он использовал классические картины, то в новом эпизоде под прицел попал фильм «Убить Билла» Квентина Тарантино.
 
 Причем отсылки тут сразу на всех уровнях. И дизайн дома Зенин отсылает к японскому ресторану House of Blue Leaves из голливудского фильма. И постановка сцены: с отражениями в мече, черно-белым фильтром и даже прыжком главной героини на второй этаж. И даже поп-музыка на фоне звучит хоть и не точно так же, как в «Убить Билла», но точно достаточно похоже.
 
 Получилось дико красочно. Хотя вот японская аудитория такой подход [не оценила](https://www.reddit.com/r/Jujutsufolk/comments/1ql122l/about_the_whole_situation_with_japan_not_liking/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button), ведь история Маки вообще трагическая, а тут такое веселье. А как вы считаете, стоят ли отсылки того?
+
+::image{src="/images/uploads/tg-3665.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3666.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3667.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3668.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3669.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3670.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3671.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3672.jpg" alt="" width="column"}

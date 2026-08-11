@@ -4,12 +4,14 @@ date: 2024-09-25
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2415.jpg
+pullMedia: false
 noCover: false
 tgId: 2415
 tgUrl: https://t.me/podcastbaka/2415
 ---
+
+::image{src="/images/uploads/tg-2415.jpg" alt="" width="column"}
 
 Была в Shonen Jump такая манга — «Юный лорд — мастер побега». Классический сёнен, но в историческом сеттинге феодальной Японии. Написал ее Юсэй Мацуи, автор «Класса убийц». Манга выиграла Shogakukan Manga Award в 2024, но при этом назвать ее флагманом журнала было сложно.
 
@@ -20,3 +22,11 @@ tgUrl: https://t.me/podcastbaka/2415
 Смотря на эти кадры из аниме сложно поверить, что это настоящие сцены из сериала, а не просто концепт-арты.
 
 Даже если вы не любите сёнены, я советую посмотреть сериал ради этой красоты.
+
+::image{src="/images/uploads/tg-2416.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2417.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2418.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2419.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2420.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2421.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2422.jpg" alt="" width="column"}

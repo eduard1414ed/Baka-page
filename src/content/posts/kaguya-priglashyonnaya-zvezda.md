@@ -4,14 +4,16 @@ date: 2022-08-12
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-442.jpg
+pullMedia: false
 noCover: false
 tgId: 442
 tgUrl: https://t.me/podcastbaka/442
 animeSuggested:
   - oshi-no-ko
 ---
+
+::image{src="/images/uploads/tg-442.jpg" alt="" width="column"}
 
 В манге «Ребёнок идола», которую пишет Ака Акасака, вдруг появился персонаж из другой его работы.
 
@@ -20,3 +22,5 @@ animeSuggested:
 Но главный смысл ее появления был, на самом деле, не в этом. В самом конце главы Акасаки хитро показал ее изменившееся имя — Сироганэ Кагуя.
 
 А это значит, официально, что они с президентом школьного совета в будущем поженятся. #заметки
+
+::image{src="/images/uploads/tg-443.jpg" alt="" width="column"}

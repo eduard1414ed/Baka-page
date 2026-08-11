@@ -4,12 +4,14 @@ date: 2025-01-22
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2690.jpg
+pullMedia: false
 noCover: false
 tgId: 2690
 tgUrl: https://t.me/podcastbaka/2690
 ---
+
+::image{src="/images/uploads/tg-2690.jpg" alt="" width="column"}
 
 Как обычно, первым делом в этом сезоне решил оценить романтические сериалы. Глянул первые три тайтла:
 

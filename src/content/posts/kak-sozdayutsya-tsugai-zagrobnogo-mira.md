@@ -4,12 +4,14 @@ date: 2026-06-10
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-4007.jpg
+pullMedia: false
 noCover: false
 tgId: 4007
 tgUrl: https://t.me/podcastbaka/4007
 ---
+
+::image{src="/images/uploads/tg-4007.jpg" alt="" width="column"}
 
 На ютюб-канале Aniplex вышло большое часовое видео с экскурсией по студии Хирому Аракавы, создательницы «Стального алхимика» и «Цугаев».
 
@@ -26,3 +28,9 @@ tgUrl: https://t.me/podcastbaka/4007
 4️⃣ Ассистенты Аракавы, кстати, работают с диджиталом. Один из них, например, создал (и потом напечатал) 3D-модель самой студии.
 
 5️⃣ Аракава уже знает, чем закончатся «Цугаи». И даже придумала несколько финальных панелей. Но как долго займет путь до финала — она не уверена.
+
+::image{src="/images/uploads/tg-4008.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-4009.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-4010.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-4011.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-4012.jpg" alt="" width="column"}

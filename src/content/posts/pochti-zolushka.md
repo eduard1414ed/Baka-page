@@ -4,14 +4,16 @@ date: 2023-08-09
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1428.jpg
+pullMedia: false
 noCover: false
 tgId: 1428
 tgUrl: https://t.me/podcastbaka/1428
 animeSuggested:
   - barakamon
 ---
+
+::image{src="/images/uploads/tg-1428.jpg" alt="" width="column"}
 
 Когда я был подростком, мне в руки попалась серия книг «Меч истины» Терри Гудкаинда. Если вы никогда о ней не слышали — это фантастика с магией, драконами и рыцарями, основной сюжетный ход которой звучит так: главного героя разлучают с любимой, и всю книгу они разными путями пытаются снова встретиться. В следующем томе повторить заново.
 

@@ -4,8 +4,8 @@ date: 2023-04-19
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1196.jpg
+pullMedia: false
 noCover: false
 tgId: 1196
 tgUrl: https://t.me/podcastbaka/1196
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-1196.jpg" alt="" width="column"}
 
 В этом выпуске мы обсуждаем, как Будда и Иисус проводят свой отпуск в пригороде Токио.
 

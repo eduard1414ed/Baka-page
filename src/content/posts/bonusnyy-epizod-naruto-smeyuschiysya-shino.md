@@ -4,8 +4,8 @@ date: 2022-05-14
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-60.jpg
+pullMedia: false
 noCover: false
 tgId: 60
 tgUrl: https://t.me/podcastbaka/60
@@ -17,6 +17,8 @@ bonusLinks:
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-60.jpg" alt="" width="column"}
 
 В последнем бонусном эпизоде второго сезона оцениваем сразу три арки: «Длинный день у Кибы», «Легендарный Омбаа» и «Смеющийся Шино».
 

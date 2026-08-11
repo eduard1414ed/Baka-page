@@ -4,12 +4,14 @@ date: 2023-02-07
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1010.jpg
+pullMedia: false
 noCover: false
 tgId: 1010
 tgUrl: https://t.me/podcastbaka/1010
 ---
+
+::image{src="/images/uploads/tg-1010.jpg" alt="" width="column"}
 
 Что отличает качественное аниме от среднего? Особенно, если мы сравниваем, например, два похожих исекая?
 

@@ -4,12 +4,14 @@ date: 2022-05-14
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-21.jpg
+pullMedia: false
 noCover: false
 tgId: 21
 tgUrl: https://t.me/podcastbaka/21
 ---
+
+::image{src="/images/uploads/tg-21.jpg" alt="" width="column"}
 
 Boichi — автор Доктора Стоуна доказал, что это возможно.
 

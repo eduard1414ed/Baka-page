@@ -4,8 +4,8 @@ date: 2022-05-15
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-99.jpg
+pullMedia: false
 noCover: false
 tgId: 99
 tgUrl: https://t.me/podcastbaka/99
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-99.jpg" alt="" width="column"}
 
 В этом *сорокаминутном* (!) выпуске мы решили поностальгировать и обсудить аниме, которое мы любили в детстве.
 

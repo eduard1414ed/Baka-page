@@ -4,8 +4,8 @@ date: 2022-07-07
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-289.jpg
+pullMedia: false
 noCover: false
 tgId: 289
 tgUrl: https://t.me/podcastbaka/289
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-289.jpg" alt="" width="column"}
 
 В этом выпуске мы задаемся главным вопросом: что не так с сериалом «Хёка»?
 

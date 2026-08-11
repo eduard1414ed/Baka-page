@@ -4,12 +4,14 @@ date: 2023-08-25
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1469.jpg
+pullMedia: false
 noCover: false
 tgId: 1469
 tgUrl: https://t.me/podcastbaka/1469
 ---
+
+::image{src="/images/uploads/tg-1469.jpg" alt="" width="column"}
 
 В нашем недавнем выпуске подкаста про «Волейбол» (посмотрите и послушайте, если еще нет!) я рассказывал про то, как сериал и аниме повлияли на популярность волейбола среди школьников и студентов.
 

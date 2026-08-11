@@ -4,12 +4,14 @@ date: 2024-04-11
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2058.jpg
+pullMedia: false
 noCover: false
 tgId: 2058
 tgUrl: https://t.me/podcastbaka/2058
 ---
+
+::image{src="/images/uploads/tg-2058.jpg" alt="" width="column"}
 
 Я настолько много писал про «Фрирен», что какой-то добрый человек добавил на страницу этого аниме в Википедии меня в раздел критики со ссылкой на статью в «Т—Ж».
 

@@ -4,12 +4,14 @@ date: 2025-04-22
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2898.jpg
+pullMedia: false
 noCover: false
 tgId: 2898
 tgUrl: https://t.me/podcastbaka/2898
 ---
+
+::image{src="/images/uploads/tg-2898.jpg" alt="" width="column"}
 
 Когда-то давным-давно, пять лет назад (почти в другой жизни) я вел подкаст про кино и сериалы. И как-то в нем рассказывал про очень впечатливший меня сериал от Netfix — Anne with an E.
 
@@ -26,3 +28,9 @@ tgUrl: https://t.me/podcastbaka/2898
 Посмотрим, не пострадает ли дальнейший сюжет от ускоренного темпа. И не будут ли нам чаще показывать страшненьких 3D-лошадей.
 
 Но по первым сериям мне кажется, это аниме — очередной хороший способ познакомиться с культовой и по-настоящему прекрасной историей.
+
+::image{src="/images/uploads/tg-2899.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2900.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2901.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2902.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2903.jpg" alt="" width="column"}

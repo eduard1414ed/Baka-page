@@ -4,12 +4,14 @@ date: 2023-06-08
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1299.jpg
+pullMedia: false
 noCover: false
 tgId: 1299
 tgUrl: https://t.me/podcastbaka/1299
 ---
+
+::image{src="/images/uploads/tg-1299.jpg" alt="" width="column"}
 
 Хашира — название элитных воинов в «Истребителе демонов». И дословно слово hashira переведено на русский довольно точно — «столпы».
 

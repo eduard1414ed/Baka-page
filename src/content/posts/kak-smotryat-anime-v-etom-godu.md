@@ -4,8 +4,8 @@ date: 2023-12-25
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1793.jpg
+pullMedia: false
 noCover: false
 tgId: 1793
 tgUrl: https://t.me/podcastbaka/1793
@@ -13,6 +13,8 @@ animeSuggested:
   - shingeki-no-kyojin
   - one-piece
 ---
+
+::image{src="/images/uploads/tg-1793.jpg" alt="" width="column"}
 
 Я решил под конец года изучить «[Индекс Кинопоиск Pro](https://www.kinopoisk.ru/special/index/)» — инструмент для измерения популярности сериалов (в том числе аниме!). И вот, что я обнаружил:
 

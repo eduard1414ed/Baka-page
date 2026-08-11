@@ -4,8 +4,8 @@ date: 2023-05-26
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1277.jpg
+pullMedia: false
 noCover: false
 tgId: 1277
 tgUrl: https://t.me/podcastbaka/1277
@@ -13,6 +13,8 @@ animeSuggested:
   - howls-moving-castle
   - spirited-away
 ---
+
+::image{src="/images/uploads/tg-1277.jpg" alt="" width="column"}
 
 31-го мая у «Кинопоиска» заканчиваются права на контент студии Ghibli. Поэтому ребята устроили распродажу и отдают аниме студии по одному рублю.
 

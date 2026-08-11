@@ -4,12 +4,14 @@ date: 2025-08-12
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3252.jpg
+pullMedia: false
 noCover: false
 tgId: 3252
 tgUrl: https://t.me/podcastbaka/3252
 ---
+
+::image{src="/images/uploads/tg-3252.jpg" alt="" width="column"}
 
 Раз уж я заговорил вчера про «Фарфоровую куклу». Должен сказать, что второй сезон аниме про косплей выглядит очень изобретательно.
 
@@ -20,3 +22,8 @@ tgUrl: https://t.me/podcastbaka/3252
 Да и в других эпизодах много интересного: живая камера, использование чиби-моделек, абсурдные (в хорошем смысле) комедийные тайминги. CloverWorks показывает мастер-класс.
 
 Так что, если вы пропустили выход второго сезона в огне этого лета — советую наверстать.
+
+::image{src="/images/uploads/tg-3253.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3254.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3255.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3256.jpg" alt="" width="column"}

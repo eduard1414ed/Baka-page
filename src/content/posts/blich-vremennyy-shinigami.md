@@ -4,8 +4,8 @@ date: 2025-02-20
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2757.jpg
+pullMedia: false
 noCover: false
 tgId: 2757
 tgUrl: https://t.me/podcastbaka/2757
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_1674
 ---
+
+::image{src="/images/uploads/tg-2757.jpg" alt="" width="column"}
 
 Мы продолжаем возвращаться к корням — и вновь обсуждаем классический сёнен. В этой раз очередь дошла до первой арки «Блича».
 

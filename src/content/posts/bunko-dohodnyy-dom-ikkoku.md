@@ -4,8 +4,8 @@ date: 2026-06-04
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3999.jpg
+pullMedia: false
 noCover: false
 tgId: 3999
 tgUrl: https://t.me/podcastbaka/3999
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2603
 ---
+
+::image{src="/images/uploads/tg-3999.jpg" alt="" width="column"}
 
 Румико Такахаси — одна из самых известных мангак в истории, которая создала целый ряд культовых и революционных работ. От «Инуяси» да «Несносных пришельцев», от «Ранма 1/2» до «Доходного дома Иккоку».
 

@@ -4,8 +4,8 @@ date: 2022-05-14
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-78.jpg
+pullMedia: false
 noCover: false
 tgId: 78
 tgUrl: https://t.me/podcastbaka/78
@@ -17,6 +17,8 @@ bonusLinks:
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-78.jpg" alt="" width="column"}
 
 Наконец-то мы очень хвалим филлерный эпизод — потому что это отличная детективная история.
 

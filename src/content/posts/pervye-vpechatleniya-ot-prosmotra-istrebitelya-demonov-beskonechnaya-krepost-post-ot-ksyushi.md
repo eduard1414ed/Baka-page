@@ -4,12 +4,14 @@ date: 2025-10-01
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3378.jpg
+pullMedia: false
 noCover: false
 tgId: 3378
 tgUrl: https://t.me/podcastbaka/3378
 ---
+
+::image{src="/images/uploads/tg-3378.jpg" alt="" width="column"}
 
 На выходных посмотрела «Истребителя демонов: Бесконечная крепость» и, конечно, как преданный фанат, осталась довольна. Для тех, кто обожает эту историю, фильм будет бальзамом на душу, но если вы просто пошли в кино за компанию, то стоит учесть несколько моментов:
 

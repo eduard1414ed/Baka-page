@@ -4,12 +4,14 @@ date: 2024-08-08
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2305.jpg
+pullMedia: false
 noCover: false
 tgId: 2305
 tgUrl: https://t.me/podcastbaka/2305
 ---
+
+::image{src="/images/uploads/tg-2305.jpg" alt="" width="column"}
 
 Продолжая [пост](/posts/parochka-romantik/) о новых романтических аниме летнего сезона. Я посмотрел еще несколько тайтлов:
 
@@ -28,3 +30,6 @@ tgUrl: https://t.me/podcastbaka/2305
 Пожалуй, самая скучная романтика сезона (из тех, что я успел посмотреть). Близняшки Наори и Руми влюбляются в одного и того же парня, друга детства Дзюна. А он тоже не может разобраться, кто из них ему нравится. И в итоге драма, ревность и, конечно, все всегда происходит невовремя.
 
 Но как-то все это плоско и второпях. Герои не вызывают симпатию, а анимация сама по себе не вывозит. Я бы не советовал этот сериал смотреть.
+
+::image{src="/images/uploads/tg-2306.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2307.jpg" alt="" width="column"}

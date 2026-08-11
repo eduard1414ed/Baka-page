@@ -4,8 +4,8 @@ date: 2023-01-24
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-964.jpg
+pullMedia: false
 noCover: false
 tgId: 964
 tgUrl: https://t.me/podcastbaka/964
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-964.jpg" alt="" width="column"}
 
 Подкаст «Бака!» сейчас в отпуске, но мы с Ксюшей решили, что нечестно оставлять наших подписчиков больше чем на месяц без выпусков. Поэтому мы записали расслабленный эпизод не об аниме — а о нашей жизни.
 

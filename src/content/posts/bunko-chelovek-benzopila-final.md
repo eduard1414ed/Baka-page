@@ -4,8 +4,8 @@ date: 2026-03-31
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3861.jpg
+pullMedia: false
 noCover: false
 tgId: 3861
 tgUrl: https://t.me/podcastbaka/3861
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2482
 ---
+
+::image{src="/images/uploads/tg-3861.jpg" alt="" width="column"}
 
 Блестяще подгадав с таймингом, мы записали этот эпизод сразу после выхода финальной главы второй части (а может и всего) «Человека-бензопилы».
 

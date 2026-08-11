@@ -4,8 +4,8 @@ date: 2022-11-25
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-754.jpg
+pullMedia: false
 noCover: false
 tgId: 754
 tgUrl: https://t.me/podcastbaka/754
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-754.jpg" alt="" width="column"}
 
 Самый lofi-выпуск нашего подкаста. Много музыки группы Creepy Nuts, много восторгов и безобидные вампиры.
 

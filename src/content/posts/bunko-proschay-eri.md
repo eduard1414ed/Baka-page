@@ -4,8 +4,8 @@ date: 2025-08-07
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3243.jpg
+pullMedia: false
 noCover: false
 tgId: 3243
 tgUrl: https://t.me/podcastbaka/3243
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_1943
 ---
+
+::image{src="/images/uploads/tg-3243.jpg" alt="" width="column"}
 
 В новом выпуске нашего ежемесячного подкаста о манге, мы обсуждаем по вашим заявкам ваншот Тацуки Фудзимото, автора «Человека-бензопилы» — «Прощай, Эри!»
 

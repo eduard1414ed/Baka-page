@@ -4,8 +4,8 @@ date: 2023-04-17
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1193.jpg
+pullMedia: false
 noCover: false
 tgId: 1193
 tgUrl: https://t.me/podcastbaka/1193
@@ -13,6 +13,8 @@ animeSuggested:
   - naruto
   - jujutsu-kaisen
 ---
+
+::image{src="/images/uploads/tg-1193.jpg" alt="" width="column"}
 
 📋**Неккецу** — поджанр сёнэна с уникальным повествованием. И если вы никогда о нем не слышали, то не переживайте! Скорее всего вы его точно видели. Многие причисляют авторство легендарному Осаму Тедзуке и его редактору.
 

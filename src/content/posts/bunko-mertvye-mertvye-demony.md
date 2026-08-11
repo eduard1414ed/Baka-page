@@ -4,8 +4,8 @@ date: 2025-09-18
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3338.jpg
+pullMedia: false
 noCover: false
 tgId: 3338
 tgUrl: https://t.me/podcastbaka/3338
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2019
 ---
+
+::image{src="/images/uploads/tg-3338.jpg" alt="" width="column"}
 
 А в новом выпуске нашего ежемесячного подкаста о манге мы обсуждаем другую историю с инопланетянами — «Мертвых мертвых демонов» Инио Асано.
 

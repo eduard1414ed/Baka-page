@@ -4,12 +4,14 @@ date: 2025-07-19
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3168.jpg
+pullMedia: false
 noCover: false
 tgId: 3168
 tgUrl: https://t.me/podcastbaka/3168
 ---
+
+::image{src="/images/uploads/tg-3168.jpg" alt="" width="column"}
 
 «Город» — это экранизация манги Кэйити Арави, автора «Мелочей жизни», которую делает культовая студия Kyoto Animation. Та самая, которая выпустила «Вайолет Эвергарден», K-On и «Меланхолию Харухи Судзумии». 
 
@@ -20,3 +22,7 @@ tgUrl: https://t.me/podcastbaka/3168
 Такой подход максимально приблизил анимацию к комиксному стилю оригинальной манги.
 
 Я не большой фанат эпизодической комедии (почти ситкома), каковым является «Город». Но не оценить техническое мастерство не могу.
+
+::image{src="/images/uploads/tg-3169.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3170.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3171.jpg" alt="" width="column"}

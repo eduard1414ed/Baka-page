@@ -4,8 +4,8 @@ date: 2025-03-20
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2839.jpg
+pullMedia: false
 noCover: false
 tgId: 2839
 tgUrl: https://t.me/podcastbaka/2839
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_1720
 ---
+
+::image{src="/images/uploads/tg-2839.jpg" alt="" width="column"}
 
 В новом бонусном выпуске мы обсуждаем второй сезон аниме «Волейбол».
 

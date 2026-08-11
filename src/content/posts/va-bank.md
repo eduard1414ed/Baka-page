@@ -4,12 +4,14 @@ date: 2026-05-08
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3933.jpg
+pullMedia: false
 noCover: false
 tgId: 3933
 tgUrl: https://t.me/podcastbaka/3933
 ---
+
+::image{src="/images/uploads/tg-3933.jpg" alt="" width="column"}
 
 Обычно мангаки финансово не участвуют в разработке аниме, этим занимаются их издатели. Но в случае с «Левшой Эреном» автор, Дайсукэ Ито, настолько сильно хотел получить экранизацию и настолько поверил в успех своего произведения, что профинансировал значительную часть производства экранизации.
 

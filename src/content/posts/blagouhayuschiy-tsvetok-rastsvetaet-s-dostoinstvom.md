@@ -4,12 +4,14 @@ date: 2024-12-12
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2589.jpg
+pullMedia: false
 noCover: false
 tgId: 2589
 tgUrl: https://t.me/podcastbaka/2589
 ---
+
+::image{src="/images/uploads/tg-2589.jpg" alt="" width="column"}
 
 Вы знаете, насколько я люблю хорошую романтику. Поэтому вряд ли удивитесь тому, что всю прошлую неделю я зачитывался мангой с очень сложным для запоминания названием: «Благоухающий цветок расцветает с достоинством».
 

@@ -4,8 +4,8 @@ date: 2025-07-09
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3131.jpg
+pullMedia: false
 noCover: false
 tgId: 3131
 tgUrl: https://t.me/podcastbaka/3131
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_1868
 ---
+
+::image{src="/images/uploads/tg-3131.jpg" alt="" width="column"}
 
 Самый актуальный выпуск подкаста «Бунко!» прямо к выходу экранизации этой манги.
 

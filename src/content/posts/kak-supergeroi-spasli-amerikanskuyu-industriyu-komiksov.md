@@ -4,12 +4,14 @@ date: 2023-09-14
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1508.jpg
+pullMedia: false
 noCover: false
 tgId: 1508
 tgUrl: https://t.me/podcastbaka/1508
 ---
+
+::image{src="/images/uploads/tg-1508.jpg" alt="" width="column"}
 
 В [опросе](https://t.me/podcastbaka/1500) на прошлой неделе с гигантским отрывом победили анонсы новых выпусков, поэтому рассказываю про второй эпизод «Омнибуса и танкобона».
 

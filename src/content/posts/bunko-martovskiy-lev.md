@@ -4,8 +4,8 @@ date: 2025-03-31
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2850.jpg
+pullMedia: false
 noCover: false
 tgId: 2850
 tgUrl: https://t.me/podcastbaka/2850
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_1730
 ---
+
+::image{src="/images/uploads/tg-2850.jpg" alt="" width="column"}
 
 Для мартовского выпуска нашего подкаста о манге вы в голосовании выбрали тайтл «Мартовский лев».
 

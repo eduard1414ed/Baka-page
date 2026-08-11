@@ -4,12 +4,14 @@ date: 2024-11-14
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2512.jpg
+pullMedia: false
 noCover: false
 tgId: 2512
 tgUrl: https://t.me/podcastbaka/2512
 ---
+
+::image{src="/images/uploads/tg-2512.jpg" alt="" width="column"}
 
 В этом году я как обычно собираю длиннющий и обновляющийся материал с лучшими манга-релизами года.
 

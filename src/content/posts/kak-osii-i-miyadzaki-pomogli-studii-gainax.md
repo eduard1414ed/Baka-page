@@ -4,14 +4,16 @@ date: 2024-12-04
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2566.jpg
+pullMedia: false
 noCover: false
 tgId: 2566
 tgUrl: https://t.me/podcastbaka/2566
 animeSuggested:
   - royal-space-force
 ---
+
+::image{src="/images/uploads/tg-2566.jpg" alt="" width="column"}
 
 Ныне обанкротившаяся студия Gainax до того, как снять «Евангелион» и другие культовые тайтлы, была небольшой командой студентов, которые выпускали короткометражки и назывались Daicon Film.
 

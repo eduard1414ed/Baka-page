@@ -4,12 +4,14 @@ date: 2023-04-06
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1161.jpg
+pullMedia: false
 noCover: false
 tgId: 1161
 tgUrl: https://t.me/podcastbaka/1161
 ---
+
+::image{src="/images/uploads/tg-1161.jpg" alt="" width="column"}
 
 В воскресенье начался весенний аниме-сезон, и я посмотрел первые серии нескольких сериалов, которые мне показались интересными. Сейчас поделюсь впечатлениями:
 
@@ -46,3 +48,7 @@ Production I.G вложились в это аниме: невероятной �
 Можно было бы дать шанс аниме ради истории, но я уже прочитал ее в манге. И поводов смотреть этот ужас у меня больше нет.
 
 *Бросаю после первой серии.* #обзор
+
+::image{src="/images/uploads/tg-1162.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1163.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1164.jpg" alt="" width="column"}

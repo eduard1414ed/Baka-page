@@ -4,8 +4,8 @@ date: 2025-03-06
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2804.jpg
+pullMedia: false
 noCover: false
 tgId: 2804
 tgUrl: https://t.me/podcastbaka/2804
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_1704
 ---
+
+::image{src="/images/uploads/tg-2804.jpg" alt="" width="column"}
 
 Мы наконец-то по многочисленным заявкам посмотрели один из самых культовых тайтлов в истории.
 

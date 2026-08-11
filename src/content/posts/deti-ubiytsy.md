@@ -4,12 +4,14 @@ date: 2025-11-18
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3481.jpg
+pullMedia: false
 noCover: false
 tgId: 3481
 tgUrl: https://t.me/podcastbaka/3481
 ---
+
+::image{src="/images/uploads/tg-3481.jpg" alt="" width="column"}
 
 Если вы не смотрите «Санду», снова настоятельно рекомендую это исправлять.
 
@@ -26,3 +28,8 @@ tgUrl: https://t.me/podcastbaka/3481
 Которая как бы визуально подчеркивает это ужасное несовпадение: внешне невинные дети, совершившие ужасные преступления. И жутко пугает!
 
 Это очень крутое и небанальное использование освещения.
+
+::image{src="/images/uploads/tg-3482.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3483.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3484.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3485.jpg" alt="" width="column"}

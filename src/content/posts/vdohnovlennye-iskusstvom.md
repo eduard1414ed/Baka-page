@@ -4,12 +4,14 @@ date: 2024-01-29
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1864.jpg
+pullMedia: false
 noCover: false
 tgId: 1864
 tgUrl: https://t.me/podcastbaka/1864
 ---
+
+::image{src="/images/uploads/tg-1864.jpg" alt="" width="column"}
 
 В начале XX века в Японии работал художник Хасуй Кавасэ. За свою карьеру он нарисовал больше 600 сельских и городских пейзажей.
 
@@ -20,3 +22,13 @@ tgUrl: https://t.me/podcastbaka/1864
 Американский художник Bill Murdon, работающий с Disney, Уэсом Андерсоном и другими известными авторами, решил запечатлеть это сходство между работами Кавасэ и студии Ghibli. И [нарисовал](https://www.billmudron.com/ghibli-prints) серию работ, соединяющих в себе арты из фильмов студии и стиль культового художника. Получилось невероятно красиво.
 
 Так вдохновение переходит от одного автора к другому, а то к третьему. #заметки
+
+::image{src="/images/uploads/tg-1865.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1866.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1867.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1868.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1869.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1870.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1871.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1872.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1873.jpg" alt="" width="column"}

@@ -4,12 +4,14 @@ date: 2023-01-23
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-961.jpg
+pullMedia: false
 noCover: false
 tgId: 961
 tgUrl: https://t.me/podcastbaka/961
 ---
+
+::image{src="/images/uploads/tg-961.jpg" alt="" width="column"}
 
 В 2018 продюсер Нобухиро Осава основал новую студию специально для создания экранизации культовой новеллы — «Реинкарнации безработного».
 

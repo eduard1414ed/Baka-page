@@ -4,8 +4,8 @@ date: 2022-05-14
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-31.jpg
+pullMedia: false
 noCover: false
 tgId: 31
 tgUrl: https://t.me/podcastbaka/31
@@ -17,6 +17,8 @@ bonusLinks:
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-31.jpg" alt="" width="column"}
 
 В первом бонусном эпизоде второго сезона мы продолжаем обсуждать аниме «Наруто» — и переходим к филлерным эпизодам.
 

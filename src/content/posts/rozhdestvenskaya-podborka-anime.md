@@ -4,12 +4,14 @@ date: 2025-12-24
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3584.jpg
+pullMedia: false
 noCover: false
 tgId: 3584
 tgUrl: https://t.me/podcastbaka/3584
 ---
+
+::image{src="/images/uploads/tg-3584.jpg" alt="" width="column"}
 
 Кажется, пришло время создавать новогоднее настроение?Традиционный праздничный список аниме, которые можно посмотреть, пока вы нарезаете салаты и наряжаете ёлку.
 

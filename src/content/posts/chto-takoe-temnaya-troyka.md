@@ -4,12 +4,14 @@ date: 2023-05-17
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1262.jpg
+pullMedia: false
 noCover: false
 tgId: 1262
 tgUrl: https://t.me/podcastbaka/1262
 ---
+
+::image{src="/images/uploads/tg-1262.jpg" alt="" width="column"}
 
 В 2018 году сразу три сёнена начали выходить в журнале Shonen Jump, их объединяла жестокость, гротескное изображение монстров и неожиданный взгляд на привычные штампы манги.
 

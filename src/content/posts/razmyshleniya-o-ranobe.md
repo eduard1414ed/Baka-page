@@ -4,12 +4,14 @@ date: 2023-08-17
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1442.jpg
+pullMedia: false
 noCover: false
 tgId: 1442
 tgUrl: https://t.me/podcastbaka/1442
 ---
+
+::image{src="/images/uploads/tg-1442.jpg" alt="" width="column"}
 
 Последнюю неделю я читаю [«Реинкарнацию безработного»](/posts/reinkarnatsiya-bezrabotnogo-kak-rasskazat-idealnuyu-istoriyu-vzrosleniya-i-sdelat-horoshiy-isekay/) — и нахожусь одновременно в полном восторге и полном отрицании.
 
@@ -28,3 +30,5 @@ tgUrl: https://t.me/podcastbaka/1442
 Но (успокаиваю я себя) хотя бы Рудеус все делает по обоюдному согласию и не с рабынями, как некоторые.
 
 **В итоге** я уже неделю не могу отлипнуть от ранобэ, а значит плюсы перевешивают минусы. Очень надеюсь и жду, когда всю историю экранизируют, чтобы пережить ее еще раз. #обзор
+
+::image{src="/images/uploads/tg-1443.jpg" alt="" width="column"}

@@ -4,12 +4,14 @@ date: 2025-08-19
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3262.jpg
+pullMedia: false
 noCover: false
 tgId: 3262
 tgUrl: https://t.me/podcastbaka/3262
 ---
+
+::image{src="/images/uploads/tg-3262.jpg" alt="" width="column"}
 
 Пока что мой прогноз из эссе о том, что исекаев будет становиться меньше, сбывается. В этом сезоне выходит не так много тайтлов про попаданцев. Более того, один из них я даже готов похвалить — это «Маг воды».
 

@@ -4,8 +4,8 @@ date: 2022-10-14
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-671.jpg
+pullMedia: false
 noCover: false
 tgId: 671
 tgUrl: https://t.me/podcastbaka/671
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-671.jpg" alt="" width="column"}
 
 Каким вышло главное аниме этого лета? Шедевр, достойный похвалы от Кодзимы, или поверхностный проходняк про девушек-шпионок?
 

@@ -4,12 +4,14 @@ date: 2024-08-12
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2313.jpg
+pullMedia: false
 noCover: false
 tgId: 2313
 tgUrl: https://t.me/podcastbaka/2313
 ---
+
+::image{src="/images/uploads/tg-2313.jpg" alt="" width="column"}
 
 Сходил недавно в гости в подкаст от «Шикимори» — поговорил с ребятами об индустрии подкастинга, о том, становится ли аниме с каждым годом все хуже (нет), и как появляются аниме-блогеры.
 

@@ -4,14 +4,16 @@ date: 2025-10-29
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3445.jpg
+pullMedia: false
 noCover: false
 tgId: 3445
 tgUrl: https://t.me/podcastbaka/3445
 animeSuggested:
   - akira
 ---
+
+::image{src="/images/uploads/tg-3445.jpg" alt="" width="column"}
 
 Мне как-то в комментариях предъявили, что я все время ругаю исекаи. Теперь я пытаюсь в каждом сезоне найти хотя бы один симпатичный тайтл про попаданцев, который могу искрене похвалить.
 

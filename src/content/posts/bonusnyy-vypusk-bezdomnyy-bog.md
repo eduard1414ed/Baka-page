@@ -4,8 +4,8 @@ date: 2022-06-09
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-209.jpg
+pullMedia: false
 noCover: false
 tgId: 209
 tgUrl: https://t.me/podcastbaka/209
@@ -17,6 +17,8 @@ bonusLinks:
 animeSuggested:
   - noragami
 ---
+
+::image{src="/images/uploads/tg-209.jpg" alt="" width="column"}
 
 В этом эпизоде мы полчаса спорим о том, насколько хорош сериал «Бездомный бог».
 

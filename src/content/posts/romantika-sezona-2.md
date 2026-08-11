@@ -4,12 +4,14 @@ date: 2026-02-16
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3713.jpg
+pullMedia: false
 noCover: false
 tgId: 3713
 tgUrl: https://t.me/podcastbaka/3713
 ---
+
+::image{src="/images/uploads/tg-3713.jpg" alt="" width="column"}
 
 Продолжаю оценивать романтические тайтлы этого сезона, на очереди еще три претендента ([первая часть тут](/posts/romantika-sezona-3640/)):
 

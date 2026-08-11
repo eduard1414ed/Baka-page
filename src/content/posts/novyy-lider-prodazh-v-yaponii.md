@@ -4,14 +4,16 @@ date: 2022-05-14
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-29.jpg
+pullMedia: false
 noCover: false
 tgId: 29
 tgUrl: https://t.me/podcastbaka/29
 animeSuggested:
   - shingeki-no-kyojin
 ---
+
+::image{src="/images/uploads/tg-29.jpg" alt="" width="column"}
 
 Что если я скажу, что манги «Демон Слеер», «Атака Титанов» и «Токийские мстители» все уступили по продажам манге, рассчитанной для девушек?
 

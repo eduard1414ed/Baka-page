@@ -4,8 +4,8 @@ date: 2022-07-21
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-341.jpg
+pullMedia: false
 noCover: false
 tgId: 341
 tgUrl: https://t.me/podcastbaka/341
@@ -17,6 +17,8 @@ bonusLinks:
 animeSuggested:
   - dorohedoro
 ---
+
+::image{src="/images/uploads/tg-341.jpg" alt="" width="column"}
 
 В этом бонусном эпизоде мы спорим о том, что такое «Дорохедоро»: шедевр или дыра.
 

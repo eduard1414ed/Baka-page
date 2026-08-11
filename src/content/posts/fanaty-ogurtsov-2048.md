@@ -4,12 +4,14 @@ date: 2024-04-10
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2048.jpg
+pullMedia: false
 noCover: false
 tgId: 2048
 tgUrl: https://t.me/podcastbaka/2048
 ---
+
+::image{src="/images/uploads/tg-2048.jpg" alt="" width="column"}
 
 В японской мифологии есть существа — каппы. Это зелёные обезьяны с желтым клювом, которые обитают в реках и прудах.
 

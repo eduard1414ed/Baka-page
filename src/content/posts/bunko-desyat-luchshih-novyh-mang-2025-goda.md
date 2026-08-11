@@ -4,8 +4,8 @@ date: 2025-12-11
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3542.jpg
+pullMedia: false
 noCover: false
 tgId: 3542
 tgUrl: https://t.me/podcastbaka/3542
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2167
 ---
+
+::image{src="/images/uploads/tg-3542.jpg" alt="" width="column"}
 
 Финальный эпизод этого года мы решили закончить красиво. Поэтому позвали в гости Киру из канала «[Кира, а где L](https://t.me/pomogina)» и вместе составили список из десяти лучших манг, стартовавших в этом году.
 

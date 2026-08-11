@@ -4,8 +4,8 @@ date: 2024-08-27
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2340.jpg
+pullMedia: false
 noCover: false
 tgId: 2340
 tgUrl: https://t.me/podcastbaka/2340
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-2340.jpg" alt="" width="column"}
 
 Почему перспективный сёнен прошел мимо зрителя? Стоит ли ждать сто глав ради интересных сюжетных ходов? И какую способность негатора мы бы с Ксюшей хотели?
 

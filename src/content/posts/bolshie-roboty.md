@@ -4,14 +4,16 @@ date: 2025-06-11
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3031.jpg
+pullMedia: false
 noCover: false
 tgId: 3031
 tgUrl: https://t.me/podcastbaka/3031
 animeSuggested:
   - barakamon
 ---
+
+::image{src="/images/uploads/tg-3031.jpg" alt="" width="column"}
 
 Начну с признания — я практически не разбираюсь во вселенной «Гандам». Мехи никогда меня особо не привлекали.
 
@@ -24,3 +26,13 @@ animeSuggested:
 Все это дополняется классной музыкой от [NOMELON NOLEMON](https://www.youtube.com/watch?v=73stcwZC9vk) и других исполнителей (а вставных треков там много). И получается что-то вроде смеси из «Гандама», «Киберпанка» и старых аниме студии Gainax.
 
 Даже жаль, что я не могу оценить сюжет и полностью проникнуться.
+
+::image{src="/images/uploads/tg-3032.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3033.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3034.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3035.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3036.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3037.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3038.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3039.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3040.jpg" alt="" width="column"}

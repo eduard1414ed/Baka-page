@@ -4,12 +4,14 @@ date: 2025-07-29
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3208.jpg
+pullMedia: false
 noCover: false
 tgId: 3208
 tgUrl: https://t.me/podcastbaka/3208
 ---
+
+::image{src="/images/uploads/tg-3208.jpg" alt="" width="column"}
 
 Я смотрю аниме с субтитрами. Но в эссе и подкасты мы вставляем чаще всего кусочки с озвучкой — чтобы они были понятны на слух. И обычно мы берем просто самую доступную озвучку для загрузки в хорошем качестве.
 

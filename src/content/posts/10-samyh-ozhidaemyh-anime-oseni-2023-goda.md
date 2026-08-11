@@ -4,12 +4,14 @@ date: 2023-09-29
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1531.jpg
+pullMedia: false
 noCover: false
 tgId: 1531
 tgUrl: https://t.me/podcastbaka/1531
 ---
+
+::image{src="/images/uploads/tg-1531.jpg" alt="" width="column"}
 
 Осенний сезон аниме в этом году уступает по насыщенности весеннему и летнему — но интересных сериалов все равно хватает.
 

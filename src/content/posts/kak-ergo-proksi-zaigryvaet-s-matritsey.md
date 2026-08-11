@@ -4,12 +4,14 @@ date: 2024-02-14
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1921.jpg
+pullMedia: false
 noCover: false
 tgId: 1921
 tgUrl: https://t.me/podcastbaka/1921
 ---
+
+::image{src="/images/uploads/tg-1921.jpg" alt="" width="column"}
 
 Несмотря на огромное количество отсылок на философию и классическую литературу, важность которых мы [обсудили в большом выпуске подкаста,](https://t.me/podcastbaka/1898) одним из главных источников для параллелей в «Эрго Прокси» выступает вполне себе поп-культурный феномен — «Матрица».
 

@@ -4,12 +4,14 @@ date: 2022-05-14
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-68.jpg
+pullMedia: false
 noCover: false
 tgId: 68
 tgUrl: https://t.me/podcastbaka/68
 ---
+
+::image{src="/images/uploads/tg-68.jpg" alt="" width="column"}
 
 Сериал «Голубой период» расскажет о школьнике Ягути, который хочет стать художником и пытается поступить в единственный университет искусств Японии, где есть бюджетные места.
 

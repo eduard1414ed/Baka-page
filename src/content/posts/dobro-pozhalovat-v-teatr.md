@@ -4,12 +4,14 @@ date: 2024-07-17
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2250.jpg
+pullMedia: false
 noCover: false
 tgId: 2250
 tgUrl: https://t.me/podcastbaka/2250
 ---
+
+::image{src="/images/uploads/tg-2250.jpg" alt="" width="column"}
 
 Буквально на прошлой неделе стартовал новый сезон «Звездного дитя». Какой вышла первая серия?
 
@@ -20,3 +22,7 @@ tgUrl: https://t.me/podcastbaka/2250
 Может быть это эффект первой серии, конечно. Посмотрим, удастся ли удержать новый уровень. Но в любом случае я премьерой доволен и буду смотреть дальше.
 
 P.S. Ну и конечно, новый сезон «Звездного дитя» — новая волна моего восхищения Аримой Каной. Терпите.
+
+::image{src="/images/uploads/tg-2251.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2252.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2253.jpg" alt="" width="column"}

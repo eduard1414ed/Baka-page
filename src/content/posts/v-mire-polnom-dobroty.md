@@ -4,12 +4,14 @@ date: 2025-07-22
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3176.jpg
+pullMedia: false
 noCover: false
 tgId: 3176
 tgUrl: https://t.me/podcastbaka/3176
 ---
+
+::image{src="/images/uploads/tg-3176.jpg" alt="" width="column"}
 
 На русском языке вышла манга «В мире, полном доброты» известного японского художника Avogado6, и я очень хочу ее вам порекомендовать.
 
@@ -18,3 +20,9 @@ tgUrl: https://t.me/podcastbaka/3176
 Причем картина эта довольно печальная. Трогательная, немного страшная, и абсолютно по-человечески глупая. Это манга о том, как человечество сражается с ветряными мельницами и постоянно вредит этим самому себе. Как война сама себя воспроизводит, как легко расчеловечить себя и других, как страх и жадность приводят к катастрофам. А еще о том, как даже среди всего этого и несмотря на все это в мире находится место доброте.
 
 И все это в одном цельном томе. Так что настоятельно рекомендую купить себе на полку «В мире, полном доброты» от издательства [«Комильфо»](https://t.me/komilfobook). Она уже в продаже [в книжных](https://www.chitai-gorod.ru/product/v-mire-polnom-dobroty-3103370?erid=2W5zFG3JsNG), [комиксшопах](https://28oi.ru/product/v-mire-polnom-dobroty?erid=2W5zFG3JsNG) и [на маркетплейсах](https://ozon.ru/t/L4ghSpE?erid=2W5zFG3JsNG).
+
+::image{src="/images/uploads/tg-3177.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3178.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3179.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3180.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3181.jpg" alt="" width="column"}

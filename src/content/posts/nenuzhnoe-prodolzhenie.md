@@ -4,12 +4,14 @@ date: 2024-06-25
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2207.jpg
+pullMedia: false
 noCover: false
 tgId: 2207
 tgUrl: https://t.me/podcastbaka/2207
 ---
+
+::image{src="/images/uploads/tg-2207.jpg" alt="" width="column"}
 
 Очень смешное недопонимание [произошло](https://myanimelist.net/news/71250815) на прошлой неделе. Джозеф Чоу, CEO компании Sola Entertainment сказал по поводу запуска игры по аниме «Ниндзя Камуи»: «надеемся, что она развлечет фанатов, пока мы работаем над вторым сезоном».
 

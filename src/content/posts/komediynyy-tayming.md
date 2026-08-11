@@ -4,12 +4,14 @@ date: 2023-07-17
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1369.jpg
+pullMedia: false
 noCover: false
 tgId: 1369
 tgUrl: https://t.me/podcastbaka/1369
 ---
+
+::image{src="/images/uploads/tg-1369.jpg" alt="" width="column"}
 
 [Продолжая разговор о «Хоримии»](/posts/peresmotr/) — после того, как я пересмотрел весь сериал, я решил в этот раз прочитать еще и мангу.
 
@@ -22,3 +24,9 @@ tgUrl: https://t.me/podcastbaka/1369
 Пока я читал мангу, я регулярно смеялся в голос и пересказывал шутки всем окружающим.
 
 И мне кажется, манга «Хоримия» очень недооценена именно как комедия. #заметки
+
+::image{src="/images/uploads/tg-1370.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1371.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1372.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1373.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1374.jpg" alt="" width="column"}

@@ -4,8 +4,8 @@ date: 2022-07-28
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-367.jpg
+pullMedia: false
 noCover: false
 tgId: 367
 tgUrl: https://t.me/podcastbaka/367
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-367.jpg" alt="" width="column"}
 
 В этом потрясающем бонусном эпизоде мы обсуждаем главное аниме весеннего сезона (а возможно и года) — «Семья шпиона»!
 

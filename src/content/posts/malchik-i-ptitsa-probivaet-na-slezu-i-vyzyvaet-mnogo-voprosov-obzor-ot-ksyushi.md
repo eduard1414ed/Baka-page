@@ -4,12 +4,14 @@ date: 2024-02-04
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1882.jpg
+pullMedia: false
 noCover: false
 tgId: 1882
 tgUrl: https://t.me/podcastbaka/1882
 ---
+
+::image{src="/images/uploads/tg-1882.jpg" alt="" width="column"}
 
 У меня было неоднозначное впечатление от просмотра нового аниме Миядзаки. С одной стороны вполне понятная история про переживание потери матери, с другой стороны совершенно непонятный фантастический мир.
 

@@ -4,12 +4,14 @@ date: 2026-05-18
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3944.jpg
+pullMedia: false
 noCover: false
 tgId: 3944
 tgUrl: https://t.me/podcastbaka/3944
 ---
+
+::image{src="/images/uploads/tg-3944.jpg" alt="" width="column"}
 
 Режиссер культовой «Акиры», Катсухиро Отомо, вместе со студией Sunrise («Код Гиас», «Ковбой Бибоп») потратил больше десяти лет и 20 миллионов долларов, чтобы сделать этот фильм.
 

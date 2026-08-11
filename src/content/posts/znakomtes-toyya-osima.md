@@ -4,12 +4,14 @@ date: 2025-07-28
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3201.jpg
+pullMedia: false
 noCover: false
 tgId: 3201
 tgUrl: https://t.me/podcastbaka/3201
 ---
+
+::image{src="/images/uploads/tg-3201.jpg" alt="" width="column"}
 
 Тойя Осима — относительно молодой аниматор и режиссёр анимации, ему всего тридцать. Но работает в индустрии он уже больше десяти лет.
 
@@ -18,3 +20,8 @@ tgUrl: https://t.me/podcastbaka/3201
 И не зря — с тех пор он успел потрудиться над «Моб Психо 100», «Сделай это сам!», «Фрирен» и «Подземельем вкусностей». Еще вы наверняка видели прекрасный [атмосферный эндинг](https://www.youtube.com/watch?v=aiCMXJ4zKWA&t=12s) к «Кайдзю №8», который он срежиссировал.
 
 А сейчас он работает над нашумевшим «Такопи» — режиссировал четвертую серию, посвященную истории Наоки. Его анимация отличается сильной деформацией форм, слабым контрастом и чётким чувством движения. Особенно круто у него выходит на мой вкус анимация фонов.
+
+::image{src="/images/uploads/tg-3202.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3203.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3204.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3205.jpg" alt="" width="column"}

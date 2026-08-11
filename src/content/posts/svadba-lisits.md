@@ -4,12 +4,14 @@ date: 2025-09-29
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3369.jpg
+pullMedia: false
 noCover: false
 tgId: 3369
 tgUrl: https://t.me/podcastbaka/3369
 ---
+
+::image{src="/images/uploads/tg-3369.jpg" alt="" width="column"}
 
 В японском языке есть выражение kitsune no yomeiri (狐の嫁入り) — лисья свадьба. Так в части регионов Японии называют природное явление, когда в солнечную погоду идет дождь.
 

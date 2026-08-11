@@ -4,12 +4,14 @@ date: 2026-04-28
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3910.jpg
+pullMedia: false
 noCover: false
 tgId: 3910
 tgUrl: https://t.me/podcastbaka/3910
 ---
+
+::image{src="/images/uploads/tg-3910.jpg" alt="" width="column"}
 
 Давно пора! Запускаем очередной ультимативный список лучших аниме года, как обычно, с зимних премьер.
 

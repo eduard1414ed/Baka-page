@@ -4,12 +4,14 @@ date: 2022-12-21
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-824.jpg
+pullMedia: false
 noCover: false
 tgId: 824
 tgUrl: https://t.me/podcastbaka/824
 ---
+
+::image{src="/images/uploads/tg-824.jpg" alt="" width="column"}
 
 Современный мир работает удивительным образом. В чарты легко может взлететь песня двадцатилетней давности, если ее кто-то вдруг вспомнит в тиктоке.
 

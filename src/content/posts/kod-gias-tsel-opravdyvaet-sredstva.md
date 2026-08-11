@@ -4,8 +4,8 @@ date: 2026-05-28
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3968.jpg
+pullMedia: false
 noCover: false
 tgId: 3968
 tgUrl: https://t.me/podcastbaka/3968
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2601
 ---
+
+::image{src="/images/uploads/tg-3968.jpg" alt="" width="column"}
 
 «Код Гиас» — одно из главных аниме нулевых, но как оно состарилось? Целый час обсуждаем философские теории, сражения мехов и противоречивых антигероев.
 

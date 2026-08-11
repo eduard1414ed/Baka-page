@@ -4,12 +4,14 @@ date: 2026-01-22
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3652.jpg
+pullMedia: false
 noCover: false
 tgId: 3652
 tgUrl: https://t.me/podcastbaka/3652
 ---
+
+::image{src="/images/uploads/tg-3652.jpg" alt="" width="column"}
 
 Главная героиня Судзу тяжело переживает потерю матери и находит способ пережить утрату в виртуальном пространстве U. Там она создает другую личность — невероятно красивую певицу Belle. Она быстро становится популярной. Но однажды ее выступление срывает ее полная противоположность — нелюдимый страшный дракон.
 

@@ -4,8 +4,8 @@ date: 2025-02-28
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2792.jpg
+pullMedia: false
 noCover: false
 tgId: 2792
 tgUrl: https://t.me/podcastbaka/2792
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_1689
 ---
+
+::image{src="/images/uploads/tg-2792.jpg" alt="" width="column"}
 
 В февральском выпуске нашего подкаста о манге мы решили вновь обсудить сразу три тайтла: «Гатиакуту», «Так сложно любить отаку» и «Бродягу».
 

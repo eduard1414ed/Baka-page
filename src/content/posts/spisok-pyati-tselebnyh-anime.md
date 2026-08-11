@@ -4,8 +4,8 @@ date: 2024-03-25
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2022.jpg
+pullMedia: false
 noCover: false
 tgId: 2022
 tgUrl: https://t.me/podcastbaka/2022
@@ -13,6 +13,8 @@ animeSuggested:
   - k-on
   - barakamon
 ---
+
+::image{src="/images/uploads/tg-2022.jpg" alt="" width="column"}
 
 1️⃣ [Лагерь на свежем воздухе](/posts/tg-2022-05-21-167/)
 

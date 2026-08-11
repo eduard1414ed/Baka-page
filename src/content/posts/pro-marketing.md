@@ -4,12 +4,14 @@ date: 2024-09-26
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2423.jpg
+pullMedia: false
 noCover: false
 tgId: 2423
 tgUrl: https://t.me/podcastbaka/2423
 ---
+
+::image{src="/images/uploads/tg-2423.jpg" alt="" width="column"}
 
 Хочу немного поговорить о рекламе аниме. Мы, за пределами Японии, видим прямую рекламу сериалов достаточно редко. Но зато до нас доносятся другие промо-материалы: посты, интервью, трейлеры.
 

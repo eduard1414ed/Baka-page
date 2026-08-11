@@ -4,12 +4,14 @@ date: 2024-04-16
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2063.jpg
+pullMedia: false
 noCover: false
 tgId: 2063
 tgUrl: https://t.me/podcastbaka/2063
 ---
+
+::image{src="/images/uploads/tg-2063.jpg" alt="" width="column"}
 
 Наше провокативное название выпуска про «Фрирен» ожидаемо вызвало бурные споры в комментариях [(можете вот на ютюбе почитать).](https://youtu.be/4O0l9rqy_8E?si=lNjg1IVGa759XIML)
 

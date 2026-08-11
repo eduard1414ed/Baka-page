@@ -4,12 +4,14 @@ date: 2023-10-25
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1614.jpg
+pullMedia: false
 noCover: false
 tgId: 1614
 tgUrl: https://t.me/podcastbaka/1614
 ---
+
+::image{src="/images/uploads/tg-1614.jpg" alt="" width="column"}
 
 На прошлой неделе Эван Колл, композитор «Фрирен» и «Вайолет Эвергарден», [забежал](https://www.reddit.com/r/anime/comments/17cmxar/im_evan_call_composer_for_violet_evergarden_my/) на Reddit и ответил на вопросы пользователей. Один из главных вопросов был о том, как выглядит таймлайн работы над проектами и насколько сильно он отличается в зависимости от студии. Вот, что ответил Эван:
 

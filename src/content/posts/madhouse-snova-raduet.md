@@ -4,14 +4,16 @@ date: 2024-11-26
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2541.jpg
+pullMedia: false
 noCover: false
 tgId: 2541
 tgUrl: https://t.me/podcastbaka/2541
 animeSuggested:
   - chi-chikyuu-no-undou-ni-tsuite
 ---
+
+::image{src="/images/uploads/tg-2541.jpg" alt="" width="column"}
 
 Понял вдруг, что почти ничего не рассказал вам про еще один заметный сериал этого сезона — «О движении Земли». А тем временем это один из самых интересных новых тайтлов.
 

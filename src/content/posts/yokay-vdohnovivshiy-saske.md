@@ -4,14 +4,16 @@ date: 2023-08-23
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1466.jpg
+pullMedia: false
 noCover: false
 tgId: 1466
 tgUrl: https://t.me/podcastbaka/1466
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-1466.jpg" alt="" width="column"}
 
 Наткнулся на интересный факт из интервью Масаси Кисимото, автора «Наруто». Он признался, что персонаж Саске был вдохновлен одним из героев манги YuYu Hakusho («Отчет о буйстве духов»).
 
@@ -22,3 +24,5 @@ YuYu Hakusho — культовый сёнен 90-х годов об уличн�
 Кисимото сказал, что не только внешний вид, но и многие техники (в том числе Шаринган) он придумал именно благодаря Хиэи.
 
 Что скажете, похожи? #заметки
+
+::image{src="/images/uploads/tg-1467.jpg" alt="" width="column"}

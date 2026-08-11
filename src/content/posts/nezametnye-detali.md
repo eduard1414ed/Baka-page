@@ -4,12 +4,14 @@ date: 2022-08-16
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-452.jpg
+pullMedia: false
 noCover: false
 tgId: 452
 tgUrl: https://t.me/podcastbaka/452
 ---
+
+::image{src="/images/uploads/tg-452.jpg" alt="" width="column"}
 
 Я продолжаю смотреть «Песнь ночных сов» и продолжаю отмечать интересные визуальные детали.
 

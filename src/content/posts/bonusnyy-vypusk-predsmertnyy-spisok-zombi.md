@@ -4,8 +4,8 @@ date: 2024-04-05
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2041.jpg
+pullMedia: false
 noCover: false
 tgId: 2041
 tgUrl: https://t.me/podcastbaka/2041
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-2041.jpg" alt="" width="column"}
 
 В этом выпуске мы обсуждаем многострадальный сериал, которому сильно не повезло с производством: постоянные переносы, кранчи и скандалы.
 

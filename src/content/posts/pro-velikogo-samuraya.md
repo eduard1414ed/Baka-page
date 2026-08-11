@@ -4,12 +4,14 @@ date: 2023-12-06
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1715.jpg
+pullMedia: false
 noCover: false
 tgId: 1715
 tgUrl: https://t.me/podcastbaka/1715
 ---
+
+::image{src="/images/uploads/tg-1715.jpg" alt="" width="column"}
 
 *(пост от Ксюши)*
 

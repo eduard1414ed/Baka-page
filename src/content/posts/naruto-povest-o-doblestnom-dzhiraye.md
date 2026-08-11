@@ -4,8 +4,8 @@ date: 2025-02-06
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2727.jpg
+pullMedia: false
 noCover: false
 tgId: 2727
 tgUrl: https://t.me/podcastbaka/2727
@@ -17,6 +17,8 @@ bonusLinks:
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-2727.jpg" alt="" width="column"}
 
 Спустя два года мы решили наконец-то вернуться к обсуждению «Наруто»! И подхватываем сериал ровно там, где остановились — на одной из самых интересных и трагических арок. 
 

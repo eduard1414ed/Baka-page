@@ -4,8 +4,8 @@ date: 2025-07-17
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3159.jpg
+pullMedia: false
 noCover: false
 tgId: 3159
 tgUrl: https://t.me/podcastbaka/3159
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_1898
 ---
+
+::image{src="/images/uploads/tg-3159.jpg" alt="" width="column"}
 
 Этой весной вышел новый тайтл от культового Синъитиро Ватанабэ, режиссера «Ковбоя Бибопа» и «Самурая Чамплу». Каким он (не) получился?
 

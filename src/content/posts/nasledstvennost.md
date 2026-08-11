@@ -4,12 +4,14 @@ date: 2022-09-14
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-563.jpg
+pullMedia: false
 noCover: false
 tgId: 564
 tgUrl: https://t.me/podcastbaka/564
 ---
+
+::image{src="/images/uploads/tg-563.jpg" alt="" width="column"}
 
 Пока я смотрел Edgerunners меня не покидало чувство, что я где-то уже видел похожий стиль и анимацию. Особенно во время погонь и экшна.
 
@@ -22,3 +24,5 @@ Cyberpunk выглядит чище и ярче, но узнаваемые гл�
 Так что мы были правы, когда говорили про визуальный стиль и культовый статус «Красной черты» в [отдельном большом выпуске подкаста](/posts/krasnaya-cherta-poslednee-nastoyaschee-iskusstvo-ili-prosto-film-dlya-gikov/). Он продолжает быть актуальным и становиться вдохновением для новых проектов.
 
 Посмотрите, кстати, [наш эпизод](/posts/krasnaya-cherta-poslednee-nastoyaschee-iskusstvo-ili-prosto-film-dlya-gikov/), если ещё не успели. #заметки
+
+::image{src="/images/uploads/tg-564.jpg" alt="" width="column"}

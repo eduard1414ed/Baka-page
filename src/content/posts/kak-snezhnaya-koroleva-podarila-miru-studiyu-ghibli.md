@@ -4,12 +4,14 @@ date: 2025-12-10
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3541.jpg
+pullMedia: false
 noCover: false
 tgId: 3541
 tgUrl: https://t.me/podcastbaka/3541
 ---
+
+::image{src="/images/uploads/tg-3541.jpg" alt="" width="column"}
 
 В биографии Миядзаки постоянно встречаются поворотные моменты. Один из таких — желание уйти из анимации. Изменить свое решение автора заставил мультфильм «Снежная королева» Льва Атаманова, организованный компанией, в которой он работал.
 

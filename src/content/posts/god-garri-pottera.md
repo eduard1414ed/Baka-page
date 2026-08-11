@@ -4,12 +4,14 @@ date: 2023-08-30
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1474.jpg
+pullMedia: false
 noCover: false
 tgId: 1474
 tgUrl: https://t.me/podcastbaka/1474
 ---
+
+::image{src="/images/uploads/tg-1474.jpg" alt="" width="column"}
 
 Вышло уже второе аниме за год, которое пытается перепридумать штампы, заложенные «Гарри Поттером».
 

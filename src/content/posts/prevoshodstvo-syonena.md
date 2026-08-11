@@ -4,12 +4,14 @@ date: 2023-03-07
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1090.jpg
+pullMedia: false
 noCover: false
 tgId: 1090
 tgUrl: https://t.me/podcastbaka/1090
 ---
+
+::image{src="/images/uploads/tg-1090.jpg" alt="" width="column"}
 
 Shounen Jump — самый популярный в Японии журнал манги (с гиганстким отрывом). И больше половины сериалов, которые сейчас выходят, можно отнести именно к сёнен-демографии.
 

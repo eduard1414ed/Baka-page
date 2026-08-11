@@ -4,12 +4,14 @@ date: 2025-01-29
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2707.jpg
+pullMedia: false
 noCover: false
 tgId: 2707
 tgUrl: https://t.me/podcastbaka/2707
 ---
+
+::image{src="/images/uploads/tg-2707.jpg" alt="" width="column"}
 
 Манга «Мальчишки двадцатого века» Наоки Урасавы рассказывает о таинственном культе, который на рубеже веков захватывает власть в Японии, устраивает теракты и предсказывает конец света.
 

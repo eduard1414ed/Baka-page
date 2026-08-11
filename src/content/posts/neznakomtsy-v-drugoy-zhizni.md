@@ -4,12 +4,14 @@ date: 2024-11-11
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2503.jpg
+pullMedia: false
 noCover: false
 tgId: 2503
 tgUrl: https://t.me/podcastbaka/2503
 ---
+
+::image{src="/images/uploads/tg-2503.jpg" alt="" width="column"}
 
 (пишет: Ксюша)
 
@@ -22,3 +24,10 @@ tgUrl: https://t.me/podcastbaka/2503
 Так что с мнением Эда о «Незнакомцах в другой жизни» не согласна. Манга оригинальная и цепляющая.
 
 И выделяю отдельную строчку благодарности мангаке за красивый гардероб главной героини. Стырила для себя пару идей 💅
+
+::image{src="/images/uploads/tg-2504.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2505.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2506.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2507.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2508.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2509.jpg" alt="" width="column"}

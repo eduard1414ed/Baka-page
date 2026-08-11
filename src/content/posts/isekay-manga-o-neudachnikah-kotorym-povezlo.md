@@ -4,12 +4,14 @@ date: 2023-10-12
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1585.jpg
+pullMedia: false
 noCover: false
 tgId: 1585
 tgUrl: https://t.me/podcastbaka/1585
 ---
+
+::image{src="/images/uploads/tg-1585.jpg" alt="" width="column"}
 
 В новом выпуске «Омнибуса и танкобона» снова в качестве рассказчика выступаю я. И этот эпизод будет немного похож на [выпуск «Врат аниме»](https://t.me/podcastbaka/1495), где я разбирался в истории жанра исекай.
 

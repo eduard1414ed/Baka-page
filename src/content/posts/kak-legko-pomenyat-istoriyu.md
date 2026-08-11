@@ -4,12 +4,14 @@ date: 2022-11-22
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-744.jpg
+pullMedia: false
 noCover: false
 tgId: 744
 tgUrl: https://t.me/podcastbaka/744
 ---
+
+::image{src="/images/uploads/tg-744.jpg" alt="" width="column"}
 
 Иногда фанатские арты не только красивые, но могут заставить задуматься о том, как кардинально может измениться история, если слегка поменять какую-нибудь деталь.
 
@@ -18,3 +20,7 @@ tgUrl: https://t.me/podcastbaka/744
 Мне кажется, могла бы получиться меланхоличная история про братские отношения подростка и демона-ребёнка (никакого подтекста).
 
 Как вам такой сюжет? #заметки
+
+::image{src="/images/uploads/tg-745.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-746.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-747.jpg" alt="" width="column"}

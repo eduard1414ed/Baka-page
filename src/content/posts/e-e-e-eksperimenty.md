@@ -4,12 +4,14 @@ date: 2025-05-20
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2973.jpg
+pullMedia: false
 noCover: false
 tgId: 2973
 tgUrl: https://t.me/podcastbaka/2973
 ---
+
+::image{src="/images/uploads/tg-2973.jpg" alt="" width="column"}
 
 Принес вам в качестве рекомендации две необычные манги, которые можно купить и прочитать на русском языке.
 
@@ -30,3 +32,5 @@ tgUrl: https://t.me/podcastbaka/2973
 Если вы поклонник «Игры в кальмара», то манга от автора «Синей тюрьмы» вам определённо зайдет.
 
 Первый том так же уже в продаже [в книжных и на маркетплейсах](https://ozon.ru/t/5zdJe3c?erid=2W5zFHkt82c).
+
+::image{src="/images/uploads/tg-2974.jpg" alt="" width="column"}

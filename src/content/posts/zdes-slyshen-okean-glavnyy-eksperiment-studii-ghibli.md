@@ -4,8 +4,8 @@ date: 2026-04-30
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3914.jpg
+pullMedia: false
 noCover: false
 tgId: 3914
 tgUrl: https://t.me/podcastbaka/3914
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2558
 ---
+
+::image{src="/images/uploads/tg-3914.jpg" alt="" width="column"}
 
 Этот фильм реже всего упоминают в подборках лучших фильмов студии Ghibli, а если и упоминают, то где-то ближе к последним местам. Действительно ли он так плох или это скорее недооцененный шедевр?
 

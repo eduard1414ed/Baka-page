@@ -4,12 +4,14 @@ date: 2024-09-18
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2389.jpg
+pullMedia: false
 noCover: false
 tgId: 2389
 tgUrl: https://t.me/podcastbaka/2389
 ---
+
+::image{src="/images/uploads/tg-2389.jpg" alt="" width="column"}
 
 Кстати, продолжая разговор о повседневности — хочу посоветовать вам новую мангу.
 

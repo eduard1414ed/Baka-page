@@ -4,12 +4,14 @@ date: 2025-04-18
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2893.jpg
+pullMedia: false
 noCover: false
 tgId: 2893
 tgUrl: https://t.me/podcastbaka/2893
 ---
+
+::image{src="/images/uploads/tg-2893.jpg" alt="" width="column"}
 
 Один из самых узнаваемых и распространенных символов для передачи эмоции в аниме и манге — это икари мааку (怒りマーク), значок гнева.
 

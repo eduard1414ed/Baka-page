@@ -4,14 +4,16 @@ date: 2025-09-17
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3337.jpg
+pullMedia: false
 noCover: false
 tgId: 3337
 tgUrl: https://t.me/podcastbaka/3337
 animeSuggested:
   - jujutsu-kaisen
 ---
+
+::image{src="/images/uploads/tg-3337.jpg" alt="" width="column"}
 
 8 сентября вышла первая глава нового спин-оффа «Магической битвы» — «Магическая Битва. Модуль». Геге Акутами в этот раз исполняет роль сценариста, а рисует мангу Юдзи Ивасаки («Академия Шифра»).
 

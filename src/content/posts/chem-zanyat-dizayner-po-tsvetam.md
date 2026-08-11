@@ -4,12 +4,14 @@ date: 2024-05-28
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2144.jpg
+pullMedia: false
 noCover: false
 tgId: 2144
 tgUrl: https://t.me/podcastbaka/2144
 ---
+
+::image{src="/images/uploads/tg-2144.jpg" alt="" width="column"}
 
 Прочитал тут очень [любопытное интервью](https://realsound.jp/movie/2024/05/post-1670331.html) Кэя Исигуро, который работает дизайнером по цветам в студии Doga Kobo. Он отвечал за такие сериалы как «Звездное дитя», «Новая игра» и «Медуза не умеет плавать в ночи».
 

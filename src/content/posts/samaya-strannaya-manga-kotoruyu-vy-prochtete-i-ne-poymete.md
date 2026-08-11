@@ -4,12 +4,14 @@ date: 2023-02-03
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-997.jpg
+pullMedia: false
 noCover: false
 tgId: 997
 tgUrl: https://t.me/podcastbaka/997
 ---
+
+::image{src="/images/uploads/tg-997.jpg" alt="" width="column"}
 
 Я тут проходил курс про Японию (попозже про него расскажу еще) и узнал про мангу «Бобобо-бо Бо-бобо». И не могу удержаться от того, чтобы рассказать о ней вам.
 

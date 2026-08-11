@@ -4,12 +4,14 @@ date: 2024-01-23
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1850.jpg
+pullMedia: false
 noCover: false
 tgId: 1850
 tgUrl: https://t.me/podcastbaka/1850
 ---
+
+::image{src="/images/uploads/tg-1850.jpg" alt="" width="column"}
 
 Есть такая студия Minakata Lab — это небольшая компания, которая в основном занимается созданием рекламы и клипов.
 

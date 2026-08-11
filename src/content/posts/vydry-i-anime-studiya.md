@@ -4,12 +4,14 @@ date: 2024-02-07
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1893.jpg
+pullMedia: false
 noCover: false
 tgId: 1893
 tgUrl: https://t.me/podcastbaka/1893
 ---
+
+::image{src="/images/uploads/tg-1893.jpg" alt="" width="column"}
 
 В титрах некоторых новых сериалов, например «Долой безделье!» или «Любовь с кончиков пальцев», можно заметить очень любопытную студию — Conk-sistent Animation Otter. Буквально студия «анимации выдры». У нее даже соответствующий логотип — с выдрой, рисующей аниме.
 

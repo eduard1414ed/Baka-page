@@ -4,8 +4,8 @@ date: 2025-04-30
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2927.jpg
+pullMedia: false
 noCover: false
 tgId: 2927
 tgUrl: https://t.me/podcastbaka/2927
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_1765
 ---
+
+::image{src="/images/uploads/tg-2927.jpg" alt="" width="column"}
 
 Вы не поверите, но это романтическая манга, которая понравилась Ксюше!
 

@@ -4,12 +4,14 @@ date: 2023-03-23
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1131.jpg
+pullMedia: false
 noCover: false
 tgId: 1131
 tgUrl: https://t.me/podcastbaka/1131
 ---
+
+::image{src="/images/uploads/tg-1131.jpg" alt="" width="column"}
 
 Уже на следующей неделе начнется весенний аниме сезон — и как всегда, он забит интересными и многообещающими тайтлами.
 

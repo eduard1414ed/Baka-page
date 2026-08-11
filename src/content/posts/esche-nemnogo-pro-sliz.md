@@ -4,12 +4,14 @@ date: 2024-08-14
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2315.jpg
+pullMedia: false
 noCover: false
 tgId: 2315
 tgUrl: https://t.me/podcastbaka/2315
 ---
+
+::image{src="/images/uploads/tg-2315.jpg" alt="" width="column"}
 
 На прошлой неделе у нас вышел внеочередной выпуск подкаста — [про аниме «О моем перерождении в слизь»](https://t.me/podcastbaka/2310).
 
@@ -22,3 +24,5 @@ tgUrl: https://t.me/podcastbaka/2315
 Мы заранее не сговаривались, так что пункты у нас получились разными — можно даже посравнивать.
 
 Если вы послушали подкаст, но вам оказалось этого мало — мы постарались еще!
+
+::image{src="/images/uploads/tg-2316.jpg" alt="" width="column"}

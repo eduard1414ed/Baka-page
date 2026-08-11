@@ -4,12 +4,14 @@ date: 2026-01-07
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3609.jpg
+pullMedia: false
 noCover: false
 tgId: 3609
 tgUrl: https://t.me/podcastbaka/3609
 ---
+
+::image{src="/images/uploads/tg-3609.jpg" alt="" width="column"}
 
 В 1982 году один перспективный режиссер аниме договорился с журналом Animage выпустить эксклюзивную мангу для издания.
 

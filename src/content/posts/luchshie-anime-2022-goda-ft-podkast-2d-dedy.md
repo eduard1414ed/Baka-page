@@ -4,12 +4,14 @@ date: 2023-01-18
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-954.jpg
+pullMedia: false
 noCover: false
 tgId: 954
 tgUrl: https://t.me/podcastbaka/954
 ---
+
+::image{src="/images/uploads/tg-954.jpg" alt="" width="column"}
 
 Мы с Ксюшей сходили в гости в прекрасный подкаст об аниме и гик-культуре «[2D DEDы](https://pc.st/1581897638)», чтобы обсудить любимые сериалы прошлого года!
 

@@ -4,12 +4,14 @@ date: 2022-05-14
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-32.jpg
+pullMedia: false
 noCover: false
 tgId: 32
 tgUrl: https://t.me/podcastbaka/32
 ---
+
+::image{src="/images/uploads/tg-32.jpg" alt="" width="column"}
 
 *Та же минута, но с видео в тиктоке:* [https://vm.tiktok.com/ZSejCYJ1o](https://vm.tiktok.com/ZSejCYJ1o/)/
 

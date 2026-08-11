@@ -4,12 +4,14 @@ date: 2026-01-19
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3640.jpg
+pullMedia: false
 noCover: false
 tgId: 3640
 tgUrl: https://t.me/podcastbaka/3640
 ---
+
+::image{src="/images/uploads/tg-3640.jpg" alt="" width="column"}
 
 Как обычно, первым делом в этом сезоне решил оценить романтические сериалы. Глянул первые три тайтла:
 

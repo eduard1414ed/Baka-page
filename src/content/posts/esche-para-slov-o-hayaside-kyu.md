@@ -4,14 +4,16 @@ date: 2022-10-04
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-622.jpg
+pullMedia: false
 noCover: false
 tgId: 622
 tgUrl: https://t.me/podcastbaka/622
 animeSuggested:
   - dorohedoro
 ---
+
+::image{src="/images/uploads/tg-622.jpg" alt="" width="column"}
 
 Мангака «Дорохедоро» не только использует разные необычные техники рисования, но и придумала собственный метод создания дизайна персонажей.
 
@@ -22,3 +24,9 @@ animeSuggested:
 При этом рисовать с фотографий или чужих рисунков ей не нравится. Подходят только куклы и воображение.
 
 Заметьте, кстати, сколько разных вариантов спецназовцев — вот откуда столько военной формы с многочисленными деталями в «Дорохедоро» #заметки
+
+::image{src="/images/uploads/tg-623.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-624.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-625.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-626.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-627.jpg" alt="" width="column"}

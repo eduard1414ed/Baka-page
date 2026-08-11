@@ -4,8 +4,8 @@ date: 2025-06-12
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3041.jpg
+pullMedia: false
 noCover: false
 tgId: 3041
 tgUrl: https://t.me/podcastbaka/3041
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_1827
 ---
+
+::image{src="/images/uploads/tg-3041.jpg" alt="" width="column"}
 
 В этот раз мы обсуждаем тайтл, который у нас заказал подписчик! «Чистый звук» — это аниме про игру на классическом японском инструменте, сямисэне.
 

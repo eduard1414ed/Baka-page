@@ -4,12 +4,14 @@ date: 2025-07-24
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3195.jpg
+pullMedia: false
 noCover: false
 tgId: 3195
 tgUrl: https://t.me/podcastbaka/3195
 ---
+
+::image{src="/images/uploads/tg-3195.jpg" alt="" width="column"}
 
 Два друга-альпиниста застряли в горах из-за метели. К счастью, им удалось найти безопасный дом и вызвать спасателей. Казалось бы, что может пойти не так? Вот только один из этих друзей только что признался в совершенном убийстве.
 
@@ -20,3 +22,8 @@ tgUrl: https://t.me/podcastbaka/3195
 Это триллер, где на кону — жизнь. Но в то же самое время, это довольно абсурдная история, где нелепая ситуация и подчеркнуто выразительная мимика героев вызывают если не смех, то по крайней мере улыбку.
 
 Ну и конечно, отлично выполненный твист в финале... а пожалуй, лучше не буду спойлерить. Лучше прочитайте мангу сами, раз уж ее издало «Комильфо», и поставьте себе еще один томик на полку. Манга «Признание» уже в продаже [в книжных](https://www.chitai-gorod.ru/product/priznanie-3094832?erid=2W5zFH5nDzY), [комиксшопах](https://28oi.ru/product/priznanie-predzakaz?erid=2W5zFH5nDzY) и [на маркетплейсах](https://ozon.ru/t/hw4jlB2?erid=2W5zFH5nDzY).
+
+::image{src="/images/uploads/tg-3196.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3197.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3198.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3199.jpg" alt="" width="column"}

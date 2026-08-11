@@ -4,12 +4,14 @@ date: 2023-11-09
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1643.jpg
+pullMedia: false
 noCover: false
 tgId: 1643
 tgUrl: https://t.me/podcastbaka/1643
 ---
+
+::image{src="/images/uploads/tg-1643.jpg" alt="" width="column"}
 
 Вот это да, уже последний выпуск первого сезона «Омнибуса и танкобона». А как будто начинали только вчера.
 

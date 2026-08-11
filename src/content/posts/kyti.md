@@ -4,12 +4,14 @@ date: 2023-09-13
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1504.jpg
+pullMedia: false
 noCover: false
 tgId: 1504
 tgUrl: https://t.me/podcastbaka/1504
 ---
+
+::image{src="/images/uploads/tg-1504.jpg" alt="" width="column"}
 
 На Manga Plus [появилась](https://mangaplus.shueisha.co.jp/viewer/1018500) в бесплатном доступе манга от Shonen Jump про котов, которые готовят рамен — Red Cat Ramen.
 
@@ -20,3 +22,5 @@ tgUrl: https://t.me/podcastbaka/1504
 Что любопытно, изначально это была любительская манга (додзинси), но она стала так популярна, что Shonen Jump забрали ее под свое крыло.
 
 Если вы читаете по-английски, обязательно гляньте и проведите приятно вечер с котиками. #обзор
+
+::image{src="/images/uploads/tg-1505.jpg" alt="" width="column"}

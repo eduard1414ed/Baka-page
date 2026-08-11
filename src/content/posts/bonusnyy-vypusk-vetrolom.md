@@ -4,8 +4,8 @@ date: 2024-09-10
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2368.jpg
+pullMedia: false
 noCover: false
 tgId: 2368
 tgUrl: https://t.me/podcastbaka/2368
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-2368.jpg" alt="" width="column"}
 
 В последнем бонусном эпизоде сезона мы решили обсудить новый баттл-сёнен, сделанный по всем канонам.
 

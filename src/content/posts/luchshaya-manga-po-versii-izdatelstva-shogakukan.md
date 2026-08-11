@@ -4,14 +4,16 @@ date: 2025-01-20
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2679.jpg
+pullMedia: false
 noCover: false
 tgId: 2679
 tgUrl: https://t.me/podcastbaka/2679
 animeSuggested:
   - kore-kaite-shine
 ---
+
+::image{src="/images/uploads/tg-2679.jpg" alt="" width="column"}
 
 Были объявлены победители ежегодной премии Shogakukan Manga Award. Это, кстати, юбилейное, 70-е награждение. Победителей в этом году четыре (их теперь не делят на категории):
 
@@ -34,3 +36,7 @@ animeSuggested:
 ——
 
 Будете читать что-то из этого?
+
+::image{src="/images/uploads/tg-2680.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2681.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2682.jpg" alt="" width="column"}

@@ -4,8 +4,8 @@ date: 2025-09-04
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3315.jpg
+pullMedia: false
 noCover: false
 tgId: 3315
 tgUrl: https://t.me/podcastbaka/3315
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_1991
 ---
+
+::image{src="/images/uploads/tg-3315.jpg" alt="" width="column"}
 
 В новом бонусном эпизоде мы обсудили популярную и изобретательную комедию «Ведьмнадзор».
 

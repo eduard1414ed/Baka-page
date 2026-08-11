@@ -4,12 +4,14 @@ date: 2023-04-13
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1186.jpg
+pullMedia: false
 noCover: false
 tgId: 1186
 tgUrl: https://t.me/podcastbaka/1186
 ---
+
+::image{src="/images/uploads/tg-1186.jpg" alt="" width="column"}
 
 В синтоистской традиции есть особый способ попросить что-то у богов (или поблагодарить их) — таблички эма.
 

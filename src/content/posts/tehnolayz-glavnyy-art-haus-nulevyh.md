@@ -4,8 +4,8 @@ date: 2025-07-31
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3221.jpg
+pullMedia: false
 noCover: false
 tgId: 3221
 tgUrl: https://t.me/podcastbaka/3221
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_1938
 ---
+
+::image{src="/images/uploads/tg-3221.jpg" alt="" width="column"}
 
 В новом бонусном эпизоде мы обсудим культовый тайтл 2003 года от студии Madhouse — «Технолайз».
 

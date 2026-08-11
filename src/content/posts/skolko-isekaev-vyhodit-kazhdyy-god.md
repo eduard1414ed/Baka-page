@@ -4,12 +4,14 @@ date: 2025-03-14
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2820.jpg
+pullMedia: false
 noCover: false
 tgId: 2820
 tgUrl: https://t.me/podcastbaka/2820
 ---
+
+::image{src="/images/uploads/tg-2820.jpg" alt="" width="column"}
 
 Специально для [нового эссе](https://youtu.be/_DQtUHVcrU0) мы вручную посчитали, сколько произведений с исекай-элементами вышло за последние 15 лет.
 

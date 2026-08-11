@@ -4,12 +4,14 @@ date: 2024-05-24
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2141.jpg
+pullMedia: false
 noCover: false
 tgId: 2141
 tgUrl: https://t.me/podcastbaka/2141
 ---
+
+::image{src="/images/uploads/tg-2141.jpg" alt="" width="column"}
 
 Пересматривал тут на прошлой неделе «Чудачества любви не помеха» и зацепился за одну из сцен, где герои обсуждают непослушные волосы.
 

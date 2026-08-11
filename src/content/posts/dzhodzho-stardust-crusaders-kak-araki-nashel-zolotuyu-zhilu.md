@@ -4,8 +4,8 @@ date: 2025-05-15
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2969.jpg
+pullMedia: false
 noCover: false
 tgId: 2969
 tgUrl: https://t.me/podcastbaka/2969
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_1785
 ---
+
+::image{src="/images/uploads/tg-2969.jpg" alt="" width="column"}
 
 Мы продолжаем обсуждать тайтлы, которые давно вам обещали. В этот раз — продолжаем разбор «ДжоДжо» и говорим об успешной третьей части.
 

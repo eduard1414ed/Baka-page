@@ -4,8 +4,8 @@ date: 2022-06-23
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-246.jpg
+pullMedia: false
 noCover: false
 tgId: 246
 tgUrl: https://t.me/podcastbaka/246
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-246.jpg" alt="" width="column"}
 
 В этом выпуске мы продолжаем исследовать творчество Мамору Хосоды — и обсуждаем один из лучших семейных аниме последних лет.
 

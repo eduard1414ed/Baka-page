@@ -4,8 +4,8 @@ date: 2022-10-28
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-703.jpg
+pullMedia: false
 noCover: false
 tgId: 703
 tgUrl: https://t.me/podcastbaka/703
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-703.jpg" alt="" width="column"}
 
 Один из самых красивых полнометражных фильмов, который из простой романтической истории превращается в притчу о создании вселенной.
 

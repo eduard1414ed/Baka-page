@@ -4,8 +4,8 @@ date: 2024-12-27
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2631.jpg
+pullMedia: false
 noCover: false
 tgId: 2631
 tgUrl: https://t.me/podcastbaka/2631
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-2631.jpg" alt="" width="column"}
 
 В новом расслабленном бонусном эпизоде мы с Ксюшей вспоминаем все то, что помогает нам создать праздничную атмосферу. Любимые мультики, фильмы и игры, поездки с родителями, и ностальгические истории.
 

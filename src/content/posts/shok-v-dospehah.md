@@ -4,12 +4,14 @@ date: 2026-07-22
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-4096.jpg
+pullMedia: false
 noCover: false
 tgId: 4096
 tgUrl: https://t.me/podcastbaka/4096
 ---
+
+::image{src="/images/uploads/tg-4096.jpg" alt="" width="column"}
 
 Я могу представить себе шок, который можно испытать от нового «Призрака в доспехах».
 

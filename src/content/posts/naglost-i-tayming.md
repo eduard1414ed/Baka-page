@@ -4,12 +4,14 @@ date: 2023-02-28
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1075.jpg
+pullMedia: false
 noCover: false
 tgId: 1075
 tgUrl: https://t.me/podcastbaka/1075
 ---
+
+::image{src="/images/uploads/tg-1075.jpg" alt="" width="column"}
 
 Сёнэн-ай — поджанр сёдзе-манги, который рассказывает о романтических отношениях между мужчинами. Последние годы экранизации сёнэн-ай — это самые заметные сёдзё-аниме. Прошлогоднее «Сасаки и Миано», полнометражный фильм «Беззаботные дни» и, конечно, «Юри на льду».
 

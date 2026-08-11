@@ -4,12 +4,14 @@ date: 2022-10-25
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-695.jpg
+pullMedia: false
 noCover: false
 tgId: 695
 tgUrl: https://t.me/podcastbaka/695
 ---
+
+::image{src="/images/uploads/tg-695.jpg" alt="" width="column"}
 
 Самая интересная и спойлерная деталь опенинга «Бензопилы» — это червь, которым Макима кормит Денджи.
 

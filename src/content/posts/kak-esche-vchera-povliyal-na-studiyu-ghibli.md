@@ -4,12 +4,14 @@ date: 2025-06-27
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3084.jpg
+pullMedia: false
 noCover: false
 tgId: 3084
 tgUrl: https://t.me/podcastbaka/3084
 ---
+
+::image{src="/images/uploads/tg-3084.jpg" alt="" width="column"}
 
 Если вы еще не смотрели [новое эссе](https://youtu.be/D4UrqEntAOU), то вы упустили увлекательную историю о том, как Ghibli превратилась в знакомую нам студию
 

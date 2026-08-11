@@ -4,8 +4,8 @@ date: 2022-05-14
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-38.jpg
+pullMedia: false
 noCover: false
 externalUrl: ''
 externalSource: ''
@@ -23,6 +23,8 @@ tgUrl: https://t.me/podcastbaka/38
 anime:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-38.jpg" alt="" width="column"}
 
 В этом эпизоде мы наконец-то (!) остались довольны филлерной аркой, потому что нам показали команду №8.
 

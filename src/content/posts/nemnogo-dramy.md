@@ -4,12 +4,14 @@ date: 2024-05-22
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2138.jpg
+pullMedia: false
 noCover: false
 tgId: 2138
 tgUrl: https://t.me/podcastbaka/2138
 ---
+
+::image{src="/images/uploads/tg-2138.jpg" alt="" width="column"}
 
 Рэну 28 лет, он переехал из маленького города в Токио, но так и не нашел свое призвание. Он перебивается подработками и чувствует себя совершенно лишним. Настолько, что решает прыгнуть с моста.
 

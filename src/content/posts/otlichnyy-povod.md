@@ -4,12 +4,14 @@ date: 2023-01-06
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-931.jpg
+pullMedia: false
 noCover: false
 tgId: 931
 tgUrl: https://t.me/podcastbaka/931
 ---
+
+::image{src="/images/uploads/tg-931.jpg" alt="" width="column"}
 
 Кстати, день рождения мастера еще и отличный повод, чтобы перечитать и переслушать наши увлекательные материалы про Миядзаки: #полезное
 

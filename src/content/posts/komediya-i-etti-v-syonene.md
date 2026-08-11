@@ -4,12 +4,14 @@ date: 2023-06-27
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1330.jpg
+pullMedia: false
 noCover: false
 tgId: 1330
 tgUrl: https://t.me/podcastbaka/1330
 ---
+
+::image{src="/images/uploads/tg-1330.jpg" alt="" width="column"}
 
 К 60-м годам в манге уже сложились определенные каноны и, скажем так, пантеон классиков: туда входил уже упомянутый Осаму Тэдзука, Кадзумаса Хираи и другие мангаки. Журналы, в которых публиковали мангу для подростков, Weekly Shonen Sunday и Weekly Shonen Magazine уже продавались сотнями тысяч копий.
 
@@ -26,3 +28,5 @@ tgUrl: https://t.me/podcastbaka/1330
 Школьники обменивались Shonen Jump-ом, вырывали страницы и показывали друзьям. Фурор был таким, что родители этих самых школьников начали протестовать против выхода журнала. Издательству пришлось отбивать свой новый хит и его автора.
 
 Именно популярность Harenchi Gakuen заложила основу для будущей комедийной составляющей, которая есть почти в каждом сёнене. И стала опорой для нового журнала Shonen Jump. #заметки
+
+::image{src="/images/uploads/tg-1331.jpg" alt="" width="column"}

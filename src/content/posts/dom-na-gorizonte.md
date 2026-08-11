@@ -4,12 +4,14 @@ date: 2025-12-12
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3550.jpg
+pullMedia: false
 noCover: false
 tgId: 3550
 tgUrl: https://t.me/podcastbaka/3550
 ---
+
+::image{src="/images/uploads/tg-3550.jpg" alt="" width="column"}
 
 Вынесу одну из рекомендаций из выпуска «Бунко» в отдельный пост (но еще девять останутся там, так что советую его послушать).
 
@@ -22,3 +24,5 @@ tgUrl: https://t.me/podcastbaka/3550
 Герои притираются друг к другу, делятся воспоминаниями, помогают окружающим людям и следят за работой бани. По вайбу манга местами даже напоминает мой любимый [Hirayasumi](/posts/zhit-i-naslazhdatsya-prostoy-zhiznyu/).
 
 При этом дизайн персонажей и арт для меня почему-то похож на стиль мангаки Масакадзу Исигуро, автора «Иллюзии рая», которую я уже вспоминал на этой неделе. Вот такой вот кроссовер. Очень советую!
+
+::image{src="/images/uploads/tg-3551.jpg" alt="" width="column"}

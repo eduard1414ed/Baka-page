@@ -4,12 +4,14 @@ date: 2026-04-15
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3889.jpg
+pullMedia: false
 noCover: false
 tgId: 3889
 tgUrl: https://t.me/podcastbaka/3889
 ---
+
+::image{src="/images/uploads/tg-3889.jpg" alt="" width="column"}
 
 Как обычно, (почти) первым делом в этом сезоне решил оценить романтические сериалы. Глянул первые три тайтла:
 

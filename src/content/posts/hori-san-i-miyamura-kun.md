@@ -4,12 +4,14 @@ date: 2025-03-28
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2847.jpg
+pullMedia: false
 noCover: false
 tgId: 2847
 tgUrl: https://t.me/podcastbaka/2847
 ---
+
+::image{src="/images/uploads/tg-2847.jpg" alt="" width="column"}
 
 Я мельком упомянул в [видеоэссе](https://t.me/podcastbaka/2845) о том, что существует шестисерийная OVA по «Хоримии», которая вышла за девять (!) лет до знакомого нам сериала. И это очень интересная штука.
 

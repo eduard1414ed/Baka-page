@@ -4,12 +4,14 @@ date: 2022-12-27
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-869.jpg
+pullMedia: false
 noCover: false
 tgId: 869
 tgUrl: https://t.me/podcastbaka/869
 ---
+
+::image{src="/images/uploads/tg-869.jpg" alt="" width="column"}
 
 Одна из известных особенностей самого популярного журнала манги в мире, Shounen Jump, состоит в том, что издатели холоднокровно закрывают любую мангу, которая оказывается недостаточно популярной.
 

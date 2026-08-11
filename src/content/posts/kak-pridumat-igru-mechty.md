@@ -4,12 +4,14 @@ date: 2025-07-10
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3141.jpg
+pullMedia: false
 noCover: false
 tgId: 3141
 tgUrl: https://t.me/podcastbaka/3141
 ---
+
+::image{src="/images/uploads/tg-3141.jpg" alt="" width="column"}
 
 Аниме и видеоигры давно живут по соседству. «Персона», «Врата Штейна», «Киберпанк: Бегущие по краю» — всё это примеры историй, которые начались в играх, а потом перешли на экраны.
 

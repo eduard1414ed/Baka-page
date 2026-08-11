@@ -4,12 +4,14 @@ date: 2024-02-19
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1946.jpg
+pullMedia: false
 noCover: false
 tgId: 1946
 tgUrl: https://t.me/podcastbaka/1946
 ---
+
+::image{src="/images/uploads/tg-1946.jpg" alt="" width="column"}
 
 Давненько не рассказывал вам ничего нового про «Фрирен». И очень кстати вышла 23 серия, которая показала, насколько увлекательным (и в то же время опасным) может быть изучение подземелий.
 
@@ -20,3 +22,7 @@ tgUrl: https://t.me/podcastbaka/1946
 Вот ты рисуешь карту, вот смотришь на сундук, а вот открываешь дверь, за которой может быть сокровище, а может — смертельная ловушка.
 
 Заставляет задать себе вопрос, а смог бы ты получать удовольствие от исследования подземелий? А вы бы смогли? #заметки
+
+::image{src="/images/uploads/tg-1947.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1948.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1949.jpg" alt="" width="column"}

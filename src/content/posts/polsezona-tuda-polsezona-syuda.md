@@ -4,12 +4,14 @@ date: 2026-06-16
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-4024.jpg
+pullMedia: false
 noCover: false
 tgId: 4024
 tgUrl: https://t.me/podcastbaka/4024
 ---
+
+::image{src="/images/uploads/tg-4024.jpg" alt="" width="column"}
 
 В [разборах итогов прошлого года](https://t.me/podcastbaka/3586) я предсказывал, что нас ждет еще больше экспериментов с форматами. И снова угадал!
 

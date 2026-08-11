@@ -4,12 +4,14 @@ date: 2023-10-17
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1597.jpg
+pullMedia: false
 noCover: false
 tgId: 1597
 tgUrl: https://t.me/podcastbaka/1597
 ---
+
+::image{src="/images/uploads/tg-1597.jpg" alt="" width="column"}
 
 Компьютерные игры, голый мужик с головой синей курицы и Шангри-Ла — казалось бы, как эти вещи связаны? Но такая странная смесь, похоже, превратилась в главный исекай (почти) этого сезона.
 

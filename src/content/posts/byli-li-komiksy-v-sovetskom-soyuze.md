@@ -4,12 +4,14 @@ date: 2023-10-19
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1600.jpg
+pullMedia: false
 noCover: false
 tgId: 1600
 tgUrl: https://t.me/podcastbaka/1600
 ---
+
+::image{src="/images/uploads/tg-1600.jpg" alt="" width="column"}
 
 Седьмой эпизод подкаста «Омнибус и танкобон» — про историю комиксов в СССР и России. А наш приглашенный эксперт в этом выпуске — Миша Заславский, сценарист, редактор и историк комиксов.
 

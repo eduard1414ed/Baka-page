@@ -4,12 +4,14 @@ date: 2022-09-20
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-590.jpg
+pullMedia: false
 noCover: false
 tgId: 590
 tgUrl: https://t.me/podcastbaka/590
 ---
+
+::image{src="/images/uploads/tg-590.jpg" alt="" width="column"}
 
 Сатоси Кон — уникальный режиссёр, полнометражными аниме которого вдохновлялись потом все: от Вачовски до Нолана.
 

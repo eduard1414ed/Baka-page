@@ -4,12 +4,14 @@ date: 2024-06-28
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2211.jpg
+pullMedia: false
 noCover: false
 tgId: 2211
 tgUrl: https://t.me/podcastbaka/2211
 ---
+
+::image{src="/images/uploads/tg-2211.jpg" alt="" width="column"}
 
 Одна из самых запоминающихся вещей в фильме «Призрак в доспехах» 1995 года — это виды города будущего, в котором происходит все действие.
 
@@ -22,3 +24,7 @@ tgUrl: https://t.me/podcastbaka/2211
 Например, оказалось, что авторы не просто взяли Гонконг за образец — они буквально перерисовали некоторые улицы по фотографиям. Причем, фотографии специально делали черно-белыми, чтобы художники сами решали, какими должны быть цвета и свет.
 
 И в итоге город получился не только в аниме одним из главных героев, но и отдельно арты города выглядят как произведения искусства. #заметки
+
+::image{src="/images/uploads/tg-2212.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2213.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2214.jpg" alt="" width="column"}

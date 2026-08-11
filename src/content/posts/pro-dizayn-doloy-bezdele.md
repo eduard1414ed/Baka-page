@@ -4,12 +4,14 @@ date: 2023-04-24
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1211.jpg
+pullMedia: false
 noCover: false
 tgId: 1211
 tgUrl: https://t.me/podcastbaka/1211
 ---
+
+::image{src="/images/uploads/tg-1211.jpg" alt="" width="column"}
 
 Я очень ждал этот повседневный сериал, но совсем не успеваю его смотреть. Поэтому попросил ребят из канала [Moonhausu](https://t.me/moonhausu) рассказать вам про него что-нибудь интересное:
 
@@ -25,3 +27,5 @@ tgUrl: https://t.me/podcastbaka/1211
 Кстати, на официальном сайте skip-and-loafer.com эта деталь обыгрывается еще чаще.
 
 Ну и на афише все герои в школьных лоферах, дабы подчеркнуть название. Да это мелочь, но это говорит о уровне подготовки и трепетному отношению к производству сериала»
+
+::image{src="/images/uploads/tg-1212.jpg" alt="" width="column"}

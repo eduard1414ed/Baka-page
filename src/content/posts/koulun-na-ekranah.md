@@ -4,12 +4,14 @@ date: 2025-07-25
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3200.jpg
+pullMedia: false
 noCover: false
 tgId: 3200
 tgUrl: https://t.me/podcastbaka/3200
 ---
+
+::image{src="/images/uploads/tg-3200.jpg" alt="" width="column"}
 
 По мотивам [нашего нового эссе](https://t.me/podcastbaka/3193) решил собрать подборку, в каких еще тайтлах можно встретить [культовый район](/posts/gorod-krepost-koulun/) Коулун. Или город, который очень сильно на него похож:
 

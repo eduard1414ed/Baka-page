@@ -4,12 +4,14 @@ date: 2023-09-18
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1511.jpg
+pullMedia: false
 noCover: false
 tgId: 1511
 tgUrl: https://t.me/podcastbaka/1511
 ---
+
+::image{src="/images/uploads/tg-1511.jpg" alt="" width="column"}
 
 Школьник Кэйтаро с детства привлекает к себе потусторонние силы. Из-за этого он закрылся в себе и начал страдать депрессией.
 

@@ -4,14 +4,16 @@ date: 2023-09-04
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1494.jpg
+pullMedia: false
 noCover: false
 tgId: 1494
 tgUrl: https://t.me/podcastbaka/1494
 animeSuggested:
   - apocalypse-hotel
 ---
+
+::image{src="/images/uploads/tg-1494.jpg" alt="" width="column"}
 
 В начале сезона я [рассказывал](https://t.me/podcastbaka/1366) вам об идеальной премьере «Зомби-апокалипсиса и списка из ста дел». С тех пор прошло полтора месяца — и теперь за этот (хороший!) сериал становится страшно.
 

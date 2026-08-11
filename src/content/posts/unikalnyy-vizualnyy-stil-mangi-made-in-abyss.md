@@ -4,12 +4,14 @@ date: 2023-02-23
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1068.jpg
+pullMedia: false
 noCover: false
 tgId: 1068
 tgUrl: https://t.me/podcastbaka/1068
 ---
+
+::image{src="/images/uploads/tg-1068.jpg" alt="" width="column"}
 
 На этой неделе выйдет эпизод нашего подкаста про аниме «Созданный в Бездне», и при подготовке к нему я, конечно, полистал оригинальную мангу Акихито Цукуси.
 
@@ -28,3 +30,5 @@ Made in Abyss больше похожа на иллюстрации к нове�
 Акихито Цукуси очень противоречивый автор, который рассказывает талантливую историю с невероятным артом, но в то же время умудряется [эротизировать](https://booru.allthefallen.moe/data/original/c6/ff/c6ffdd04437834ccb1e108aa2359921c.jpg) там (очень маленьких) детей.
 
 И поэтому воспринимать мангу адекватно становится довольно сложно. К счастью, аниме сильно уменьшило количество и откровенность таких сцен. #заметки
+
+::image{src="/images/uploads/tg-1069.jpg" alt="" width="column"}

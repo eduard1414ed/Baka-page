@@ -4,12 +4,14 @@ date: 2024-04-24
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2072.jpg
+pullMedia: false
 noCover: false
 tgId: 2072
 tgUrl: https://t.me/podcastbaka/2072
 ---
+
+::image{src="/images/uploads/tg-2072.jpg" alt="" width="column"}
 
 Бейсбол для японских подростков — особенный вид спорта.
 

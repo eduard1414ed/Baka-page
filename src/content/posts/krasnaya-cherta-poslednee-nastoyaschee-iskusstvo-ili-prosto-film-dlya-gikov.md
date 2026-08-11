@@ -4,12 +4,14 @@ date: 2022-08-03
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-391.jpg
+pullMedia: false
 noCover: false
 tgId: 391
 tgUrl: https://t.me/podcastbaka/391
 ---
+
+::image{src="/images/uploads/tg-391.jpg" alt="" width="column"}
 
 Невероятно стильная рисовка и совершенно пустой сюжет — сегодня мы обсуждаем противоречивый фильм «Красная черта».
 

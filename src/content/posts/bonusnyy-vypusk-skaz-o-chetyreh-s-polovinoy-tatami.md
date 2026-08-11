@@ -4,8 +4,8 @@ date: 2024-07-17
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2254.jpg
+pullMedia: false
 noCover: false
 tgId: 2254
 tgUrl: https://t.me/podcastbaka/2254
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-2254.jpg" alt="" width="column"}
 
 В первом бонусном эпизоде нового сезона обсуждаем классический сериал Масааки Юасы про одиночество, страх выбора и маленькую комнатку, в которой могут происходить удивительные события. #бонус
 

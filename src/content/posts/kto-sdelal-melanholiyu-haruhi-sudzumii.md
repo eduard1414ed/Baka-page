@@ -4,14 +4,16 @@ date: 2026-03-25
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3841.jpg
+pullMedia: false
 noCover: false
 tgId: 3841
 tgUrl: https://t.me/podcastbaka/3841
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-3841.jpg" alt="" width="column"}
 
 Если вы слушали наш подкаст «Врата аниме», вы знаете, что заказчиками производства аниме выступают не сами студии, а группы компаний, которые совместно спонсируют создание выгодных им тайтлов. Это могут быть издатели манги и ранобэ, стриминги, телеканалы, производители игрушек и даже музыкальные лейблы. Они делят риски и делят, понятное дело, прибыль.
 

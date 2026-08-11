@@ -4,8 +4,8 @@ date: 2023-08-01
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1409.jpg
+pullMedia: false
 noCover: false
 tgId: 1409
 tgUrl: https://t.me/podcastbaka/1409
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-1409.jpg" alt="" width="column"}
 
 В этом выпуске мы обсудим последний экранизированный сёнен из «Темной тройки».
 

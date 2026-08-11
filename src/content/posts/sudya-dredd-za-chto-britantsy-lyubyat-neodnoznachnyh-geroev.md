@@ -4,12 +4,14 @@ date: 2023-09-21
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1514.jpg
+pullMedia: false
 noCover: false
 tgId: 1514
 tgUrl: https://t.me/podcastbaka/1514
 ---
+
+::image{src="/images/uploads/tg-1514.jpg" alt="" width="column"}
 
 Приключения школьников-хулиганов, журналы, которые любили в детстве принц Чарльз и вокалист Judas Priest, ранчо с динозаврами у ковбоев из будущего, американские супергерои в качестве балласта, волнующая сила 2000 AD и другие явления из мира британских комиксов.
 

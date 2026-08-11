@@ -4,12 +4,14 @@ date: 2023-05-24
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1271.jpg
+pullMedia: false
 noCover: false
 tgId: 1271
 tgUrl: https://t.me/podcastbaka/1271
 ---
+
+::image{src="/images/uploads/tg-1271.jpg" alt="" width="column"}
 
 Если вы посмотрите на раскадровки аниме, то быстро заметите, что там обычно используется несколько цветов: желтый, красный, голубой, иногда зеленый или фиолетовый. Что они значат и зачем нужны?
 

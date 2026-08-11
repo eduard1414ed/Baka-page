@@ -4,12 +4,14 @@ date: 2025-05-19
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2971.jpg
+pullMedia: false
 noCover: false
 tgId: 2971
 tgUrl: https://t.me/podcastbaka/2971
 ---
+
+::image{src="/images/uploads/tg-2971.jpg" alt="" width="column"}
 
 Продолжая тему ваншотов. Это постоянный формат журналов манги, на котором авторы тестируют свои идеи. Одна глава — одна идея. Легко понять, работает завязка или нет.
 

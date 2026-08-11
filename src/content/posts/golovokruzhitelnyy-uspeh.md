@@ -4,12 +4,14 @@ date: 2023-01-23
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-962.jpg
+pullMedia: false
 noCover: false
 tgId: 962
 tgUrl: https://t.me/podcastbaka/962
 ---
+
+::image{src="/images/uploads/tg-962.jpg" alt="" width="column"}
 
 Продажи манги «Одинокий рокер» от Аки Хамадзи резко подскачили на фоне выхода сериала.
 
@@ -20,3 +22,5 @@ tgUrl: https://t.me/podcastbaka/962
 Так что новый сезон сериала почти неизбежен. И для него уже достаточно материала. Аниме адаптировало всего два тома манги (до 21 главы), еще три тома уже вышли (до 50 главы) и четвертый том (до 60 главы) почти завершен.
 
 Осталось дождаться анонсов от CloverWorks. #прочее
+
+::image{src="/images/uploads/tg-963.jpg" alt="" width="column"}

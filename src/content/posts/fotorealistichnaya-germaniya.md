@@ -4,12 +4,14 @@ date: 2023-08-07
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1423.jpg
+pullMedia: false
 noCover: false
 tgId: 1423
 tgUrl: https://t.me/podcastbaka/1423
 ---
+
+::image{src="/images/uploads/tg-1423.jpg" alt="" width="column"}
 
 События одного из самых известных триллеров в манге и аниме, «Монстра», проходят в основном в Германии. Герой посещают Франкфурт, Берлин, Дюссельдорф и другие менее крупные города.
 
@@ -20,3 +22,7 @@ tgUrl: https://t.me/podcastbaka/1423
 Что самое удивительное в этом, так это то, что я не нашел ни одного подтверждения того, что Урасава сам хоть раз был в Германии. И если он добился такой реалистичности только по фотографиям и книгам (Google Maps тогда еще не было) — это колоссальная работа.
 
 P.S. В аниме, кстати, с этим напортачили. Потому что в одной из сцен показывают светофор с синим цветом вместо зеленого. Такие используют в Японии, но их точно не встретишь в Германии.
+
+::image{src="/images/uploads/tg-1424.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1425.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1426.jpg" alt="" width="column"}

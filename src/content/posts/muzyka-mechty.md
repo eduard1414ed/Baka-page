@@ -4,12 +4,14 @@ date: 2024-05-01
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2081.jpg
+pullMedia: false
 noCover: false
 tgId: 2081
 tgUrl: https://t.me/podcastbaka/2081
 ---
+
+::image{src="/images/uploads/tg-2081.jpg" alt="" width="column"}
 
 Хочу поделиться радостью — наконец-то вышел полный альбом с саундтреком «Фрирен». Композитор Эван Колл в этот раз превзошел себя, написав 70 композиций.
 

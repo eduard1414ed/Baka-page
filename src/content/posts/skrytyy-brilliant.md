@@ -4,12 +4,14 @@ date: 2025-02-24
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2775.jpg
+pullMedia: false
 noCover: false
 tgId: 2775
 tgUrl: https://t.me/podcastbaka/2775
 ---
+
+::image{src="/images/uploads/tg-2775.jpg" alt="" width="column"}
 
 От сериала под названием «Перерождение мужчины средних лет в дочь дворянина» по определению ничего не ждешь, кроме кринжа и треша.
 

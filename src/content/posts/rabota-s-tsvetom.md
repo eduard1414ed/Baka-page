@@ -4,12 +4,14 @@ date: 2023-04-03
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1155.jpg
+pullMedia: false
 noCover: false
 tgId: 1155
 tgUrl: https://t.me/podcastbaka/1155
 ---
+
+::image{src="/images/uploads/tg-1155.jpg" alt="" width="column"}
 
 По этой короткометражке, кстати, очень интересно изучить, как авторы работают с цветом.
 
@@ -18,3 +20,7 @@ tgUrl: https://t.me/podcastbaka/1155
 Удивительно, что сама эта раскадровка уже выглядит невероятно красиво — хоть и отличается по стилю рисунка.
 
 И такой тщательный предпродакшн помогает правильно отрисовать не только цвета, но и игру света, тени и отражений #заметки
+
+::image{src="/images/uploads/tg-1156.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1157.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1158.jpg" alt="" width="column"}

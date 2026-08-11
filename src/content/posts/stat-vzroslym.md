@@ -4,12 +4,14 @@ date: 2025-06-05
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3010.jpg
+pullMedia: false
 noCover: false
 tgId: 3010
 tgUrl: https://t.me/podcastbaka/3010
 ---
+
+::image{src="/images/uploads/tg-3010.jpg" alt="" width="column"}
 
 Ютаро Урашима, будучи подростком, очень хотел стать взрослым и вел тетрадку с правилами. Туда он записывал все то, что по его мнению может сделать его по-настощему взрослым.
 

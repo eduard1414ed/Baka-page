@@ -4,8 +4,8 @@ date: 2025-05-29
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2988.jpg
+pullMedia: false
 noCover: false
 tgId: 2988
 tgUrl: https://t.me/podcastbaka/2988
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_1802
 ---
+
+::image{src="/images/uploads/tg-2988.jpg" alt="" width="column"}
 
 Как один забытый фильм изменил самую известную аниме-студию? О чем он заставляет вспоминать зрителей? Почему эту картину должны посмотреть все взрослые?
 

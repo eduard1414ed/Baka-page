@@ -4,12 +4,14 @@ date: 2024-07-26
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2281.jpg
+pullMedia: false
 noCover: false
 tgId: 2281
 tgUrl: https://t.me/podcastbaka/2281
 ---
+
+::image{src="/images/uploads/tg-2281.jpg" alt="" width="column"}
 
 Ну и все, на этом с «Кайдзю» закончим. Давайте поговорим о новинках! В этом сезоне выходит много романтических историй, которые зацепили мое внимание. Я уже посмотрел первые серии нескольких из них — так что сейчас поделюсь мнением.
 
@@ -34,3 +36,6 @@ tgUrl: https://t.me/podcastbaka/2281
 🧐 **Пока два из трех, неплохой результат**
 
 На очереди еще просмотр «Слишком много проигравших героинь!», «Моя семпай — парень?», «Любовь не делится на близнецов» и «У моей жены нет эмоций». Вот это на моей улице праздник в этом сезоне, конечно
+
+::image{src="/images/uploads/tg-2282.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2283.jpg" alt="" width="column"}

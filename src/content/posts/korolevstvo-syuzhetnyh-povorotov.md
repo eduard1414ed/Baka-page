@@ -4,14 +4,16 @@ date: 2023-11-27
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1685.jpg
+pullMedia: false
 noCover: false
 tgId: 1685
 tgUrl: https://t.me/podcastbaka/1685
 animeSuggested:
   - jujutsu-kaisen
 ---
+
+::image{src="/images/uploads/tg-1685.jpg" alt="" width="column"}
 
 «Королевство руин» — пожалуй, один из самых небанальных сериалов этого года, который сильно страдает от нехватки качества.
 

@@ -4,12 +4,14 @@ date: 2025-06-20
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3065.jpg
+pullMedia: false
 noCover: false
 tgId: 3065
 tgUrl: https://t.me/podcastbaka/3065
 ---
+
+::image{src="/images/uploads/tg-3065.jpg" alt="" width="column"}
 
 Во вторник была на премьере «Дандадан: Злой глаз» и вышла после просмотра с очень-очень положительными эмоциями. Вот пять причин, почему [стоит сходить](https://www.afisha.ru/movie/dandadan-zloy-glaz-1000813/) на это аниме в кино:
 

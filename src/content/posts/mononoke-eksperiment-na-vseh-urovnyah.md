@@ -4,8 +4,8 @@ date: 2024-03-15
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2007.jpg
+pullMedia: false
 noCover: false
 tgId: 2007
 tgUrl: https://t.me/podcastbaka/2007
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-2007.jpg" alt="" width="column"}
 
 В этом выпуске мы обсуждаем один из самых необычных сериалов, который смешивает традиционное японское искусство с технологиями аниме-производства.
 

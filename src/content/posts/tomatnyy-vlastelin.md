@@ -4,12 +4,14 @@ date: 2023-03-13
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1101.jpg
+pullMedia: false
 noCover: false
 tgId: 1101
 tgUrl: https://t.me/podcastbaka/1101
 ---
+
+::image{src="/images/uploads/tg-1101.jpg" alt="" width="column"}
 
 Главный герой сериала — обычный офисный работник по имени Джо. Но уже в первой серии он превращается в гигантского томата после неудачного эксперимента в лаборатории. Сначала его жизнь становится настоящим кошмаром, но затем он понимает, что его новый образ жизни может быть не так уж и плох.
 

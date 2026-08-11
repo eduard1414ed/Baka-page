@@ -4,8 +4,8 @@ date: 2023-08-29
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1473.jpg
+pullMedia: false
 noCover: false
 tgId: 1473
 tgUrl: https://t.me/podcastbaka/1473
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-1473.jpg" alt="" width="column"}
 
 Обсуждаем одну из самых заметных премьер этой весны — slice of life сериал «В лоферах вприпрыжку».
 

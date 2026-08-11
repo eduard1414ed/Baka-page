@@ -4,12 +4,14 @@ date: 2026-04-21
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3899.jpg
+pullMedia: false
 noCover: false
 tgId: 3899
 tgUrl: https://t.me/podcastbaka/3899
 ---
+
+::image{src="/images/uploads/tg-3899.jpg" alt="" width="column"}
 
 Посмотрел первые три серии «Цугаев загробного мира» — экранизации нового тайтла Хирому Аракавы, создательницы «Стального алхимика».
 

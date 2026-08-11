@@ -4,12 +4,14 @@ date: 2023-02-20
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1046.jpg
+pullMedia: false
 noCover: false
 tgId: 1046
 tgUrl: https://t.me/podcastbaka/1046
 ---
+
+::image{src="/images/uploads/tg-1046.jpg" alt="" width="column"}
 
 Манга оказывает невероятное влияние на культуру не только в Японии, но и в других странах (вспомните [чарт](/posts/samye-prodavaemye-komiksy-v-rossii/) «Чук и Гика»). Особенно это влияние заметно в Корее и Китае, где появились свои форматы комиксов, вдохновленные мангой.
 

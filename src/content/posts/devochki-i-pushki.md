@@ -4,12 +4,14 @@ date: 2024-04-23
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2070.jpg
+pullMedia: false
 noCover: false
 tgId: 2070
 tgUrl: https://t.me/podcastbaka/2070
 ---
+
+::image{src="/images/uploads/tg-2070.jpg" alt="" width="column"}
 
 На прошлой неделе у нас вышел внезапный [бонусный эпизод про «Школу убийц»](/posts/bonusnyy-vypusk-shkola-ubiyts/), и я решил, что это хороший повод собрать лучшие (на мой вкус) аниме про девочек с пушками.
 

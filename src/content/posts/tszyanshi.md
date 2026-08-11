@@ -4,12 +4,14 @@ date: 2024-11-04
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2488.jpg
+pullMedia: false
 noCover: false
 tgId: 2488
 tgUrl: https://t.me/podcastbaka/2488
 ---
+
+::image{src="/images/uploads/tg-2488.jpg" alt="" width="column"}
 
 Хочу немного продлить хэллоуинскую атмосферу и вспомнить популярный в аниме и манге образ, который на самом деле пришел из китайских легенд.
 

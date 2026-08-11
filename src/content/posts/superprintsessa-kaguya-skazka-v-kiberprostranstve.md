@@ -4,8 +4,8 @@ date: 2026-02-05
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3697.jpg
+pullMedia: false
 noCover: false
 tgId: 3697
 tgUrl: https://t.me/podcastbaka/3697
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2384
 ---
+
+::image{src="/images/uploads/tg-3697.jpg" alt="" width="column"}
 
 Мы возвращаемся с новым сезоном подкаста и стартуем с обсуждения новинки этого года — полнометражного фильма «Суперпринцесса Кагуя».
 

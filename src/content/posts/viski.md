@@ -4,12 +4,14 @@ date: 2024-07-10
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2238.jpg
+pullMedia: false
 noCover: false
 tgId: 2238
 tgUrl: https://t.me/podcastbaka/2238
 ---
+
+::image{src="/images/uploads/tg-2238.jpg" alt="" width="column"}
 
 (пост от Ксюши)
 

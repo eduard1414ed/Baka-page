@@ -4,12 +4,14 @@ date: 2023-08-21
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1449.jpg
+pullMedia: false
 noCover: false
 tgId: 1449
 tgUrl: https://t.me/podcastbaka/1449
 ---
+
+::image{src="/images/uploads/tg-1449.jpg" alt="" width="column"}
 
 «В лоферах вприпрыжку» (или «Долой безделье!») — пожалуй самая яркая и запоминающаяся повседневность первой половины этого года.
 
@@ -24,3 +26,9 @@ tgUrl: https://t.me/podcastbaka/1449
 «Фотографии Хамада-сана улавливают искренность маленьких моментов, повседневной жизни, — говорила режиссерша. — Я подумала, что это соответствует направлению этой работы и использовала их в качестве образца»
 
 Я не был знаком с этим фотографом, но после «Лоферов» и интервью Котоми пересмотрел весь его [сайт](https://www.hideakihamada.com/). Действительно потрясающая (и нужная!) атмосфера. #заметки
+
+::image{src="/images/uploads/tg-1450.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1451.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1452.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1453.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1454.jpg" alt="" width="column"}

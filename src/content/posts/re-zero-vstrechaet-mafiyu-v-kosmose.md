@@ -4,12 +4,14 @@ date: 2025-11-17
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3480.jpg
+pullMedia: false
 noCover: false
 tgId: 3480
 tgUrl: https://t.me/podcastbaka/3480
 ---
+
+::image{src="/images/uploads/tg-3480.jpg" alt="" width="column"}
 
 Почти у всех аниме по визуальным новеллам есть одна общая проблема — структура истории.
 

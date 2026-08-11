@@ -4,12 +4,14 @@ date: 2025-11-11
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3468.jpg
+pullMedia: false
 noCover: false
 tgId: 3468
 tgUrl: https://t.me/podcastbaka/3468
 ---
+
+::image{src="/images/uploads/tg-3468.jpg" alt="" width="column"}
 
 На прошлой неделе вышла антология ваншотов Тацуки Фудзимото, автора «Человека-бензопилы», которые он писал в молодости до первой сериализации, под названием «Тацуки Фудзимото: С семнадцати до двадцати шести». Какой она вышла?
 
@@ -22,3 +24,11 @@ tgUrl: https://t.me/podcastbaka/3468
 Получается довольно редкий шанс за два часа проследить, как развивались идеи и навыки одного талантливого автора с помощью восьми короткометражек.
 
 Серии делали разные студии: поэтому дизайн, настроение и качество у них тоже очень разное. Но как будто этому сборнику это даже идет. Так что советую не пропускать.
+
+::image{src="/images/uploads/tg-3469.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3470.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3471.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3472.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3473.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3474.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3475.jpg" alt="" width="column"}

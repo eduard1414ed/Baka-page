@@ -4,8 +4,8 @@ date: 2026-03-19
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3824.jpg
+pullMedia: false
 noCover: false
 tgId: 3824
 tgUrl: https://t.me/podcastbaka/3824
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2466
 ---
+
+::image{src="/images/uploads/tg-3824.jpg" alt="" width="column"}
 
 Полнометражная экранизация «Человека-бензопилы» с помпой прокатилась по миру, собрав отличную кассу. Но действительно ли это классный фильм?
 

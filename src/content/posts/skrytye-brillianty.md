@@ -4,12 +4,14 @@ date: 2023-04-04
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1159.jpg
+pullMedia: false
 noCover: false
 tgId: 1159
 tgUrl: https://t.me/podcastbaka/1159
 ---
+
+::image{src="/images/uploads/tg-1159.jpg" alt="" width="column"}
 
 Аниматоры нередко оставляют на полях черновых работ пометки — для себя или для своих коллег.
 

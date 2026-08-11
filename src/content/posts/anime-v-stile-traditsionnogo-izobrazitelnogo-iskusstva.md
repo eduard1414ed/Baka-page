@@ -4,12 +4,14 @@ date: 2023-03-16
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1107.jpg
+pullMedia: false
 noCover: false
 tgId: 1107
 tgUrl: https://t.me/podcastbaka/1107
 ---
+
+::image{src="/images/uploads/tg-1107.jpg" alt="" width="column"}
 
 Любое аниме несет в себе наследие традиционного японского искусства. Но иногда эта связь видна особенно ярко. Мы собрали такие фильмы и сериалы:
 

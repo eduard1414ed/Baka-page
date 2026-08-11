@@ -4,12 +4,14 @@ date: 2023-03-02
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1079.jpg
+pullMedia: false
 noCover: false
 tgId: 1079
 tgUrl: https://t.me/podcastbaka/1079
 ---
+
+::image{src="/images/uploads/tg-1079.jpg" alt="" width="column"}
 
 Аниме «Врат Штейна» — тот случай, когда оригинал истории это не манга, а визуальная новелла. Интерактивная история на стыке манги, романа и копьютерной игры.
 

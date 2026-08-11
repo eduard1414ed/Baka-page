@@ -4,12 +4,14 @@ date: 2023-10-26
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1615.jpg
+pullMedia: false
 noCover: false
 tgId: 1615
 tgUrl: https://t.me/podcastbaka/1615
 ---
+
+::image{src="/images/uploads/tg-1615.jpg" alt="" width="column"}
 
 Как комиксы стали утешением для корейского народа? Кто такие манхваки и почему они умирают на работе? Чем вебтуны отличаются от бумажных комиксов и что читают в Северной Корее? А еще, конечно, какие вебтуны почитать новичкам?
 

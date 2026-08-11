@@ -4,12 +4,14 @@ date: 2024-08-22
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2330.jpg
+pullMedia: false
 noCover: false
 tgId: 2330
 tgUrl: https://t.me/podcastbaka/2330
 ---
+
+::image{src="/images/uploads/tg-2330.jpg" alt="" width="column"}
 
 В [новом выпуске](https://t.me/podcastbaka/2325) Ксюша назвала недооцененным фильм студии Ghibli «Сказания о Земноморье». Расскажу вам про него забавную историю.
 
@@ -28,3 +30,8 @@ tgUrl: https://t.me/podcastbaka/2330
 Впрочем, Хаяо это пришлось не по душе. На протяжении всего производства «Сказаний», они с сыном не разговаривали. А во время предпросмотра аниме, Хаяо вышел из зала посреди фильма покурить, потому что ему «казалось, что это тянется вечность».
 
 Учитывая это, кажется символичным, что «Сказания» начинаются со сцены убийства подростком своего отца. #заметки
+
+::image{src="/images/uploads/tg-2331.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2332.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2333.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2334.jpg" alt="" width="column"}

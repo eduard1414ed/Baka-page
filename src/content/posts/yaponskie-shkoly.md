@@ -4,12 +4,14 @@ date: 2023-09-22
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1515.jpg
+pullMedia: false
 noCover: false
 tgId: 1515
 tgUrl: https://t.me/podcastbaka/1515
 ---
+
+::image{src="/images/uploads/tg-1515.jpg" alt="" width="column"}
 
 Если вы смотрите много аниме — вы наверняка замечали, что японские школы отличаются от привычных нам.
 

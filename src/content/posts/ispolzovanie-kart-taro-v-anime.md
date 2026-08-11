@@ -4,14 +4,16 @@ date: 2023-05-01
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1225.jpg
+pullMedia: false
 noCover: false
 tgId: 1225
 tgUrl: https://t.me/podcastbaka/1225
 animeSuggested:
   - shingeki-no-kyojin
 ---
+
+::image{src="/images/uploads/tg-1225.jpg" alt="" width="column"}
 
 Пока в нашем обществе тема карт таро является скорее основой для мемов, знаменитые мангаки во всю используют их как нарративный инструмент.
 

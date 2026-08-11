@@ -4,12 +4,14 @@ date: 2025-10-07
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3401.jpg
+pullMedia: false
 noCover: false
 tgId: 3401
 tgUrl: https://t.me/podcastbaka/3401
 ---
+
+::image{src="/images/uploads/tg-3401.jpg" alt="" width="column"}
 
 Сходил в гости в подкаст о кино «Эффект Эмметта Брауна», чтобы обсудить «Призрак в доспехах» Мамору Осии и его одноимённый игровой ремейк от Руперта Сандерса со Скарлетт Йоханссон в главной роли.
 

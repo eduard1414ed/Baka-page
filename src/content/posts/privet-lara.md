@@ -4,12 +4,14 @@ date: 2026-07-21
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-4095.jpg
+pullMedia: false
 noCover: false
 tgId: 4095
 tgUrl: https://t.me/podcastbaka/4095
 ---
+
+::image{src="/images/uploads/tg-4095.jpg" alt="" width="column"}
 
 «Прощай, Лара!» — один из самых интересных сериалов этого сезона. Это оригинальный тайтл от студии Kinema Citrus, который переделывает классическую сказку о Русалочке и приправляет ее ностальгическим стилем аниме конца прошлого века.
 

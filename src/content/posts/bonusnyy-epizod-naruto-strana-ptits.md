@@ -4,8 +4,8 @@ date: 2022-05-14
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-47.jpg
+pullMedia: false
 noCover: false
 tgId: 47
 tgUrl: https://t.me/podcastbaka/47
@@ -17,6 +17,8 @@ bonusLinks:
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-47.jpg" alt="" width="column"}
 
 Наконец-то мы хвалим филлерную арку «Наруто»!
 

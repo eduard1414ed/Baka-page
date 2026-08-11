@@ -4,12 +4,14 @@ date: 2022-12-28
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-882.jpg
+pullMedia: false
 noCover: false
 tgId: 882
 tgUrl: https://t.me/podcastbaka/882
 ---
+
+::image{src="/images/uploads/tg-882.jpg" alt="" width="column"}
 
 В [последнем бонусном эпизоде](/posts/bonusnyy-vypusk-v-les-gde-mertsayut-svetlyachki/) про «Лес, где мерцают светлячки» мы затронули тему обложек сёдзё-манги. Почему они все сделаны в одном дизайне?
 
@@ -28,3 +30,9 @@ tgUrl: https://t.me/podcastbaka/882
 Впрочем, в последние годы это стало меняться. Арт из манги начинает занимать все больше пространства на обложке, а издательства привлекают дизайнеров для того, чтобы создавать яркие иллюстрации.
 
 Так что наслаждайтесь дизайном Hana to Yume Comics пока можете вместе со мной. #заметки
+
+::image{src="/images/uploads/tg-883.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-884.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-885.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-886.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-887.jpg" alt="" width="column"}

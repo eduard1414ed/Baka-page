@@ -4,12 +4,14 @@ date: 2026-05-15
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3943.jpg
+pullMedia: false
 noCover: false
 tgId: 3943
 tgUrl: https://t.me/podcastbaka/3943
 ---
+
+::image{src="/images/uploads/tg-3943.jpg" alt="" width="column"}
 
 В новом бонусном эпизоде мы много говорим о том, что юмор сериала «Скрытые вещи» зачастую понятен только японцам. И главный пример этого — само название сериала.
 

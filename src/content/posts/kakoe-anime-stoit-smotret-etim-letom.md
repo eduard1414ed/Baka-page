@@ -4,14 +4,16 @@ date: 2023-06-30
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1343.jpg
+pullMedia: false
 noCover: false
 tgId: 1343
 tgUrl: https://t.me/podcastbaka/1343
 animeSuggested:
   - apocalypse-hotel
 ---
+
+::image{src="/images/uploads/tg-1343.jpg" alt="" width="column"}
 
 Уже на этих выходных начинается летний аниме сезон — и как всегда, он забит интересными и многообещающими тайтлами.
 

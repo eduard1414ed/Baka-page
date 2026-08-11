@@ -4,14 +4,16 @@ date: 2026-02-10
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3706.jpg
+pullMedia: false
 noCover: false
 tgId: 3706
 tgUrl: https://t.me/podcastbaka/3706
 animeSuggested:
   - ikoku-nikki
 ---
+
+::image{src="/images/uploads/tg-3706.jpg" alt="" width="column"}
 
 Среди всего многообразия этого зимнего сезона вторым сериалом после «Фрирен», эпизоды которого я смотрю сразу же в день релиза, внезапно стал «Дневник разных стран».
 

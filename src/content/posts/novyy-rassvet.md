@@ -4,12 +4,14 @@ date: 2026-02-24
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3750.jpg
+pullMedia: false
 noCover: false
 tgId: 3750
 tgUrl: https://t.me/podcastbaka/3750
 ---
+
+::image{src="/images/uploads/tg-3750.jpg" alt="" width="column"}
 
 Я попал на премьеру фильма «Новый рассвет» на Берлинском кинофестивале. И это очень красивая картина!
 
@@ -22,3 +24,8 @@ tgUrl: https://t.me/podcastbaka/3750
 Поэтому премию на Берлинском кинофестивале аниме не взяло. Но это не значит, что его не стоит смотреть! Хотя бы ради визуала.
 
 Фильм выйдет в кино в Японии 6 марта. А дату премьеры в других странах еще не объявили.
+
+::image{src="/images/uploads/tg-3751.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3752.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3753.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3754.jpg" alt="" width="column"}

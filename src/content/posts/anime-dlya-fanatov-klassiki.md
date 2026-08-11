@@ -4,12 +4,14 @@ date: 2025-03-05
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2801.jpg
+pullMedia: false
 noCover: false
 tgId: 2801
 tgUrl: https://t.me/podcastbaka/2801
 ---
+
+::image{src="/images/uploads/tg-2801.jpg" alt="" width="column"}
 
 Zenshuu — новое оригинальное аниме от студии MAPPA. И на первый взгляд — это очередной исекай.
 
@@ -24,3 +26,6 @@ Zenshuu — новое оригинальное аниме от студии MAP
 Да и сам сюжет — вылитое аниме конца прошлого века. Со всеми его штампами.
 
 Так что на самом деле Zenshuu — это сериал, от которого самое большое удовольствие получат не фанаты исекаев. А опытные зрители, пересмотревшие всю классику. Которые смогут прочувствовать и оценить ностальгические вайбы.
+
+::image{src="/images/uploads/tg-2802.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2803.jpg" alt="" width="column"}

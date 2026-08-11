@@ -4,12 +4,14 @@ date: 2025-05-12
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2966.jpg
+pullMedia: false
 noCover: false
 tgId: 2966
 tgUrl: https://t.me/podcastbaka/2966
 ---
+
+::image{src="/images/uploads/tg-2966.jpg" alt="" width="column"}
 
 «Лазарь» — новый сериал Синъитиро Ватанабэ, автора «Ковбоя Бибопа» и «Самурая Чамплу», с первой серии обещает веселый экшен под джазовую музыку (мы такое любим).
 

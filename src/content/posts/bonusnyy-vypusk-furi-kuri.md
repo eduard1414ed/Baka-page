@@ -4,8 +4,8 @@ date: 2022-10-21
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-682.jpg
+pullMedia: false
 noCover: false
 tgId: 682
 tgUrl: https://t.me/podcastbaka/682
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-682.jpg" alt="" width="column"}
 
 Лучший музыкальный клип, история про взросление и безудержный беспредел.
 

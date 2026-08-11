@@ -4,12 +4,14 @@ date: 2022-07-22
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-346.jpg
+pullMedia: false
 noCover: false
 tgId: 346
 tgUrl: https://t.me/podcastbaka/346
 ---
+
+::image{src="/images/uploads/tg-346.jpg" alt="" width="column"}
 
 Ещё в январе я записал [тикток](https://vt.tiktok.com/ZSRLW1La7/?k=1) про успешное ранобэ, первый том которого за год переиздали 15 раз, и прогнозировал скорое появление манги. Так и вышло.
 

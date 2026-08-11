@@ -4,14 +4,16 @@ date: 2023-01-28
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-981.jpg
+pullMedia: false
 noCover: false
 tgId: 981
 tgUrl: https://t.me/podcastbaka/981
 animeSuggested:
   - dorohedoro
 ---
+
+::image{src="/images/uploads/tg-981.jpg" alt="" width="column"}
 
 Семь лет назад мангака Кумо Кагю, автор «Убийцы гоблинов», завел тред на японском реддите о приключениях парня по имени Данила.
 

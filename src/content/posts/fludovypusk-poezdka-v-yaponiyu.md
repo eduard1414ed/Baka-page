@@ -4,8 +4,8 @@ date: 2025-12-26
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3588.jpg
+pullMedia: false
 noCover: false
 tgId: 3588
 tgUrl: https://t.me/podcastbaka/3588
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2209
 ---
+
+::image{src="/images/uploads/tg-3588.jpg" alt="" width="column"}
 
 В начале декабря я съездил в свою первую двухнедельную поездку в Японию. И теперь рассказываю Ксюше все самое главное: какие города мы успели посмотреть? Сколько тарелок рамена съели? Какую мангу купили? И о чем болтали с местными?
 

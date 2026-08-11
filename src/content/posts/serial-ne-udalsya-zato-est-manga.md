@@ -4,12 +4,14 @@ date: 2024-11-21
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2527.jpg
+pullMedia: false
 noCover: false
 tgId: 2527
 tgUrl: https://t.me/podcastbaka/2527
 ---
+
+::image{src="/images/uploads/tg-2527.jpg" alt="" width="column"}
 
 В сентябре впервые в России вышел официальный артбук одного из самых известных художников в жанре ужасов Дзюндзи Ито.
 
@@ -20,3 +22,9 @@ tgUrl: https://t.me/podcastbaka/2527
 В конце книги — рассказ Ито о творческих приёмах и источниках вдохновения для жутких рисунков и идей.
 
 Артбук в продаже [в книжных](https://vk.cc/cDVI1g) и на [маркетплейсах](https://vk.cc/cDVHTU) (там еще и скидки сейчас, так что поторопитесь)
+
+::image{src="/images/uploads/tg-2528.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2529.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2530.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2531.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2532.jpg" alt="" width="column"}

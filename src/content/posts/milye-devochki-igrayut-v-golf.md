@@ -4,12 +4,14 @@ date: 2025-03-12
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2817.jpg
+pullMedia: false
 noCover: false
 tgId: 2817
 tgUrl: https://t.me/podcastbaka/2817
 ---
+
+::image{src="/images/uploads/tg-2817.jpg" alt="" width="column"}
 
 Старшеклассница Минами любит видеоигры, но когда ее любимую гачу закрывают, она решает попробовать себя в других хобби, чтобы не жалеть об упущенной юности. И внезапно больше всего ее цепляет гольф.
 

@@ -4,12 +4,14 @@ date: 2024-10-23
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2469.jpg
+pullMedia: false
 noCover: false
 tgId: 2469
 tgUrl: https://t.me/podcastbaka/2469
 ---
+
+::image{src="/images/uploads/tg-2469.jpg" alt="" width="column"}
 
 Я в начале года уже рассказывал об этой манге и даже включил ее в список лучших новых тайтлов 2023, но считаю, что про нее все равно слишком мало говорят. А это тем временем одна из самых ярких романтических историй, которая сейчас выходит.
 

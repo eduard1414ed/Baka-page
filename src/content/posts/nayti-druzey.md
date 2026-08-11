@@ -4,12 +4,14 @@ date: 2025-08-18
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3261.jpg
+pullMedia: false
 noCover: false
 tgId: 3261
 tgUrl: https://t.me/podcastbaka/3261
 ---
+
+::image{src="/images/uploads/tg-3261.jpg" alt="" width="column"}
 
 Паша Беляев из дружественного подкаста «2D Деды» решил организовать оффлайн аниме-клуб в Санкт-Петербурге для тех, кто хочет пообщаться об аниме, завести новые знакомства, посмотреть тайтлы вместе и совместно придумывать различные активности.
 

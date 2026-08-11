@@ -4,12 +4,14 @@ date: 2023-11-16
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1659.jpg
+pullMedia: false
 noCover: false
 tgId: 1659
 tgUrl: https://t.me/podcastbaka/1659
 ---
+
+::image{src="/images/uploads/tg-1659.jpg" alt="" width="column"}
 
 В последнем выпуске «Омнибуса и танкобона» мы обсуждали, почему авторы аниме не переделывают первоисточники, а снимают почти дословные экранизации манги (в отличие от того, что с американскими комиксами делает Голливуд).
 

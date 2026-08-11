@@ -4,12 +4,14 @@ date: 2025-08-26
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3272.jpg
+pullMedia: false
 noCover: false
 tgId: 3272
 tgUrl: https://t.me/podcastbaka/3272
 ---
+
+::image{src="/images/uploads/tg-3272.jpg" alt="" width="column"}
 
 Вам понравился пост про Дюссельдорф, поэтому расскажу, что я вообще там делал. Дело в том, что я как блоггер попал на Gamescom (он проходил в соседнем Кёльне). Это самая большая игровая выставка в Европе. И одна из крупнейших в мире.
 
@@ -30,3 +32,6 @@ tgUrl: https://t.me/podcastbaka/3272
 ———
 
 Очень советую подписаться на ребят, и если будет возможность — тоже купить себе что-то красивое. А если хочется узнать больше про Gamescom и посмотреть кружочки про то, как я ищу зачем-то аниме на игровой конференции, то заглядывайте в [наш второй (более шумный) канал.](https://t.me/livebaka/343)
+
+::image{src="/images/uploads/tg-3273.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3274.jpg" alt="" width="column"}

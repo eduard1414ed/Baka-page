@@ -4,8 +4,8 @@ date: 2025-03-04
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2799.jpg
+pullMedia: false
 noCover: false
 tgId: 2799
 tgUrl: https://t.me/podcastbaka/2799
@@ -13,6 +13,8 @@ animeSuggested:
   - non-non-biyori
   - barakamon
 ---
+
+::image{src="/images/uploads/tg-2799.jpg" alt="" width="column"}
 
 Если вы уже посмотрели [наше эссе про мангу «Жизнь в одноэтажном доме»](https://t.me/podcastbaka/2782), прочитали ее до онгоинга и теперь ищите похожие произведения, я принес идеальную подборку.
 

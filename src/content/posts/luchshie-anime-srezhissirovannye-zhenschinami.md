@@ -4,12 +4,14 @@ date: 2025-03-08
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2811.jpg
+pullMedia: false
 noCover: false
 tgId: 2811
 tgUrl: https://t.me/podcastbaka/2811
 ---
+
+::image{src="/images/uploads/tg-2811.jpg" alt="" width="column"}
 
 В индустрии аниме и манги огромное количество талантливых девушек: от мангак до сэйю. Их вклад абсолютно незаменим. В честь праздника я собрать пять тайтлов, созданных женщинами.
 

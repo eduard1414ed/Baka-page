@@ -4,12 +4,14 @@ date: 2026-06-23
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-4046.jpg
+pullMedia: false
 noCover: false
 tgId: 4046
 tgUrl: https://t.me/podcastbaka/4046
 ---
+
+::image{src="/images/uploads/tg-4046.jpg" alt="" width="column"}
 
 Летний сезон, как всегда, обещает быть по-настоящему жарким. Поэтому продолжаем традицию с составлением тир-листа сериалов.
 

@@ -4,12 +4,14 @@ date: 2023-07-04
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1353.jpg
+pullMedia: false
 noCover: false
 tgId: 1353
 tgUrl: https://t.me/podcastbaka/1353
 ---
+
+::image{src="/images/uploads/tg-1353.jpg" alt="" width="column"}
 
 Нашел классный арт, показывающий как бы выглядела Гвен из «Человека-паука», если бы она появилась в других вселенных.
 

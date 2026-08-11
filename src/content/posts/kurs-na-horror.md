@@ -4,14 +4,16 @@ date: 2023-09-19
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1512.jpg
+pullMedia: false
 noCover: false
 tgId: 1512
 tgUrl: https://t.me/podcastbaka/1512
 animeSuggested:
   - apocalypse-hotel
 ---
+
+::image{src="/images/uploads/tg-1512.jpg" alt="" width="column"}
 
 Вообще я в этом году замечаю тренд на мистические истории с элементами ужасов. Только за это лето вышли, загибайте пальцы: «Зомби-апокалипсис», «Темное собрание», «Фарс убитой нежити».
 

@@ -4,12 +4,14 @@ date: 2025-09-02
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3312.jpg
+pullMedia: false
 noCover: false
 tgId: 3312
 tgUrl: https://t.me/podcastbaka/3312
 ---
+
+::image{src="/images/uploads/tg-3312.jpg" alt="" width="column"}
 
 Человечество может жить лишь на небольшом клочке земли. Потому что за его пределами все во власти демонических существ. Конечно, люди пытаются отправлять героев, чтобы очистить эти территории и расширить границы, но это обычно заканчивается трагедией.
 

@@ -4,12 +4,14 @@ date: 2024-01-12
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1837.jpg
+pullMedia: false
 noCover: false
 tgId: 1837
 tgUrl: https://t.me/podcastbaka/1837
 ---
+
+::image{src="/images/uploads/tg-1837.jpg" alt="" width="column"}
 
 Синтаро учится в старшей школе и серьезно занимается искусством. Его план — поступить в арт-университет. Но однажды в комнате школьного художественного клуба начинает появляться девушка Кёко, которая отвлекает его от этих планов. У нее строгий взгляд, сильные руки, и вообще она занимается созданием барабанов тайко.
 

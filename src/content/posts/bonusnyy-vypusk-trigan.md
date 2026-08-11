@@ -4,8 +4,8 @@ date: 2022-12-02
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-780.jpg
+pullMedia: false
 noCover: false
 tgId: 780
 tgUrl: https://t.me/podcastbaka/780
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-780.jpg" alt="" width="column"}
 
 Обсуждаем классический космический вестерн, который очень любит Ксюша.
 

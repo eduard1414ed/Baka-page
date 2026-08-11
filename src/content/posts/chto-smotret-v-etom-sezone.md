@@ -4,12 +4,14 @@ date: 2024-01-09
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1827.jpg
+pullMedia: false
 noCover: false
 tgId: 1827
 tgUrl: https://t.me/podcastbaka/1827
 ---
+
+::image{src="/images/uploads/tg-1827.jpg" alt="" width="column"}
 
 Зимний аниме-сезон уже начался, но мой полноценный текст с тем, что стоит смотреть, выйдет чуть позже. Поэтому чтобы вы не упустили ничего в январе — я подготовил для вас краткий список аниме с датами выхода.
 
@@ -46,3 +48,8 @@ tgUrl: https://t.me/podcastbaka/1827
 Новое оригинальное аниме от студии MAPPA. По сюжету парень Аладдин попадает в школу, полную преступников и хулиганов, встречает реального джина, девушку своей мечты и оказывается втянут в разборки банд.
 
 *Дата выхода первого эпизода: 13 января* #полезное
+
+::image{src="/images/uploads/tg-1828.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1829.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1830.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1831.jpg" alt="" width="column"}

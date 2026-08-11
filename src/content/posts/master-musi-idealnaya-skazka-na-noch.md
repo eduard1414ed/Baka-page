@@ -4,8 +4,8 @@ date: 2026-06-18
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-4035.jpg
+pullMedia: false
 noCover: false
 tgId: 4035
 tgUrl: https://t.me/podcastbaka/4035
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2629
 ---
+
+::image{src="/images/uploads/tg-4035.jpg" alt="" width="column"}
 
 Муси — простейшая форма жизни в мире. Муси существуют повсюду и безо всякой цели. Гинко — путешествует по миру, помогая людям справиться с встречами с муси.
 

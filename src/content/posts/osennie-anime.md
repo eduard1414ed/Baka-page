@@ -4,12 +4,14 @@ date: 2024-09-04
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2362.jpg
+pullMedia: false
 noCover: false
 tgId: 2362
 tgUrl: https://t.me/podcastbaka/2362
 ---
+
+::image{src="/images/uploads/tg-2362.jpg" alt="" width="column"}
 
 Я каждый год делают подборку аниме к лету, а тут подумал, что вообще-то и к осени такую тоже можно сделать. Так что настраиваемся на листопад, дожди и школьные будни:
 

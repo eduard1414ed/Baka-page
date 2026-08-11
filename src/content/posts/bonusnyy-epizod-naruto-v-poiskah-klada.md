@@ -4,8 +4,8 @@ date: 2022-05-14
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-53.jpg
+pullMedia: false
 noCover: false
 tgId: 53
 tgUrl: https://t.me/podcastbaka/53
@@ -17,6 +17,8 @@ bonusLinks:
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-53.jpg" alt="" width="column"}
 
 В этом выпуске мы снова обсуждаем несколько арок, но, к сожалению, все ругаем. Это арки «Деньги и сноровка», «В поисках клада» и «Горячие источники».
 

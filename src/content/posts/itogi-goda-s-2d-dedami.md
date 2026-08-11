@@ -4,12 +4,14 @@ date: 2026-01-23
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3654.jpg
+pullMedia: false
 noCover: false
 tgId: 3654
 tgUrl: https://t.me/podcastbaka/3654
 ---
+
+::image{src="/images/uploads/tg-3654.jpg" alt="" width="column"}
 
 По сложившейся традиции (в четвертый раз подряд, вот это время бежит) пришел в гости в подкаст «2D Деды», чтобы обсудить итоги аниме-года.
 

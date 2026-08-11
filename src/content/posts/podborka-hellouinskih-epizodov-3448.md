@@ -4,14 +4,16 @@ date: 2025-10-31
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3448.jpg
+pullMedia: false
 noCover: false
 tgId: 3448
 tgUrl: https://t.me/podcastbaka/3448
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-3448.jpg" alt="" width="column"}
 
 Сегодня Хэллоуин, а значит время для тематических серий, которые могут развлечь вас в этот пятничный вечер.
 

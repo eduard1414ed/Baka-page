@@ -4,8 +4,8 @@ date: 2024-03-01
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1969.jpg
+pullMedia: false
 noCover: false
 tgId: 1969
 tgUrl: https://t.me/podcastbaka/1969
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-1969.jpg" alt="" width="column"}
 
 [Первый сезон «Реинкарнации безработного»](https://pc.st/e/1R-R8mepdlo) был для нас с Ксюшей глотком свежего воздуха в фэнтези-жанре. Но что происходит с сериалом теперь?
 

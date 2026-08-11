@@ -4,12 +4,14 @@ date: 2023-11-22
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1675.jpg
+pullMedia: false
 noCover: false
 tgId: 1675
 tgUrl: https://t.me/podcastbaka/1675
 ---
+
+::image{src="/images/uploads/tg-1675.jpg" alt="" width="column"}
 
 Одна из известных особенностей самого популярного журнала манги в мире, Shonen Jump, состоит в том, что издатели холоднокровно закрывают любую мангу, которая оказывается недостаточно популярной.
 

@@ -4,12 +4,14 @@ date: 2024-04-25
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2073.jpg
+pullMedia: false
 noCover: false
 tgId: 2073
 tgUrl: https://t.me/podcastbaka/2073
 ---
+
+::image{src="/images/uploads/tg-2073.jpg" alt="" width="column"}
 
 Kill la Kill («Убить или быть убитым») — одно из самых странных (но и культовых) аниме, в котором сюжет крутится вокруг разумной одежды, которая хочет захватить мир.
 

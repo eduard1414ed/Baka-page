@@ -4,12 +4,14 @@ date: 2023-08-03
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1411.jpg
+pullMedia: false
 noCover: false
 tgId: 1411
 tgUrl: https://t.me/podcastbaka/1411
 ---
+
+::image{src="/images/uploads/tg-1411.jpg" alt="" width="column"}
 
 Есть множество способов передать экшн-сцену в виде статичных картинок. Чтобы показать динамику, мангаки прибегают к моушн-лайнам, ономатопеям (обозначениям звуков), или изображению последовательности действий прямо на одной панели.
 
@@ -24,3 +26,6 @@ tgUrl: https://t.me/podcastbaka/1411
 Такое чередование панелей разного размера, крупности кадра и его глубины как раз и создает из статичных картинок настоящий экшн.
 
 P.S. Этот пример еще хорош тем, что Асано по минимуму использует те привычные приемы, которые я описал в самом начале. #заметки
+
+::image{src="/images/uploads/tg-1412.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1413.jpg" alt="" width="column"}

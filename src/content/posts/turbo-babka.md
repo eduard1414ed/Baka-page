@@ -4,12 +4,14 @@ date: 2024-11-19
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2521.jpg
+pullMedia: false
 noCover: false
 tgId: 2521
 tgUrl: https://t.me/podcastbaka/2521
 ---
+
+::image{src="/images/uploads/tg-2521.jpg" alt="" width="column"}
 
 В первой арке главные герои «Дандадана» сталкиваются со странным озабоченным духом «Турбо-бабки», которая не прочь устроить смертельные гонки. Этот образ кажется совершенно точно придуманным специально для сумасшедшей манги.
 

@@ -4,12 +4,14 @@ date: 2024-06-19
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2192.jpg
+pullMedia: false
 noCover: false
 tgId: 2192
 tgUrl: https://t.me/podcastbaka/2192
 ---
+
+::image{src="/images/uploads/tg-2192.jpg" alt="" width="column"}
 
 Как вы знаете, манга может быть обо всем, что угодно — от полицейских до ловли жуков, от волшебников до ниндзя.
 
@@ -22,3 +24,8 @@ tgUrl: https://t.me/podcastbaka/2192
 Например, Hitori Gohan («Обед в одиночку») — это журнал с мангой про взрослых, которым часто приходится обедать в одиночестве или готовить для себя. Futari Gohan («Обед вдвоем») — про ужины и завтраки, которые готовят семейные парочки или влюбленные. А Outdoor Gohan («Обед вне дома») — о сложностях приготовления пищи в походах.
 
 Во многом такие журналы заменяют кулинарные книги или разделы с рецептами в местных газетах. Может быть, если бы в моем ближайшем продуктовом магазине продавали такую мангу — я бы тоже чаще себе готовил вкусную еду. #заметки
+
+::image{src="/images/uploads/tg-2193.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2194.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2195.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2196.jpg" alt="" width="column"}

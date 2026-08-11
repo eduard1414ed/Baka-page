@@ -4,14 +4,16 @@ date: 2023-07-20
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1377.jpg
+pullMedia: false
 noCover: false
 tgId: 1377
 tgUrl: https://t.me/podcastbaka/1377
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-1377.jpg" alt="" width="column"}
 
 Пару дней назад вышел ваншот-приквел к «Наруто» о Четвертом Хокаге — The Whirlwind Inside the Vortex. Каким он получился (без спойлеров)?
 

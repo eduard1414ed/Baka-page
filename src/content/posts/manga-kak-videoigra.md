@@ -4,12 +4,14 @@ date: 2026-05-27
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3963.jpg
+pullMedia: false
 noCover: false
 tgId: 3963
 tgUrl: https://t.me/podcastbaka/3963
 ---
+
+::image{src="/images/uploads/tg-3963.jpg" alt="" width="column"}
 
 Инио Асано не только гениально рассказывает душераздирающие истории, но еще и стал одним из первых мангак, который активно использует современные технологии для создания манги. И речь не об искусственном интеллекте или генерации картинок, а про инструментарий геймдизайнера.
 
@@ -20,3 +22,8 @@ tgUrl: https://t.me/podcastbaka/3963
 Особенно это заметно в «Мертвых мертвых демонах». Персонажи там постоянно находятся в очень конкретных пространствах Токио: на крышах домов, у магазинов, в школьных коридорах, и на станциях метро.
 
 И Асано важно, чтобы не только эти места ощущались реальными, но огромная летающая тарелка над городом, гигантские роботы и инопланетные захватчики — ощущались естественной частью этого детализированного, почти гиперреалистичного мира.
+
+::image{src="/images/uploads/tg-3964.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3965.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3966.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3967.jpg" alt="" width="column"}

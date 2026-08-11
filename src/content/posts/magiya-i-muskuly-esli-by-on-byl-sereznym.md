@@ -4,14 +4,16 @@ date: 2024-09-05
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2363.jpg
+pullMedia: false
 noCover: false
 tgId: 2363
 tgUrl: https://t.me/podcastbaka/2363
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-2363.jpg" alt="" width="column"}
 
 В летнем сезоне неожиданно одним из лучших сериалов в плане анимации стал «Меч и жезл Вистории». Сериал от студии Actas, которая до этого отметилась разве что работой над «Девушками и танками».
 

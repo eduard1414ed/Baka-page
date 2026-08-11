@@ -4,12 +4,14 @@ date: 2024-10-14
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2459.jpg
+pullMedia: false
 noCover: false
 tgId: 2459
 tgUrl: https://t.me/podcastbaka/2459
 ---
+
+::image{src="/images/uploads/tg-2459.jpg" alt="" width="column"}
 
 И снова о «Дандадане», и снова об опенинге этого сериала (я скоро остановлюсь, обещаю). Я добрался до текста песни Otonoke и обнаружил, что она переполнена отсылками на разные японские ужастики и легенды:
 

@@ -4,12 +4,14 @@ date: 2023-09-14
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1506.jpg
+pullMedia: false
 noCover: false
 tgId: 1506
 tgUrl: https://t.me/podcastbaka/1506
 ---
+
+::image{src="/images/uploads/tg-1506.jpg" alt="" width="column"}
 
 Экшн-фигурки, Funko Pop, самодельные куклы — все это неотъемлемая часть отаку-культуры.
 

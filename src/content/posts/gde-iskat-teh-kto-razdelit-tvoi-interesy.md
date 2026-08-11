@@ -4,12 +4,14 @@ date: 2025-06-19
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3064.jpg
+pullMedia: false
 noCover: false
 tgId: 3064
 tgUrl: https://t.me/podcastbaka/3064
 ---
+
+::image{src="/images/uploads/tg-3064.jpg" alt="" width="column"}
 
 Иногда хочется поделиться с кем-то своими любимыми вещами. Смотреть одни и те же аниме. Смеяться над одними мемами. Обмениваться стикерами из «Фарфоровой куклы» и ассоциировать себя с Хори и Миямурой из «Хоримии».
 

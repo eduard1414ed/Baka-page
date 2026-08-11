@@ -4,12 +4,14 @@ date: 2023-10-07
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1576.jpg
+pullMedia: false
 noCover: false
 tgId: 1576
 tgUrl: https://t.me/podcastbaka/1576
 ---
+
+::image{src="/images/uploads/tg-1576.jpg" alt="" width="column"}
 
 Ксюша приехала в гости в Тбилиси, и мы записались впервые за год в одном месте. Мы решили посмотреть трейлеры всех новых аниме этого сезона и оценить, что мы будем смотреть целиком, чему дадим шанс, а что точно пропустим.
 

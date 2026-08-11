@@ -4,8 +4,8 @@ date: 2024-02-16
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1939.jpg
+pullMedia: false
 noCover: false
 tgId: 1939
 tgUrl: https://t.me/podcastbaka/1939
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-1939.jpg" alt="" width="column"}
 
 В этом бонусном выпуске мы, наконец-то (!), обсуждаем сёнен нового поколения. И начинаем с первого сезона!
 

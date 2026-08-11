@@ -4,12 +4,14 @@ date: 2023-07-27
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1400.jpg
+pullMedia: false
 noCover: false
 tgId: 1400
 tgUrl: https://t.me/podcastbaka/1400
 ---
+
+::image{src="/images/uploads/tg-1400.jpg" alt="" width="column"}
 
 Принес вам очередной скрытый бриллиант сезона.
 

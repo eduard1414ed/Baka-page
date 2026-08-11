@@ -4,15 +4,19 @@ date: 2022-11-30
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-768.jpg
+pullMedia: false
 noCover: false
 tgId: 768
 tgUrl: https://t.me/podcastbaka/768
 ---
+
+::image{src="/images/uploads/tg-768.jpg" alt="" width="column"}
 
 Буквально месяц назад мы [обсуждали в подкасте](https://pc.st/e/1R-R8mepdlo) первый сезон исекая «Реинкарнация безработного» — и вот появилась официальная новость о том, что оригинальная новелла подходит к концу.
 
 Издатель показал обложку последнего тома, которая, конечно, отсылает к самому началу истории. И показывает, какой путь прошел Рудеус.
 
 Тем временем продолжение сериала уже [анонсировано](https://shikimori.one/animes/51179-mushoku-tensei-ii-isekai-ittara-honki-dasu) на следующий год. #прочее
+
+::image{src="/images/uploads/tg-769.jpg" alt="" width="column"}

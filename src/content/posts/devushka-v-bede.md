@@ -4,12 +4,14 @@ date: 2025-05-02
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2934.jpg
+pullMedia: false
 noCover: false
 tgId: 2934
 tgUrl: https://t.me/podcastbaka/2934
 ---
+
+::image{src="/images/uploads/tg-2934.jpg" alt="" width="column"}
 
 Продолжаю отсматривать не самые очевидные релизы этой весны и отмечать те, которые можно глянуть. «Соседнему королевству продали святую, помолвку которой разорвали из-за того, что она стала слишком совершенной», несмотря на название, как раз из таких.
 

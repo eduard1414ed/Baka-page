@@ -4,12 +4,14 @@ date: 2022-06-11
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-215.jpg
+pullMedia: false
 noCover: false
 tgId: 215
 tgUrl: https://t.me/podcastbaka/215
 ---
+
+::image{src="/images/uploads/tg-215.jpg" alt="" width="column"}
 
 Недавно объявили, что популярная комедийная манга получит веб-аниме (проще говоря: мультик на YouTube).
 

@@ -4,8 +4,8 @@ date: 2025-10-21
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3426.jpg
+pullMedia: false
 noCover: false
 tgId: 3426
 tgUrl: https://t.me/podcastbaka/3426
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2057
 ---
+
+::image{src="/images/uploads/tg-3426.jpg" alt="" width="column"}
 
 В новом выпуске нашего ежемесячного подкаста о манге по вашим запросам обсуждаем «Долой безделье!» Мисаки Такамацу.
 

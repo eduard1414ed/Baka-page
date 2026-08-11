@@ -4,12 +4,14 @@ date: 2025-08-09
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3250.jpg
+pullMedia: false
 noCover: false
 tgId: 3250
 tgUrl: https://t.me/podcastbaka/3250
 ---
+
+::image{src="/images/uploads/tg-3250.jpg" alt="" width="column"}
 
 Ровно 80 лет назад произошла трагедия, изменившая ход истории: атомная бомбардировка Хиросимы и Нагасаки. Сотни тысяч потерянных жизней, разрушенные города, и память о катастрофе, которая глубоко вплелась в японскую культуру (и речь не только об аниме «Босоногий Гэн»).
 

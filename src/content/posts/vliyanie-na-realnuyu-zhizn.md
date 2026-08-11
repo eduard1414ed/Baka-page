@@ -4,12 +4,14 @@ date: 2025-03-21
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2840.jpg
+pullMedia: false
 noCover: false
 tgId: 2840
 tgUrl: https://t.me/podcastbaka/2840
 ---
+
+::image{src="/images/uploads/tg-2840.jpg" alt="" width="column"}
 
 Редко можно встретить наглядную статистику, которая показывает влияние аниме на реальную жизнь. Но у «Волейбола» такие данные есть, и мы их  вспоминаем в новом [бонусном эпизоде](/posts/voleybol-kakim-poluchilsya-vtoroy-sezon/).
 

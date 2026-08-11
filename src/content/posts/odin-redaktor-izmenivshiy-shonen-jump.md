@@ -4,12 +4,14 @@ date: 2025-02-05
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2726.jpg
+pullMedia: false
 noCover: false
 tgId: 2726
 tgUrl: https://t.me/podcastbaka/2726
 ---
+
+::image{src="/images/uploads/tg-2726.jpg" alt="" width="column"}
 
 Знакомьтесь, это Шихей Лин. Он опытный редактор, который работал в Jump SQ аж с 2006 года.
 

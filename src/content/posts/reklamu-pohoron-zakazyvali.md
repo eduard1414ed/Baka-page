@@ -4,12 +4,14 @@ date: 2025-05-07
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2952.jpg
+pullMedia: false
 noCover: false
 tgId: 2952
 tgUrl: https://t.me/podcastbaka/2952
 ---
+
+::image{src="/images/uploads/tg-2952.jpg" alt="" width="column"}
 
 Как вы знаете, коллаборации аниме-персонажей с разными брендами для рекламы продуктов и услуг — абсолютно обычная история. Я [писал](/posts/moda-i-manga/), например, про то, как модные дома рекламируют свою одежду с помощью «Магической битвы» и «Голубого периода».
 

@@ -4,14 +4,16 @@ date: 2025-05-13
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2967.jpg
+pullMedia: false
 noCover: false
 tgId: 2967
 tgUrl: https://t.me/podcastbaka/2967
 animeSuggested:
   - akira
 ---
+
+::image{src="/images/uploads/tg-2967.jpg" alt="" width="column"}
 
 Раз уж я вчера мельком упомянул эту мангу, давайте расскажу подробнее. «Я и Дьявольский блюз» написал Акира Хирата, автор очень популярного тайтла «Школа-тюрьма».
 

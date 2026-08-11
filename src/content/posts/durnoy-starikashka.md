@@ -4,12 +4,14 @@ date: 2023-05-02
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1226.jpg
+pullMedia: false
 noCover: false
 tgId: 1226
 tgUrl: https://t.me/podcastbaka/1226
 ---
+
+::image{src="/images/uploads/tg-1226.jpg" alt="" width="column"}
 
 Все мы сегодня знаем Хидэаки Анно как создателя «Евангелиона» и основателя студии Khara.
 

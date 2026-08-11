@@ -4,14 +4,16 @@ date: 2023-11-20
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1662.jpg
+pullMedia: false
 noCover: false
 tgId: 1662
 tgUrl: https://t.me/podcastbaka/1662
 animeSuggested:
   - shirobako
 ---
+
+::image{src="/images/uploads/tg-1662.jpg" alt="" width="column"}
 
 Производство второго сезона «Магической битвы» превращается для сотрудников студии MAPPA в трагедию.
 

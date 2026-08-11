@@ -4,12 +4,14 @@ date: 2024-11-13
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2511.jpg
+pullMedia: false
 noCover: false
 tgId: 2511
 tgUrl: https://t.me/podcastbaka/2511
 ---
+
+::image{src="/images/uploads/tg-2511.jpg" alt="" width="column"}
 
 Посмотрел еще парочку новых тайтлов этого сезона (уже не только романтику), поэтому сейчас поделюсь мнением:
 

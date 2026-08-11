@@ -4,12 +4,14 @@ date: 2023-06-07
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1297.jpg
+pullMedia: false
 noCover: false
 tgId: 1297
 tgUrl: https://t.me/podcastbaka/1297
 ---
+
+::image{src="/images/uploads/tg-1297.jpg" alt="" width="column"}
 
 Весенний сезон подходит к концу, поэтому я обновил подборку аниме, которые стоит посмотреть в этом году.
 

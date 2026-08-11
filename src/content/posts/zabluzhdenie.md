@@ -4,12 +4,14 @@ date: 2024-03-28
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2024.jpg
+pullMedia: false
 noCover: false
 tgId: 2024
 tgUrl: https://t.me/podcastbaka/2024
 ---
+
+::image{src="/images/uploads/tg-2024.jpg" alt="" width="column"}
 
 Ну что, в прошлую пятницу вышла последняя серия «Фрирен». Мы уже готовим с Ксюшей эпизод подкаста, посвященный этому сериалу. А пока хочу узнать, как ваши впечатления? Остались ли вы довольны финальной аркой? Изменилось ли ваше отношение к аниме после его окончания?
 

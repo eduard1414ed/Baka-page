@@ -4,12 +4,14 @@ date: 2025-01-31
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2717.jpg
+pullMedia: false
 noCover: false
 tgId: 2717
 tgUrl: https://t.me/podcastbaka/2717
 ---
+
+::image{src="/images/uploads/tg-2717.jpg" alt="" width="column"}
 
 На прошлой неделе я посмотрел (чтобы вы не страдали) новые исекаи, которые вышли в этом сезоне. Сейчас расскажу свои впечатления:
 

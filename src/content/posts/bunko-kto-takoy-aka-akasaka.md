@@ -4,8 +4,8 @@ date: 2026-01-22
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3651.jpg
+pullMedia: false
 noCover: false
 tgId: 3651
 tgUrl: https://t.me/podcastbaka/3651
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2255
 ---
+
+::image{src="/images/uploads/tg-3651.jpg" alt="" width="column"}
 
 Мы запускаем новый сезон нашего ежемесячного подкаста о манге. И делаем это с очередным новым форматом. В этот раз мы говорим не об отдельном тайтле, а об одном авторе и разбираем его творчество.
 

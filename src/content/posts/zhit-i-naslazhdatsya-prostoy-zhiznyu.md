@@ -4,12 +4,14 @@ date: 2024-09-30
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2428.jpg
+pullMedia: false
 noCover: false
 tgId: 2428
 tgUrl: https://t.me/podcastbaka/2428
 ---
+
+::image{src="/images/uploads/tg-2428.jpg" alt="" width="column"}
 
 На выходных снова перечитал и догнал онгоинг манги Hirayasumi. Это одна из лучших повседневных историй, которая сейчас выходит.
 

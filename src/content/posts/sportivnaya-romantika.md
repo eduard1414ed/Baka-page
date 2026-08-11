@@ -4,12 +4,14 @@ date: 2024-10-15
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2460.jpg
+pullMedia: false
 noCover: false
 tgId: 2460
 tgUrl: https://t.me/podcastbaka/2460
 ---
+
+::image{src="/images/uploads/tg-2460.jpg" alt="" width="column"}
 
 В этом сезоне начинается долгожданная экранизация «Голубой шкатулки». Оригинальная манга Кодзи Миуры — одна из самых заметных романтических историй последних лет (по крайней мере из Shonen Jump). В  2022 году она заняла четвертое место в списке самых рекомендуемых манг в книжных магазинах.
 

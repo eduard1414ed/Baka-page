@@ -4,12 +4,14 @@ date: 2024-11-12
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2510.jpg
+pullMedia: false
 noCover: false
 tgId: 2510
 tgUrl: https://t.me/podcastbaka/2510
 ---
+
+::image{src="/images/uploads/tg-2510.jpg" alt="" width="column"}
 
 В японском языке есть термин, которой редко можно услышать в русскоязычном или даже англоязычном комьюнити, а он, вообще-то, зачастую гораздо лучше описывает определенный вид аниме, чем, например «сёдзё» или «сёнен».
 

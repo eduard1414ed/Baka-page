@@ -4,8 +4,8 @@ date: 2023-09-12
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1503.jpg
+pullMedia: false
 noCover: false
 tgId: 1503
 tgUrl: https://t.me/podcastbaka/1503
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-1503.jpg" alt="" width="column"}
 
 Что нас ждет после смерти? Сколько нужно серий, чтобы рассказать о загробном мире? И где здесь прячется Ягами Лайт?
 

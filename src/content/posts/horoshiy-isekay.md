@@ -4,14 +4,16 @@ date: 2023-09-01
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1484.jpg
+pullMedia: false
 noCover: false
 tgId: 1484
 tgUrl: https://t.me/podcastbaka/1484
 animeSuggested:
   - akira
 ---
+
+::image{src="/images/uploads/tg-1484.jpg" alt="" width="column"}
 
 Мне как-то в комментариях предъявили, что я все время ругаю исекаи. Теперь я пытаюсь в каждом сезоне найти хотя бы один симпатичный тайтл про попаданцев, который могу искрене похвалить.
 
@@ -24,3 +26,7 @@ animeSuggested:
 Что по-настоящему выделяет его на фоне других проходных аниме — это визуальный стиль. Дизайн персонажей выполнен в духе аниме 80-90-х, а постановка и анимация сражений моментами (особенно в первой серии) очень эффектные. Студия Sunrise («Гинтама», «Гандамы») хорошо постаралась.
 
 В итоге «Мой статус убийцы очевидно превосходит геройский» заполняет ту же нишу, что и «Могу я попросить ещё кое-что?», о котором я [писал на прошлой неделе](/posts/mogu-ya-poprosit-eschyo-koe-chto/). Веселый сериал на вечер, за просмотром которого можно отключить голову. А что еще от исекая нужно?
+
+::image{src="/images/uploads/tg-1485.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1486.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1487.jpg" alt="" width="column"}

@@ -4,14 +4,16 @@ date: 2023-01-30
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-983.jpg
+pullMedia: false
 noCover: false
 tgId: 983
 tgUrl: https://t.me/podcastbaka/983
 animeSuggested:
   - jujutsu-kaisen
 ---
+
+::image{src="/images/uploads/tg-983.jpg" alt="" width="column"}
 
 Одно из самых интересных явлений в японском фольклоре — это хякки яко, или ночной парад ста демонов. В летние ночи (обычно в августе) все ёкаи, призраки и другие сверхъестественные существа выходят на улицы Японии, дико распевая и танцуя.
 

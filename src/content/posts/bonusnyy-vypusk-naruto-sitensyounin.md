@@ -4,8 +4,8 @@ date: 2022-05-15
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-94.jpg
+pullMedia: false
 noCover: false
 tgId: 94
 tgUrl: https://t.me/podcastbaka/94
@@ -17,6 +17,8 @@ bonusLinks:
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-94.jpg" alt="" width="column"}
 
 В этом выпуске мы обсуждаем последнюю филлерную арку первого сезона «Наруто»!
 

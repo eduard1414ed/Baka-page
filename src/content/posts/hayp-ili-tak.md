@@ -4,12 +4,14 @@ date: 2026-01-15
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3637.jpg
+pullMedia: false
 noCover: false
 tgId: 3637
 tgUrl: https://t.me/podcastbaka/3637
 ---
+
+::image{src="/images/uploads/tg-3637.jpg" alt="" width="column"}
 
 Часовой первый эпизод «Приговорённый быть героем» сразу привлекает внимание. Это почти безостановочный экшен, в котором суровый герой рубит, взрывает и кромсает орды хорошо нарисованных монстров.
 

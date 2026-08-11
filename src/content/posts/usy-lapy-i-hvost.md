@@ -4,12 +4,14 @@ date: 2026-07-08
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-4062.jpg
+pullMedia: false
 noCover: false
 tgId: 4062
 tgUrl: https://t.me/podcastbaka/4062
 ---
+
+::image{src="/images/uploads/tg-4062.jpg" alt="" width="column"}
 
 (пост от Ксюши)
 

@@ -4,14 +4,16 @@ date: 2026-02-26
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3766.jpg
+pullMedia: false
 noCover: false
 tgId: 3766
 tgUrl: https://t.me/podcastbaka/3766
 animeSuggested:
   - apocalypse-hotel
 ---
+
+::image{src="/images/uploads/tg-3766.jpg" alt="" width="column"}
 
 Создание «Апокалипсис: Отеля» было долгим и тяжелым процессом: смена концепции, студии производства, подбор подходящего режиссера (посмотрите новое эссе, где я обо всем этом рассказываю)
 

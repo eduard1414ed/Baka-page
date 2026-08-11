@@ -4,12 +4,14 @@ date: 2026-05-26
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3962.jpg
+pullMedia: false
 noCover: false
 tgId: 3962
 tgUrl: https://t.me/podcastbaka/3962
 ---
+
+::image{src="/images/uploads/tg-3962.jpg" alt="" width="column"}
 
 На прошлой неделе [были объявлены](https://www.crunchyroll.com/news/latest/2026/5/22/anime-awards-2026-winners-list) результаты премии стриминга аниме Crunchyroll. И как всегда они получились противоречивыми. С чем-то я в целом согласен, а что-то вызывает однозначное раздражение.
 

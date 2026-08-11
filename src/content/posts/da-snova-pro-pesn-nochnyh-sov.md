@@ -4,14 +4,16 @@ date: 2022-08-26
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-484.jpg
+pullMedia: false
 noCover: false
 tgId: 484
 tgUrl: https://t.me/podcastbaka/484
 animeSuggested:
   - akira
 ---
+
+::image{src="/images/uploads/tg-484.jpg" alt="" width="column"}
 
 Я уже посвятил этому аниме [этот пост](/posts/tg-2022-07-10-305/) и [этот пост](/posts/obzor-vseh-anime-leta-pesn-nochnyh-sov/), и [этот пост](/posts/nezametnye-detali/). Но не могу остановиться, простите.
 

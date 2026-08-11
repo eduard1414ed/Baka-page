@@ -4,12 +4,14 @@ date: 2025-10-22
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3427.jpg
+pullMedia: false
 noCover: false
 tgId: 3427
 tgUrl: https://t.me/podcastbaka/3427
 ---
+
+::image{src="/images/uploads/tg-3427.jpg" alt="" width="column"}
 
 Пересматривал для подкаста несколько серий «В лоферах вприпрыжку» (или «Долой безделье!») — и как же классно он выглядит. Пастельные цвета, детально прорисованные задники, и голубое-голубое небо.
 
@@ -20,3 +22,9 @@ tgUrl: https://t.me/podcastbaka/3427
 «Фотографии Хамада-сана улавливают искренность маленьких моментов, повседневной жизни, — говорила режиссерша. — Я подумала, что это соответствует направлению этой работы и использовала их в качестве образца»
 
 Я не был знаком с этим фотографом, но после «Лоферов» и интервью Котоми пересмотрел весь его [сайт](https://www.hideakihamada.com/). Действительно потрясающая (и нужная!) атмосфера.
+
+::image{src="/images/uploads/tg-3428.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3429.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3430.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3431.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3432.jpg" alt="" width="column"}

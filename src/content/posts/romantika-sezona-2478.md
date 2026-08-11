@@ -4,12 +4,14 @@ date: 2024-10-31
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2478.jpg
+pullMedia: false
 noCover: false
 tgId: 2478
 tgUrl: https://t.me/podcastbaka/2478
 ---
+
+::image{src="/images/uploads/tg-2478.jpg" alt="" width="column"}
 
 Как обычно, первым делом в этом сезоне решил оценить романтические сериалы. Про «Голубую шкатулку» я уже написал [отдельный пост](/posts/sportivnaya-romantika/), но что по другим тайтлам?
 

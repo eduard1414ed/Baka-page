@@ -4,12 +4,14 @@ date: 2025-05-23
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2982.jpg
+pullMedia: false
 noCover: false
 tgId: 2982
 tgUrl: https://t.me/podcastbaka/2982
 ---
+
+::image{src="/images/uploads/tg-2982.jpg" alt="" width="column"}
 
 Если бы в прошлом году я не сделал [эссе о ностальгии](https://vk.com/video-211086713_456239145) (по мотивам фильма «Дрейфующий дом») — я бы наверняка сделал бы его сейчас, но уже о другом тайтле.
 

@@ -4,12 +4,14 @@ date: 2025-09-05
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3317.jpg
+pullMedia: false
 noCover: false
 tgId: 3317
 tgUrl: https://t.me/podcastbaka/3317
 ---
+
+::image{src="/images/uploads/tg-3317.jpg" alt="" width="column"}
 
 В [бонусном выпуске про «Ведьмнадзор»](/posts/vedmnadzor-anime-sitkom-kotoryy-my-zasluzhili/) мы с Ксюшей обсуждали, что на самом деле самой популярной и долгоиграющей мангой в Shonen Jump являются далеко не боевые сенены, а классические комедии.
 

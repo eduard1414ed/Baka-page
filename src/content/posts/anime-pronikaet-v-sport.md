@@ -4,12 +4,14 @@ date: 2022-11-15
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-735.jpg
+pullMedia: false
 noCover: false
 tgId: 735
 tgUrl: https://t.me/podcastbaka/735
 ---
+
+::image{src="/images/uploads/tg-735.jpg" alt="" width="column"}
 
 В это воскресенье начнется главный национальный футбольный турнир — Чемпионат мира.
 

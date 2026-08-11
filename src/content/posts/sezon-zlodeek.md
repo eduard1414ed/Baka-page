@@ -4,12 +4,14 @@ date: 2024-02-13
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1914.jpg
+pullMedia: false
 noCover: false
 tgId: 1914
 tgUrl: https://t.me/podcastbaka/1914
 ---
+
+::image{src="/images/uploads/tg-1914.jpg" alt="" width="column"}
 
 Последний год явно сложился новый тренд. Наряду с исекаями, выходит все больше аниме про отомэ-игры и злодеек в главной роли. Этой зимой таких тайтлов сразу три.
 

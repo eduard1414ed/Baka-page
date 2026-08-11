@@ -4,12 +4,14 @@ date: 2022-12-06
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-788.jpg
+pullMedia: false
 noCover: false
 tgId: 788
 tgUrl: https://t.me/podcastbaka/788
 ---
+
+::image{src="/images/uploads/tg-788.jpg" alt="" width="column"}
 
 Мой любимый способ учиться — это взять навык и разобрать его на исходные части, чтобы понять «а как оно сделано».
 
@@ -22,3 +24,7 @@ tgUrl: https://t.me/podcastbaka/788
 Если вы хотите снимать кино или рисовать мангу, или рассказывать истории как-то еще — очень советую сохранять себе такие штуки.
 
 Вот, например, раскадровка целой сцены из последнего сезона «Моб Психо 100», [выпуск про который](https://t.me/podcastbaka/774) мы записали на прошлой неделе. Послушайте, если пропустили (он классный, потому что подкасты я в итоге делать научился) #заметки
+
+::image{src="/images/uploads/tg-789.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-790.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-791.jpg" alt="" width="column"}

@@ -4,12 +4,14 @@ date: 2023-06-05
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1290.jpg
+pullMedia: false
 noCover: false
 tgId: 1290
 tgUrl: https://t.me/podcastbaka/1290
 ---
+
+::image{src="/images/uploads/tg-1290.jpg" alt="" width="column"}
 
 Пока «Бака» в отпуске я воспользовался возможностью и сходил в гости в подкаст о документальном кино «Синедок, динозавр», чтобы поговорить о фильме про студию Ghibli — «Царство грёз и безумия».
 

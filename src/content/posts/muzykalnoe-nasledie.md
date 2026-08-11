@@ -4,12 +4,14 @@ date: 2025-11-28
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3518.jpg
+pullMedia: false
 noCover: false
 tgId: 3518
 tgUrl: https://t.me/podcastbaka/3518
 ---
+
+::image{src="/images/uploads/tg-3518.jpg" alt="" width="column"}
 
 На прошлой неделе вышел трибьют-альбом к двадцатилетию группы RADWIMPS (вы ее знаете по саундтрекам фильмов Синкая — «Твое имя» и «Дитя погоды»).
 

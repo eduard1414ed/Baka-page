@@ -4,14 +4,16 @@ date: 2024-05-27
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2143.jpg
+pullMedia: false
 noCover: false
 tgId: 2143
 tgUrl: https://t.me/podcastbaka/2143
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-2143.jpg" alt="" width="column"}
 
 Вчерашний анонс продолжения «Звездного дитя» натолкнул меня на размышления о том, как в последние годы ускорился выпуск вторых сезонов успешных тайтлов.
 

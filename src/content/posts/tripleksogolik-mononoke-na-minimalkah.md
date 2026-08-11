@@ -4,8 +4,8 @@ date: 2026-02-19
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3729.jpg
+pullMedia: false
 noCover: false
 tgId: 3729
 tgUrl: https://t.me/podcastbaka/3729
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2409
 ---
+
+::image{src="/images/uploads/tg-3729.jpg" alt="" width="column"}
 
 Чтобы сбалансировать первый бонусный эпизод сезона, который был невероятно актуальным, в этот раз мы посмотрели классическое аниме нулевых.
 

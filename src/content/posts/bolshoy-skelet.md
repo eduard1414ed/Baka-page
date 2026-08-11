@@ -4,12 +4,14 @@ date: 2024-08-23
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2335.jpg
+pullMedia: false
 noCover: false
 tgId: 2335
 tgUrl: https://t.me/podcastbaka/2335
 ---
+
+::image{src="/images/uploads/tg-2335.jpg" alt="" width="column"}
 
 Вы наверняка видели в аниме про сверхъестественное образ гигантского скелета. Это гасядокуро.
 

@@ -4,12 +4,14 @@ date: 2024-06-20
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2197.jpg
+pullMedia: false
 noCover: false
 tgId: 2197
 tgUrl: https://t.me/podcastbaka/2197
 ---
+
+::image{src="/images/uploads/tg-2197.jpg" alt="" width="column"}
 
 Я смотрел старую версию «Волчицы и пряностей» еще когда учился в школе, и помню только общие впечатления.
 

@@ -4,12 +4,14 @@ date: 2023-02-07
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1012.jpg
+pullMedia: false
 noCover: false
 tgId: 1012
 tgUrl: https://t.me/podcastbaka/1012
 ---
+
+::image{src="/images/uploads/tg-1012.jpg" alt="" width="column"}
 
 Впервые нам удалось отстоять свое видео на ютюбе!
 

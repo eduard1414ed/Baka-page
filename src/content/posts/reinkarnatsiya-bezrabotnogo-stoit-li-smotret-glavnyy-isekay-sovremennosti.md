@@ -4,12 +4,14 @@ date: 2024-05-23
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2140.jpg
+pullMedia: false
 noCover: false
 tgId: 2140
 tgUrl: https://t.me/podcastbaka/2140
 ---
+
+::image{src="/images/uploads/tg-2140.jpg" alt="" width="column"}
 
 Продолжаю делать большие материалы о любимых сериалах! И в этот раз решил подробно рассказать о «Реинкарнации безработного»
 

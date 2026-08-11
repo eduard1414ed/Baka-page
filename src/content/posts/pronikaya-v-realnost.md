@@ -4,12 +4,14 @@ date: 2024-07-18
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2255.jpg
+pullMedia: false
 noCover: false
 tgId: 2255
 tgUrl: https://t.me/podcastbaka/2255
 ---
+
+::image{src="/images/uploads/tg-2255.jpg" alt="" width="column"}
 
 В бонусном выпуске на этой неделе — [про «Сказ о четырех с половиной татами»](/posts/bonusnyy-vypusk-skaz-o-chetyreh-s-polovinoy-tatami/) — мы обсуждали, как в этом сериале смешивается анимация со съемками реального мира.
 
@@ -22,3 +24,7 @@ tgUrl: https://t.me/podcastbaka/2255
 Для того, чтобы добиться такого результата, в качестве режиссера эндинга пригласили [Тао Таджиму.](https://taotajima.jp/) Он вообще клипмейкер и чаще работает в кино.
 
 Но за последнее время он снял несколько проектов как раз с совмещением визуала, и у него получается это абсолютно гениально. [Вот, например, другая его работа, гляньте.](https://taotajima.jp/works/Magic/) #заметки
+
+::image{src="/images/uploads/tg-2256.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2257.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2258.jpg" alt="" width="column"}

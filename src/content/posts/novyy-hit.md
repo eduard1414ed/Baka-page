@@ -4,14 +4,16 @@ date: 2024-01-18
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1847.jpg
+pullMedia: false
 noCover: false
 tgId: 1847
 tgUrl: https://t.me/podcastbaka/1847
 animeSuggested:
   - yomi-no-tsugai
 ---
+
+::image{src="/images/uploads/tg-1847.jpg" alt="" width="column"}
 
 Манга создательницы культового [«Стального Алхимика»,](/posts/stalnoy-alhimik-vvedenie-naskolko-bezzhalostno-eto-anime-i-alhimiya-eto-magiya-ili-nauka/) Хирому Аракавы, «Цугаи загробного мира», уже продалась тиражем в 2 миллиона копий. Это продажи первых шести томов. Что очень даже неплохой результат.
 

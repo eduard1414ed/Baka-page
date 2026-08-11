@@ -4,12 +4,14 @@ date: 2024-04-08
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2042.jpg
+pullMedia: false
 noCover: false
 tgId: 2042
 tgUrl: https://t.me/podcastbaka/2042
 ---
+
+::image{src="/images/uploads/tg-2042.jpg" alt="" width="column"}
 
 Весенний аниме-сезон уже начался, но мой полноценный текст с тем, что стоит смотреть, выйдет чуть позже. Поэтому чтобы вы не упустили ничего в апреле — я подготовил для вас краткий список аниме с датами выхода.
 
@@ -42,3 +44,8 @@ tgUrl: https://t.me/podcastbaka/2042
 Это долгожданная экранизация очередной успешной манги из онлайн-версии журнала Shounen Jump. Сериал будет наполнен сражениями с большими монстрами, легким юмором и знакомыми нам сюжетными поворотами.
 
 *Дата выхода: 13 апреля* #полезное
+
+::image{src="/images/uploads/tg-2043.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2044.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2045.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2046.jpg" alt="" width="column"}

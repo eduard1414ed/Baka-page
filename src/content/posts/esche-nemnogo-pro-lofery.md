@@ -4,12 +4,14 @@ date: 2023-08-28
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1470.jpg
+pullMedia: false
 noCover: false
 tgId: 1470
 tgUrl: https://t.me/podcastbaka/1470
 ---
+
+::image{src="/images/uploads/tg-1470.jpg" alt="" width="column"}
 
 На прошлой неделе я [рассказывал](/posts/fotografii-kak-referens/) о том, как для сериала «В лоферах вприпрыжку» авторы в качестве референсов использовали фотографии Хамады Хидэаки.
 
@@ -20,3 +22,6 @@ tgUrl: https://t.me/podcastbaka/1470
 Самое интересное с этими реальными референсами связано с деревней, в которой жила главная героиня, Мицуме.  Продюсеры обратили внимание, что цвет черепицы на крышах там другой. Это произвело на режиссершу сильное впечатление: «Не знаю почему, но они были черными». Такой цвет встречается нечасто, поэтому было сделано много референсных фотографий.
 
 Такое внимание к деталям заслуживает большой похвалы. #заметки
+
+::image{src="/images/uploads/tg-1471.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1472.jpg" alt="" width="column"}

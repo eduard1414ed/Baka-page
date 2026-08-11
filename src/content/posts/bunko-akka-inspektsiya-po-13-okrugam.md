@@ -4,8 +4,8 @@ date: 2025-11-13
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3477.jpg
+pullMedia: false
 noCover: false
 tgId: 3477
 tgUrl: https://t.me/podcastbaka/3477
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2122
 ---
+
+::image{src="/images/uploads/tg-3477.jpg" alt="" width="column"}
 
 В этом месяце мы обсуждаем политический триллер Нацумэ Оно — «АККА: Инспекция по 13 округам». Причем делаем это не одни, а в компании Лизы, создательницы канала «[лиза монах смотрит аниме](http://t.me/liza_monah_i_anime)».
 

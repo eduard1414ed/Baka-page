@@ -4,12 +4,14 @@ date: 2025-12-05
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3529.jpg
+pullMedia: false
 noCover: false
 tgId: 3529
 tgUrl: https://t.me/podcastbaka/3529
 ---
+
+::image{src="/images/uploads/tg-3529.jpg" alt="" width="column"}
 
 Помните такой фильм студии Ghibli, «Со склонов Кокурико»? Он примичателен тремя вещами:
 

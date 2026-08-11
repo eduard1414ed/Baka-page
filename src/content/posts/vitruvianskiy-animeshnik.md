@@ -4,12 +4,14 @@ date: 2025-12-09
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3539.jpg
+pullMedia: false
 noCover: false
 tgId: 3539
 tgUrl: https://t.me/podcastbaka/3539
 ---
+
+::image{src="/images/uploads/tg-3539.jpg" alt="" width="column"}
 
 Наткнулся на [забавную коллекцию](https://x.com/FoldermanJ/status/1986860882983555273?s=20) изображений Витрувианского человека в аниме.
 

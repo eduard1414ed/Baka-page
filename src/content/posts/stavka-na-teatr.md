@@ -4,14 +4,16 @@ date: 2022-08-22
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-468.jpg
+pullMedia: false
 noCover: false
 tgId: 468
 tgUrl: https://t.me/podcastbaka/468
 animeSuggested:
   - akane-banashi
 ---
+
+::image{src="/images/uploads/tg-468.jpg" alt="" width="column"}
 
 Shounen Jump с февраля выпускает новую мангу, и все больше делает на неё ставку — цветные развороты, обложки и масса рекламных материалов.
 

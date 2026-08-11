@@ -4,14 +4,16 @@ date: 2023-10-31
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1624.jpg
+pullMedia: false
 noCover: false
 tgId: 1624
 tgUrl: https://t.me/podcastbaka/1624
 animeSuggested:
   - sousou-no-frieren
 ---
+
+::image{src="/images/uploads/tg-1624.jpg" alt="" width="column"}
 
 В новой серии «Фрирен» наконец-то прозвучало полное название аниме 葬送のフリーレン (Sousou no Frieren).
 

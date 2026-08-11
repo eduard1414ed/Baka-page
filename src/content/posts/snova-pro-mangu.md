@@ -4,14 +4,16 @@ date: 2023-06-16
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1319.jpg
+pullMedia: false
 noCover: false
 tgId: 1319
 tgUrl: https://t.me/podcastbaka/1319
 animeSuggested:
   - yomi-no-tsugai
 ---
+
+::image{src="/images/uploads/tg-1319.jpg" alt="" width="column"}
 
 Такая сегодня неделя, что почти все посты о манге. Но надеюсь, вы не против.
 

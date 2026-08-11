@@ -4,12 +4,14 @@ date: 2023-06-14
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1312.jpg
+pullMedia: false
 noCover: false
 tgId: 1312
 tgUrl: https://t.me/podcastbaka/1312
 ---
+
+::image{src="/images/uploads/tg-1312.jpg" alt="" width="column"}
 
 Давненько не было обзоров на мангу, решил это исправить. «Эта девчонка милая... но опасная?» — это онгоинг от издания Comic Smart, в котором вышло уже 50 глав.
 
@@ -20,3 +22,8 @@ tgUrl: https://t.me/podcastbaka/1312
 Манга одновременно похожа на «[У Коми-сан проблемы с общением](/posts/bonusnyy-vypusk-u-komi-san-problemy-s-obscheniem/)» и на «[Моя девушка не только милая](/posts/obzor-vseh-anime-vesny-138/)». А местами, когда главную героиню наряжают, она может напоминать и «[Фарфоровую куклу](/posts/bonusnyy-vypusk-moya-farforovaya-kukla-vlyubilas/)».
 
 Как вы поняли, «Эта девчонка милая» — совсем не оригинальное произведение. Но все важные элементы истории сделаны тут верно: героиня правда милая, комедийные моменты работают и вызывают улыбку, а наивность помогает расслабиться. #обзор
+
+::image{src="/images/uploads/tg-1313.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1314.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1315.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1316.jpg" alt="" width="column"}

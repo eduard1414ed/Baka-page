@@ -4,8 +4,8 @@ date: 2026-04-02
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3868.jpg
+pullMedia: false
 noCover: false
 tgId: 3868
 tgUrl: https://t.me/podcastbaka/3868
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2492
 ---
+
+::image{src="/images/uploads/tg-3868.jpg" alt="" width="column"}
 
 Наши руки наконец-то добрались до ремейка культового сёдзё начала нулевых. В этом выпуске обсуждаем самое начало — первый сезон.
 

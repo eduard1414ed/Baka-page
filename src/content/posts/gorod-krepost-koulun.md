@@ -4,12 +4,14 @@ date: 2025-04-15
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2880.jpg
+pullMedia: false
 noCover: false
 tgId: 2880
 tgUrl: https://t.me/podcastbaka/2880
 ---
+
+::image{src="/images/uploads/tg-2880.jpg" alt="" width="column"}
 
 До 1993 года в Гонконге существовало место, в которое сложно поверить. Оно казалось вышло из фантастического романа. Это был Коулун — самый густонаселённый квартал в истории человечества.
 
@@ -26,3 +28,8 @@ tgUrl: https://t.me/podcastbaka/2880
 Именно его урбанистический хаос — с вросшими друг в друга зданиями, светом неоновых ламп и вечным полумраком — стал визуальной основой для киберпанка. Вдохновлённые Коулуном художники и режиссёры рисовали миры, где города больше напоминают ульи, а улицы — кишащие сети без выхода.
 
 След Коулуна можно найти и в «Призраке в доспехах», и в «Акире», и, конечно, в новом сериале этого сезона — «Обычный роман в Коулуне».
+
+::image{src="/images/uploads/tg-2881.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2882.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2883.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-2884.jpg" alt="" width="column"}

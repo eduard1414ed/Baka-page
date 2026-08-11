@@ -4,8 +4,8 @@ date: 2024-07-30
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2285.jpg
+pullMedia: false
 noCover: false
 tgId: 2285
 tgUrl: https://t.me/podcastbaka/2285
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-2285.jpg" alt="" width="column"}
 
 Новый сериал о девочках, которые собирают музыкальную группу — каким он вышел? Это просто длинная реклама или интересный тайтл? Получилось ли у авторов достойное 3D?
 

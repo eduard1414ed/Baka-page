@@ -4,12 +4,14 @@ date: 2022-05-14
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-51.jpg
+pullMedia: false
 noCover: false
 tgId: 51
 tgUrl: https://t.me/podcastbaka/51
 ---
+
+::image{src="/images/uploads/tg-51.jpg" alt="" width="column"}
 
 «Аля иногда кокетничает со мной по-русски» — рассказывает об отношениях школьницы Али, которая переехала в Японию и ее одноклассника Кудзе.
 

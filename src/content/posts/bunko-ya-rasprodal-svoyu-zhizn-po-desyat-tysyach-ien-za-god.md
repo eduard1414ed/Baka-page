@@ -4,8 +4,8 @@ date: 2026-04-27
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3909.jpg
+pullMedia: false
 noCover: false
 tgId: 3909
 tgUrl: https://t.me/podcastbaka/3909
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2549
 ---
+
+::image{src="/images/uploads/tg-3909.jpg" alt="" width="column"}
 
 «Я распродал свою жизнь» — одна из самых популярных коротких романтических манг, у которой нет аниме-экранизации. Действительно ли она так хороша?
 

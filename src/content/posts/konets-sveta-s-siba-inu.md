@@ -4,12 +4,14 @@ date: 2024-03-19
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2010.jpg
+pullMedia: false
 noCover: false
 tgId: 2010
 tgUrl: https://t.me/podcastbaka/2010
 ---
+
+::image{src="/images/uploads/tg-2010.jpg" alt="" width="column"}
 
 На выходных сидел с собакой друзей — и подумал поискать мангу про собак. И обнаружил очень милый шедевр.
 
@@ -18,3 +20,5 @@ tgUrl: https://t.me/podcastbaka/2010
 Манга смешная и нелепая. Здесь нет других людей, зато есть пришельцы-туристы, духи, тролли-еноты и абсолютной нормой считается общение с животными.
 
 Общего сюжета нет, отдельные зарисовки. Поэтому можно листать рандомные главы в грустные вечера. #обзор
+
+::image{src="/images/uploads/tg-2011.jpg" alt="" width="column"}

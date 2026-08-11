@@ -4,12 +4,14 @@ date: 2025-04-29
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2924.jpg
+pullMedia: false
 noCover: false
 tgId: 2924
 tgUrl: https://t.me/podcastbaka/2924
 ---
+
+::image{src="/images/uploads/tg-2924.jpg" alt="" width="column"}
 
 В аниме полно штампов, связанных со школьной жизнью. Все эти спортивные фестивали, экскурсии в другой город, тесты и экзамены. Но почему при этом создается гораздо меньше тайтлов о студентах? Хотя казалось бы, там есть все то же самое?
 

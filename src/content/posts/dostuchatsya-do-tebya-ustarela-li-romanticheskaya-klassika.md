@@ -4,8 +4,8 @@ date: 2025-07-03
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3102.jpg
+pullMedia: false
 noCover: false
 tgId: 3102
 tgUrl: https://t.me/podcastbaka/3102
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_1863
 ---
+
+::image{src="/images/uploads/tg-3102.jpg" alt="" width="column"}
 
 В новом бонусном выпуске мы обсуждаем первый сезон одного из самых известных сёдзё — «Достучаться до тебя».
 

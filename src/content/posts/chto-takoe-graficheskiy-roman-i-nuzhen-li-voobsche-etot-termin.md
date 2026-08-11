@@ -4,12 +4,14 @@ date: 2023-11-02
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1632.jpg
+pullMedia: false
 noCover: false
 tgId: 1632
 tgUrl: https://t.me/podcastbaka/1632
 ---
+
+::image{src="/images/uploads/tg-1632.jpg" alt="" width="column"}
 
 В чем разница между комиксом, графическим романом, нарисованным романом, романом в картинках и графическим альбомом? Почему американский комиксист Уилл Айснер отказался называть свои книги комиксами, а британский автор Нил Гейман — графическими романами? И какие комиксы почитать, если вы не любите истории про ниндзя, роботов и магию?
 

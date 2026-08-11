@@ -4,12 +4,14 @@ date: 2023-02-16
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1038.jpg
+pullMedia: false
 noCover: false
 tgId: 1038
 tgUrl: https://t.me/podcastbaka/1038
 ---
+
+::image{src="/images/uploads/tg-1038.jpg" alt="" width="column"}
 
 Если вы давно читаете этот канал — вы знаете, как я люблю обращать внимание на то, как «работает камера» в аниме. Потому что по сравнению с life-action в анимации нет ничего лишнего. Камера может полностью следовать за желаниями и решениями режиссера. И потому в ней можно найти очень много скрытого смысла.
 

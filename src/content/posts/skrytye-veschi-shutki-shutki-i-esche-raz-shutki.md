@@ -4,8 +4,8 @@ date: 2026-05-14
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3942.jpg
+pullMedia: false
 noCover: false
 tgId: 3942
 tgUrl: https://t.me/podcastbaka/3942
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2582
 ---
+
+::image{src="/images/uploads/tg-3942.jpg" alt="" width="column"}
 
 Достаточно ли одного юмора для того, чтобы сериал был интересным? Стоит ли скрывать от детей место своей работы? И как это аниме может быть меркой для всех новых тайтлов?
 

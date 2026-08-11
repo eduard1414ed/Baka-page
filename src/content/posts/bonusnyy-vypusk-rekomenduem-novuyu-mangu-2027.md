@@ -4,8 +4,8 @@ date: 2024-03-30
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2027.jpg
+pullMedia: false
 noCover: false
 tgId: 2027
 tgUrl: https://t.me/podcastbaka/2027
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-2027.jpg" alt="" width="column"}
 
 Мы решили выпустить эпизод про «Белую коробку» в общем фиде, поэтому я подготовил для платных подписчиков соло-бонус. Посоветовал три новые манги 2024 года, на которые стоит обратить внимание.
 

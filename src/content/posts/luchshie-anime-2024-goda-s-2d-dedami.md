@@ -4,12 +4,14 @@ date: 2025-01-24
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2692.jpg
+pullMedia: false
 noCover: false
 tgId: 2692
 tgUrl: https://t.me/podcastbaka/2692
 ---
+
+::image{src="/images/uploads/tg-2692.jpg" alt="" width="column"}
 
 По сложившейся традиции ребята из подкаста «[2D Деды](http://t.me/twoddeds)» позвали меня в гости подвести итоги аниме года.
 

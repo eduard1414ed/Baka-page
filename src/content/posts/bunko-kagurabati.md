@@ -4,8 +4,8 @@ date: 2026-07-24
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-4111.jpg
+pullMedia: false
 noCover: false
 tgId: 4111
 tgUrl: https://t.me/podcastbaka/4111
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-4111.jpg" alt="" width="column"}
 
 Что общего у «Кагурабати» и «Морбиуса»? Как «Бака!» предсказала успех мангаки Хокодзоно? И почему манга про месть стала главным источником мемов?
 

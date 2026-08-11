@@ -4,12 +4,14 @@ date: 2024-10-30
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2476.jpg
+pullMedia: false
 noCover: false
 tgId: 2476
 tgUrl: https://t.me/podcastbaka/2476
 ---
+
+::image{src="/images/uploads/tg-2476.jpg" alt="" width="column"}
 
 Если вы посмотрите на ключевые кадры аниме, то быстро заметите, что там обычно используется несколько цветов: желтый, красный, голубой, иногда зеленый или фиолетовый. Что они значат и зачем нужны?
 

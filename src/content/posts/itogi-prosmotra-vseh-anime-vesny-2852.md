@@ -4,14 +4,16 @@ date: 2025-04-01
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2852.jpg
+pullMedia: false
 noCover: false
 tgId: 2852
 tgUrl: https://t.me/podcastbaka/2852
 animeSuggested:
   - apocalypse-hotel
 ---
+
+::image{src="/images/uploads/tg-2852.jpg" alt="" width="column"}
 
 В субботу мы провели стрим, где посмотрели трейлеры всех весенних премьер и решили, что смотреть, а что нет ([запись лежит на твиче](https://www.twitch.tv/bakapodcast)).
 

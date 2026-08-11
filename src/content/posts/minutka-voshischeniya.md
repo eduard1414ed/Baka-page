@@ -4,12 +4,14 @@ date: 2022-08-09
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-431.jpg
+pullMedia: false
 noCover: false
 tgId: 431
 tgUrl: https://t.me/podcastbaka/431
 ---
+
+::image{src="/images/uploads/tg-431.jpg" alt="" width="column"}
 
 Сериал Call of the Night — рассказывает о парне, который спасается от бессонницы и находит утешение в ночных прогулках (у нас есть [обзор этого аниме](/posts/obzor-vseh-anime-leta-pesn-nochnyh-sov/)).
 
@@ -20,3 +22,7 @@ tgUrl: https://t.me/podcastbaka/431
 Мы видим маленьких людей в абсолютно тихом и бесконечно пустом неоновом пространстве улиц и звездного неба.
 
 Это красиво (1) и это передаёт нам, зрителям, ощущения, которые испытывает сам главный герой (2) #заметки
+
+::image{src="/images/uploads/tg-432.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-433.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-434.jpg" alt="" width="column"}

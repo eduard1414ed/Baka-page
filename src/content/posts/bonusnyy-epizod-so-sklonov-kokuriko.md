@@ -4,8 +4,8 @@ date: 2022-08-18
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-459.jpg
+pullMedia: false
 noCover: false
 tgId: 459
 tgUrl: https://t.me/podcastbaka/459
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-459.jpg" alt="" width="column"}
 
 В последнем бонусном эпизоде сезона мы обсуждаем необычный фильм студии Ghibli — «Со склонов Кокурико»
 

@@ -4,8 +4,8 @@ date: 2026-07-16
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-4086.jpg
+pullMedia: false
 noCover: false
 tgId: 4086
 tgUrl: https://t.me/podcastbaka/4086
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2646
 ---
+
+::image{src="/images/uploads/tg-4086.jpg" alt="" width="column"}
 
 «Город» — это экранизация манги Кэйити Арави, автора «Мелочей жизни», которую выпустила культовая студия Kyoto Animation.
 

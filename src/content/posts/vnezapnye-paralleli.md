@@ -4,12 +4,14 @@ date: 2023-03-31
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1144.jpg
+pullMedia: false
 noCover: false
 tgId: 1144
 tgUrl: https://t.me/podcastbaka/1144
 ---
+
+::image{src="/images/uploads/tg-1144.jpg" alt="" width="column"}
 
 Небольшое дополнение к эпизоду. Мы с Ксюшей много говорили об исторической достоверности «Саги о Винланде», и вспоминали, какие герои отсылают к реальным викингам.
 
@@ -22,3 +24,5 @@ tgUrl: https://t.me/podcastbaka/1144
 Именно так погиб и Торс, защищая своего сына.
 
 Так что, Юкимура не только про викингов читал, но явно и в школе любил историю. #заметки
+
+::image{src="/images/uploads/tg-1145.jpg" alt="" width="column"}

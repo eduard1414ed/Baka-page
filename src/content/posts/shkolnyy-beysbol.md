@@ -4,12 +4,14 @@ date: 2022-08-15
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-449.jpg
+pullMedia: false
 noCover: false
 tgId: 449
 tgUrl: https://t.me/podcastbaka/449
 ---
+
+::image{src="/images/uploads/tg-449.jpg" alt="" width="column"}
 
 Бейсбол для японских подростков — особенный вид спорта.
 

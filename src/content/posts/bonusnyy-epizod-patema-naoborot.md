@@ -4,8 +4,8 @@ date: 2022-11-04
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-714.jpg
+pullMedia: false
 noCover: false
 tgId: 714
 tgUrl: https://t.me/podcastbaka/714
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-714.jpg" alt="" width="column"}
 
 Боится ли Ксюша перевернутых людей? Каково это жить в слоенном пироге? И где на самом деле верх, а где низ?
 

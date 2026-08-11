@@ -4,12 +4,14 @@ date: 2023-05-16
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1260.jpg
+pullMedia: false
 noCover: false
 tgId: 1260
 tgUrl: https://t.me/podcastbaka/1260
 ---
+
+::image{src="/images/uploads/tg-1260.jpg" alt="" width="column"}
 
 «KamiKatsu: Как быть богу в мире без богов?» — очередной исекай, который пытается посмеяться над штампами исекаев. Герой перемещается в новый мир, но вместо заданий в гильдии ему дают лопату и заставляют копать грядки.
 
@@ -24,3 +26,5 @@ tgUrl: https://t.me/podcastbaka/1260
 Теперь меня не покидает мысль, что ужасный 3D, совершенно отвратительная режиссура и аниме-фильтр на тракторе — все это мета-игра и художественные решения. И на самом деле, KamiKatsu смеется не только над штампами исекаев, но и над самим аниме в целом.
 
 Ну либо это просто очень плохой и кринжовый сериал — такое тоже может быть. #заметки
+
+::image{src="/images/uploads/tg-1261.jpg" alt="" width="column"}

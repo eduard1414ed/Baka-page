@@ -4,12 +4,14 @@ date: 2022-06-23
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-247.jpg
+pullMedia: false
 noCover: false
 tgId: 250
 tgUrl: https://t.me/podcastbaka/250
 ---
+
+::image{src="/images/uploads/tg-247.jpg" alt="" width="column"}
 
 В начале 70-х годов несколько девушек поставили себе цель — сделать профессию мангаки нормой для женщин. Они объединились в «Союз 24-го года» и стали одними из родоначальниц сёдзе (манги для девочек).
 
@@ -18,3 +20,7 @@ tgUrl: https://t.me/podcastbaka/250
 Но, как я рассказывал в [выпуске подкаста про сёдзе](https://youtu.be/Pn3wKPK15lI), этот приём так понравился читателям и самим авторам, что стал появляться и в других демографиях.
 
 И вот я наткнулся на идеальный пример — аниме «Моя девушка не только милая» основано на сёнен-манге. Но вы только посмотрите, насколько ярко и подробно прорисованы глаза даже на раскадровках. #заметки
+
+::image{src="/images/uploads/tg-248.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-249.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-250.jpg" alt="" width="column"}

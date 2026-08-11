@@ -4,12 +4,14 @@ date: 2025-10-20
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3425.jpg
+pullMedia: false
 noCover: false
 tgId: 3425
 tgUrl: https://t.me/podcastbaka/3425
 ---
+
+::image{src="/images/uploads/tg-3425.jpg" alt="" width="column"}
 
 В детстве Скарлет обожала драться. Ведь это самый простой путь к справедливости. Но высшее общество, разумеется, было в ужасе, и брат регулярно отчитывал её за позорные выходки. Со временем, под давлением семьи и из-за помолвки с принцем, она научилась держать лицо и играть роль приличной леди.
 

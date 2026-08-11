@@ -4,12 +4,14 @@ date: 2025-01-05
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2642.jpg
+pullMedia: false
 noCover: false
 tgId: 2642
 tgUrl: https://t.me/podcastbaka/2642
 ---
+
+::image{src="/images/uploads/tg-2642.jpg" alt="" width="column"}
 
 У японских футбольных команд очень странные названия: Хоккайдо Консодоле, Урава Рэд Даймондс, Нагоя Грампус. В них как будто намешано сразу несколько языков: испанский, английский, японский и черт-еще-знает-какой.
 

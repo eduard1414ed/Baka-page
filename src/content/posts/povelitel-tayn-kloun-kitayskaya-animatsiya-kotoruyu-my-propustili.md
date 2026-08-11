@@ -4,8 +4,8 @@ date: 2026-03-05
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3777.jpg
+pullMedia: false
 noCover: false
 tgId: 3777
 tgUrl: https://t.me/podcastbaka/3777
@@ -17,6 +17,8 @@ bonusLinks:
 animeSuggested:
   - guimi-zhi-zhu-xiaochou-pian
 ---
+
+::image{src="/images/uploads/tg-3777.jpg" alt="" width="column"}
 
 «Повелителя тайн» многие называли одним из лучших анимационных сериалов прошлого года. И мы, наконец-то, до него добрались.
 

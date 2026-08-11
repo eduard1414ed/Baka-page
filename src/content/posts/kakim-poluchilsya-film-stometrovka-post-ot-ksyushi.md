@@ -4,14 +4,16 @@ date: 2025-12-01
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3520.jpg
+pullMedia: false
 noCover: false
 tgId: 3520
 tgUrl: https://t.me/podcastbaka/3520
 animeSuggested:
   - hyakuemu
 ---
+
+::image{src="/images/uploads/tg-3520.jpg" alt="" width="column"}
 
 «Стометровка» — это экранизация манги Uoto, о которой мы уже [рассказывали](/posts/chto-znachit-bezhat/) (он же написал «О движение Земли»).
 

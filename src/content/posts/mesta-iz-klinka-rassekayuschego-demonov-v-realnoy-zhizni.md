@@ -4,12 +4,14 @@ date: 2022-10-18
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-675.jpg
+pullMedia: false
 noCover: false
 tgId: 676
 tgUrl: https://t.me/podcastbaka/676
 ---
+
+::image{src="/images/uploads/tg-675.jpg" alt="" width="column"}
 
 От Demon Slayer не ждешь какой-то исторической достоверности. А зря, на самом деле, в аниме есть сразу несколько реально существующих мест.
 
@@ -22,3 +24,5 @@ tgUrl: https://t.me/podcastbaka/676
 Другие аспекты «Клинка» мы подробно обсудили [в нашем подкасте, послушайте, если еще не успели](https://t.me/podcastbaka/669) 😉
 
 #заметки
+
+::image{src="/images/uploads/tg-676.jpg" alt="" width="column"}

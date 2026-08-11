@@ -4,8 +4,8 @@ date: 2026-04-16
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3890.jpg
+pullMedia: false
 noCover: false
 tgId: 3890
 tgUrl: https://t.me/podcastbaka/3890
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2511
 ---
+
+::image{src="/images/uploads/tg-3890.jpg" alt="" width="column"}
 
 «Труп под ногами Сакурако» — странный феномен. Детективный сериал середины 2010-х, похожий на сериал «Кости». В котором есть только один сезон и который почти никто не помнит.
 

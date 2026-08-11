@@ -4,14 +4,16 @@ date: 2026-02-25
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3755.jpg
+pullMedia: false
 noCover: false
 tgId: 3755
 tgUrl: https://t.me/podcastbaka/3755
 animeSuggested:
   - jujutsu-kaisen
 ---
+
+::image{src="/images/uploads/tg-3755.jpg" alt="" width="column"}
 
 «Магическая битва» в недавнем эпизоде показывает мастер-класс по передаче мотивов и намерений персонажей через окружение.
 
@@ -22,3 +24,5 @@ animeSuggested:
 В конце концов герои узнают от врагов информацию. Вот только кто-то из них идет в ловушку — а кто-то нет. И это можно понять как раз с помощью окружения и того, как обставлена сцена.
 
 Собственно, вопрос для тех, кто не читал мангу. Вы догадались, кто из них врет?
+
+::image{src="/images/uploads/tg-3756.jpg" alt="" width="column"}

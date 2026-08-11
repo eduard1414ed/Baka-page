@@ -4,12 +4,14 @@ date: 2023-09-25
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1518.jpg
+pullMedia: false
 noCover: false
 tgId: 1518
 tgUrl: https://t.me/podcastbaka/1518
 ---
+
+::image{src="/images/uploads/tg-1518.jpg" alt="" width="column"}
 
 Примерно такие заголовки можно было прочитать в конце прошлой недели, когда компания Nippon TV [объявила](https://www.animenewsnetwork.com/news/2023-09-21/nippon-tv-to-acquire-studio-ghibli-as-subsidiary/.202613), что приобретает 42,3% акций студии Ghibli.
 

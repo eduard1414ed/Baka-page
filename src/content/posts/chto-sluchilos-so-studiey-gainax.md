@@ -4,14 +4,16 @@ date: 2024-06-10
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2179.jpg
+pullMedia: false
 noCover: false
 tgId: 2179
 tgUrl: https://t.me/podcastbaka/2179
 animeSuggested:
   - royal-space-force
 ---
+
+::image{src="/images/uploads/tg-2179.jpg" alt="" width="column"}
 
 Gainax — аниме-студия, ответственная за «Евангелион», «Фури-Кури» и «Гуррен-Лаганн». И 7 июня этого года она объявила о банкротстве. Как так вышло?
 

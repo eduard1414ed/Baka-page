@@ -4,8 +4,8 @@ date: 2022-05-14
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-35.jpg
+pullMedia: false
 noCover: false
 tgId: 35
 tgUrl: https://t.me/podcastbaka/35
@@ -17,6 +17,8 @@ bonusLinks:
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-35.jpg" alt="" width="column"}
 
 В этом выпуске мы пытаемся найти хоть что-то хорошее в очередной филлерной арке «Наруто».
 

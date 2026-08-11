@@ -4,8 +4,8 @@ date: 2022-06-02
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-181.jpg
+pullMedia: false
 noCover: false
 tgId: 181
 tgUrl: https://t.me/podcastbaka/181
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: https://vk.com/podcast.baka?w=wall-211086713_207
 ---
+
+::image{src="/images/uploads/tg-181.jpg" alt="" width="column"}
 
 С новым сезоном возвращаются и бонусные эпизоды — и мы постарались сделать их еще более интересными.
 

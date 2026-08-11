@@ -4,8 +4,8 @@ date: 2025-01-28
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2700.jpg
+pullMedia: false
 noCover: false
 tgId: 2700
 tgUrl: https://t.me/podcastbaka/2700
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-2700.jpg" alt="" width="column"}
 
 В первом выпуске нашего нового подкаста о манге мы решили обсудить сразу три тайтла: «Соланин», «Мальчишки двадцатого века» и «Серебряная ложка».
 

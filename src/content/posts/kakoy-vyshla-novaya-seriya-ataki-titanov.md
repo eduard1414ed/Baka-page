@@ -4,12 +4,14 @@ date: 2023-03-04
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1081.jpg
+pullMedia: false
 noCover: false
 tgId: 1081
 tgUrl: https://t.me/podcastbaka/1081
 ---
+
+::image{src="/images/uploads/tg-1081.jpg" alt="" width="column"}
 
 Вчера вечером состоялся релиз первой части финала «Атаки Титанов» в виде специального часового эпизода. Без спойлеров расскажу, что из этого вышло.
 
@@ -40,3 +42,9 @@ tgUrl: https://t.me/podcastbaka/1081
 Если вы смотрели и любите «Атаку» — то безусловно. Иначе вы обязательно поймайте где-нибудь спойлеры.
 
 Но, если вы «Атаку» еще не смотрели совсем — я бы советовал дождаться все-таки самого финального финала и потом начинать. Чтобы познакомиться с этой историей сразу целиком — так точно эмоции будут ярче. #обзор
+
+::image{src="/images/uploads/tg-1082.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1083.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1084.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1085.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1086.jpg" alt="" width="column"}

@@ -4,8 +4,8 @@ date: 2022-05-14
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-57.jpg
+pullMedia: false
 noCover: false
 tgId: 57
 tgUrl: https://t.me/podcastbaka/57
@@ -17,6 +17,8 @@ bonusLinks:
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-57.jpg" alt="" width="column"}
 
 Ксюша хвалит, а Эд ругает следующую большую филлерную арку.
 

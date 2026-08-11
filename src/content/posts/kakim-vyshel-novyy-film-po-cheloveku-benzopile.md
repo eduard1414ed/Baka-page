@@ -4,12 +4,14 @@ date: 2025-10-27
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3442.jpg
+pullMedia: false
 noCover: false
 tgId: 3442
 tgUrl: https://t.me/podcastbaka/3442
 ---
+
+::image{src="/images/uploads/tg-3442.jpg" alt="" width="column"}
 
 «Человек-бензопила. История Резе» — это прямое продолжение первого сезона, которое рассказывает о том, как Дэндзи знакомится с милой девушкой по имени Резе. Я вчера вечером сходил на фильм и сейчас без спойлеров про него расскажу.
 

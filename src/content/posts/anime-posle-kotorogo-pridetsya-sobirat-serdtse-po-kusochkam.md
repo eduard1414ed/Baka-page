@@ -4,12 +4,14 @@ date: 2024-11-07
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2499.jpg
+pullMedia: false
 noCover: false
 tgId: 2499
 tgUrl: https://t.me/podcastbaka/2499
 ---
+
+::image{src="/images/uploads/tg-2499.jpg" alt="" width="column"}
 
 (пишет: Ксюша)
 

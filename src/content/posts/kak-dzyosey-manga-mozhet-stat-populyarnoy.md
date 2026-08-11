@@ -4,14 +4,16 @@ date: 2022-09-19
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-587.jpg
+pullMedia: false
 noCover: false
 tgId: 587
 tgUrl: https://t.me/podcastbaka/587
 animeSuggested:
   - shingeki-no-kyojin
 ---
+
+::image{src="/images/uploads/tg-587.jpg" alt="" width="column"}
 
 Что если я скажу, что «Клинок рассекающий демонов», «Атака Титанов» и «Токийские мстители» прошлой зимой все уступили по продажам дзесэй-манге?
 

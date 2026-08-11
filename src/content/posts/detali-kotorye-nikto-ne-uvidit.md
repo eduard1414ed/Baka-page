@@ -4,15 +4,27 @@ date: 2022-08-03
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-393.jpg
+pullMedia: false
 noCover: false
 tgId: 393
 tgUrl: https://t.me/podcastbaka/393
 ---
+
+::image{src="/images/uploads/tg-393.jpg" alt="" width="column"}
 
 В новом выпуске мы говорим о том, почему фильм Red Line оказался провальным — и как один из минусов отмечаем то, что невероятную детализацию рисовки просто не успеваешь рассмотреть из-за бешеной скорости происходящего.
 
 Это можно исправить, если смотреть не сам фильм, а артбук к нему.
 
 Отдельные страницы с дизайном персонажей показывают огромный труд, который вложили создатели в эту работу. И даже становится жаль, что такой оригинальный стиль в итоге не смог полностью раскрыться. #заметки
+
+::image{src="/images/uploads/tg-394.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-395.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-396.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-397.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-398.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-399.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-400.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-401.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-402.jpg" alt="" width="column"}

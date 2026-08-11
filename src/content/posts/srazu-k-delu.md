@@ -4,12 +4,14 @@ date: 2023-03-09
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1093.jpg
+pullMedia: false
 noCover: false
 tgId: 1093
 tgUrl: https://t.me/podcastbaka/1093
 ---
+
+::image{src="/images/uploads/tg-1093.jpg" alt="" width="column"}
 
 После [изучения популярных тайтлов](/posts/prevoshodstvo-syonena/) я решил больше рассказывать про сёдзё (и не только) — приступаю.
 

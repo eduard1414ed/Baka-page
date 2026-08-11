@@ -4,8 +4,8 @@ date: 2022-05-14
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-71.jpg
+pullMedia: false
 noCover: false
 tgId: 71
 tgUrl: https://t.me/podcastbaka/71
@@ -17,6 +17,8 @@ bonusLinks:
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-71.jpg" alt="" width="column"}
 
 Мы возвращаемся с новым сезоном — а значит, возвращаются и обсуждения филлерных арок «Наруто».
 

@@ -4,8 +4,8 @@ date: 2022-08-11
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-438.jpg
+pullMedia: false
 noCover: false
 tgId: 438
 tgUrl: https://t.me/podcastbaka/438
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-438.jpg" alt="" width="column"}
 
 Политическое устройство, общественный порядок и свобода выбора — главные темы, которые поднимает первый сезон «Психопаспорта».
 

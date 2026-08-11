@@ -4,12 +4,14 @@ date: 2025-07-02
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-3101.jpg
+pullMedia: false
 noCover: false
 tgId: 3101
 tgUrl: https://t.me/podcastbaka/3101
 ---
+
+::image{src="/images/uploads/tg-3101.jpg" alt="" width="column"}
 
 Второй сезон «Ветролома» проходит как-то мимо радаров (даже я посмотрел только пару серий). Даже немного обидно, поэтому давайте расскажу вам про перевод названий в этом тайтле. Может разожгу немного интерес:
 

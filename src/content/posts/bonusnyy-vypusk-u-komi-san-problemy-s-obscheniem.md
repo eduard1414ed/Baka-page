@@ -4,8 +4,8 @@ date: 2022-05-15
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-104.jpg
+pullMedia: false
 noCover: false
 tgId: 104
 tgUrl: https://t.me/podcastbaka/104
@@ -15,6 +15,8 @@ bonusLinks:
   tgClosed: ''
   vkDonat: ''
 ---
+
+::image{src="/images/uploads/tg-104.jpg" alt="" width="column"}
 
 В этом выпуске мы обсуждаем одну из лучших комедий 2021 года.
 

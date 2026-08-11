@@ -4,12 +4,14 @@ date: 2026-07-01
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-4055.jpg
+pullMedia: false
 noCover: false
 tgId: 4055
 tgUrl: https://t.me/podcastbaka/4055
 ---
+
+::image{src="/images/uploads/tg-4055.jpg" alt="" width="column"}
 
 Последний год я работал над офигенным секретным проектом, о котором не мог никому рассказывать.
 
@@ -24,3 +26,8 @@ tgUrl: https://t.me/podcastbaka/4055
 Книжка вышла очень красивая и, надеюсь, очень интересная. Как для тех, кто только впервые узнает про аниме, так и для тех, кто следит за темой давно.
 
 **«Манга, моэ, исекай. Большой гид по аниме»** выйдет 28 июля. Электронная и аудиоверсия будут в Яндекс Книгах, а бумажную уже можно [предзаказать](https://alpinabook.ru/catalog/book-manga-moe-isekay/) [на сайте «Альпины нон-фикшн](https://alpinabook.ru/catalog/book-manga-moe-isekay/)».
+
+::image{src="/images/uploads/tg-4056.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-4057.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-4058.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-4059.jpg" alt="" width="column"}

@@ -4,12 +4,14 @@ date: 2026-06-15
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-4023.jpg
+pullMedia: false
 noCover: false
 tgId: 4023
 tgUrl: https://t.me/podcastbaka/4023
 ---
+
+::image{src="/images/uploads/tg-4023.jpg" alt="" width="column"}
 
 Вчера состоялся первый матч сборной Японии по футболу на Чемпионате мира. И я вспомнил вот эту смешную историю.
 

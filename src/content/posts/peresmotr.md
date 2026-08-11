@@ -4,12 +4,14 @@ date: 2023-06-23
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1325.jpg
+pullMedia: false
 noCover: false
 tgId: 1325
 tgUrl: https://t.me/podcastbaka/1325
 ---
+
+::image{src="/images/uploads/tg-1325.jpg" alt="" width="column"}
 
 На прошлой неделе пересмотрел «Хоримию» — и неожиданно для себя изменил свое мнение об этом сериале.
 
@@ -22,3 +24,5 @@ tgUrl: https://t.me/podcastbaka/1325
 Вот так внезапно мой список ожидания пополнился летним аниме «Хоримия: Кусочек». Куда войдут сюжеты из манги, оставшиеся за бортом пересмотренной мной экранизации. Очень жду!
 
 Вам бы хотелось послушать выпуск «Баки!» про «Хоримию»? #заметки
+
+::image{src="/images/uploads/tg-1326.jpg" alt="" width="column"}

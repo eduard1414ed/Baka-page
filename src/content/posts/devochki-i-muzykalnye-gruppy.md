@@ -4,12 +4,14 @@ date: 2024-08-01
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-2289.jpg
+pullMedia: false
 noCover: false
 tgId: 2289
 tgUrl: https://t.me/podcastbaka/2289
 ---
+
+::image{src="/images/uploads/tg-2289.jpg" alt="" width="column"}
 
 В недавнем бонусном выпуске про «Плач девичьей группы» мы с Ксюшей обсуждали, чем отличаются разные сериалы про девочек и музыкальные группы (их ведь уже под сотню наберется!)
 

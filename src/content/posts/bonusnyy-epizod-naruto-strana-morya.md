@@ -4,8 +4,8 @@ date: 2022-05-14
 category: bonus
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-50.jpg
+pullMedia: false
 noCover: false
 tgId: 50
 tgUrl: https://t.me/podcastbaka/50
@@ -17,6 +17,8 @@ bonusLinks:
 animeSuggested:
   - naruto
 ---
+
+::image{src="/images/uploads/tg-50.jpg" alt="" width="column"}
 
 Обсуждаем две арки «Наруто»: одну хвалим, другую ругаем.
 

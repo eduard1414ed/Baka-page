@@ -4,14 +4,16 @@ date: 2023-05-23
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1270.jpg
+pullMedia: false
 noCover: false
 tgId: 1270
 tgUrl: https://t.me/podcastbaka/1270
 animeSuggested:
   - oshi-no-ko
 ---
+
+::image{src="/images/uploads/tg-1270.jpg" alt="" width="column"}
 
 «Ребенок идола» — рассказывает об обратной стороне шоу-бизнеса. В новой шестой серии авторы через героиню Акане подняли тему кибербуллинга и того, как он влияет на ментальное состояние людей, находящихся в центре внимания.
 

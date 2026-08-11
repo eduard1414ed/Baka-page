@@ -4,12 +4,14 @@ date: 2024-02-28
 category: note
 draft: true
 description: ''
-cover: ''
-pullMedia: true
+cover: /images/uploads/tg-1960.jpg
+pullMedia: false
 noCover: false
 tgId: 1960
 tgUrl: https://t.me/podcastbaka/1960
 ---
+
+::image{src="/images/uploads/tg-1960.jpg" alt="" width="column"}
 
 Последний фильм Макото Синкая — «Судзумэ, закрывающая двери» рассказывает о том, как постепенно заживают раны. Даже если они оставлены большими трагедиями.
 
