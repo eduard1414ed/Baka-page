@@ -2459,7 +2459,9 @@
 		"phrases": [
 			"Гинтамы"
 		],
-		"at": "2026-08-11T15:18:38.938Z"
+		"at": "2026-08-11T15:18:38.938Z",
+		"result": "вписано в «gintama»: Гинтамы",
+		"applied": "2026-08-11T15:20:47.754Z"
 	},
 	{
 		"id": "cand:56165",
@@ -2471,7 +2473,9 @@
 		"phrases": [
 			"Забвение бэттери"
 		],
-		"at": "2026-08-11T15:18:43.006Z"
+		"at": "2026-08-11T15:18:43.006Z",
+		"result": "заведён: src/content/anime/boukyaku-battery-tv.json",
+		"applied": "2026-08-11T15:20:48.815Z"
 	},
 	{
 		"id": "cand:27989",
@@ -2483,7 +2487,9 @@
 		"phrases": [
 			"Звучи, эуфониум!"
 		],
-		"at": "2026-08-11T15:18:44.555Z"
+		"at": "2026-08-11T15:18:44.555Z",
+		"result": "заведён: src/content/anime/hibike-euphonium.json",
+		"applied": "2026-08-11T15:20:50.724Z"
 	},
 	{
 		"id": "cand:36028",
@@ -2495,7 +2501,9 @@
 		"phrases": [
 			"Золотое божество"
 		],
-		"at": "2026-08-11T15:18:56.156Z"
+		"at": "2026-08-11T15:18:56.156Z",
+		"result": "заведён: src/content/anime/golden-kamuy.json",
+		"applied": "2026-08-11T15:20:52.523Z"
 	},
 	{
 		"id": "cand:249",
@@ -2507,7 +2515,9 @@
 		"phrases": [
 			"Инуяся"
 		],
-		"at": "2026-08-11T15:18:57.371Z"
+		"at": "2026-08-11T15:18:57.371Z",
+		"result": "заведён: src/content/anime/inuyasha.json",
+		"applied": "2026-08-11T15:20:54.374Z"
 	},
 	{
 		"id": "cand:52020",
@@ -2519,7 +2529,9 @@
 		"phrases": [
 			"Конец света с Сиба-Ину"
 		],
-		"at": "2026-08-11T15:18:59.255Z"
+		"at": "2026-08-11T15:18:59.255Z",
+		"result": "заведён: src/content/anime/sekai-no-owari-ni-shiba-inu-to.json",
+		"applied": "2026-08-11T15:20:56.166Z"
 	},
 	{
 		"id": "cand:120",
@@ -2531,7 +2543,9 @@
 		"phrases": [
 			"Корзинка фруктов"
 		],
-		"at": "2026-08-11T15:19:05.772Z"
+		"at": "2026-08-11T15:19:05.772Z",
+		"result": "заведён: src/content/anime/fruits-basket.json",
+		"applied": "2026-08-11T15:20:57.964Z"
 	},
 	{
 		"id": "cand:1088",
@@ -2543,7 +2557,9 @@
 		"phrases": [
 			"Макросс"
 		],
-		"at": "2026-08-11T15:19:09.255Z"
+		"at": "2026-08-11T15:19:09.255Z",
+		"result": "заведён: src/content/anime/macross.json",
+		"applied": "2026-08-11T15:20:59.912Z"
 	},
 	{
 		"id": "cand:57810",
@@ -2555,7 +2571,9 @@
 		"phrases": [
 			"Маленький гражданин"
 		],
-		"at": "2026-08-11T15:19:15.022Z"
+		"at": "2026-08-11T15:19:15.022Z",
+		"result": "заведён: src/content/anime/shoushimin-series.json",
+		"applied": "2026-08-11T15:21:01.726Z"
 	},
 	{
 		"id": "cand:45425",
@@ -2567,7 +2585,9 @@
 		"phrases": [
 			"Медленная петля"
 		],
-		"at": "2026-08-11T15:19:16.472Z"
+		"at": "2026-08-11T15:19:16.472Z",
+		"result": "заведён: src/content/anime/slow-loop.json",
+		"applied": "2026-08-11T15:21:03.635Z"
 	},
 	{
 		"id": "cand:51358",
@@ -2579,7 +2599,9 @@
 		"phrases": [
 			"Мертвые-мертвые демоны"
 		],
-		"at": "2026-08-11T15:19:17.738Z"
+		"at": "2026-08-11T15:19:17.738Z",
+		"result": "заведён: src/content/anime/dead-dead-demons-dededede-destruction.json",
+		"applied": "2026-08-11T15:21:05.465Z"
 	},
 	{
 		"id": "cand:2246",
@@ -2591,7 +2613,9 @@
 		"phrases": [
 			"Мононокэ"
 		],
-		"at": "2026-08-11T15:19:24.704Z"
+		"at": "2026-08-11T15:19:24.704Z",
+		"result": "заведён: src/content/anime/mononoke.json",
+		"applied": "2026-08-11T15:21:07.313Z"
 	},
 	{
 		"id": "cand:38555",
@@ -2603,7 +2627,9 @@
 		"phrases": [
 			"Моя реинкарнация в отомэ-игре в качестве главной злодейки"
 		],
-		"at": "2026-08-11T15:19:26.738Z"
+		"at": "2026-08-11T15:19:26.738Z",
+		"result": "заведён: src/content/anime/otome-game-no-hametsu-flag-shika-nai-akuyaku-reijou-ni-tense.json",
+		"applied": "2026-08-11T15:21:09.113Z"
 	},
 	{
 		"id": "cand:11433",
@@ -2615,7 +2641,9 @@
 		"phrases": [
 			"Мы ждём тебя летом"
 		],
-		"at": "2026-08-11T15:19:28.388Z"
+		"at": "2026-08-11T15:19:28.388Z",
+		"result": "заведён: src/content/anime/ano-natsu-de-matteru.json",
+		"applied": "2026-08-11T15:21:11.017Z"
 	},
 	{
 		"id": "cand:19815",
@@ -2627,7 +2655,9 @@
 		"phrases": [
 			"Нет игры — нет жизни"
 		],
-		"at": "2026-08-11T15:19:31.405Z"
+		"at": "2026-08-11T15:19:31.405Z",
+		"result": "заведён: src/content/anime/no-game-no-life.json",
+		"applied": "2026-08-11T15:21:12.831Z"
 	},
 	{
 		"id": "cand:60254",
@@ -2639,7 +2669,9 @@
 		"phrases": [
 			"Обычные дни Яно"
 		],
-		"at": "2026-08-11T15:19:39.555Z"
+		"at": "2026-08-11T15:19:39.555Z",
+		"result": "заведён: src/content/anime/yano-kun-no-futsuu-no-hibi.json",
+		"applied": "2026-08-11T15:21:14.992Z"
 	},
 	{
 		"id": "cand:759",
@@ -2651,7 +2683,9 @@
 		"phrases": [
 			"Однажды в Токио"
 		],
-		"at": "2026-08-11T15:19:40.522Z"
+		"at": "2026-08-11T15:19:40.522Z",
+		"result": "заведён: src/content/anime/tokyo-godfathers.json",
+		"applied": "2026-08-11T15:21:16.793Z"
 	},
 	{
 		"id": "cand:35434",
@@ -2663,6 +2697,8 @@
 		"phrases": [
 			"Парни из магазинчика"
 		],
-		"at": "2026-08-11T15:19:48.872Z"
+		"at": "2026-08-11T15:19:48.872Z",
+		"result": "заведён: src/content/anime/konbini-kareshi.json",
+		"applied": "2026-08-11T15:21:18.618Z"
 	}
 ]
