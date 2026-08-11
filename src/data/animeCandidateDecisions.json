@@ -1251,5 +1251,17 @@
 			"Красная черта"
 		],
 		"at": "2026-08-11T13:44:05.468Z"
+	},
+	{
+		"id": "cand:61026",
+		"what": "create",
+		"sourceId": 61026,
+		"source": "shikimori",
+		"slug": "ansatsusha-de-aru-ore-no-status-ga-yuusha-yori-mo-akiraka-ni",
+		"title": "Мой статус убийцы очевидно превосходит геройский",
+		"phrases": [
+			"Мой статус убийцы очевидно превосходит геройский"
+		],
+		"at": "2026-08-11T13:44:12.034Z"
 	}
 ]
