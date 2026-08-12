@@ -2,15 +2,17 @@
 title: Обзор аниме «Непостижимая Ахарэн»
 date: 2022-05-15
 category: note
-draft: true
+draft: false
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/pasted-image-1786577569971.png
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 tgId: 121
 tgUrl: https://t.me/podcastbaka/121
 ---
-
-[Непостижимая Ахарэн](https://anilist.co/anime/137281/Aharensan-wa-Hakarenai/)
 
 Новое комедийное аниме про одноклассников. Тихая маленькая и странная Ахарэн начинает общаться с угрюмым и социально-неловким Райдо. При этом она совсем не понимает границ и уже после первой прогулки держит парня за руку, спит у него на коленях и кормит бенто.
 
