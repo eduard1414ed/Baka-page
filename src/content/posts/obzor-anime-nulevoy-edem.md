@@ -2,10 +2,13 @@
 title: Обзор аниме «Нулевой Эдем»
 date: 2022-05-14
 category: note
-draft: true
+draft: false
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/IMG_0708.jpeg
+noCover: false
+externalUrl: ''
+externalSource: ''
+anime: []
 tgId: 44
 tgUrl: https://t.me/podcastbaka/44
 ---
