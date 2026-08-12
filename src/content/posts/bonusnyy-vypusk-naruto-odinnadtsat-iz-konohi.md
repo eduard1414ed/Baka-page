@@ -1,27 +1,33 @@
 ---
-title: Бонусный выпуск | Наруто. Одиннадцать из Конохи
+title: Наруто. Одиннадцать из Конохи | Обсуждение филлеров
 date: 2022-05-14
 category: bonus
 draft: true
 description: ''
 cover: /images/uploads/tg-78.jpg
-pullMedia: false
 noCover: false
-tgId: 78
-tgUrl: https://t.me/podcastbaka/78
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested:
+  - naruto
 bonusLinks:
   boosty: ''
   patreon: ''
   tgClosed: ''
   vkDonat: ''
-animeSuggested:
+pullMedia: false
+tgId: 78
+tgUrl: https://t.me/podcastbaka/78
+anime:
   - naruto
 ---
 
 ::image{src="/images/uploads/tg-78.jpg" alt="" width="column"}
 
+
 Наконец-то мы очень хвалим филлерный эпизод — потому что это отличная детективная история.
 
-Обсуждаем, почему Шикамару залог успеха и восторгаемся смелостю Сакуры. #бонус
+Обсуждаем, почему Шикамару залог успеха и восторгаемся смелостю Сакуры.
 
-Послушать выпуск можно у нас [на патреоне](https://www.patreon.com/bakapodcast) или у нас [в группе в ВК](https://vk.com/podcast.baka)
+::anime-ref{id="naruto" source="shikimori" source-id="20"}
