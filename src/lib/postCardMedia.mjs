@@ -12,7 +12,7 @@
 // и в этом файле — и однажды разъехалось бы.
 
 import { getYoutubeThumbnailUrl } from './youtube.mjs';
-import { coverSrcs } from './postImage.mjs';
+import { coverSrcs, firstImageInBody } from './postImage.mjs';
 import { findEpisodeByGuid } from './podcastFeed.mjs';
 import { resolveEpisodeCover } from './episodeCover.mjs';
 
@@ -34,9 +34,15 @@ import { resolveEpisodeCover } from './episodeCover.mjs';
  *   3) обложка выпуска с хостинга подкаста — своя сжатая копия, если она
  *      уже скачана (см. episodeCover.mjs);
  *   4) кадр с ютюба у видеоэссе;
- *   5) ничего. Карточка остаётся текстовой.
+ *   5) первая картинка из текста — ровно то, что обещает подсказка поля
+ *      «Обложка» в админке («пусто — сайт возьмёт первую картинку из текста»).
+ *      Правило считает `firstImageInBody`, тот же код, что и у превью для
+ *      соцсетей: карточка и ссылка в чате обязаны показывать одну картинку.
+ *      Стоит ПОСЛЕДНЕЙ, ниже ютюба: у видеоэссе обложка — кадр ролика,
+ *      а картинка в тексте там иллюстрация по ходу дела;
+ *   6) ничего. Карточка остаётся текстовой.
  *
- * @param {{ id: string, data: Record<string, any> }} post
+ * @param {{ id: string, data: Record<string, any>, body?: string }} post
  * @returns {Promise<CardMedia | null>}
  */
 export async function getCardMedia(post) {
@@ -57,6 +63,12 @@ export async function getCardMedia(post) {
 
 	const thumbnail = youtube ? getYoutubeThumbnailUrl(youtube) : null;
 	if (thumbnail) return { src: thumbnail, srcset: null, play: true };
+
+	// Сжатые копии для неё сделает сборка сама: она смотрит, на какие загрузки
+	// ссылаются ГОТОВЫЕ страницы (optimize-uploads-integration.mjs), и новая
+	// ссылка из карточки попадает в этот список наравне с остальными.
+	const inBody = coverSrcs(firstImageInBody(post.body));
+	if (inBody) return { ...inBody, play: false };
 
 	return null;
 }
