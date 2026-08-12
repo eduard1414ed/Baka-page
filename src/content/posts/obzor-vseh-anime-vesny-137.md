@@ -10,7 +10,7 @@ tgId: 137
 tgUrl: https://t.me/podcastbaka/137
 ---
 
-[Мир отомэ-игр — это тяжёлый мир для мобов](https://anilist.co/anime/142074/Trapped-in-a-Dating-Sim-The-World-of-Otome-Games-Is-Tough-for-Mobs/)
+Мир отомэ-игр — это тяжёлый мир для мобов
 
 Соскучились по исекаям? Я — нет.
 

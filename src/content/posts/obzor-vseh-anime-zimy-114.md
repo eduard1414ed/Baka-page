@@ -10,7 +10,7 @@ tgId: 114
 tgUrl: https://t.me/podcastbaka/114
 ---
 
-[Эта фарфоровая кукла влюбилась](https://anilist.co/anime/132405/My-DressUp-Darling/)
+Эта фарфоровая кукла влюбилась
 
 Однозначно лучшее аниме этого сезона.
 

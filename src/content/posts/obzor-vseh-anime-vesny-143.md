@@ -12,7 +12,7 @@ animeSuggested:
   - shingeki-no-kyojin
 ---
 
-[Семья шпиона](https://anilist.co/anime/140960/SPY-x-FAMILY/)
+Семья шпиона
 
 Ну это аниме сезона. Однозначно и безоговорочно.
 
