@@ -4,17 +4,19 @@ hostsNote: Кто делает «Баку!»
 hosts:
   - name: Эд
     role: Ведущий · сценарист
-    photo: /images/uploads/DSCF0304.jpg
+    photo: /images/uploads/photo_2026-08-05_13-29-57.jpg
     bio: Медиаменеджер, помимо «Баки!» — автор подкаста про комиксы и мангу «Омнибус и танкобон» от Arzamas, текстов об аниме и манге для «Кинопоиска», «Т—Ж» и других изданий.
     urlLabel: Telegram
     url: https://t.me/etsarionov
   - name: Ксюша
     role: Ведущая
+    photo: /images/uploads/Без имени-1.jpg
     bio: Журналистка, пишет для «Кинопоиска» и других изданий.
     urlLabel: Telegram
     url: https://t.me/ksushaotakuet
   - name: Иван
     role: Монтажёр
+    photo: /images/uploads/Без имени-2.jpg
     bio: Собирает наши потрясающие видеоверсии и эссе. Помимо этого работает и над десятком других успешных подкастов.
     urlLabel: Telegram
     url: https://t.me/in_da_tresh
