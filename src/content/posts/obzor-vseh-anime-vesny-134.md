@@ -2,15 +2,18 @@
 title: Обзор аниме «Стать настоящей героиней!»
 date: 2022-05-15
 category: note
-draft: true
+draft: false
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/pasted-image-1786576995619.png
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 tgId: 134
 tgUrl: https://t.me/podcastbaka/134
+anime:
+  - heroine-tarumono-kiraware-heroine-to-naisho-no-oshigoto
 ---
-
-[Стать настоящей героиней!](https://anilist.co/anime/138459/Heroines-Run-the-Show/)
 
 Аниме, от которого я не ждал ровным счетом ничего, но посмотрел в итоге залпом все четыре вышедших серии.
 
@@ -21,3 +24,5 @@ tgUrl: https://t.me/podcastbaka/134
 Получается история, в которой герои постепенно учатся понимать друг друга и находить общий язык. Что еще нужно?
 
 **Смотреть дальше:** да, это пока мой теневой фаворит сезона
+
+::anime-ref{id="heroine-tarumono-kiraware-heroine-to-naisho-no-oshigoto" source="shikimori" source-id="49692"}
