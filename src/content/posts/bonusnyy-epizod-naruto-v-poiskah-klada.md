@@ -1,6 +1,6 @@
 ---
 title: Наруто. В поисках клада | Обсуждение филлеров
-date: 2022-05-14
+date: 2022-05-21
 category: bonus
 draft: false
 description: ''
