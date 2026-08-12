@@ -2,7 +2,7 @@
 title: Бонусный выпуск | Наруто. Менма
 date: 2022-05-15
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-90.jpg
 noCover: false
