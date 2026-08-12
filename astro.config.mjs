@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import remarkDirective from 'remark-directive';
+import remarkColonText from './src/plugins/remark-colon-text.mjs';
 import remarkImageFigure from './src/plugins/remark-image-figure.mjs';
 import remarkEpisodeCover from './src/plugins/remark-episode-cover.mjs';
 import remarkAdLabel from './src/plugins/remark-ad-label.mjs';
@@ -32,6 +33,10 @@ export default defineConfig({
 		// Порядок важен: спойлер должен видеть уже сгруппированные картинки/галереи.
 		remarkPlugins: [
 			remarkDirective,
+			// Двоеточие перед словом («Re:Zero», «Erid:2Vtz…», «в 20:00») разбор
+			// считает меткой и слово после него теряет. Возвращаем такие места
+			// в текст ДО всех остальных плагинов — они должны видеть текст целым.
+			remarkColonText,
 			// Обычная markdown-картинка с хостинга подкаста → сжатая копия
 			// из public/episodes/. Он же убирает из текста картинку, которая
 			// уже показана в шапке выпуска или бонуса.
