@@ -5,12 +5,18 @@ category: note
 draft: true
 description: ''
 cover: ''
-noCover: true
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 tgId: 72
 tgUrl: https://t.me/podcastbaka/72
+anime:
+  - akebi-chan-no-sailor-fuku
 ---
 
-[Школьная форма Акэби](https://anilist.co/anime/131548/Akebichan-no-Sailor-Fuku/)
+::image{src="/images/uploads/IMG_0717.jpeg" alt="" width="column"}
+
 
 Девочка Комити поступает в частную школу, в которую мечтала. Там училась ее мама, и в то время все ученики носили матроски. Поэтому Комити тоже хочет носить матроску, хотя правила школы давно изменились.
 
@@ -20,3 +26,5 @@ tgUrl: https://t.me/podcastbaka/72
 
 **Оценка:** 6.7 (за темп и графику)
 **Смотреть дальше:** скорее нет, слишком странно
+
+::anime-ref{id="akebi-chan-no-sailor-fuku" source="shikimori" source-id="48553"}
