@@ -1,6 +1,6 @@
 ---
 title: Наруто. Страна Нано | Обсуждение филлеров
-date: 2022-05-14
+date: 2022-05-24
 category: bonus
 draft: false
 description: ''
