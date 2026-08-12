@@ -1,27 +1,32 @@
 ---
-title: Бонусный эпизод | Наруто. Страна Моря
+title: Наруто. Страна Моря | Обсуждение филлеров
 date: 2022-05-14
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-50.jpg
-pullMedia: false
 noCover: false
-tgId: 50
-tgUrl: https://t.me/podcastbaka/50
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested:
+  - naruto
+timecodes: ''
 bonusLinks:
   boosty: ''
   patreon: ''
   tgClosed: ''
   vkDonat: ''
-animeSuggested:
+pullMedia: false
+tgId: 50
+tgUrl: https://t.me/podcastbaka/50
+anime:
   - naruto
 ---
 
 ::image{src="/images/uploads/tg-50.jpg" alt="" width="column"}
 
-Обсуждаем две арки «Наруто»: одну хвалим, другую ругаем.
 
-Как готовить рамен с помощью ниндзюцу? Как Анко ушла от Орочимару? И почему руки-змеи не могут никого спасти из воды? #бонус
+Обсуждаем две арки :anime[«Наруто»]{id="naruto" source="shikimori" source-id="20"}: одну хвалим, другую ругаем.
 
-Послушать выпуск можно у нас [на патреоне](https://www.patreon.com/bakapodcast) или у нас [в группе в ВК](https://vk.com/podcast.baka)
+Как готовить рамен с помощью ниндзюцу? Как Анко ушла от Орочимару? И почему руки-змеи не могут никого спасти из воды?
