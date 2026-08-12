@@ -1,27 +1,31 @@
 ---
-title: Бонусный эпизод | Наруто. Убежище Орочимару
+title: Наруто. Убежище Орочимару | Обсуждение филлеров
 date: 2022-05-14
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-31.jpg
-pullMedia: false
 noCover: false
-tgId: 31
-tgUrl: https://t.me/podcastbaka/31
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested:
+  - naruto
 bonusLinks:
   boosty: ''
   patreon: ''
   tgClosed: ''
   vkDonat: ''
-animeSuggested:
+pullMedia: false
+tgId: 31
+tgUrl: https://t.me/podcastbaka/31
+anime:
   - naruto
 ---
 
 ::image{src="/images/uploads/tg-31.jpg" alt="" width="column"}
 
-В первом бонусном эпизоде второго сезона мы продолжаем обсуждать аниме «Наруто» — и переходим к филлерным эпизодам.
 
-Как авторы попытались сделать арку про Сакуру, но у них не получилось? Почему герои попадают в глупые ловушки? И почему эта арка — не совсем филлер? #бонус
+В первом бонусном эпизоде второго сезона мы продолжаем обсуждать аниме :anime[«Наруто»]{id="naruto" source="shikimori" source-id="20"} — и переходим к филлерным эпизодам.
 
-Послушать выпуск можно у нас [на патреоне](https://www.patreon.com/bakapodcast) или у нас [в группе в ВК](https://vk.com/podcast.baka)
+Как авторы попытались сделать арку про Сакуру, но у них не получилось? Почему герои попадают в глупые ловушки? И почему эта арка — не совсем филлер?
