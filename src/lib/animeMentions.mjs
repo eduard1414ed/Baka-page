@@ -153,10 +153,13 @@ function isWordChar(char) {
 }
 
 // Одно название из справочника → что по нему искать (см. MIN_PREFIX_LENGTH).
+//
+// `cut` помечает кусок, полученный обрезкой по двоеточию. Он слабее целого
+// названия, и это важно при столкновении — см. сортировку в buildAnimeMatcher.
 function searchNames(title) {
-	const names = [title];
+	const names = [{ raw: title, cut: false }];
 	const colon = title.indexOf(':');
-	if (colon >= MIN_PREFIX_LENGTH) names.push(title.slice(0, colon).trim());
+	if (colon >= MIN_PREFIX_LENGTH) names.push({ raw: title.slice(0, colon).trim(), cut: true });
 	return names;
 }
 
@@ -220,6 +223,8 @@ export function buildAnimeMatcher(entries, options) {
 
 	for (const entry of entries) {
 		const strictTitle = applyQuotes && entry.data?.strictQuotes === true;
+		// Собственное имя тайтла — по нему решается старшинство при столкновении.
+		const canon = String(entry.data?.titleRu || entry.data?.titleOriginal || '');
 
 		for (const title of [
 			entry.data?.titleRu,
@@ -229,7 +234,7 @@ export function buildAnimeMatcher(entries, options) {
 		]) {
 			if (!title) continue;
 
-			for (const raw of searchNames(title)) {
+			for (const { raw, cut } of searchNames(title)) {
 				if (raw.length < MIN_NAME_LENGTH) continue;
 				const folded = fold(raw);
 				const key = entry.id + ' ' + folded;
@@ -243,12 +248,49 @@ export function buildAnimeMatcher(entries, options) {
 				// ящика» — 15 из 16. Без этой оговорки галочка отнимала бы заведомо
 				// безопасное. Решение заказчика 11 августа 2026.
 				const strict = strictTitle && /\p{Script=Cyrillic}/u.test(raw);
-				names.push({ id: entry.id, name: raw, folded, strict });
+				names.push({ id: entry.id, name: raw, folded, strict, cut, canon: canon.length });
 			}
 		}
 	}
 
-	names.sort((a, b) => b.folded.length - a.folded.length);
+	// СТАРШИНСТВО НАЗВАНИЙ — ЧЕТЫРЕ КЛЮЧА, И ТОЛЬКО ПЕРВЫЙ БЫЛ ТУТ ИЗНАЧАЛЬНО.
+	//
+	// 1. ДЛИННОЕ ПОБЕЖДАЕТ КОРОТКОЕ. Когда одно название вложено в другое,
+	//    выигрывать должно длинное — иначе «Атака титанов» терялась бы внутри
+	//    «Атака титанов: Финал».
+	//
+	// Остальные три появились 12 августа 2026, когда справочник вырос с 53
+	// тайтлов до 424 и в нём стало много ПРОДОЛЖЕНИЙ. Кусок до двоеточия
+	// у «Стального алхимика: Братство» — это ровно «Стальной алхимик», то есть
+	// полное название ДРУГОГО тайтла, и длины у них совпадают. Победителя при
+	// равной длине выбирал порядок файлов в папке, а `-` сортируется раньше `.`,
+	// поэтому продолжение побеждало ВСЕГДА: 17 названий из 17. На живом сайте
+	// это было 19 ссылок «Наруто» на «Ураганные хроники», 13 «Стальных
+	// алхимиков» на «Братство» и 8 «Атак титанов» на «Финал. Часть 2».
+	//
+	// 2. ЦЕЛОЕ НАЗВАНИЕ ПОБЕЖДАЕТ ОБРЕЗАННОЕ ПО ДВОЕТОЧИЮ. Кусок — это догадка
+	//    («вслух подзаголовок не произносят»), а целое название — факт.
+	//    Догадка не имеет права перебивать факт.
+	//
+	// 3. ПРИ ПРОЧИХ РАВНЫХ ПОБЕЖДАЕТ ТОТ, ЧЬЁ СОБСТВЕННОЕ ИМЯ КОРОЧЕ. Ключ 2
+	//    закрывает не всё: падежные формы продолжения морфология считает ТОЖЕ
+	//    от куска до двоеточия и кладёт их в `aliasesAuto` готовыми, так что
+	//    обрезкой они уже не помечены. «Человека-бензопила» лежит в двух
+	//    карточках сразу и в обеих как полноправный вариант. Тогда название
+	//    принадлежит тому, у кого оно и есть имя целиком, — а у того имя короче,
+	//    потому что у соперника к нему приписан хвост после двоеточия.
+	//
+	// 4. И НАПОСЛЕДОК — ПО `id`, ЧТОБЫ ИСХОД НЕ ЗАВИСЕЛ ОТ ПОРЯДКА ФАЙЛОВ ВООБЩЕ.
+	//    Это не украшение: именно порядок файлов и был причиной поломки. Пока
+	//    хоть один случай решается им, поломка вернётся при первом переименовании
+	//    файла, и заметить это будет некому.
+	names.sort(
+		(a, b) =>
+			b.folded.length - a.folded.length ||
+			Number(a.cut) - Number(b.cut) ||
+			a.canon - b.canon ||
+			(a.id < b.id ? -1 : a.id > b.id ? 1 : 0),
+	);
 	return names;
 }
 
