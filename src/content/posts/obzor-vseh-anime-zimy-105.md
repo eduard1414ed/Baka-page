@@ -2,17 +2,20 @@
 title: Обзор аниме «Биско-ржавоед»
 date: 2022-05-15
 category: note
-draft: true
+draft: false
 description: ''
-cover: ''
-noCover: true
-tgId: 105
-tgUrl: https://t.me/podcastbaka/105
+cover: /images/uploads/pasted-image-1786577699039.png
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 animeSuggested:
   - dorohedoro
+tgId: 105
+tgUrl: https://t.me/podcastbaka/105
+anime:
+  - sabikui-bisco
 ---
-
-[Биско-ржавоед](https://anilist.co/anime/130591/Sabikui-Bisco/)
 
 Причудливая смесь «Безумного Макса» с оттенками «Дорохедоро». По сюжету Япония пережила катаклизм, покрылась песком и ржавчиной, а люди начали заболевать неизвестной болезнью. Однако главные герои отправляются на поиски гриба, который может всех излечить.
 
@@ -20,3 +23,5 @@ animeSuggested:
 
 **Оценка:** 7 (перспективненько)
 **Смотреть дальше:** да, в надежде на отличный сюжет
+
+::anime-ref{id="sabikui-bisco" source="shikimori" source-id="48414"}
