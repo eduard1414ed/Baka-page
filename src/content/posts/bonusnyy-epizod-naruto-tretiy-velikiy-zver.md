@@ -2,7 +2,7 @@
 title: Наруто. Третий Великий Зверь | Обсуждение филлеров
 date: 2022-05-14
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-75.jpg
 noCover: false
