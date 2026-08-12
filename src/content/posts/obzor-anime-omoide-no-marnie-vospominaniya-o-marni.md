@@ -7,9 +7,12 @@ description: ''
 cover: /images/uploads/IMG_0710.jpeg
 noCover: false
 externalUrl: ''
-anime: []
+externalSource: ''
+adLabel: ''
 tgId: 19
 tgUrl: https://t.me/podcastbaka/19
+anime:
+  - omoide-no-marnie
 ---
 
 Как и обещал, новый обзор:
@@ -53,3 +56,5 @@ tgUrl: https://t.me/podcastbaka/19
 Думаю, да. Это хороший (и очень красиво нарисованный) фильм.
 
 Он может быть не оставит в вас какой-то глубокий след, если тема не зацепит что-то личное, но точно оставит приятное впечатление.
+
+::anime-ref{id="omoide-no-marnie" source="shikimori" source-id="21557"}
