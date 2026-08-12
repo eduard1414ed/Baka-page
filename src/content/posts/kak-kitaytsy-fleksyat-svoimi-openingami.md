@@ -6,9 +6,16 @@ draft: true
 description: ''
 cover: ''
 noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 tgId: 157
 tgUrl: https://t.me/podcastbaka/157
 ---
+
+::video{youtube="https://www.youtube.com/watch?v=ZtEBMYcZvjY"}
+
 
 Последние годы донхуа (китайское аниме) становится все заметнее для западного зрителя, да и в Японии тоже.
 
