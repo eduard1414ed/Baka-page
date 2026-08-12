@@ -1,27 +1,31 @@
 ---
-title: Бонусный эпизод | Наруто. Возвращение Мидзуки
+title: Наруто. Возвращение Мидзуки | Обсуждение филлеров
 date: 2022-05-14
 category: bonus
 draft: true
 description: ''
 cover: /images/uploads/tg-35.jpg
-pullMedia: false
 noCover: false
-tgId: 35
-tgUrl: https://t.me/podcastbaka/35
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested:
+  - naruto
 bonusLinks:
   boosty: ''
   patreon: ''
   tgClosed: ''
   vkDonat: ''
-animeSuggested:
+pullMedia: false
+tgId: 35
+tgUrl: https://t.me/podcastbaka/35
+anime:
   - naruto
 ---
 
 ::image{src="/images/uploads/tg-35.jpg" alt="" width="column"}
 
-В этом выпуске мы пытаемся найти хоть что-то хорошее в очередной филлерной арке «Наруто».
 
-Зачем возвращать старого героя и превращать в котенка? Почему Фуджин и Райджин — не братья Цунаде? И как так, что Какаши краш (снова)? #бонус
+В этом выпуске мы пытаемся найти хоть что-то хорошее в очередной филлерной арке :anime[«Наруто»]{id="naruto" source="shikimori" source-id="20"}.
 
-Послушать выпуск можно у нас [на патреоне](https://www.patreon.com/bakapodcast) или у нас [в группе в ВК](https://vk.com/podcast.baka)
+Зачем возвращать старого героя и превращать в котенка? Почему Фуджин и Райджин — не братья Цунаде? И как так, что Какаши краш (снова)?
