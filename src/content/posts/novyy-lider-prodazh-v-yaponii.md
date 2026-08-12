@@ -1,24 +1,27 @@
 ---
-title: Новый лидер продаж в Японии
+title: Новый лидер продаж в Японии — и это дзёсэй
 date: 2022-05-14
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-29.jpg
-pullMedia: false
-noCover: false
-tgId: 29
-tgUrl: https://t.me/podcastbaka/29
+noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 animeSuggested:
   - shingeki-no-kyojin
+pullMedia: false
+tgId: 29
+tgUrl: https://t.me/podcastbaka/29
 ---
 
 ::image{src="/images/uploads/tg-29.jpg" alt="" width="column"}
+
 
 Что если я скажу, что манги «Демон Слеер», «Атака Титанов» и «Токийские мстители» все уступили по продажам манге, рассчитанной для девушек?
 
 «Не говори тайна» — это необычный детектив, в котором каждые несколько глав — новая законченная история. Между собой их объединяет образ одарённого студента Тоторо. Получается своеобразная смесь Хёки и Шерлока.
 
-Произведение опытной мангаки Юки Тамуры выходит с 2017 года в дзёсей-журнале Flowers, но именно этой зимой после выхода сериала на японском в взлетела в чартах продаж. #заметки
-
-[Смотреть тикток](https://www.tiktok.com/@bakapodcast/video/7064857044397919490?is_from_webapp=1&sender_device=pc&web_id=7067448597755414018)
+Произведение опытной мангаки Юки Тамуры выходит с 2017 года в дзёсей-журнале Flowers, но именно этой зимой после выхода сериала на японском в взлетела в чартах продаж.
