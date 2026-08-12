@@ -427,8 +427,11 @@ const postSearchMeta = [
 				isEpisode ? (
 					<section class="episode-hero">
 						<div class="episode-topline tech" data-pagefind-ignore>
-							<a class="back" href={backHref}>
-								← {categoryLabel}
+							{/* Подпись и поведение — как у шапки статьи (ContentHeader):
+							    ведёт назад по истории, а раздел остаётся запасным путём.
+							    Возвращает скрипт макета по метке `data-back`. */}
+							<a class="back" href={backHref} data-back>
+								← Назад
 							</a>
 							<span>
 								<time datetime={isoDate}>{formatPostDate(date)}</time>
@@ -476,7 +479,6 @@ const postSearchMeta = [
 				) : (
 					<ContentHeader
 						backHref={backHref}
-						backLabel={categoryLabel}
 						date={date}
 						timing={timing?.label ?? null}
 						title={title}

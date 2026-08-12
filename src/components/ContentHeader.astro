@@ -14,9 +14,9 @@
 import { formatPostDate } from '../lib/postDate.mjs';
 
 interface Props {
-	/** Куда ведёт «← Заметки»: раздел, в котором лежит материал. */
+	/** Куда ведёт «← Назад», когда возвращаться некуда: раздел материала.
+	    Подпись у ссылки одна на весь сайт и живёт в разметке ниже. */
 	backHref: string;
-	backLabel: string;
 	date: Date;
 	/** «6 мин читать» или «19 мин смотреть». null — показывать нечего. */
 	timing?: string | null;
@@ -25,7 +25,7 @@ interface Props {
 	lead?: string | null;
 }
 
-const { backHref, backLabel, date, timing = null, title, lead = null } = Astro.props;
+const { backHref, date, timing = null, title, lead = null } = Astro.props;
 ---
 
 <header class="content-header">
@@ -33,7 +33,12 @@ const { backHref, backLabel, date, timing = null, title, lead = null } = Astro.p
 	    подписи, а не текст материала. Без него они попадали бы в выдачу поиска
 	    обрывком вроде «…6 мин читать Ёдзи Такэсигэ — один из главных…». */}
 	<div class="content-meta tech" data-pagefind-ignore>
-		<a class="back" href={backHref}>← {backLabel}</a>
+		{/* «Назад» ведёт НАЗАД, а не в раздел: раздел был неожиданностью —
+		    человек пришёл с главной, а уходил в «Заметки». Возвращает его
+		    скрипт макета (одно место на весь сайт, помечено `data-back`),
+		    а адрес в ссылке остаётся запасным путём: с него начинали сеанс,
+		    возвращаться некуда. */}
+		<a class="back" href={backHref} data-back>← Назад</a>
 		<div class="content-meta-right">
 			<time datetime={date.toISOString().slice(0, 10)}>{formatPostDate(date)}</time>
 			{
