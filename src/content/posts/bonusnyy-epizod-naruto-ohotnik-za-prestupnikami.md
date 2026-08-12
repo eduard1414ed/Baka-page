@@ -1,6 +1,6 @@
 ---
 title: Наруто. Охотник за преступниками | Обсуждение филлеров
-date: 2022-05-14
+date: 2022-05-18
 category: bonus
 draft: false
 description: ''
