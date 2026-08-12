@@ -2,15 +2,18 @@
 title: Обзор аниме «Летнее время»
 date: 2022-05-15
 category: note
-draft: true
+draft: false
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/pasted-image-1786577444139.png
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 tgId: 145
 tgUrl: https://t.me/podcastbaka/145
+anime:
+  - summertime-render
 ---
-
-[Летнее время](https://anilist.co/anime/129201/Summer-Time-Rendering/)
 
 Тут я поумерю свои восторги, но все еще останусь в хвалебном тоне. «Летнее время» — это интересный сплав «Твин Пикс» и «Дня сурка» в виде аниме.
 
@@ -19,3 +22,5 @@ tgUrl: https://t.me/podcastbaka/145
 Первые четыре серии, которые вышли на данный момент, я посмотрел — и сюжет в них идет хорошо и интересно. Есть опасность, что он скатится и не сможет ответить на все вопросы, особенно учитывая 25 серий в сезоне. Но если нет — это тоже скорее всего будет одним из лучших аниме года.
 
 **Смотреть дальше:** да, особенно если любите мистику
+
+::anime-ref{id="summertime-render" source="shikimori" source-id="47194"}
