@@ -2,7 +2,7 @@
 title: Обзор аниме «Девушка-целитель»
 date: 2022-05-15
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/pasted-image-1786576890992.png
 noCover: false
