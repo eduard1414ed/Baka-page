@@ -2,7 +2,7 @@
 title: Обзор аниме «Школьная форма Акэби»
 date: 2022-05-14
 category: note
-draft: true
+draft: false
 description: ''
 cover: ''
 noCover: false
