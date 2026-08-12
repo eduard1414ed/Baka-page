@@ -1,11 +1,13 @@
 ---
-title: Обзор аниме Omoide no Marnie («Воспоминания о Марни»)
+title: Обзор аниме «Воспоминания о Марни»
 date: 2022-05-14
 category: note
-draft: true
+draft: false
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/IMG_0710.jpeg
+noCover: false
+externalUrl: ''
+anime: []
 tgId: 19
 tgUrl: https://t.me/podcastbaka/19
 ---
