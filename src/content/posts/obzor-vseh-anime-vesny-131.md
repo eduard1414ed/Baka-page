@@ -2,7 +2,7 @@
 title: Обзор аниме «Сведённые кукушкой»
 date: 2022-05-15
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/pasted-image-1786576931635.png
 noCover: false
