@@ -5,23 +5,29 @@ category: bonus
 draft: true
 description: ''
 cover: /images/uploads/tg-60.jpg
-pullMedia: false
 noCover: false
-tgId: 60
-tgUrl: https://t.me/podcastbaka/60
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested:
+  - naruto
 bonusLinks:
   boosty: ''
   patreon: ''
   tgClosed: ''
   vkDonat: ''
-animeSuggested:
+pullMedia: false
+tgId: 60
+tgUrl: https://t.me/podcastbaka/60
+anime:
   - naruto
 ---
 
 ::image{src="/images/uploads/tg-60.jpg" alt="" width="column"}
 
+
 В последнем бонусном эпизоде второго сезона оцениваем сразу три арки: «Длинный день у Кибы», «Легендарный Омбаа» и «Смеющийся Шино».
 
-Какую лечебную траву продают герои? Кто мог бы помочь Конохе победить Пейна? И при чем тут смеющийся труп? #бонус
+Какую лечебную траву продают герои? Кто мог бы помочь Конохе победить Пейна? И при чем тут смеющийся труп?
 
-Послушать выпуск можно у нас [на патреоне](https://www.patreon.com/bakapodcast) или у нас [в группе в ВК](https://vk.com/podcast.baka)
+::anime-ref{id="naruto" source="shikimori" source-id="20"}
