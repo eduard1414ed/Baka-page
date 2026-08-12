@@ -2,15 +2,18 @@
 title: Обзор аниме «Ржавая броня»
 date: 2022-05-15
 category: note
-draft: true
+draft: false
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/pasted-image-1786577673428.png
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 tgId: 103
 tgUrl: https://t.me/podcastbaka/103
+anime:
+  - sabiiro-no-armor-reimei
 ---
-
-[Ржавая броня](https://anilist.co/anime/109820/Rusted-Armors/)
 
 Главный шедевр — аниме с CGI-персонажами на фонах, нарисованных в Paint.
 
@@ -20,3 +23,5 @@ tgUrl: https://t.me/podcastbaka/103
 
 **Оценка:** 1 (потому что хоть в опенинге музыка приятная)
 **Смотреть дальше:** нет, мне и одну серию было больно досматривать
+
+::anime-ref{id="sabiiro-no-armor-reimei" source="shikimori" source-id="39917"}
