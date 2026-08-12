@@ -2,15 +2,18 @@
 title: Обзор аниме «Моя девушка не только милая»
 date: 2022-05-15
 category: note
-draft: true
+draft: false
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/pasted-image-1786577246154.png
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 tgId: 138
 tgUrl: https://t.me/podcastbaka/138
+anime:
+  - kawaii-dake-ja-nai-shikimori-san
 ---
-
-Моя девушка не только милая
 
 У меня противоречивые чувства от этого сериала. Я его очень ждал и по трейлерам мне казалось, что он составит конкуренцию «Фарфоровой кукле» за лучшую романтику года.
 
@@ -23,3 +26,5 @@ tgUrl: https://t.me/podcastbaka/138
 Как романтика аниме проигрывает, «Фарфоровой кукле». Как комедия — все той же «Кагуе». Как повседневность, например,  «Лагерю на свежем воздухе». К моему сожалению.
 
 **Смотреть дальше:** да, конечно. Это отличное аниме, несмотря на мое бурчание
+
+::anime-ref{id="kawaii-dake-ja-nai-shikimori-san" source="shikimori" source-id="45613"}
