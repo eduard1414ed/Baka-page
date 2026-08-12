@@ -1,14 +1,19 @@
 ---
-title: А какие филлеры смотреть?
+title: А какие филлеры «Наруто» смотреть?
 date: 2022-05-15
 category: note
-draft: true
+draft: false
 description: ''
 cover: ''
 noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested:
+  - naruto
 tgId: 119
 tgUrl: https://t.me/podcastbaka/119
-animeSuggested:
+anime:
   - naruto
 ---
 
@@ -17,7 +22,7 @@ animeSuggested:
 1. **Бикочу**
 148 — 151 серии
 
-Шино, Хината и Наруто ищут жука бикочу, который по запаху человека может определить его местонахождение.
+Шино, Хината и :anime[Наруто]{id="naruto" source="shikimori" source-id="20"} ищут жука бикочу, который по запаху человека может определить его местонахождение.
 
 2. **Страна Птиц**
 162 — 167 серии
