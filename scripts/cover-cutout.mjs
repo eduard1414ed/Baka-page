@@ -1038,14 +1038,39 @@ function reportPage(rows) {
  figure{margin:0;background:#fff;border:1px solid #ddd;padding:8px}
  figure.check{border-color:#c0392b;border-width:2px}
  .pair{display:grid;grid-template-columns:1fr 1fr;gap:6px}
- .pair img{width:100%;display:block;background:#F8F6F0}
+ .pair img{width:100%;display:block;background:var(--bg,#F8F6F0)}
  figcaption{margin-top:6px;font-size:12px;color:#444}
  .why{color:#c0392b;font-weight:600}
  code{font-size:11px;color:#888}
+ .bg-switch{position:sticky;top:0;background:#fff;border:1px solid #ddd;padding:10px 12px;margin-bottom:16px;z-index:2}
+ .bg-switch button{font:inherit;padding:4px 10px;margin-right:6px;cursor:pointer}
+ .bg-switch button[aria-pressed="true"]{background:#1a1a1a;color:#fff}
 </style>
 <h1>Персонаж вместо обложки — разведка</h1>
-<p>Слева исходная обложка, справа результат на бумажном фоне (сам файл прозрачный).
-Красной рамкой отмечено «на проверку» — это не ошибка, а просьба посмотреть.</p>
+<p>Слева исходная обложка, справа результат. Сам файл прозрачный, фон под ним
+рисует эта страница. Красной рамкой отмечено «на проверку» — это не ошибка,
+а просьба посмотреть.</p>
+
+<!-- ПОДЛОЖКА ПЕРЕКЛЮЧАЕТСЯ, И ЭТО НЕ УДОБСТВО, А УСЛОВИЕ ПРОВЕРКИ. Белая
+     рубашка и ДЫРА на её месте на бумажном фоне выглядят ОДИНАКОВО: обе
+     прошлые поломки вырезки пропущены ровно так — смотрели на бумаге,
+     отвечали «чисто», а сквозь одежду светил фон. На красном любая дыра
+     видна за секунду. Бумага остаётся первой, потому что отвечает на другой
+     вопрос — «как это будет выглядеть на сайте». -->
+<div class="bg-switch">
+	Фон под вырезкой:
+	<button type="button" data-bg="#F8F6F0" aria-pressed="true">бумага — как на сайте</button>
+	<button type="button" data-bg="#d81b60" aria-pressed="false">красный — искать дыры</button>
+	<button type="button" data-bg="#0b6cff" aria-pressed="false">синий</button>
+</div>
+<script>
+	document.querySelectorAll('.bg-switch button').forEach((b) => {
+		b.addEventListener('click', () => {
+			document.documentElement.style.setProperty('--bg', b.dataset.bg);
+			document.querySelectorAll('.bg-switch button').forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+		});
+	});
+</script>
 ${section('НА ПРОВЕРКУ', rows.filter((r) => r.status === 'check'))}
 ${section('Чисто', rows.filter((r) => r.status === 'ok'))}
 ${section('Не по шаблону — не трогаем', rows.filter((r) => r.status === 'skip'))}
@@ -1432,7 +1457,20 @@ async function main() {
 	const recheck = process.argv.includes('--recheck');
 	const force = process.argv.includes('--force');
 
-	let list = only ? covers.filter((c) => c.id.startsWith(only.slice('--only='.length))) : covers;
+	// `--only=` берёт СПИСОК через запятую, а не одно имя. Разведка стирает свою
+	// временную папку в начале каждого прогона, поэтому одиннадцать запусков
+	// подряд оставили бы страницу «было — стало» с одной последней парой:
+	// смотреть разом надо разом. Каждый кусок сравнивается и целиком, и началом
+	// имени — начало удобно («tg-3» это все картинки из телеграма за раз),
+	// но точное имя надёжнее: `tg-71` началом захватывает и `tg-714`.
+	const onlyNames = only
+		? only
+				.slice('--only='.length)
+				.split(',')
+				.map((s) => s.trim())
+				.filter(Boolean)
+		: null;
+	let list = onlyNames ? covers.filter((c) => onlyNames.some((name) => c.id === name || c.id.startsWith(name))) : covers;
 
 	if (onlyNew || recheck) {
 		if (recheck) {
