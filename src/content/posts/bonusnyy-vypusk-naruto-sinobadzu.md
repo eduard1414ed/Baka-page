@@ -1,6 +1,6 @@
 ---
 title: Наруто. Синобадзу | Обсуждение филлеров
-date: 2022-05-15
+date: 2022-05-28
 category: bonus
 draft: false
 description: ''
