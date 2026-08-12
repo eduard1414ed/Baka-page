@@ -1,6 +1,6 @@
 ---
 title: Наруто. Менма | Обсуждение филлеров
-date: 2022-05-15
+date: 2022-05-29
 category: bonus
 draft: false
 description: ''
