@@ -2,7 +2,7 @@
 title: Обзор аниме «Контратака женщины-полицейского»
 date: 2022-05-15
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/pasted-image-1786577939455.png
 noCover: false
