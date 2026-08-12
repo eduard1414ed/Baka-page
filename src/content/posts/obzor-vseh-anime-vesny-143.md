@@ -2,17 +2,20 @@
 title: Обзор аниме «Семья шпиона»
 date: 2022-05-15
 category: note
-draft: true
+draft: false
 description: ''
-cover: ''
-noCover: true
-tgId: 143
-tgUrl: https://t.me/podcastbaka/143
+cover: /images/uploads/pasted-image-1786577418305.png
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 animeSuggested:
   - shingeki-no-kyojin
+tgId: 143
+tgUrl: https://t.me/podcastbaka/143
+anime:
+  - spy-x-family
 ---
-
-Семья шпиона
 
 Ну это аниме сезона. Однозначно и безоговорочно.
 
@@ -25,3 +28,5 @@ animeSuggested:
 В-четвертых, это удивительный сплав отличного юмора — как для подростков или детей, так и для тех, кто может считать отсылки на дизайн и события второй половины XX века, — и эффектного экшена. За продакшн отвечает сразу две именитых студии — Wit («Атака титанов») и CloverWorks («Моя фарфоровая кукла»).
 
 **Смотреть дальше:** я вообще не понимаю вас, если вы это аниме не смотрите
+
+::anime-ref{id="spy-x-family" source="shikimori" source-id="50265"}
