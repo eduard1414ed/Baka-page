@@ -219,18 +219,31 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 		}
 	}
 
-	document.addEventListener('click', (event) => {
-		if (event.defaultPrevented) return;
-		// Не наше: средняя кнопка, «открыть в новой вкладке», перетаскивание.
-		if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+	// СЛУШАЕМ В ФАЗЕ ПЕРЕХВАТА, И БЕЗ ЭТОГО НЕ РАБОТАЕТ ВОВСЕ. ClientRouter
+	// ловит клики по внутренним ссылкам своим обработчиком, стоящим в <head>,
+	// то есть раньше нашего, и ставит клику `preventDefault` — он уводит
+	// на страницу раздела переходом без перезагрузки. Первая редакция этого
+	// кода на `defaultPrevented` выходила, и кнопка честно называлась «Назад»,
+	// а вела по-прежнему в раздел; заметил заказчик на живом сайте.
+	// Перехват идёт до всплытия у всех, поэтому мы оказываемся первыми,
+	// а роутер потом видит наш `preventDefault` и по ссылке не идёт —
+	// он проверяет его тем же условием (проверено по его собранному коду).
+	document.addEventListener(
+		'click',
+		(event) => {
+			if (event.defaultPrevented) return;
+			// Не наше: средняя кнопка, «открыть в новой вкладке», перетаскивание.
+			if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
 
-		const target = event.target as Element | null;
-		if (!target?.closest?.('[data-back]')) return;
-		if (!canGoBack()) return;
+			const target = event.target as Element | null;
+			if (!target?.closest?.('[data-back]')) return;
+			if (!canGoBack()) return;
 
-		event.preventDefault();
-		history.back();
-	});
+			event.preventDefault();
+			history.back();
+		},
+		true,
+	);
 
 	// СВОЁ ВИДЕО ПОСЛЕ ПЕРЕХОДА БЕЗ ПЕРЕЗАГРУЗКИ НАДО РАЗБУДИТЬ.
 	//

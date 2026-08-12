@@ -42,12 +42,41 @@ code = code.replace(/import\{([^}]*)\}from"[^"]*";/g, (_, names) => {
 	return locals.map((name) => `let ${name}=()=>"";`).join('');
 });
 
-// ПОДЛОГ: у проверки «есть ли куда возвращаться» отнимаем счётчик истории.
-// Тогда переход внутри сайта без перезагрузки перестаёт распознаваться,
-// и проверка обязана это поймать.
+// ПОДЛОГИ. Каждый портит код по-своему, и проверка обязана поймать оба.
+// Второй — не выдуманный: ровно так кнопка и была сломана в первой редакции,
+// и нашёл это заказчик на живом сайте, а не проверка.
+const FAKES = {
+	'счётчик истории отнят': (src) => src.replace(/typeof [a-zA-Z_$][\w$]*==`number`&&[a-zA-Z_$][\w$]*>0/, 'false'),
+	'слушатель снят с фазы перехвата': (src) => src.replace('history.back())},!0)', 'history.back())})'),
+};
+
+const fakeName = selftest ? process.argv[process.argv.indexOf('--selftest') + 1] : null;
+
+if (selftest && !fakeName) {
+	// Без имени подлога прогоняем ОБА, каждый своим заходом.
+	const { execFileSync } = await import('node:child_process');
+	let caught = 0;
+	for (const name of Object.keys(FAKES)) {
+		console.log(`\n— подлог «${name}»`);
+		try {
+			execFileSync(process.execPath, [process.argv[1], '--selftest', name], { stdio: 'inherit' });
+			caught++;
+		} catch {
+			console.log('ПРОВАЛ  Подлог не пойман');
+		}
+	}
+	console.log(caught === Object.keys(FAKES).length ? '\nОба подлога пойманы.' : '\nПРОВАЛ  Пойманы не все.');
+	process.exit(caught === Object.keys(FAKES).length ? 0 : 1);
+}
+
 if (selftest) {
+	const fake = FAKES[fakeName];
+	if (!fake) {
+		console.log(`ПРОВАЛ  Подлога «${fakeName}» нет`);
+		process.exit(1);
+	}
 	const before = code;
-	code = code.replace(/typeof [a-zA-Z_$][\w$]*==`number`&&[a-zA-Z_$][\w$]*>0/, 'false');
+	code = fake(code);
 	if (code === before) {
 		console.log('ПРОВАЛ  Подлог не подставился — проверка ничего не проверяет');
 		process.exit(1);
@@ -57,7 +86,7 @@ if (selftest) {
 // ——— подделка браузера ———
 
 function makeWorld({ historyIndex, referrer, origin = 'https://bakapodcast.com' }) {
-	const world = { wentBack: 0, followedLink: 0 };
+	const world = { wentBack: 0, followedLink: 0, routerTook: 0 };
 
 	const backLink = {
 		tag: 'a',
@@ -77,8 +106,9 @@ function makeWorld({ historyIndex, referrer, origin = 'https://bakapodcast.com' 
 	const listeners = [];
 	const document = {
 		referrer,
-		addEventListener(type, fn) {
-			listeners.push({ type, fn });
+		addEventListener(type, fn, options) {
+			const capture = options === true || options?.capture === true;
+			listeners.push({ type, fn, capture });
 		},
 		querySelectorAll: () => [],
 	};
@@ -90,6 +120,12 @@ function makeWorld({ historyIndex, referrer, origin = 'https://bakapodcast.com' 
 		},
 	};
 
+	// ЩЕЛЧОК ИДЁТ ДВУМЯ ФАЗАМИ, И ЭТО НЕ ПРИДИРКА К ТОЧНОСТИ ПОДДЕЛКИ.
+	// ClientRouter слушает клики обычным обработчиком из <head> — то есть
+	// раньше нашего — и ставит `preventDefault`, уводя на страницу раздела
+	// переходом без перезагрузки. Кнопка «Назад» из-за этого месяц называлась
+	// «Назад», а вела в раздел. Подделка обязана воспроизводить это, иначе
+	// её «ок» ничего не значит: она уже один раз соврала именно так.
 	world.click = (target) => {
 		const event = {
 			target,
@@ -103,8 +139,20 @@ function makeWorld({ historyIndex, referrer, origin = 'https://bakapodcast.com' 
 				this.defaultPrevented = true;
 			},
 		};
-		for (const { type, fn } of listeners) if (type === 'click') fn(event);
-		if (!event.defaultPrevented && target.attrs?.href) world.followedLink++;
+
+		// Сначала перехват — там, где обязаны быть мы.
+		for (const { type, fn, capture } of listeners) if (type === 'click' && capture) fn(event);
+
+		// Потом всплытие: сначала роутер Astro, следом наши обычные обработчики,
+		// если бы они тут были.
+		if (!event.defaultPrevented && target.attrs?.href) {
+			event.preventDefault();
+			world.routerTook++;
+		}
+		for (const { type, fn, capture } of listeners) if (type === 'click' && !capture) fn(event);
+
+		// Куда в итоге ушёл человек: роутер повёл его по адресу ссылки.
+		if (world.routerTook > 0) world.followedLink++;
 	};
 
 	world.backLink = backLink;
