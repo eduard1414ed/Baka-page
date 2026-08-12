@@ -5,21 +5,24 @@ category: bonus
 draft: true
 description: ''
 cover: /images/uploads/tg-110.jpg
-pullMedia: false
 noCover: false
-tgId: 110
-tgUrl: https://t.me/podcastbaka/110
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 bonusLinks:
   boosty: ''
   patreon: ''
   tgClosed: ''
   vkDonat: ''
+pullMedia: false
+tgId: 110
+tgUrl: https://t.me/podcastbaka/110
 ---
 
 ::image{src="/images/uploads/tg-110.jpg" alt="" width="column"}
 
+
 Главное аниме этой зимы — какое оно? Простая романтика, заполненная фан-сервисом? Или что-то более серьезное и достойное внимания?
 
-Разбираемся в последнем бонусном эпизоде сезона. #бонус
-
-Послушать выпуск можно у нас [на патреоне](https://www.patreon.com/bakapodcast) или [в группе в ВК](https://vk.com/podcast.baka).
+Разбираемся в последнем бонусном эпизоде сезона.
