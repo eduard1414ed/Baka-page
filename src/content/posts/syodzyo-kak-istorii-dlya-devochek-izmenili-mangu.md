@@ -17,4 +17,4 @@ tgUrl: https://t.me/podcastbaka/1566
 
 В этот раз к нам в гости в «Омнибус и танкобон» пришла прекрасная Юля Тарасюк, исследовательница манги и куратор Центра манги и комиксов в Санкт-Петербурге.
 
-Выпуск можно послушать бесплатно все там же [на сервисе «Строки».](https://stroki.mts.ru/audiobook/5-syodzyo-kak-istorii-dlya-devochek-izmenili-mangu-173800) #арзамас
+Выпуск можно послушать бесплатно все там же [на сервисе «Строки».](https://stroki.mts.ru/audiobook/5-syodzyo-kak-istorii-dlya-devochek-izmenili-mangu-173800)

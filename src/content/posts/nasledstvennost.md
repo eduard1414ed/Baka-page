@@ -23,6 +23,6 @@ Cyberpunk выглядит чище и ярче, но узнаваемые гл�
 
 Так что мы были правы, когда говорили про визуальный стиль и культовый статус «Красной черты» в [отдельном большом выпуске подкаста](/posts/krasnaya-cherta-poslednee-nastoyaschee-iskusstvo-ili-prosto-film-dlya-gikov/). Он продолжает быть актуальным и становиться вдохновением для новых проектов.
 
-Посмотрите, кстати, [наш эпизод](/posts/krasnaya-cherta-poslednee-nastoyaschee-iskusstvo-ili-prosto-film-dlya-gikov/), если ещё не успели. #заметки
+Посмотрите, кстати, [наш эпизод](/posts/krasnaya-cherta-poslednee-nastoyaschee-iskusstvo-ili-prosto-film-dlya-gikov/), если ещё не успели.
 
 ::image{src="/images/uploads/tg-564.jpg" alt="" width="column"}

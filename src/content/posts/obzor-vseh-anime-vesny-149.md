@@ -36,5 +36,3 @@ tgUrl: https://t.me/podcastbaka/149
 10. [Танцуй, танцуй, танцор](/posts/obzor-vseh-anime-vesny-126/) (спорт, драма)
 
 11. [Птичье крыло: История гольфисток](/posts/obzor-vseh-anime-vesny-125/) (спорт)
-
-#полезное #весна2022

@@ -22,7 +22,7 @@ animeSuggested:
 
 В большинстве категорий победила тройка от MAPPA: «Магическая битва», «Атака Титанов» и «Человек-бензопила». Что в целом понятно, но осадок неприятный.
 
-Кажется, что даже наша «[Бака Awards](https://t.me/podcastbaka/1819)» была полезнее и интереснее. #прочее
+Кажется, что даже наша «[Бака Awards](https://t.me/podcastbaka/1819)» была полезнее и интереснее.
 
 ::image{src="/images/uploads/tg-1977.jpg" alt="" width="column"}
 ::image{src="/images/uploads/tg-1978.jpg" alt="" width="column"}

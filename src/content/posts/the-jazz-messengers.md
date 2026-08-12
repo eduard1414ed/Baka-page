@@ -17,7 +17,7 @@ tgUrl: https://t.me/podcastbaka/1114
 
 Интересно, что назван гайдбук в честь классического джаз-коллектива The Jazz Messengers, выступавшего в США с 1955 по 1990 год.
 
-Но вообще я им делюсь просто потому что красиво. #другое
+Но вообще я им делюсь просто потому что красиво.
 
 ::image{src="/images/uploads/tg-1115.jpg" alt="" width="column"}
 ::image{src="/images/uploads/tg-1116.jpg" alt="" width="column"}

@@ -19,4 +19,4 @@ tgUrl: https://t.me/podcastbaka/1615
 
  Выпуск можно послушать бесплатно все там же [на сервисе «Строки».](https://stroki.mts.ru/audiobook/8-mankhva-i-vebtuny-pochemu-v-yuzhnoy-koreye-vzleteli-tsifrovyye-komiksy-189998)
 
-P.S. А параллельным курсом [на Arzamas стал доступен](https://arzamas.academy/podcasts/332/3) наш третий эпизод: про британский комикс, Судью Дредда и приключения школьников-хулиганов. #арзамас
+P.S. А параллельным курсом [на Arzamas стал доступен](https://arzamas.academy/podcasts/332/3) наш третий эпизод: про британский комикс, Судью Дредда и приключения школьников-хулиганов.

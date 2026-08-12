@@ -17,7 +17,7 @@ tgUrl: https://t.me/podcastbaka/644
 
 И мои ожидания полностью оправдались. Полноценный обзор я сделаю после выхода второй серии, а пока — просто посмотрите на эти потрясающие ракурсы и цветовую гамму.
 
-Студия CloverWorks в этом сезоне снова на высоте. #заметки
+Студия CloverWorks в этом сезоне снова на высоте.
 
 ::image{src="/images/uploads/tg-645.jpg" alt="" width="column"}
 ::image{src="/images/uploads/tg-646.jpg" alt="" width="column"}

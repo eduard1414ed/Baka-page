@@ -17,6 +17,6 @@ tgUrl: https://t.me/podcastbaka/1632
 
 В этом выпуске мы с Ваней вдвоем пускаемся в терминологическое путешествие, чтобы в итоге прийти к неоднозначным выводам.
 
-Выпуск можно послушать бесплатно все там же [на сервисе «Строки».](https://stroki.mts.ru/audiobook/9-chto-takoye-graficheskiy-roman-i-nuzhen-li-voobsche-etot-termin-206806) #арзамас
+Выпуск можно послушать бесплатно все там же [на сервисе «Строки».](https://stroki.mts.ru/audiobook/9-chto-takoye-graficheskiy-roman-i-nuzhen-li-voobsche-etot-termin-206806)
 
 P.S. А параллельным курсом [на Arzamas стал доступен](https://arzamas.academy/podcasts/332/4) наш четвертый эпизод: про французский юмор, бельгийскую детализацию и бессмертную серию «Приключения Астерикса».

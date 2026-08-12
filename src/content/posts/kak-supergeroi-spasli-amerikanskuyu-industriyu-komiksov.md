@@ -19,4 +19,4 @@ tgUrl: https://t.me/podcastbaka/1508
 
 Если про сёнен рассказывал я, то в этот раз рассказывал Ваня, а я задавал ему кучу глупых вопросов.
 
-Выпуск можно послушать бесплатно все там же [на сервисе «Строки».](https://stroki.mts.ru/audiobook/2-kak-supergeroi-spasli-amerikanskuyu-industriyu-komiksov-133331) #арзамас
+Выпуск можно послушать бесплатно все там же [на сервисе «Строки».](https://stroki.mts.ru/audiobook/2-kak-supergeroi-spasli-amerikanskuyu-industriyu-komiksov-133331)

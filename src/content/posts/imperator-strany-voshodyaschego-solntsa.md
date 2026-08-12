@@ -19,8 +19,6 @@ tgUrl: https://t.me/podcastbaka/253
 
 Забавно, что в реальности у императора Сётоку было аж четыре жены. Правда, и советников было больше одного 😏
 
-#заметки
-
 ::image{src="/images/uploads/tg-254.jpg" alt="" width="column"}
 ::image{src="/images/uploads/tg-255.jpg" alt="" width="column"}
 ::image{src="/images/uploads/tg-256.jpg" alt="" width="column"}

@@ -19,7 +19,7 @@ tgUrl: https://t.me/podcastbaka/744
 
 Мне кажется, могла бы получиться меланхоличная история про братские отношения подростка и демона-ребёнка (никакого подтекста).
 
-Как вам такой сюжет? #заметки
+Как вам такой сюжет?
 
 ::image{src="/images/uploads/tg-745.jpg" alt="" width="column"}
 ::image{src="/images/uploads/tg-746.jpg" alt="" width="column"}

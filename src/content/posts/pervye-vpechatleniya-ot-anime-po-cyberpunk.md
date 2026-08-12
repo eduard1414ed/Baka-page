@@ -19,7 +19,7 @@ tgUrl: https://t.me/podcastbaka/561
 
 Ну и некоторые операторские решения — мое почтение.
 
-(когда досмотрю до конца — напишу обзор или сделаю видео) #заметки
+(когда досмотрю до конца — напишу обзор или сделаю видео)
 
 ::image{src="/images/uploads/tg-559.jpg" alt="" width="column"}
 ::image{src="/images/uploads/tg-560.jpg" alt="" width="column"}

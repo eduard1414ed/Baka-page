@@ -17,7 +17,7 @@ tgUrl: https://t.me/podcastbaka/239
 
 На такие арты всегда очень интересно смотреть — там бывают ракурсы, которых не встретишь в самих сериалах, ранние наброски внешности героев или вовсе отброшенные варианты и концепции.
 
-Нашел тут как раз [страницу](https://characterdesignreferences.com/art-of-animation-7/art-of-death-note) с такими наработками для «Тетради смерти» — гляньте (ну и заодно спойлерю вам аниме в грядущем выпуске 😉) #заметки
+Нашел тут как раз [страницу](https://characterdesignreferences.com/art-of-animation-7/art-of-death-note) с такими наработками для «Тетради смерти» — гляньте (ну и заодно спойлерю вам аниме в грядущем выпуске 😉)
 
 ::image{src="/images/uploads/tg-240.jpg" alt="" width="column"}
 ::image{src="/images/uploads/tg-241.jpg" alt="" width="column"}

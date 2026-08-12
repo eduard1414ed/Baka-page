@@ -17,4 +17,4 @@ tgUrl: https://t.me/podcastbaka/1353
 
 Мой фаворит — стиль «Блича». А ваш?
 
-(художник: [A2T](https://twitter.com/A2TwillDraw/status/1672984763039096838?s=20)) #прочее
+(художник: [A2T](https://twitter.com/A2TwillDraw/status/1672984763039096838?s=20))

@@ -17,7 +17,7 @@ tgUrl: https://t.me/podcastbaka/2121
 
 Собрал для вас, конечно, самую красивую еду из монстров.
 
-А еще больше примеров и сравнение кадров с мангой и аниме есть в отличном тексте [вот тут](https://dtf.ru/anime/2653785-dungeon-meshi-iskusstvo-adaptacii#Dizayn-personazhey), советую. #полезное
+А еще больше примеров и сравнение кадров с мангой и аниме есть в отличном тексте [вот тут](https://dtf.ru/anime/2653785-dungeon-meshi-iskusstvo-adaptacii#Dizayn-personazhey), советую.
 
 ::image{src="/images/uploads/tg-2122.jpg" alt="" width="column"}
 ::image{src="/images/uploads/tg-2123.jpg" alt="" width="column"}

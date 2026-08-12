@@ -11,5 +11,3 @@ tgUrl: https://t.me/podcastbaka/108
 ---
 
 https://youtu.be/W8hjjjW4nJ0
-
-#полезное

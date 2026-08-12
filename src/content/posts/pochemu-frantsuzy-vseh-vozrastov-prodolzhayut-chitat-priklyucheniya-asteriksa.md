@@ -17,4 +17,4 @@ tgUrl: https://t.me/podcastbaka/1528
 
 Я мало разбирался во французских комиксах до записи этого выпуска, поэтому с диким интересом слушал объяснения Максима Трудова, переводчика комиксов и преподавателя русского языка во Франции. Там много крутых деталей и сравнений с японской индустрией. Надеюсь, что вам тоже понравится!
 
-Выпуск можно послушать бесплатно все там же [на сервисе «Строки».](https://stroki.mts.ru/audiobook/4-pochemu-frantsuzy-vsekh-vozrastov-prodolzhayut-chitat-priklyucheniya-asteriksa-157032) #арзамас
+Выпуск можно послушать бесплатно все там же [на сервисе «Строки».](https://stroki.mts.ru/audiobook/4-pochemu-frantsuzy-vsekh-vozrastov-prodolzhayut-chitat-priklyucheniya-asteriksa-157032)

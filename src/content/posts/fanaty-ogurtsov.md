@@ -23,8 +23,6 @@ tgUrl: https://t.me/podcastbaka/349
 
 Если же вы не в Японии, но про капп хотите узнать побольше — есть отличное трогательное полнометражное аниме «[Волшебное лето](https://shikimori.one/animes/2848-kappa-no-coo-to-natsuyasumi?ysclid=l5xqh1zvlr332082040)». Про мальчика, который подружился как раз с таким зелёным каппой.
 
-#заметки
-
 ::image{src="/images/uploads/tg-350.jpg" alt="" width="column"}
 ::image{src="/images/uploads/tg-351.jpg" alt="" width="column"}
 ::image{src="/images/uploads/tg-352.jpg" alt="" width="column"}

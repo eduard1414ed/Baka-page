@@ -17,6 +17,6 @@ tgUrl: https://t.me/podcastbaka/768
 
 Издатель показал обложку последнего тома, которая, конечно, отсылает к самому началу истории. И показывает, какой путь прошел Рудеус.
 
-Тем временем продолжение сериала уже [анонсировано](https://shikimori.one/animes/51179-mushoku-tensei-ii-isekai-ittara-honki-dasu) на следующий год. #прочее
+Тем временем продолжение сериала уже [анонсировано](https://shikimori.one/animes/51179-mushoku-tensei-ii-isekai-ittara-honki-dasu) на следующий год.
 
 ::image{src="/images/uploads/tg-769.jpg" alt="" width="column"}

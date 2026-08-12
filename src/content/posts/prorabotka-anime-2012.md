@@ -17,7 +17,7 @@ tgUrl: https://t.me/podcastbaka/2012
 
 На такие арты всегда очень интересно смотреть — там бывают ракурсы, которых не встретишь в самих сериалах, ранние наброски внешности героев или вовсе отброшенные варианты и концепции.
 
-Вот как раз [страница](https://characterdesignreferences.com/art-of-animation-7/art-of-death-note) с такими наработками для «Тетради смерти» — гляньте #заметки
+Вот как раз [страница](https://characterdesignreferences.com/art-of-animation-7/art-of-death-note) с такими наработками для «Тетради смерти» — гляньте
 
 ::image{src="/images/uploads/tg-2013.jpg" alt="" width="column"}
 ::image{src="/images/uploads/tg-2014.jpg" alt="" width="column"}

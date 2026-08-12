@@ -17,4 +17,4 @@ tgUrl: https://t.me/podcastbaka/2081
 
 Саундтрек разделен на два диска по 34 и 36 треков. Чуть больше двух часов в итоге.
 
-Послушать альбом можно легально [на Spotify](https://open.spotify.com/album/4fgJZhpksYeOUtddVplxWS?si=HMy-8IA4T_Otkx48PJPBIA) и на [Apple Music](https://music.apple.com/us/album/frieren-beyond-journeys-end-original-soundtrack/1739445636). #заметки
+Послушать альбом можно легально [на Spotify](https://open.spotify.com/album/4fgJZhpksYeOUtddVplxWS?si=HMy-8IA4T_Otkx48PJPBIA) и на [Apple Music](https://music.apple.com/us/album/frieren-beyond-journeys-end-original-soundtrack/1739445636).

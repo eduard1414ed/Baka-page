@@ -19,4 +19,4 @@ tgUrl: https://t.me/podcastbaka/1600
 
 Выпуск можно послушать бесплатно все там же [на сервисе «Строки».](https://stroki.mts.ru/audiobook/7-byli-li-komiksy-v-sovetskom-soyuze-189997)
 
-P.S. А параллельным курсом [на Arzamas стал доступен](https://arzamas.academy/podcasts/332/2) наш второй эпизод: про супергероев. #арзамас
+P.S. А параллельным курсом [на Arzamas стал доступен](https://arzamas.academy/podcasts/332/2) наш второй эпизод: про супергероев.

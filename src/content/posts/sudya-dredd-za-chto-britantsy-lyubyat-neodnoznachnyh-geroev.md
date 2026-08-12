@@ -19,4 +19,4 @@ tgUrl: https://t.me/podcastbaka/1514
 
 И про Британию нам рассказал сценарист и историк комиксов Алексей Волков.
 
-Выпуск можно послушать бесплатно все там же [на сервисе «Строки».](https://stroki.mts.ru/audiobook/3-sudya-dredd-za-chto-britantsy-lyubyat-neodnoznachnykh-geroyev-157031) #арзамас
+Выпуск можно послушать бесплатно все там же [на сервисе «Строки».](https://stroki.mts.ru/audiobook/3-sudya-dredd-za-chto-britantsy-lyubyat-neodnoznachnykh-geroyev-157031)

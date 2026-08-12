@@ -23,4 +23,4 @@ tgUrl: https://t.me/podcastbaka/497
 
 Но самое интересное в том, что в этом году седьмой раз в истории премии лучшим художником признали Наоюки Кано, который в том числе создавал дизайн для «Легенд о Героях Галактики».
 
-Если вдруг вы не слышали ни разу об этом аниме — очень советую послушать [наш выпуск про него](/posts/final-sezona-legenda-o-geroyah-galaktiki-tetrad-druzhby-natsume-i-rozygrysh-mangi/). #прочее
+Если вдруг вы не слышали ни разу об этом аниме — очень советую послушать [наш выпуск про него](/posts/final-sezona-legenda-o-geroyah-galaktiki-tetrad-druzhby-natsume-i-rozygrysh-mangi/).

@@ -15,7 +15,7 @@ tgUrl: https://t.me/podcastbaka/1478
 
 Сегодня в рубрике с красивыми картинками сравниваем кадры из аниме и арт из ранобэ «Реинкарнация безработного».
 
-Что вам больше нравится? #прочее
+Что вам больше нравится?
 
 ::image{src="/images/uploads/tg-1479.jpg" alt="" width="column"}
 ::image{src="/images/uploads/tg-1480.jpg" alt="" width="column"}

@@ -19,7 +19,7 @@ animeSuggested:
 
 И очень кстати Тите Кубо опубликовал индивидуальные иллюстрации для каждого героя GOTEI-13 из Bleach.
 
-Чей дизайн вам больше всего нравится? #прочее
+Чей дизайн вам больше всего нравится?
 
 ::image{src="/images/uploads/tg-793.jpg" alt="" width="column"}
 ::image{src="/images/uploads/tg-794.jpg" alt="" width="column"}

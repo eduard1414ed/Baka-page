@@ -23,6 +23,4 @@ tgUrl: https://t.me/podcastbaka/676
 
 Другие аспекты «Клинка» мы подробно обсудили [в нашем подкасте, послушайте, если еще не успели](https://t.me/podcastbaka/669) 😉
 
-#заметки
-
 ::image{src="/images/uploads/tg-676.jpg" alt="" width="column"}

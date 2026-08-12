@@ -19,7 +19,7 @@ tgUrl: https://t.me/podcastbaka/1998
 
 И, что интересно, в сети можно найти шаблоны студий с подробными инструкциями, как ими пользоваться. Редкий случай, когда что-то про работу студий есть в открытом доступе.
 
-[Вот здесь](https://tips.clip-studio.com/en-us/articles/4537), например, собраны шаблоны Toei Animation, Hibari, Kinema Citrus, OLM и Marza Animation Planet. Если вы увлекаетесь анимацией и сами хотите ей заниматься — рекомендую протестировать и разобраться. #заметки
+[Вот здесь](https://tips.clip-studio.com/en-us/articles/4537), например, собраны шаблоны Toei Animation, Hibari, Kinema Citrus, OLM и Marza Animation Planet. Если вы увлекаетесь анимацией и сами хотите ей заниматься — рекомендую протестировать и разобраться.
 
 ::image{src="/images/uploads/tg-1999.jpg" alt="" width="column"}
 ::image{src="/images/uploads/tg-2000.jpg" alt="" width="column"}

@@ -21,4 +21,4 @@ tgUrl: https://t.me/podcastbaka/1643
 
 Выпуск можно послушать бесплатно все там же [на сервисе «Строки»](https://stroki.mts.ru/audiobook/10-kak-svyazany-manga-i-anime-210880)[.](https://stroki.mts.ru/audiobook/9-chto-takoye-graficheskiy-roman-i-nuzhen-li-voobsche-etot-termin-206806)
 
-P.S. А параллельным курсом [на Arzamas стал доступен](https://arzamas.academy/podcasts/332/5) наш пятый эпизод: про сёдзё и то, как истории из журналов для девочек изменили всю мангу. #арзамас
+P.S. А параллельным курсом [на Arzamas стал доступен](https://arzamas.academy/podcasts/332/5) наш пятый эпизод: про сёдзё и то, как истории из журналов для девочек изменили всю мангу.

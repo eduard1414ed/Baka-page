@@ -19,7 +19,7 @@ Milan Records объявили о том, что выпустят весь са�
 
 Написал оригинальный саундтрек Акира Ямаока, известный также по музыке для серии игр Silent Hill. На пластинку попадут и треки, сделанные P.T. Adamczyk и Marcin Przyblowicz.
 
-Распространять пластинку со специально сделанным студией TRIGGER дизайном начнут в январе. Но предзаказать ее на Amazon [можно уже сейчас](https://www.amazon.com/dp/B0CL8T3TW9?linkCode=as2). #прочее
+Распространять пластинку со специально сделанным студией TRIGGER дизайном начнут в январе. Но предзаказать ее на Amazon [можно уже сейчас](https://www.amazon.com/dp/B0CL8T3TW9?linkCode=as2).
 
 ::image{src="/images/uploads/tg-1634.jpg" alt="" width="column"}
 ::image{src="/images/uploads/tg-1635.jpg" alt="" width="column"}
