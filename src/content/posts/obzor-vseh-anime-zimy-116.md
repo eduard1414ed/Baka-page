@@ -2,15 +2,18 @@
 title: Обзор аниме «Руководство гениального принца по вызволению страны из долгов»
 date: 2022-05-15
 category: note
-draft: true
+draft: false
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/pasted-image-1786577858975.png
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 tgId: 116
 tgUrl: https://t.me/podcastbaka/116
+anime:
+  - tensai-ouji-no-akaji-kokka-saisei-jutsu
 ---
-
-[Руководство гениального принца по вызволению страны из долгов](https://anilist.co/anime/129190/The-Genius-Princes-Guide-to-Raising-a-Nation-Out-of-Debt/)
 
 Молодой правитель средневековой страны хочет ее продать подороже соседям и жить счастливо, ничего не решая, но все постоянно идет не так.
 
@@ -20,3 +23,5 @@ tgUrl: https://t.me/podcastbaka/116
 
 **Оценка:** 7 (и может быть выше, если смешные сцены будут разбавляться сюжетом)
 **Смотреть дальше:** как минимум еще несколько серий точно
+
+::anime-ref{id="tensai-ouji-no-akaji-kokka-saisei-jutsu" source="shikimori" source-id="47159"}
