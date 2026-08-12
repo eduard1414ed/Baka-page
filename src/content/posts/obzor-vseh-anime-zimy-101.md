@@ -4,15 +4,16 @@ date: 2022-05-15
 category: note
 draft: true
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/pasted-image-1786577626571.png
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 tgId: 101
 tgUrl: https://t.me/podcastbaka/101
+anime:
+  - ryman-s-club
 ---
-
-Клуб белых воротничков
-
-Второе спортивное аниме в моем марафоне — и в этот раз не настолько стыдное.
 
 Это история офисного работника Микото, который считался вундеркиндом в бадминтоне, но из-за травмы ушел из профессионального спорта. Теперь он должен, играя в офисной команде, доказать себе и другим, что его карьера еще не закончена.
 
@@ -22,3 +23,5 @@ tgUrl: https://t.me/podcastbaka/101
 
 **Оценка:** 6 (по сравнению с мини-футболом просто идеал)
 **Смотреть дальше:** скорее нет, но только потому что не фанат спортивных аниме
+
+::anime-ref{id="ryman-s-club" source="shikimori" source-id="50185"}
