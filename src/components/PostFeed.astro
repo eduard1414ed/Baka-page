@@ -25,6 +25,7 @@
 // не касаются вовсе, поэтому спорить с раскладкой нечему.
 import PostCard from './PostCard.astro';
 import LoadMore from './LoadMore.astro';
+import CategoryTabs from './CategoryTabs.astro';
 import { visibleCategories, categoriesShownIn } from '../content.config';
 import { ARCHIVE_BASE } from '../lib/archive.mjs';
 
@@ -56,11 +57,10 @@ const modes = visibleCategories.map((category) => {
 	return {
 		id: category.id,
 		label: category.label,
-		// Подпись ссылки в архив у этого режима: «Все подкасты в архиве».
-		// Множественное число берётся из `labelMany` — из `label` его не вывести:
-		// раздел подкаста называется «Подкаст», в единственном числе.
-		archiveLabel: `Все ${category.labelMany} в архиве`,
-		archiveHref: `/category/${category.id}/`,
+		// Подписи и адреса ссылки «в архив» тут больше нет: её строит вкладка
+		// (CategoryTabs.astro), а скрипт ниже забирает их с самой вкладки.
+		// Оставленная здесь копия жила бы без единого читателя и врала бы
+		// следующему про то, откуда эти строки берутся.
 		top: own.slice(0, PER_MODE),
 		// «Из архива» в режиме типа — следующие ПОСЛЕ показанных выше
 		// в этом же режиме. Считать от редакционных рядов здесь нельзя:
@@ -78,41 +78,9 @@ const olderAll = posts.filter((post) => !shownIds?.includes(post.id)).slice(0, O
 const nothingToShow = olderAll.length === 0;
 ---
 
-<nav class="filters" aria-label="Фильтр материалов">
-	<div class="filters-inner">
-		<span class="filters-label eyebrow tech">Материалы</span>
-		{/* Подпись и адрес ссылки «в архив» висят на самой вкладке, а не лежат
-		    отдельным списком в скрипте. Строки приходят из content.config.ts,
-		    и второго места, где их надо было бы держать в согласии со списком
-		    категорий, не появляется. */}
-		<div class="filter-group">
-			<button
-				class="filter-btn active"
-				type="button"
-				data-filter="all"
-				aria-pressed="true"
-				data-archive-label="Весь архив"
-				data-archive-href={ARCHIVE_BASE}
-			>
-				Все
-			</button>
-			{
-				modes.map((mode) => (
-					<button
-						class="filter-btn"
-						type="button"
-						data-filter={mode.id}
-						aria-pressed="false"
-						data-archive-label={mode.archiveLabel}
-						data-archive-href={mode.archiveHref}
-					>
-						{mode.label}
-					</button>
-				))
-			}
-		</div>
-	</div>
-</nav>
+{/* Ряд вкладок — общий компонент: точно такой же стоит в архиве, только там
+    ссылками. Состав, вид и поведение на тесном экране описаны в нём одном. */}
+<CategoryTabs variant="filter" ariaLabel="Фильтр материалов" label="Материалы" underline />
 
 {/* Режим «Все» — не карточная сетка, а редакционные ряды. Их собирает
     страница: это композиция главной, а не лента. */}
@@ -171,120 +139,8 @@ const nothingToShow = olderAll.length === 0;
 </section>
 
 <style>
-	/* ---------- Фильтры ---------- */
-
-	/* ПЕРЕНОСЯТСЯ, А НЕ СКРОЛЛЯТСЯ. Горизонтальная карусель на узком экране
-	   прячет часть вкладок за краем: их не видно, и о них не догадаться. */
-	.filters {
-		border-bottom: 1px solid var(--line);
-	}
-
-	.filters-inner {
-		min-height: 56px;
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 0 var(--sp-6);
-		padding: var(--sp-2) 0;
-	}
-
-	/* Вид — общий `.eyebrow` в global.css: «Материалы» это надзаголовок ряда
-	   вкладок, такой же, как «[ из архива ]» ниже. Здесь остаётся только место:
-	   подпись стоит В СТРОКУ с вкладками, поэтому отступ снизу снимается,
-	   а сама она центруется по высоте ряда. */
-	.filters-label {
-		display: flex;
-		align-items: center;
-		margin-bottom: 0;
-	}
-
-	.filter-group {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0 var(--sp-6);
-	}
-
-	/* Цель не меньше 44 по высоте (§8). Рамки у вкладки нет: коробок
-	   в языке сайта не осталось, активная помечается подчёркиванием.
-
-	   МОНОШИРИННОГО НАЧЕРТАНИЯ ТУТ НЕТ, и это важно. У кнопок стоял класс
-	   технического слоя, и он приводил с собой гарнитуру: вкладки главной
-	   набирались IBM Plex Mono, а точно такие же вкладки архива — Inter.
-	   Один и тот же ряд выглядел на двух страницах по-разному. В макетах
-	   у `.filter-btn` и у `.archive-tab` гарнитура не задана вовсе, то есть
-	   обе берут основную; капслок, кегль и трекинг — здесь, ниже.
-	   Моноширинной остаётся только подпись «Материалы» слева: она подпись
-	   блока, а не вкладка. */
-	.filter-btn {
-		position: relative;
-		min-height: 44px;
-		display: inline-flex;
-		align-items: center;
-		padding: 0;
-		border: 0;
-		background: transparent;
-		color: var(--ink);
-		font-size: var(--caption);
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		white-space: normal;
-	}
-
-	.filter-btn:hover {
-		color: var(--accent-text);
-	}
-
-	/* Активное состояние никогда не обозначается только цветом (§3.3):
-	   к начертанию добавляется подчёркивание. */
-	.filter-btn.active {
-		font-weight: 600;
-	}
-
-	.filter-btn.active::after {
-		content: '';
-		position: absolute;
-		left: 0;
-		right: 0;
-		bottom: 8px;
-		height: 1.5px;
-		background: var(--ink);
-	}
-
-	/* НА ТЕСНОМ ЭКРАНЕ РЯД СЖИМАЕТСЯ, ЧТОБЫ НЕ ПЕРЕНОСИТЬСЯ. Пять вкладок
-	   («Все», «Подкаст», «Видеоэссе», «Заметки», «Статьи») весят вместе
-	   302 px — замер по метрикам Inter, начертанием 600 у активной, потому
-	   что решает самая широкая строка. При зазоре 24 ряду нужен экран 433 px,
-	   и на телефоне последняя вкладка уезжала на вторую строку одна.
-	   Зазор 10 и кегль 11 (нижняя граница технического слоя) дают 316 px:
-	   ряд встаёт в строку начиная с экрана 353. На 320 он всё равно
-	   переносится — там места нет ни при каком зазоре, и это цена.
-
-	   Перелом 432, а не круглое число: это последняя ширина, на которой
-	   ряд ещё не помещался при обычном зазоре.
-
-	   ТО ЖЕ САМОЕ ЕСТЬ У ВКЛАДОК АРХИВА (`ArchiveView.astro`) — состав
-	   у рядов один и тот же, и выглядеть они обязаны одинаково. Меняете
-	   тут — поправьте и там. */
-	@media (max-width: 432px) {
-		.filter-group {
-			gap: 0 10px;
-		}
-
-		.filter-btn {
-			font-size: var(--technical);
-		}
-	}
-
-	@media (min-width: 821px) {
-		.filters-label {
-			padding-right: var(--sp-6);
-			border-right: 1px solid var(--line);
-		}
-
-		.filter-group {
-			gap: 0 var(--sp-8);
-		}
-	}
+	/* Ряд вкладок описан в CategoryTabs.astro — одним местом на главную
+	   и на архив. Здесь его правил больше нет. */
 
 	.all-layout {
 		padding-top: var(--sp-6);
@@ -438,7 +294,7 @@ const nothingToShow = olderAll.length === 0;
 	}
 
 	function applyMode(mode: string) {
-		document.querySelectorAll<HTMLElement>('.filter-btn[data-filter]').forEach((button) => {
+		document.querySelectorAll<HTMLElement>('.tab[data-filter]').forEach((button) => {
 			const on = button.dataset.filter === mode;
 			button.classList.toggle('active', on);
 			button.setAttribute('aria-pressed', String(on));
@@ -469,7 +325,7 @@ const nothingToShow = olderAll.length === 0;
 		const target = event.target instanceof Element ? event.target : null;
 		if (!target) return;
 
-		const filter = target.closest<HTMLElement>('.filter-btn[data-filter]');
+		const filter = target.closest<HTMLElement>('.tab[data-filter]');
 		if (filter?.dataset.filter) {
 			applyMode(filter.dataset.filter);
 			return;

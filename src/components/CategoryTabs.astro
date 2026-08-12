@@ -1,0 +1,206 @@
+---
+// Ряд вкладок по типу материала. ОДИН НА ВЕСЬ САЙТ: фильтры главной
+// (`PostFeed.astro`) и вкладки архива с разделами (`ArchiveView.astro`).
+//
+// ДО 12 АВГУСТА 2026 ЭТО БЫЛИ ДВА ОПИСАНИЯ, И ОНИ УЖЕ РАЗОШЛИСЬ. В обоих
+// файлах стояла пометка «меняете тут — поправьте и там», и она не сработала:
+// на широком экране зазор между вкладками был 32 px на главной и 24 в архиве.
+// Разъезд приехал не из нашего кода, а из макетов — `page-home.css` задаёт
+// `.filter-group{gap:var(--space-8)}` от 821, а `page-archive.css` такого
+// правила не имеет вовсе. Дизайн-система про зазор молчит, поэтому число
+// выбрал заказчик: 32 обоим. Ровно тот случай, что записан уроком —
+// «элемент, который есть в нескольких макетах, сверять во ВСЕХ».
+//
+// РЯДЫ РАЗНЫЕ ПО УСТРОЙСТВУ, И ЭТО НЕ МЕЛОЧЬ. На главной вкладка — КНОПКА:
+// она переключает ленту прямо на странице, никуда не уводя. В архиве — ССЫЛКА
+// на настоящий адрес раздела, который можно послать другому и который найдёт
+// поисковик. Отсюда и разные признаки выбранного: у кнопки `aria-pressed`,
+// у ссылки `aria-current`. Общее — состав, вид и поведение на тесном экране,
+// и вот оно теперь здесь.
+import { visibleCategories } from '../content.config';
+import { ARCHIVE_BASE } from '../lib/archive.mjs';
+
+interface Props {
+	/** `filter` — кнопки на главной, `link` — ссылки на разделы в архиве. */
+	variant: 'filter' | 'link';
+	/** Что выбрано: `all` или id категории. */
+	active?: string;
+	ariaLabel: string;
+	/** Надзаголовок слева в строку («Материалы»). Только у главной. */
+	label?: string | null;
+	/** Линия под рядом. Только у главной: в архиве её рисует верхняя граница
+	    первого ряда карточек, и вторая дала бы две линии подряд (§5). */
+	underline?: boolean;
+}
+
+const { variant, active = 'all', ariaLabel, label = null, underline = false } = Astro.props;
+
+// Подпись и адрес ссылки «в архив» висят на самой вкладке, а не лежат отдельным
+// списком в скрипте. Строки приходят из content.config.ts, и второго места,
+// где их надо было бы держать в согласии со списком категорий, не появляется.
+const tabs = [
+	{
+		id: 'all',
+		label: 'Все',
+		href: ARCHIVE_BASE,
+		// Множественное число берётся из `labelMany` — из `label` его не вывести:
+		// раздел подкаста называется «Подкаст», в единственном числе.
+		archiveLabel: 'Весь архив',
+		archiveHref: ARCHIVE_BASE,
+	},
+	...visibleCategories.map((category) => ({
+		id: category.id,
+		label: category.label,
+		href: `/category/${category.id}/`,
+		archiveLabel: `Все ${category.labelMany} в архиве`,
+		archiveHref: `/category/${category.id}/`,
+	})),
+];
+---
+
+<nav class:list={['tabs', underline && 'tabs-underline']} aria-label={ariaLabel}>
+	<div class="tabs-inner">
+		{label && <span class="tabs-label eyebrow tech">{label}</span>}
+		<div class="tab-group">
+			{
+				tabs.map((tab) =>
+					variant === 'filter' ? (
+						<button
+							class:list={['tab', tab.id === active && 'active']}
+							type="button"
+							data-filter={tab.id}
+							aria-pressed={String(tab.id === active)}
+							data-archive-label={tab.archiveLabel}
+							data-archive-href={tab.archiveHref}
+						>
+							{tab.label}
+						</button>
+					) : (
+						<a class="tab" href={tab.href} aria-current={tab.id === active ? 'page' : undefined}>
+							{tab.label}
+						</a>
+					),
+				)
+			}
+		</div>
+	</div>
+</nav>
+
+<style>
+	/* Линия под рядом есть только там, где её попросили: см. `underline`. */
+	.tabs-underline {
+		border-bottom: 1px solid var(--line);
+	}
+
+	.tabs-inner {
+		min-height: 56px;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0 var(--sp-6);
+		padding: var(--sp-2) 0;
+	}
+
+	/* Вид — общий `.eyebrow` в global.css: это надзаголовок ряда, такой же,
+	   как «[ из архива ]» ниже по странице. Здесь остаётся только место:
+	   подпись стоит В СТРОКУ с вкладками, поэтому отступ снизу снимается,
+	   а сама она центруется по высоте ряда. */
+	.tabs-label {
+		display: flex;
+		align-items: center;
+		margin-bottom: 0;
+	}
+
+	/* ПЕРЕНОСЯТСЯ, А НЕ СКРОЛЛЯТСЯ. Горизонтальная карусель на узком экране
+	   прячет часть вкладок за краем: их не видно, и о них не догадаться. */
+	.tab-group {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0 var(--sp-6);
+	}
+
+	/* Цель не меньше 44 по высоте (§8). Рамки у вкладки нет: коробок в языке
+	   сайта не осталось, выбранная помечается подчёркиванием.
+
+	   МОНОШИРИННОГО НАЧЕРТАНИЯ ТУТ НЕТ, и это важно. У кнопок стоял класс
+	   технического слоя, и он приводил с собой гарнитуру: вкладки главной
+	   набирались IBM Plex Mono, а точно такие же вкладки архива — Inter.
+	   Один и тот же ряд выглядел на двух страницах по-разному. В макетах
+	   гарнитура у вкладки не задана вовсе, то есть обе берут основную;
+	   капслок, кегль и трекинг — здесь. Моноширинной остаётся только подпись
+	   «Материалы» слева: она подпись блока, а не вкладка.
+
+	   Сбросы кнопки (`padding`, `border`, `background`, `white-space`) стоят
+	   и у ссылки тоже: своего вида они ей не меняют, а разводить одно правило
+	   на два ради этого — ровно та копия, от которой этот компонент избавляет. */
+	.tab {
+		position: relative;
+		min-height: 44px;
+		display: inline-flex;
+		align-items: center;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: var(--ink);
+		font-size: var(--caption);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		white-space: normal;
+	}
+
+	.tab:hover {
+		color: var(--accent-text);
+	}
+
+	/* Выбранное состояние никогда не обозначается только цветом (§3.3):
+	   к начертанию добавляется подчёркивание. Признак у кнопки и у ссылки
+	   разный по смыслу — «нажата» против «текущая страница», — но вид один,
+	   и описан он один раз двумя селекторами. */
+	.tab.active,
+	.tab[aria-current='page'] {
+		font-weight: 600;
+	}
+
+	.tab.active::after,
+	.tab[aria-current='page']::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 8px;
+		height: 1.5px;
+		background: var(--ink);
+	}
+
+	/* НА ТЕСНОМ ЭКРАНЕ РЯД СЖИМАЕТСЯ, ЧТОБЫ НЕ ПЕРЕНОСИТЬСЯ. Пять вкладок
+	   («Все», «Подкаст», «Видеоэссе», «Заметки», «Статьи») весят вместе
+	   302 px — замер по метрикам Inter, начертанием 600 у выбранной, потому
+	   что решает самая широкая строка. При зазоре 24 ряду нужен экран 433 px,
+	   и на телефоне последняя вкладка уезжала на вторую строку одна.
+	   Зазор 10 и кегль 11 (нижняя граница технического слоя) дают 316 px:
+	   ряд встаёт в строку начиная с экрана 353. На 320 он всё равно
+	   переносится — там места нет ни при каком зазоре, и это цена.
+
+	   Перелом 432, а не круглое число: это последняя ширина, на которой
+	   ряд ещё не помещался при обычном зазоре. */
+	@media (max-width: 432px) {
+		.tab-group {
+			gap: 0 10px;
+		}
+
+		.tab {
+			font-size: var(--technical);
+		}
+	}
+
+	@media (min-width: 821px) {
+		.tabs-label {
+			padding-right: var(--sp-6);
+			border-right: 1px solid var(--line);
+		}
+
+		.tab-group {
+			gap: 0 var(--sp-8);
+		}
+	}
+</style>

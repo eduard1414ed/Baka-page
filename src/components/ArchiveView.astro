@@ -20,7 +20,7 @@
 import PostCard from './PostCard.astro';
 import Pagination from './Pagination.astro';
 import SectionHead from './SectionHead.astro';
-import { visibleCategories } from '../content.config';
+import CategoryTabs from './CategoryTabs.astro';
 
 interface Props {
 	/** Материалы текущей страницы, уже отсортированные и нарезанные. */
@@ -45,25 +45,12 @@ const { posts, eyebrow, heading, intro, countLine, activeCategory, base, current
 {/* Шапка раздела — общий компонент: точно такая же стоит у каталога тайтлов. */}
 <SectionHead eyebrow={eyebrow} heading={heading} intro={intro} countLine={countLine} />
 
-{/* Те же вкладки, что фильтры на главной, но здесь это ОБЫЧНЫЕ ССЫЛКИ
-    на разделы: у каждого типа свой адрес, на который можно сослаться
-    и который найдёт поисковик. Своей линии снизу у вкладок нет — её рисует
-    верхняя граница первого ряда карточек, иначе вышли бы две линии
+{/* Те же вкладки, что фильтры на главной, — ОДИН КОМПОНЕНТ НА ОБЕ СТРАНИЦЫ.
+    Здесь это обычные ССЫЛКИ на разделы: у каждого типа свой адрес, на который
+    можно сослаться и который найдёт поисковик. Своей линии снизу у ряда нет —
+    её рисует верхняя граница первого ряда карточек, иначе вышли бы две линии
     в тридцати пикселях друг от друга (§5). */}
-<nav class="archive-tabs" aria-label="Тип материала">
-	<a class="archive-tab" href="/archive/" aria-current={activeCategory ? undefined : 'page'}>Все</a>
-	{
-		visibleCategories.map((category) => (
-			<a
-				class="archive-tab"
-				href={`/category/${category.id}/`}
-				aria-current={category.id === activeCategory ? 'page' : undefined}
-			>
-				{category.label}
-			</a>
-		))
-	}
-</nav>
+<CategoryTabs variant="link" ariaLabel="Тип материала" active={activeCategory ?? 'all'} />
 
 {
 	posts.length === 0 ? (
@@ -80,59 +67,9 @@ const { posts, eyebrow, heading, intro, countLine, activeCategory, base, current
 {last > 1 && <Pagination current={current} last={last} base={base} />}
 
 <style>
-	/* Шапка раздела — в SectionHead.astro: она общая с каталогом тайтлов. */
-
-	/* Вкладки переносятся, а не скроллятся: карусель прячет часть типов
-	   за краем экрана, и о них не догадаться. */
-	.archive-tabs {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0 var(--sp-6);
-		padding: var(--sp-2) 0;
-		font-size: var(--caption);
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-	}
-
-	.archive-tab {
-		position: relative;
-		min-height: 44px;
-		display: inline-flex;
-		align-items: center;
-		color: var(--ink);
-	}
-
-	.archive-tab:hover {
-		color: var(--accent-text);
-	}
-
-	/* Активная вкладка отличается не только цветом (§3.3): начертанием
-	   и подчёркиванием, а для диктора — `aria-current`. */
-	.archive-tab[aria-current='page'] {
-		font-weight: 600;
-	}
-
-	.archive-tab[aria-current='page']::after {
-		content: '';
-		position: absolute;
-		left: 0;
-		right: 0;
-		bottom: 8px;
-		height: 1.5px;
-		background: var(--ink);
-	}
-
-	/* НА ТЕСНОМ ЭКРАНЕ РЯД СЖИМАЕТСЯ, ЧТОБЫ НЕ ПЕРЕНОСИТЬСЯ. Числа и замер —
-	   в `PostFeed.astro`, где стоит такой же ряд с тем же составом вкладок:
-	   пятерым при зазоре 24 нужен экран 433 px, при зазоре 10 и кегле 11 —
-	   353. Меняете тут — поправьте и там; развести эти два ряда нельзя,
-	   они одинаковы по замыслу. */
-	@media (max-width: 432px) {
-		.archive-tabs {
-			gap: 0 10px;
-			font-size: var(--technical);
-		}
-	}
+	/* Шапка раздела — в SectionHead.astro: она общая с каталогом тайтлов.
+	   Ряд вкладок — в CategoryTabs.astro: он общий с главной. Здесь ни того,
+	   ни другого правил больше нет. */
 
 	/* Сама сетка — общая (.list-grid в global.css). Странице остаётся
 	   только вертикальный ритм. */
