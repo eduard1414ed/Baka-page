@@ -2,15 +2,18 @@
 title: Обзор аниме «Убивающая любовь»
 date: 2022-05-15
 category: note
-draft: true
+draft: false
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/pasted-image-1786577987673.png
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 tgId: 95
 tgUrl: https://t.me/podcastbaka/95
+anime:
+  - koroshi-ai
 ---
-
-[Убивающая любовь](https://anilist.co/anime/127050/Love-of-Kill/)
 
 Аниме про отношения охотницы за головами Шато и супер-опасного киллера Сона.
 
@@ -22,3 +25,5 @@ tgUrl: https://t.me/podcastbaka/95
 
 **Оценка:** 6 (за неплохую завязку)
 **Смотреть дальше:** нет, потому что не зацепили герои
+
+::anime-ref{id="koroshi-ai" source="shikimori" source-id="44516"}
