@@ -1,5 +1,62 @@
+import { fileURLToPath } from 'node:url';
+import sharp from 'sharp';
 import { visit } from 'unist-util-visit';
 import { getImageVariantSrcs } from '../lib/imageVariants.mjs';
+
+// ПРОПОРЦИЮ ПЛИТКИ ЗАДАЮТ САМИ КАДРЫ, А НЕ ЧИСЛО ИЗ СТИЛЕЙ.
+//
+// Раньше плитка сетки была жёстко 16:9, и вертикальные кадры резались
+// пополам: у заметки про «Человека-паука» две страницы манги с пропорцией
+// 0.66 показывались широкими полосками. Замер 574 картинок из 125 галерей
+// архива: пропорции идут от 0.54 до 2.98, у 38 галерей ВСЕ кадры
+// вертикальные, а однородных галерей подавляющее большинство — разнобой
+// больше чем в 1.25 раза нашёлся только у 24.
+//
+// Размеры читаются у самих файлов при сборке. Кэш по пути обязателен:
+// тело поста разбирается дважды (страница материала и страница тайтла),
+// а картинок в архиве 574 — без него это 1148 обращений к диску.
+const ratioCache = new Map();
+
+async function imageRatio(src) {
+	if (ratioCache.has(src)) return ratioCache.get(src);
+
+	let ratio = null;
+	try {
+		// fileURLToPath, а не `.pathname`: в пути к проекту русские буквы,
+		// и `.pathname` отдал бы их закодированными — «файла нет» про файл,
+		// который есть.
+		const path = fileURLToPath(new URL(`../../public${src.startsWith('/') ? src : `/${src}`}`, import.meta.url));
+		const { width, height } = await sharp(path).metadata();
+		if (width > 0 && height > 0) ratio = width / height;
+	} catch {
+		// Картинки нет на диске (её ещё не загрузили) или формат неизвестен —
+		// плитка останется прежней, 16:9. Ронять сборку всего сайта из-за
+		// одной пропорции нельзя.
+	}
+
+	ratioCache.set(src, ratio);
+	return ratio;
+}
+
+/**
+ * Пропорция плитки для галереи — МЕДИАНА пропорций её кадров.
+ *
+ * Медиана, а не самый широкий кадр (как у рамки постера в марке) и не самый
+ * узкий: у однородной галереи — а таких подавляющее большинство — она равна
+ * пропорции кадров, то есть не режет вообще ничего. У разнобойной один
+ * случайный кадр не тянет за собой всю сетку: возьми мы максимум, вертикальный
+ * кадр в широкой плитке потерял бы шестьдесят процентов высоты.
+ *
+ * Ни одного размера не прочиталось — отдаём null, и плитка остаётся 16:9.
+ */
+function medianRatio(items) {
+	const ratios = items.map((item) => ratioCache.get(item.src)).filter((r) => typeof r === 'number' && r > 0);
+	if (ratios.length === 0) return null;
+
+	ratios.sort((a, b) => a - b);
+	const middle = ratios.length / 2;
+	return ratios.length % 2 === 1 ? ratios[Math.floor(middle)] : (ratios[middle - 1] + ratios[middle]) / 2;
+}
 
 // Значения атрибутов приходят экранированными из админки (см. public/admin/index.html) —
 // там кавычка ломает разбор синтаксиса директивы, поэтому её заменяют на &quot;.
@@ -237,9 +294,16 @@ function groupFigureData(items, onWarn) {
 	const caption = buildCaption(blockCaptionItem(items, onWarn));
 	if (caption) children.push(caption);
 
+	// Пропорция плитки (сетка) и рамки слайда (карусель) — от самих кадров.
+	// Нет размеров — переменной нет, и стили берут запасные 16:9.
+	const ratio = medianRatio(items);
+
 	return {
 		hName: 'figure',
-		hProperties: { class: isCarousel ? 'figure gallery gallery-carousel' : 'figure gallery gallery-grid' },
+		hProperties: {
+			class: isCarousel ? 'figure gallery gallery-carousel' : 'figure gallery gallery-grid',
+			...(ratio ? { style: `--tile-ratio: ${ratio.toFixed(3)}` } : {}),
+		},
 		hChildren: children,
 	};
 }
@@ -256,7 +320,15 @@ function groupFigureData(items, onWarn) {
  * и сдвинулся бы от любой вставки.
  */
 export default function remarkImageFigure() {
-	return (tree, file) => {
+	return async (tree, file) => {
+		// Размеры картинок читаются ДО основного прохода: он синхронный,
+		// а обращение к диску — нет. Первый проход только собирает адреса.
+		const srcs = new Set();
+		visit(tree, 'leafDirective', (node) => {
+			if (node.name === 'image' && node.attributes?.src) srcs.add(node.attributes.src);
+		});
+		await Promise.all([...srcs].map(imageRatio));
+
 		const warnGallery = (what) => {
 			console.warn(`[галерея] ${file?.path ?? 'пост'}: у галереи одна подпись на блок, а ${what}.`);
 		};
