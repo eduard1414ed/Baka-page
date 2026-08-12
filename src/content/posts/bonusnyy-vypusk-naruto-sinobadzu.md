@@ -7,6 +7,8 @@ description: ''
 cover: /images/uploads/tg-86.jpg
 noCover: false
 externalUrl: ''
+externalSource: ''
+adLabel: ''
 animeSuggested:
   - naruto
 bonusLinks:
