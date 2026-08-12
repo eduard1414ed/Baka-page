@@ -2,15 +2,18 @@
 title: Обзор аниме «РПГ Недвижимость»
 date: 2022-05-15
 category: note
-draft: true
+draft: false
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/pasted-image-1786577363920.png
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 tgId: 140
 tgUrl: https://t.me/podcastbaka/140
+anime:
+  - rpg-fudousan
 ---
-
-РПГ Недвижимость
 
 Мой любимый жанр — милые девушки делают милые вещи, но в фантастическом мире.
 
@@ -21,3 +24,5 @@ tgUrl: https://t.me/podcastbaka/140
 Я больше фанат этого жанра в реалистическом сеттинге (смотри: «Лагерь на свежем воздухе»), но я могу представить, что для кого-то и «РПГ Недвижимость» будет давать тот же терапевтический эффект.
 
 **Смотреть дальше:** если вам хочется отдохнуть и выключить мозг — самое то
+
+::anime-ref{id="rpg-fudousan" source="shikimori" source-id="48363"}
