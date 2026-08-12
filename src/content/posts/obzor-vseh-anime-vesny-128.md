@@ -2,12 +2,17 @@
 title: Обзор аниме «Рыцарь-скелет вступает в параллельный мир»
 date: 2022-05-15
 category: note
-draft: true
+draft: false
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/pasted-image-1786576831619.png
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 tgId: 128
 tgUrl: https://t.me/podcastbaka/128
+anime:
+  - gaikotsu-kishi-sama-tadaima-isekai-e-odekakechuu
 ---
 
 Рыцарь-скелет вступает в параллельный мир
@@ -21,3 +26,5 @@ tgUrl: https://t.me/podcastbaka/128
 Может слегка смущать 3D-доспехи главного героя, но по первой серии они выполнены добротно и не бросаются в глаза.
 
 **Смотреть дальше:** если ищите для себя новый исекай — то да
+
+::anime-ref{id="gaikotsu-kishi-sama-tadaima-isekai-e-odekakechuu" source="shikimori" source-id="48760"}
