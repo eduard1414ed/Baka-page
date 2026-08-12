@@ -21,7 +21,6 @@ tgId: 45
 tgUrl: https://t.me/podcastbaka/45
 anime:
   - naruto
-  - naruto-shinsaku-anime
   - cowboy-bebop
 ---
 
@@ -30,3 +29,5 @@ anime:
 Почему :anime[«Наруто»]{id="naruto" source="shikimori" source-id="20"} выставляют таким глупым? Как филлеры пытаются играть в «Ковбоя Бибопа»? И почему глупость иногда лучше пресности?
 
 ::anime-ref{id="cowboy-bebop" source="shikimori" source-id="1"}
+
+::anime-ref{id="naruto" source="shikimori" source-id="20"}
