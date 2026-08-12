@@ -1,6 +1,6 @@
 ---
 title: Наруто. Клан Курама | Обсуждение филлеров
-date: 2022-05-14
+date: 2022-05-27
 category: bonus
 draft: false
 description: ''
