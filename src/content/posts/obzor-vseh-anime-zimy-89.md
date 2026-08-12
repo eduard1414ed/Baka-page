@@ -4,15 +4,18 @@ date: 2022-05-15
 category: note
 draft: true
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/pasted-image-1786577939455.png
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 tgId: 89
 tgUrl: https://t.me/podcastbaka/89
+anime:
+  - hakozume-kouban-joshi-no-gyakushuu
 ---
 
-[Контратака женщины-полицейского](https://anilist.co/anime/137312/Hakozume-Kouban-Joshi-no-Gyakushuu/)
-
-Еще одна комедия в этой четверке. Как вам идея аниме про скучную жизнь Токийской полиции?
+Как вам идея аниме про скучную жизнь Токийской полиции?
 
 Главная героиня, Маи, устала от неблагодарной работы в полиции и хочет уже уволиться, когда к ней приставляют новую напарницу, Сейко. Пообщавшись с ней, Маи понимает, что, возможно, она не так уж устала от своей работы.
 
@@ -20,3 +23,5 @@ tgUrl: https://t.me/podcastbaka/89
 
 **Оценка:** 7.5 (за оригинальность)
 **Смотреть дальше:** да, мне понравилось
+
+::anime-ref{id="hakozume-kouban-joshi-no-gyakushuu" source="shikimori" source-id="49519"}
