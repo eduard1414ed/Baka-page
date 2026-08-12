@@ -23,10 +23,3 @@ bonusLinks:
 Но при этом он занимает первое место среди самых недооцененных аниме на «Шикимори» и регулярно забирается в топы детективных тайтлов.
 
 Мы решили в этом феномене окончательно разобраться — в новом бонусном эпизоде!
-
-**Где слушать?**
-
-🌕 [Boosty (за рубли)](https://boosty.to/bakapodcast/posts/ba19bfa5-1916-44a4-9cb7-4e3918ebfa7a?share=success_publish_link)
-🌖 [VK Donat (за рубли)](https://vk.com/wall-211086713_2511)
-🌓 [Patreon (за валюту)](https://www.patreon.com/posts/trup-pod-nogami-155749082?utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=postshare_creator&utm_content=join_link)
-🌑 [Закрытый Telegram-канал](https://t.me/tribute/app?startapp=s26z)

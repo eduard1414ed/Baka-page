@@ -21,10 +21,3 @@ bonusLinks:
 «Код Гиас» — одно из главных аниме нулевых, но как оно состарилось? Целый час обсуждаем философские теории, сражения мехов и противоречивых антигероев.
 
 А еще сравниваем сериал с «Атакой титанов», «Тетрадью смерти» и «Гуррен Лаганном».
-
-**Где слушать?**
-
-🌕 [Boosty (за рубли)](https://boosty.to/bakapodcast/posts/e7da8f7d-ac54-42a8-a3a7-8e0390da3c87?share=post_link)
-🌖 [VK Donat (за рубли)](https://vk.com/wall-211086713_2601)
-🌓 [Patreon (за валюту)](https://www.patreon.com/posts/kod-gias-tsel-159375774?utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=postshare_creator&utm_content=join_link)
-🌑 [Закрытый Telegram-канал](https://t.me/tribute/app?startapp=s26z)

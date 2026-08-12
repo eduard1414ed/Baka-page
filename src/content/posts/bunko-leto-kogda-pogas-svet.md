@@ -21,10 +21,3 @@ bonusLinks:
 Самый актуальный выпуск подкаста «Бунко!» прямо к выходу экранизации этой манги.
 
 Как школьнику удалось получить экранизацию всего за несколько месяцев? Может ли манга по-настоящему пугать? И почему режиссерам аниме придется совсем нелегко?
-
-**Где смотреть и слушать?**
-
-🌕 [Boosty (за рубли)](https://boosty.to/bakapodcast/posts/e2f4a0ae-4d9e-4071-a047-731ea63bd6f3?share=post_link)
-🌖 [VK Donat (за рубли)](https://vk.com/wall-211086713_1868)
-🌓 [Patreon (за валюту)](https://www.patreon.com/posts/bunko-leto-kogda-133557326)
-🌑 [Закрытый Telegram-канал](https://t.me/tribute/app?startapp=s26z)

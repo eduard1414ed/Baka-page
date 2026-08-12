@@ -21,10 +21,3 @@ bonusLinks:
 Как один забытый фильм изменил самую известную аниме-студию? О чем он заставляет вспоминать зрителей? Почему эту картину должны посмотреть все взрослые?
 
 И как с этим связана венгерская народная музыка?
-
-**Где слушать?**
-
-🌕 [Boosty (за рубли)](https://boosty.to/bakapodcast/posts/509f27bb-ad3d-4e37-b21e-daefb24b5264?share=success_publish_link)
-🌔 [VK Donut (за рубли)](https://vk.com/wall-211086713_1802)
-🌓 [Patreon (за валюту)](https://www.patreon.com/posts/eshche-vchera-130159152?utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=postshare_creator&utm_content=join_link)
-🌑 [Закрытый Telegram-канал](https://t.me/tribute/app?startapp=s26z)

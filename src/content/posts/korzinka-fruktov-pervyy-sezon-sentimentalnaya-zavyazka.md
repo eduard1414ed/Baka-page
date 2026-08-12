@@ -21,10 +21,3 @@ bonusLinks:
 Наши руки наконец-то добрались до ремейка культового сёдзё начала нулевых. В этом выпуске обсуждаем самое начало — первый сезон.
 
 Справилась ли студия TMS Entertainment с адаптацией? Как сериал невольно обманывает ожидания? И за что стоит любить Тору Хонду?
-
-**Где слушать?**
-
-🌕 [Boosty (за рубли)](https://boosty.to/bakapodcast/posts/0760345e-e280-4fa5-89da-d0e8d89cf440?share=success_publish_link)
-🌖 [VK Donat (за рубли)](https://vk.com/wall-211086713_2492)
-🌓 [Patreon (за валюту)](https://www.patreon.com/posts/korzinka-fruktov-154578824?utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=postshare_creator&utm_content=join_link)
-🌑 [Закрытый Telegram-канал](https://t.me/tribute/app?startapp=s26z)

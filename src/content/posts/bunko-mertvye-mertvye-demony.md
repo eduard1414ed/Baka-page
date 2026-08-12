@@ -23,10 +23,3 @@ bonusLinks:
 Мангака хотел сделать свой K-On, а получилась сложная драма про политику, взросление и человеческую натуру.
 
 Как так вышло? Почему эта манга так сильно напоминает реальную жизнь? И может ли эта история научить жизни в разрушающемся мире?
-
-**Где смотреть и слушать?**
-
-🌕 [Boosty (за рубли)](https://boosty.to/bakapodcast/posts/cc8f4ab0-4cdc-402f-9198-5edb148a7355?share=success_publish_link)
-🌖 [VK Donat (за рубли)](https://vk.com/wall-211086713_2019)
-🌓 [Patreon (за валюту)](https://www.patreon.com/posts/bunko-mertvye-139168862?utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=postshare_creator&utm_content=join_link)
-🌑 [Закрытый Telegram-канал](https://t.me/tribute/app?startapp=s26z)

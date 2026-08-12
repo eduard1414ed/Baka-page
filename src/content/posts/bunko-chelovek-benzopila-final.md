@@ -23,10 +23,3 @@ bonusLinks:
 Получилась ли история Асы и Йор? Куда исчезли любимые герои? Кто пришел им на смену, и почему эта замена вышла неравноценной? Что произошло с персонажем Дендзи? И главное — стоит ли ждать третью часть?
 
 А вообще мы просто почти час бомбим на Тацуки Фудзимото.
-
-**Где слушать?**
-
-🌕 [Boosty (за рубли](https://boosty.to/bakapodcast/posts/89f573a2-e089-4d98-b9ed-76e52c0bb9f0?share=post_link))
-🌖 [VK Donat (за рубли](https://vk.com/wall-211086713_2482))
-🌓 [Patreon (за валюту](https://www.patreon.com/posts/bunko-chelovek-154340261?utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=postshare_creator&utm_content=join_link))
-🌑 [Закрытый Telegram-канал](https://t.me/tribute/app?startapp=s26z)
