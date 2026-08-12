@@ -4,6 +4,7 @@ import remarkDirective from 'remark-directive';
 import remarkColonText from './src/plugins/remark-colon-text.mjs';
 import remarkImageFigure from './src/plugins/remark-image-figure.mjs';
 import remarkEpisodeCover from './src/plugins/remark-episode-cover.mjs';
+import remarkLeadCover from './src/plugins/remark-lead-cover.mjs';
 import remarkAdLabel from './src/plugins/remark-ad-label.mjs';
 import remarkSpoiler from './src/plugins/remark-spoiler.mjs';
 import remarkVideo from './src/plugins/remark-video.mjs';
@@ -47,6 +48,13 @@ export default defineConfig({
 			// плагин стоял после — тогда он умел убирать только markdown-картинку
 			// с хостинга подкаста, а её remarkImageFigure и не трогает.
 			remarkEpisodeCover,
+			// Обложка поста в начало текста, если картинок в тексте нет ни одной.
+			// СТРОГО ЗДЕСЬ: после remarkEpisodeCover — иначе обложка выпуска,
+			// которую тот вот-вот уберёт из тела, посчиталась бы картинкой
+			// в тексте; до remarkAdLabel и remarkImageFigure — чтобы маркировка
+			// рекламы встала под наш кадр, а сам кадр разобрал тот же код,
+			// что и обычные иллюстрации. Зачем это нужно — в шапке плагина.
+			remarkLeadCover,
 			// Маркировка рекламы из поля поста. МЕЖДУ ЭТИМИ ДВУМЯ И НИГДЕ БОЛЬШЕ:
 			// после remarkEpisodeCover — чтобы не встать под обложку выпуска,
 			// которую тот только что убрал из тела; до remarkImageFigure —
