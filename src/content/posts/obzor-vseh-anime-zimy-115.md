@@ -2,15 +2,17 @@
 title: Обзор аниме «Медленная петля»
 date: 2022-05-15
 category: note
-draft: true
+draft: false
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/pasted-image-1786577799421.png
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 tgId: 115
 tgUrl: https://t.me/podcastbaka/115
 ---
-
-Медленная петля
 
 Аниме про милых девочек, которые делают милые дела на улице.
 
