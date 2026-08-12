@@ -2,15 +2,20 @@
 title: Впечатления от предпоказа «Её заветное жедание»
 date: 2022-05-14
 category: note
-draft: true
+draft: false
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/IMG_0718.jpeg
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 tgId: 27
 tgUrl: https://t.me/podcastbaka/27
+anime:
+  - josee-to-tora-to-sakana-tachi
 ---
 
-Сходили на предпоказ аниме «[Ее заветное желание](https://www.kinopoisk.ru/film/1398967/)» (в оригинале название звучит как «Жозе, тигр и рыба»). Благодаря [кинокомпании Вольга](https://t.me/volgafilms), за что ей спасибо.
+Сходили на предпоказ аниме «Ее заветное желание» (в оригинале название звучит как «Жозе, тигр и рыба»). Благодаря [кинокомпании Вольга](https://t.me/volgafilms), за что ей спасибо.
 
 ### Что за аниме?
 
@@ -57,3 +62,5 @@ tgUrl: https://t.me/podcastbaka/27
 Ну и к тому же, у нас в кинотеатрах, кажется, давненько не выходило аниме — чем не повод.
 
 Если что, «Ее заветное желание» выходит в прокат 30 сентября.
+
+::anime-ref{id="josee-to-tora-to-sakana-tachi" source="shikimori" source-id="40787"}
