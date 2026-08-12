@@ -83,9 +83,38 @@ export default function optimizeUploadsIntegration() {
 				let converted = 0;
 				let ogCopies = 0;
 				let unused = 0;
+				// Копии для превью у картинок, которые сами остаются как есть.
+				let asIsOg = 0;
 
 				for (const entry of entries) {
-					if (!isOptimizableImage(entry)) continue;
+					// Формат, который мы не пережимаем (webp, gif, svg). Страница
+					// показывает такой файл КАК ЕСТЬ — coverSrcs отдаёт исходный
+					// путь, — и webp-копий у него никто не просит. А вот jpeg-копия
+					// для превью нужна ровно так же: телеграм webp разворачивает
+					// ненадёжно, и без этой копии ссылка на пост разворачивалась
+					// с общей картинкой сайта вместо его обложки. Наступили
+					// 13 августа 2026 на двух опубликованных обзорах, чьи обложки
+					// загружены в админку в webp; сборка честно ругалась
+					// «ссылается на картинку, которой нет», а исправить это
+					// было нечем: до сжатия такой файл не доходил вовсе.
+					if (!isOptimizableImage(entry)) {
+						const href = `/${UPLOADS_DIR}/${entry}`;
+						if (!refs.has(getOgVariantSrc(href))) continue;
+
+						const filePath = fileURLToPath(new URL(entry, uploadsUrl));
+						const outName = `${variantBase(entry)}-og.jpg`;
+
+						// Оригинал остаётся лежать: на него ссылается сама
+						// страница. Это отличие от jpeg и png, которые после
+						// снятия копий удаляются.
+						await sharp(await readFile(filePath))
+							.resize({ width: OG_WIDTH, withoutEnlargement: true })
+							.flatten({ background: OG_BACKGROUND })
+							.jpeg({ quality: 82 })
+							.toFile(fileURLToPath(new URL(outName, uploadsUrl)));
+						asIsOg += 1;
+						continue;
+					}
 
 					// Имя копий считает ОДНА функция на обе стороны: страница
 					// просит файл по этому имени (getImageVariantSrcs), сборка
@@ -144,6 +173,10 @@ export default function optimizeUploadsIntegration() {
 				if (converted > 0) {
 					const tail = ogCopies > 0 ? `, из них ${ogCopies} с jpeg-копией для превью` : '';
 					logger.info(`Сжал ${converted} картинок из ${UPLOADS_DIR} в webp (по 2 размера)${tail}`);
+				}
+
+				if (asIsOg > 0) {
+					logger.info(`Сделал ${asIsOg} jpeg-копий для превью у картинок, которые не пережимаем (webp и подобные)`);
 				}
 
 				// Пропущенное называется вслух. Молчаливая экономия читается как
