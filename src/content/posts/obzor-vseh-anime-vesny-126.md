@@ -2,18 +2,21 @@
 title: Обзор аниме «Танцуй, танцуй, танцор»
 date: 2022-05-15
 category: note
-draft: true
+draft: false
 description: ''
-cover: ''
-noCover: true
-tgId: 126
-tgUrl: https://t.me/podcastbaka/126
+cover: /images/uploads/pasted-image-1786576772521.png
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 animeSuggested:
   - shingeki-no-kyojin
   - jujutsu-kaisen
+tgId: 126
+tgUrl: https://t.me/podcastbaka/126
+anime:
+  - dance-dance-danseur
 ---
-
-[Танцуй, танцуй, танцор](https://anilist.co/anime/132171/Dance-Dance-Danseur/)
 
 Фаворит в этой четверке — сериал от студии Mappa («Атака Титанов», «Магическая битва»). Хотя это тоже спортивное аниме.
 
@@ -24,3 +27,5 @@ animeSuggested:
 Анимация очень качественная — как в танцах, так и обычной жизни, хотя рисовка с длиннющими шеями может смущать. Герои тоже скорее приятные: за внутренней борьбой Дзюмпея интересно наблюдать (пусть сюжет и несется галопом), а Мияко, которая внешне выглядит мило, на самом деле умело манипулирует парнем.
 
 **Смотреть дальше:** по форме это все то же спортивное аниме, пусть и более качественное. Поэтому я смотреть не буду, но если вы фанат спортивного аниме — не пропускайте.
+
+::anime-ref{id="dance-dance-danseur" source="shikimori" source-id="48702"}
