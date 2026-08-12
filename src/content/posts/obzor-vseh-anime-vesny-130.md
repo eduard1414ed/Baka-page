@@ -4,13 +4,16 @@ date: 2022-05-15
 category: note
 draft: true
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/pasted-image-1786576890992.png
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 tgId: 130
 tgUrl: https://t.me/podcastbaka/130
+anime:
+  - healer-girl
 ---
-
-[Девушка-целитель](https://anilist.co/anime/133412/Healer-Girl/)
 
 Это аниме-мюзикл! Не просто аниме с музыкой, как K-On или «Фуука». Аниме-мюзикл!
 
@@ -21,3 +24,5 @@ tgUrl: https://t.me/podcastbaka/130
 При этом не могу сказать, что это какое-то потрясающе разнообразное пение. Голоса сею красивые, но все в итоге сливается в одну похожую мелодию.
 
 **Смотреть дальше:** нет, но из-за рисовки и милого посыла можно поставить детям, например
+
+::anime-ref{id="healer-girl" source="shikimori" source-id="48857"}
