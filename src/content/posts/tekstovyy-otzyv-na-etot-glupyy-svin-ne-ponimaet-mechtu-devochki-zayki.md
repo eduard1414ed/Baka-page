@@ -2,7 +2,7 @@
 title: Текстовый отзыв на «Этот глупый свин не понимает мечту девочки-зайки»
 date: 2022-05-15
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/pasted-image-1786578045440.png
 noCover: false
