@@ -8,9 +8,11 @@ cover: /images/uploads/IMG_0716.jpeg
 noCover: true
 externalUrl: ''
 externalSource: ''
-anime: []
+adLabel: ''
 tgId: 74
 tgUrl: https://t.me/podcastbaka/74
+anime:
+  - baraou-no-souretsu
 ---
 
 Странное яойное переложение исторических драм Шекспира. Ричард III, например, в этой истории не мужчина и не женщина, обладает атрибутами обоих полов. И судя по первой серии, влюбляется в заклятого врага Генриха.
@@ -21,3 +23,5 @@ tgUrl: https://t.me/podcastbaka/74
 
 **Оценка:** 4.5 (может фанатам яоя норм?)
 **Смотреть:** точно нет, если только бессонницы не будет
+
+::anime-ref{id="baraou-no-souretsu" source="shikimori" source-id="42892"}
