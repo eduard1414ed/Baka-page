@@ -4,7 +4,7 @@ date: 2022-05-14
 category: bonus
 draft: false
 description: ''
-cover: ''
+cover: /images/uploads/photo_2022-05-14_23-05-13.jpg
 noCover: false
 externalUrl: ''
 externalSource: ''
