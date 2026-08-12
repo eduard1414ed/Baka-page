@@ -2,12 +2,17 @@
 title: Обзор аниме «Вкусы молодости»
 date: 2022-05-14
 category: note
-draft: true
+draft: false
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/IMG_0711.jpeg
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 tgId: 14
 tgUrl: https://t.me/podcastbaka/14
+anime:
+  - shikioriori
 ---
 
 Посмотрел сейчас «Вкусы молодости» — антологию из трёх короткометражных фильмов (на Нетфликс)
@@ -45,3 +50,5 @@ tgUrl: https://t.me/podcastbaka/14
 Да, однозначно. Ради потрясающей картинки, ради ностальгии и, в конце концов, аниме из трёх новелл длится всего час.
 
 Оно того стоит.
+
+::anime-ref{id="shikioriori" source="shikimori" source-id="37396"}
