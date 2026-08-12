@@ -20,12 +20,13 @@ bonusLinks:
 tgId: 45
 tgUrl: https://t.me/podcastbaka/45
 anime:
+  - naruto
   - naruto-shinsaku-anime
   - cowboy-bebop
 ---
 
 Сегодня обсуждаем сразу три арки: «Охотник за преступниками», «Зеленые звери» и «План по самовыживанию».
 
-Почему :anime[Наруто]{id="naruto-shinsaku-anime" source="shikimori" source-id="54688"} выставляют таким глупым? Как филлеры пытаются играть в «Ковбоя Бибопа»? И почему глупость иногда лучше пресности?
+Почему :anime[«Наруто»]{id="naruto" source="shikimori" source-id="20"} выставляют таким глупым? Как филлеры пытаются играть в «Ковбоя Бибопа»? И почему глупость иногда лучше пресности?
 
 ::anime-ref{id="cowboy-bebop" source="shikimori" source-id="1"}
