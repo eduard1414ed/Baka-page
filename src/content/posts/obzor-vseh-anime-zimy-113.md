@@ -2,15 +2,17 @@
 title: Обзор аниме «Тотальный гарем»
 date: 2022-05-15
 category: note
-draft: true
+draft: false
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/pasted-image-1786577761722.png
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 tgId: 113
 tgUrl: https://t.me/podcastbaka/113
 ---
-
-[Тотальный гарем](https://anilist.co/anime/118465/Worlds-End-Harem/)
 
 Вот где беззастенчивого фансервиса на грани с хентаем (а иногда и за гранью) полно — так это в «Тотальном гареме».
 
