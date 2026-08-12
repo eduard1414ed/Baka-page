@@ -13,9 +13,10 @@ tgId: 48
 tgUrl: https://t.me/podcastbaka/48
 anime:
   - kaguya-sama-wa-kokurasetai-tensai-tachi-no-renai-zunousen
+  - kaguya-sama-wa-kokurasetai-tensai-tachi-no-renai-zunousen-2
 ---
 
-За три дня посмотрел оба сезона «[Госпожи Кагуи](https://www.kinopoisk.ru/series/1231054/)» и испытываю смешанные чувства.
+За три дня посмотрел оба сезона «Госпожи Кагуи» и испытываю смешанные чувства.
 
 ### **Что за аниме?**
 
@@ -70,3 +71,5 @@ anime:
 Я же посмотрел залпом и получил удовольствие от расслабления — оно того стоило.
 
 ::anime-ref{id="kaguya-sama-wa-kokurasetai-tensai-tachi-no-renai-zunousen" source="shikimori" source-id="37999"}
+
+::anime-ref{id="kaguya-sama-wa-kokurasetai-tensai-tachi-no-renai-zunousen-2" source="shikimori" source-id="40591"}
