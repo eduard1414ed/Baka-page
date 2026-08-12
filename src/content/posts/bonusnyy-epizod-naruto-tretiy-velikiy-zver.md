@@ -1,6 +1,6 @@
 ---
 title: Наруто. Третий Великий Зверь | Обсуждение филлеров
-date: 2022-05-14
+date: 2022-05-25
 category: bonus
 draft: false
 description: ''
