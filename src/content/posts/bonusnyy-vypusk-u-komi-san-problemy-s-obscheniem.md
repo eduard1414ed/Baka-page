@@ -1,25 +1,31 @@
 ---
-title: Бонусный выпуск | У Коми-сан проблемы с общением
+title: Как жить с социофобией? | У Коми-сан проблемы с общением
 date: 2022-05-15
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-104.jpg
-pullMedia: false
 noCover: false
-tgId: 104
-tgUrl: https://t.me/podcastbaka/104
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 bonusLinks:
   boosty: ''
   patreon: ''
   tgClosed: ''
   vkDonat: ''
+pullMedia: false
+tgId: 104
+tgUrl: https://t.me/podcastbaka/104
+anime:
+  - komi-san-wa-comyushou-desu
 ---
 
 ::image{src="/images/uploads/tg-104.jpg" alt="" width="column"}
+
 
 В этом выпуске мы обсуждаем одну из лучших комедий 2021 года.
 
 Почему в «Коми-сан» такой хороший юмор? Как настоящие социальные проблемы делают сериал интереснее? И за счет чего аниме круче оригинальной манги?
 
-Послушать выпуск можно у нас [на патреоне](https://www.patreon.com/bakapodcast) или [в группе в ВК](https://vk.com/podcast.baka).
+::anime-ref{id="komi-san-wa-comyushou-desu" source="shikimori" source-id="48926"}
