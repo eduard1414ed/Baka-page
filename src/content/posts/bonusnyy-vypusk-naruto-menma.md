@@ -5,23 +5,29 @@ category: bonus
 draft: true
 description: ''
 cover: /images/uploads/tg-90.jpg
-pullMedia: false
 noCover: false
-tgId: 90
-tgUrl: https://t.me/podcastbaka/90
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested:
+  - naruto
 bonusLinks:
   boosty: ''
   patreon: ''
   tgClosed: ''
   vkDonat: ''
-animeSuggested:
+pullMedia: false
+tgId: 90
+tgUrl: https://t.me/podcastbaka/90
+anime:
   - naruto
 ---
 
 ::image{src="/images/uploads/tg-90.jpg" alt="" width="column"}
 
+
 В этом выпуске обсуждаем арку из трех серий (с 213 по 215) — «Менма».
 
-Почему авторы не любят Тентен, как музыка может сделать вас сильнее и «менма» — это бобы или бамбук? #бонус
+Почему авторы не любят Тентен, как музыка может сделать вас сильнее и «менма» — это бобы или бамбук?
 
-Послушать выпуск можно у нас [на патреоне](https://www.patreon.com/bakapodcast) или [в группе в ВК](https://vk.com/podcast.baka).
+::anime-ref{id="naruto" source="shikimori" source-id="20"}
