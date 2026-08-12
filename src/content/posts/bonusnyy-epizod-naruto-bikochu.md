@@ -1,6 +1,6 @@
 ---
 title: Наруто. Бикочу | Обсуждение филлеров
-date: 2022-05-14
+date: 2022-05-16
 category: bonus
 draft: false
 description: ''
