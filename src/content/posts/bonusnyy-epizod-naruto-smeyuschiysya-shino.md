@@ -1,6 +1,6 @@
 ---
 title: Наруто. Смеющийся Шино | Обсуждение филлеров
-date: 2022-05-14
+date: 2022-05-23
 category: bonus
 draft: false
 description: ''
