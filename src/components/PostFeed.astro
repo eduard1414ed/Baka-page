@@ -321,6 +321,56 @@ const nothingToShow = olderAll.length === 0;
 		syncLoadMore();
 	}
 
+	// ВЫБРАННАЯ ВКЛАДКА ЖИВЁТ В АДРЕСЕ, И БЕЗ ЭТОГО «НАЗАД» ЕЁ ТЕРЯЛО.
+	//
+	// Вкладки главной — кнопки: они переключают ленту прямо на странице,
+	// никуда не уводя. Значит браузер о выборе не знает ничего, и, вернувшись
+	// с материала, показывает главную такой, какой её отдал сервер, — с «Все».
+	// Человек при этом уверен, что был в «Заметках», и считает это поломкой.
+	// Заметил заказчик 12 августа 2026.
+	//
+	// ЗАМЕНА ЗАПИСИ, А НЕ НОВАЯ. `pushState` заводил бы шаг истории на каждое
+	// нажатие вкладки, и «назад» с главной ходило бы по вкладкам вместо того,
+	// чтобы уйти туда, откуда пришли. Нам нужно другое: чтобы у ТОЙ ЖЕ записи
+	// истории был правильный адрес — тогда возврат на неё вернёт и вкладку.
+	//
+	// СОСТОЯНИЕ ПЕРЕДАЁМ ПРЕЖНЕЕ, И ЭТО ОБЯЗАТЕЛЬНО. В `history.state` лежит
+	// счётчик `index` от ClientRouter, по которому «Назад» в шапке материала
+	// решает, есть ли куда возвращаться (см. `canGoBack` в Layout.astro).
+	// Затри мы его пустым объектом — ссылка «Назад» на материалах начала бы
+	// уводить в раздел, и связь с этим местом никто бы не нашёл.
+	function writeMode(mode: string) {
+		const url = new URL(window.location.href);
+		if (mode === 'all') url.searchParams.delete('mode');
+		else url.searchParams.set('mode', mode);
+		history.replaceState(history.state, '', url);
+	}
+
+	// Какой режим просит адрес. Незнакомое значение — не режим: чужая ссылка,
+	// опечатка, переименованная категория. Спрашиваем сами вкладки, а не
+	// список в скрипте: второй список категорий разошёлся бы с первым.
+	function modeFromUrl() {
+		const asked = new URL(window.location.href).searchParams.get('mode');
+		if (!asked) return 'all';
+		const tabs = document.querySelectorAll<HTMLElement>('.tab[data-filter]');
+		return [...tabs].some((tab) => tab.dataset.filter === asked) ? asked : 'all';
+	}
+
+	// Страница приехала (обычным открытием или возвратом) — ставим ту вкладку,
+	// которую называет адрес. Обе точки нужны по той же причине, что у видео
+	// в Layout.astro: `astro:after-swap` — самый ранний момент, когда новая
+	// разметка уже в живом документе, и вкладка встаёт ДО отрисовки, без
+	// подмигивания; `astro:page-load` — единственное событие, приходящее
+	// и при обычном открытии страницы.
+	function restoreMode() {
+		// Страница без ленты (материал, архив, каталог) — делать нечего.
+		if (!document.querySelector('.tab[data-filter]')) return;
+		applyMode(modeFromUrl());
+	}
+
+	document.addEventListener('astro:after-swap', restoreMode);
+	document.addEventListener('astro:page-load', restoreMode);
+
 	document.addEventListener('click', (event) => {
 		const target = event.target instanceof Element ? event.target : null;
 		if (!target) return;
@@ -328,6 +378,7 @@ const nothingToShow = olderAll.length === 0;
 		const filter = target.closest<HTMLElement>('.tab[data-filter]');
 		if (filter?.dataset.filter) {
 			applyMode(filter.dataset.filter);
+			writeMode(filter.dataset.filter);
 			return;
 		}
 
