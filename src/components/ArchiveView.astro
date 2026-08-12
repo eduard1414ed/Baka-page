@@ -122,6 +122,18 @@ const { posts, eyebrow, heading, intro, countLine, activeCategory, base, current
 		background: var(--ink);
 	}
 
+	/* НА ТЕСНОМ ЭКРАНЕ РЯД СЖИМАЕТСЯ, ЧТОБЫ НЕ ПЕРЕНОСИТЬСЯ. Числа и замер —
+	   в `PostFeed.astro`, где стоит такой же ряд с тем же составом вкладок:
+	   пятерым при зазоре 24 нужен экран 433 px, при зазоре 10 и кегле 11 —
+	   353. Меняете тут — поправьте и там; развести эти два ряда нельзя,
+	   они одинаковы по замыслу. */
+	@media (max-width: 432px) {
+		.archive-tabs {
+			gap: 0 10px;
+			font-size: var(--technical);
+		}
+	}
+
 	/* Сама сетка — общая (.list-grid в global.css). Странице остаётся
 	   только вертикальный ритм. */
 	.archive-list {
