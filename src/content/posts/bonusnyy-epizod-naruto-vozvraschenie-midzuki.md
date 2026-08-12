@@ -1,6 +1,6 @@
 ---
 title: Наруто. Возвращение Мидзуки | Обсуждение филлеров
-date: 2022-05-14
+date: 2022-05-15
 category: bonus
 draft: false
 description: ''
