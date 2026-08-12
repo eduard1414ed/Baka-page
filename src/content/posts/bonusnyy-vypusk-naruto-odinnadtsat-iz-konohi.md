@@ -2,7 +2,7 @@
 title: Наруто. Одиннадцать из Конохи | Обсуждение филлеров
 date: 2022-05-14
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-78.jpg
 noCover: false
