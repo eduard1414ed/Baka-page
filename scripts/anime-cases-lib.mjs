@@ -433,6 +433,28 @@ function brokenWords(spoken, form) {
  * @param {{ id: string, titleRu?: string, titleOriginal?: string, aliases?: string[], forms: string[] }[]} list
  * @param {Map<string, number>} hitsByForm свёрнутая форма → сколько новых упоминаний даёт
  */
+/**
+ * НАЧИНАЕТСЯ ЛИ НАЗВАНИЕ С ИМЕННОЙ ГРУППЫ.
+ *
+ * Возвращает `null`, если да (и спрашивать не о чем), либо строчку с причиной,
+ * если нет: «О движении Земли» уже стоит в падеже, «Быть героем Икс» начинается
+ * с действия, «Хоть я и бездарная злодейка» — с придаточного.
+ *
+ * ВЫНЕСЕНО НАРУЖУ 12 АВГУСТА 2026, когда этот же вопрос понадобился второму
+ * читателю — разбору заголовков сезонных обзоров (задача 16, правка 3): там
+ * первая строка поста выдаётся за название тайтла, и «начинается с глагола или
+ * предлога» — прямой признак того, что это не название, а фраза.
+ * Вторая копия набора частей речи разъехалась бы молча.
+ */
+export function notNounPhraseStart(text) {
+	requireMorph('notNounPhraseStart');
+	const firstWord = wordsOf(text)[0];
+	if (!firstWord) return null;
+	const parse = bestParse(Az.Morph(firstWord) ?? []);
+	if (!parse || HEAD_OK.has(String(parse.tag.POST))) return null;
+	return `начинается не с именной группы («${firstWord}» — ${parse.tag.POST})`;
+}
+
 export function suspiciousForms(list, hitsByForm = new Map()) {
 	requireMorph('suspiciousForms');
 
@@ -456,12 +478,9 @@ export function suspiciousForms(list, hitsByForm = new Map()) {
 		const spoken = spokenPart(String(item.titleRu ?? ''));
 
 		// Название не именная группа — спрашиваем один раз на тайтл, а не на форму.
-		const firstWord = wordsOf(spoken)[0];
-		const firstParse = firstWord ? bestParse(Az.Morph(firstWord) ?? []) : null;
-		const notNounPhrase =
-			firstWord && firstParse && !HEAD_OK.has(String(firstParse.tag.POST))
-				? `название начинается не с именной группы («${firstWord}» — ${firstParse.tag.POST}), склонять его целиком нельзя`
-				: null;
+		// Само правило живёт в `notNounPhraseStart`: у него теперь два читателя.
+		const why0 = notNounPhraseStart(spoken);
+		const notNounPhrase = why0 ? `название ${why0}, склонять его целиком нельзя` : null;
 
 		for (const form of item.forms) {
 			const key = fold(form);

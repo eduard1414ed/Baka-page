@@ -1,5 +1,5 @@
 ---
-title: 'Обзор всех аниме зимы:'
+title: Обзор аниме «Знак!»
 date: 2022-05-14
 category: note
 draft: true

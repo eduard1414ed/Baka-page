@@ -1,5 +1,5 @@
 ---
-title: 'Обзор всех аниме зимы:'
+title: Обзор аниме «Медленная петля»
 date: 2022-05-15
 category: note
 draft: true

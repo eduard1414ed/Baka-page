@@ -1,5 +1,5 @@
 ---
-title: 'Обзор всех аниме лета: «Тимимо»'
+title: Обзор аниме «Тимимо»
 date: 2022-07-29
 category: note
 draft: true
