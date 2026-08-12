@@ -1,27 +1,31 @@
 ---
-title: Бонусный эпизод | Наруто. Страна Птиц
+title: Наруто. Страна Птиц | Обсуждение филлеров
 date: 2022-05-14
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-47.jpg
-pullMedia: false
 noCover: false
-tgId: 47
-tgUrl: https://t.me/podcastbaka/47
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested:
+  - naruto
 bonusLinks:
   boosty: ''
   patreon: ''
   tgClosed: ''
   vkDonat: ''
-animeSuggested:
+pullMedia: false
+tgId: 47
+tgUrl: https://t.me/podcastbaka/47
+anime:
   - naruto
 ---
 
 ::image{src="/images/uploads/tg-47.jpg" alt="" width="column"}
 
-Наконец-то мы хвалим филлерную арку «Наруто»!
 
-Почему «Страна Птиц» — это настоящий детектив? На какую еду похож главный злодей? И правда ли воздушные змеи смешат Ксюшу? #бонус
+Наконец-то мы хвалим филлерную арку :anime[«Наруто»]{id="naruto" source="shikimori" source-id="20"}!
 
-Послушать выпуск можно у нас [на патреоне](https://www.patreon.com/bakapodcast) или у нас [в группе в ВК](https://vk.com/podcast.baka)
+Почему «Страна Птиц» — это настоящий детектив? На какую еду похож главный злодей? И правда ли воздушные змеи смешат Ксюшу?
