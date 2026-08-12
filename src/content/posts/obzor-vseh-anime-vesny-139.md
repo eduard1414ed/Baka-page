@@ -2,15 +2,18 @@
 title: Обзор аниме «Тусовщик Кунмин»
 date: 2022-05-15
 category: note
-draft: true
+draft: false
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/pasted-image-1786577306753.png
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 tgId: 139
 tgUrl: https://t.me/podcastbaka/139
+anime:
+  - paripi-koumei
 ---
-
-Тусовщик Кунмин
 
 Казалось бы, уже знакомый и заезженный формат обратного исекая, когда герой из другого мира (или просто из другой эры) попадает в настоящее. Можно было бы ждать очередной проходняк.
 
@@ -21,3 +24,5 @@ tgUrl: https://t.me/podcastbaka/139
 Анимация и рисовка от P.A. Works не хватает звезд с неба, но и не особо проседает.
 
 **Смотреть дальше:** да, отличная комедия
+
+::anime-ref{id="paripi-koumei" source="shikimori" source-id="50380"}
