@@ -2,7 +2,7 @@
 title: Бонусный эпизод | Наруто. Смеющийся Шино
 date: 2022-05-14
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-60.jpg
 noCover: false
