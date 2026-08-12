@@ -2,7 +2,7 @@
 title: Бонусный выпуск | Наруто. Ситэнсёунин
 date: 2022-05-15
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-94.jpg
 noCover: false
