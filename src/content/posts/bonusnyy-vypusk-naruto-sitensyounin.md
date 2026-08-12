@@ -1,6 +1,6 @@
 ---
 title: Наруто. Ситэнсёунин | Обсуждение филлеров
-date: 2022-05-15
+date: 2022-05-30
 category: bonus
 draft: false
 description: ''
