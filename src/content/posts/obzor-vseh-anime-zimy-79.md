@@ -2,15 +2,17 @@
 title: Обзор аниме «Девушки на линии фронта»
 date: 2022-05-14
 category: note
-draft: true
+draft: false
 description: ''
 cover: ''
 noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 tgId: 79
 tgUrl: https://t.me/podcastbaka/79
 ---
-
-[Девушки на линии фронта](https://anilist.co/anime/128828/Dolls-Frontline/)
 
 В ходе Третьей мировой войны население Земли было частично уничтожено, а большая часть территории планеты стала непригодной для жизни. Для поддержания мира военные организации стали использовать андроидов. И конечно, ими оказались сексапильные девушки.
 
