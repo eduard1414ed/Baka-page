@@ -4,13 +4,16 @@ date: 2022-05-15
 category: note
 draft: true
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/pasted-image-1786578045440.png
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 tgId: 109
 tgUrl: https://t.me/podcastbaka/109
+anime:
+  - seishun-buta-yarou-wa-bunny-girl-senpai-no-yume-wo-minai
 ---
-
-.
 
 Это сериал из 13 эпизодов и плюс полнометражный фильм-продолжение под названием «Этому глупому свину и не снилась девочка-зайка». Вышли они в 2018 и 2019 годах соответственно и сняты по серии ранобэ (иллюстрированных новелл).
 
@@ -47,3 +50,5 @@ tgUrl: https://t.me/podcastbaka/109
 Я не сказал ничего про то, как это нарисовано, потому что — довольно хорошо. Это не Синкай, но и ругать не за что. Дизайн персонажей мне тоже понравился.
 
 Советую ли я смотреть? Да. Хотя бы ради диалогов Маи и Сакуты.
+
+::anime-ref{id="seishun-buta-yarou-wa-bunny-girl-senpai-no-yume-wo-minai" source="shikimori" source-id="37450"}
