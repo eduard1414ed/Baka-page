@@ -2,7 +2,7 @@
 title: Настоящая история об эльфийке
 date: 2022-09-12
 category: note
-draft: true
+draft: false
 description: ''
 cover: ''
 noCover: false
