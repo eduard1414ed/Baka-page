@@ -2,12 +2,26 @@
 title: Смещённый финал
 date: 2022-09-05
 category: note
-draft: true
+draft: false
 description: ''
 cover: ''
 noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 518
 tgUrl: https://t.me/podcastbaka/518
+anime:
+  - yahari-ore-no-seishun-love-comedy-wa-machigatteiru
+  - yahari-ore-no-seishun-love-comedy-wa-machigatteiru-kan
 ---
 
 Последний пост про «Орегайру» на ближайшее время. И хочется в нем поговорить о том, почему финальный сезон сериала так хорош.
@@ -37,3 +51,7 @@ tgUrl: https://t.me/podcastbaka/518
 Таким образом, за сезон нам показывают два финала, наглядно демонстрируя, почему один из них был бы печальным и фальшивым. А ещё нам одной сценой дают понять, что дружба героев сохраняется, несмотря ни на что, и клуб волонтеров продолжит существовать.
 
 Поэтому последний сезон «Орегару» так хорош.
+
+::anime-ref{id="yahari-ore-no-seishun-love-comedy-wa-machigatteiru" source="shikimori" source-id="14813"}
+
+::anime-ref{id="yahari-ore-no-seishun-love-comedy-wa-machigatteiru-kan" source="shikimori" source-id="39547"}
