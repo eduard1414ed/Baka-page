@@ -2,16 +2,30 @@
 title: Руководство по тому, как быть девочкой
 date: 2023-01-23
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-961.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 961
 tgUrl: https://t.me/podcastbaka/961
+anime:
+  - oniichan-wa-oshimai
+  - mushoku-tensei-isekai-ittara-honki-dasu
 ---
 
 ::image{src="/images/uploads/tg-961.jpg" alt="" width="column"}
+
 
 В 2018 продюсер Нобухиро Осава основал новую студию специально для создания экранизации культовой новеллы — «Реинкарнации безработного».
 
@@ -32,3 +46,7 @@ tgUrl: https://t.me/podcastbaka/961
 Как относиться к «Мой братик теперь не братик!» — у меня не малейшего представления. За одну серию вайб от аниме может меняться с «какое милое и уютное шоу» до «не, ну так нельзя, это уже хентай».
 
 Расскажите, успели ли вы оценить Oniichan wa Oshimai!? И как он вам?
+
+::anime-ref{id="oniichan-wa-oshimai" source="shikimori" source-id="51678"}
+
+::anime-ref{id="mushoku-tensei-isekai-ittara-honki-dasu" source="shikimori" source-id="39535"}
