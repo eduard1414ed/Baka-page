@@ -1,17 +1,29 @@
 ---
-title: Итоги года с 2D Дедами
+title: Итоги аниме-года с 2D Дедами
 date: 2026-01-23
-category: note
-draft: true
+category: podcast
+draft: false
 description: ''
 cover: /images/uploads/tg-3654.jpg
-pullMedia: false
 noCover: false
+externalUrl: https://2ddeds.mave.digital/
+externalSource: «2D Деды»
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3654
 tgUrl: https://t.me/podcastbaka/3654
 ---
 
 ::image{src="/images/uploads/tg-3654.jpg" alt="" width="column"}
+
 
 По сложившейся традиции (в четвертый раз подряд, вот это время бежит) пришел в гости в подкаст «2D Деды», чтобы обсудить итоги аниме-года.
 
