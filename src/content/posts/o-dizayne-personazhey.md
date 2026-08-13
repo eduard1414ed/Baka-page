@@ -2,16 +2,25 @@
 title: О дизайне персонажей
 date: 2023-01-10
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-934.jpg
+noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
 pullMedia: false
-noCover: false
 tgId: 934
 tgUrl: https://t.me/podcastbaka/934
 ---
-
-::image{src="/images/uploads/tg-934.jpg" alt="" width="column"}
 
 Один из главных комедийных приемов «Рок-тихони» — это гиперболизация ощущений социофобной Боччи-тян через деформацию ее модели.
 
@@ -30,5 +39,8 @@ tgUrl: https://t.me/podcastbaka/934
 Благодаря такому простому, но ясному решению с моделью Боччи стало возможно делать все, что угодно. Это, кстати, доказывают вот такие примеры: минималистичный стенд на улицах Японии или концептуальная обложка саундтрека из сериала.
 
 P.S. Кстати, деталь по обложке как раз — видно, насколько дизайн Боччи осознанно проработаннее, чем у ее подружек. Если бы на обложке не было розового квадрата Боччи, то это могла быть картинка для любого аниме, где у девочек разноцветные волосы.
+
+::image{src="/images/uploads/tg-934.jpg" alt="" width="column"}
+
 
 ::image{src="/images/uploads/tg-935.jpg" alt="" width="column"}
