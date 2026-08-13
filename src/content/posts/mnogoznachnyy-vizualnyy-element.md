@@ -2,12 +2,25 @@
 title: Многозначный визуальный элемент
 date: 2022-09-02
 category: note
-draft: true
+draft: false
 description: ''
 cover: ''
-noCover: true
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 511
 tgUrl: https://t.me/podcastbaka/511
+anime:
+  - yahari-ore-no-seishun-love-comedy-wa-machigatteiru
 ---
 
 «Как и ожидалось моя школьная романтическая жизнь не удалась» как можно понять из названия — романтика про школу. Главный герой, Хачиман, изначально высокомерный подросток-максималист, который считает, что все общение, дружба и любовь — это не что-то настоящее, а просто притворство и социальные нормы.
@@ -18,8 +31,26 @@ tgUrl: https://t.me/podcastbaka/511
 
 Как это передать визуально? Режиссерка, Ёсимура Ай, придумала простой прием — стикеры на вывеске класса, в котором расположен клуб. Каждый раз, когда герои выполняют чью-то просьбу, над входом появляется новый стикер.
 
+
+::image{src="/images/uploads/pasted-image-1786620588321.webp" alt="" width="column"}
+
+
+
+::image{src="/images/uploads/pasted-image-1786620599803.webp" alt="" width="column"}
+
+
 Но не совсем. Так как некоторые просьбы включают в себя несколько участников, или поступает сразу несколько просьб, к середине аниме число стикеров начинает не совпадать с числом выполненных заданий.
 
 И ты вдруг понимаешь, что этот прием был не только про помощь со стороны клуба, но и число людей, которые подружились или стали хорошо относиться к нелюдимым в начале Хачиману и Юкино.
 
 Пустая вывеска класса наполняется красками так же, как постепенно наполняется чем-то настоящим и жизнь главных героев.
+
+
+::image{src="/images/uploads/pasted-image-1786620613405.webp" alt="" width="column"}
+
+
+
+::image{src="/images/uploads/pasted-image-1786620626181.webp" alt="" width="column"}
+
+
+::anime-ref{id="yahari-ore-no-seishun-love-comedy-wa-machigatteiru" source="shikimori" source-id="14813"}
