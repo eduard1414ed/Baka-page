@@ -2,7 +2,7 @@
 title: Обзор аниме «Клуб белых воротничков»
 date: 2022-05-15
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/pasted-image-1786577626571.png
 noCover: false
