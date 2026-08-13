@@ -2,11 +2,22 @@
 title: Лучшая манга 2023 года — обновляемый список
 date: 2023-04-29
 category: article
-externalUrl: https://t-j.ru/list/best-manga-2023/
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tj-luchshaya-manga-2023-goda-obnovlyaemyy-spisok.jpg
 noCover: false
+externalUrl: https://t-j.ru/list/best-manga-2023/
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1222
 tgUrl: https://t.me/podcastbaka/1222
 ---
