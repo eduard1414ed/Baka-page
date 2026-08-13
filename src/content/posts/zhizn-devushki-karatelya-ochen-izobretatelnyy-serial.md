@@ -2,7 +2,7 @@
 title: «Жизнь девушки-карателя» — очень изобретательный сериал
 date: 2022-06-09
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/pasted-image-1786607804974.webp
 noCover: false
