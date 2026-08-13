@@ -5,15 +5,27 @@ category: note
 draft: true
 description: ''
 cover: /images/uploads/tg-1289.jpg
-pullMedia: false
 noCover: false
-tgId: 1289
-tgUrl: https://t.me/podcastbaka/1289
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 animeSuggested:
   - naruto
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 1289
+tgUrl: https://t.me/podcastbaka/1289
+anime:
+  - cowboy-bebop
 ---
 
 ::image{src="/images/uploads/tg-1289.jpg" alt="" width="column"}
+
 
 Когда мы говорим об аниме — мы редко думаем о том, к какой расе принадлежат герои из него. Никого не смущает афроамериканец Киллер Би из «Наруто» или очевидные параллели с Германией в «Атаке Титанов».
 
@@ -26,3 +38,5 @@ animeSuggested:
 Но впоследствие, особенно в фантастических историях, вроде «Ковбоя Бибопа» — это стало еще одним признаком смешения культур и глобализации.
 
 Мне вообще нравится такой подход, потому что на самом деле нет никакой разницы, к какой национальности или расе принадлежит Фэй Валентайн, важно лишь то, что она остается интересным персонажем.
+
+::anime-ref{id="cowboy-bebop" source="shikimori" source-id="1"}
