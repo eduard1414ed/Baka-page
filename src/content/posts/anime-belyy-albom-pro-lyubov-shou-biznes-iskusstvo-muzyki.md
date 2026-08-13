@@ -2,7 +2,7 @@
 title: 'Аниме «Белый альбом»: Про любовь? Шоу-бизнес? Искусство музыки?'
 date: 2023-06-20
 category: note
-draft: true
+draft: false
 description: ''
 cover: ''
 noCover: true
