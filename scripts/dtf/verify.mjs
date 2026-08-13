@@ -12,6 +12,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ROOT, fetchArticle, postPath } from './source.mjs';
+import { handEdited } from './guard.mjs';
 
 const SELFTEST = process.argv.includes('--selftest');
 
@@ -39,7 +40,14 @@ const plainMd = (md, { keepCaptions = false } = {}) => {
 		.replace(/\\$/gm, '')
 		.replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
 		.replace(/\*\*([^*]*)\*\*/g, '$1')
-		.replace(/\*([^*]*)\*/g, '$1');
+		.replace(/\*([^*]*)\*/g, '$1')
+		// ПОДЧЁРКИВАНИЕ — ЭТО ТОЖЕ КУРСИВ, И ПИШЕТ ЕГО ИМЕННО АДМИНКА. Мы кладём
+		// в файл `*(смеется)*`, а Sveltia при первом же сохранении переписывает
+		// это в `_(смеется)_`: разметка та же, знаки другие. Не снимай мы их —
+		// проверка краснела бы на КАЖДОМ посте, который заказчик открыл и сохранил,
+		// то есть ровно на его работе (CLAUDE.md, про заслон и растущие данные).
+		.replace(/__([^_]*)__/g, '$1')
+		.replace(/_([^_]*)_/g, '$1');
 };
 
 const bodyOf = (raw) => raw.split(/^---$/m).slice(2).join('---');
@@ -63,6 +71,7 @@ const DROP = {
 	// Реклама канала — как в подборках 2023. Три звёздочки на DTF набраны
 	// заголовком: это черта-разделитель перед послесловием, а не вопрос.
 	jjk: [/^Читайте больше про аниме/, /^\*+$/],
+	openingi: [/делитесь в комментариях/i],
 };
 
 const problemsOfImages = (raw) => {
@@ -234,9 +243,14 @@ async function checkBluePeriod(raw) {
 }
 
 // ─── Интервью «Долой безделье!» ───────────────────────────────────────────
-async function checkInterview(raw) {
+async function checkInterview(raw, { edited } = {}) {
 	const problems = [];
 	const article = await fetchArticle(1805563);
+	// ПОСТ, КОТОРЫЙ ПРАВИЛ ЗАКАЗЧИК, БОЛЬШЕ НЕ ОБЯЗАН СХОДИТЬСЯ С DTF. Сверка
+	// «знак в знак» — утверждение о ПЕРЕНОСЕ, и оно верно ровно до первой его
+	// правки. 13 августа он подписал десять кадров и добавил одиннадцатый:
+	// проверка покраснела на его работе, хотя сломано не было ничего.
+	if (edited) return [...checkEdited(raw), ...checkCoverFirst(raw), ...problemsOfImages(raw)];
 
 	const want = norm(article.blocks
 		.filter((b) => b.type === 'text' || b.type === 'header')
@@ -305,9 +319,10 @@ async function checkInterview(raw) {
 // и все они разные. Подпись, уехавшую к соседнему кадру, тут не поймает
 // ничто, кроме глаз заказчика; у «Долой безделье!» она поймана лишь потому,
 // что подпись там ОДНА и приехала из первоисточника.
-async function checkJjk(raw) {
+async function checkJjk(raw, { edited } = {}) {
 	const problems = [];
 	const article = await fetchArticle(1383597);
+	if (edited) return [...checkEdited(raw), ...checkCoverFirst(raw), ...problemsOfImages(raw)];
 
 	const want = norm(article.blocks
 		.filter((b) => b.type === 'text' || b.type === 'header' || b.type === 'incut')
@@ -361,6 +376,93 @@ async function checkJjk(raw) {
 	return problems;
 }
 
+// ─── «Самые важные опенинги в истории» ────────────────────────────────────
+async function checkOpeningi(raw, { edited } = {}) {
+	const problems = [];
+	const article = await fetchArticle(1589685);
+	if (edited) return [...checkEdited(raw), ...checkCoverFirst(raw), ...problemsOfImages(raw)];
+
+	const want = norm(article.blocks
+		.filter((b) => b.type === 'text' || b.type === 'header')
+		.flatMap((b) => b.data.text.split(/<\/p>|<br\s*\/?>/i))
+		.map((chunk) => norm(strip(chunk)))
+		.filter((text) => text && !DROP.openingi.some((re) => re.test(text)))
+		.join(' '));
+	const got = norm(plainMd(bodyOf(raw)));
+	if (want !== got) {
+		let i = 0; while (i < want.length && want[i] === got[i]) i++;
+		problems.push(`текст разошёлся на знаке ${i}: ждали ${JSON.stringify(want.slice(i, i + 50))}, получили ${JSON.stringify(got.slice(i, i + 50))}`);
+	}
+
+	// ЗАГОЛОВКИ — ЧЕТВЁРТЫЙ УРОВЕНЬ: это названия тайтлов, как в обзорах-
+	// марафонах. Сверяем текстом, а не счётом: съехавший на соседний уровень
+	// заголовок счётом не поймать вовсе.
+	const wantHeads = article.blocks.filter((b) => b.type === 'header').map((b) => norm(strip(b.data.text)));
+	const gotHeads = [...raw.matchAll(/^(#{1,6}) (.+)$/gm)].map((m) => ({ level: m[1].length, text: norm(m[2]) }));
+	if (wantHeads.join('\n') !== gotHeads.map((h) => h.text).join('\n'))
+		problems.push(`заголовки разошлись: у DTF ${wantHeads.length}, у нас ${gotHeads.length}`);
+	for (const head of gotHeads)
+		if (head.level !== 4) problems.push(`название тайтла стоит заголовком ${head.level}, а не 4: «${head.text.slice(0, 40)}»`);
+
+	// РОЛИКИ СВЕРЯЕМ ПО ИДЕНТИФИКАТОРАМ И ПО ПОРЯДКУ. Тут это дороже обычного:
+	// роликов одиннадцать, у каждого свой опенинг, и подменённый чужим счётом
+	// не поймать. Порядок важен так же — ролик стоит под своим заголовком.
+	const wantVideos = article.blocks.filter((b) => b.type === 'video').map((b) => b.data.video.data.external_service.id);
+	const gotVideos = [...raw.matchAll(/::video\{youtube="[^"]*v=([^"&]+)"\}/g)].map((m) => m[1]);
+	if (wantVideos.join(',') !== gotVideos.join(','))
+		problems.push(`ролики разошлись: у DTF [${wantVideos.join(',')}], у нас [${gotVideos.join(',')}]`);
+
+	// У каждого тайтла свой ролик, и стоит он СРАЗУ под заголовком — как
+	// картинка в обзорах-марафонах. Последний одиннадцатый ролик хвостовой,
+	// это выпуск подкаста, и заголовка у него нет.
+	const blocks = blocksOf(raw);
+	for (const [index, block] of blocks.entries())
+		if (/^#### /.test(block) && !(blocks[index + 1] ?? '').startsWith('::video'))
+			problems.push(`у тайтла нет ролика: ${block.slice(0, 50)}`);
+
+	const wantImages = article.blocks.filter((b) => b.type === 'media').reduce((n, b) => n + b.data.items.length, 0);
+	const gotImages = (raw.match(/^::image/gm) || []).length;
+	if (wantImages !== gotImages) problems.push(`картинок у DTF ${wantImages}, у нас ${gotImages}`);
+
+	if (/api\.dtf\.ru/.test(raw)) problems.push('осталась переадресация api.dtf.ru');
+	if (/google\.[a-z.]+\/url\?/.test(raw)) problems.push('осталась переадресация google.com/url');
+	if (!/^tgId: 967$/m.test(raw)) problems.push('пропал tgId: 967 — импорт заведёт анонс из телеграма заново');
+
+	problems.push(...checkCoverFirst(raw));
+	problems.push(...problemsOfImages(raw));
+	return problems;
+}
+
+/**
+ * Что остаётся правдой у поста, который заказчик уже правил.
+ *
+ * СВЕРКА С ПЕРВОИСТОЧНИКОМ ТУТ НЕ ГОДИТСЯ, И ЭТО НЕ ПОСЛАБЛЕНИЕ. «Текст сходится
+ * с DTF знак в знак» — утверждение о переносе, а не о посте: правку заказчика
+ * оно объявляет поломкой, потому что она и есть отличие от DTF. Оставь мы его
+ * законом — первая же его работа заперла бы проверку навсегда, а список
+ * «известных отличий» пришлось бы дописывать после каждого сохранения.
+ * Это ровно тот случай из CLAUDE.md: утверждение, растущее вместе с данными,
+ * законом быть не может.
+ *
+ * Здесь перечислено то, что от правок не зависит вовсе: файлы на месте,
+ * переадресаций нет, привязка к телеграму цела, разметка блоков не разъехалась.
+ */
+function checkEdited(raw) {
+	const problems = [];
+	if (/api\.dtf\.ru/.test(raw)) problems.push('осталась переадресация api.dtf.ru');
+	if (/google\.[a-z.]+\/url\?/.test(raw)) problems.push('осталась переадресация google.com/url');
+	if (!/^tgId: \d+$/m.test(raw)) problems.push('пропал tgId — импорт заведёт анонс из телеграма заново');
+	// Пустая подпись — след правки, оборвавшейся на полпути: на странице она
+	// даёт голое «FIG. 03 —» без текста.
+	for (const match of raw.matchAll(/^::image\{[^}]*caption="(\s*)"[^}]*\}$/gm))
+		problems.push(`у картинки пустая подпись — на странице выйдет «FIG. NN —» без текста: ${match[0].slice(0, 60)}`);
+	// Заголовки внутри материала бывают только третьи, четвёртые и пятые:
+	// первый — заголовок страницы, второй у нас в теле не используется.
+	for (const match of raw.matchAll(/^(#{1,6}) /gm))
+		if (match[1].length < 3) problems.push(`заголовок ${match[1].length}-го уровня в теле: такой в материале не используется`);
+	return problems;
+}
+
 // ─── Вид: обложка, порядок, подписи (правки заказчика 13 августа) ─────────
 function checkCoverFirst(raw) {
 	const problems = [];
@@ -405,9 +507,29 @@ const POSTS = [
 	{ slug: 'kakoe-anime-stoit-smotret-etoy-vesnoy-2023', name: 'подборка весны 2023', checks: [(raw) => checkPodborka2023(raw, 1696863)] },
 	{ slug: 'kakoe-anime-stoit-smotret-etim-letom-2023', name: 'подборка лета 2023', checks: [(raw) => checkPodborka2023(raw, 1922981)] },
 	{ slug: 'realnye-kartiny-v-mange-goluboy-period', name: '«Голубой период»', checks: [checkBluePeriod] },
-	{ slug: 'doloy-bezdele-intervyu-s-rezhisserom-anime-i-avtorom-originalnoy-mangi', name: 'интервью «Долой безделье!»', checks: [checkInterview] },
-	{ slug: 'intervyu-s-sozdatelyami-magicheskoy-bitvy', name: 'интервью «Магическая битва»', checks: [checkJjk] },
+	{ slug: 'doloy-bezdele-intervyu-s-rezhisserom-anime-i-avtorom-originalnoy-mangi', name: 'интервью «Долой безделье!»', checks: [checkInterview], builder: './build-doloy-bezdele.mjs' },
+	{ slug: 'intervyu-s-sozdatelyami-magicheskoy-bitvy', name: 'интервью «Магическая битва»', checks: [checkJjk], builder: './build-jjk-intervyu.mjs' },
+	{ slug: 'samye-vazhnye-openingi-v-istorii', name: 'самые важные опенинги', checks: [checkOpeningi], builder: './build-openingi.mjs' },
 ];
+
+/**
+ * Правил ли заказчик пост после переноса.
+ *
+ * ПРИЗНАК ПРЯМОЙ: спрашиваем сам сборщик, что он собрал бы сейчас, и сравниваем
+ * с живым файлом. Не дата, не число картинок, не «есть ли подписи» — сравнение
+ * с тем, что мы сами и производим. Тот же признак стоит заслоном у сборщиков
+ * (guard.mjs), и это нарочно: два ответа на один вопрос разъехались бы.
+ *
+ * У поста без своего сборщика (обзоры-марафоны, подборки) спрашивать некого —
+ * такие сверяем по-старому. Это честный пробел, а не решение: их сборщики
+ * заслон получили, а вот сказать «меня правили» ещё не умеют.
+ */
+async function wasEdited(post, raw) {
+	if (!post.builder) return false;
+	const { build } = await import(post.builder);
+	const { text } = await build({ write: false });
+	return handEdited(postPath(post.slug), text) !== null;
+}
 
 async function runAll() {
 	let bad = 0;
@@ -415,14 +537,21 @@ async function runAll() {
 		const file = postPath(post.slug);
 		if (!fs.existsSync(file)) { console.log(`\n=== ${post.name} ===\n   ✗ файла нет: ${post.slug}.md`); bad++; continue; }
 		const raw = fs.readFileSync(file, 'utf8');
+		const edited = await wasEdited(post, raw);
 		const problems = [];
-		for (const check of post.checks) problems.push(...(await check(raw)));
+		for (const check of post.checks) problems.push(...(await check(raw, { edited })));
 		console.log(`\n=== ${post.name} ===`);
 		if (problems.length) { problems.slice(0, 6).forEach((p) => console.log('   ✗', p)); bad += problems.length; }
 		else {
 			const images = (raw.match(/^::image/gm) || []).length;
 			const videos = (raw.match(/^::video/gm) || []).length;
-			console.log(`   ✓ сходится с DTF: картинок ${images}${videos ? `, роликов ${videos}` : ''}`);
+			const what = `картинок ${images}${videos ? `, роликов ${videos}` : ''}`;
+			// Говорим ВСЛУХ, что именно проверено: «сходится с DTF» и «не сломано
+			// то, что от правок не зависит» — разные утверждения разной силы,
+			// и путать их нельзя.
+			console.log(edited
+				? `   ✓ пост правил заказчик — сверка с DTF не применялась; целостность в порядке: ${what}`
+				: `   ✓ сходится с DTF: ${what}`);
 		}
 	}
 	return bad;
@@ -442,6 +571,26 @@ async function selftest() {
 	// Подпись достаём ИЗ ДАННЫХ: вписанная именем, она протухнет от первой же
 	// правки заказчика в админке, и заслон покраснеет на здоровом посте.
 	const jjkCaption = /^::image\{[^}]*caption="([^"]*)"[^}]*\}$/m.exec(jjk)[1];
+	const ops = fs.readFileSync(postPath('samye-vazhnye-openingi-v-istorii'), 'utf8');
+	// Заголовок и ролик достаём ИЗ ДАННЫХ, а не вписываем именем.
+	const firstTitle = /^#### (.+)$/m.exec(ops)[1];
+	const firstVideo = /::video\{youtube="[^"]*v=([^"&]+)"\}/.exec(ops)[1];
+
+	/**
+	 * Подделать текст — и УБЕДИТЬСЯ, ЧТО ПОДДЕЛКА СОСТОЯЛАСЬ.
+	 *
+	 * Подлог, который ничего не заменил, проверяет не проверку, а собственную
+	 * аккуратность: `replace` по ненайденной строке отдаёт текст как есть,
+	 * молча, и здоровый файл уходит в проверку под видом сломанного. Она честно
+	 * молчит — а в отчёте это выглядит как «ПРОПУЩЕНО», то есть обвиняет
+	 * проверку в чужой ошибке. Так и вышло дважды: заказчик успел превратить
+	 * ссылку в блок `::link`, и подлог целил в текст, которого уже нет.
+	 */
+	const forge = (text, from, to) => {
+		const forged = text.replace(from, to);
+		if (forged === text) throw new Error(`подлог не сработал: в тексте нет ${from}`);
+		return forged;
+	};
 
 	const cases = [
 		['зима 2022: потерян целый тайтл', () => checkZima2022(zima.replace(/#### \[Ниндзяла\]\([^)]*\)/, '')), true],
@@ -485,12 +634,52 @@ async function selftest() {
 		['«Магическая битва»: реклама канала вернулась', () => checkJjk(jjk.replace('##### Сэко-сан,', 'Читайте больше про аниме в нашем телеграм-канале\n\n##### Сэко-сан,')), true],
 		['«Магическая битва»: черта-разделитель вернулась заголовком', () => checkJjk(jjk.replace('Узнать больше о «Магической битве»', '##### ***\n\nУзнать больше о «Магической битве»')), true],
 		['«Магическая битва»: потерян tgId', () => checkJjk(jjk.replace(/^tgId: 437$/m, 'tgId: null')), true],
+		['опенинги: ролик подменён чужим', () => checkOpeningi(ops.replace(firstVideo, 'dQw4w9WgXcQ')), true],
+		['опенинги: два ролика поменялись местами', () => {
+			const ids = [...ops.matchAll(/::video\{youtube="[^"]*v=([^"&]+)"\}/g)].map((m) => m[1]);
+			return checkOpeningi(ops.replace(ids[0], '@@').replace(ids[1], ids[0]).replace('@@', ids[1]));
+		}, true],
+		['опенинги: название тайтла съехало на третий уровень', () => checkOpeningi(ops.replace(`#### ${firstTitle}`, `### ${firstTitle}`)), true],
+		['опенинги: у тайтла пропал ролик', () => checkOpeningi(ops.replace(`::video{youtube="https://www.youtube.com/watch?v=${firstVideo}"}\n\n`, '')), true],
+		['опенинги: ролик уехал из-под своего заголовка', () => {
+			const parts = ops.split(/\n\n/);
+			const i = parts.findIndex((b) => b.startsWith('#### '));
+			[parts[i], parts[i + 1]] = [parts[i + 1], parts[i]];
+			return checkOpeningi(parts.join('\n\n'));
+		}, true],
+		['опенинги: призыв в комментарии вернулся', () => checkOpeningi(ops.trimEnd() + '\n\nИ после просмотра обязательно делитесь в комментариях, какие ваши любимые опенинги!\n'), true],
+		['опенинги: потерян tgId', () => checkOpeningi(ops.replace(/^tgId: 967$/m, 'tgId: null')), true],
 		// Вторая половина: на здоровых файлах все проверки обязаны МОЛЧАТЬ.
 		['здоровый обзор зимы 2022', () => checkZima2022(zima), false],
 		['здоровый «Голубой период»', () => checkBluePeriod(bp), false],
 		['здоровая подборка весны 2023', () => checkPodborka2023(vesna, 1696863), false],
-		['здоровое интервью «Долой безделье!»', () => checkInterview(talk), false],
+		// ЗАСЛОН СБОРЩИКА — обе половины. Он решает, стирать ли работу заказчика,
+		// поэтому «не трогали» и «трогали» обязаны различаться оба.
+		['заслон: видит правку заказчика', async () => {
+			const { build } = await import('./build-doloy-bezdele.mjs');
+			const { text } = await build({ write: false });
+			return handEdited(postPath('doloy-bezdele-intervyu-s-rezhisserom-anime-i-avtorom-originalnoy-mangi'), text) ? ['правка видна'] : [];
+		}, true],
+		['заслон: молчит на нетронутом посте', async () => {
+			const { build } = await import('./build-openingi.mjs');
+			const { text } = await build({ write: false });
+			return handEdited(postPath('samye-vazhnye-openingi-v-istorii'), text) ? ['ложная тревога'] : [];
+		}, false],
+		// ЗАСЛОН ДЛЯ ПРАВЛЕНОГО ПОСТА — обе половины. Первая: он ловит то,
+		// что от правок не зависит и ломаться не должно никогда.
+		['правленый: осталась переадресация DTF', () => Promise.resolve(checkEdited(forge(talk, 'https://realsound.jp', 'https://api.dtf.ru/v2.8/redirect?to=https%3A%2F%2Frealsound.jp'))), true],
+		['правленый: потерян tgId', () => Promise.resolve(checkEdited(forge(talk, /^tgId: 1256$/m, 'tgId: null'))), true],
+		['правленый: у картинки пустая подпись', () => Promise.resolve(checkEdited(forge(talk, /caption="[^"]+"/, 'caption=""'))), true],
+		['правленый: в теле завёлся заголовок второго уровня', () => Promise.resolve(checkEdited(talk.replace(/^##### /m, '## '))), true],
+		// Вторая половина: на ЖИВОМ правленом посте он обязан молчать. Без неё
+		// заслон, ругающийся на всё подряд, выглядел бы работающим.
+		['правленый: живой пост заказчика', () => Promise.resolve(checkEdited(talk)), false],
+		// А сверка с DTF на этом же посте обязана и краснеть (правки — это
+		// отличия от DTF), и НЕ применяться, когда ей сказали про правки.
+		['сверка с DTF краснеет на правленом посте, если её не выключить', () => checkInterview(talk), true],
+		['она же молчит, когда знает про правки', () => checkInterview(talk, { edited: true }), false],
 		['здоровое интервью «Магическая битва»', () => checkJjk(jjk), false],
+		['здоровые «Самые важные опенинги»', () => checkOpeningi(ops), false],
 	];
 
 	let ok = true;

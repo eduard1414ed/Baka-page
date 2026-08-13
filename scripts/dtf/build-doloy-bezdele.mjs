@@ -26,6 +26,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { fetchArticle, stripTags, blockToParagraphs, postPath, frontmatter } from './source.mjs';
 import { fetchImages } from './fetch-images.mjs';
+import { writeGuarded } from './guard.mjs';
 
 const ID = 1805563;
 const SLUG = 'doloy-bezdele-intervyu-s-rezhisserom-anime-i-avtorom-originalnoy-mangi';
@@ -124,7 +125,8 @@ export async function build({ write = true } = {}) {
 	const refs = live ? (live.split(/^---$/m).slice(2).join('---').match(/^::anime-ref\{[^}]*\}$/gm) ?? []) : [];
 
 	const text = head + '\n' + [...lines, ...refs].join('\n\n') + '\n';
-	if (write) fs.writeFileSync(file, text);
+	// Заслон: пересборка не имеет права стереть правку заказчика (guard.mjs).
+	if (write) writeGuarded(file, text, { force: process.argv.includes('--force') });
 
 	return { text, lines, dropped, images, article };
 }
