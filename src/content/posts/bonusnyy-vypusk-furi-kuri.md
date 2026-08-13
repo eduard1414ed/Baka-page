@@ -2,28 +2,36 @@
 title: Бонусный выпуск | Фури Кури
 date: 2022-10-21
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-682.jpg
-pullMedia: false
 noCover: false
-tgId: 682
-tgUrl: https://t.me/podcastbaka/682
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
 bonusLinks:
   boosty: ''
   patreon: ''
   tgClosed: ''
   vkDonat: ''
+pullMedia: false
+tgId: 682
+tgUrl: https://t.me/podcastbaka/682
+anime:
+  - flcl
 ---
 
 ::image{src="/images/uploads/tg-682.jpg" alt="" width="column"}
+
 
 Лучший музыкальный клип, история про взросление и безудержный беспредел.
 
 Что такое «Фури Кури»? Кто делал это аниме? И что там вообще происходит? Пытаемся разобраться в этом бонусном эпизоде.
 
-**Как послушать этот и другие бонусы?** Есть несколько способов:
-
-💛 [Поддержать нас в группе VK](https://vk.com/podcast.baka)
-💚 [Подписаться в сервисе Boosty](https://boosty.to/bakapodcast)
-💙 Если вы не из России — [подписаться на нас на Patreon](https://www.patreon.com/bakapodcast)
+::anime-ref{id="flcl" source="shikimori" source-id="227"}
