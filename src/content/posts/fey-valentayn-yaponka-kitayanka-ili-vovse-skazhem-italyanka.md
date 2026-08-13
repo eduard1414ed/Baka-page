@@ -2,7 +2,7 @@
 title: Фэй Валентайн — японка, китаянка или вовсе, скажем, итальянка?
 date: 2023-06-02
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1289.jpg
 noCover: false
