@@ -2,16 +2,28 @@
 title: Тирания, рабы и колонии
 date: 2024-04-17
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2066.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2066
 tgUrl: https://t.me/podcastbaka/2066
 ---
 
 ::image{src="/images/uploads/tg-2066.jpg" alt="" width="column"}
+
 
 Манобу живет в ужасной стране, где запрещены все развлечения: игры, комиксы, фильмы. Их не только изымают, но и могут казнить за их владение. Мечта Манобу успешно закончить школу и уехать в другую, более свободную, страну. Но его старания и таланты приводят к ровно обратному результату, правительство решает отправить его в качестве кандидата на роль управляющего другой планеты-колонии.
 

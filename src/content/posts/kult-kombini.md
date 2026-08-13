@@ -2,16 +2,28 @@
 title: Культ комбини
 date: 2023-08-18
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1444.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1444
 tgUrl: https://t.me/podcastbaka/1444
 ---
 
 ::image{src="/images/uploads/tg-1444.jpg" alt="" width="column"}
+
 
 Есть множество образов, которые у людей ассоциируются с Японией. Самураи, скоростные поезда, странная реклама. Но есть и еще один, о котором говорят не так часто, — комбини.
 

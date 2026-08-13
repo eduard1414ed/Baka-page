@@ -2,18 +2,30 @@
 title: Хороший исекай?
 date: 2025-10-29
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3445.jpg
-pullMedia: false
 noCover: false
-tgId: 3445
-tgUrl: https://t.me/podcastbaka/3445
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 animeSuggested:
   - akira
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 3445
+tgUrl: https://t.me/podcastbaka/3445
+anime:
+  - ansatsusha-de-aru-ore-no-status-ga-yuusha-yori-mo-akiraka-ni
 ---
 
 ::image{src="/images/uploads/tg-3445.jpg" alt="" width="column"}
+
 
 Мне как-то в комментариях предъявили, что я все время ругаю исекаи. Теперь я пытаюсь в каждом сезоне найти хотя бы один симпатичный тайтл про попаданцев, который могу искрене похвалить.
 
@@ -26,3 +38,5 @@ animeSuggested:
 Что по-настоящему выделяет его на фоне других проходных аниме — это визуальный стиль. Дизайн персонажей выполнен в духе аниме 80-90-х, а постановка и анимация сражений моментами (особенно в первой серии) очень эффектные. Студия Sunrise («Гинтама», «Гандамы») хорошо постаралась.
 
 В итоге «Мой статус убийцы очевидно превосходит геройский» заполняет ту же нишу, что и «Могу я попросить ещё кое-что?», о котором я [писал на прошлой неделе](/posts/mogu-ya-poprosit-eschyo-koe-chto/). Веселый сериал на вечер, за просмотром которого можно отключить голову. А что еще от исекая нужно?
+
+::anime-ref{id="ansatsusha-de-aru-ore-no-status-ga-yuusha-yori-mo-akiraka-ni" source="shikimori" source-id="61026"}

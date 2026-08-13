@@ -2,16 +2,29 @@
 title: Сейлор Мун и мода
 date: 2025-01-09
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2651.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2651
 tgUrl: https://t.me/podcastbaka/2651
+anime:
+  - bishoujo-senshi-sailor-moon
 ---
 
 ::image{src="/images/uploads/tg-2651.jpg" alt="" width="column"}
+
 
 «Сейлор Мун» вдохновляло своим стилем тысячи девочек (и не только) по всему миру. И не зря, потому что создательница истории Наоко Такеучи часто [обращалась](https://mcmag.ru/kak-serial-sejlor-mun-povliyal-na-mody/) к высокой моде. К коллекциями Мюглера, Ива Сен-Лорана, Шанель, Версаче и других известных модельеров 90-х годов.
 
@@ -25,8 +38,23 @@ tgUrl: https://t.me/podcastbaka/2651
 
 Еще пару примеров оставлю в иллюстрациях к посту. Какой из костюмов вам нравится больше всего?
 
+
 ::image{src="/images/uploads/tg-2652.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2653.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2654.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2655.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2656.jpg" alt="" width="column"}
+
+::anime-ref{id="bishoujo-senshi-sailor-moon" source="shikimori" source-id="530"}

@@ -2,16 +2,29 @@
 title: Фарс убитой нежити
 date: 2023-07-27
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1400.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1400
 tgUrl: https://t.me/podcastbaka/1400
+anime:
+  - undead-girl-murder-farce
 ---
 
 ::image{src="/images/uploads/tg-1400.jpg" alt="" width="column"}
+
 
 Принес вам очередной скрытый бриллиант сезона.
 
@@ -28,3 +41,5 @@ tgUrl: https://t.me/podcastbaka/1400
 При этом здесь полно шуток и на высоте визуальный ряд (особенно экшн в первой серии) — так что заскучать не получится.
 
 К четвертой серии герои заканчивают только свое первое расследование, поэтому в сезоне нас ждет скорее всего 2-3 дела. Очень надеюсь, что студия Lapin сразу закладывается на продолжение — потому что я уже жду.
+
+::anime-ref{id="undead-girl-murder-farce" source="shikimori" source-id="54790"}

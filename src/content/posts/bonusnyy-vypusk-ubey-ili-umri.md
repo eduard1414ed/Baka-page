@@ -2,29 +2,36 @@
 title: Бонусный выпуск | Убей или умри
 date: 2024-04-26
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2074.jpg
-pullMedia: false
 noCover: false
-tgId: 2074
-tgUrl: https://t.me/podcastbaka/2074
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
 bonusLinks:
   boosty: ''
   patreon: ''
   tgClosed: ''
   vkDonat: ''
+pullMedia: false
+tgId: 2074
+tgUrl: https://t.me/podcastbaka/2074
+anime:
+  - kill-la-kill
 ---
 
 ::image{src="/images/uploads/tg-2074.jpg" alt="" width="column"}
+
 
 Одежда, захватывающая мир. Отсылки на историю объединения Японии. Безбашенный экшен. И много-много-много фан-сервиса.
 
 В этом выпуске мы обсуждаем противоречивый сериал Kill la kill, который (возможно) спас всю аниме-индустрию.
 
-**Послушать** **эпизод можно несколькими способами:**
-
-💛 [Поддержать нас в группе VK](https://vk.com/podcast.baka)
-💚 [Подписаться в сервисе Boosty](https://boosty.to/bakapodcast)
-💙 Если вы не из России — [подписаться на нас на Patreon](https://www.patreon.com/bakapodcast)
-💜 Либо вступить в закрытый канал [прямо в телеграме](https://t.me/tribute/app?startapp=s26z)
+::anime-ref{id="kill-la-kill" source="shikimori" source-id="18679"}

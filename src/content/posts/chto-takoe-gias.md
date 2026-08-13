@@ -2,16 +2,28 @@
 title: Что такое гиас?
 date: 2026-05-29
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3975.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3975
 tgUrl: https://t.me/podcastbaka/3975
 ---
 
 ::image{src="/images/uploads/tg-3975.jpg" alt="" width="column"}
+
 
 Одна из вещей, которую мы не обсудили в [бонусном эпизоде про «Код Гиас» ](/posts/kod-gias-tsel-opravdyvaet-sredstva/)(чтобы не растягивать выпуск на два часа) — это сама концепция гиаса и откуда она взялась.
 

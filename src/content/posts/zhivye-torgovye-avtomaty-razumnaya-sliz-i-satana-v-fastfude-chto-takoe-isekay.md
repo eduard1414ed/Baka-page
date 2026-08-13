@@ -2,11 +2,22 @@
 title: 'Живые торговые автоматы, разумная слизь и Сатана в фастфуде: что такое исекай'
 date: 2024-08-01
 category: article
-externalUrl: https://www.kinopoisk.ru/media/article/4009743/
-draft: true
+draft: false
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/pasted-image-1786650031043.webp
+noCover: false
+externalUrl: https://www.kinopoisk.ru/media/article/4009743/
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2290
 tgUrl: https://t.me/podcastbaka/2290
 ---

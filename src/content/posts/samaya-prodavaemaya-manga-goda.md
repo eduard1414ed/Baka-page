@@ -2,18 +2,29 @@
 title: Самая продаваемая манга года
 date: 2024-12-09
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2585.jpg
-pullMedia: false
 noCover: false
-tgId: 2585
-tgUrl: https://t.me/podcastbaka/2585
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 animeSuggested:
   - jujutsu-kaisen
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 2585
+tgUrl: https://t.me/podcastbaka/2585
 ---
 
 ::image{src="/images/uploads/tg-2585.jpg" alt="" width="column"}
+
 
 Oricon опубликовал итоги продаж за год. В топ-10 попали восемь сёнэнов и два сейнэна. На первом месте с приличным отрывом, конечно, «Магическая битва».
 

@@ -2,11 +2,22 @@
 title: 5 новых крутых аниме-сериалов, которые стоит посмотреть
 date: 2024-06-14
 category: article
-externalUrl: https://www.kinopoisk.ru/media/news/4009561/
-draft: true
+draft: false
 description: ''
-cover: ''
+cover: /images/uploads/pasted-image-1786649359178.webp
 noCover: true
+externalUrl: https://www.kinopoisk.ru/media/news/4009561/
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2186
 tgUrl: https://t.me/podcastbaka/2186
 ---

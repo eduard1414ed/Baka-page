@@ -2,21 +2,32 @@
 title: Новогодний флудовыпуск | Бонус
 date: 2024-12-27
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2631.jpg
-pullMedia: false
 noCover: false
-tgId: 2631
-tgUrl: https://t.me/podcastbaka/2631
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
 bonusLinks:
   boosty: ''
   patreon: ''
   tgClosed: ''
   vkDonat: ''
+pullMedia: false
+tgId: 2631
+tgUrl: https://t.me/podcastbaka/2631
 ---
 
 ::image{src="/images/uploads/tg-2631.jpg" alt="" width="column"}
+
 
 В новом расслабленном бонусном эпизоде мы с Ксюшей вспоминаем все то, что помогает нам создать праздничную атмосферу. Любимые мультики, фильмы и игры, поездки с родителями, и ностальгические истории.
 

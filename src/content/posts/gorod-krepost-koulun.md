@@ -2,16 +2,29 @@
 title: Город-крепость Коулун
 date: 2025-04-15
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2880.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2880
 tgUrl: https://t.me/podcastbaka/2880
+anime:
+  - kowloon-generic-romance
 ---
 
 ::image{src="/images/uploads/tg-2880.jpg" alt="" width="column"}
+
 
 До 1993 года в Гонконге существовало место, в которое сложно поверить. Оно казалось вышло из фантастического романа. Это был Коулун — самый густонаселённый квартал в истории человечества.
 
@@ -29,7 +42,19 @@ tgUrl: https://t.me/podcastbaka/2880
 
 След Коулуна можно найти и в «Призраке в доспехах», и в «Акире», и, конечно, в новом сериале этого сезона — «Обычный роман в Коулуне».
 
+
 ::image{src="/images/uploads/tg-2881.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2882.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2883.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2884.jpg" alt="" width="column"}
+
+::anime-ref{id="kowloon-generic-romance" source="shikimori" source-id="60083"}

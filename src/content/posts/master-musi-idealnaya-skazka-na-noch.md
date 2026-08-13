@@ -2,21 +2,32 @@
 title: Мастер Муси | Идеальная сказка на ночь
 date: 2026-06-18
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-4035.jpg
-pullMedia: false
 noCover: false
-tgId: 4035
-tgUrl: https://t.me/podcastbaka/4035
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
 bonusLinks:
   boosty: https://boosty.to/bakapodcast/posts/133bfc7c-d735-47c0-af2d-f49655831b12?share=post_link
   patreon: ''
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2629
+pullMedia: false
+tgId: 4035
+tgUrl: https://t.me/podcastbaka/4035
 ---
 
 ::image{src="/images/uploads/tg-4035.jpg" alt="" width="column"}
+
 
 Муси — простейшая форма жизни в мире. Муси существуют повсюду и безо всякой цели. Гинко — путешествует по миру, помогая людям справиться с встречами с муси.
 

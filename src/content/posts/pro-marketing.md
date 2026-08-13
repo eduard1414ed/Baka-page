@@ -1,17 +1,30 @@
 ---
-title: Про маркетинг
+title: Про маркетинг аниме
 date: 2024-09-26
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2423.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2423
 tgUrl: https://t.me/podcastbaka/2423
+anime:
+  - dandadan
 ---
 
 ::image{src="/images/uploads/tg-2423.jpg" alt="" width="column"}
+
 
 Хочу немного поговорить о рекламе аниме. Мы, за пределами Японии, видим прямую рекламу сериалов достаточно редко. Но зато до нас доносятся другие промо-материалы: посты, интервью, трейлеры.
 
@@ -28,3 +41,5 @@ tgUrl: https://t.me/podcastbaka/2423
 В результате «Дандадан» еще не вышел, а уже «на хайпе». Сравните это с «Нежитью и неудачей», которая выходила на Disney+ и получила почти ноль продвижения, — и в итоге про этот сериал никто толком и не узнал.
 
 Вот что делает грамотный маркетинг.
+
+::anime-ref{id="dandadan" source="shikimori" source-id="57334"}

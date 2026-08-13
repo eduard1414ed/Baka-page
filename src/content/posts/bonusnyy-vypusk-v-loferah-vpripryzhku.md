@@ -2,21 +2,32 @@
 title: Бонусный выпуск | В лоферах вприпрыжку
 date: 2023-08-29
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1473.jpg
-pullMedia: false
 noCover: false
-tgId: 1473
-tgUrl: https://t.me/podcastbaka/1473
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
 bonusLinks:
   boosty: ''
   patreon: ''
   tgClosed: ''
   vkDonat: ''
+pullMedia: false
+tgId: 1473
+tgUrl: https://t.me/podcastbaka/1473
 ---
 
 ::image{src="/images/uploads/tg-1473.jpg" alt="" width="column"}
+
 
 Обсуждаем одну из самых заметных премьер этой весны — slice of life сериал «В лоферах вприпрыжку».
 

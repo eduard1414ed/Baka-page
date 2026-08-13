@@ -2,18 +2,29 @@
 title: О нет, опять инопланетяне!
 date: 2025-09-17
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3337.jpg
-pullMedia: false
 noCover: false
-tgId: 3337
-tgUrl: https://t.me/podcastbaka/3337
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 animeSuggested:
   - jujutsu-kaisen
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 3337
+tgUrl: https://t.me/podcastbaka/3337
 ---
 
 ::image{src="/images/uploads/tg-3337.jpg" alt="" width="column"}
+
 
 8 сентября вышла первая глава нового спин-оффа «Магической битвы» — «Магическая Битва. Модуль». Геге Акутами в этот раз исполняет роль сценариста, а рисует мангу Юдзи Ивасаки («Академия Шифра»).
 

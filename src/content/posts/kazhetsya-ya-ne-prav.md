@@ -1,19 +1,31 @@
 ---
-title: Кажется, я не прав!
+title: Кажется, я не прав про «Кайдзю»!
 date: 2024-05-08
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2114.jpg
-pullMedia: false
 noCover: false
-tgId: 2114
-tgUrl: https://t.me/podcastbaka/2114
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 animeSuggested:
   - jujutsu-kaisen
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 2114
+tgUrl: https://t.me/podcastbaka/2114
+anime:
+  - kaijuu-8-gou
 ---
 
 ::image{src="/images/uploads/tg-2114.jpg" alt="" width="column"}
+
 
 Мне тут написали коллеги из «Кинопоиска», и кажется я оказался не прав в оценке популярности «Кайдзю номер восемь».
 
@@ -22,3 +34,5 @@ animeSuggested:
 До этого из новых релизов в этом году там были только «Поднятие уровня в одиночку» (аж на втором месте) и «Магическая битва» (на четвертом). Ну и стабильно где-то около десятки крутится «Ван Пис».
 
 Так что все-таки «Кайдзю» своего зрителя находит, причем очень успешно. Во всяком случае в русскоязычном пространстве.
+
+::anime-ref{id="kaijuu-8-gou" source="shikimori" source-id="52588"}

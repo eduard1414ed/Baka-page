@@ -2,16 +2,29 @@
 title: Раздвигая границы
 date: 2024-06-05
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2165.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2165
 tgUrl: https://t.me/podcastbaka/2165
+anime:
+  - dungeon-meshi
 ---
 
 ::image{src="/images/uploads/tg-2165.jpg" alt="" width="column"}
+
 
 Я много хвалил «Фрирен» за умелое распределение сил аниматоров и привлечение к работе талантливых специалистов. Так вот, «Подземелье вкусностей» — заслуживает за это не меньшей похвалы. Потрясающее качество каждую серию.
 
@@ -25,8 +38,23 @@ tgUrl: https://t.me/podcastbaka/2165
 
 Круто, когда в студии ты можешь попробовать себя в разных ролях и проявить свои таланты.
 
+
 ::image{src="/images/uploads/tg-2166.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2167.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2168.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2169.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2170.jpg" alt="" width="column"}
+
+::anime-ref{id="dungeon-meshi" source="shikimori" source-id="52701"}

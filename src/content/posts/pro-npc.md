@@ -2,16 +2,28 @@
 title: Про NPC
 date: 2024-09-17
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2385.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2385
 tgUrl: https://t.me/podcastbaka/2385
 ---
 
 ::image{src="/images/uploads/tg-2385.jpg" alt="" width="column"}
+
 
 Одна из вещей, которая всегда делает повседневное аниме лучше — это работа с фоном. И речь не только про то, насколько хорошо нарисованы школьные кабинеты, улочки маленькой деревни или небоскребы в Токио. Но еще и о том, как себя ведут персонажи, на фоне которых живут главные герои.
 
@@ -23,6 +35,13 @@ tgUrl: https://t.me/podcastbaka/2385
 
 И в этом красота работы с фонами.
 
+
 ::image{src="/images/uploads/tg-2386.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2387.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2388.jpg" alt="" width="column"}

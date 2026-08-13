@@ -2,18 +2,29 @@
 title: Еще одна история
 date: 2026-02-27
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3767.jpg
-pullMedia: false
 noCover: false
-tgId: 3767
-tgUrl: https://t.me/podcastbaka/3767
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 animeSuggested:
   - apocalypse-hotel
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 3767
+tgUrl: https://t.me/podcastbaka/3767
 ---
 
 ::image{src="/images/uploads/tg-3767.jpg" alt="" width="column"}
+
 
 В [новое эссе про «Апокалипсис: Отель»](https://t.me/podcastbaka/3764) не влезла [классная история](https://blog.sakugabooru.com/2026/01/02/apocalypse-hotel-and-legacies/) про то, как свобода и креатив в команде могут создавать что-то по-настоящему особенное.
 
@@ -24,5 +35,6 @@ animeSuggested:
 За прошедшие годы цветы там разрослись и стали ещё более величественными. Для арт-директора это оказалось трогательным моментом: команда не просто не стала исправлять деталь, добавленную им без согласования, — режиссер и аниматоры приняли её как часть мира, вписали в канон и наделили смыслом, куда большим, чем Хонда мог себе представить.
 
 Это еще один пример того, о чем я подробно говорю в эссе. При работе над «Апокалипсис: Отелем» собралась команда, в которой все работали вместе и дополняли друг друга. И благодаря этому аниме получилось таким запоминающимся.
+
 
 ::image{src="/images/uploads/tg-3768.jpg" alt="" width="column"}

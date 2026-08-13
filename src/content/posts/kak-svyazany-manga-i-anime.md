@@ -1,17 +1,29 @@
 ---
 title: Как связаны манга и аниме
 date: 2023-11-09
-category: note
-draft: true
+category: podcast
+draft: false
 description: ''
 cover: /images/uploads/tg-1643.jpg
-pullMedia: false
 noCover: false
+externalUrl: https://arzamas.academy/podcasts/332/10
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1643
 tgUrl: https://t.me/podcastbaka/1643
 ---
 
 ::image{src="/images/uploads/tg-1643.jpg" alt="" width="column"}
+
 
 Вот это да, уже последний выпуск первого сезона «Омнибуса и танкобона». А как будто начинали только вчера.
 

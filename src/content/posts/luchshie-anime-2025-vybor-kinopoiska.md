@@ -2,11 +2,22 @@
 title: 'Лучшие аниме — 2025: выбор Кинопоиска'
 date: 2026-01-12
 category: article
-externalUrl: https://www.kinopoisk.ru/media/article/4012222/
-draft: true
+draft: false
 description: ''
-cover: ''
+cover: /images/uploads/pasted-image-1786656803628.webp
 noCover: true
+externalUrl: https://www.kinopoisk.ru/media/article/4012222/
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3625
 tgUrl: https://t.me/podcastbaka/3625
 ---

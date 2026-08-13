@@ -2,16 +2,28 @@
 title: 100 великих фильмов XXI века
 date: 2023-11-08
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1641.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1641
 tgUrl: https://t.me/podcastbaka/1641
 ---
 
 ::image{src="/images/uploads/tg-1641.jpg" alt="" width="column"}
+
 
 К 20-летию Кинопоиска более 200 экспертов — режиссеров и продюсеров, шоураннеров и кинокритиков, писателей и сценаристов — выбрали 100 самых важных фильмов нашего века. Мы с Ксюшей приняли в этом участие.
 
@@ -20,5 +32,6 @@ tgUrl: https://t.me/podcastbaka/1641
 А выше можно посмотреть, как выглядят наши личные топ-10. Выбирать было мучительно сложно, особенно учитывая, что в список могли входить только полнометражные фильмы, вышедшие после 2001 года. Я старался добавить в список как можно больше аниме.
 
 А какие фильмы выбрали бы вы?
+
 
 ::image{src="/images/uploads/tg-1642.jpg" alt="" width="column"}

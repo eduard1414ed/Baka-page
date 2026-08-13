@@ -2,16 +2,29 @@
 title: Исекай заказывали?
 date: 2025-08-19
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3262.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3262
 tgUrl: https://t.me/podcastbaka/3262
+anime:
+  - mizu-zokusei-no-mahoutsukai
 ---
 
 ::image{src="/images/uploads/tg-3262.jpg" alt="" width="column"}
+
 
 Пока что мой прогноз из эссе о том, что исекаев будет становиться меньше, сбывается. В этом сезоне выходит не так много тайтлов про попаданцев. Более того, один из них я даже готов похвалить — это «Маг воды».
 
@@ -26,3 +39,5 @@ tgUrl: https://t.me/podcastbaka/3262
 В «Маге воды» тоже прогрессия быстрее, чем, например, в «Реинкарнации безработного». Но сериал тратит хотя бы немного времени на тренировки героя, на то, чтобы наладить химию между персонажами, на то, чтобы дать миру подышать — а зрителю в него погрузиться.
 
 И поэтому «Мага воды» приятно смотреть. Это ни в коем случае не шедевр, но несколько приятных вечеров сериал точно может обеспечить.
+
+::anime-ref{id="mizu-zokusei-no-mahoutsukai" source="shikimori" source-id="60732"}

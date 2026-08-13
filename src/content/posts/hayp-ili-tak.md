@@ -2,16 +2,29 @@
 title: Хайп или так?
 date: 2026-01-15
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3637.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3637
 tgUrl: https://t.me/podcastbaka/3637
+anime:
+  - yuusha-kei-ni-shosu-choubatsu-yuusha-9004-tai-keimu-kiroku
 ---
 
 ::image{src="/images/uploads/tg-3637.jpg" alt="" width="column"}
+
 
 Часовой первый эпизод «Приговорённый быть героем» сразу привлекает внимание. Это почти безостановочный экшен, в котором суровый герой рубит, взрывает и кромсает орды хорошо нарисованных монстров.
 
@@ -24,3 +37,5 @@ tgUrl: https://t.me/podcastbaka/3637
 Сюжет с неба звезд не хватает, но функционально работает. И дает простор для захватывающего экшена. Сериал выполнен в классном стиле, отсылающем к мрачным аниме 90-х. Кроме того, снимает его Такасима Хироюки, который был режиссером анимации первого сезона «Реинкарнации безработного».
 
 Единственная тревога — продакшн сериала. Сперва его перенесли с прошлой осени на текущий сезон, а теперь еще и второй эпизод подвинули на неделю. Надеюсь, у них там все хорошо с производством, и нас не ждет новый «Ниндзя Камуи».
+
+::anime-ref{id="yuusha-kei-ni-shosu-choubatsu-yuusha-9004-tai-keimu-kiroku" source="shikimori" source-id="56009"}

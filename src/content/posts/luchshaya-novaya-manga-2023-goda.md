@@ -2,11 +2,22 @@
 title: Лучшая новая манга 2023 года
 date: 2023-08-14
 category: article
-externalUrl: https://t-j.ru/list/best-manga-2023/
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tj-luchshaya-novaya-manga-2023-goda.jpg
 noCover: false
+externalUrl: https://t-j.ru/list/best-manga-2023/
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1438
 tgUrl: https://t.me/podcastbaka/1438
 ---

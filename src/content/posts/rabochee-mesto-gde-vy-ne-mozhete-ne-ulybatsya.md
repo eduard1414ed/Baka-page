@@ -2,18 +2,30 @@
 title: Рабочее место, где вы не можете не улыбаться
 date: 2025-12-03
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3527.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested:
+  - egao-no-taenai-shokuba-desu
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3527
 tgUrl: https://t.me/podcastbaka/3527
-animeSuggested:
+anime:
   - egao-no-taenai-shokuba-desu
 ---
 
 ::image{src="/images/uploads/tg-3527.jpg" alt="" width="column"}
+
 
 Я падок на аниме и мангу про создание аниме и манги. Поэтому не мог пройти мимо нового сериала «Рабочее место, где вы не можете не улыбаться».
 
@@ -26,3 +38,5 @@ animeSuggested:
 Интересно еще и то, что в центре сюжета очень разные женские героини: тревожная, но талантливая мангака Нана, строгая, но заботливая редактор Сато и энергичная юная ассистентка Хадзама. Учитывая, что индустрия манги преимущественно мужская сфера (хотя это быстро меняется в последние 20-30 лет), это важная репрезентация.
 
 Аниме проходит как-то мимо радаров, а зря. Мне кажется, что это одна из лучших комедий года.
+
+::anime-ref{id="egao-no-taenai-shokuba-desu" source="shikimori" source-id="57859"}

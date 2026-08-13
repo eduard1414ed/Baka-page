@@ -2,16 +2,25 @@
 title: Реальный Мусаси
 date: 2025-02-26
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2779.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2779
 tgUrl: https://t.me/podcastbaka/2779
 ---
-
-::image{src="/images/uploads/tg-2779.jpg" alt="" width="column"}
 
 Миямото Мусаси — главный герой манги «Бродяга» Такэхико Иноуэ основан на исторической личности. Жившем в конце XVI века самурае. Считается, что тот был рекордсменом по количеству выигранных подряд сражений — 62.
 
@@ -22,5 +31,8 @@ tgUrl: https://t.me/podcastbaka/2779
 Реальный Миямото Мусаси, кстати, был не только войном, но еще и писателем, философом и художником. Впрочем, всем этим он занимался уже после становления великим и известным воином.
 
 В манге же мы узнаем только начало пути Мусаси. Такэхико Иноуэ специально взял такую перспективу, чтобы не повторять другие сюжеты об этом герое. Потому что про взрослую жизнь реального Мусаси мы знаем сильно больше, чем про его молодость.
+
+::image{src="/images/uploads/tg-2779.jpg" alt="" width="column"}
+
 
 ::image{src="/images/uploads/tg-2780.jpg" alt="" width="column"}

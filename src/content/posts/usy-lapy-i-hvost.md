@@ -2,18 +2,29 @@
 title: Усы, лапы и хвост
 date: 2026-07-08
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-4062.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 4062
 tgUrl: https://t.me/podcastbaka/4062
+anime:
+  - bakeneko-anzu-chan
 ---
 
 ::image{src="/images/uploads/tg-4062.jpg" alt="" width="column"}
 
-(пост от Ксюши)
 
 На днях посмотрела очень смешную полнометражку «Бакэнэко Андзу». История про пятиклассницу Карин, которой пришлось остаться жить с дедушкой-настоятелем храма, пока ее непутевый отец пытается расплатиться с долгами. Следить за девочкой поручают храмовому коту Андзу, который так долго жил и не старел, что в итоге стал призраком.
 
@@ -23,4 +34,6 @@ tgUrl: https://t.me/podcastbaka/4062
 
 Поэтому в Андзу мы сразу считываем дядю среднего возраста, которому этот мир абсолютно понятен. Усы, лапы и хвост — вот и все документы, а с остальными проблемам он уж как-нибудь разберется. 
 
-Всем советую посмотреть это аниме и скрасить один из вечеров. А еще лучше сходить в кино и увидеть все [на большом экране 14 июля в КАРО/АРТ.](https://karofilm.ru/film/16044?date=2026-07-14)
+Всем советую посмотреть это аниме и скрасить один из вечеров.
+
+::anime-ref{id="bakeneko-anzu-chan" source="shikimori" source-id="54603"}

@@ -1,17 +1,26 @@
 ---
-title: Какую мангу читать?
+title: Какую мангу «Монолога фармацевта» читать?
 date: 2024-08-07
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2303.jpg
+noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
 pullMedia: false
-noCover: false
 tgId: 2303
 tgUrl: https://t.me/podcastbaka/2303
 ---
-
-::image{src="/images/uploads/tg-2303.jpg" alt="" width="column"}
 
 В [выпуске подкаста](https://youtu.be/XuTL6s2voq4) про «Монолог фармацевта» мы обсуждали, что есть две параллельно выходящие манги по этой истории. Но какую из них читать?
 
@@ -22,5 +31,8 @@ tgUrl: https://t.me/podcastbaka/2303
 (кстати, именно художнику Nekokurage дали условный срок за уклонение от налогов, а не авторке «Монолога фармацевта», как многие писали)
 
 У обеих манг есть свои плюсы и минусы, поэтому аниме и берет лучшее от всех версий. Я бы советовал выбрать ту, которая вам ближе по визуальному стилю.
+
+::image{src="/images/uploads/tg-2303.jpg" alt="" width="column"}
+
 
 ::image{src="/images/uploads/tg-2304.jpg" alt="" width="column"}

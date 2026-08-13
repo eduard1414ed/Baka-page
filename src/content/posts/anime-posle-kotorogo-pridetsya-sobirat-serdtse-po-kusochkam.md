@@ -2,18 +2,29 @@
 title: Аниме, после которого придется собирать сердце по кусочкам
 date: 2024-11-07
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2499.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: 'Автор текста: Ксюша'
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2499
 tgUrl: https://t.me/podcastbaka/2499
+anime:
+  - look-back
 ---
 
 ::image{src="/images/uploads/tg-2499.jpg" alt="" width="column"}
 
-(пишет: Ксюша)
 
 Вы уже видели мое [первое впечатление](https://t.me/podcastbaka/2486) после просмотра «Оглянись». Это был тот редкий случай, когда я не читала мангу и даже не смотрела трейлер, поэтому в кино ожидала увидеть милую и легкую повседневной историю. Но, конечно, японцы не могут вот так просто оставить зрителя без эмоциональных качелей.
 
@@ -23,4 +34,4 @@ tgUrl: https://t.me/podcastbaka/2499
 
 Независимо от того насколько вы кремень, все равно советую смотреть всем. Как минимум потому, что работа выставлялась на анимационном фестивале в Анси, а это тот еще показатель крутости!
 
-*\*Советую еще заглянуть на* [сайт](https://www.annecyfestival.com/en) *фестиваля, если вас тоже восхищает мультипликация*
+::anime-ref{id="look-back" source="shikimori" source-id="58125"}

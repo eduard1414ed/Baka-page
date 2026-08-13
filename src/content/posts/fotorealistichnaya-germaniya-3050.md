@@ -1,17 +1,29 @@
 ---
-title: Фотореалистичная Германия
+title: Фотореалистичная Германия (проверено)
 date: 2025-06-16
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3050.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3050
 tgUrl: https://t.me/podcastbaka/3050
 ---
 
 ::image{src="/images/uploads/tg-3050.jpg" alt="" width="column"}
+
 
 События одного из самых известных триллеров в манге и аниме, «Монстра», проходят в основном в Германии. Герои посещают Франкфурт, Берлин, Дюссельдорф и другие менее крупные города.
 
@@ -19,12 +31,37 @@ tgUrl: https://t.me/podcastbaka/3050
 
 Я на этих выходных оказался в городе Гейдельберг, в котором в самом начале «Монстра» жила Нина со своими приемными родителями. К сожалению, забыл сфотографировать места с тех же ракурсов, что были в манге, но все равно должно быть вполне узнаваемо.
 
+
 ::image{src="/images/uploads/tg-3051.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3052.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3053.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3054.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3055.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3056.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3057.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3058.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3059.jpg" alt="" width="column"}

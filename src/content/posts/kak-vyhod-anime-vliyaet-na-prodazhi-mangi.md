@@ -2,16 +2,28 @@
 title: Как выход аниме влияет на продажи манги?
 date: 2023-11-16
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1659.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1659
 tgUrl: https://t.me/podcastbaka/1659
 ---
 
 ::image{src="/images/uploads/tg-1659.jpg" alt="" width="column"}
+
 
 В последнем выпуске «Омнибуса и танкобона» мы обсуждали, почему авторы аниме не переделывают первоисточники, а снимают почти дословные экранизации манги (в отличие от того, что с американскими комиксами делает Голливуд).
 

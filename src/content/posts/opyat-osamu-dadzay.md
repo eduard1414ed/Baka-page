@@ -2,16 +2,30 @@
 title: Опять Осаму Дадзай
 date: 2024-06-26
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2208.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2208
 tgUrl: https://t.me/podcastbaka/2208
+anime:
+  - isekai-shikkaku
+  - bungou-stray-dogs
 ---
 
 ::image{src="/images/uploads/tg-2208.jpg" alt="" width="column"}
+
 
 Этим летом выходит очередное аниме, главный герой которого основан на классике японской литературы — Осаму Дадзае.
 
@@ -23,4 +37,9 @@ tgUrl: https://t.me/podcastbaka/2208
 
 (правда, в остальном новый сериал — это исекай, но закроем на это глаза)
 
+
 ::image{src="/images/uploads/tg-2209.jpg" alt="" width="column"}
+
+::anime-ref{id="isekai-shikkaku" source="shikimori" source-id="52367"}
+
+::anime-ref{id="bungou-stray-dogs" source="shikimori" source-id="31478"}

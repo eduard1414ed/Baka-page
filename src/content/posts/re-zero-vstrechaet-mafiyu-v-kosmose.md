@@ -2,16 +2,29 @@
 title: Ре:Зеро встречает мафию в космосе
 date: 2025-11-17
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3480.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3480
 tgUrl: https://t.me/podcastbaka/3480
+anime:
+  - gnosia
 ---
 
 ::image{src="/images/uploads/tg-3480.jpg" alt="" width="column"}
+
 
 Почти у всех аниме по визуальным новеллам есть одна общая проблема — структура истории.
 
@@ -34,3 +47,5 @@ tgUrl: https://t.me/podcastbaka/3480
 В итоге при просмотре не покидает ощущение, что ты смотришь не аниме, а то, как твой друг рядом проходит игру. Да, забавно. Но хотелось бы держать геймпад в руках и делать выборы самому.
 
 Впрочем, не исключаю, что фанатам «Игры в кальмара» и других подобных шоу, «Гносия» может зайти.
+
+::anime-ref{id="gnosia" source="shikimori" source-id="60427"}

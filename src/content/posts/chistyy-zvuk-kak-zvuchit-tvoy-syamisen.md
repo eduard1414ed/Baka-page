@@ -2,22 +2,36 @@
 title: Чистый звук | Как звучит твой сямисэн?
 date: 2025-06-12
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3041.jpg
-pullMedia: false
 noCover: false
-tgId: 3041
-tgUrl: https://t.me/podcastbaka/3041
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
 bonusLinks:
   boosty: https://boosty.to/bakapodcast/posts/8d48e87b-1332-42fb-80a3-d2c1b8923161?share=post_link
   patreon: ''
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_1827
+pullMedia: false
+tgId: 3041
+tgUrl: https://t.me/podcastbaka/3041
+anime:
+  - mashiro-no-oto
 ---
 
 ::image{src="/images/uploads/tg-3041.jpg" alt="" width="column"}
 
+
 В этот раз мы обсуждаем тайтл, который у нас заказал подписчик! «Чистый звук» — это аниме про игру на классическом японском инструменте, сямисэне.
 
 Почему этот сериал делится на две совершенно разные части? Можно ли судить о тайтле только по первому сезону? И что общего между этим аниме и моей курсовой?
+
+::anime-ref{id="mashiro-no-oto" source="shikimori" source-id="42590"}

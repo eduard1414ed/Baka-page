@@ -2,16 +2,25 @@
 title: Самая продаваемая манга и ранобэ в Японии
 date: 2023-12-07
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1716.jpg
+noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
 pullMedia: false
-noCover: false
 tgId: 1716
 tgUrl: https://t.me/podcastbaka/1716
 ---
-
-::image{src="/images/uploads/tg-1716.jpg" alt="" width="column"}
 
 Oricon опубликовал традиционные рейтинги продаж за год. Первое место по продажам манги неожиданно занял спокон — «Синяя тюрьма», который в этом году получил экранизацию.
 
@@ -22,5 +31,9 @@ Oricon опубликовал традиционные рейтинги прод
 Среди ранобэ опять же явно видно как сильно аниме подстегивает продажи — первые две строчки за романами, которые в этом году получили экранизации.
 
 Из интересного, на шестом месте ранобэ «Моя соседка Аля иногда кокетничает со мной по-русски» про русскую девушку, которая перевелась в японскую школу. По ней тоже уже объявлено аниме.
+
+
+::image{src="/images/uploads/tg-1716.jpg" alt="" width="column"}
+
 
 ::image{src="/images/uploads/tg-1717.jpg" alt="" width="column"}

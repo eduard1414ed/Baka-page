@@ -2,18 +2,29 @@
 title: Тренд на ускорение
 date: 2024-05-27
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2143.jpg
-pullMedia: false
 noCover: false
-tgId: 2143
-tgUrl: https://t.me/podcastbaka/2143
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 animeSuggested:
   - naruto
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 2143
+tgUrl: https://t.me/podcastbaka/2143
 ---
 
 ::image{src="/images/uploads/tg-2143.jpg" alt="" width="column"}
+
 
 Вчерашний анонс продолжения «Звездного дитя» натолкнул меня на размышления о том, как в последние годы ускорился выпуск вторых сезонов успешных тайтлов.
 

@@ -2,18 +2,29 @@
 title: Какой получилась новая манга по «Магической битве»?
 date: 2026-03-16
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3815.jpg
-pullMedia: false
 noCover: false
-tgId: 3815
-tgUrl: https://t.me/podcastbaka/3815
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 animeSuggested:
   - jujutsu-kaisen
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 3815
+tgUrl: https://t.me/podcastbaka/3815
 ---
 
 ::image{src="/images/uploads/tg-3815.jpg" alt="" width="column"}
+
 
 «Магическая Битва. Модуль» выходит с сентября прошлого года, сценарий к ней пишет сам Геге Акутами, а за рисунок отвечает Юдзи Ивасаки («Академия Шифра»).
 

@@ -2,16 +2,29 @@
 title: Великое путешествие
 date: 2023-08-16
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1440.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1440
 tgUrl: https://t.me/podcastbaka/1440
+anime:
+  - fune-wo-amu
 ---
 
 ::image{src="/images/uploads/tg-1440.jpg" alt="" width="column"}
+
 
 Когда я учился в Литературном институте, примерно половину времени занимали занятия собственно по литературе, а другая половина была посвящена языку. Откуда появились знакомые нам слова? Как они связываются в предложения? Почему некоторые из них исчезают, а другие появляются?
 
@@ -30,3 +43,5 @@ tgUrl: https://t.me/podcastbaka/1440
 Ты вслед за героями после просмотра сериала начинаешь думать, а как правильно объяснить значение слов. Что такое «лево»? Какие новые слова ты недавно слышал? И почему мы говорим «голодный как собака»?
 
 Если вы искали непринужденную, но приятную повседневность, или любите слова, то очень советую «Мы свяжем лодку».
+
+::anime-ref{id="fune-wo-amu" source="shikimori" source-id="32948"}

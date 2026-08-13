@@ -2,16 +2,29 @@
 title: Ва-банк!
 date: 2026-05-08
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3933.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3933
 tgUrl: https://t.me/podcastbaka/3933
+anime:
+  - hidarikiki-no-eren
 ---
 
 ::image{src="/images/uploads/tg-3933.jpg" alt="" width="column"}
+
 
 Обычно мангаки финансово не участвуют в разработке аниме, этим занимаются их издатели. Но в случае с «Левшой Эреном» автор, Дайсукэ Ито, настолько сильно хотел получить экранизацию и настолько поверил в успех своего произведения, что профинансировал значительную часть производства экранизации.
 
@@ -22,3 +35,5 @@ tgUrl: https://t.me/podcastbaka/3933
 Особенно забавно, что это идеально перекликается с самой темой «Левши Эрена» — одержимостью творчества, готовностью поставить все на то, что ты станешь успешным художником.
 
 Я посмотрел пару первых серий и, честно говоря, пока совершенно не впечатлен. Ни сюжетом, ни качеством адаптации. А вам как?
+
+::anime-ref{id="hidarikiki-no-eren" source="shikimori" source-id="53732"}

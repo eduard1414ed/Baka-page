@@ -2,16 +2,29 @@
 title: Обратный исекай?
 date: 2026-04-21
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3899.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3899
 tgUrl: https://t.me/podcastbaka/3899
+anime:
+  - yomi-no-tsugai
 ---
 
 ::image{src="/images/uploads/tg-3899.jpg" alt="" width="column"}
+
 
 Посмотрел первые три серии «Цугаев загробного мира» — экранизации нового тайтла Хирому Аракавы, создательницы «Стального алхимика».
 
@@ -24,3 +37,5 @@ tgUrl: https://t.me/podcastbaka/3899
 Самое забавное же — это то, что главный герой из мира условных средних веков оказывается в современности. И по сути, это обратный исекай, где он должен освоить, как работает туалет, где в машине прячутся кони, и что вообще такое телефон. Посмотрим, насколько долго этот мотив будет сохранятся, но он меня пока радует.
 
 В общем, «Цугаи» ощущаются крепко сбитым аниме, но без изысков. Рассчитываю на то, что Аракава закрутит как обычно сюжет — и к середине первого сезона аниме разгонится.
+
+::anime-ref{id="yomi-no-tsugai" source="shikimori" source-id="62001"}

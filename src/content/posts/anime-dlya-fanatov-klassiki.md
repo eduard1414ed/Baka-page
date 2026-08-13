@@ -2,16 +2,29 @@
 title: Аниме для фанатов классики
 date: 2025-03-05
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2801.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2801
 tgUrl: https://t.me/podcastbaka/2801
+anime:
+  - zenshuu
 ---
 
 ::image{src="/images/uploads/tg-2801.jpg" alt="" width="column"}
+
 
 Zenshuu — новое оригинальное аниме от студии MAPPA. И на первый взгляд — это очередной исекай.
 
@@ -27,5 +40,11 @@ Zenshuu — новое оригинальное аниме от студии MAP
 
 Так что на самом деле Zenshuu — это сериал, от которого самое большое удовольствие получат не фанаты исекаев. А опытные зрители, пересмотревшие всю классику. Которые смогут прочувствовать и оценить ностальгические вайбы.
 
+
 ::image{src="/images/uploads/tg-2802.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2803.jpg" alt="" width="column"}
+
+::anime-ref{id="zenshuu" source="shikimori" source-id="58502"}

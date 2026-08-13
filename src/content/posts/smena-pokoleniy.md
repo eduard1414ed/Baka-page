@@ -2,20 +2,31 @@
 title: Смена поколений
 date: 2024-08-30
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2352.jpg
-pullMedia: false
 noCover: false
-tgId: 2352
-tgUrl: https://t.me/podcastbaka/2352
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 animeSuggested:
   - jujutsu-kaisen
   - shingeki-no-kyojin
   - one-piece
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 2352
+tgUrl: https://t.me/podcastbaka/2352
 ---
 
 ::image{src="/images/uploads/tg-2352.jpg" alt="" width="column"}
+
 
 Я думаю с объявлением об окончании манги «Магическая битва» можно смело говорить о том, что мы с вами на пороге смены поколений.
 
@@ -28,5 +39,6 @@ animeSuggested:
 Мне очень любопытно, что же станет следующим большим хитом.
 
 (Хотя я в глубине души надеюсь, что мы просто вступили в эру «Фрирен» и других фэнтези)
+
 
 ::image{src="/images/uploads/tg-2353.jpg" alt="" width="column"}

@@ -2,16 +2,28 @@
 title: Дурной старикашка
 date: 2025-03-25
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2842.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2842
 tgUrl: https://t.me/podcastbaka/2842
 ---
 
 ::image{src="/images/uploads/tg-2842.jpg" alt="" width="column"}
+
 
 Все вы уже наверно видели эту фотку: Хидэаки Анно стоит на крыльце с Хаяо Миядзаки. На самом деле этих двух великих режиссеров связывает долгая история.
 

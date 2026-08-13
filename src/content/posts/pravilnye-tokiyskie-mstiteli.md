@@ -2,16 +2,29 @@
 title: Правильные «Токийские мстители»?
 date: 2024-04-11
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2054.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2054
 tgUrl: https://t.me/podcastbaka/2054
+anime:
+  - wind-breaker
 ---
 
 ::image{src="/images/uploads/tg-2054.jpg" alt="" width="column"}
+
 
 Трейлер сериала «Ветролом» не обещал ничего хорошего. Формула «битвы уличных банд» каким-то образом успела за пару лет не только войти в моду, но и сразу же выйти из нее. Чего стоит деконструкция этого жанра в пусть и довольно нелепом, но все еще смешном «Буттигири?!».
 
@@ -23,6 +36,15 @@ tgUrl: https://t.me/podcastbaka/2054
 
 Я не жду от сериала ничего сверхестественного и вряд ли он попадет в списки лучших тайтлов этого года. Но если вы ищите веселый сёнен на вечер, скорее всего это ваш выбор.
 
+
 ::image{src="/images/uploads/tg-2055.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2056.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2057.jpg" alt="" width="column"}
+
+::anime-ref{id="wind-breaker" source="shikimori" source-id="54900"}

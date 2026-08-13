@@ -2,16 +2,25 @@
 title: Главная новость года!
 date: 2026-07-01
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-4055.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 4055
 tgUrl: https://t.me/podcastbaka/4055
 ---
-
-::image{src="/images/uploads/tg-4055.jpg" alt="" width="column"}
 
 Последний год я работал над офигенным секретным проектом, о котором не мог никому рассказывать.
 
@@ -27,7 +36,21 @@ tgUrl: https://t.me/podcastbaka/4055
 
 **«Манга, моэ, исекай. Большой гид по аниме»** выйдет 28 июля. Электронная и аудиоверсия будут в Яндекс Книгах, а бумажную уже можно [предзаказать](https://alpinabook.ru/catalog/book-manga-moe-isekay/) [на сайте «Альпины нон-фикшн](https://alpinabook.ru/catalog/book-manga-moe-isekay/)».
 
+
+::image{src="/images/uploads/tg-4055.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-4056.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-4057.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-4058.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-4059.jpg" alt="" width="column"}

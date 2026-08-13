@@ -2,18 +2,30 @@
 title: Как Осии и Миядзаки помогли студии Gainax
 date: 2024-12-04
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2566.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested:
+  - royal-space-force
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2566
 tgUrl: https://t.me/podcastbaka/2566
-animeSuggested:
+anime:
   - royal-space-force
 ---
 
 ::image{src="/images/uploads/tg-2566.jpg" alt="" width="column"}
+
 
 Ныне обанкротившаяся студия Gainax до того, как снять «Евангелион» и другие культовые тайтлы, была небольшой командой студентов, которые выпускали короткометражки и назывались Daicon Film.
 
@@ -26,3 +38,5 @@ animeSuggested:
 В общем, сам по себе пилот мог и не убедить серьезных бизнесменов. Поэтому Сигэру Ватанабэ решил заранее показать этот пилот состоявшимся авторам и заручиться их поддержкой. Этими авторами стали Мамору Осии и Хаяо Миядзаки.
 
 Именно их высокая оценка помогла дать добро на производство первого проекта будущей студии Gainax — фильма «Королевские космические силы».
+
+::anime-ref{id="royal-space-force" source="shikimori" source-id="1034"}

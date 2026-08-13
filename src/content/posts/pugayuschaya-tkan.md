@@ -2,16 +2,28 @@
 title: Пугающая ткань
 date: 2025-10-30
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3446.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3446
 tgUrl: https://t.me/podcastbaka/3446
 ---
 
 ::image{src="/images/uploads/tg-3446.jpg" alt="" width="column"}
+
 
 Мне нравится, что в японской мифологии почти любой предмет может оказаться смертельно-опасным ёкаем или призраком. Если ты недостаточно внимателен.
 

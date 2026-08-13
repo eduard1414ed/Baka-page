@@ -2,16 +2,28 @@
 title: 'Искусство аниме: эволюция и современность'
 date: 2025-04-28
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2923.jpg
-pullMedia: false
 noCover: false
+externalUrl: https://pc.st/1700884702
+externalSource: «Отдел Кадров»
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2923
 tgUrl: https://t.me/podcastbaka/2923
 ---
 
 ::image{src="/images/uploads/tg-2923.jpg" alt="" width="column"}
+
 
 Я тут сходил в гости в прекрасный подкаст «[Отдел Кадров](https://pc.st/1700884702)» и помог ребятам разобраться, что такого особенного в аниме, и почему все его смотрят.
 

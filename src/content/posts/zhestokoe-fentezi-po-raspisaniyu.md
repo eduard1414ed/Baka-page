@@ -2,16 +2,29 @@
 title: Жестокое фэнтези по расписанию
 date: 2025-09-02
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3312.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3312
 tgUrl: https://t.me/podcastbaka/3312
+anime:
+  - clevatess-majuu-no-ou-to-akago-to-shikabane-no-yuusha
 ---
 
 ::image{src="/images/uploads/tg-3312.jpg" alt="" width="column"}
+
 
 Человечество может жить лишь на небольшом клочке земли. Потому что за его пределами все во власти демонических существ. Конечно, люди пытаются отправлять героев, чтобы очистить эти территории и расширить границы, но это обычно заканчивается трагедией.
 
@@ -28,3 +41,5 @@ tgUrl: https://t.me/podcastbaka/3312
 Экшен хоть и не на топ-уровне, но для студии Lay-duce это все равно шаг вперед (до этого работали в основном над романтикой, вроде «Томо — девушка!» и «Стать настоящей героиней!»). Есть немного 3D-монстров, немного серо-бурой цветовой гаммы, чтобы скрыть недостаточную детализацию, но все в пределах разумного.
 
 Так что если вы фанат мрачного фэнтези — «Клеватесс: Король демонических зверей, младенец и герой‑нежить» в этом сезоне вполне может вас порадовать.
+
+::anime-ref{id="clevatess-majuu-no-ou-to-akago-to-shikabane-no-yuusha" source="shikimori" source-id="59205"}

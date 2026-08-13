@@ -2,11 +2,22 @@
 title: '«Дандадан: Злой глаз»: почему не стоит пропускать фильм — продолжение аниме о призраках, пришельцах и червях-людоедах'
 date: 2025-06-30
 category: article
-externalUrl: https://t-j.ru/dandadan-evil-eye-review/
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tj-dandadan-zloy-glaz-pochemu-ne-stoit-propuskat-film-prodolzhenie-anime-o-prizrakah-prisheltsah-i-chervyah-lyudoedah.jpg
 noCover: false
+externalUrl: https://t-j.ru/dandadan-evil-eye-review/
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3086
 tgUrl: https://t.me/podcastbaka/3086
 ---

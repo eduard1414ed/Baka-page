@@ -2,22 +2,36 @@
 title: Бунко! | Доходный дом Иккоку
 date: 2026-06-04
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3999.jpg
-pullMedia: false
 noCover: false
-tgId: 3999
-tgUrl: https://t.me/podcastbaka/3999
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
 bonusLinks:
   boosty: https://boosty.to/bakapodcast/posts/65c23f36-981a-4698-9616-25ae6e40df65?share=post_link
   patreon: https://www.patreon.com/posts/bunko-dokhodnyi-160120062?utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=postshare_creator&utm_content=join_link
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_2603
+pullMedia: false
+tgId: 3999
+tgUrl: https://t.me/podcastbaka/3999
+anime:
+  - maison-ikkoku
 ---
 
 ::image{src="/images/uploads/tg-3999.jpg" alt="" width="column"}
 
+
 Румико Такахаси — одна из самых известных мангак в истории, которая создала целый ряд культовых и революционных работ. От «Инуяси» да «Несносных пришельцев», от «Ранма 1/2» до «Доходного дома Иккоку».
 
 Вместе с Абулхаиром, автором [канала «Кусогаки»](http://t.me/kusogakianime) мы обсудили, как ей это удалось? Какие штампы появились в манге благодаря Такахаси? И стоит ли сегодня читать романтические комедии 80-х годов?
+
+::anime-ref{id="maison-ikkoku" source="shikimori" source-id="1453"}

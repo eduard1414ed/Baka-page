@@ -2,16 +2,25 @@
 title: Монстры или люди?
 date: 2025-03-17
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2828.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2828
 tgUrl: https://t.me/podcastbaka/2828
 ---
-
-::image{src="/images/uploads/tg-2828.jpg" alt="" width="column"}
 
 Принес вам свежую рекомендацию. Land of Monsters (русского перевода пока нет) — новая дарк-фэнтези манга от Weekly Shonen Sunday (в этом же журнале выходит, например, «Фрирен»).
 
@@ -26,5 +35,8 @@ tgUrl: https://t.me/podcastbaka/2828
 Из минусов: рисунок немного простоват. Но это дебютная работа мангаки Mitsutani, так что со временем он может стать лучше.
 
 Сейчас на английском доступно уже четыре главы. И выходить они должны еженедельно. Не пропустите.
+
+::image{src="/images/uploads/tg-2828.jpg" alt="" width="column"}
+
 
 ::image{src="/images/uploads/tg-2829.jpg" alt="" width="column"}

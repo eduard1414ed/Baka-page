@@ -2,16 +2,25 @@
 title: Инио Асано и реклама ликера
 date: 2025-09-24
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3357.jpg
+noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
 pullMedia: false
-noCover: false
 tgId: 3357
 tgUrl: https://t.me/podcastbaka/3357
 ---
-
-::image{src="/images/uploads/tg-3357.jpg" alt="" width="column"}
 
 Последние несколько недель я погружен в исследование творчества Инио Асано. У нас уже вышел [эпизод подкаста «Бунко!»](/posts/bunko-mertvye-mertvye-demony/) про «Мертвых мертвых демонов». А завтра выйдет новое видеоэссе про еще одну мангу этого автора.
 
@@ -24,5 +33,7 @@ tgUrl: https://t.me/podcastbaka/3357
 В этот раз обходится без драмы и смертей (реклама все-таки). Но Асано все равно мастерски показывает свое умение передавать повседневный быт и глубокую психологию — даже в рамках пары страниц.
 
 «Заботливый» — вроде бы реклама и чего ее читать. Но в то же время, это классная маленькая история о том, как забота может прятаться в мелочах и как важно ее принимать. Которую даже не грех порекомендовать (а вот можно ли порекомендовать ликер Funwari — мне неизвестно, не пробовал)
+
+::image{src="/images/uploads/tg-3357.jpg" alt="" width="column"}
 
 ::image{src="/images/uploads/tg-3358.jpg" alt="" width="column"}

@@ -2,16 +2,28 @@
 title: Сколько исекаев выходит каждый год?
 date: 2025-03-14
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2820.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2820
 tgUrl: https://t.me/podcastbaka/2820
 ---
 
 ::image{src="/images/uploads/tg-2820.jpg" alt="" width="column"}
+
 
 Специально для [нового эссе](https://youtu.be/_DQtUHVcrU0) мы вручную посчитали, сколько произведений с исекай-элементами вышло за последние 15 лет.
 

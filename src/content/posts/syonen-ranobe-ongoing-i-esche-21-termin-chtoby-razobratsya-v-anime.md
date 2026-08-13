@@ -2,11 +2,22 @@
 title: Сёнэн, ранобэ, онгоинг и еще 21 термин, чтобы разобраться в аниме
 date: 2024-12-06
 category: article
-externalUrl: https://t-j.ru/short/anime-slovarik/
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tj-syonen-ranobe-ongoing-i-esche-21-termin-chtoby-razobratsya-v-anime.jpg
 noCover: false
+externalUrl: https://t-j.ru/short/anime-slovarik/
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2582
 tgUrl: https://t.me/podcastbaka/2582
 ---

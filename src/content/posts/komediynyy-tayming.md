@@ -1,17 +1,27 @@
 ---
-title: Комедийный тайминг
+title: Комедийный тайминг в «Хоримии»
 date: 2023-07-17
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1369.jpg
+noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
 pullMedia: false
-noCover: false
 tgId: 1369
 tgUrl: https://t.me/podcastbaka/1369
+anime:
+  - horimiya
 ---
-
-::image{src="/images/uploads/tg-1369.jpg" alt="" width="column"}
 
 [Продолжая разговор о «Хоримии»](/posts/peresmotr/) — после того, как я пересмотрел весь сериал, я решил в этот раз прочитать еще и мангу.
 
@@ -25,8 +35,28 @@ tgUrl: https://t.me/podcastbaka/1369
 
 И мне кажется, манга «Хоримия» очень недооценена именно как комедия.
 
+
+::image{src="/images/uploads/tg-1369.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1370.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1371.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1372.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1373.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1374.jpg" alt="" width="column"}
+
+
+::anime-ref{id="horimiya" source="shikimori" source-id="42897"}

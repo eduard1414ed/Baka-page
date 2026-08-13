@@ -2,16 +2,28 @@
 title: Про талантливый дизайн персонажа
 date: 2026-03-11
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3803.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3803
 tgUrl: https://t.me/podcastbaka/3803
 ---
 
 ::image{src="/images/uploads/tg-3803.jpg" alt="" width="column"}
+
 
 В школьных аниме цветные волосы — частый прием, который используется, чтобы зрителю было проще различать героев. Например, в «Хоримии» у героев волосы всех цветов радуги: от красных до ярко-зеленых. Хотя в реальной жизни в Японии чаще всего запрещено красить волосы в школе.
 

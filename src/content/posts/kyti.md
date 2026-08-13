@@ -2,16 +2,29 @@
 title: Кыти!
 date: 2023-09-13
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1504.jpg
+noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
 pullMedia: false
-noCover: false
 tgId: 1504
 tgUrl: https://t.me/podcastbaka/1504
+anime:
+  - ramen-akaneko
 ---
 
 ::image{src="/images/uploads/tg-1504.jpg" alt="" width="column"}
+
 
 На Manga Plus [появилась](https://mangaplus.shueisha.co.jp/viewer/1018500) в бесплатном доступе манга от Shonen Jump про котов, которые готовят рамен — Red Cat Ramen.
 
@@ -23,4 +36,7 @@ tgUrl: https://t.me/podcastbaka/1504
 
 Если вы читаете по-английски, обязательно гляньте и проведите приятно вечер с котиками.
 
+
 ::image{src="/images/uploads/tg-1505.jpg" alt="" width="column"}
+
+::anime-ref{id="ramen-akaneko" source="shikimori" source-id="57325"}

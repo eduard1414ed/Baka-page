@@ -2,18 +2,30 @@
 title: Что будет, когда люди исчезнут?
 date: 2025-06-04
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3009.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested:
+  - apocalypse-hotel
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3009
 tgUrl: https://t.me/podcastbaka/3009
-animeSuggested:
+anime:
   - apocalypse-hotel
 ---
 
 ::image{src="/images/uploads/tg-3009.jpg" alt="" width="column"}
+
 
 Когда-то давно был такой фильм от канала Discovery — там рассказывали, как, если исчезнут люди, постепенно города превратятся в джунгли или пустыни и по ним расселятся дикие животные.
 
@@ -28,3 +40,5 @@ animeSuggested:
 А еще экшен — прекрасно исполненный студией CygamesPictures, отвественной за нашумевших «Девочек-пони».
 
 И в итоге сформулировать одним предложением, что такое «Апокалипсис: Отель» — не получается. Но очевидно, что это что-то очень увлекательное и оригинальное.
+
+::anime-ref{id="apocalypse-hotel" source="shikimori" source-id="59675"}

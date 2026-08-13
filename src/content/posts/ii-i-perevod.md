@@ -2,16 +2,28 @@
 title: ИИ и перевод
 date: 2024-05-13
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2117.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2117
 tgUrl: https://t.me/podcastbaka/2117
 ---
 
 ::image{src="/images/uploads/tg-2117.jpg" alt="" width="column"}
+
 
 Японская компания Orange, которая разрабатывает технологии для перевода и издания манги, привлекла почти три миллиарда йен инвестиций на создание нового AI-сервиса. По планам компании, летом она запустит в США манга-сервис emaqi. Для которого переводы манги будет делать искусственный интеллект.
 

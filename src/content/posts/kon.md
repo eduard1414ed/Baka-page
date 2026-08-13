@@ -1,17 +1,30 @@
 ---
-title: Кон!
+title: Кон! Дэдпул?
 date: 2024-04-04
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2039.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2039
 tgUrl: https://t.me/podcastbaka/2039
+anime:
+  - chainsaw-man
 ---
 
 ::image{src="/images/uploads/tg-2039.jpg" alt="" width="column"}
+
 
 Как оценить влияние аниме на массовую культуру? Я уже [писал](/posts/moda-i-manga/) как-то, что заметный признак этого процесса — модные бренды одежды, которые коллабятся с известными тайтлами.
 
@@ -21,4 +34,8 @@ tgUrl: https://t.me/podcastbaka/2039
 
 Интересно, знает ли Дэдпул, что Лис предоставляет возможность призывать его голову только привлекательным охотникам?
 
+
 ::image{src="/images/uploads/tg-2040.jpg" alt="" width="column"}
+
+
+::anime-ref{id="chainsaw-man" source="shikimori" source-id="44511"}

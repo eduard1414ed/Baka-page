@@ -2,18 +2,30 @@
 title: Дьявольский блюз
 date: 2025-05-13
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2967.jpg
-pullMedia: false
 noCover: false
-tgId: 2967
-tgUrl: https://t.me/podcastbaka/2967
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 animeSuggested:
   - akira
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 2967
+tgUrl: https://t.me/podcastbaka/2967
+anime:
+  - prison-school
 ---
 
 ::image{src="/images/uploads/tg-2967.jpg" alt="" width="column"}
+
 
 Раз уж я вчера мельком упомянул эту мангу, давайте расскажу подробнее. «Я и Дьявольский блюз» написал Акира Хирата, автор очень популярного тайтла «Школа-тюрьма».
 
@@ -24,3 +36,5 @@ animeSuggested:
 Манга нарисована в кинематографическом стиле, с гипердетализированной графикой, похожей на гравюры или старые чёрно-белые фильмы. С очень мрачной и пугающей атмосферой, напоминающей американские ужасы, Лавкрафта и готику.
 
 «Дьявольски блюз» начал выходить в 2004 году, но, как и многие другие сэйнены, осталась незавершённой: всего вышло 4 тома. Тем не менее, если вы любите ужасы, гнетущие истории и музыку — эту историю стоит почитать.
+
+::anime-ref{id="prison-school" source="shikimori" source-id="30240"}

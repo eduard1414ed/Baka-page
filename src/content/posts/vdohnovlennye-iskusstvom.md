@@ -2,16 +2,28 @@
 title: Вдохновленные искусством
 date: 2024-01-29
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1864.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1864
 tgUrl: https://t.me/podcastbaka/1864
 ---
 
 ::image{src="/images/uploads/tg-1864.jpg" alt="" width="column"}
+
 
 В начале XX века в Японии работал художник Хасуй Кавасэ. За свою карьеру он нарисовал больше 600 сельских и городских пейзажей.
 
@@ -23,12 +35,37 @@ tgUrl: https://t.me/podcastbaka/1864
 
 Так вдохновение переходит от одного автора к другому, а то к третьему.
 
+
 ::image{src="/images/uploads/tg-1865.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1866.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1867.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1868.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1869.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1870.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1871.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1872.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1873.jpg" alt="" width="column"}

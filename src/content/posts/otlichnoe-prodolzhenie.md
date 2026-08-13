@@ -1,17 +1,30 @@
 ---
-title: Отличное продолжение
+title: Отличное продолжение «Фарфоровой куклы»
 date: 2025-08-12
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3252.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3252
 tgUrl: https://t.me/podcastbaka/3252
+anime:
+  - sono-bisque-doll-wa-koi-wo-suru-season-2
 ---
 
 ::image{src="/images/uploads/tg-3252.jpg" alt="" width="column"}
+
 
 Раз уж я заговорил вчера про «Фарфоровую куклу». Должен сказать, что второй сезон аниме про косплей выглядит очень изобретательно.
 
@@ -23,7 +36,19 @@ tgUrl: https://t.me/podcastbaka/3252
 
 Так что, если вы пропустили выход второго сезона в огне этого лета — советую наверстать.
 
+
 ::image{src="/images/uploads/tg-3253.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3254.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3255.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3256.jpg" alt="" width="column"}
+
+::anime-ref{id="sono-bisque-doll-wa-koi-wo-suru-season-2" source="shikimori" source-id="53065"}

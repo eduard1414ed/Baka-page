@@ -2,16 +2,29 @@
 title: Благоухающий цветок расцветает с достоинством
 date: 2024-12-12
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2589.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2589
 tgUrl: https://t.me/podcastbaka/2589
+anime:
+  - kaoru-hana-wa-rin-to-saku
 ---
 
 ::image{src="/images/uploads/tg-2589.jpg" alt="" width="column"}
+
 
 Вы знаете, насколько я люблю хорошую романтику. Поэтому вряд ли удивитесь тому, что всю прошлую неделю я зачитывался мангой с очень сложным для запоминания названием: «Благоухающий цветок расцветает с достоинством».
 
@@ -28,3 +41,5 @@ tgUrl: https://t.me/podcastbaka/2589
 Я заметил, что мангу ругают за то, что персонажи в ней постоянно извиняются, но мне наоборот кажется, что это сильная сторона истории. Именно то, как передаются здесь внутренние переживания героев, как изображается их забота друг о друге — заставляет проникнуться ими и с интересом читать эту незамысловатую историю.
 
 Ну и еще тут абсолютно великолепный рисунок. Костюмы, выражения лиц, большие панели — восторг. Очень советую!
+
+::anime-ref{id="kaoru-hana-wa-rin-to-saku" source="shikimori" source-id="59845"}

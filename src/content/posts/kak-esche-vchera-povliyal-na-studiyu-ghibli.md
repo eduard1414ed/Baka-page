@@ -2,16 +2,29 @@
 title: Как «Еще вчера» повлиял на студию Ghibli?
 date: 2025-06-27
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3084.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3084
 tgUrl: https://t.me/podcastbaka/3084
+anime:
+  - omoide-poroporo
 ---
 
 ::image{src="/images/uploads/tg-3084.jpg" alt="" width="column"}
+
 
 Если вы еще не смотрели [новое эссе](https://youtu.be/D4UrqEntAOU), то вы упустили увлекательную историю о том, как Ghibli превратилась в знакомую нам студию
 
@@ -28,3 +41,5 @@ tgUrl: https://t.me/podcastbaka/3084
 Сейчас сложно себе представить, какой это был рискованный ход. Любой провал мог повлиять не только на сборы конкретного фильма, но и привести к тому, что молодая студия рассыпется как карточный домик. К счастью, этого не произошло.
 
 «Еще вчера» стал внезапным хитом проката: а как и почему, [смотрите все-таки в эссе](https://youtu.be/D4UrqEntAOU).
+
+::anime-ref{id="omoide-poroporo" source="shikimori" source-id="1029"}

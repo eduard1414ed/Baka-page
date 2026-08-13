@@ -2,16 +2,27 @@
 title: Как показать экшн в манге?
 date: 2023-08-03
 category: note
-draft: true
+draft: false
 description: ''
-cover: /images/uploads/tg-1411.jpg
-pullMedia: false
+cover: ''
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1411
 tgUrl: https://t.me/podcastbaka/1411
 ---
 
-::image{src="/images/uploads/tg-1411.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-1413.jpg" alt="" width="column"}
 
 Есть множество способов передать экшн-сцену в виде статичных картинок. Чтобы показать динамику, мангаки прибегают к моушн-лайнам, ономатопеям (обозначениям звуков), или изображению последовательности действий прямо на одной панели.
 
@@ -27,5 +38,6 @@ tgUrl: https://t.me/podcastbaka/1411
 
 P.S. Этот пример еще хорош тем, что Асано по минимуму использует те привычные приемы, которые я описал в самом начале.
 
+::image{src="/images/uploads/tg-1411.jpg" alt="" width="column"}
+
 ::image{src="/images/uploads/tg-1412.jpg" alt="" width="column"}
-::image{src="/images/uploads/tg-1413.jpg" alt="" width="column"}

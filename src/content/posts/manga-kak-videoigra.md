@@ -2,28 +2,50 @@
 title: Манга как видеоигра
 date: 2026-05-27
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3963.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3963
 tgUrl: https://t.me/podcastbaka/3963
 ---
 
-::image{src="/images/uploads/tg-3963.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3963.jpg" alt="" caption="Кадры с мастер-класса Асано" width="column"}
+
 
 Инио Асано не только гениально рассказывает душераздирающие истории, но еще и стал одним из первых мангак, который активно использует современные технологии для создания манги. И речь не об искусственном интеллекте или генерации картинок, а про инструментарий геймдизайнера.
 
 Вместо того чтобы полностью вручную рисовать сложные городские фоны, Асано много лет использует трехмерное моделирование, фотографии и цифровую обработку. После «Спокойной ночи Пун-пун» он потратил больше полугода на изучение Blender и Unreal Engine. И теперь использует технологии для ускорения производства и упрощения работы ассистентов.
 
+
+::image{src="/images/uploads/tg-3964.jpg" alt="" caption="Роботы из «Мертвых мертвых демонов»" width="column"}
+
+
 Асано может собрать улицу, квартиру или целый район в 3D, выставить нужную камеру, свет и перспективу, а потом уже поверх этого рисовать персонажей и детали.
 
 Особенно это заметно в «Мертвых мертвых демонах». Персонажи там постоянно находятся в очень конкретных пространствах Токио: на крышах домов, у магазинов, в школьных коридорах, и на станциях метро.
 
+
+::image{src="/images/uploads/tg-3965.jpg" alt="А вот что вышло в итоге" width="column"}
+
+
 И Асано важно, чтобы не только эти места ощущались реальными, но огромная летающая тарелка над городом, гигантские роботы и инопланетные захватчики — ощущались естественной частью этого детализированного, почти гиперреалистичного мира.
 
-::image{src="/images/uploads/tg-3964.jpg" alt="" width="column"}
-::image{src="/images/uploads/tg-3965.jpg" alt="" width="column"}
-::image{src="/images/uploads/tg-3966.jpg" alt="" width="column"}
+
+::image{src="/images/uploads/tg-3966.jpg" alt="" caption="Такие детали, особенно с учетом перспективы, очень тяжело создать без прямого референса" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3967.jpg" alt="" width="column"}

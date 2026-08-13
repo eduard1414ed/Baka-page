@@ -2,16 +2,28 @@
 title: Дорогу ваншотам
 date: 2025-05-19
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2971.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2971
 tgUrl: https://t.me/podcastbaka/2971
 ---
 
 ::image{src="/images/uploads/tg-2971.jpg" alt="" width="column"}
+
 
 Продолжая тему ваншотов. Это постоянный формат журналов манги, на котором авторы тестируют свои идеи. Одна глава — одна идея. Легко понять, работает завязка или нет.
 

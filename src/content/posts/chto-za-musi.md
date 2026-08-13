@@ -2,16 +2,28 @@
 title: Что за муси?
 date: 2026-06-19
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-4036.jpg
+noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
 pullMedia: false
-noCover: false
 tgId: 4036
 tgUrl: https://t.me/podcastbaka/4036
 ---
 
 ::image{src="/images/uploads/tg-4036.jpg" alt="" width="column"}
+
 
 В [новом бонусном выпуске](/posts/master-musi-idealnaya-skazka-na-noch/) мы много говорили про муси из аниме «Мастер муси». Это такие маленькие мистические существа, которых способны воздействовать на людей, давать магические способности или наоборот, накладывать проклятия.
 

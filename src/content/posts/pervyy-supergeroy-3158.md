@@ -2,16 +2,28 @@
 title: Первый супергерой
 date: 2025-07-16
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3158.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3158
 tgUrl: https://t.me/podcastbaka/3158
 ---
 
 ::image{src="/images/uploads/tg-3158.jpg" alt="" width="column"}
+
 
 Возможно, первым супергероем можно считать японского персонажа — Ōgon Bat.
 

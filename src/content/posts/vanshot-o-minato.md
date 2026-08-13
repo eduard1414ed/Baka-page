@@ -2,18 +2,31 @@
 title: Ваншот о Минато
 date: 2023-07-20
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1377.jpg
-pullMedia: false
 noCover: false
-tgId: 1377
-tgUrl: https://t.me/podcastbaka/1377
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 animeSuggested:
   - naruto
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 1377
+tgUrl: https://t.me/podcastbaka/1377
+anime:
+  - naruto
+  - boruto-naruto-the-movie
 ---
 
 ::image{src="/images/uploads/tg-1377.jpg" alt="" width="column"}
+
 
 Пару дней назад вышел ваншот-приквел к «Наруто» о Четвертом Хокаге — The Whirlwind Inside the Vortex. Каким он получился (без спойлеров)?
 
@@ -28,3 +41,7 @@ animeSuggested:
 Приятно видеть возвращение классического стиля Кисимото, особенно если сравнивать арт с «Боруто». Есть парочка очень красивых панелей, некоторые из них цветные.
 
 В итоге, я остался доволен ваншотом, хотя и ждал от него немного большего.
+
+::anime-ref{id="naruto" source="shikimori" source-id="20"}
+
+::anime-ref{id="boruto-naruto-the-movie" source="shikimori" source-id="28755"}

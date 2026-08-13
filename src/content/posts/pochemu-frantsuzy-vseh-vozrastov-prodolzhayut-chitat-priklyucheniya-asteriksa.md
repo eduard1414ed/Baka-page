@@ -1,17 +1,29 @@
 ---
 title: Почему французы всех возрастов продолжают читать «Приключения Астерикса»?
 date: 2023-09-28
-category: note
-draft: true
+category: podcast
+draft: false
 description: ''
 cover: /images/uploads/tg-1528.jpg
-pullMedia: false
 noCover: false
+externalUrl: https://arzamas.academy/podcasts/332/4
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1528
 tgUrl: https://t.me/podcastbaka/1528
 ---
 
 ::image{src="/images/uploads/tg-1528.jpg" alt="" width="column"}
+
 
 Что общего между комиксами и велосипедами, чем франко-бельгийские комиксы отличаются от французских, и что такое «девятое искусство».
 

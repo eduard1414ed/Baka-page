@@ -2,16 +2,28 @@
 title: Свадьба лисиц
 date: 2025-09-29
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3369.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3369
 tgUrl: https://t.me/podcastbaka/3369
 ---
 
 ::image{src="/images/uploads/tg-3369.jpg" alt="" width="column"}
+
 
 В японском языке есть выражение kitsune no yomeiri (狐の嫁入り) — лисья свадьба. Так в части регионов Японии называют природное явление, когда в солнечную погоду идет дождь.
 

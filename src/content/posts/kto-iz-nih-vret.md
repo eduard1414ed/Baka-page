@@ -2,18 +2,30 @@
 title: Кто из них врет?
 date: 2026-02-25
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3755.jpg
-pullMedia: false
 noCover: false
-tgId: 3755
-tgUrl: https://t.me/podcastbaka/3755
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 animeSuggested:
   - jujutsu-kaisen
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 3755
+tgUrl: https://t.me/podcastbaka/3755
+anime:
+  - jujutsu-kaisen-shimetsu-kaiyuu-zenpen
 ---
 
 ::image{src="/images/uploads/tg-3755.jpg" alt="" width="column"}
+
 
 «Магическая битва» в недавнем эпизоде показывает мастер-класс по передаче мотивов и намерений персонажей через окружение.
 
@@ -25,4 +37,7 @@ animeSuggested:
 
 Собственно, вопрос для тех, кто не читал мангу. Вы догадались, кто из них врет?
 
+
 ::image{src="/images/uploads/tg-3756.jpg" alt="" width="column"}
+
+::anime-ref{id="jujutsu-kaisen-shimetsu-kaiyuu-zenpen" source="shikimori" source-id="57658"}

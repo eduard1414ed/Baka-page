@@ -2,18 +2,30 @@
 title: Madhouse снова радует
 date: 2024-11-26
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2541.jpg
-pullMedia: false
 noCover: false
-tgId: 2541
-tgUrl: https://t.me/podcastbaka/2541
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 animeSuggested:
   - chi-chikyuu-no-undou-ni-tsuite
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 2541
+tgUrl: https://t.me/podcastbaka/2541
+anime:
+  - parasite
 ---
 
 ::image{src="/images/uploads/tg-2541.jpg" alt="" width="column"}
+
 
 Понял вдруг, что почти ничего не рассказал вам про еще один заметный сериал этого сезона — «О движении Земли». А тем временем это один из самых интересных новых тайтлов.
 
@@ -26,3 +38,5 @@ animeSuggested:
 А герои, которые казались главными, умереть — и уступить место совсем другим. Такая авторская смелость подкупает, и становится по-настоящему интересно, куда она его заведет в итоге.  Будьте осторожны, это сэйнен — так что в сериале подробно показывают пытки и убийства.
 
 Однако если вы фанат исторических жестоких драм в духе «Саги о Винланде», то «О движении Земли» — вам точно понравится.
+
+::anime-ref{id="parasite" source="shikimori" source-id="51476"}

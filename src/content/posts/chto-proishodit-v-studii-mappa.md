@@ -2,18 +2,29 @@
 title: Что происходит в студии MAPPA?
 date: 2023-11-20
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1662.jpg
-pullMedia: false
 noCover: false
-tgId: 1662
-tgUrl: https://t.me/podcastbaka/1662
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 animeSuggested:
   - shirobako
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 1662
+tgUrl: https://t.me/podcastbaka/1662
 ---
 
 ::image{src="/images/uploads/tg-1662.jpg" alt="" width="column"}
+
 
 Производство второго сезона «Магической битвы» превращается для сотрудников студии MAPPA в трагедию.
 

@@ -1,19 +1,30 @@
 ---
-title: Каким получился фильм «Стометровка»? (пост от Ксюши)
+title: Каким получился фильм «Стометровка»?
 date: 2025-12-01
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3520.jpg
-pullMedia: false
 noCover: false
-tgId: 3520
-tgUrl: https://t.me/podcastbaka/3520
+externalUrl: ''
+externalSource: ''
+adLabel: 'Автор текста: Ксюша'
+anime: []
 animeSuggested:
   - hyakuemu
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 3520
+tgUrl: https://t.me/podcastbaka/3520
 ---
 
 ::image{src="/images/uploads/tg-3520.jpg" alt="" width="column"}
+
 
 «Стометровка» — это экранизация манги Uoto, о которой мы уже [рассказывали](/posts/chto-znachit-bezhat/) (он же написал «О движение Земли»).
 

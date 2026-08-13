@@ -2,16 +2,28 @@
 title: Девушка в беде
 date: 2025-05-02
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2934.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2934
 tgUrl: https://t.me/podcastbaka/2934
 ---
 
 ::image{src="/images/uploads/tg-2934.jpg" alt="" width="column"}
+
 
 Продолжаю отсматривать не самые очевидные релизы этой весны и отмечать те, которые можно глянуть. «Соседнему королевству продали святую, помолвку которой разорвали из-за того, что она стала слишком совершенной», несмотря на название, как раз из таких.
 

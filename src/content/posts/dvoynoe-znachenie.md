@@ -1,19 +1,30 @@
 ---
-title: Двойное значение
+title: Двойное значение названия «Фрирен»
 date: 2023-10-31
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1624.jpg
-pullMedia: false
 noCover: false
-tgId: 1624
-tgUrl: https://t.me/podcastbaka/1624
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 animeSuggested:
   - sousou-no-frieren
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 1624
+tgUrl: https://t.me/podcastbaka/1624
 ---
 
 ::image{src="/images/uploads/tg-1624.jpg" alt="" width="column"}
+
 
 В новой серии «Фрирен» наконец-то прозвучало полное название аниме 葬送のフリーレン (Sousou no Frieren).
 

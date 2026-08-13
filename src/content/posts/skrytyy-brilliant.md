@@ -2,16 +2,29 @@
 title: Скрытый бриллиант
 date: 2025-02-24
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2775.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2775
 tgUrl: https://t.me/podcastbaka/2775
+anime:
+  - akuyaku-reijou-tensei-ojisan
 ---
 
 ::image{src="/images/uploads/tg-2775.jpg" alt="" width="column"}
+
 
 От сериала под названием «Перерождение мужчины средних лет в дочь дворянина» по определению ничего не ждешь, кроме кринжа и треша.
 
@@ -24,3 +37,5 @@ tgUrl: https://t.me/podcastbaka/2775
 При этом в сериале почти нет пошлости, насилия и других дешевых приемов. «Перерождение мужчины средних лет в дочь дворянина» идеально балансирует между оптимистичным добрым настроением и высмеиванием самого жанра перерождения в злодейку.
 
 Лучший исекай сезона, однозначно.
+
+::anime-ref{id="akuyaku-reijou-tensei-ojisan" source="shikimori" source-id="57719"}

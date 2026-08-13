@@ -1,17 +1,29 @@
 ---
 title: Девочки и пушки
 date: 2024-04-23
-category: note
+category: article
 draft: true
 description: ''
 cover: /images/uploads/tg-2070.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2070
 tgUrl: https://t.me/podcastbaka/2070
 ---
 
 ::image{src="/images/uploads/tg-2070.jpg" alt="" width="column"}
+
 
 На прошлой неделе у нас вышел внезапный [бонусный эпизод про «Школу убийц»](/posts/bonusnyy-vypusk-shkola-ubiyts/), и я решил, что это хороший повод собрать лучшие (на мой вкус) аниме про девочек с пушками.
 

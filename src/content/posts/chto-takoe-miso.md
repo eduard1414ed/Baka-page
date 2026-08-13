@@ -2,16 +2,29 @@
 title: Что такое мисо?
 date: 2026-06-09
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-4003.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 4003
 tgUrl: https://t.me/podcastbaka/4003
+anime:
+  - moyashimon
 ---
 
 ::image{src="/images/uploads/tg-4003.jpg" alt="" width="column"}
+
 
 На прошлых выходных я сходил на мастер-класс по изготовлению мисо. Это такая традиционная японская паста, которую получают путём длительной ферментации соевых бобов с солью и кодзи (плесенью).
 
@@ -25,10 +38,18 @@ tgUrl: https://t.me/podcastbaka/4003
 
 Есть даже несколько манга-тайтлов, которые посвящены мисо и ферментации:
 
-1️⃣ Канпай с мисо-супом! — история двух школьников, которые очень любят мисо-суп.
+1. Канпай с мисо-супом! — история двух школьников, которые очень любят мисо-суп.
+2. Сельскохозяйственные истории — манга и аниме о парне, который может видеть бактерий. И, конечно, оказывается втянут в эксперименты по ферментации и брожению.
 
-2️⃣ Сельскохозяйственные истории — манга и аниме о парне, который может видеть бактерий. И, конечно, оказывается втянут в эксперименты по ферментации и брожению.
 
 ::image{src="/images/uploads/tg-4004.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-4005.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-4006.jpg" alt="" width="column"}
+
+::anime-ref{id="moyashimon" source="shikimori" source-id="3001"}

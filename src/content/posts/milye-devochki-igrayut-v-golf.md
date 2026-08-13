@@ -2,16 +2,29 @@
 title: Милые девочки играют в гольф
 date: 2025-03-12
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2817.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2817
 tgUrl: https://t.me/podcastbaka/2817
+anime:
+  - sorairo-utility
 ---
 
 ::image{src="/images/uploads/tg-2817.jpg" alt="" width="column"}
+
 
 Старшеклассница Минами любит видеоигры, но когда ее любимую гачу закрывают, она решает попробовать себя в других хобби, чтобы не жалеть об упущенной юности. И внезапно больше всего ее цепляет гольф.
 
@@ -28,3 +41,5 @@ tgUrl: https://t.me/podcastbaka/2817
 А саундтрек от молодого композитора Хориты Дайсукэ в лучшие моменты напоминает работу Акиюки Татэямы для «Лагеря на свежем воздухе» — и это очень высокая оценка.
 
 Так что если вы, как и я, любите легкую повседневность — советую обратить внимание на «Небесно-голубой гибрид».
+
+::anime-ref{id="sorairo-utility" source="shikimori" source-id="50209"}

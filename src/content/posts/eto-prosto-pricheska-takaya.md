@@ -2,16 +2,28 @@
 title: Это просто прическа такая
 date: 2024-05-24
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2141.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2141
 tgUrl: https://t.me/podcastbaka/2141
 ---
 
 ::image{src="/images/uploads/tg-2141.jpg" alt="" width="column"}
+
 
 Пересматривал тут на прошлой неделе «Чудачества любви не помеха» и зацепился за одну из сцен, где герои обсуждают непослушные волосы.
 

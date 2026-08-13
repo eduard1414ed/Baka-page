@@ -2,16 +2,28 @@
 title: Музыкальное наследие
 date: 2025-11-28
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3518.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3518
 tgUrl: https://t.me/podcastbaka/3518
 ---
 
 ::image{src="/images/uploads/tg-3518.jpg" alt="" width="column"}
+
 
 На прошлой неделе вышел трибьют-альбом к двадцатилетию группы RADWIMPS (вы ее знаете по саундтрекам фильмов Синкая — «Твое имя» и «Дитя погоды»).
 

@@ -2,11 +2,22 @@
 title: Я стал экспертом по аниме, заработал денег и поучаствовал в создании сериала «Санек и Борян»
 date: 2024-02-22
 category: article
-externalUrl: https://t-j.ru/anime-money/
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tj-ya-stal-ekspertom-po-anime-zarabotal-deneg-i-pouchastvoval-v-sozdanii-seriala-sanek-i-boryan.jpg
 noCover: false
+externalUrl: https://t-j.ru/anime-money/
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1954
 tgUrl: https://t.me/podcastbaka/1954
 ---

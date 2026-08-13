@@ -1,21 +1,28 @@
 ---
-title: Еще немного про слизь
+title: '«О моем переро­ждении в слизь»: в чем феномен попу­лярного аниме и зачем его смотреть'
 date: 2024-08-14
-category: note
-draft: true
+category: article
+draft: false
 description: ''
 cover: /images/uploads/tg-2315.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2315
 tgUrl: https://t.me/podcastbaka/2315
+anime:
+  - tensei-shitara-slime-datta-ken-2nd-season
+  - tensei-shitara-slime-datta-ken
 ---
-
-::image{src="/images/uploads/tg-2315.jpg" alt="" width="column"}
-
-Но мы с Ксюшей решили на этом не останавливаться и поэтому подготовили материалы по этому сериалу еще и в текстовом виде.
-
-Ксюша поделилась пятью причинами смотреть этот исекай на «Кинопоиске»: https://www.kinopoisk.ru/media/article/4009767/
 
 А я разобрал плюсы и минусы «Слизи» в большом обзоре на «Т—Ж»: https://journal.tinkoff.ru/reincarnated-as-a-slime/
 
@@ -23,4 +30,6 @@ tgUrl: https://t.me/podcastbaka/2315
 
 Если вы послушали подкаст, но вам оказалось этого мало — мы постарались еще!
 
-::image{src="/images/uploads/tg-2316.jpg" alt="" width="column"}
+::anime-ref{id="tensei-shitara-slime-datta-ken-2nd-season" source="shikimori" source-id="39551"}
+
+::anime-ref{id="tensei-shitara-slime-datta-ken" source="shikimori" source-id="37430"}

@@ -2,16 +2,28 @@
 title: 'Мой любимый тип постов: о «Фрирен»'
 date: 2025-01-16
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2673.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2673
 tgUrl: https://t.me/podcastbaka/2673
 ---
 
 ::image{src="/images/uploads/tg-2673.jpg" alt="" width="column"}
+
 
 Что, вы думали сериал закончился почти год назад, и я перестану о нем писать? А вот и нет.
 
@@ -19,6 +31,13 @@ tgUrl: https://t.me/podcastbaka/2673
 
 Огромная по объемам работа, благодаря которой персонажи в сериале выглядят консистентно и в каждой серии — невероятно красиво.
 
+
 ::image{src="/images/uploads/tg-2674.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2675.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2676.jpg" alt="" width="column"}

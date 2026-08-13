@@ -1,17 +1,27 @@
 ---
-title: Волшебная кухня
+title: Волшебная кухня колпаков
 date: 2026-05-06
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3930.jpg
+noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
 pullMedia: false
-noCover: false
 tgId: 3930
 tgUrl: https://t.me/podcastbaka/3930
+anime:
+  - tongari-boushi-no-atelier
 ---
-
-::image{src="/images/uploads/tg-3930.jpg" alt="" width="column"}
 
 А теперь, когда все восхищаются «Ателье колдовских колпаков», я наконец могу вам рассказать о другой, связанной с этим тайтлом, манге.
 
@@ -23,4 +33,8 @@ tgUrl: https://t.me/podcastbaka/3930
 
 Если вам в «Подземелье вкусностей» нравились развороты с едой и в «Ателье» теперь этого не хватает — очень рекомендую добавить в рацион «Кухню колдовских колпаков».
 
+::image{src="/images/uploads/tg-3930.jpg" alt="" width="column"}
+
 ::image{src="/images/uploads/tg-3931.jpg" alt="" width="column"}
+
+::anime-ref{id="tongari-boushi-no-atelier" source="shikimori" source-id="51553"}

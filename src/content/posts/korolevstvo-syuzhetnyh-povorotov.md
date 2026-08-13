@@ -2,18 +2,30 @@
 title: Королевство сюжетных поворотов
 date: 2023-11-27
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1685.jpg
-pullMedia: false
 noCover: false
-tgId: 1685
-tgUrl: https://t.me/podcastbaka/1685
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 animeSuggested:
   - jujutsu-kaisen
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 1685
+tgUrl: https://t.me/podcastbaka/1685
+anime:
+  - hametsu-no-oukoku
 ---
 
 ::image{src="/images/uploads/tg-1685.jpg" alt="" width="column"}
+
 
 «Королевство руин» — пожалуй, один из самых небанальных сериалов этого года, который сильно страдает от нехватки качества.
 
@@ -32,3 +44,5 @@ animeSuggested:
 И даже то, что в режиссерском кресле опытный Кэйтаро Мотонага, работавший еще над старой «Легендой о героях Галактики» и «Патлабором», не помогает.
 
 Но тем не менее, если вы не боитесь слайдшоу вместо анимации и любите трешовые истории — то очень советую.
+
+::anime-ref{id="hametsu-no-oukoku" source="shikimori" source-id="54362"}

@@ -2,16 +2,28 @@
 title: Большой скелет
 date: 2024-08-23
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2335.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2335
 tgUrl: https://t.me/podcastbaka/2335
 ---
 
 ::image{src="/images/uploads/tg-2335.jpg" alt="" width="column"}
+
 
 Вы наверняка видели в аниме про сверхъестественное образ гигантского скелета. Это гасядокуро.
 

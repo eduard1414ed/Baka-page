@@ -1,17 +1,29 @@
 ---
-title: Новый рассвет
+title: 'И наступит рассвет: первые впечатления'
 date: 2026-02-24
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3750.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3750
 tgUrl: https://t.me/podcastbaka/3750
 ---
 
 ::image{src="/images/uploads/tg-3750.jpg" alt="" width="column"}
+
 
 Я попал на премьеру фильма «Новый рассвет» на Берлинском кинофестивале. И это очень красивая картина!
 
@@ -25,7 +37,17 @@ tgUrl: https://t.me/podcastbaka/3750
 
 Фильм выйдет в кино в Японии 6 марта. А дату премьеры в других странах еще не объявили.
 
+
 ::image{src="/images/uploads/tg-3751.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3752.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3753.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3754.jpg" alt="" width="column"}

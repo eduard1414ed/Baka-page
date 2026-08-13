@@ -2,18 +2,30 @@
 title: Творческая свобода
 date: 2026-04-29
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3911.jpg
-pullMedia: false
 noCover: false
-tgId: 3911
-tgUrl: https://t.me/podcastbaka/3911
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 animeSuggested:
   - k-on
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 3911
+tgUrl: https://t.me/podcastbaka/3911
+anime:
+  - kamiina-botan-yoeru-sugata-wa-yuri-no-hana
 ---
 
 ::image{src="/images/uploads/tg-3911.jpg" alt="" width="column"}
+
 
 «Ботан Камиина» — уникальный пример творческой свободы. Казалось бы, это просто сериал о студентках, которые любят выпить. Но подход к созданию этого тайтла настолько отличается от привычного, что я жду его каждую серию наравне с каким-нибудь «Ателье».
 
@@ -25,5 +37,11 @@ animeSuggested:
 
 Что важно при таком подходе, над всеми первыми эпизодами работали талантливые аниматоры, каждый со своим выверенным видением. И если такой же умелый подбор авторов сохранится — «Ботан Камиина» может стать лучшим сериалом для любителей именно анимации.
 
+
 ::image{src="/images/uploads/tg-3912.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3913.jpg" alt="" width="column"}
+
+::anime-ref{id="kamiina-botan-yoeru-sugata-wa-yuri-no-hana" source="shikimori" source-id="61186"}

@@ -2,16 +2,28 @@
 title: Следуй за огоньками
 date: 2025-08-27
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3277.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3277
 tgUrl: https://t.me/podcastbaka/3277
 ---
 
 ::image{src="/images/uploads/tg-3277.jpg" alt="" width="column"}
+
 
 Светящиеся огоньки, которые заводят куда-то не туда путников, распространенный сюжет. В английской литературе их называют will-o’-the-wisp — и они обычно появляются на болотах; в славянском фольклоре есть «лешачий огонь» — блуждающий огонёк в лесу, связанный с проделками лешего; а в Японии таких существ называют ониби (дословно: «огоньки демонов»).
 

@@ -2,16 +2,29 @@
 title: Тарантино в восторге
 date: 2026-01-29
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3664.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3664
 tgUrl: https://t.me/podcastbaka/3664
+anime:
+  - jujutsu-kaisen-shimetsu-kaiyuu-zenpen
 ---
 
 ::image{src="/images/uploads/tg-3664.jpg" alt="" width="column"}
+
 
 Сёта Госёдзоно, режиссер «Магической битвы», [продолжает использовать](/posts/nastoyaschee-iskusstvo/) новый сезон как площадку для того, чтобы отдавать дань уважения любимым произведениям. И если в опенинге он использовал классические картины, то в новом эпизоде под прицел попал фильм «Убить Билла» Квентина Тарантино.
 
@@ -19,11 +32,35 @@ tgUrl: https://t.me/podcastbaka/3664
 
 Получилось дико красочно. Хотя вот японская аудитория такой подход [не оценила](https://www.reddit.com/r/Jujutsufolk/comments/1ql122l/about_the_whole_situation_with_japan_not_liking/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button), ведь история Маки вообще трагическая, а тут такое веселье. А как вы считаете, стоят ли отсылки того?
 
+
 ::image{src="/images/uploads/tg-3665.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3666.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3667.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3668.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3669.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3670.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3671.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3672.jpg" alt="" width="column"}
+
+::anime-ref{id="jujutsu-kaisen-shimetsu-kaiyuu-zenpen" source="shikimori" source-id="57658"}

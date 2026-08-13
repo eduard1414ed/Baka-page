@@ -2,16 +2,29 @@
 title: Не просто бэнгер
 date: 2024-10-14
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2459.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2459
 tgUrl: https://t.me/podcastbaka/2459
+anime:
+  - dandadan
 ---
 
 ::image{src="/images/uploads/tg-2459.jpg" alt="" width="column"}
+
 
 И снова о «Дандадане», и снова об опенинге этого сериала (я скоро остановлюсь, обещаю). Я добрался до текста песни Otonoke и обнаружил, что она переполнена отсылками на разные японские ужастики и легенды:
 
@@ -36,3 +49,5 @@ tgUrl: https://t.me/podcastbaka/2459
 Отсылка к двум популярным хоррорам: «Звонок» (призрака зовут Садако) и «Проклятие» (оттуда, соответственно, Каяко). Интересно, что есть даже фильм-кроссовер этих франшиз и называется он Sadako vs. Kayako.
 
 Автор манги, Юкинобу Тацу, кстати, в интервью признавался, что именно этот фильм вдохновил его на создание «Дандадан». Потому что ему понравилась смесь страшного и смешного.
+
+::anime-ref{id="dandadan" source="shikimori" source-id="57334"}

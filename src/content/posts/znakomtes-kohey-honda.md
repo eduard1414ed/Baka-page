@@ -2,19 +2,30 @@
 title: 'Знакомьтесь: Кохей Хонда'
 date: 2025-06-25
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3074.jpg
-pullMedia: false
 noCover: false
-tgId: 3074
-tgUrl: https://t.me/podcastbaka/3074
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 animeSuggested:
   - apocalypse-hotel
   - one-piece
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 3074
+tgUrl: https://t.me/podcastbaka/3074
 ---
 
 ::image{src="/images/uploads/tg-3074.jpg" alt="" width="column"}
+
 
 Я уже [рассказывал](/posts/chto-budet-kogda-lyudi-ischeznut/) про любопытный сериал «Апокалипсис: Отель», а теперь хочу познакомить вас с его арт-директором.
 
@@ -24,10 +35,29 @@ animeSuggested:
 
 При этом Хонда умело интегрирует персонажей в окружение, делая так, чтобы они не выбивались, выглядели естественно в сцене. И фон не отвлекал, а дополнял и усиливал восприятие эмоций.
 
+
 ::image{src="/images/uploads/tg-3075.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3076.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3077.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3078.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3079.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3080.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3081.jpg" alt="" width="column"}

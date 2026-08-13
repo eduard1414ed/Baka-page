@@ -9,7 +9,6 @@ noCover: true
 externalUrl: ''
 externalSource: ''
 adLabel: ''
-anime: []
 animeSuggested:
   - naruto
   - one-piece
@@ -22,6 +21,11 @@ bonusLinks: null
 pullMedia: false
 tgId: 1100
 tgUrl: https://t.me/podcastbaka/1100
+anime:
+  - kanojo-to-kanojo-no-neko-everything-flows
+  - afro-samurai
+  - aho-girl
+  - flcl
 ---
 
 Для того, чтобы приятно провести время, не обязательно смотреть несколько сотен серий «Наруто» или «Ван-Пис». Иногда хочется посмотреть что-то цельное и интересное за один-два дня.
@@ -69,3 +73,11 @@ _Количество серий: 6_
 Это классическая комедия 90-х годов, которая очень приятно состарилась и наполнилась еще и ностальгическим вайбом.
 
 _Количество серий: 6_
+
+::anime-ref{id="kanojo-to-kanojo-no-neko-everything-flows" source="shikimori" source-id="32491"}
+
+::anime-ref{id="afro-samurai" source="shikimori" source-id="1292"}
+
+::anime-ref{id="aho-girl" source="shikimori" source-id="34881"}
+
+::anime-ref{id="flcl" source="shikimori" source-id="227"}

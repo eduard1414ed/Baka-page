@@ -2,16 +2,28 @@
 title: «Путешествие Сюны» и «Сказания о Земноморье»
 date: 2024-08-22
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2330.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2330
 tgUrl: https://t.me/podcastbaka/2330
 ---
 
 ::image{src="/images/uploads/tg-2330.jpg" alt="" width="column"}
+
 
 В [новом выпуске](https://t.me/podcastbaka/2325) Ксюша назвала недооцененным фильм студии Ghibli «Сказания о Земноморье». Расскажу вам про него забавную историю.
 
@@ -31,7 +43,17 @@ tgUrl: https://t.me/podcastbaka/2330
 
 Учитывая это, кажется символичным, что «Сказания» начинаются со сцены убийства подростком своего отца.
 
+
 ::image{src="/images/uploads/tg-2331.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2332.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2333.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2334.jpg" alt="" width="column"}

@@ -2,16 +2,28 @@
 title: Са-си-су-се-со
 date: 2023-08-02
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1410.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1410
 tgUrl: https://t.me/podcastbaka/1410
 ---
 
 ::image{src="/images/uploads/tg-1410.jpg" alt="" width="column"}
+
 
 Японцы используют не буквенный алфавит, как у нас, а слоговой. То есть каждый знак хираганы (или катаканы) — это отдельный слог.
 

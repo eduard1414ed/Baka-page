@@ -2,16 +2,29 @@
 title: Шок в доспехах
 date: 2026-07-22
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-4096.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 4096
 tgUrl: https://t.me/podcastbaka/4096
+anime:
+  - koukaku-kidoutai-tv
 ---
 
 ::image{src="/images/uploads/tg-4096.jpg" alt="" width="column"}
+
 
 Я могу представить себе шок, который можно испытать от нового «Призрака в доспехах».
 
@@ -26,3 +39,5 @@ tgUrl: https://t.me/podcastbaka/4096
 Но — что удивительно — я бы при этом не стал рекомендовать этот сериал как стартовую точку для погружения во франшизу. Авторы явно расчитывают, что зритель уже в курсе, кто такая майор Кусонаги, что делают татикомы и за кем охотится Девятый отдел. И вообще не тратят времени на погружение в детали. Я бы сказал, что это сериал от фанатов для фанатов.
 
 А как вам новый «Призрак в доспехах»?
+
+::anime-ref{id="koukaku-kidoutai-tv" source="shikimori" source-id="58929"}

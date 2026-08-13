@@ -2,16 +2,28 @@
 title: Дети-убийцы
 date: 2025-11-18
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3481.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3481
 tgUrl: https://t.me/podcastbaka/3481
 ---
 
 ::image{src="/images/uploads/tg-3481.jpg" alt="" width="column"}
+
 
 Если вы не смотрите «Санду», снова настоятельно рекомендую это исправлять.
 
@@ -23,13 +35,19 @@ tgUrl: https://t.me/podcastbaka/3481
 
 Однако авторы идут по другому пути. Класс чистый. Дети совершенно обычные и даже милые. Все подчеркнуто светлое, залитое солнцем.
 
+::image{src="/images/uploads/tg-3482.jpg" alt="" width="column"}
+
+::image{src="/images/uploads/tg-3483.jpg" alt="" width="column"}
+
 Но солнце это не мягкое и комфортное. Оно оставляет жесткие тени, создавая контрастную картинку.
 
 Которая как бы визуально подчеркивает это ужасное несовпадение: внешне невинные дети, совершившие ужасные преступления. И жутко пугает!
 
 Это очень крутое и небанальное использование освещения.
 
-::image{src="/images/uploads/tg-3482.jpg" alt="" width="column"}
-::image{src="/images/uploads/tg-3483.jpg" alt="" width="column"}
+
 ::image{src="/images/uploads/tg-3484.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3485.jpg" alt="" width="column"}

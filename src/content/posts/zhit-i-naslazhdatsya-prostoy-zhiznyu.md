@@ -2,16 +2,29 @@
 title: Жить и наслаждаться простой жизнью
 date: 2024-09-30
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2428.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2428
 tgUrl: https://t.me/podcastbaka/2428
+anime:
+  - hirayasumi
 ---
 
 ::image{src="/images/uploads/tg-2428.jpg" alt="" width="column"}
+
 
 На выходных снова перечитал и догнал онгоинг манги Hirayasumi. Это одна из лучших повседневных историй, которая сейчас выходит.
 
@@ -22,3 +35,5 @@ tgUrl: https://t.me/podcastbaka/2428
 Еще мне очень нравится визуальный стиль манги. Автор Синдзо Кэйго создал запоминающиеся, но в то же время очень реалистичные образы. А пейзажи города и вид самого одноэтажного дома — хочется повесить себе на стену.
 
 Очень советую эту мангу всем, кто хочет немного замедлиться и побольше обращать внимание на мелочи жизни.
+
+::anime-ref{id="hirayasumi" source="shikimori" source-id="62100"}

@@ -2,16 +2,25 @@
 title: Манга победила
 date: 2025-09-03
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3313.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3313
 tgUrl: https://t.me/podcastbaka/3313
 ---
-
-::image{src="/images/uploads/tg-3313.jpg" alt="" width="column"}
 
 В подкасте [«Омнибус и танкобон»](https://arzamas.academy/podcasts/332) мы с [Ваней Чернявским](http://t.me/ivan_punch_man) много обсуждали состояние комикс-индустрии в Америке и то, почему манга сейчас становится все более популярна за пределами Японии.
 
@@ -24,5 +33,7 @@ tgUrl: https://t.me/podcastbaka/3313
 Спустя 50 лет, в 2025 году авторы Batman создают обложку для первого же номера — с отсылкой на мангу «Кагурабати». При том, что это тайтл без экранизации и дай бог с сотней вышедших глав. (И не какая-то культовая нишевая история, а вполне себе обычный боевой сёнен).
 
 Если даже Бэтмену, чтобы привлечь аудиторию, надо делать отсылки на японскую мангу — кажется, показательнее некуда.
+
+::image{src="/images/uploads/tg-3313.jpg" alt="" width="column"}
 
 ::image{src="/images/uploads/tg-3314.jpg" alt="" width="column"}

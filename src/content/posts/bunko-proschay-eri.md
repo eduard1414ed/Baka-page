@@ -2,21 +2,32 @@
 title: Бунко! | Прощай, Эри!
 date: 2025-08-07
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3243.jpg
-pullMedia: false
 noCover: false
-tgId: 3243
-tgUrl: https://t.me/podcastbaka/3243
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
 bonusLinks:
   boosty: https://boosty.to/bakapodcast/posts/ce31cce9-a71b-4827-b633-77181b1076c7?share=post_link
   patreon: https://www.patreon.com/posts/bunko-proshchai-135928720
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_1943
+pullMedia: false
+tgId: 3243
+tgUrl: https://t.me/podcastbaka/3243
 ---
 
 ::image{src="/images/uploads/tg-3243.jpg" alt="" width="column"}
+
 
 В новом выпуске нашего ежемесячного подкаста о манге, мы обсуждаем по вашим заявкам ваншот Тацуки Фудзимото, автора «Человека-бензопилы» — «Прощай, Эри!»
 

@@ -2,16 +2,29 @@
 title: Спортивная романтика
 date: 2024-10-15
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2460.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2460
 tgUrl: https://t.me/podcastbaka/2460
+anime:
+  - ao-no-hako
 ---
 
 ::image{src="/images/uploads/tg-2460.jpg" alt="" width="column"}
+
 
 В этом сезоне начинается долгожданная экранизация «Голубой шкатулки». Оригинальная манга Кодзи Миуры — одна из самых заметных романтических историй последних лет (по крайней мере из Shonen Jump). В  2022 году она заняла четвертое место в списке самых рекомендуемых манг в книжных магазинах.
 
@@ -24,3 +37,5 @@ tgUrl: https://t.me/podcastbaka/2460
 Вот и в «Голубой шкатулке» по первым сериям заметна экономия. Опенинг выглядит великолепно, обычные сцены похуже. Есть эффектные пролеты камеры в 3D пространстве, а есть зачем-то нарисованные на компьютере и явно выделяющиеся корзины с мячами. (При этом отдельно отмечу сам спорт — он сделан хорошо)
 
 Такая неровность в анимации — это в целом не очень страшно для такого тайтла. Главное, чтобы уровень не упал еще ниже. Буду внимательно смотреть дальше.
+
+::anime-ref{id="ao-no-hako" source="shikimori" source-id="57181"}

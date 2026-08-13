@@ -2,20 +2,34 @@
 title: Дом на горизонте
 date: 2025-12-12
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3550.jpg
+noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
 pullMedia: false
-noCover: false
 tgId: 3550
 tgUrl: https://t.me/podcastbaka/3550
 ---
 
-::image{src="/images/uploads/tg-3550.jpg" alt="" width="column"}
-
 Вынесу одну из рекомендаций из выпуска «Бунко» в отдельный пост (но еще девять останутся там, так что советую его послушать).
 
 По сюжету манги «Дом на горизонте» парень Рёма со своим дедушкой содержат общественную баню в небольшом приморском городке. Однажды у их дверей неожиданно появляется мальчик по имени Рео, который утверждает, что он незаконнорожденный сын отца Рёмы. Который умер за несколько лет до этого.
+
+::image{src="/images/uploads/tg-3550.jpg" alt="" width="column"}
+
+
+::image{src="/images/uploads/tg-3551.jpg" alt="" width="column"}
 
 С этого момента двум парням предстоит научиться жить друг с другом, как сводным братьям.
 
@@ -24,5 +38,3 @@ tgUrl: https://t.me/podcastbaka/3550
 Герои притираются друг к другу, делятся воспоминаниями, помогают окружающим людям и следят за работой бани. По вайбу манга местами даже напоминает мой любимый [Hirayasumi](/posts/zhit-i-naslazhdatsya-prostoy-zhiznyu/).
 
 При этом дизайн персонажей и арт для меня почему-то похож на стиль мангаки Масакадзу Исигуро, автора «Иллюзии рая», которую я уже вспоминал на этой неделе. Вот такой вот кроссовер. Очень советую!
-
-::image{src="/images/uploads/tg-3551.jpg" alt="" width="column"}

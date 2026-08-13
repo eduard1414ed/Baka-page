@@ -2,16 +2,26 @@
 title: Еще немного про «Лоферы»
 date: 2023-08-28
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1470.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1470
 tgUrl: https://t.me/podcastbaka/1470
+anime:
+  - skip-to-loafer
 ---
-
-::image{src="/images/uploads/tg-1470.jpg" alt="" width="column"}
 
 На прошлой неделе я [рассказывал](/posts/fotografii-kak-referens/) о том, как для сериала «В лоферах вприпрыжку» авторы в качестве референсов использовали фотографии Хамады Хидэаки.
 
@@ -23,5 +33,15 @@ tgUrl: https://t.me/podcastbaka/1470
 
 Такое внимание к деталям заслуживает большой похвалы.
 
+
+::image{src="/images/uploads/tg-1470.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1471.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1472.jpg" alt="" width="column"}
+
+::anime-ref{id="skip-to-loafer" source="shikimori" source-id="50416"}

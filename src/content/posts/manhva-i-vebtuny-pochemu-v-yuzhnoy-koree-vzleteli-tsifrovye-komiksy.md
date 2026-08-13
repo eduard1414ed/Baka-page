@@ -1,17 +1,29 @@
 ---
 title: 'Манхва и вебтуны: почему в Южной Корее взлетели цифровые комиксы'
 date: 2023-10-26
-category: note
-draft: true
+category: podcast
+draft: false
 description: ''
 cover: /images/uploads/tg-1615.jpg
-pullMedia: false
 noCover: false
+externalUrl: https://arzamas.academy/podcasts/332/8
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1615
 tgUrl: https://t.me/podcastbaka/1615
 ---
 
 ::image{src="/images/uploads/tg-1615.jpg" alt="" width="column"}
+
 
 Как комиксы стали утешением для корейского народа? Кто такие манхваки и почему они умирают на работе? Чем вебтуны отличаются от бумажных комиксов и что читают в Северной Корее? А еще, конечно, какие вебтуны почитать новичкам?
 

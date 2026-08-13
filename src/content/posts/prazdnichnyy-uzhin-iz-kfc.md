@@ -2,16 +2,28 @@
 title: Праздничный ужин — из KFC
 date: 2025-10-15
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3421.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3421
 tgUrl: https://t.me/podcastbaka/3421
 ---
 
 ::image{src="/images/uploads/tg-3421.jpg" alt="" width="column"}
+
 
 Пока смотрел «Санду» вспомнил про занимательный факт о том, как японцы отмечают Рождество. Пока мы ставим елку и запускаем фейерверки, в Японии — едят курицу.
 

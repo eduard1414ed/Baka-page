@@ -2,16 +2,28 @@
 title: Что такое старания?
 date: 2023-11-23
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1676.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1676
 tgUrl: https://t.me/podcastbaka/1676
 ---
 
 ::image{src="/images/uploads/tg-1676.jpg" alt="" width="column"}
+
 
 Как вы знаете, я не большой фанат спортивных аниме. И когда я узнал, что этой осенью выходит оригинальное аниме про Формулу-4, «Обгон», меня это не слишком заинтересовало. Я решил дать шанс, посмотреть пару серий, исключительно потому что режиссер сериала — Эй Аоки, ответственен за серию Fate.
 
@@ -25,6 +37,13 @@ tgUrl: https://t.me/podcastbaka/1676
 
 Скорее всего в итоге это будет привычная для спортивного аниме история о преодолении и финальном успехе, но я и не против. Настолько приятно смотреть сами эпизоды.
 
+
 ::image{src="/images/uploads/tg-1677.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1678.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1679.jpg" alt="" width="column"}

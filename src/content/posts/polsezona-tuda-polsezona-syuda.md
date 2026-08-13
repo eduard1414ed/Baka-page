@@ -2,16 +2,28 @@
 title: Полсезона туда, полсезона сюда
 date: 2026-06-16
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-4024.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 4024
 tgUrl: https://t.me/podcastbaka/4024
 ---
 
 ::image{src="/images/uploads/tg-4024.jpg" alt="" width="column"}
+
 
 В [разборах итогов прошлого года](https://t.me/podcastbaka/3586) я предсказывал, что нас ждет еще больше экспериментов с форматами. И снова угадал!
 

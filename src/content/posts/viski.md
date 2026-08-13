@@ -1,19 +1,30 @@
 ---
-title: Виски?
+title: Виски заказывали?
 date: 2024-07-10
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2238.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: 'Автор текста: Ксюша'
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2238
 tgUrl: https://t.me/podcastbaka/2238
+anime:
+  - komada-jouryuujo-e-youkoso
 ---
 
 ::image{src="/images/uploads/tg-2238.jpg" alt="" width="column"}
 
-(пост от Ксюши)
 
 На выходных меня позвали на предпоказ аниме «Винокурня семьи Комада», и я ни разу не пожалела, что сходила. Получилась поучительная история для ~~алкоголиков~~ тех, кто потерялся в рутине.
 
@@ -31,4 +42,6 @@ tgUrl: https://t.me/podcastbaka/2238
 
 Визуальное исполнение аниме тоже не разочаровывает. Мельчайшая детализация в работе механизмов завода, разнообразие цветов разных сортов виски, проработка задних фонов — наслаждение для глаз и настоящий подарок для любителей крепкого напитка.
 
-Рекомендую посмотерть аниме именно в кинотеатре на большом экране, оно кстати выходит уже 11 июля 🥃
+Рекомендую посмотерть аниме именно в кинотеатре на большом экране, оно кстати выходит уже 11 июля
+
+::anime-ref{id="komada-jouryuujo-e-youkoso" source="shikimori" source-id="55149"}

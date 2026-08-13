@@ -2,18 +2,30 @@
 title: Исторический Джирайя
 date: 2025-02-07
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2734.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested:
+  - naruto
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2734
 tgUrl: https://t.me/podcastbaka/2734
-animeSuggested:
+anime:
   - naruto
 ---
 
 ::image{src="/images/uploads/tg-2734.jpg" alt="" width="column"}
+
 
 В XIX веке в Японии была популярна серия рассказов о ниндзя, который владел магией и мог призывать жаб.
 
@@ -25,4 +37,7 @@ animeSuggested:
 
 Как вы понимаете, этот сюжет, персонажи и даже их способности сильно повлияли на Масаси Кисимото и на мангу «Наруто».
 
+
 ::image{src="/images/uploads/tg-2735.jpg" alt="" width="column"}
+
+::anime-ref{id="naruto" source="shikimori" source-id="20"}

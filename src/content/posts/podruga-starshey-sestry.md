@@ -2,16 +2,28 @@
 title: Подруга старшей сестры
 date: 2024-03-14
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2004.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2004
 tgUrl: https://t.me/podcastbaka/2004
 ---
 
 ::image{src="/images/uploads/tg-2004.jpg" alt="" width="column"}
+
 
 Я нашел вам временную замену Марин Китагавы из «Фарфоровой куклы». Хотя ладно, до нее пока всем далеко, но манга «Подруга старшей сестры» тоже рассказывает историю приятной гяру.
 
@@ -22,5 +34,6 @@ tgUrl: https://t.me/podcastbaka/2004
 Рисует ее Вака Такасэ, автор довольно известного юри-сборника Resonant Blue.
 
 Так что если искали какой-нибудь романтический онгоинг — смело забирайте рекомендацию.
+
 
 ::image{src="/images/uploads/tg-2005.jpg" alt="" width="column"}

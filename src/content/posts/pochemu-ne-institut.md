@@ -2,16 +2,28 @@
 title: Почему не институт?
 date: 2025-04-29
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2924.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2924
 tgUrl: https://t.me/podcastbaka/2924
 ---
 
 ::image{src="/images/uploads/tg-2924.jpg" alt="" width="column"}
+
 
 В аниме полно штампов, связанных со школьной жизнью. Все эти спортивные фестивали, экскурсии в другой город, тесты и экзамены. Но почему при этом создается гораздо меньше тайтлов о студентах? Хотя казалось бы, там есть все то же самое?
 

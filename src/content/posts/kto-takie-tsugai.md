@@ -2,16 +2,28 @@
 title: Кто такие цугаи?
 date: 2026-05-11
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3934.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3934
 tgUrl: https://t.me/podcastbaka/3934
 ---
 
 ::image{src="/images/uploads/tg-3934.jpg" alt="" width="column"}
+
 
 Новый тайтл от создательницы «Стального алхимика», Хирому Аракавы, «Цугаи загробного мира» [рассказывает](/posts/obratnyy-isekay/) о мальчике Юру из далекой горной деревни. Уже в первой главе на деревню совершают нападение и убивают почти всех жителей — и герой вынужден бежать. В ходе побега он знакомится с защитниками деревни, двумя сверхъестественными сущностями, которых называют цугаи. Кто это вообще такие?
 

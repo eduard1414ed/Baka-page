@@ -2,16 +2,28 @@
 title: Лечебное аниме
 date: 2024-03-25
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2021.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2021
 tgUrl: https://t.me/podcastbaka/2021
 ---
 
 ::image{src="/images/uploads/tg-2021.jpg" alt="" width="column"}
+
 
 В 1990-х годах в Японии был глобальный кризис. Сперва лопнул экономический пузырь. Всего за несколько месяцев упала стоимость земли, упали акции, сотни компаний обанкротились. Люди оказались буквально на улице.
 

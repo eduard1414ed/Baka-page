@@ -2,16 +2,29 @@
 title: Проникая в реальность
 date: 2024-07-18
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2255.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2255
 tgUrl: https://t.me/podcastbaka/2255
+anime:
+  - shoushimin-series
 ---
 
 ::image{src="/images/uploads/tg-2255.jpg" alt="" width="column"}
+
 
 В бонусном выпуске на этой неделе — [про «Сказ о четырех с половиной татами»](/posts/bonusnyy-vypusk-skaz-o-chetyreh-s-polovinoy-tatami/) — мы обсуждали, как в этом сериале смешивается анимация со съемками реального мира.
 
@@ -25,6 +38,15 @@ tgUrl: https://t.me/podcastbaka/2255
 
 Но за последнее время он снял несколько проектов как раз с совмещением визуала, и у него получается это абсолютно гениально. [Вот, например, другая его работа, гляньте.](https://taotajima.jp/works/Magic/)
 
+
 ::image{src="/images/uploads/tg-2256.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2257.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2258.jpg" alt="" width="column"}
+
+::anime-ref{id="shoushimin-series" source="shikimori" source-id="57810"}

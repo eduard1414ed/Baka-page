@@ -2,16 +2,29 @@
 title: Про самый жуткий сериал сезона
 date: 2025-07-15
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3154.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3154
 tgUrl: https://t.me/podcastbaka/3154
+anime:
+  - takopii-no-genzai
 ---
 
 ::image{src="/images/uploads/tg-3154.jpg" alt="" width="column"}
+
 
 Несмотря на то, что «Лето, когда погас свет» (про который был прошлый пост) по жанру хоррор, самым страшным сериалом сезона для меня стал не он. Это звание внезапно ушло «Первородному греху Такопи».
 
@@ -25,6 +38,15 @@ tgUrl: https://t.me/podcastbaka/3154
 
 Не советую смотреть «Первородный грех Такопи» людям в депрессии и с психологическими травмами. Остальным — обязательно. Хоть и со своими минусами, это все равно один из главных тайтлов сезона.
 
+
 ::image{src="/images/uploads/tg-3155.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3156.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3157.jpg" alt="" width="column"}
+
+::anime-ref{id="takopii-no-genzai" source="shikimori" source-id="60489"}

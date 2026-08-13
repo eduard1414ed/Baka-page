@@ -2,16 +2,29 @@
 title: Добро пожаловать в театр
 date: 2024-07-17
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2250.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2250
 tgUrl: https://t.me/podcastbaka/2250
+anime:
+  - oshi-no-ko-2nd-season
 ---
 
 ::image{src="/images/uploads/tg-2250.jpg" alt="" width="column"}
+
 
 Буквально на прошлой неделе стартовал новый сезон «Звездного дитя». Какой вышла первая серия?
 
@@ -23,6 +36,15 @@ tgUrl: https://t.me/podcastbaka/2250
 
 P.S. Ну и конечно, новый сезон «Звездного дитя» — новая волна моего восхищения Аримой Каной. Терпите.
 
+
 ::image{src="/images/uploads/tg-2251.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2252.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2253.jpg" alt="" width="column"}
+
+::anime-ref{id="oshi-no-ko-2nd-season" source="shikimori" source-id="55791"}

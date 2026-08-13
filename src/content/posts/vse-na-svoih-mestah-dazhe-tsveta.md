@@ -2,16 +2,29 @@
 title: Все на своих местах — даже цвета
 date: 2024-10-09
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2450.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2450
 tgUrl: https://t.me/podcastbaka/2450
+anime:
+  - dandadan
 ---
 
 ::image{src="/images/uploads/tg-2450.jpg" alt="" width="column"}
+
 
 Я уже [писал](/posts/pro-marketing/) о том, как Фуго Ямасиро, режиссер «Дандадана» тщательно подходит к работе — и вот, мы наконец-то увидели это на примере первого эпизода. И все оказалось еще круче!
 
@@ -23,7 +36,34 @@ tgUrl: https://t.me/podcastbaka/2450
 
 И это нужно не только для стиля. Учитывая, как мало времени «Дандадан» дает на то, чтобы зритель мог втянуться и разобраться в происходящем, такие цветовые акценты отлично помогают не потеряться.
 
+
 ::image{src="/images/uploads/tg-2451.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2452.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2453.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2454.jpg" alt="" width="column"}
+
+
+Я нашел еще раскадровку для цветов опенинга сериала.
+
+За нее отвечала художница из Китая, Софи Ли. Она работала над дизайном персонажей для фильма «Человек-паук: Паутина вселенных», рисовала концепт арты для аниме «Моя подруга — демон», а сейчас работает художницей по цветам в Science SARU.
+
+У нее, кстати, [очень красивый сайт](https://sophieli.carbonmade.com/) с кейсами, обязательно полистайте.
+
+
+::image{src="/images/uploads/tg-2458.jpg" alt="" width="column"}
+
+
+
+::image{src="/images/uploads/tg-2457.jpg" alt="" width="column"}
+
+
+::anime-ref{id="dandadan" source="shikimori" source-id="57334"}

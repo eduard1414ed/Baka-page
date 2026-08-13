@@ -2,16 +2,28 @@
 title: Химатэн!
 date: 2024-09-18
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2389.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2389
 tgUrl: https://t.me/podcastbaka/2389
 ---
 
 ::image{src="/images/uploads/tg-2389.jpg" alt="" width="column"}
+
 
 Кстати, продолжая разговор о повседневности — хочу посоветовать вам новую мангу.
 

@@ -2,16 +2,29 @@
 title: Хори-сан и Миямура-кун
 date: 2025-03-28
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2847.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2847
 tgUrl: https://t.me/podcastbaka/2847
+anime:
+  - hori-san-to-miyamura-kun
 ---
 
 ::image{src="/images/uploads/tg-2847.jpg" alt="" width="column"}
+
 
 Я мельком упомянул в [видеоэссе](https://t.me/podcastbaka/2845) о том, что существует шестисерийная OVA по «Хоримии», которая вышла за девять (!) лет до знакомого нам сериала. И это очень интересная штука.
 
@@ -20,3 +33,5 @@ tgUrl: https://t.me/podcastbaka/2847
 А во-вторых, эта OVA стала режиссерским дебютом Синго Нацумэ — человека, который позже снимет первый сезон «Ванпанчмена», «Космический Денди» и... «Сонни боя».
 
 Вот так вот забавно и оказались связаны сразу несколько моих эссе.
+
+::anime-ref{id="hori-san-to-miyamura-kun" source="shikimori" source-id="14753"}

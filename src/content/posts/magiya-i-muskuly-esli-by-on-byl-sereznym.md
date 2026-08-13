@@ -2,18 +2,30 @@
 title: Магия и мускулы... если бы он был серьезным
 date: 2024-09-05
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2363.jpg
-pullMedia: false
 noCover: false
-tgId: 2363
-tgUrl: https://t.me/podcastbaka/2363
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 animeSuggested:
   - naruto
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 2363
+tgUrl: https://t.me/podcastbaka/2363
+anime:
+  - tsue-to-tsurugi-no-wistoria
 ---
 
 ::image{src="/images/uploads/tg-2363.jpg" alt="" width="column"}
+
 
 В летнем сезоне неожиданно одним из лучших сериалов в плане анимации стал «Меч и жезл Вистории». Сериал от студии Actas, которая до этого отметилась разве что работой над «Девушками и танками».
 
@@ -28,3 +40,5 @@ animeSuggested:
 Тоже магическая академия, тоже главный герой, не умеющий колдовать, такой же поддерживающий каст второстепенных героев (вплоть до типажей). Ничего выдающегося и даже запоминающегося.
 
 В итоге ответ на вопрос, стоит ли смотреть этот сериал, зависит от того, насколько вы цените крутую анимацию. Для себя я скорее отвечаю да, мне просто красиво. Но готов легко принять и другую точку зрения.
+
+::anime-ref{id="tsue-to-tsurugi-no-wistoria" source="shikimori" source-id="58059"}

@@ -2,16 +2,25 @@
 title: Грустнее «Хатико»
 date: 2025-02-21
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2765.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2765
 tgUrl: https://t.me/podcastbaka/2765
 ---
-
-::image{src="/images/uploads/tg-2765.jpg" alt="" width="column"}
 
 На русском языке вышла новая однотомная манга Такаси Мураками — мастера пробуждать эмоции даже в самых чёрствых читателях.
 
@@ -23,8 +32,17 @@ tgUrl: https://t.me/podcastbaka/2765
 
 Мне от таких историй всегда очень грустно. Но все равно рекомендую всем, кто неравнодушен к душещипательным сюжетам и любит однотомники.
 
-«Мальчик и пёс» от издательства «Комильфо» уже в продаже [в книжных](https://www.chitai-gorod.ru/product/mal-cik-i-pes-3081620?erid=2W5zFJbVYVn), комиксшопах и на [маркетплейсах](https://ozon.ru/t/VeYJYE4?erid=2W5zFJbVYVn).
+
+::image{src="/images/uploads/tg-2765.jpg" alt="" width="column"}
+
+
 
 ::image{src="/images/uploads/tg-2766.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2767.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2768.jpg" alt="" width="column"}

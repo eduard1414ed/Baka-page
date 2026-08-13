@@ -2,16 +2,27 @@
 title: Что это за палки на кладбищах?
 date: 2025-12-16
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3559.jpg
+noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
 pullMedia: false
-noCover: false
 tgId: 3559
 tgUrl: https://t.me/podcastbaka/3559
+anime:
+  - kuroshitsuji
+  - shaman-king
 ---
-
-::image{src="/images/uploads/tg-3559.jpg" alt="" width="column"}
 
 Если вы хоть раз видели японские кладбища, скорее всего вы замечали, что у них рядом с надгробиями часто стоят деревянные палки с каким-то текстом. Это сотобы — ритуальные таблички с молитвами за умерших.
 
@@ -21,4 +32,12 @@ tgUrl: https://t.me/podcastbaka/3559
 
 Сотобы часто появляются и в аниме. Чаще всего, как просто антураж, но иногда все-такие играют и сюжетную роль. Именно сотобу использует Йо из «Шаман Кинга» в качестве своего первого оружия. А у Гробовщика из «Темного дворецкого» это и вовсе главная способность.
 
+
+::image{src="/images/uploads/tg-3559.jpg" alt="" width="column"}
+
+
 ::image{src="/images/uploads/tg-3560.jpg" alt="" width="column"}
+
+::anime-ref{id="kuroshitsuji" source="shikimori" source-id="4898"}
+
+::anime-ref{id="shaman-king" source="shikimori" source-id="154"}

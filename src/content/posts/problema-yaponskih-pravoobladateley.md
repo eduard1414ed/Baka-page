@@ -2,16 +2,25 @@
 title: Проблема японских правообладателей
 date: 2026-07-09
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-4063.jpg
+noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
 pullMedia: false
-noCover: false
 tgId: 4063
 tgUrl: https://t.me/podcastbaka/4063
 ---
-
-::image{src="/images/uploads/tg-4063.jpg" alt="" width="column"}
 
 На прошлой неделе сотни видео на YouTube об «Ателье колдовских колпаков» были демонетизированы (то есть за них авторы не получают деньги). До этого в течение месяца Discord-группы «Ателье», «Кагурабати» и «Синей тюрьмы» были снесены по требованию правообладателей.
 
@@ -24,5 +33,10 @@ tgUrl: https://t.me/podcastbaka/4063
 В случае с «Ателье» это еще не самое страшное. Потому что с роликов снимают монетизацию, но не блокируют и не кидают страйки на канал (как в случае с «Дрейфующим домом»). Но тем не менее — это удар по авторам, которые зарабатывают свои гроши на контенте.
 
 А еще это абсолютная глупость. Потому что это направлено не против пиратства, а против комьюнити, которое в первую очередь продвигает любимые тайтлы. У меня на канале есть ролики про «Фрирен» или «Подземелье вкусностей», но не будет про «Ателье». Не потому что оно хуже и недостойно внимания, а потому что так решили правообладатели.
+
+
+::image{src="/images/uploads/tg-4063.jpg" alt="" width="column"}
+
+
 
 ::image{src="/images/uploads/tg-4064.jpg" alt="" width="column"}

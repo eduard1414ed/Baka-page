@@ -2,19 +2,34 @@
 title: Влияние на реальную жизнь
 date: 2025-03-21
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2840.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2840
 tgUrl: https://t.me/podcastbaka/2840
+anime:
+  - haikyuu
 ---
 
 ::image{src="/images/uploads/tg-2840.jpg" alt="" width="column"}
+
 
 Редко можно встретить наглядную статистику, которая показывает влияние аниме на реальную жизнь. Но у «Волейбола» такие данные есть, и мы их  вспоминаем в новом [бонусном эпизоде](/posts/voleybol-kakim-poluchilsya-vtoroy-sezon/).
 
 Что это за график? Это количество подростков, которые записываются в волейбольные клубы в старшей школе в Японии. Много лет оно неуклонно падало — до 2014 года, когда вышел как раз «Волейбол». И после этого — огромный всплеск популярности.
 
 Оказалось, что история Хинаты и его друзей буквально вдохновляет подростков попробовать себя в этом виде спорта. Я не смог найти эти же данные по женским спортивным клубам, но уверен, что там показатели схожие.
+
+::anime-ref{id="haikyuu" source="shikimori" source-id="20583"}

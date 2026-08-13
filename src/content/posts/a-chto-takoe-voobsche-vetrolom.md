@@ -1,17 +1,29 @@
 ---
-title: А что такое вообще «Ветролом»
+title: А что такое вообще «Ветролом»?
 date: 2025-07-02
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3101.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3101
 tgUrl: https://t.me/podcastbaka/3101
 ---
 
 ::image{src="/images/uploads/tg-3101.jpg" alt="" width="column"}
+
 
 Второй сезон «Ветролома» проходит как-то мимо радаров (даже я посмотрел только пару серий). Даже немного обидно, поэтому давайте расскажу вам про перевод названий в этом тайтле. Может разожгу немного интерес:
 

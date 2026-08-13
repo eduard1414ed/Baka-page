@@ -2,11 +2,22 @@
 title: '«Хвост Феи: Столетний квест» — долгожданное продолжение фэнтезийной истории'
 date: 2024-08-05
 category: article
-externalUrl: https://www.kinopoisk.ru/media/news/4009713/
-draft: true
+draft: false
 description: ''
-cover: ''
+cover: /images/uploads/pasted-image-1786650116444.webp
 noCover: true
+externalUrl: https://www.kinopoisk.ru/media/news/4009713/
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2299
 tgUrl: https://t.me/podcastbaka/2299
 ---

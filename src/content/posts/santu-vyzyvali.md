@@ -2,16 +2,28 @@
 title: Санту вызывали?
 date: 2025-10-14
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3415.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3415
 tgUrl: https://t.me/podcastbaka/3415
 ---
 
-::image{src="/images/uploads/tg-3415.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-3415.jpg" alt="" caption="Пару Итагаки вынашивает план на новую мангу" width="column"}
+
 
 Мои ощущения подтвердились. Самый интересный релиз этой осени — это «Санда».
 
@@ -19,14 +31,27 @@ tgUrl: https://t.me/podcastbaka/3415
 
 Главный герой — Санда Кадзусигэ, ученик средней школы. Который скрывает свою вторую личность — Санта-Клауса. Сверхсильного, устойчивого к огну, дальнозоркого деда, который умеет отращивать металлические острые лыжи прямо из своих ступней.
 
+
+::image{src="/images/uploads/tg-3416.jpg" alt="" caption="Он еще и визуально очень изобретательный" width="column"}
+
+
+
+::image{src="/images/uploads/tg-3417.jpg" alt="" width="column"}
+
+
+
+::image{src="/images/uploads/tg-3418.jpg" alt="" width="column"}
+
+
+
+::image{src="/images/uploads/tg-3419.jpg" alt="" width="column"}
+
+
 Идеальный тайтл для одной из самых изобретательных студии на рынке — Science SARU, которая ответствена за «Дандадан» и «Ину-О». На месте все их фишки: уникальный дизайн персонажей, игра с цветом и блестящая анимация.
 
 Первые две серии ощущаются пока больше как безумный фан. Но учитывая, что оригинальную мангу написала Пару Итагаки, создательница «Выдающихся зверей», скорее все в «Санде» будет и более глубокий социальный подтекст. О кризисе рождаемости в Японии и ценности детей.
 
 В общем, это мы точно смотрим. Советую!
 
-::image{src="/images/uploads/tg-3416.jpg" alt="" width="column"}
-::image{src="/images/uploads/tg-3417.jpg" alt="" width="column"}
-::image{src="/images/uploads/tg-3418.jpg" alt="" width="column"}
-::image{src="/images/uploads/tg-3419.jpg" alt="" width="column"}
-::image{src="/images/uploads/tg-3420.jpg" alt="" width="column"}
+
+::image{src="/images/uploads/tg-3420.jpg" alt="" caption="Дизайн персонажей — отдельная фишка" width="column"}

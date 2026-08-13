@@ -2,16 +2,28 @@
 title: Весна твоей юности
 date: 2024-11-12
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2510.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2510
 tgUrl: https://t.me/podcastbaka/2510
 ---
 
 ::image{src="/images/uploads/tg-2510.jpg" alt="" width="column"}
+
 
 В японском языке есть термин, которой редко можно услышать в русскоязычном или даже англоязычном комьюнити, а он, вообще-то, зачастую гораздо лучше описывает определенный вид аниме, чем, например «сёдзё» или «сёнен».
 

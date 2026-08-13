@@ -2,16 +2,29 @@
 title: Как маленькая студия повлияла на большое аниме?
 date: 2024-01-23
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1850.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1850
 tgUrl: https://t.me/podcastbaka/1850
+anime:
+  - tengoku-daimakyou
 ---
 
 ::image{src="/images/uploads/tg-1850.jpg" alt="" width="column"}
+
 
 Есть такая студия Minakata Lab — это небольшая компания, которая в основном занимается созданием рекламы и клипов.
 
@@ -24,3 +37,5 @@ tgUrl: https://t.me/podcastbaka/1850
 Спустя пять лет, развивая успех манги, вышло аниме — которое не только удачно адаптировало первоисточник, но и попало во все топы лучших сериалов за год. Что интересно, дизайн персонажей в этом аниме был почти идентичен тому, как выглядели герои в промо-ролике от Minakata Lab. И это не случайно, студия, делавшая аниме, пригласила в качестве дизайнера персонажей человека, работавшего в Minakata Lab, обеспечив ему таким образом дебют в большой аниме-индустрии.
 
 Вот таким удивительным образом маленькая студия Minakata Lab повлияла своей работой и на мангу «Великая небесная стена», и на то, каким получилось аниме.
+
+::anime-ref{id="tengoku-daimakyou" source="shikimori" source-id="53393"}

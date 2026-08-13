@@ -2,21 +2,32 @@
 title: Флудовыпуск | Как мы провели лето?
 date: 2025-08-21
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3269.jpg
-pullMedia: false
 noCover: false
-tgId: 3269
-tgUrl: https://t.me/podcastbaka/3269
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
 bonusLinks:
   boosty: https://boosty.to/bakapodcast/posts/7ca6402f-9a29-4382-a811-49e5339bddf7?share=post_link
   patreon: https://www.patreon.com/posts/fludovypusk-kak-137003943
   tgClosed: ''
   vkDonat: https://vk.com/wall-211086713_1964
+pullMedia: false
+tgId: 3269
+tgUrl: https://t.me/podcastbaka/3269
 ---
 
 ::image{src="/images/uploads/tg-3269.jpg" alt="" width="column"}
+
 
 Лето подходит к концу, а значит пришло время написать сочинение о том, что мы делали все эти три месяца. Только вместо текста у нас, конечно, эпизод подкаста.
 

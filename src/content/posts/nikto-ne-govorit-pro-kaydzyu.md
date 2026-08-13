@@ -2,18 +2,29 @@
 title: Никто не говорит про кайдзю
 date: 2024-05-08
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2113.jpg
-pullMedia: false
 noCover: false
-tgId: 2113
-tgUrl: https://t.me/podcastbaka/2113
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 animeSuggested:
   - jujutsu-kaisen
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 2113
+tgUrl: https://t.me/podcastbaka/2113
 ---
 
 ::image{src="/images/uploads/tg-2113.jpg" alt="" width="column"}
+
 
 Главной премьерой этого весеннего сезона должен был стать новый сёнен от Shonen Jump — «Кайдзю номер восемь». Но вот уже вышло четыре эпизода, а интернет молчит.
 

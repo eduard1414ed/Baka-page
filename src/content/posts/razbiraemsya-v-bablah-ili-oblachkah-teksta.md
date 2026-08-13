@@ -2,16 +2,28 @@
 title: Разбираемся в баблах! (или облачках текста)
 date: 2025-09-09
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3320.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3320
 tgUrl: https://t.me/podcastbaka/3320
 ---
 
 ::image{src="/images/uploads/tg-3320.jpg" alt="" width="column"}
+
 
 В манге речь персонажей передаётся не только словами, но и визуально — через форму речевых пузырей. Квадратные, волнистые, «колючие» или растворяющиеся контуры позволяют сразу считать эмоцию: спокойствие, тревогу, раздражение, радость или даже зловещий оттенок.
 

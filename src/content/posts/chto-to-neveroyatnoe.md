@@ -1,17 +1,30 @@
 ---
-title: Что-то невероятное
+title: Что-то невероятное — «Юный лорд»
 date: 2024-09-25
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2415.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2415
 tgUrl: https://t.me/podcastbaka/2415
+anime:
+  - nige-jouzu-no-wakagimi
 ---
 
 ::image{src="/images/uploads/tg-2415.jpg" alt="" width="column"}
+
 
 Была в Shonen Jump такая манга — «Юный лорд — мастер побега». Классический сёнен, но в историческом сеттинге феодальной Японии. Написал ее Юсэй Мацуи, автор «Класса убийц». Манга выиграла Shogakukan Manga Award в 2024, но при этом назвать ее флагманом журнала было сложно.
 
@@ -23,10 +36,31 @@ tgUrl: https://t.me/podcastbaka/2415
 
 Даже если вы не любите сёнены, я советую посмотреть сериал ради этой красоты.
 
+
 ::image{src="/images/uploads/tg-2416.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2417.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2418.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2419.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2420.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2421.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-2422.jpg" alt="" width="column"}
+
+::anime-ref{id="nige-jouzu-no-wakagimi" source="shikimori" source-id="54724"}

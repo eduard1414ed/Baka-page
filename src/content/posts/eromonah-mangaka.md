@@ -2,16 +2,28 @@
 title: Эромонах-мангака
 date: 2025-12-05
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3529.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3529
 tgUrl: https://t.me/podcastbaka/3529
 ---
 
 ::image{src="/images/uploads/tg-3529.jpg" alt="" width="column"}
+
 
 Помните такой фильм студии Ghibli, «Со склонов Кокурико»? Он примичателен тремя вещами:
 

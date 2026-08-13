@@ -2,16 +2,28 @@
 title: Ретро-аниме
 date: 2024-10-22
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2468.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2468
 tgUrl: https://t.me/podcastbaka/2468
 ---
 
 ::image{src="/images/uploads/tg-2468.jpg" alt="" width="column"}
+
 
 Почему мы с одного кадра узнаем старые аниме? Почему нам так нравится собирать короткие атмосферные видео или подборки скриншотов из сериалов 70-х, 80-х и даже 90-х? Что в них такого ностальгического?
 

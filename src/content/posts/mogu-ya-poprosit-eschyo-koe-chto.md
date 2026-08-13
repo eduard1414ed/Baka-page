@@ -2,16 +2,29 @@
 title: Могу я попросить ещё кое-что?
 date: 2025-10-20
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3425.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3425
 tgUrl: https://t.me/podcastbaka/3425
+anime:
+  - saigo-ni-hitotsu-dake-onegai-shitemo-yoroshii-deshou-ka
 ---
 
 ::image{src="/images/uploads/tg-3425.jpg" alt="" width="column"}
+
 
 В детстве Скарлет обожала драться. Ведь это самый простой путь к справедливости. Но высшее общество, разумеется, было в ужасе, и брат регулярно отчитывал её за позорные выходки. Со временем, под давлением семьи и из-за помолвки с принцем, она научилась держать лицо и играть роль приличной леди.
 
@@ -22,3 +35,5 @@ tgUrl: https://t.me/podcastbaka/3425
 Но зато это отличное аниме, чтобы расслабить голову и посмотреть, как красивая героиня в красном платье «дубасит мразей». И с этим аниме справляется неплохо: анимация от LIDENFILMS не хватает звезд с неба, но и не раздражает; саундтрек от Хинако Цубакиямы отличный; ну и Асами Сэто (Май Сакурадзима из «Глупого свина», Кёко из «Хоримии» и Нобара из «Магической битвы») в роли Скарлет — идеальное попадание.
 
 Так что советую отличное развлечение на вечер-другой.
+
+::anime-ref{id="saigo-ni-hitotsu-dake-onegai-shitemo-yoroshii-deshou-ka" source="shikimori" source-id="59846"}

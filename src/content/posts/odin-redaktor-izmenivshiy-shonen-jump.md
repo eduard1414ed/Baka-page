@@ -2,16 +2,28 @@
 title: Один редактор, изменивший Shonen Jump
 date: 2025-02-05
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2726.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2726
 tgUrl: https://t.me/podcastbaka/2726
 ---
 
 ::image{src="/images/uploads/tg-2726.jpg" alt="" width="column"}
+
 
 Знакомьтесь, это Шихей Лин. Он опытный редактор, который работал в Jump SQ аж с 2006 года.
 
@@ -24,5 +36,3 @@ tgUrl: https://t.me/podcastbaka/2726
 Успех этой и следующих работ мангак оказались такими громкими, что всего через три года, в 2021 Шихей Лин был повышен до одного из главных редакторов Shonen Jump+.
 
 И по сути его работа совершила переворот в индустрии — онлайн-просмотры манги начали выходить на первый план. А истории, которые приобретают популярность и складывают тренды — стали более экспериментальными.
-
-Подробнее о том, как именно это все произошло и каким будет новое поколение манги и аниме, смотрите в [нашем видеоэссе](https://t.me/podcastbaka/2708).

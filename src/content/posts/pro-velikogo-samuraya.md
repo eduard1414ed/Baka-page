@@ -2,18 +2,29 @@
 title: Про великого самурая
 date: 2023-12-06
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1715.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: 'Автор текста: Ксюша'
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1715
 tgUrl: https://t.me/podcastbaka/1715
+anime:
+  - juubee-ninpuuchou
 ---
 
 ::image{src="/images/uploads/tg-1715.jpg" alt="" width="column"}
 
-*(пост от Ксюши)*
 
 Дзюбэй Мицуеси Ягю — это не только персонаж из «Манускрипта ниндзя», но еще и имя реального самурая, который уже в довольно юном возрасте служил сегуну и был обладателем одного из пяти величайших мечей «Гомейкен».
 
@@ -24,3 +35,5 @@ tgUrl: https://t.me/podcastbaka/1715
 Есть еще один довольно нелепый факт, который сложно оставить без внимания. По легенде, в детстве во время тренировки отец Дзюбея, который тоже был мастером меча, решил усложнить сыну задачу. Он подбросил меч в воздух, сын его должен был отбить, но все пошло не так, и получилось, что отец случайно напорол на меч своего сына. Вот так родительская забота обеспечила пацану повязку на глаз и брутальный образ сурового ронина.
 
 К сожалению, в интернете не нашла подлинное изображение Дзюбэя, но держите фрагмент свитка школы Синкаге-рю, которую основал его дед.
+
+::anime-ref{id="juubee-ninpuuchou" source="shikimori" source-id="617"}

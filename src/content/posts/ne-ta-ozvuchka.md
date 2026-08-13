@@ -2,16 +2,28 @@
 title: Не та озвучка
 date: 2025-07-29
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3208.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3208
 tgUrl: https://t.me/podcastbaka/3208
 ---
 
 ::image{src="/images/uploads/tg-3208.jpg" alt="" width="column"}
+
 
 Я смотрю аниме с субтитрами. Но в эссе и подкасты мы вставляем чаще всего кусочки с озвучкой — чтобы они были понятны на слух. И обычно мы берем просто самую доступную озвучку для загрузки в хорошем качестве.
 

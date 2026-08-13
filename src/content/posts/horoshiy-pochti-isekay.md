@@ -2,16 +2,29 @@
 title: Хороший (почти) исекай?
 date: 2023-10-17
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1597.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1597
 tgUrl: https://t.me/podcastbaka/1597
+anime:
+  - shangri-la-frontier-kusoge-hunter-kamige-ni-idoman-to-su
 ---
 
 ::image{src="/images/uploads/tg-1597.jpg" alt="" width="column"}
+
 
 Компьютерные игры, голый мужик с головой синей курицы и Шангри-Ла — казалось бы, как эти вещи связаны? Но такая странная смесь, похоже, превратилась в главный исекай (почти) этого сезона.
 
@@ -28,3 +41,5 @@ tgUrl: https://t.me/podcastbaka/1597
 Главный герой, который привык к трешовым играм, весело удивляется механикам «Шангри-Лы» и даже иногда озвучивает мои собственные мысли (типа: ого, как проработаны NPC). Анимация выглядит на порядок выше, чем то, что мы привыкли видеть в безвкусных исекаях. А главное — в сериале удачный пэйсинг (темп): нас очень постепенно знакомят с миром, дают героям время обжиться в нем, а нам, зрителям, привыкнуть к самим персонажам.
 
 Так что, если вы искали исекай (почти) сезона или любите компьютерные игры — «Рубеж Шангри-Ла» ваш выбор.
+
+::anime-ref{id="shangri-la-frontier-kusoge-hunter-kamige-ni-idoman-to-su" source="shikimori" source-id="52347"}

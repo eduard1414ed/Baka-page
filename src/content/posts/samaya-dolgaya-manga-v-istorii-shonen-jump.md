@@ -2,16 +2,29 @@
 title: Самая долгая манга в истории Shonen Jump
 date: 2025-09-05
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3317.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3317
 tgUrl: https://t.me/podcastbaka/3317
+anime:
+  - kochira-katsushikaku-kameari-kouenmae-hashutsujo
 ---
 
 ::image{src="/images/uploads/tg-3317.jpg" alt="" width="column"}
+
 
 В [бонусном выпуске про «Ведьмнадзор»](/posts/vedmnadzor-anime-sitkom-kotoryy-my-zasluzhili/) мы с Ксюшей обсуждали, что на самом деле самой популярной и долгоиграющей мангой в Shonen Jump являются далеко не боевые сенены, а классические комедии.
 
@@ -22,3 +35,5 @@ tgUrl: https://t.me/podcastbaka/3317
 Так вот, Kochikame — это абсолютно комедийная манга о жизни полицейского участка в районе Кацусика в Токио и о его обитателях, главным героем которой является неугомонный сержант Канкити Рёцу. Серия удерживала популярность десятилетиями именно благодаря лёгкому юмору, актуальным шуткам о повседневной жизни и способности отражать изменения японского общества.
 
 Нам кажется, что все тайтлы должны показывать развитие героев, рассказывать цельную умную историю с умопомрачительным экшеном или глубокой драмой. Но на самом деле, японцы часто читают манга-журналы в перерывах между работой или учебой, по дороге домой на общественном транспорте или вечером после тяжелого дня — и поэтому с удовольствием встречают простые ситкомы, вроде Kochikame, «Семьи шпиона» или того же «Ведьмнадзора».
+
+::anime-ref{id="kochira-katsushikaku-kameari-kouenmae-hashutsujo" source="shikimori" source-id="3545"}

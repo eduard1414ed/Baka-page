@@ -2,16 +2,28 @@
 title: Немного драмы
 date: 2024-05-22
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2138.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2138
 tgUrl: https://t.me/podcastbaka/2138
 ---
 
 ::image{src="/images/uploads/tg-2138.jpg" alt="" width="column"}
+
 
 Рэну 28 лет, он переехал из маленького города в Токио, но так и не нашел свое призвание. Он перебивается подработками и чувствует себя совершенно лишним. Настолько, что решает прыгнуть с моста.
 

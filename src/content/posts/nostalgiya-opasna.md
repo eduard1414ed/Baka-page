@@ -2,16 +2,29 @@
 title: Ностальгия опасна
 date: 2025-05-23
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2982.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2982
 tgUrl: https://t.me/podcastbaka/2982
+anime:
+  - kowloon-generic-romance
 ---
 
 ::image{src="/images/uploads/tg-2982.jpg" alt="" width="column"}
+
 
 Если бы в прошлом году я не сделал [эссе о ностальгии](https://vk.com/video-211086713_456239145) (по мотивам фильма «Дрейфующий дом») — я бы наверняка сделал бы его сейчас, но уже о другом тайтле.
 
@@ -24,3 +37,5 @@ tgUrl: https://t.me/podcastbaka/2982
 Все это подчеркивается ностальгической стилистикой старого аниме, в которое тут и там вторгаются sci-fi-элементы, вроде висящей в небе таинственной станции.
 
 Пожалуй, это самый интригующий тайтл этого сезона.
+
+::anime-ref{id="kowloon-generic-romance" source="shikimori" source-id="60083"}

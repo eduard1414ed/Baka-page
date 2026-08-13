@@ -2,16 +2,28 @@
 title: Япония в Германии
 date: 2025-08-20
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3263.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3263
 tgUrl: https://t.me/podcastbaka/3263
 ---
 
 ::image{src="/images/uploads/tg-3263.jpg" alt="" width="column"}
+
 
 На этой неделе я приехал в город Дюссельдорф в Германии, потому что это неожиданный японский центр Европы. Здесь живет почти десять тысяч японцев, есть своя новостная газета на японском, и даже вывески некоторых улиц продублированы на катакане.
 
@@ -27,8 +39,21 @@ tgUrl: https://t.me/podcastbaka/3263
 
 P.S. Напишите, кстати, в комментариях, насколько вам интересно читать не только об аниме и манге, но и шире — о японской культуре и моих связанных с ней путешествиях. Стоит ли еще делать такие посты?
 
+
 ::image{src="/images/uploads/tg-3264.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3265.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3266.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3267.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3268.jpg" alt="" width="column"}

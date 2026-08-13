@@ -2,19 +2,30 @@
 title: Заря MAPPA
 date: 2025-11-07
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3463.jpg
-pullMedia: false
 noCover: false
-tgId: 3463
-tgUrl: https://t.me/podcastbaka/3463
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 animeSuggested:
   - jujutsu-kaisen
   - shingeki-no-kyojin
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 3463
+tgUrl: https://t.me/podcastbaka/3463
 ---
 
 ::image{src="/images/uploads/tg-3463.jpg" alt="" width="column"}
+
 
 Мало кто помнит, но вообще-то «Дети на холме» — это первое аниме студии MAPPA. Сегодня мы знаем эту студию как хитмейкеров: «Магическая битва», «Человек-бензопила», «Атака титанов».
 

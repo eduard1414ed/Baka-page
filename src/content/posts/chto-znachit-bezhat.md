@@ -2,19 +2,31 @@
 title: Что значит бежать?
 date: 2025-04-09
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2868.jpg
-pullMedia: false
 noCover: false
-tgId: 2868
-tgUrl: https://t.me/podcastbaka/2868
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 animeSuggested:
   - chi-chikyuu-no-undou-ni-tsuite
+  - hyakuemu
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 2868
+tgUrl: https://t.me/podcastbaka/2868
+anime:
   - hyakuemu
 ---
 
 ::image{src="/images/uploads/tg-2868.jpg" alt="" width="column"}
+
 
 Мангака Uoto сейчас на виду благодаря успеху аниме «О движении Земли». Но на самом это не первая работа молодого автора. До этого из-под его руки вышла манга о легкой атлетике — «Стометровка». И я думаю, что могу ее посоветовать.
 
@@ -27,3 +39,5 @@ animeSuggested:
 Но несмотря на то, что фокус манги, очевидно, на словах и мыслях героев, мангака не забывает и о ее внешнем виде. Очень динамичный и эффектный стиль рисунка иногда поражает и создает ощущение, что ты сам бежишь вместе с героями.
 
 На этот год, кстати, анонсирована экранизация «Стометровки» в формате полнометражного фильма. Так что советую обратить внимание.
+
+::anime-ref{id="hyakuemu" source="shikimori" source-id="58919"}

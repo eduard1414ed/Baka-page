@@ -2,18 +2,29 @@
 title: Что случилось со студией Gainax?
 date: 2024-06-10
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2179.jpg
-pullMedia: false
 noCover: false
-tgId: 2179
-tgUrl: https://t.me/podcastbaka/2179
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 animeSuggested:
   - royal-space-force
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 2179
+tgUrl: https://t.me/podcastbaka/2179
 ---
 
 ::image{src="/images/uploads/tg-2179.jpg" alt="" width="column"}
+
 
 Gainax — аниме-студия, ответственная за «Евангелион», «Фури-Кури» и «Гуррен-Лаганн». И 7 июня этого года она объявила о банкротстве. Как так вышло?
 

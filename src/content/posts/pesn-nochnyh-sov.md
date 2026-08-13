@@ -1,17 +1,28 @@
 ---
-title: Песнь ночных сов
+title: Финал «Песни ночных сов»
 date: 2024-09-11
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2369.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2369
 tgUrl: https://t.me/podcastbaka/2369
+anime:
+  - yofukashi-no-uta
+  - yofukashi-no-uta-season-2
 ---
-
-::image{src="/images/uploads/tg-2369.jpg" alt="" width="column"}
 
 Я большой [фанат](/posts/bonusnyy-vypusk-pesn-nochnyh-sov/) «Песни ночных сов» — и манги, и аниме. Поэтому, когда Kotoyama весной объявил о завершении истории, я отложил онгоинг и стал дожидаться, когда выйдет финал, чтобы перечитать все целиком с самого начала. И вот, наконец-то, я это сделал.
 
@@ -27,4 +38,10 @@ tgUrl: https://t.me/podcastbaka/2369
 
 Ну и финал истории получился на мой взгляд идеальным. Манга заканчивается той же повседневностью, юмором, ночью — с которой «Песнь ночных сов» и начиналась. При этом это совсем не happy end, потому что у вампиров его и не может быть. Но это финал, который дарит то же меланхоличное чувство, которое ты можешь испытать, когда заканчиваешь школу, едешь в поезде куда-то далеко-далеко, или, когда отправляешься в одиночку на прогулку — в последнюю летнюю ночь.
 
+::image{src="/images/uploads/tg-2369.jpg" alt="" width="column"}
+
 ::image{src="/images/uploads/tg-2370.jpg" alt="" width="column"}
+
+::anime-ref{id="yofukashi-no-uta" source="shikimori" source-id="50346"}
+
+::anime-ref{id="yofukashi-no-uta-season-2" source="shikimori" source-id="58390"}
