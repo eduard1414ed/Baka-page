@@ -2,16 +2,26 @@
 title: Мода и манга
 date: 2022-08-17
 category: note
-draft: true
+draft: false
 description: ''
-cover: /images/uploads/tg-457.jpg
+cover: ''
+noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
 pullMedia: false
-noCover: false
 tgId: 457
 tgUrl: https://t.me/podcastbaka/457
+anime:
+  - blue-period
 ---
-
-::image{src="/images/uploads/tg-457.jpg" alt="" width="column"}
 
 Модные дома и бренды одежды продолжают проникать в аниме и мангу.
 
@@ -23,4 +33,8 @@ tgUrl: https://t.me/podcastbaka/457
 
 Если вы, вдруг, ещё не слышали про «Голубой период», обязательно посмотрите [нашу статью](/posts/realnye-kartiny-v-mange-goluboy-period-sikvel/) про искусство в манге и [послушайте](/posts/bonusnyy-epizod-goluboy-period/) бонусный эпизод подкаста.
 
+::image{src="/images/uploads/tg-457.jpg" alt="" width="column"}
+
 ::image{src="/images/uploads/tg-458.jpg" alt="" width="column"}
+
+::anime-ref{id="blue-period" source="shikimori" source-id="46352"}
