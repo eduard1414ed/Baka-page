@@ -2,7 +2,7 @@
 title: Стиль студии Ghibli
 date: 2022-08-18
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-460.jpg
 noCover: false
@@ -38,5 +38,6 @@ anime:
 
 
 ::image{src="/images/uploads/tg-461.jpg" alt="" width="column"}
+
 
 ::anime-ref{id="coquelicot-zaka-kara" source="shikimori" source-id="10029"}
