@@ -2,18 +2,26 @@
 title: От лоликона к Винланду
 date: 2023-05-09
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1248.jpg
-pullMedia: false
 noCover: false
-tgId: 1248
-tgUrl: https://t.me/podcastbaka/1248
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 animeSuggested:
   - dorohedoro
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 1248
+tgUrl: https://t.me/podcastbaka/1248
 ---
-
-::image{src="/images/uploads/tg-1248.jpg" alt="" width="column"}
 
 В 1986 году издательство Kodansha запустило новый журнал — Afternoon. В него отправляли всю ту мангу, которая не проходила по формату в флагманский журнал Morning.
 
@@ -33,7 +41,18 @@ animeSuggested:
 
 Так всего за 30 лет Afternoon прошел путь от лоликона к Винланду.
 
+::image{src="/images/uploads/tg-1248.jpg" alt="" width="column"}
+
 ::image{src="/images/uploads/tg-1249.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1250.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1251.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1252.jpg" alt="" width="column"}
