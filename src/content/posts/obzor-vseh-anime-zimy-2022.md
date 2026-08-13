@@ -4,7 +4,7 @@ date: 2022-04-20
 category: article
 draft: false
 description: ''
-cover: /images/uploads/dtf-zima-2022-06.webp
+cover: /images/uploads/dtf-zima-2022-cover.webp
 noCover: false
 externalUrl: ''
 externalSource: ''
@@ -17,8 +17,6 @@ script: ''
 timecodes: ''
 bonusLinks: null
 pullMedia: false
-tgId: null
-tgUrl: ''
 anime:
   - akebi-chan-no-sailor-fuku
   - baraou-no-souretsu
@@ -32,15 +30,15 @@ anime:
   - tensai-ouji-no-akaji-kokka-saisei-jutsu
 ---
 
+::image{src="/images/uploads/dtf-zima-2022-cover.webp" alt="" width="column"}
+
 Я решил устроить себе марафон — и посмотреть по одной серии всех новых аниме, которые вышли этой зимой. И рассказать вам, что стоит смотреть, а что — нет.
 
 Правила такие: я смотрю по одной серии нового сериала этой зимы в алфавитном порядке из anilist. Ставлю оценку и решаю, буду ли смотреть дальше. Поехали!
 
-
-::image{src="/images/uploads/dtf-zima-2022-06.webp" alt="" caption="Школьная форма Акэби" width="column"}
-
-
 #### [Школьная форма Акэби](/anime/akebi-chan-no-sailor-fuku/)
+
+::image{src="/images/uploads/dtf-zima-2022-06.webp" alt="" caption="Школьная форма Акэби, студия CloverWorks" width="column"}
 
 Девочка Комити поступает в частную школу, в которую мечтала. Там училась ее мама, и в то время все ученики носили матроски. Поэтому Комити тоже хочет носить матроску, хотя правила школы давно изменились.
 
@@ -52,11 +50,9 @@ anime:
 
 **Смотреть дальше:** скорее нет, слишком странно
 
-
-::image{src="/images/uploads/dtf-zima-2022-07.webp" alt="" caption="Похороны Короля Роз" width="column"}
-
-
 #### [Похороны Короля Роз](/anime/baraou-no-souretsu/)
+
+::image{src="/images/uploads/dtf-zima-2022-07.webp" alt="" caption="Похороны Короля Роз, студия J.C.Staff" width="column"}
 
 Странное яойное переложение исторических драм Шекспира. Ричард III, например, в этой истории не мужчина и не женщина, обладает атрибутами обоих полов. И судя по первой серии, влюбляется в заклятого врага Генриха.
 
@@ -68,11 +64,9 @@ anime:
 
 **Смотреть дальше:** точно нет, если только бессонницы не будет
 
-
-::image{src="/images/uploads/dtf-zima-2022-08.webp" alt="" caption="Знак!" width="column"}
-
-
 #### Знак!
+
+::image{src="/images/uploads/dtf-zima-2022-08.webp" alt="" caption="Знак!, студии Graphinica и Yumeta Company" width="column"}
 
 История про кучу девочек, которые хотят стать сею (озвучивать аниме).
 
@@ -86,11 +80,9 @@ anime:
 
 **Смотреть дальше:** скорее нет, не очень хорошее повествование
 
-
-::image{src="/images/uploads/dtf-zima-2022-09.webp" alt="" caption="Девушки на линии фронта" width="column"}
-
-
 #### Девушки на линии фронта
+
+::image{src="/images/uploads/dtf-zima-2022-09.webp" alt="" caption="Девушки на линии фронта, студия Asahi Production" width="column"}
 
 В ходе Третьей мировой войны население Земли было частично уничтожено, а большая часть территории планеты стала непригодной для жизни. Для поддержания мира военные организации стали использовать андроидов. И конечно, ими оказались сексапильные девушки.
 
@@ -100,11 +92,9 @@ anime:
 
 **Смотреть дальше:** только с друзьями поржать, так что нет
 
-
-::image{src="/images/uploads/dtf-zima-2022-10.webp" alt="" caption="Фантастический мир с обращённым в красавицу мужчиной и…" width="column"}
-
-
 #### [Фантастический мир с обращённым в красавицу мужчиной и…](/anime/fantasy-bishoujo-juniku-ojisan-to/)
+
+::image{src="/images/uploads/dtf-zima-2022-10.webp" alt="" caption="Фантастический мир с обращённым в красавицу мужчиной и…, студия OLM" width="column"}
 
 Первый исекай в этом списке! Офисный работник Хината, напившись в компании давнего друга Дзингудзи, пожелал стать ослепительной красавицей. Тут откуда ни возьмись появилась богиня и перенесла обоих в другой мир и выполнила его желание, а еще сверху наложила проклятие, чтобы эти друзья влюбились друг в друга.
 
@@ -118,11 +108,9 @@ anime:
 
 **Смотреть дальше:** скорее да, на вечер отдохнуть самое то
 
-
-::image{src="/images/uploads/dtf-zima-2022-11.webp" alt="" caption="Мини-футбол для мальчиков" width="column"}
-
-
 #### Мини-футбол для мальчиков
+
+::image{src="/images/uploads/dtf-zima-2022-11.webp" alt="" caption="Мини-футбол для мальчиков, студия diomedéa" width="column"}
 
 Я люблю футбол. Смотрю его с детства и даже занимался мини-футболом в школе. И я бы с удовольствием глянул спортивное аниме про футбол.
 
@@ -134,11 +122,9 @@ anime:
 
 **Смотреть дальше:** нет, однозначно
 
-
-::image{src="/images/uploads/dtf-zima-2022-12.webp" alt="" caption="Фантазия о Троецарствии: Духовность небес" width="column"}
-
-
 #### Фантазия о Троецарствии: Духовность небес
+
+::image{src="/images/uploads/dtf-zima-2022-12.webp" alt="" caption="Фантазия о Троецарствии: Духовность небес, студия GEEKTOYS" width="column"}
 
 Аниме по тайваньской RPG-игре про Средневековье в Китае. Вот такая смесь. По сюжету есть духи, которые развращают людей и уничтожают все вокруг, а есть отряд главных героев, которые должны этих духов побеждать.
 
@@ -150,11 +136,9 @@ anime:
 
 **Смотреть дальше:** нет, не в моем вкусе
 
-
-::image{src="/images/uploads/dtf-zima-2022-13.webp" alt="" caption="Контратака женщины-полицейского" width="column"}
-
-
 #### [Контратака женщины-полицейского](/anime/hakozume-kouban-joshi-no-gyakushuu/)
+
+::image{src="/images/uploads/dtf-zima-2022-13.webp" alt="" caption="Контратака женщины-полицейского, студия Madhouse" width="column"}
 
 Еще одна комедия в этой четверке. Как вам идея аниме про скучную жизнь Токийской полиции?
 
@@ -166,11 +150,9 @@ anime:
 
 **Смотреть дальше:** да, мне понравилось
 
-
-::image{src="/images/uploads/dtf-zima-2022-14.webp" alt="" caption="Куроицу из отдела сверхчеловеческого развития" width="column"}
-
-
 #### Куроицу из отдела сверхчеловеческого развития
+
+::image{src="/images/uploads/dtf-zima-2022-14.webp" alt="" caption="Куроицу из отдела сверхчеловеческого развития, студия Quad" width="column"}
 
 Если вы смотрели аниме 90-х, «Могучих рейнджеров» и прочий замечательный контент с дженерик-монстрами, то это сериал для вас.
 
@@ -184,11 +166,9 @@ anime:
 
 **Смотреть дальше:** дам шанс еще паре серий
 
-
-::image{src="/images/uploads/dtf-zima-2022-15.webp" alt="" caption="Она представилась как ученик мудреца" width="column"}
-
-
 #### Она представилась как ученик мудреца
+
+::image{src="/images/uploads/dtf-zima-2022-15.webp" alt="" caption="Она представилась как ученик мудреца, студия A-CAT" width="column"}
 
 Очередной исекай, в котором главный герой попадает в мир любимой MMORPG.
 
@@ -200,11 +180,9 @@ anime:
 
 **Смотреть дальше:** нет, потому что банально
 
-
-::image{src="/images/uploads/dtf-zima-2022-16.webp" alt="" caption="Убивающая любовь" width="column"}
-
-
 #### [Убивающая любовь](/anime/koroshi-ai/)
+
+::image{src="/images/uploads/dtf-zima-2022-16.webp" alt="" caption="Убивающая любовь, студия Platinum Vision" width="column"}
 
 Аниме про отношения охотницы за головами Шато и супер-опасного киллера Сона.
 
@@ -218,11 +196,9 @@ anime:
 
 **Смотреть дальше:** нет, потому что не зацепили герои
 
-
-::image{src="/images/uploads/dtf-zima-2022-17.webp" alt="" caption="Мир Лидейл" width="column"}
-
-
 #### Мир Лидейл
+
+::image{src="/images/uploads/dtf-zima-2022-17.webp" alt="" caption="Мир Лидейл, студия Maho Film" width="column"}
 
 Еее, очередной исекай!
 
@@ -238,11 +214,9 @@ anime:
 
 **Смотреть дальше:** скорее нет, но могу советовать другим
 
-
-::image{src="/images/uploads/dtf-zima-2022-18.webp" alt="" caption="Ниндзяла" width="column"}
-
-
 #### Ниндзяла
+
+::image{src="/images/uploads/dtf-zima-2022-18.webp" alt="" caption="Ниндзяла, студия OLM" width="column"}
 
 Детское аниме по игре для Nintendo Switch. Главному герою двенадцать, и у него появляются суперсилы ниндзя (которые по лору уехали из Японии в США в Средние века).
 
@@ -254,11 +228,9 @@ anime:
 
 **Смотреть дальше:** однозначно нет
 
-
-::image{src="/images/uploads/dtf-zima-2022-19.webp" alt="" caption="Ориент" width="column"}
-
-
 #### Ориент
+
+::image{src="/images/uploads/dtf-zima-2022-19.webp" alt="" caption="Ориент, студия A.C.G.T." width="column"}
 
 В Средние века Японию захватили демоны — они. Теперь обычные люди им поклоняются вместо богов. Но есть войны буси (у которых почему-то есть мотоциклы), призвание которых — убивать демонов.
 
@@ -270,11 +242,9 @@ anime:
 
 **Смотреть дальше:** нет, лучше пересмотреть «Наруто»
 
-
-::image{src="/images/uploads/dtf-zima-2022-20.webp" alt="" caption="Клуб белых воротничков" width="column"}
-
-
 #### [Клуб белых воротничков](/anime/ryman-s-club/)
+
+::image{src="/images/uploads/dtf-zima-2022-20.webp" alt="" caption="Клуб белых воротничков, студия LIDENFILMS" width="column"}
 
 Второе спортивное аниме в моем марафоне — и в этот раз не настолько стыдное.
 
@@ -288,11 +258,9 @@ anime:
 
 **Смотреть дальше:** скорее нет, но только потому что не фанат спортивных аниме
 
-
-::image{src="/images/uploads/dtf-zima-2022-21.webp" alt="" caption="Ржавая броня" width="column"}
-
-
 #### [Ржавая броня](/anime/sabiiro-no-armor-reimei/)
+
+::image{src="/images/uploads/dtf-zima-2022-21.webp" alt="" caption="Ржавая броня, студия Kigumi" width="column"}
 
 Главный шедевр этой четверки — аниме с CGI-персонажами на фонах, нарисованных в Paint.
 
@@ -304,11 +272,9 @@ anime:
 
 **Смотреть дальше:** нет, мне и одну серию было больно досматривать
 
-
-::image{src="/images/uploads/dtf-zima-2022-01.webp" alt="" caption="Биско-ржавоед" width="column"}
-
-
 #### [Биско-ржавоед](/anime/sabikui-bisco/)
+
+::image{src="/images/uploads/dtf-zima-2022-01.webp" alt="" caption="Биско-ржавоед, студия OZ" width="column"}
 
 Причудливая смесь «Безумного Макса» с оттенками «Дорохедоро». По сюжету Япония пережила катаклизм, покрылась песком и ржавчиной, а люди начали заболевать неизвестной болезнью. Однако главные герои отправляются на поиски гриба, который может всех излечить.
 
@@ -318,11 +284,9 @@ anime:
 
 **Смотреть дальше:** да, в надежде на отличный сюжет
 
-
-::image{src="/images/uploads/dtf-zima-2022-02.webp" alt="" caption="Сасаки и Миано" width="column"}
-
-
 #### Сасаки и Миано
+
+::image{src="/images/uploads/dtf-zima-2022-02.webp" alt="" caption="Сасаки и Миано, студия DEEN" width="column"}
 
 Яойная романтическая история взбалмошного и непосредственного Сасаки с тихим и скромным Миано.
 
@@ -332,11 +296,9 @@ anime:
 
 **Смотреть дальше:** нет, но могу рекомендовать другим
 
-
-::image{src="/images/uploads/dtf-zima-2022-03.webp" alt="" caption="Шэнму" width="column"}
-
-
 #### Шэнму
+
+::image{src="/images/uploads/dtf-zima-2022-03.webp" alt="" caption="Шэнму, студия Telecom Animation Film" width="column"}
 
 Экранизация одноименной серии игр про парня Рё, который хочет стать сильнейшим мастером боевых искусств и отомстить за убийство своего отца.
 
@@ -348,11 +310,9 @@ anime:
 
 **Смотреть дальше:** скорее нет, но возможно это для кого-то хороший способ узнать историю из игры
 
-
-::image{src="/images/uploads/dtf-zima-2022-04.webp" alt="" caption="Сильнейший мудрец низшей эмблемы" width="column"}
-
-
 #### Сильнейший мудрец низшей эмблемы
+
+::image{src="/images/uploads/dtf-zima-2022-04.webp" alt="" caption="Сильнейший мудрец низшей эмблемы, студия J.C.STAFF" width="column"}
 
 Ещё один исекай в этом сезоне.
 
@@ -364,11 +324,9 @@ anime:
 
 **Смотреть дальше:** нет, слишком средне
 
-
-::image{src="/images/uploads/dtf-zima-2022-05.webp" alt="" caption="Тотальный гарем" width="column"}
-
-
 #### Тотальный гарем
+
+::image{src="/images/uploads/dtf-zima-2022-05.webp" alt="" caption="Тотальный гарем, студии AXsiZ и Gokumi" width="column"}
 
 Вот где беззастенчивого фансервиса на грани с хентаем (а иногда и за гранью) полно — так это в «Тотальном гареме».
 
@@ -382,11 +340,9 @@ anime:
 
 **Смотреть дальше:** нет, лучше пойду на специальные сайты
 
-
-::image{src="/images/uploads/zima-2022-tg-115.webp" alt="" caption="Медленная петля" width="column"}
-
-
 #### [Медленная петля](/anime/slow-loop/)
+
+::image{src="/images/uploads/zima-2022-tg-115.webp" alt="" caption="Медленная петля, студия Connect" width="column"}
 
 Аниме про милых девочек, которые делают милые дела на улице.
 
@@ -400,11 +356,9 @@ anime:
 
 **Смотреть дальше:** в грустные вечера — можно
 
-
-::image{src="/images/uploads/zima-2022-tg-116.webp" alt="" caption="Руководство гениального принца по вызволению страны из долгов" width="column"}
-
-
 #### [Руководство гениального принца по вызволению страны из долгов](/anime/tensai-ouji-no-akaji-kokka-saisei-jutsu/)
+
+::image{src="/images/uploads/zima-2022-tg-116.webp" alt="" caption="Руководство гениального принца по вызволению страны из долгов, студия Yokohama Animation Lab" width="column"}
 
 Молодой правитель средневековой страны хочет ее продать подороже соседям и жить счастливо, ничего не решая, но все постоянно идет не так.
 
