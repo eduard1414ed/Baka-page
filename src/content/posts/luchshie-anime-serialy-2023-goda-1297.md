@@ -2,17 +2,28 @@
 title: Лучшие аниме-сериалы 2023 года
 date: 2023-06-07
 category: article
-externalUrl: https://t-j.ru/list/best-anime-2023/
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1297.jpg
-pullMedia: false
 noCover: false
+externalUrl: https://t-j.ru/list/best-anime-2023/
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1297
 tgUrl: https://t.me/podcastbaka/1297
 ---
 
 ::image{src="/images/uploads/tg-1297.jpg" alt="" width="column"}
+
 
 Весенний сезон подходит к концу, поэтому я обновил подборку аниме, которые стоит посмотреть в этом году.
 
