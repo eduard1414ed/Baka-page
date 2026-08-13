@@ -4,7 +4,7 @@ date: 2022-05-15
 category: note
 draft: false
 description: ''
-cover: /images/uploads/pasted-image-1786576995619.png
+cover: /images/uploads/pasted-image-1786576995619.webp
 noCover: false
 externalUrl: ''
 externalSource: ''

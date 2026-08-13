@@ -4,7 +4,7 @@ date: 2022-05-18
 category: note
 draft: true
 description: ''
-cover: /images/uploads/pasted-image-1786578289506.png
+cover: /images/uploads/pasted-image-1786578289506.webp
 noCover: false
 externalUrl: ''
 externalSource: ''
@@ -48,7 +48,7 @@ anime:
 ---
 
 
-::image{src="/images/uploads/pasted-image-1786578289506.png" alt="" width="column"}
+::image{src="/images/uploads/pasted-image-1786578289506.webp" alt="" width="column"}
 
 
 В этом сезоне вышло 25 новых сериалов — я решил посмотреть все из них и поделиться свои мнением. Что точно стоит смотреть, чему можно дать шанс, а что — не жалко и пропустить.
@@ -58,7 +58,7 @@ anime:
 Ну что, поехали?
 
 
-::image{src="/images/uploads/pasted-image-1786578337439.png" alt="" caption="Непостижимая Ахарэн" width="column"}
+::image{src="/images/uploads/pasted-image-1786578337439.webp" alt="" caption="Непостижимая Ахарэн" width="column"}
 
 
 #### Непостижимая Ахарэн
@@ -72,7 +72,7 @@ anime:
 **Смотреть дальше:** нет, бросаю после второй серии
 
 
-::image{src="/images/uploads/pasted-image-1786578361502.png" alt="" caption="Ао Аси" width="column"}
+::image{src="/images/uploads/pasted-image-1786578361502.webp" alt="" caption="Ао Аси" width="column"}
 
 
 Новая попытка сделать успешное спортивное аниме про футбол. Причем от студии Production I.G, которая знает как делать спортивное аниме (Haikyuu!, «Баскетбол Куроко»).
@@ -84,7 +84,7 @@ anime:
 **Смотреть дальше:** нет, но если вы фанат спортивного аниме, можно дать шанс
 
 
-::image{src="/images/uploads/pasted-image-1786578415203.png" alt="" caption="Птичье крыло: История гольфисток" width="column"}
+::image{src="/images/uploads/pasted-image-1786578415203.webp" alt="" caption="Птичье крыло: История гольфисток" width="column"}
 
 
 #### Птичье крыло: История гольфисток
@@ -98,7 +98,7 @@ anime:
 **Смотреть дальше:** можно дать шанс
 
 
-::image{src="/images/uploads/pasted-image-1786578499619.png" alt="" width="column"}
+::image{src="/images/uploads/pasted-image-1786578499619.webp" alt="" width="column"}
 
 
 #### Танцуй, танцуй, танцор
@@ -114,7 +114,7 @@ anime:
 **Смотреть дальше:** по форме это все то же спортивное аниме, пусть и более качественное. Поэтому я смотреть не буду, но если вы фанат спортивного аниме — не пропускайте.
 
 
-::image{src="/images/uploads/pasted-image-1786578516270.png" alt="" caption="Создание жизни: Большой побег" width="column"}
+::image{src="/images/uploads/pasted-image-1786578516270.webp" alt="" caption="Создание жизни: Большой побег" width="column"}
 
 
 #### Создание жизни: Большой побег
@@ -128,7 +128,7 @@ anime:
 **Смотреть дальше:** однозначное нет
 
 
-::image{src="/images/uploads/pasted-image-1786578543021.png" alt="" caption="Рыцарь-скелет вступает в параллельный мир" width="column"}
+::image{src="/images/uploads/pasted-image-1786578543021.webp" alt="" caption="Рыцарь-скелет вступает в параллельный мир" width="column"}
 
 
 #### Рыцарь-скелет вступает в параллельный мир
@@ -144,7 +144,7 @@ anime:
 **Смотреть дальше:** если ищите для себя новый исекай — то да
 
 
-::image{src="/images/uploads/pasted-image-1786578562354.png" alt="" caption="Ультрамариновые фанфары" width="column"}
+::image{src="/images/uploads/pasted-image-1786578562354.webp" alt="" caption="Ультрамариновые фанфары" width="column"}
 
 
 #### Ультрамариновые фанфары
@@ -160,7 +160,7 @@ anime:
 **Смотреть дальше:** если любите лошадей или спортивное аниме — можно дать шанс
 
 
-::image{src="/images/uploads/pasted-image-1786578585854.png" alt="" caption="Девушка-целитель" width="column"}
+::image{src="/images/uploads/pasted-image-1786578585854.webp" alt="" caption="Девушка-целитель" width="column"}
 
 
 #### Девушка-целитель
@@ -176,7 +176,7 @@ anime:
 **Смотреть дальше:** нет, но из-за рисовки и милого посыла можно поставить детям, например
 
 
-::image{src="/images/uploads/pasted-image-1786576931635.png" alt="" caption="Сведённые кукушкой" width="column"}
+::image{src="/images/uploads/pasted-image-1786576931635.webp" alt="" caption="Сведённые кукушкой" width="column"}
 
 
 #### Сведённые кукушкой
@@ -190,7 +190,7 @@ anime:
 **Смотреть дальше:** пока да, но если уровень кринжа возрастет — бросать
 
 
-::image{src="/images/uploads/pasted-image-1786578657954.png" alt="" caption="Любовь после мирового господства" width="column"}
+::image{src="/images/uploads/pasted-image-1786578657954.webp" alt="" caption="Любовь после мирового господства" width="column"}
 
 
 #### Любовь после мирового господства
@@ -204,7 +204,7 @@ anime:
 **Смотреть дальше:** нет, скучно
 
 
-::image{src="/images/uploads/pasted-image-1786578676170.png" alt="" caption="В сердце куноити Цубаки" width="column"}
+::image{src="/images/uploads/pasted-image-1786578676170.webp" alt="" caption="В сердце куноити Цубаки" width="column"}
 
 
 #### В сердце куноити Цубаки
@@ -222,7 +222,7 @@ anime:
 **Смотреть дальше:** нет, к завязке много вопросов
 
 
-::image{src="/images/uploads/pasted-image-1786576995619.png" alt="" width="column"}
+::image{src="/images/uploads/pasted-image-1786576995619.webp" alt="" width="column"}
 
 
 #### Стать настоящей героиней!
@@ -238,7 +238,7 @@ anime:
 **Смотреть дальше:** да, это пока мой теневой фаворит сезона
 
 
-::image{src="/images/uploads/pasted-image-1786578726117.png" alt="" caption="Этот противный целитель" width="column"}
+::image{src="/images/uploads/pasted-image-1786578726117.webp" alt="" caption="Этот противный целитель" width="column"}
 
 
 #### Этот противный целитель
@@ -254,7 +254,7 @@ anime:
 **Смотреть дальше:** нет, нет, нет
 
 
-::image{src="/images/uploads/pasted-image-1786577197991.png" alt="" caption="Дэаймон" width="column"}
+::image{src="/images/uploads/pasted-image-1786577197991.webp" alt="" caption="Дэаймон" width="column"}
 
 
 #### Дэаймон
@@ -266,7 +266,7 @@ anime:
 **Смотреть дальше:** да, хорошая повседневность
 
 
-::image{src="/images/uploads/pasted-image-1786578784141.png" alt="" caption="Мир отомэ-игр — это тяжёлый мир для мобов" width="column"}
+::image{src="/images/uploads/pasted-image-1786578784141.webp" alt="" caption="Мир отомэ-игр — это тяжёлый мир для мобов" width="column"}
 
 
 #### Мир отомэ-игр — это тяжёлый мир для мобов
@@ -282,7 +282,7 @@ anime:
 **Смотреть дальше:** нет, проходняк
 
 
-::image{src="/images/uploads/pasted-image-1786577246154.png" alt="" width="column"}
+::image{src="/images/uploads/pasted-image-1786577246154.webp" alt="" width="column"}
 
 
 #### Моя девушка не только милая
@@ -300,7 +300,7 @@ anime:
 **Смотреть дальше:** да, конечно. Это отличное аниме, несмотря на мое бурчание
 
 
-::image{src="/images/uploads/pasted-image-1786577306753.png" alt="" caption="Тусовщик Кунмин" width="column" source-label="Тусовщик Кунмин"}
+::image{src="/images/uploads/pasted-image-1786577306753.webp" alt="" caption="Тусовщик Кунмин" width="column" source-label="Тусовщик Кунмин"}
 
 
 #### Тусовщик Кунмин
@@ -316,7 +316,7 @@ anime:
 **Смотреть дальше:** да, отличная комедия
 
 
-::image{src="/images/uploads/pasted-image-1786577363920.png" alt="" caption="РПГ Недвижимость" width="column"}
+::image{src="/images/uploads/pasted-image-1786577363920.webp" alt="" caption="РПГ Недвижимость" width="column"}
 
 
 #### РПГ Недвижимость
@@ -332,7 +332,7 @@ anime:
 **Смотреть дальше:** если вам хочется отдохнуть и выключить мозг — самое то
 
 
-::image{src="/images/uploads/pasted-image-1786578922724.png" alt="" caption="Игра с нулевым счётом" width="column"}
+::image{src="/images/uploads/pasted-image-1786578922724.webp" alt="" caption="Игра с нулевым счётом" width="column"}
 
 
 #### Игра с нулевым счётом
@@ -346,7 +346,7 @@ anime:
 **Смотреть дальше:** нет, второсортно даже в этом году
 
 
-::image{src="/images/uploads/pasted-image-1786578948573.png" alt="" caption="Корпоративная рабыня хочет быть исцелена лоли-призраком" width="column"}
+::image{src="/images/uploads/pasted-image-1786578948573.webp" alt="" caption="Корпоративная рабыня хочет быть исцелена лоли-призраком" width="column"}
 
 
 #### Корпоративная рабыня хочет быть исцелена лоли-призраком
@@ -384,7 +384,7 @@ anime:
 **Смотреть дальше:** да, конечно
 
 
-::image{src="/images/uploads/pasted-image-1786577444139.png" alt="" caption="Летнее время" width="column"}
+::image{src="/images/uploads/pasted-image-1786577444139.webp" alt="" caption="Летнее время" width="column"}
 
 
 #### Летнее время
@@ -398,7 +398,7 @@ anime:
 **Смотреть дальше:** да, особенно если любите мистику
 
 
-::image{src="/images/uploads/pasted-image-1786577489254.png" alt="" caption="Жизнь девушки-карателя" width="column"}
+::image{src="/images/uploads/pasted-image-1786577489254.webp" alt="" caption="Жизнь девушки-карателя" width="column"}
 
 
 #### Жизнь девушки-карателя
@@ -416,7 +416,7 @@ anime:
 **Смотреть дальше:** да, отличное приключение с оригинальными идеями
 
 
-::image{src="/images/uploads/pasted-image-1786579411828.png" alt="" caption="Перестану быть героем" width="column"}
+::image{src="/images/uploads/pasted-image-1786579411828.webp" alt="" caption="Перестану быть героем" width="column"}
 
 
 #### Перестану быть героем
@@ -428,7 +428,7 @@ anime:
 **Смотреть дальше:** если больше смотреть нечего
 
 
-::image{src="/images/uploads/pasted-image-1786579454758.png" alt="" caption="Величайший повелитель демонов перерождается как типичное ничтожество" width="column"}
+::image{src="/images/uploads/pasted-image-1786579454758.webp" alt="" caption="Величайший повелитель демонов перерождается как типичное ничтожество" width="column"}
 
 
 #### Величайший повелитель демонов перерождается как типичное ничтожество
