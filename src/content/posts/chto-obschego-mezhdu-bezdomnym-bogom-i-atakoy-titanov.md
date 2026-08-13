@@ -2,13 +2,26 @@
 title: Что общего между «Бездомным богом» и «Атакой титанов»?
 date: 2022-06-10
 category: note
-draft: true
+draft: false
 description: ''
-cover: ''
+cover: /images/uploads/pasted-image-1786607949644.webp
 noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested:
+  - noragami
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 212
 tgUrl: https://t.me/podcastbaka/212
-animeSuggested:
+anime:
+  - shingeki-kyojin-chuugakkou
   - noragami
 ---
 
@@ -23,3 +36,7 @@ animeSuggested:
 В метро Токио были развешены общие постеры, а в выходящей манге появились комедийные зарисовки в стиле «Титанов средней школы».
 
 Возможно, третьего сезона «Бездомного бога» нет только потому, что авторы ждут выхода продолжения Титанов-школьников.
+
+::anime-ref{id="shingeki-kyojin-chuugakkou" source="shikimori" source-id="31374"}
+
+::anime-ref{id="noragami" source="shikimori" source-id="20507"}
