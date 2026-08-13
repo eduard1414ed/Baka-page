@@ -2,18 +2,30 @@
 title: Самое грустное использование мифа
 date: 2022-09-01
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-502.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested:
+  - naruto
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 502
 tgUrl: https://t.me/podcastbaka/502
-animeSuggested:
+anime:
   - naruto
 ---
 
 ::image{src="/images/uploads/tg-502.jpg" alt="" width="column"}
+
 
 «Наруто» переполнен отсылками на культуру Японии. Начиная от самого образа ниндзя и феодального государства, заканчивая именами божеств в качестве названий техник.
 
@@ -27,4 +39,7 @@ animeSuggested:
 
 Печально, что такой образ был полностью профукан.
 
+
 ::image{src="/images/uploads/tg-503.jpg" alt="" width="column"}
+
+::anime-ref{id="naruto" source="shikimori" source-id="20"}
