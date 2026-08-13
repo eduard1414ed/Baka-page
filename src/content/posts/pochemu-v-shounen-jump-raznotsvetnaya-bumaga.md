@@ -1,17 +1,29 @@
 ---
-title: Почему в Shounen Jump разноцветная бумага?
+title: Почему в Shonen Jump разноцветная бумага?
 date: 2023-01-17
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-947.jpg
+noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
 pullMedia: false
-noCover: false
 tgId: 947
 tgUrl: https://t.me/podcastbaka/947
 ---
 
 ::image{src="/images/uploads/tg-947.jpg" alt="" width="column"}
+
 
 Я несколько дней искал ответ на этот вопрос в англоязычном Google. Но ничего четкого и достоверного найти не мог. В итоге я почти отчаялся, но набрел на мангу, которая называется [The Right Way To Make Jump!](https://mangakakalot.so/reading/the-right-way-to-make-jump)
 
@@ -32,5 +44,6 @@ tgUrl: https://t.me/podcastbaka/947
 Этот же вопрос задает автор манги на производстве. На что получает ответ: «К сожалению, мы не знаем».
 
 Так что, неудивительно, что я не мог найти нигде информацию, если даже в манге о создании манги никто не знает точного ответа.
+
 
 ::image{src="/images/uploads/tg-948.jpg" alt="" width="column"}
