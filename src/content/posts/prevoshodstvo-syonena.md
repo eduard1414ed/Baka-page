@@ -2,20 +2,32 @@
 title: Превосходство сёнена
 date: 2023-03-07
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1090.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1090
 tgUrl: https://t.me/podcastbaka/1090
 ---
 
 ::image{src="/images/uploads/tg-1090.jpg" alt="" width="column"}
 
+
 Shounen Jump — самый популярный в Японии журнал манги (с гиганстким отрывом). И больше половины сериалов, которые сейчас выходят, можно отнести именно к сёнен-демографии.
 
-Но интересно, что внимание к сёненам больше не только на родине аниме, но и в России. Я тут изучал «[Индекс Кинопоиск Pro](https://www.kinopoisk.ru/special/index/)» (про который мы рассказывали [в последнем специальном выпуске](https://t.me/podcastbaka/1080)) — и заметил, что из 14 аниме, которые есть в ТОП-100 за последний год, 12 — чистые сёнены.
+Но интересно, что внимание к сёненам больше не только на родине аниме, но и в России. Я тут изучал «[Индекс Кинопоиск Pro](https://www.kinopoisk.ru/special/index/)» — и заметил, что из 14 аниме, которые есть в ТОП-100 за последний год, 12 — чистые сёнены.
 
 Еще один сериал, «Джо Джо», делается по манге, которая выходила и как сёнен, и как более взрослый сэйнен. А последний, «Токийский гуль» хоть и снят по сэйнену, но явно упрощен и переработан под аудиторию сёненов.
 
