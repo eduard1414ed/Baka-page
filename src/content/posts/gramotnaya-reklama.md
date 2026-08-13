@@ -1,18 +1,35 @@
 ---
-title: Грамотная реклама
+title: Грамотная реклама «Киберпанка»
 date: 2022-07-04
 category: note
-draft: true
+draft: false
 description: ''
 cover: ''
 noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 284
 tgUrl: https://t.me/podcastbaka/284
+anime:
+  - cyberpunk-edgerunners
 ---
 
 Я вообще не заинтересовался аниме The Cyberpunk Edgerunners. Сериал по не самой интересной вселенной, выходящий на Netflix, от студии Trigger, последние сериалы которой сложно назвать удачными.
 
 Но сегодня я посмотрел будущий опенинг Edgerunners — и теперь мне хочется дать этому аниме шанс.
+
+
+::video{youtube="https://youtu.be/3sSjXZ2sczU"}
+
 
 Во-первых, удивляет выбор музыки. Не ожидал услышать британскую группу Franz Ferdinand в опенинге аниме. Однако, она идеально сочетается с визуальным рядом.
 
@@ -24,4 +41,4 @@ tgUrl: https://t.me/podcastbaka/284
 
 Поэтому и хочется дать сериалу шанс, вдруг сама история, как и опенинг, тоже окажется не такой банальной, как я ожидал.
 
-https://youtu.be/3sSjXZ2sczU
+::anime-ref{id="cyberpunk-edgerunners" source="shikimori" source-id="42310"}
