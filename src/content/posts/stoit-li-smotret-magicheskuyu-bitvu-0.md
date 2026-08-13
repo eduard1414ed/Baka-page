@@ -2,13 +2,29 @@
 title: Стоит ли смотреть «Магическую битву 0»
 date: 2022-10-06
 category: note
-draft: true
+draft: false
 description: ''
 cover: ''
-noCover: true
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 630
 tgUrl: https://t.me/podcastbaka/630
+anime:
+  - jujutsu-kaisen-0-movie
 ---
+
+::image{src="/images/uploads/pasted-image-1786622845875.webp" alt="" width="column"}
+
 
 В конце сентября наконец-то в цифровом прокате вышел полнометражный приквел «Магической битвы». Насколько удачным он вышел?
 
@@ -43,3 +59,5 @@ tgUrl: https://t.me/podcastbaka/630
 Смотреть «Магическую битву 0» в отрыве от оригинального сериала точно не стоит. Как и надеяться, что фильм перевернет ваше отношение к франшизе, если сериал вам не понравился.
 
 Это блюдо предназначено исключительно для фанатов истории Гэгэ Акутами. Но им оно придется идеально по вкусу.
+
+::anime-ref{id="jujutsu-kaisen-0-movie" source="shikimori" source-id="48561"}
