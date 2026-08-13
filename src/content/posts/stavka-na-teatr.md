@@ -2,20 +2,32 @@
 title: Ставка на театр
 date: 2022-08-22
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-468.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested:
+  - akane-banashi
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 468
 tgUrl: https://t.me/podcastbaka/468
-animeSuggested:
+anime:
   - akane-banashi
 ---
 
 ::image{src="/images/uploads/tg-468.jpg" alt="" width="column"}
 
-Shounen Jump с февраля выпускает новую мангу, и все больше делает на неё ставку — цветные развороты, обложки и масса рекламных материалов.
+
+Shonen Jump с февраля выпускает новую мангу, и все больше делает на неё ставку — цветные развороты, обложки и масса рекламных материалов.
 
 А известные мангаки один за другим пишут о ней хвалебные отзывы.
 
@@ -27,4 +39,6 @@ Shounen Jump с февраля выпускает новую мангу, и вс
 
 Зато сразу цепляет визуальный стиль от художника Такамаса Моуэ. Театр одного актера изображается очень эффектно, а дизайн персонажей сразу запоминается.
 
-Рано говорить, насколько «Сказание об Аканэ» окажется интересной мангой, но такая ставка от Shounen Jump заставляет внимательнее следить за историей молодой актрисы.
+Рано говорить, насколько «Сказание об Аканэ» окажется интересной мангой, но такая ставка от Shonen Jump заставляет внимательнее следить за историей молодой актрисы.
+
+::anime-ref{id="akane-banashi" source="shikimori" source-id="62164"}
