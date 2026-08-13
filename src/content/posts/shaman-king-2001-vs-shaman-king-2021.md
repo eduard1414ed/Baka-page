@@ -2,7 +2,7 @@
 title: «Шаман Кинг» 2001 vs «Шаман Кинг» 2021
 date: 2022-09-21
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-593.jpg
 noCover: false
