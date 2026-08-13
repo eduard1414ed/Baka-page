@@ -2,10 +2,22 @@
 title: Ремейки в аниме
 date: 2022-09-16
 category: note
-draft: true
+draft: false
 description: ''
 cover: ''
 noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 573
 tgUrl: https://t.me/podcastbaka/573
 ---
