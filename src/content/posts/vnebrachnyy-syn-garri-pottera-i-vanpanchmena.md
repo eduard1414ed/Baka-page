@@ -2,16 +2,29 @@
 title: Внебрачный сын «Гарри Поттера» и «Ванпанчмена»
 date: 2023-05-04
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1230.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1230
 tgUrl: https://t.me/podcastbaka/1230
+anime:
+  - mashle
 ---
 
 ::image{src="/images/uploads/tg-1230.jpg" alt="" width="column"}
+
 
 Понял, что вообще нигде еще не писал про онгоинг этого сезона — «MASHLE: Магия и мускулы». А тем временем это очень абсурдный и веселый сериал, который может вас развлечь.
 
@@ -34,3 +47,5 @@ tgUrl: https://t.me/podcastbaka/1230
 В итоге MASHLE — это одноразовый стеб над «Гарри Поттером» в формате аниме, который тем не менее весело и даже ностальгично смотреть.
 
 И если вы любите такой юмор, на сериал стоит обратить внимание.
+
+::anime-ref{id="mashle" source="shikimori" source-id="52211"}
