@@ -2,16 +2,29 @@
 title: Все концовки Steins Gate (почти)
 date: 2023-03-02
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1079.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1079
 tgUrl: https://t.me/podcastbaka/1079
+anime:
+  - steins-gate
 ---
 
 ::image{src="/images/uploads/tg-1079.jpg" alt="" width="column"}
+
 
 Аниме «Врат Штейна» — тот случай, когда оригинал истории это не манга, а визуальная новелла. Интерактивная история на стыке манги, романа и копьютерной игры.
 
@@ -46,3 +59,5 @@ tgUrl: https://t.me/podcastbaka/1079
 ### 6. Концовка Рукако
 
 Окабэ отказывается менять обратно пол Рукако на мужской и дает Маюши умереть. И заводит отношения с Рукако.
+
+::anime-ref{id="steins-gate" source="shikimori" source-id="9253"}
