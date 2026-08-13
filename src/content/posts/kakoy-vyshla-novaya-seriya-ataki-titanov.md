@@ -2,16 +2,25 @@
 title: Какой вышла новая серия «Атаки титанов»?
 date: 2023-03-04
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1081.jpg
+noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
 pullMedia: false
-noCover: false
 tgId: 1081
 tgUrl: https://t.me/podcastbaka/1081
 ---
-
-::image{src="/images/uploads/tg-1081.jpg" alt="" width="column"}
 
 Вчера вечером состоялся релиз первой части финала «Атаки Титанов» в виде специального часового эпизода. Без спойлеров расскажу, что из этого вышло.
 
@@ -43,8 +52,25 @@ tgUrl: https://t.me/podcastbaka/1081
 
 Но, если вы «Атаку» еще не смотрели совсем — я бы советовал дождаться все-таки самого финального финала и потом начинать. Чтобы познакомиться с этой историей сразу целиком — так точно эмоции будут ярче.
 
+
+::image{src="/images/uploads/tg-1081.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1082.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1083.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1084.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1085.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1086.jpg" alt="" width="column"}
