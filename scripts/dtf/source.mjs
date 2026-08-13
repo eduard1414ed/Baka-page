@@ -67,11 +67,30 @@ export async function fetchArticle(id) {
 
 export const stripTags = (html) => html.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
 
-/** Переадресация DTF → прямой адрес. */
+/**
+ * Переадресация → прямой адрес. Слоёв бывает ДВА, и снимать надо оба.
+ *
+ * Первый ставит сам DTF (`api.dtf.ru/v2.8/redirect?to=…`). Второй приезжает
+ * из Google Docs: автор пишет текст там, и ссылка, скопированная из документа,
+ * оказывается обёрнута в `google.com/url?q=…` вместе со счётчиком нажатий
+ * (`usg`, `ust`). Сними только первый — и в посте останется ссылка, ведущая
+ * на google.com: она работает, поэтому промах ничем себя не выдаёт.
+ * В интервью 1805563 такая ровно одна — на первоисточник интервью, то есть
+ * на самое важное место текста. В остальных пяти перенесённых статьях
+ * `google.com/url` не встречается ни разу (проверено по кэшу ответов),
+ * так что правило ничего им не меняет.
+ */
 export function unwrapRedirect(href) {
-	if (!href.startsWith('https://api.dtf.ru/')) return href;
-	const to = new URL(href).searchParams.get('to');
-	return to ? decodeURIComponent(to) : href;
+	let address = href;
+	if (address.startsWith('https://api.dtf.ru/')) {
+		const to = new URL(address).searchParams.get('to');
+		if (to) address = decodeURIComponent(to);
+	}
+	if (/^https:\/\/(www\.)?google\.[a-z.]+\/url\?/.test(address)) {
+		const target = new URL(address).searchParams.get('q') || new URL(address).searchParams.get('url');
+		if (target) address = target;
+	}
+	return address;
 }
 
 /**

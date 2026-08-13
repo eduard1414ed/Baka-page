@@ -57,6 +57,9 @@ const DROP = {
 	zima2022: [/^Я решил устроить себе марафон/, /^(Кратко правила|Правила такие):/, /четверку аниме можно посмотреть/, /^Больше от подкаста/],
 	podborki2023: [/Расскажите в комментариях/, /не забывайте подписываться/i, /^Ещё больше интересных фактов|^Еще больше интересных фактов/],
 	bluePeriod: [/^Больше интересного и полезного в нашем телеграм/],
+	// Строка «Оригинал интервью — тут» ОСТАЁТСЯ: это указание на первоисточник,
+	// а не хвост площадки. Выброшены только теги DTF.
+	interview: [/^#\S/],
 };
 
 const problemsOfImages = (raw) => {
@@ -227,6 +230,69 @@ async function checkBluePeriod(raw) {
 	return problems;
 }
 
+// ─── Интервью «Долой безделье!» ───────────────────────────────────────────
+async function checkInterview(raw) {
+	const problems = [];
+	const article = await fetchArticle(1805563);
+
+	const want = norm(article.blocks
+		.filter((b) => b.type === 'text' || b.type === 'header')
+		.flatMap((b) => b.data.text.split(/<\/p>|<br\s*\/?>/i))
+		.map((chunk) => norm(strip(chunk)))
+		.filter((text) => text && !DROP.interview.some((re) => re.test(text)))
+		.join(' '));
+	const got = norm(plainMd(bodyOf(raw)));
+	if (want !== got) {
+		let i = 0; while (i < want.length && want[i] === got[i]) i++;
+		problems.push(`текст разошёлся на знаке ${i}: ждали ${JSON.stringify(want.slice(i, i + 50))}, получили ${JSON.stringify(got.slice(i, i + 50))}`);
+	}
+
+	// КАЖДЫЙ ВОПРОС — ПЯТЫЙ УРОВЕНЬ, И СВЕРЯЕМ ИХ ТЕКСТОМ, А НЕ СЧЁТОМ. Уровень
+	// заголовка решает весь вид блока (третий — в скобках и капсом, четвёртый —
+	// капсом), и съехавший на соседний уровень вопрос счётом не поймать вовсе.
+	const wantHeads = article.blocks.filter((b) => b.type === 'header').map((b) => norm(strip(b.data.text)));
+	const gotHeads = [...raw.matchAll(/^(#{1,6}) (.+)$/gm)].map((m) => ({ level: m[1].length, text: norm(m[2]) }));
+	if (wantHeads.join('\n') !== gotHeads.map((h) => h.text).join('\n'))
+		problems.push(`вопросы разошлись: у DTF ${wantHeads.length}, у нас ${gotHeads.length}`);
+	for (const head of gotHeads)
+		if (head.level !== 5) problems.push(`вопрос стоит заголовком ${head.level}, а не 5: «${head.text.slice(0, 50)}»`);
+
+	// ПОДПИСЬ У КАРТИНКИ ОДНА НА ВСЮ СТАТЬЮ, и потерять её легче всего:
+	// у остальных десяти кадров подписи нет, значит пропажу единственной
+	// не покажет ни счёт картинок, ни сверка текста — та её вовсе не видит.
+	//
+	// СВЕРЯЕМ ПАРАМИ «КАДР — ПОДПИСЬ», А НЕ СПИСКОМ ПОДПИСЕЙ. Первая редакция
+	// сравнивала список, и подлог «подпись уехала к чужому кадру» прошёл мимо
+	// насквозь: список-то тот же самый. А подпись не от того кадра хуже
+	// пропавшей — она выглядит правильной, и заметить её будет некому.
+	const wantCaptions = article.blocks.filter((b) => b.type === 'media').flatMap((b) => b.data.items.map((i) => norm(i.title ?? '')));
+	const gotCaptions = [...raw.matchAll(/^::image\{([^}]*)\}$/gm)].map((m) => norm(/caption="([^"]*)"/.exec(m[1])?.[1] ?? ''));
+	if (wantCaptions.length !== gotCaptions.length)
+		problems.push(`картинок у DTF ${wantCaptions.length}, у нас ${gotCaptions.length}`);
+	else for (const [index, wanted] of wantCaptions.entries())
+		if (wanted !== gotCaptions[index])
+			problems.push(`подпись ${index + 1}-го кадра разошлась: у DTF «${wanted.slice(0, 40) || '—'}», у нас «${gotCaptions[index].slice(0, 40) || '—'}»`);
+
+	// Имя говорящего полужирным — так набрано в первоисточнике. Пропади разметка,
+	// сверка текста этого не заметит: звёздочки она снимает с обеих сторон.
+	const wantBold = article.blocks.filter((b) => b.type === 'text').reduce((n, b) => n + (b.data.text.match(/<b>/g) || []).length, 0);
+	const gotBold = (bodyOf(raw).match(/\*\*[^*]+\*\*/g) || []).length;
+	if (wantBold !== gotBold) problems.push(`имён говорящих полужирным у DTF ${wantBold}, у нас ${gotBold}`);
+
+	// Переадресаций тут ДВЕ ПОРОДЫ: своя у DTF и приехавшая из Google Docs.
+	// Вторая ведёт на первоисточник интервью — самое важное место текста.
+	if (/api\.dtf\.ru/.test(raw)) problems.push('осталась переадресация api.dtf.ru');
+	if (/google\.[a-z.]+\/url\?/.test(raw)) problems.push('осталась переадресация google.com/url');
+
+	// `tgId` — не мелочь: по нему импорт узнаёт, что анонс 1256 уже на сайте.
+	// Потеряй его — и робот заведёт анонс заново, вторым файлом рядом со статьёй.
+	if (!/^tgId: 1256$/m.test(raw)) problems.push('пропал tgId: 1256 — импорт заведёт анонс из телеграма заново');
+
+	problems.push(...checkCoverFirst(raw));
+	problems.push(...problemsOfImages(raw));
+	return problems;
+}
+
 // ─── Вид: обложка, порядок, подписи (правки заказчика 13 августа) ─────────
 function checkCoverFirst(raw) {
 	const problems = [];
@@ -271,6 +337,7 @@ const POSTS = [
 	{ slug: 'kakoe-anime-stoit-smotret-etoy-vesnoy-2023', name: 'подборка весны 2023', checks: [(raw) => checkPodborka2023(raw, 1696863)] },
 	{ slug: 'kakoe-anime-stoit-smotret-etim-letom-2023', name: 'подборка лета 2023', checks: [(raw) => checkPodborka2023(raw, 1922981)] },
 	{ slug: 'realnye-kartiny-v-mange-goluboy-period', name: '«Голубой период»', checks: [checkBluePeriod] },
+	{ slug: 'doloy-bezdele-intervyu-s-rezhisserom-anime-i-avtorom-originalnoy-mangi', name: 'интервью «Долой безделье!»', checks: [checkInterview] },
 ];
 
 async function runAll() {
@@ -297,6 +364,11 @@ async function selftest() {
 	const zima = fs.readFileSync(postPath('obzor-vseh-anime-zimy-2022'), 'utf8');
 	const bp = fs.readFileSync(postPath('realnye-kartiny-v-mange-goluboy-period'), 'utf8');
 	const vesna = fs.readFileSync(postPath('kakoe-anime-stoit-smotret-etoy-vesnoy-2023'), 'utf8');
+	const talk = fs.readFileSync(postPath('doloy-bezdele-intervyu-s-rezhisserom-anime-i-avtorom-originalnoy-mangi'), 'utf8');
+	// Вопрос достаём ИЗ ДАННЫХ, а не вписываем именем: вписанный, он протухнет
+	// от первой же правки текста в админке, и заслон покраснеет на здоровом
+	// посте (в проекте это уже случалось — «Баки!» уехала в стоп-лист).
+	const firstQuestion = /^##### (.+)$/m.exec(talk)[1];
 
 	const cases = [
 		['зима 2022: потерян целый тайтл', () => checkZima2022(zima.replace(/#### \[Ниндзяла\]\([^)]*\)/, '')), true],
@@ -312,10 +384,29 @@ async function selftest() {
 		['«Голубой период»: подпись осталась абзацем', () => checkBluePeriod(bp.replace(/ caption="Работа: «Автопортрет в студии», 1929 год"/, '')), true],
 		['«Голубой период»: галерея разорвана текстом', () => checkBluePeriod(bp.replace('::image{src="/images/uploads/dtf-blue-period-03.webp"', 'Лишний абзац между кадрами галереи.\n\n::image{src="/images/uploads/dtf-blue-period-03.webp"')), true],
 		['«Голубой период»: файла картинки нет', () => checkBluePeriod(bp.replace('dtf-blue-period-05.webp', 'dtf-blue-period-99.webp')), true],
+		['интервью: пропала подпись у единственного кадра с подписью', () => checkInterview(talk.replace(/ caption="21 октября 1600 года[^"]*"/, '')), true],
+		['интервью: подпись уехала к чужому кадру', () => checkInterview(
+			talk.replace(/ caption="(21 октября 1600 года[^"]*)"/, '').replace('::image{src="/images/uploads/dtf-doloy-bezdele-07.webp" alt=""', '::image{src="/images/uploads/dtf-doloy-bezdele-07.webp" alt="" caption="21 октября 1600 года в ходе Битвы при Секигахаре Шима Сакон служил одним из высокопоставленных офицеров Исиды Мицунари"')), true],
+		['интервью: вопрос съехал на четвёртый уровень', () => checkInterview(talk.replace(`##### ${firstQuestion}`, `#### ${firstQuestion}`)), true],
+		['интервью: вопрос потерян', () => checkInterview(talk.replace(`##### ${firstQuestion}\n\n`, '')), true],
+		['интервью: имя говорящего осталось без полужирного', () => checkInterview(talk.replace('**Дэай Котоми:**', 'Дэай Котоми:')), true],
+		['интервью: ссылка на первоисточник осталась через google.com/url', () => checkInterview(talk.replace('https://realsound.jp/movie/2023/04/post-1311555.html', 'https://www.google.com/url?q=https://realsound.jp/movie/2023/04/post-1311555.html&sa=D')), true],
+		['интервью: потерян tgId — импорт заведёт анонс заново', () => checkInterview(talk.replace(/^tgId: 1256$/m, 'tgId: null')), true],
+		// Обложку не удаляем, а ОПУСКАЕМ на абзац ниже: удаление ловится счётом
+		// картинок, а это ловит только checkCoverFirst — ту проверку, ради
+		// которой подлог и написан.
+		['интервью: обложка не первым блоком', () => {
+			const blocks = talk.split(/\n\n/);
+			const i = blocks.findIndex((b) => b.startsWith('::image{src="/images/uploads/dtf-doloy-bezdele-01.webp"'));
+			[blocks[i], blocks[i + 1]] = [blocks[i + 1], blocks[i]];
+			return checkInterview(blocks.join('\n\n'));
+		}, true],
+		['интервью: у обложки появилась подпись', () => checkInterview(talk.replace('dtf-doloy-bezdele-01.webp" alt=""', 'dtf-doloy-bezdele-01.webp" alt="" caption="Кадр из аниме"')), true],
 		// Вторая половина: на здоровых файлах все проверки обязаны МОЛЧАТЬ.
 		['здоровый обзор зимы 2022', () => checkZima2022(zima), false],
 		['здоровый «Голубой период»', () => checkBluePeriod(bp), false],
 		['здоровая подборка весны 2023', () => checkPodborka2023(vesna, 1696863), false],
+		['здоровое интервью «Долой безделье!»', () => checkInterview(talk), false],
 	];
 
 	let ok = true;
