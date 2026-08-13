@@ -9,6 +9,14 @@ noCover: false
 externalUrl: ''
 externalSource: ''
 adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 154
 tgUrl: https://t.me/podcastbaka/154
 anime:
@@ -33,7 +41,7 @@ anime:
 ### Ллойд и стул le Corbusier LC2
 
 
-::image{src="/images/uploads/IMG_0720.jpeg" alt="" caption="Обложка первого тома" width="column"}
+::image{src="/images/uploads/BcHd6jPYO3GzbdDZKKofhAnQXO4ooG6BO7Wwa55v.webp" alt="" caption="Обложка первого тома" width="column"}
 
 
 Стул модерниста Ле Корбюзье был изобретён в 1928 году. И вскоре после начала массового производства он стал привычным для интерьеров офисов и других профессиональных сред.
