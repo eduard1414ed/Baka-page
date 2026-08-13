@@ -5,13 +5,26 @@ category: note
 draft: true
 description: ''
 cover: /images/uploads/tg-460.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 460
 tgUrl: https://t.me/podcastbaka/460
+anime:
+  - coquelicot-zaka-kara
 ---
 
 ::image{src="/images/uploads/tg-460.jpg" alt="" width="column"}
+
 
 В аниме-индустрии сейчас принято, чтобы рисовка и стиль адаптации были максимально приближены к оригиналу. А в противном случае фанаты начинают занижать аниме оценки и писать гневные треды в твиттере.
 
@@ -19,6 +32,11 @@ tgUrl: https://t.me/podcastbaka/460
 
 Самый яркий пример — «Со склонов Кокурико». От изначальной сёдзе-манги в визуальном плане ничего не осталось. Изменился дизайн героев, локаций, построение кадров и даже сама структура истории.
 
-Чуть более подробно мы поговорили об этом фильме в бонусном выпуске подкаста 😉
+
+::image{src="/images/uploads/pasted-image-1786619600354.webp" alt="" caption="Автор манги: Тэцуро Саяма" width="column"}
+
+
 
 ::image{src="/images/uploads/tg-461.jpg" alt="" width="column"}
+
+::anime-ref{id="coquelicot-zaka-kara" source="shikimori" source-id="10029"}
