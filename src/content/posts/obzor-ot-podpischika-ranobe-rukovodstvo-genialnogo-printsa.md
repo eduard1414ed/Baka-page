@@ -2,12 +2,26 @@
 title: 'Обзор от подписчика: ранобэ «Руководство гениального принца»'
 date: 2022-08-09
 category: note
-draft: true
+draft: false
 description: ''
 cover: ''
 noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: 'Автор текста: Anaka'
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 429
 tgUrl: https://t.me/podcastbaka/429
+anime:
+  - tensai-ouji-no-akaji-kokka-saisei-jutsu
+  - kono-subarashii-sekai-ni-shukufuku-wo
 ---
 
 Сегодня мы с вами не будем затрагивать совсем уж очевидные и популярные произведения (такие как «Безработный», «Герой щита» или «Коносуба»), а поговорим о менее известном ранобэ, у которого, однако, уже есть своя манга и даже аниме — «Руководство гениального принца».
@@ -21,3 +35,7 @@ tgUrl: https://t.me/podcastbaka/429
 Из минусов стоит отметить то, что следить за политикой может стать скучно. А также что на данный момент на русском доступно всего 7 томов.
 
 Если вы искали взрослую, но при этом не жестокую историю с притягательными персонажами —   произведение определенно стоит прочитать. Либо посмотреть аниме, на которое у нас [тоже есть обзор](/posts/obzor-vseh-anime-zimy-2022/).
+
+::anime-ref{id="tensai-ouji-no-akaji-kokka-saisei-jutsu" source="shikimori" source-id="47159"}
+
+::anime-ref{id="kono-subarashii-sekai-ni-shukufuku-wo" source="shikimori" source-id="30831"}
