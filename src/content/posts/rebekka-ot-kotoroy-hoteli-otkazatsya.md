@@ -2,16 +2,28 @@
 title: Ребекка, от которой хотели отказаться
 date: 2022-09-20
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-592.jpg
+noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
 pullMedia: false
-noCover: false
 tgId: 592
 tgUrl: https://t.me/podcastbaka/592
 ---
 
 ::image{src="/images/uploads/tg-592.jpg" alt="" width="column"}
+
 
 Я [в нашем чате](https://t.me/bakapodcast) на выходных обещал рассказать историю про создание всеми полюбившейся Ребекки из Cyberpunk: Edgerunners. Исполняю.
 
