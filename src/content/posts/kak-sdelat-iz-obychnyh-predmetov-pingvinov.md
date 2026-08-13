@@ -2,16 +2,26 @@
 title: Как сделать из обычных предметов — пингвинов?
 date: 2022-07-26
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-356.jpg
+noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
 pullMedia: false
-noCover: false
 tgId: 357
 tgUrl: https://t.me/podcastbaka/357
+anime:
+  - penguin-highway
 ---
-
-::image{src="/images/uploads/tg-356.jpg" alt="" width="column"}
 
 Такая нетривиальная задача стояла перед режиссером Исидой Хироясой при работе над его первым полнометражным фильмом — «Тайная жизнь пингвинов».
 
@@ -21,6 +31,11 @@ tgUrl: https://t.me/podcastbaka/357
 
 А в артбуке по «Пингвинам» есть несколько страниц, посвященных только тому, как именно предметы превращаются в пингвинов. Через какие стадии проходит анимация, и даже как меняется скелет животных во время этих превращений.
 
-Поэтому очень рекомендую следить за Хироясой, в сентябре планируется выход его нового фильма — «Дрейфующий дом».
+Поэтому очень рекомендую следить за Хироясой!.
+
 
 ::image{src="/images/uploads/tg-357.jpg" alt="" width="column"}
+
+::image{src="/images/uploads/tg-356.jpg" alt="" width="column"}
+
+::anime-ref{id="penguin-highway" source="shikimori" source-id="37407"}
