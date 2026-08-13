@@ -2,16 +2,29 @@
 title: Настоящий город будущего
 date: 2023-02-09
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1014.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1014
 tgUrl: https://t.me/podcastbaka/1014
+anime:
+  - koukaku-kidoutai
 ---
 
 ::image{src="/images/uploads/tg-1014.jpg" alt="" width="column"}
+
 
 Одна из самых запоминающихся вещей в фильме «Призрак в доспехах» 1995 года — это виды города будущего, в котором происходит все действие.
 
@@ -25,6 +38,15 @@ tgUrl: https://t.me/podcastbaka/1014
 
 И в итоге город получился не только в аниме одним из главных героев, но и отдельно арты города выглядят как произведения искусства.
 
+
 ::image{src="/images/uploads/tg-1015.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1016.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1017.jpg" alt="" width="column"}
+
+::anime-ref{id="koukaku-kidoutai" source="shikimori" source-id="43"}
