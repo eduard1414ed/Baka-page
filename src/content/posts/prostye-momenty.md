@@ -1,18 +1,35 @@
 ---
-title: Простые моменты
+title: Простые моменты и «Приоритет чудо-яйца»
 date: 2022-11-05
 category: note
-draft: true
+draft: false
 description: ''
 cover: ''
 noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 715
 tgUrl: https://t.me/podcastbaka/715
+anime:
+  - wonder-egg-priority
 ---
 
 Пересматривал для подкаста прошлогодний сериал «Приоритет чудо-яйца». Мои впечатления и мысли о самом аниме не изменились после второго просмотра (о них я расскажу в подкасте).
 
 Но что изменилось — так это восприятие опенинга. Прошлой зимой кадры с прогулкой главной героини и особенно кадры из реальной жизни, вместо анимации, казались мне признаком экономии. Такой опенинг сделать очевидно быстрее и дешевле, чем, например, опенинг для «Магической битвы» или даже «Рок-тихони».
+
+
+::video{youtube="https://youtu.be/tVdgHnK71MY"}
+
 
 Однако год спустя этот опенинг стал для меня одной из самых приятных частей сериала.
 
@@ -22,4 +39,4 @@ tgUrl: https://t.me/podcastbaka/715
 
 Так что, радуюсь тому, что открыл для себя этот опенинг, и удивляюсь, как события из жизни могут менять восприятие художественных произведений.
 
-https://youtu.be/tVdgHnK71MY
+::anime-ref{id="wonder-egg-priority" source="shikimori" source-id="43299"}
