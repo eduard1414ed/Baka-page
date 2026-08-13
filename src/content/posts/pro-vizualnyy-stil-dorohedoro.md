@@ -6,13 +6,25 @@ draft: true
 description: ''
 cover: ''
 noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested:
+  - dorohedoro
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 603
 tgUrl: https://t.me/podcastbaka/603
-animeSuggested:
+anime:
   - dorohedoro
 ---
 
-В [нашем бонусном выпуске в прошлом сезоне](/posts/bonusnyy-vypusk-dorohedoro/) я рассказывал, что мне не очень понравился сериал «Дорохедоро», пока Ксюша безостановочно им востаргалась. Но на чем мы сошлись — что рисовка оригинальной манги невероятно стильная.
+В нашем бонусном выпуске в прошлом сезоне я рассказывал, что мне не очень понравился сериал «Дорохедоро», пока Ксюша безостановочно им востаргалась. Но на чем мы сошлись — что рисовка оригинальной манги невероятно стильная.
 
 Оказалось, что и то, как она создается — тоже достаточно интересная история. Мангу придумала Хаясида Кю, девушка из семьи потомственных художников. Она пошла по стопам бабушки и мамы: училась сперва в художественной школе, а потом в Токийском университете искусств.
 
@@ -27,3 +39,21 @@ animeSuggested:
 В итоге у нее накопилось больше 20 записных книжек с заметками и картинками.
 
 Для издания Dorohedoro Gengaten 2020 она как раз показала часть иллюстраций, которых не было на страницах оригинальной манги.
+
+
+::image{src="/images/uploads/pasted-image-1786622233393.webp" alt="" width="column"}
+
+
+
+::image{src="/images/uploads/pasted-image-1786622244596.webp" alt="" width="column"}
+
+
+
+::image{src="/images/uploads/pasted-image-1786622255338.webp" alt="" width="column"}
+
+
+
+::image{src="/images/uploads/pasted-image-1786622264702.webp" alt="" width="column"}
+
+
+::anime-ref{id="dorohedoro" source="shikimori" source-id="38668"}
