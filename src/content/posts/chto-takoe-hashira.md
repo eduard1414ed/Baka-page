@@ -2,7 +2,7 @@
 title: Что такое «Хашира»?
 date: 2023-06-08
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1299.jpg
 noCover: false
