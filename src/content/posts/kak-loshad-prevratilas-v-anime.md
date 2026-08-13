@@ -2,16 +2,28 @@
 title: Как лошадь превратилась в аниме
 date: 2023-04-13
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1186.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1186
 tgUrl: https://t.me/podcastbaka/1186
 ---
 
 ::image{src="/images/uploads/tg-1186.jpg" alt="" width="column"}
+
 
 В синтоистской традиции есть особый способ попросить что-то у богов (или поблагодарить их) — таблички эма.
 
@@ -26,5 +38,3 @@ tgUrl: https://t.me/podcastbaka/1186
 И современные храмы тоже вынуждены идти в ногу со временем, поэтому теперь нередко можно встретить эма с иллюстрациями из аниме: любимыми героями, отдельными сценами или распространенными образами.
 
 Так храмы стараются привлечь к покупки эма молодую аудиторию. Какое бы желание и с каким изображением вы бы оставили?
-
-(иллюстрация к посту [отсюда](https://twitter.com/ferdalangurinn/status/1638793130366631936?s=20))
