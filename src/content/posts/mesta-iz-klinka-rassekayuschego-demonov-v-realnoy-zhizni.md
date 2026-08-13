@@ -2,16 +2,29 @@
 title: Места из «Клинка, рассекающего демонов» в реальной жизни
 date: 2022-10-18
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-675.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 676
 tgUrl: https://t.me/podcastbaka/676
+anime:
+  - kimetsu-no-yaiba
 ---
 
 ::image{src="/images/uploads/tg-675.jpg" alt="" width="column"}
+
 
 От Demon Slayer не ждешь какой-то исторической достоверности. А зря, на самом деле, в аниме есть сразу несколько реально существующих мест.
 
@@ -21,6 +34,9 @@ tgUrl: https://t.me/podcastbaka/676
 
 Наконец, отель, в котором находится база Музана, где он карает своих подчиненных, тоже, вероятно, имеет настоящий прототип. Находится он в префектуре Фукусима и называется «[Окавасу](https://goo.gl/maps/TLZ4WUqHRjYiyZPx9)».
 
-Другие аспекты «Клинка» мы подробно обсудили [в нашем подкасте, послушайте, если еще не успели](https://t.me/podcastbaka/669) 😉
+Другие аспекты «Клинка» мы подробно обсудили [в нашем подкасте, послушайте, если еще не успели](https://t.me/podcastbaka/669)
+
 
 ::image{src="/images/uploads/tg-676.jpg" alt="" width="column"}
+
+::anime-ref{id="kimetsu-no-yaiba" source="shikimori" source-id="38000"}
