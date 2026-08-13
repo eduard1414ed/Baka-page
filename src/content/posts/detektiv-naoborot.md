@@ -2,12 +2,25 @@
 title: Детектив наоборот
 date: 2022-06-19
 category: note
-draft: true
+draft: false
 description: ''
-cover: ''
+cover: /images/uploads/pasted-image-1786608778732.webp
 noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 237
 tgUrl: https://t.me/podcastbaka/237
+anime:
+  - my-home-hero
 ---
 
 Расскажу как раз об одном интересном сэйнене, который скоро должен получить аниме-адаптацию.
@@ -27,3 +40,5 @@ tgUrl: https://t.me/podcastbaka/237
 В результате получается своеобразный детектив-перевертыш, где мы следим не за тем, как ищут убийцу, а за тем, как убийца пытается скрыться. Более того, мы следим за убийцей по случайности, терзаемым моральной дилеммой и безудержным желанием спасти свою семью.
 
 Манга называется «Мой домашний герой», и выходит уже 4 года.
+
+::anime-ref{id="my-home-hero" source="shikimori" source-id="52092"}
