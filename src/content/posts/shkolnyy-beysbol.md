@@ -2,16 +2,28 @@
 title: Школьный бейсбол
 date: 2022-08-15
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-449.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 449
 tgUrl: https://t.me/podcastbaka/449
 ---
 
 ::image{src="/images/uploads/tg-449.jpg" alt="" width="column"}
+
 
 Бейсбол для японских подростков — особенный вид спорта.
 
