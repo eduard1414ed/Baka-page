@@ -2,23 +2,33 @@
 title: Бонусный выпуск | Акира
 date: 2023-04-12
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1185.jpg
-pullMedia: false
 noCover: false
-tgId: 1185
-tgUrl: https://t.me/podcastbaka/1185
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested:
+  - akira
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
 bonusLinks:
   boosty: ''
   patreon: ''
   tgClosed: ''
   vkDonat: ''
-animeSuggested:
-  - akira
+pullMedia: false
+tgId: 1185
+tgUrl: https://t.me/podcastbaka/1185
 ---
 
 ::image{src="/images/uploads/tg-1185.jpg" alt="" width="column"}
+
 
 В этом выпуске мы обсуждаем одно из самых культовых аниме в истории.
 
