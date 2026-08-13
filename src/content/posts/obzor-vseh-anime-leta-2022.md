@@ -1,8 +1,8 @@
 ---
-title: Обзор всех аниме лета
+title: Обзор всех аниме лета 2022 — что стоит посмотреть?
 date: 2022-08-26
 category: article
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/dtf-leto-2022-01.webp
 noCover: false
@@ -17,6 +17,8 @@ script: ''
 timecodes: ''
 bonusLinks: null
 pullMedia: false
+tgId: null
+tgUrl: ''
 anime:
   - teppen
   - chimimo
@@ -36,9 +38,15 @@ anime:
   - kumichou-musume-to-sewagakari
   - lycoris-recoil
   - yofukashi-no-uta
+  - extreme-hearts
+  - tensei-kenja-no-isekai-life-dai-2-no-shokugyou-wo-ete-sekai-
+  - engage-kiss
+  - yuurei-deco
+  - bucchigire
 ---
 
 ::image{src="/images/uploads/dtf-leto-2022-01.webp" alt="" width="column"}
+
 
 В этом сезоне вышло 23 новых сериала — я решил посмотреть все из них и поделиться свои мнением. Что точно стоит смотреть, чему можно дать шанс, а что — не жалко и пропустить.
 
@@ -52,7 +60,9 @@ anime:
 
 #### [Вершина!](/anime/teppen/)
 
+
 ::image{src="/images/uploads/dtf-leto-2022-02.webp" alt="" caption="Вершина!, студия Drive" width="column"}
+
 
 В [прошлогоднем сериале «Необычное такси»](/posts/ep-22/) есть пара героев-комиков, которые выступают в уникальном для Японии комедийном жанре мандзай. И авторы субтитров к этому сериалу написали такой перевод к их выступлениям: «Шутки построены на игре слов и культурных отсылках и все равно будут непонятны вам».
 
@@ -66,7 +76,9 @@ anime:
 
 #### [Тимимо](/anime/chimimo/)
 
+
 ::image{src="/images/uploads/dtf-leto-2022-03.webp" alt="" caption="Тимимо, студия Shin-Ei Animation" width="column"}
+
 
 Если вы искали сериал для детей — в этом сезоне это «Тимимо». Хотя должен сказать, что завязка там, кхм, странная.
 
@@ -80,7 +92,9 @@ anime:
 
 #### [Богиня идола-мерзавца](/anime/kami-kuzu-idol/)
 
+
 ::image{src="/images/uploads/dtf-leto-2022-04.webp" alt="" caption="Богиня идола-мерзавца, студия Gokumi" width="column"}
+
 
 Я очень разочарован этим аниме. После просмотра первой серии еще месяц назад я был готов написать хвалебный обзор, но решил подождать второй-третий серии. И оказался прав, потому что после веселого пилота, за пару эпизодов сериал растерял все свое обаяние.
 
@@ -94,7 +108,9 @@ anime:
 
 #### [Люцифер и бисквитный молот](/anime/hoshi-no-samidare/)
 
+
 ::image{src="/images/uploads/dtf-leto-2022-05.webp" alt="" caption="Люцифер и бисквитный молот, студия NAZ" width="column"}
+
 
 Я много раз слышал об оригинальной манге и вот с выходом аниме решил посмотреть сразу и адаптацию, и первоисточник.
 
@@ -114,7 +130,9 @@ anime:
 
 #### [Моя новая горничная очень подозрительна](/anime/saikin-yatotta-maid-ga-ayashii/)
 
+
 ::image{src="/images/uploads/dtf-leto-2022-06.webp" alt="" caption="Моя новая горничная очень подозрительна, студия SILVER LINK." width="column"}
+
 
 Одна и та же шутка, рассказанная дважды, перестаёт быть смешной.
 
@@ -130,7 +148,9 @@ anime:
 
 #### [Солнечная улыбка Арснотории!](/anime/warau-arsnotoria-sun/)
 
+
 ::image{src="/images/uploads/dtf-leto-2022-07.webp" alt="" caption="Солнечная улыбка Арснотории!, студия LIDENFILMS" width="column"}
+
 
 Пять девочек учатся магии в летающей школе. Идеальная завязка для приятного иясикея.
 
@@ -144,7 +164,9 @@ anime:
 
 #### Экстремальные сердца
 
+
 ::image{src="/images/uploads/dtf-leto-2022-08.webp" alt="" caption="Экстремальные сердца, студия Seven Arcs" width="column"}
+
 
 Как бы сказать. Это мешанина из всего подряд.
 
@@ -158,7 +180,9 @@ anime:
 
 #### [Прима-кукла](/anime/prima-doll/)
 
+
 ::image{src="/images/uploads/dtf-leto-2022-09.webp" alt="" caption="Прима-кукла, студия Bibury Animation Studios" width="column"}
+
 
 Послевоенный мир, в котором механические куклы-девочки, задуманные как орудия убийства, работают в кафе.
 
@@ -176,7 +200,9 @@ anime:
 
 #### [Фармацевт из параллельного мира](/anime/isekai-yakkyoku/)
 
+
 ::image{src="/images/uploads/dtf-leto-2022-10.webp" alt="" caption="Фармацевт из параллельного мира, студия Diomedéa" width="column"}
+
 
 Я не большой фанат исекаев. Обычно я ругаю даже те исекаи, которые в целом принято хвалить в аниме-комьюнити (например, весенний «Мир отомэ-игр»).
 
@@ -194,7 +220,9 @@ anime:
 
 #### Жизнь перерождённого мудреца в другом мире
 
+
 ::image{src="/images/uploads/dtf-leto-2022-11.webp" alt="" caption="Жизнь перерождённого мудреца в другом мире, студия REVOROOT" width="column"}
+
 
 Если аниме про лекаря мне внезапно зашло, то вот «Жизнь мудреца» — ожидаемо ввело в скуку.
 
@@ -206,7 +234,9 @@ anime:
 
 #### [Гарем рабов в лабиринте другого мира](/anime/isekai-meikyuu-de-harem-wo/)
 
+
 ::image{src="/images/uploads/dtf-leto-2022-12.webp" alt="" caption="Гарем рабов в лабиринте другого мира, студия Passione" width="column"}
+
 
 Я бы хотел разделить обзор этого аниме на две части. В первой я отброшу все этические вопросы, а во второй уже их задам.
 
@@ -228,7 +258,9 @@ anime:
 
 #### [Черный призыватель](/anime/kuro-no-shoukanshi/)
 
+
 ::image{src="/images/uploads/dtf-leto-2022-13.webp" alt="" caption="Черный призыватель, студия Satelight" width="column"}
+
 
 Аниме, которое очень похоже на «Гарем рабов», про который я писал выше, но которое подходит к тем же темам гораздо более аккуратно.
 
@@ -242,7 +274,9 @@ anime:
 
 #### [Перерождение дяди](/anime/isekai-ojisan/)
 
+
 ::image{src="/images/uploads/dtf-leto-2022-14.webp" alt="" caption="Перерождение дяди, студия Atelier Pontdarc" width="column"}
+
 
 Это история про человека, который семнадцать лет провел в другом мире, а потом вернулся в реальность вместе с новоприобретенными способностями к магии.
 
@@ -262,7 +296,9 @@ anime:
 
 #### Привлекая поцелуй
 
+
 ::image{src="/images/uploads/dtf-leto-2022-15.webp" alt="" caption="Привлекая поцелуй, студия A-1 Pictures" width="column"}
+
 
 Набор черт в этом сериале шаблонный: ничем не примечательные демоны, главный герой, который их убивает, и гарем девушек-помощниц, вьющийся вокруг него.
 
@@ -274,7 +310,9 @@ anime:
 
 #### [Дочь моей мачехи — моя бывшая девушка](/anime/mamahaha-no-tsurego-ga-motokano-datta/)
 
+
 ::image{src="/images/uploads/dtf-leto-2022-16.webp" alt="" caption="Дочь моей мачехи — моя бывшая девушка, студия Project No.9" width="column"}
+
 
 Каждый сезон обязательно должен выходить сериал про отношения сводных брата и сёстры. И в большинстве случаев их качество оказывается где-то на шкале между отвратительным кринжем и забавным проходняком.
 
@@ -286,7 +324,9 @@ anime:
 
 #### [Блестящий пост](/anime/shine-post/)
 
+
 ::image{src="/images/uploads/dtf-leto-2022-17.webp" alt="" caption="Блестящий пост, студия KAI" width="column"}
+
 
 Это аниме про идолов. Со всеми вытекающими минусами и плюсами.
 
@@ -300,7 +340,9 @@ anime:
 
 #### Юрэй Деко
 
+
 ::image{src="/images/uploads/dtf-leto-2022-18.webp" alt="" caption="Юрэй Деко, студия Science SARU" width="column"}
+
 
 Масааки Юаса — ветеран индустрии. Он делал анимацию для таких культовых аниме как «Самурай Чамплу», «Пинг Понг» и «Дораэмон».
 
@@ -322,7 +364,9 @@ anime:
 
 #### [Аюму всё равно станет ближе](/anime/soredemo-ayumu-wa-yosetekuru/)
 
+
 ::image{src="/images/uploads/dtf-leto-2022-19.webp" alt="" caption="Аюму всё равно станет ближе, студия SILVER LINK." width="column"}
+
 
 Я бы описал это аниме одной фразой: «нереализованный потенциал».
 
@@ -338,7 +382,9 @@ anime:
 
 #### [Вермейл в золотом](/anime/kinsou-no-vermeil-gakeppuchi-majutsushi-wa-saikyou-no-yakusa/)
 
+
 ::image{src="/images/uploads/dtf-leto-2022-20.webp" alt="" caption="Вермейл в золотом, студия Staple Entertainment" width="column"}
+
 
 Как бы описать это аниме... мечты неуверенного подростка о сексуальной взрослой женщине?
 
@@ -350,7 +396,9 @@ anime:
 
 #### [Дочка босса и ее нянька](/anime/kumichou-musume-to-sewagakari/)
 
+
 ::image{src="/images/uploads/dtf-leto-2022-21.webp" alt="" caption="Дочка босса и ее нянька, студия feel." width="column"}
+
 
 Жёсткий якудза вдруг становится нянькой для маленькой девочки — это уже второй сериал с таким синопсисом за последний год.
 
@@ -368,7 +416,9 @@ anime:
 
 #### [Ликорис Рикоил](/anime/lycoris-recoil/)
 
+
 ::image{src="/images/uploads/dtf-leto-2022-22.webp" alt="" caption="Ликорис Рикоил, студия A-1 Pictures" width="column"}
+
 
 Это аниме по оригинальному сценарию. События сериала происходят в недалеком будущем. Япония достигла нулевой преступности благодаря тайному агентству, убивающему всех, кто нарушает закон.
 
@@ -390,7 +440,9 @@ anime:
 
 #### [Песнь ночных сов](/anime/yofukashi-no-uta/)
 
+
 ::image{src="/images/uploads/dtf-leto-2022-23.webp" alt="" caption="Песнь ночных сов, студия LIDENFILMS" width="column"}
+
 
 Ко Ямори — обычный школьник, у которого были друзья и даже девушка, которой он нравился. Но оказалось, что все это — не то, чего он ищет. Девушка его не интересовала (как и парни, впрочем), а жизнь казалась бессмысленной.
 
@@ -412,7 +464,9 @@ anime:
 
 #### Буттигирэ
 
+
 ::image{src="/images/uploads/dtf-leto-2022-24.webp" alt="" caption="Буттигирэ, студия Geno Studio" width="column"}
+
 
 Скрытый бриллиант этого сезона, на мой взгляд.
 
@@ -425,3 +479,13 @@ anime:
 Если вам нравятся приключения — то это ваш выбор в этом сезоне.
 
 **Вывод:** удивлён, что про сериал вообще никто не говорит, он веселый
+
+::anime-ref{id="extreme-hearts" source="shikimori" source-id="50999"}
+
+::anime-ref{id="tensei-kenja-no-isekai-life-dai-2-no-shokugyou-wo-ete-sekai-" source="shikimori" source-id="47163"}
+
+::anime-ref{id="engage-kiss" source="shikimori" source-id="51417"}
+
+::anime-ref{id="yuurei-deco" source="shikimori" source-id="51092"}
+
+::anime-ref{id="bucchigire" source="shikimori" source-id="51371"}
