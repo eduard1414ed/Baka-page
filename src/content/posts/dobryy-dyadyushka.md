@@ -9,7 +9,6 @@ noCover: false
 externalUrl: ''
 externalSource: ''
 adLabel: ''
-anime: []
 animeSuggested: []
 mentionsHidden: ''
 speakers: ''
@@ -20,6 +19,8 @@ bonusLinks: null
 pullMedia: false
 tgId: 1324
 tgUrl: https://t.me/podcastbaka/1324
+anime:
+  - mononoke-hime
 ---
 
 ::image{src="/images/uploads/tg-1324.jpg" alt="" width="column"}
@@ -27,7 +28,7 @@ tgUrl: https://t.me/podcastbaka/1324
 
 В [выпуске подкаста](/posts/yaponskaya-krasota-krepchayuschiy-veter-i-miyadzaki/) о документальном фильме про студию Ghibli я упоминал, что Миядзаки никогда не был очень приятным человеком для работы.
 
-И тут я наткнулся на любопытные примеры этого. В книге, описывающей работу студии Ghibli над «Принцессой Мононокэ», есть такие моменты:
+И тут я наткнулся на любопытные примеры этого. В книге, описывающей работу студии Ghibli над :anime[«Принцессой Мононокэ»]{id="mononoke-hime" source="shikimori" source-id="164"}, есть такие моменты:
 
 > «_Молодые аниматоры работали так медленно, что Миядзаки разозлился. Он собрал их всех в конференц-зале и отчитал_»
 
