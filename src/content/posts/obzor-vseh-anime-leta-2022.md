@@ -144,7 +144,7 @@ anime:
 
 ::image{src="/images/uploads/dtf-leto-2022-08.webp" alt="" caption="Экстремальные сердца" width="column"}
 
-#### [Экстремальные сердца](https://anilist.co/anime/145001/Extreme-Hearts)
+#### Экстремальные сердца
 
 Как бы сказать. Это мешанина из всего подряд.
 
@@ -194,7 +194,7 @@ anime:
 
 ::image{src="/images/uploads/dtf-leto-2022-11.webp" alt="" caption="Жизнь перерождённого мудреца в другом мире" width="column"}
 
-#### [Жизнь перерождённого мудреца в другом мире](https://anilist.co/anime/129192/My-Isekai-Life-I-Gained-a-Second-Character-Class-and-Became-the-Strongest-Sage-in-the-World/)
+#### Жизнь перерождённого мудреца в другом мире
 
 Если аниме про лекаря мне внезапно зашло, то вот «Жизнь мудреца» — ожидаемо ввело в скуку.
 
@@ -262,7 +262,7 @@ anime:
 
 ::image{src="/images/uploads/dtf-leto-2022-15.webp" alt="" caption="Привлекая поцелуй" width="column"}
 
-#### [Привлекая поцелуй](https://anilist.co/anime/146625/Engage-Kiss/)
+#### Привлекая поцелуй
 
 Набор черт в этом сериале шаблонный: ничем не примечательные демоны, главный герой, который их убивает, и гарем девушек-помощниц, вьющийся вокруг него.
 
@@ -300,7 +300,7 @@ anime:
 
 ::image{src="/images/uploads/dtf-leto-2022-18.webp" alt="" caption="Юрэй Деко" width="column"}
 
-#### [Юрэй Деко](https://anilist.co/anime/145468/YUREI-DECO/)
+#### Юрэй Деко
 
 Масааки Юаса — ветеран индустрии. Он делал анимацию для таких культовых аниме как «Самурай Чамплу», «Пинг Понг» и «Дораэмон».
 
@@ -412,7 +412,7 @@ anime:
 
 ::image{src="/images/uploads/dtf-leto-2022-24.webp" alt="" caption="Буттигирэ" width="column"}
 
-#### [Буттигирэ](https://anilist.co/anime/146650/Shine-on-Bakumatsu-Bad-Boys/)
+#### Буттигирэ
 
 Скрытый бриллиант этого сезона, на мой взгляд.
 
