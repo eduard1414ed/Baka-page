@@ -1,7 +1,7 @@
 ---
 title: Потрогать траву
 date: 2025-03-04
-category: note
+category: article
 draft: true
 description: ''
 cover: /images/uploads/tg-2799.jpg

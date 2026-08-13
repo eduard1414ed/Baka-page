@@ -1,7 +1,7 @@
 ---
 title: Gamescom и художники
 date: 2025-08-26
-category: note
+category: article
 draft: true
 description: ''
 cover: /images/uploads/tg-3272.jpg
@@ -17,15 +17,15 @@ tgUrl: https://t.me/podcastbaka/3272
 
 На ней показывают и большие AAA-игры, и инди, и железо, и мобильные релизы. А еще туда приезжают крутые косплееры и художники. Я с трудом удержался, чтобы не скупить кучу мерча по «Евангелиону», «Фарфоровой кукле» и другим тайтлам. Но деньги от меня все-таки ушли — на авторские работы. Сейчас покажу трех крутых художников, которых я там встретил и рисунки которых теперь висят у меня дома:
 
-1️⃣ [chowlie](https://www.instagram.com/chowlie.art?igsh=MTA2Ym9jbXg5anNyMw==)
+#### [chowlie](https://www.instagram.com/chowlie.art?igsh=MTA2Ym9jbXg5anNyMw==)
 
 Художница из Германии, которая рисует очень теплые картины в пастельных тонах, классные миниатюры с чиби-версиями героев и всякие пины и значки.
 
-2️⃣ [ryoko nagara](https://www.instagram.com/ryoko_nagara_illustrations?igsh=MTY5MnN6enM3MG80bg==)
+#### [ryoko nagara](https://www.instagram.com/ryoko_nagara_illustrations?igsh=MTY5MnN6enM3MG80bg==)
 
 Японка, живущая в Берлине, которая рисует городские пейзажи, населенные кошками (и иногда собаками).
 
-3️⃣ [nayth](https://www.instagram.com/n.a.y.t.h?igsh=d2l3bHExZGZtbXNs)
+#### [nayth](https://www.instagram.com/n.a.y.t.h?igsh=d2l3bHExZGZtbXNs)
 
 Художник из Франции, который рисует большие компиляции героев. На Gamescome у него были картины по «Берсерку», «ДжоДжо» и Ghibli. А еще он выпустил целый отдельный комикс про поездку в Корею.
 

@@ -1,7 +1,7 @@
 ---
 title: Восемь сторон Фудзимото
 date: 2025-11-11
-category: note
+category: article
 draft: true
 description: ''
 cover: /images/uploads/tg-3468.jpg
