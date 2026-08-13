@@ -2,16 +2,25 @@
 title: Пора поесть
 date: 2023-05-30
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1279.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1279
 tgUrl: https://t.me/podcastbaka/1279
 ---
-
-::image{src="/images/uploads/tg-1279.jpg" alt="" width="column"}
 
 Как вы знаете, манга может быть обо всем, что угодно — от полицейских до ловли жуков, от волшебников до ниндзя.
 
@@ -25,7 +34,20 @@ tgUrl: https://t.me/podcastbaka/1279
 
 Во многом такие журналы заменяют кулинарные книги или разделы с рецептами в местных газетах. Может быть, если бы в моем ближайшем продуктовом магазине продавали такую мангу — я бы тоже чаще себе готовил вкусную еду.
 
+
+::image{src="/images/uploads/tg-1279.jpg" alt="" width="column"}
+
+
 ::image{src="/images/uploads/tg-1280.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1281.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1282.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1283.jpg" alt="" width="column"}
