@@ -1,11 +1,23 @@
 ---
 title: Аниме о традиционной японской музыке
 date: 2023-03-30
-category: note
+category: article
 draft: true
 description: ''
 cover: ''
 noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1141
 tgUrl: https://t.me/podcastbaka/1141
 ---
