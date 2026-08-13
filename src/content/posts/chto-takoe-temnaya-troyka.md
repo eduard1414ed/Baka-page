@@ -2,16 +2,29 @@
 title: Что такое «темная тройка»?
 date: 2023-05-17
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1262.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1262
 tgUrl: https://t.me/podcastbaka/1262
+anime:
+  - jigokuraku
 ---
 
 ::image{src="/images/uploads/tg-1262.jpg" alt="" width="column"}
+
 
 В 2018 году сразу три сёнена начали выходить в журнале Shonen Jump, их объединяла жестокость, гротескное изображение монстров и неожиданный взгляд на привычные штампы манги.
 
@@ -24,3 +37,5 @@ tgUrl: https://t.me/podcastbaka/1262
 Более темный и реалистичный тон этих сёненов не только дал им эффектное название, но и привлек новую аудиторию.
 
 Я думаю, что вы уже догадались, что «темная тройка» — это общее название для «Магической битвы», «Человека-бензопилы» и «Адского рая».
+
+::anime-ref{id="jigokuraku" source="shikimori" source-id="46569"}
