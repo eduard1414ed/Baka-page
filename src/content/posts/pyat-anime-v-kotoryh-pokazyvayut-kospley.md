@@ -4,7 +4,7 @@ date: 2022-07-14
 category: article
 draft: false
 description: ''
-cover: ''
+cover: /images/uploads/pasted-image-1786613264868.webp
 noCover: false
 externalUrl: ''
 externalSource: ''
