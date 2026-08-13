@@ -1,17 +1,29 @@
 ---
-title: Самые продаваемые комиксы в России
+title: Самые продаваемые комиксы в России в 2022 году
 date: 2023-02-06
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1005.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1005
 tgUrl: https://t.me/podcastbaka/1005
 ---
 
 ::image{src="/images/uploads/tg-1005.jpg" alt="" width="column"}
+
 
 Магазин комиксов «Чук и Гик», с которым мы очень дружим, [опубликовал](https://t.me/chookandgeek/28129) списки самых продаваемых комиксов 2022 года.
 
