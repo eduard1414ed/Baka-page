@@ -8,7 +8,7 @@ cover: /images/uploads/pasted-image-1786612012873.webp
 noCover: false
 externalUrl: ''
 externalSource: ''
-adLabel: 'Автор: Anaka'
+adLabel: 'Автор текста: Anaka'
 animeSuggested: []
 mentionsHidden: ''
 speakers: ''
