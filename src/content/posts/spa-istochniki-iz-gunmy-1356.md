@@ -2,16 +2,28 @@
 title: Спа-источники из Гунмы
 date: 2023-07-06
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1356.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1356
 tgUrl: https://t.me/podcastbaka/1356
 ---
 
 ::image{src="/images/uploads/tg-1356.jpg" alt="" width="column"}
+
 
 У японских футбольных команд очень странные названия: Хоккайдо Консодоле, Урава Рэд Даймондс, Нагоя Грампус. В них как будто намешано сразу несколько языков: испанский, английский, японский и черт-еще-знает-какой.
 
