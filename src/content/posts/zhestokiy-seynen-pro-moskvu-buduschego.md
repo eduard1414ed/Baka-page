@@ -2,18 +2,29 @@
 title: Жестокий сэйнен про Москву будущего
 date: 2023-01-28
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-981.jpg
-pullMedia: false
 noCover: false
-tgId: 981
-tgUrl: https://t.me/podcastbaka/981
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 animeSuggested:
   - dorohedoro
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 981
+tgUrl: https://t.me/podcastbaka/981
 ---
 
 ::image{src="/images/uploads/tg-981.jpg" alt="" width="column"}
+
 
 Семь лет назад мангака Кумо Кагю, автор «Убийцы гоблинов», завел тред на японском реддите о приключениях парня по имени Данила.
 
