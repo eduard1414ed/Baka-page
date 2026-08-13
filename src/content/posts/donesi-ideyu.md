@@ -2,7 +2,7 @@
 title: Донеси идею
 date: 2023-05-10
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1254.jpg
 noCover: true
@@ -30,6 +30,9 @@ tgUrl: https://t.me/podcastbaka/1254
 
 И мне очень нравится этот пример, потому что он освобождает. Даже если вы делаете что-то не так красиво, как другие, главное чтобы это работало.
 
+
 ::image{src="/images/uploads/tg-1254.jpg" alt="" width="column"}
+
+
 
 ::image{src="/images/uploads/tg-1255.jpg" alt="" width="column"}
