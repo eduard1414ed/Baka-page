@@ -8,6 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { fetchArticle, stripTags, blockToParagraphs, postPath } from './source.mjs';
+import { writeGuarded } from './guard.mjs';
 
 const SLUG = 'realnye-kartiny-v-mange-goluboy-period';
 
@@ -87,7 +88,8 @@ async function build() {
 	const frontmatter = ['---', parts[1].trim().replace(/^cover: .*$/m, `cover: ${cover}`), '---', ''].join('\n');
 	const refs = parts.slice(2).join('---').match(/^::anime-ref\{[^}]*\}$/gm) ?? [];
 
-	fs.writeFileSync(postPath(SLUG), frontmatter + '\n' + [...lines, ...refs].join('\n\n') + '\n');
+	// Заслон: пересборка не имеет права стереть правку заказчика (guard.mjs).
+	writeGuarded(postPath(SLUG), frontmatter + '\n' + [...lines, ...refs].join('\n\n') + '\n', { force: process.argv.includes('--force') });
 
 	const galleries = article.blocks.filter((b) => b.type === 'media' && b.data.items.length > 1).length;
 	console.log(`картинок: ${img} | галерей: ${galleries} | глав: ${lines.filter((l) => l.startsWith('### ')).length}`);

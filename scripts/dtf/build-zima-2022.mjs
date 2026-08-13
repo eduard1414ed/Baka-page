@@ -8,6 +8,7 @@ import path from 'node:path';
 import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { ROOT, fetchArticle, stripTags, blockToParagraphs, postPath } from './source.mjs';
+import { writeGuarded } from './guard.mjs';
 import { captionFor } from './captions.mjs';
 
 const { readAnimeCollection } = await import(new URL('../anime-cases-lib.mjs', import.meta.url).href);
@@ -139,7 +140,8 @@ async function build() {
 	const frontmatter = ['---', parts[1].trim().replace(/^cover: .*$/m, `cover: ${COVER}`), '---', ''].join('\n');
 	const refs = parts.slice(2).join('---').match(/^::anime-ref\{[^}]*\}$/gm) ?? [];
 
-	fs.writeFileSync(postPath(SLUG), frontmatter + '\n' + [...lines, ...refs].join('\n\n') + '\n');
+	// Заслон: пересборка не имеет права стереть правку заказчика (guard.mjs).
+	writeGuarded(postPath(SLUG), frontmatter + '\n' + [...lines, ...refs].join('\n\n') + '\n', { force: process.argv.includes('--force') });
 
 	console.log(`тайтлов: ${anime.length + noLink.length} | из справочника: ${new Set(anime).size} | без ссылки: ${noLink.length}`);
 	console.log(`картинок: ${lines.filter((l) => l.startsWith('::image')).length} | служебных меток сохранено: ${refs.length}`);

@@ -7,6 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { fetchArticle, stripTags, blockToParagraphs, splitIncut, postPath } from './source.mjs';
+import { writeGuarded } from './guard.mjs';
 import { captionFor } from './captions.mjs';
 import { SEEN_2023 } from './titles-2023.mjs';
 
@@ -122,7 +123,8 @@ async function build() {
 		const frontmatter = ['---', parts[1].trim().replace(/^cover: .*$/m, `cover: ${cover}`), '---', ''].join('\n');
 		const refs = parts.slice(2).join('---').match(/^::anime-ref\{[^}]*\}$/gm) ?? [];
 
-		fs.writeFileSync(postPath(job.out), frontmatter + '\n' + [...lines, ...refs].join('\n\n') + '\n');
+		// Заслон: пересборка не имеет права стереть правку заказчика (guard.mjs).
+		writeGuarded(postPath(job.out), frontmatter + '\n' + [...lines, ...refs].join('\n\n') + '\n', { force: process.argv.includes('--force') });
 		console.log(`\n=== ${job.out} ===`);
 		console.log(`картинок: ${img} | роликов: ${lines.filter((l) => l.startsWith('::video')).length} | разделов: ${lines.filter((l) => l.startsWith('### ')).length}`);
 		for (const d of dropped) console.log(`   выброшено (${d.why}): «${d.text}»`);
