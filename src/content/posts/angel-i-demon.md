@@ -2,13 +2,29 @@
 title: Ангел и демон
 date: 2022-09-03
 category: note
-draft: true
+draft: false
 description: ''
 cover: ''
-noCover: true
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 512
 tgUrl: https://t.me/podcastbaka/512
+anime:
+  - yahari-ore-no-seishun-love-comedy-wa-machigatteiru
 ---
+
+::image{src="/images/uploads/pasted-image-1786620836134.webp" alt="" width="column"}
+
 
 Я обещал поговорить про учительницу, Шизуку. И интереснее всего это сделать в связке с другой взрослой героиней, сестрой Юкино, Харуно.
 
@@ -33,3 +49,5 @@ tgUrl: https://t.me/podcastbaka/512
 Таким образом две взрослые героини становятся своеобразной парой: хороший и плохой полицейский, или ангел и демон на плечах. Они как бы зеркалят друг друга.
 
 Но, как часто бывает, если бы в истории была только одна сторона (положительная или отрицательная, не важно), то герой никогда бы не смог дойти до конца. И поддержка Шизуки, и интриги Харуно оказываются одинаково важны для развития Хатимана и всей истории.
+
+::anime-ref{id="yahari-ore-no-seishun-love-comedy-wa-machigatteiru" source="shikimori" source-id="14813"}
