@@ -2,13 +2,28 @@
 title: Панельная ностальгия по счастливому детству
 date: 2023-01-11
 category: note
-draft: true
+draft: false
 description: ''
 cover: ''
-noCover: true
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 936
 tgUrl: https://t.me/podcastbaka/936
 ---
+
+::image{src="/images/uploads/pasted-image-1786624982398.webp" alt="" width="column"}
+
 
 В японской мифологии есть особый вид духов — цукумогами. Это вещь или предмет, который так долго существовал, что обрел душу и сознание.
 
