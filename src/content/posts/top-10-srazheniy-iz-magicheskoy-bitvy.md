@@ -1,7 +1,8 @@
 ---
 title: Топ-10 сражений из «Магической битвы»
 date: 2024-10-03
-category: note
+category: article
+externalUrl: https://t-j.ru/list/magical-warfar-fights/
 draft: true
 description: ''
 cover: /images/uploads/tg-2432.jpg
@@ -18,5 +19,3 @@ tgUrl: https://t.me/podcastbaka/2432
 К окончанию истории я решил собрать десять самых эффектных и запоминающихся битв. По моему мнению, конечно. Список не ранжированный, без первых и последних мест, а бои расположены в порядке их публикации.
 
 Пишите в комментариях, согласны ли вы с моим выбором!
-
-https://journal.tinkoff.ru/list/magical-warfar-fights/

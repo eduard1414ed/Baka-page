@@ -1,7 +1,8 @@
 ---
 title: Лучшие аниме-сериалы 2024 года
 date: 2024-10-10
-category: note
+category: article
+externalUrl: https://t-j.ru/list/best-anime-2024/
 draft: true
 description: ''
 cover: /images/uploads/tg-2456.jpg
@@ -18,5 +19,3 @@ tgUrl: https://t.me/podcastbaka/2456
 Туда добавилось аж восемь новых аниме: про инопланетян, самураев, волшебников и проигравших героинь.
 
 Добавляйте текст в закладки и не пропускайте самые интересные, важные и знаковые аниме года.
-
-https://journal.tinkoff.ru/list/best-anime-2024/

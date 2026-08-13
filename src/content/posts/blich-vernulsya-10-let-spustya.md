@@ -6,7 +6,7 @@ draft: false
 description: ''
 cover: /images/uploads/pasted-image-1786623654298.webp
 noCover: true
-externalUrl: https://journal.tinkoff.ru/bleach-comeback/
+externalUrl: https://t-j.ru/bleach-comeback/
 externalSource: Т—Ж
 adLabel: ''
 animeSuggested: []
@@ -27,8 +27,6 @@ anime:
 Ребята из Т—Ж попросили меня рассказать, в чем феномен оригинального аниме и чего стоит ждать от финальной арки.
 
 Вышел большой текст и про сюжет, и про героев, и про стиль сериала. Если вы еще не смотрели «Блич» и думаете, стоит ли это делать — советую почитать:
-
-https://journal.tinkoff.ru/bleach-comeback/
 
 ::anime-ref{id="bleach" source="shikimori" source-id="269"}
 

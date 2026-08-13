@@ -1,11 +1,12 @@
 ---
 title: 10 самых ожидаемых аниме лета 2024 года
 date: 2024-07-04
-category: note
+category: article
+externalUrl: https://t-j.ru/list/summer-anime-2024/
 draft: true
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/tj-10-samyh-ozhidaemyh-anime-leta-2024-goda.jpg
+noCover: false
 tgId: 2227
 tgUrl: https://t.me/podcastbaka/2227
 ---
@@ -15,5 +16,3 @@ tgUrl: https://t.me/podcastbaka/2227
 Среди них — история про Харли Квинн в фэнтези-мире, готовящие рамэн кошки и романтика про русскоязычную героиню.
 
 Я по традиции выбрал десять самых интересных аниме-сериалов, которые советую посмотреть в этом сезоне.
-
-https://journal.tinkoff.ru/list/summer-anime-2024/

@@ -1,11 +1,12 @@
 ---
 title: 10 самых ожидаемых аниме осени 2025 года
 date: 2025-10-10
-category: note
+category: article
+externalUrl: https://t-j.ru/list/anime-autumn-2025/
 draft: true
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/tj-10-samyh-ozhidaemyh-anime-oseni-2025-goda.jpg
+noCover: false
 tgId: 3406
 tgUrl: https://t.me/podcastbaka/3406
 ---
@@ -13,5 +14,3 @@ tgUrl: https://t.me/podcastbaka/3406
 Для тех, кому мало [просто названий тайтлов](/posts/itogi-prosmotra-vseh-anime-oseni-3388/), которые я рекомендую к просмотру в этом сезоне, и хочется узнать больше — собрал традиционную подборку из 10 самых ожидаемых аниме.
 
 Среди них — третий сезон истории о сильнейшем супергерое, опасные приключения в поисках тайны Рождества, мистический детектив в средневековой Японии и новые «Звездные войны».
-
-https://t-j.ru/list/anime-autumn-2025/

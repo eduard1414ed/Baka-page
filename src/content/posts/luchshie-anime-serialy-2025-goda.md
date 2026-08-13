@@ -1,11 +1,12 @@
 ---
 title: Лучшие аниме-сериалы 2025 года
 date: 2025-03-07
-category: note
+category: article
+externalUrl: https://t-j.ru/list/best-anime-2025/
 draft: true
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/tj-luchshie-anime-serialy-2025-goda.jpg
+noCover: false
 tgId: 2806
 tgUrl: https://t.me/podcastbaka/2806
 ---
@@ -13,5 +14,3 @@ tgUrl: https://t.me/podcastbaka/2806
 Зимний сезон подходит к концу, а значит самое время собрать список лучших новых тайтлов. Неожиданно, в нем оказалось сразу семь произведений.
 
 В течение всего года я, как обычно, буду дополнять материал, так что сохраните его в закладках.
-
-https://t-j.ru/list/best-anime-2025/

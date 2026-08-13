@@ -1,11 +1,12 @@
 ---
 title: Лучшие аниме-сериалы 2025 года
 date: 2025-10-28
-category: note
+category: article
+externalUrl: https://t-j.ru/list/best-anime-2025/
 draft: true
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/tj-luchshie-anime-serialy-2025-goda-3444.jpg
+noCover: false
 tgId: 3444
 tgUrl: https://t.me/podcastbaka/3444
 ---
@@ -15,5 +16,3 @@ tgUrl: https://t.me/podcastbaka/3444
 Туда добавилось четырехсерийное аниме, которое выжмет все ваши слезы; экранизация одной из моих любимых манг; сериал о жизни целого города; и тайтлы про камни, мусор и демонических зверей.
 
 Сохраняйте себе текст в закладки, чтобы не пропустить лучшие новые аниме:
-
-https://t-j.ru/list/best-anime-2025/

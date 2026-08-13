@@ -1,11 +1,12 @@
 ---
 title: 15 легендарных мемов, которые нам подарило аниме
 date: 2024-12-26
-category: note
+category: article
+externalUrl: https://t-j.ru/list/anime-memes
 draft: true
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/tj-15-legendarnyh-memov-kotorye-nam-podarilo-anime.jpg
+noCover: false
 tgId: 2627
 tgUrl: https://t.me/podcastbaka/2627
 ---
@@ -15,5 +16,3 @@ tgUrl: https://t.me/podcastbaka/2627
 От жожо-референсов до гребанного робота, от трак-куна до Канеки на аватарке.
 
 Пишите там в комментах, кстати, какие еще мемы я забыл:
-
-https://journal.tinkoff.ru/list/anime-memes

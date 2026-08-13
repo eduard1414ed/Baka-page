@@ -1,11 +1,12 @@
 ---
 title: Лучшие аниме-сериалы 2025 года
 date: 2025-12-18
-category: note
+category: article
+externalUrl: https://t-j.ru/list/best-anime-2025/
 draft: true
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/tj-luchshie-anime-serialy-2025-goda-3563.jpg
+noCover: false
 tgId: 3563
 tgUrl: https://t.me/podcastbaka/3563
 ---
@@ -15,7 +16,5 @@ tgUrl: https://t.me/podcastbaka/3563
 У меня вышло 26 тайтлов, по семь в зимний, весенний и летний сезоны, и финальные пять вот сейчас осенью. По два сериала от студий MAPPA, Bind, Ajia-do и Cygames Pictures, а все остальные только по одному представителю за год успели накопить.
 
 Если вы ждали, когда онгоинги закончатся, чтобы посмотреть все залпом под новогодней ёлкой — время пришло!
-
-https://t-j.ru/list/best-anime-2025/
 
 P.S. Ну и пишите в комменты, что бы еще добавили вы в список

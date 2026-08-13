@@ -1,11 +1,12 @@
 ---
 title: '«Кайдзю № 8»: бойкое аниме про больших монстров и тридцатилетнего неудачника'
 date: 2024-07-22
-category: note
+category: article
+externalUrl: https://t-j.ru/kaiju-no-8/
 draft: true
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/tj-kaydzyu-8-boykoe-anime-pro-bolshih-monstrov-i-tridtsatiletnego-neudachnika.jpg
+noCover: false
 tgId: 2269
 tgUrl: https://t.me/podcastbaka/2269
 ---
@@ -13,5 +14,3 @@ tgUrl: https://t.me/podcastbaka/2269
 Оригинальная манга выходит в онлайн-журнале Shonen Jump+, где уже собрала больше 400 миллионов просмотров.
 
 Но получилось ли у студии Production I.G перенести успех в аниме-формат? И станет ли этот тайтл новой «Атакой титанов»? Рассказал текстом, каким вышел сериал «Кайдзю № 8».
-
-https://journal.tinkoff.ru/kaiju-no-8/

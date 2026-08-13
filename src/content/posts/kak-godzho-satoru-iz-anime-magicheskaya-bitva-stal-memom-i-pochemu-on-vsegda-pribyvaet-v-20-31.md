@@ -1,7 +1,8 @@
 ---
 title: Как Годжо Сатору из аниме «Магическая битва» стал мемом — и почему он всегда прибывает в 20:31
 date: 2024-02-27
-category: note
+category: article
+externalUrl: https://t-j.ru/who-is-satoru-gojo/
 draft: true
 description: ''
 cover: /images/uploads/tg-1959.jpg
@@ -22,5 +23,3 @@ animeSuggested:
 Ребята из раздела про интернет-культуру Т—Ж попросили меня помочь им и рассказать, кто такой Годжо и почему про него вдруг появилось столько мемов.
 
 Осторожно: спойлеры к манге.
-
-https://journal.tinkoff.ru/who-is-satoru-gojo/

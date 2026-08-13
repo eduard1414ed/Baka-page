@@ -1,7 +1,8 @@
 ---
 title: '«Реинкарнация безработного»: стоит ли смотреть главный исекай современности'
 date: 2024-05-23
-category: note
+category: article
+externalUrl: https://t-j.ru/mushoku-tensei
 draft: true
 description: ''
 cover: /images/uploads/tg-2140.jpg
@@ -16,5 +17,3 @@ tgUrl: https://t.me/podcastbaka/2140
 Продолжаю делать большие материалы о любимых сериалах! И в этот раз решил подробно рассказать о «Реинкарнации безработного»
 
 О чем сериал, почему он важен для индустрии, кто его делал и в чем его плюсы и минусы. Все самое полезное и интересное в одном лонгриде:
-
-https://journal.tinkoff.ru/mushoku-tensei

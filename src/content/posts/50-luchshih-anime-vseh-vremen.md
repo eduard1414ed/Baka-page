@@ -1,11 +1,12 @@
 ---
 title: 50 лучших аниме всех времен
 date: 2024-08-26
-category: note
+category: article
+externalUrl: https://t-j.ru/list/best-anime
 draft: true
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/tj-50-luchshih-anime-vseh-vremen.jpg
+noCover: false
 tgId: 2338
 tgUrl: https://t.me/podcastbaka/2338
 ---
@@ -15,5 +16,3 @@ tgUrl: https://t.me/podcastbaka/2338
 Титаническую работу по отбору тайтлов мы проделали вместе с [Юлей Тарасюк](http://t.me/shoujo_josei), [Лёшей Филипповым](http://t.me/penpenwork) и [Женей Шеяновым](http://t.me/aveserpens). Было невероятно сложно оставить только 50 аниме — у нас их в списках было гораздо больше (но это было весело). Мы постарались найти баланс жанров, авторов и олдовости.
 
 Мне кажется, что получилось очень неплохо и не совсем банально! Пишите в комментарии, какие еще тайтлы вы бы в этот список добавили:
-
-https://journal.tinkoff.ru/list/best-anime

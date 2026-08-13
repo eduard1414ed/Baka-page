@@ -1,7 +1,8 @@
 ---
 title: Аниме по рублю
 date: 2023-05-26
-category: note
+category: article
+externalUrl: https://hd.kinopoisk.ru/selection/5f1e9e475d991a0021376dc1
 draft: true
 description: ''
 cover: /images/uploads/tg-1277.jpg
@@ -23,5 +24,3 @@ animeSuggested:
 При покупке фильмов, они останутся у вас в аккаунте навсегда, но важно успеть сделать покупку до 31 мая.
 
 Если вы в РФ, воспользуйтесь возможностью забрать себе в библиотеку любимые аниме.
-
-https://hd.kinopoisk.ru/selection/5f1e9e475d991a0021376dc1

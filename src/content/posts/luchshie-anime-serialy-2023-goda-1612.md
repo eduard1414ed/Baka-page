@@ -1,11 +1,12 @@
 ---
 title: Лучшие аниме-сериалы 2023 года
 date: 2023-10-24
-category: note
+category: article
+externalUrl: https://t-j.ru/list/best-anime-2023/
 draft: true
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/tj-luchshie-anime-serialy-2023-goda-1612.jpg
+noCover: false
 tgId: 1612
 tgUrl: https://t.me/podcastbaka/1612
 ---
@@ -13,5 +14,3 @@ tgUrl: https://t.me/podcastbaka/1612
 В очередной раз обновил большую подборку аниме, которые стоит в этом году смотреть.
 
 Список пополнился летними премьерами: комедией «Однушка лорда демонов и героя», драмой «Мой счастливый брак», детективом про демонов «Фарс убитой нежити», необычным хоррором «Темное собрание» и креативным, но так до конца и не вышедшим «Зомби-апокалипсисом и списком из ста дел».
-
-https://journal.tinkoff.ru/list/best-anime-2023/

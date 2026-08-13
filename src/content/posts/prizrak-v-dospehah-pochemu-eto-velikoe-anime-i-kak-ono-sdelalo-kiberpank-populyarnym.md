@@ -1,11 +1,12 @@
 ---
 title: '«Призрак в доспехах»: почему это великое аниме и как оно сделало киберпанк популярным'
 date: 2025-09-08
-category: note
+category: article
+externalUrl: https://t-j.ru/ghost-in-the-shell-review-2025/
 draft: true
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/tj-prizrak-v-dospehah-pochemu-eto-velikoe-anime-i-kak-ono-sdelalo-kiberpank-populyarnym.jpg
+noCover: false
 tgId: 3318
 tgUrl: https://t.me/podcastbaka/3318
 ---
@@ -13,5 +14,3 @@ tgUrl: https://t.me/podcastbaka/3318
 20 августа в повторный российский прокат вышел «Призрак в доспехах» 1995 года. Так что я решил, что это неплохой повод в текстовом формате рассказать, как этот фильм обрел культовый статус, чем он отличается от оригинальной манги и в каком порядке лучше знакомиться с франшизой.
 
 > «Призрак в доспехах» начинается как нуарный детектив о киберпреступлениях будущего. Но к финалу оборачивается философским рассуждением о том, что значит быть личностью и где проходит граница между живым и искусственным.
-
-https://t-j.ru/ghost-in-the-shell-review-2025/

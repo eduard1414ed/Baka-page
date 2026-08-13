@@ -1,11 +1,12 @@
 ---
 title: Я стал экспертом по аниме, заработал денег и поучаствовал в создании сериала «Санек и Борян»
 date: 2024-02-22
-category: note
+category: article
+externalUrl: https://t-j.ru/anime-money/
 draft: true
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/tj-ya-stal-ekspertom-po-anime-zarabotal-deneg-i-pouchastvoval-v-sozdanii-seriala-sanek-i-boryan.jpg
+noCover: false
 tgId: 1954
 tgUrl: https://t.me/podcastbaka/1954
 ---
@@ -17,5 +18,3 @@ tgUrl: https://t.me/podcastbaka/1954
 А еще там засветился наш чат (и может быть кто-то из вас тоже).
 
 Пишите там в комментах, сколько вы тратите на аниме и мангу в месяц, потому что у меня какая-то несерьезная сумма вышла.
-
-https://journal.tinkoff.ru/anime-money/

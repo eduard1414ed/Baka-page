@@ -1,7 +1,8 @@
 ---
 title: Лучшие аниме-сериалы 2023 года
 date: 2023-06-07
-category: note
+category: article
+externalUrl: https://t-j.ru/list/best-anime-2023/
 draft: true
 description: ''
 cover: /images/uploads/tg-1297.jpg
@@ -16,5 +17,3 @@ tgUrl: https://t.me/podcastbaka/1297
 Весенний сезон подходит к концу, поэтому я обновил подборку аниме, которые стоит посмотреть в этом году.
 
 Я добавил аж семь тайтлов. Список пополнили: «Адский рай», «Великая небесная стена», «Моя любовь 999 уровня к Ямаде», «В лоферах вприпрыжку», «Магия и мускулы», «Бессонница после школы» и «Звездное дитя»
-
-https://journal.tinkoff.ru/list/best-anime-2023/

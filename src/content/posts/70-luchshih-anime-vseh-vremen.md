@@ -1,11 +1,12 @@
 ---
 title: 70 лучших аниме всех времен
 date: 2025-11-05
-category: note
+category: article
+externalUrl: https://t-j.ru/list/best-anime/
 draft: true
 description: ''
-cover: ''
-noCover: true
+cover: /images/uploads/tj-70-luchshih-anime-vseh-vremen.jpg
+noCover: false
 tgId: 3461
 tgUrl: https://t.me/podcastbaka/3461
 ---
@@ -15,5 +16,3 @@ tgUrl: https://t.me/podcastbaka/3461
 Добавилась как культовая классика, которую мы сперва упустили, например «Гандам» и «Легенды о героях Галактики». Так и новинки, мимо которых не получилось пройти, в частности «Подземелье вкусностей» и «Мертвые-мертвые демоны».
 
 Список гигантский, так что не забудьте добавить его в закладки. Так вы сможете вернуться к нему позже:
-
-https://t-j.ru/list/best-anime/
