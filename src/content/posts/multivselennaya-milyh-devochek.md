@@ -2,16 +2,29 @@
 title: Мультивселенная милых девочек
 date: 2023-01-13
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-939.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 939
 tgUrl: https://t.me/podcastbaka/939
+anime:
+  - slow-loop
 ---
 
 ::image{src="/images/uploads/tg-939.jpg" alt="" width="column"}
+
 
 Я еще в прошлом году (неделю назад) обещал [у нас в чате](https://t.me/bakapodcast) рассказать о том, как связаны сериалы «Рок-тихоня» и «Медленная петля».
 
@@ -30,3 +43,5 @@ tgUrl: https://t.me/podcastbaka/939
 Издательство еще больше подогревает эту взаимосвязь, выпуская ролевую игру по мотивам своей вселенной с персонажами из разных манг: Kirara Fantasia.
 
 Так что появление Боччи-тян в «Петле» скорее всего было требованием [производственного комитета](https://t.me/podcastbaka/755), в который входит издательство Kirara.
+
+::anime-ref{id="slow-loop" source="shikimori" source-id="45425"}
