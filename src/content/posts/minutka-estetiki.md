@@ -2,7 +2,7 @@
 title: Минутка эстетики – «Наруто»
 date: 2022-11-29
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-760.jpg
 noCover: false
