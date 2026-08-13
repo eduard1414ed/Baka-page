@@ -1,19 +1,31 @@
 ---
-title: Да, снова про «Песнь ночных сов»
+title: Да, и снова про «Песнь ночных сов»
 date: 2022-08-26
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-484.jpg
-pullMedia: false
 noCover: false
-tgId: 484
-tgUrl: https://t.me/podcastbaka/484
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 animeSuggested:
   - akira
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 484
+tgUrl: https://t.me/podcastbaka/484
+anime:
+  - yofukashi-no-uta
 ---
 
 ::image{src="/images/uploads/tg-484.jpg" alt="" width="column"}
+
 
 Я уже посвятил этому аниме [этот пост](/posts/tg-2022-07-10-305/) и [этот пост](/posts/obzor-vseh-anime-leta-2022/), и [этот пост](/posts/nezametnye-detali/). Но не могу остановиться, простите.
 
@@ -30,3 +42,5 @@ animeSuggested:
 А большую часть пространства занимает пустой пол — очень знакомая картина, когда отводишь глаза во время неудобного разговора.
 
 Получается, что ощущения героев передаются не словами или даже эмоциями на лицах, а построением самого кадра.
+
+::anime-ref{id="yofukashi-no-uta" source="shikimori" source-id="50346"}
