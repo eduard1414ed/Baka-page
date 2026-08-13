@@ -6,10 +6,23 @@ draft: true
 description: ''
 cover: ''
 noCover: true
-tgId: 224
-tgUrl: https://t.me/podcastbaka/224
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 animeSuggested:
   - naruto
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 224
+tgUrl: https://t.me/podcastbaka/224
+anime:
+  - naruto
+  - naruto-shippuuden
 ---
 
 Масаси Кисимото, создатель «Наруто» не раз рассказывал, что самым сложным героем для него был Саске.
@@ -19,6 +32,10 @@ animeSuggested:
 Из-за того, что изначально у мангаки не было представления о персонаже, он долго думал над тем, каким же будет этот герой.
 
 И если с характером все решилось ещё до начала манги, то вот с одеждой пришлось помучаться.
+
+
+::image{src="/images/uploads/pasted-image-1786608123012.webp" alt="" width="column"}
+
 
 В первоначальном дизайне Саске носил множество ожерелий вокруг своих ног и рук. Но рисовать это раз в неделю очень тяжело, поэтому от этой концепции Кисимото отказался.
 
@@ -33,3 +50,7 @@ animeSuggested:
 В будущем выпуске (уже завтра) мы обсудим как раз первую встречу Наруто и модника Саске в новом костюме.
 
 А пока, как вы думаете, на каком костюме Кисимото стоило остановиться?
+
+::anime-ref{id="naruto" source="shikimori" source-id="20"}
+
+::anime-ref{id="naruto-shippuuden" source="shikimori" source-id="1735"}
