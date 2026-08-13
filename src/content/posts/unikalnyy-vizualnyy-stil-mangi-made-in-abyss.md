@@ -2,16 +2,29 @@
 title: Уникальный визуальный стиль манги Made in Abyss
 date: 2023-02-23
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1068.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1068
 tgUrl: https://t.me/podcastbaka/1068
+anime:
+  - made-in-abyss
 ---
 
 ::image{src="/images/uploads/tg-1068.jpg" alt="" width="column"}
+
 
 На этой неделе выйдет эпизод нашего подкаста про аниме «Созданный в Бездне», и при подготовке к нему я, конечно, полистал оригинальную мангу Акихито Цукуси.
 
@@ -31,4 +44,7 @@ Made in Abyss больше похожа на иллюстрации к нове�
 
 И поэтому воспринимать мангу адекватно становится довольно сложно. К счастью, аниме сильно уменьшило количество и откровенность таких сцен.
 
+
 ::image{src="/images/uploads/tg-1069.jpg" alt="" width="column"}
+
+::anime-ref{id="made-in-abyss" source="shikimori" source-id="34599"}
