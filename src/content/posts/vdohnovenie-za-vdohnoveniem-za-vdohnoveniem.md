@@ -2,16 +2,28 @@
 title: Вдохновение за вдохновением за вдохновением
 date: 2023-01-16
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-943.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 943
 tgUrl: https://t.me/podcastbaka/943
 ---
 
 ::image{src="/images/uploads/tg-943.jpg" alt="" width="column"}
+
 
 В нашей премии за лучший саундтрек прошлого года [победило](/posts/vtoraya-nominatsiya-luchshiy-saundtrek/) аниме Call of the Night. Во многом, благодаря песням группы Creepy Nuts, которые звучат в опенинге, эндинге и даже внутри некоторых серий.
 
