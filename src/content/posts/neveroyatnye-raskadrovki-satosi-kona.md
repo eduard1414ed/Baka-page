@@ -2,16 +2,28 @@
 title: Невероятные раскадровки Сатоси Кона
 date: 2022-09-20
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-590.jpg
+noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
 pullMedia: false
-noCover: false
 tgId: 590
 tgUrl: https://t.me/podcastbaka/590
 ---
 
 ::image{src="/images/uploads/tg-590.jpg" alt="" width="column"}
+
 
 Сатоси Кон — уникальный режиссёр, полнометражными аниме которого вдохновлялись потом все: от Вачовски до Нолана.
 
