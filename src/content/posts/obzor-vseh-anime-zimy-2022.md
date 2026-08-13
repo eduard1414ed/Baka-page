@@ -1,8 +1,8 @@
 ---
 title: Обзор всех аниме зимы
 date: 2022-04-20
-category: note
-draft: true
+category: article
+draft: false
 description: ''
 cover: /images/uploads/dtf-zima-2022-06.webp
 noCover: false
@@ -17,6 +17,8 @@ script: ''
 timecodes: ''
 bonusLinks: null
 pullMedia: false
+tgId: null
+tgUrl: ''
 anime:
   - akebi-chan-no-sailor-fuku
   - baraou-no-souretsu
@@ -34,7 +36,9 @@ anime:
 
 Правила такие: я смотрю по одной серии нового сериала этой зимы в алфавитном порядке из anilist. Ставлю оценку и решаю, буду ли смотреть дальше. Поехали!
 
+
 ::image{src="/images/uploads/dtf-zima-2022-06.webp" alt="" caption="Школьная форма Акэби" width="column"}
+
 
 #### [Школьная форма Акэби](/anime/akebi-chan-no-sailor-fuku/)
 
@@ -48,7 +52,9 @@ anime:
 
 **Смотреть дальше:** скорее нет, слишком странно
 
+
 ::image{src="/images/uploads/dtf-zima-2022-07.webp" alt="" caption="Похороны Короля Роз" width="column"}
+
 
 #### [Похороны Короля Роз](/anime/baraou-no-souretsu/)
 
@@ -62,7 +68,9 @@ anime:
 
 **Смотреть дальше:** точно нет, если только бессонницы не будет
 
+
 ::image{src="/images/uploads/dtf-zima-2022-08.webp" alt="" caption="Знак!" width="column"}
+
 
 #### Знак!
 
@@ -78,7 +86,9 @@ anime:
 
 **Смотреть дальше:** скорее нет, не очень хорошее повествование
 
+
 ::image{src="/images/uploads/dtf-zima-2022-09.webp" alt="" caption="Девушки на линии фронта" width="column"}
+
 
 #### Девушки на линии фронта
 
@@ -90,7 +100,9 @@ anime:
 
 **Смотреть дальше:** только с друзьями поржать, так что нет
 
+
 ::image{src="/images/uploads/dtf-zima-2022-10.webp" alt="" caption="Фантастический мир с обращённым в красавицу мужчиной и…" width="column"}
+
 
 #### [Фантастический мир с обращённым в красавицу мужчиной и…](/anime/fantasy-bishoujo-juniku-ojisan-to/)
 
@@ -106,7 +118,9 @@ anime:
 
 **Смотреть дальше:** скорее да, на вечер отдохнуть самое то
 
+
 ::image{src="/images/uploads/dtf-zima-2022-11.webp" alt="" caption="Мини-футбол для мальчиков" width="column"}
+
 
 #### Мини-футбол для мальчиков
 
@@ -120,7 +134,9 @@ anime:
 
 **Смотреть дальше:** нет, однозначно
 
+
 ::image{src="/images/uploads/dtf-zima-2022-12.webp" alt="" caption="Фантазия о Троецарствии: Духовность небес" width="column"}
+
 
 #### Фантазия о Троецарствии: Духовность небес
 
@@ -134,7 +150,9 @@ anime:
 
 **Смотреть дальше:** нет, не в моем вкусе
 
+
 ::image{src="/images/uploads/dtf-zima-2022-13.webp" alt="" caption="Контратака женщины-полицейского" width="column"}
+
 
 #### [Контратака женщины-полицейского](/anime/hakozume-kouban-joshi-no-gyakushuu/)
 
@@ -148,7 +166,9 @@ anime:
 
 **Смотреть дальше:** да, мне понравилось
 
+
 ::image{src="/images/uploads/dtf-zima-2022-14.webp" alt="" caption="Куроицу из отдела сверхчеловеческого развития" width="column"}
+
 
 #### Куроицу из отдела сверхчеловеческого развития
 
@@ -164,7 +184,9 @@ anime:
 
 **Смотреть дальше:** дам шанс еще паре серий
 
+
 ::image{src="/images/uploads/dtf-zima-2022-15.webp" alt="" caption="Она представилась как ученик мудреца" width="column"}
+
 
 #### Она представилась как ученик мудреца
 
@@ -178,7 +200,9 @@ anime:
 
 **Смотреть дальше:** нет, потому что банально
 
+
 ::image{src="/images/uploads/dtf-zima-2022-16.webp" alt="" caption="Убивающая любовь" width="column"}
+
 
 #### [Убивающая любовь](/anime/koroshi-ai/)
 
@@ -194,7 +218,9 @@ anime:
 
 **Смотреть дальше:** нет, потому что не зацепили герои
 
+
 ::image{src="/images/uploads/dtf-zima-2022-17.webp" alt="" caption="Мир Лидейл" width="column"}
+
 
 #### Мир Лидейл
 
@@ -212,7 +238,9 @@ anime:
 
 **Смотреть дальше:** скорее нет, но могу советовать другим
 
+
 ::image{src="/images/uploads/dtf-zima-2022-18.webp" alt="" caption="Ниндзяла" width="column"}
+
 
 #### Ниндзяла
 
@@ -226,7 +254,9 @@ anime:
 
 **Смотреть дальше:** однозначно нет
 
+
 ::image{src="/images/uploads/dtf-zima-2022-19.webp" alt="" caption="Ориент" width="column"}
+
 
 #### Ориент
 
@@ -240,7 +270,9 @@ anime:
 
 **Смотреть дальше:** нет, лучше пересмотреть «Наруто»
 
+
 ::image{src="/images/uploads/dtf-zima-2022-20.webp" alt="" caption="Клуб белых воротничков" width="column"}
+
 
 #### [Клуб белых воротничков](/anime/ryman-s-club/)
 
@@ -256,7 +288,9 @@ anime:
 
 **Смотреть дальше:** скорее нет, но только потому что не фанат спортивных аниме
 
+
 ::image{src="/images/uploads/dtf-zima-2022-21.webp" alt="" caption="Ржавая броня" width="column"}
+
 
 #### [Ржавая броня](/anime/sabiiro-no-armor-reimei/)
 
@@ -270,7 +304,9 @@ anime:
 
 **Смотреть дальше:** нет, мне и одну серию было больно досматривать
 
+
 ::image{src="/images/uploads/dtf-zima-2022-01.webp" alt="" caption="Биско-ржавоед" width="column"}
+
 
 #### [Биско-ржавоед](/anime/sabikui-bisco/)
 
@@ -282,7 +318,9 @@ anime:
 
 **Смотреть дальше:** да, в надежде на отличный сюжет
 
+
 ::image{src="/images/uploads/dtf-zima-2022-02.webp" alt="" caption="Сасаки и Миано" width="column"}
+
 
 #### Сасаки и Миано
 
@@ -294,7 +332,9 @@ anime:
 
 **Смотреть дальше:** нет, но могу рекомендовать другим
 
+
 ::image{src="/images/uploads/dtf-zima-2022-03.webp" alt="" caption="Шэнму" width="column"}
+
 
 #### Шэнму
 
@@ -308,7 +348,9 @@ anime:
 
 **Смотреть дальше:** скорее нет, но возможно это для кого-то хороший способ узнать историю из игры
 
+
 ::image{src="/images/uploads/dtf-zima-2022-04.webp" alt="" caption="Сильнейший мудрец низшей эмблемы" width="column"}
+
 
 #### Сильнейший мудрец низшей эмблемы
 
@@ -322,7 +364,9 @@ anime:
 
 **Смотреть дальше:** нет, слишком средне
 
+
 ::image{src="/images/uploads/dtf-zima-2022-05.webp" alt="" caption="Тотальный гарем" width="column"}
+
 
 #### Тотальный гарем
 
@@ -338,7 +382,9 @@ anime:
 
 **Смотреть дальше:** нет, лучше пойду на специальные сайты
 
+
 ::image{src="/images/uploads/zima-2022-tg-115.webp" alt="" caption="Медленная петля" width="column"}
+
 
 #### [Медленная петля](/anime/slow-loop/)
 
@@ -354,7 +400,9 @@ anime:
 
 **Смотреть дальше:** в грустные вечера — можно
 
+
 ::image{src="/images/uploads/zima-2022-tg-116.webp" alt="" caption="Руководство гениального принца по вызволению страны из долгов" width="column"}
+
 
 #### [Руководство гениального принца по вызволению страны из долгов](/anime/tensai-ouji-no-akaji-kokka-saisei-jutsu/)
 
