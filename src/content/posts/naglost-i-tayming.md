@@ -2,16 +2,28 @@
 title: Наглость и тайминг
 date: 2023-02-28
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1075.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1075
 tgUrl: https://t.me/podcastbaka/1075
 ---
 
 ::image{src="/images/uploads/tg-1075.jpg" alt="" width="column"}
+
 
 Сёнэн-ай — поджанр сёдзе-манги, который рассказывает о романтических отношениях между мужчинами. Последние годы экранизации сёнэн-ай — это самые заметные сёдзё-аниме. Прошлогоднее «Сасаки и Миано», полнометражный фильм «Беззаботные дни» и, конечно, «Юри на льду».
 
@@ -26,5 +38,3 @@ tgUrl: https://t.me/podcastbaka/1075
 В результате 50-страничный ваншот был опубликован. Мангу подписали как «историю с красивым парнем (бисёнэном) в главной роли».
 
 И она стала первым сёнен-ай в истории манги.
-
-**P.S.** Я это все к чему — ждите обсуждение «Юри на льду» в следующем бонусном эпизоде «Баки»
