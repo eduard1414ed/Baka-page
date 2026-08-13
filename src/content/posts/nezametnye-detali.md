@@ -1,17 +1,30 @@
 ---
-title: Незаметные детали
+title: Незаметные детали в «Песне ночных сов»
 date: 2022-08-16
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-452.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 452
 tgUrl: https://t.me/podcastbaka/452
+anime:
+  - yofukashi-no-uta
 ---
 
 ::image{src="/images/uploads/tg-452.jpg" alt="" width="column"}
+
 
 Я продолжаю смотреть «Песнь ночных сов» и продолжаю отмечать интересные визуальные детали.
 
@@ -22,3 +35,5 @@ tgUrl: https://t.me/podcastbaka/452
 Это небольшой кадр, который длится всего пару секунд — но если быть внимательным, то он раскрывает сюжетный поворот раньше времени. Потому что Нанакуса, будучи вампиршей, конечно, не отражается в зеркале.
 
 Это приятная маленькая деталь, показывающая проработку истории
+
+::anime-ref{id="yofukashi-no-uta" source="shikimori" source-id="50346"}
