@@ -1,20 +1,40 @@
 ---
-title: Выбираем романтику сезона
+title: Выбираем романтику сезона — зима 2023
 date: 2023-02-01
-category: note
-draft: true
+category: article
+draft: false
 description: ''
 cover: ''
-noCover: true
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 994
 tgUrl: https://t.me/podcastbaka/994
+anime:
+  - kubo-san-wa-mob-wo-yurusanai
+  - tomo-chan-wa-onnanoko
+  - koori-zokusei-danshi-to-cool-na-douryou-joshi
+  - otonari-no-tenshi-sama-ni-itsunomanika-dame-ningen-ni-sarete
 ---
 
 Этой зимой вышло четыре новых романтических сериала: «Ледяной парень и его спокойная коллега», «Томо — девушка!», «Ангел по соседству» и «Кубо не прощает меня — моба».
 
 Я посмотрел каждый из них, и решил помочь вам с выбором.
 
-4️⃣  **Кубо не прощает меня — моба**
+4. **Кубо не прощает меня — моба**
+
+
+::image{src="/images/uploads/pasted-image-1786625865167.webp" alt="" caption="Аниме студии PINE JAM" width="column"}
+
 
 Школьника Дзюнто никто не замечает. Настолько, что про него регулярно забывают учителя, а одноклассники считают хорошей приметой увидеть его хотя бы раз за день.
 
@@ -24,7 +44,11 @@ tgUrl: https://t.me/podcastbaka/994
 
 Поэтому пока советую этот сериал пропустить и посмотреть его потом как весеннюю премьеру.
 
-3️⃣ **Томо — девушка!**
+3. **Томо — девушка!**
+
+
+::image{src="/images/uploads/pasted-image-1786625919899.webp" alt="" caption="Аниме студии Lay-duce" width="column"}
+
 
 Главный ромком этого сезона. Томо и  Дзюнъитиро — соседи и друзья с детства. Но есть проблема: Томо влюблена в своего друга, а тот не воспринимает ее как девушку.
 
@@ -34,7 +58,11 @@ tgUrl: https://t.me/podcastbaka/994
 
 Если вам хочется посмеяться — то это ваш выбор.
 
-2️⃣ **Ледяной парень и его спокойная коллега**
+2. **Ледяной парень и его спокойная коллега**
+
+
+::image{src="/images/uploads/pasted-image-1786625958963.webp" alt="" caption="Аниме студий Zero-G и Liber" width="column"}
+
 
 По трейлеру мне казалось, что это очень странное аниме. Сюжет крутится вокруг двух коллег по работе: Химуро и Фуюцуки. Причем Химуро — потомок ёкая Юки-онны (то есть Снежной девы). Поэтому когда он испытывает сильные чувства — все вокруг начинает замерзать.
 
@@ -42,10 +70,22 @@ tgUrl: https://t.me/podcastbaka/994
 
 В итоге динамика между героями в сериале очень похожа на отношения двух взрослых людей, которые испытывают симпатию друг к другу. Получается что-то вроде «Трудно любить отаку», только вместо приколов над видеоиграми и мангой тут шутки про наследство способностей от ёкаев.
 
-1️⃣ **Ангел по соседству**
+1.  **Ангел по соседству**
+
+
+::image{src="/images/uploads/pasted-image-1786626022413.webp" alt="" caption="Аниме студии Project No.9" width="column"}
+
 
 Я уже [писал](/posts/kakoe-anime-stoit-smotret-etoy-zimoy-2023/) про этот сериал в подборке перед началом зимнего сезона — и на момент четвертой серии могу сказать, что мои ожидания оправдываются.
 
 Это, конечно, не сериал на уровне «Торадоры» или «Фарфоровой куклы», но за отношениями героев приятно смотреть, сценаристы очень вовремя добавляют второстепенных персонажей и разбавляют историю. А главное, в их отношениях есть развитие, которое не строится на заигрывании со зрителем с вопросом «будут они вместе или нет».
 
 Это классный романтический иясикей, который я советую посмотреть, если вы любите повседневность.
+
+::anime-ref{id="kubo-san-wa-mob-wo-yurusanai" source="shikimori" source-id="51815"}
+
+::anime-ref{id="tomo-chan-wa-onnanoko" source="shikimori" source-id="52305"}
+
+::anime-ref{id="koori-zokusei-danshi-to-cool-na-douryou-joshi" source="shikimori" source-id="52173"}
+
+::anime-ref{id="otonari-no-tenshi-sama-ni-itsunomanika-dame-ningen-ni-sarete" source="shikimori" source-id="50739"}
