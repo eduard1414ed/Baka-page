@@ -2,28 +2,36 @@
 title: Бонусный выпуск | Ликорис Рекоил
 date: 2022-10-14
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-671.jpg
-pullMedia: false
 noCover: false
-tgId: 671
-tgUrl: https://t.me/podcastbaka/671
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
 bonusLinks:
   boosty: ''
   patreon: ''
   tgClosed: ''
   vkDonat: ''
+pullMedia: false
+tgId: 671
+tgUrl: https://t.me/podcastbaka/671
+anime:
+  - lycoris-recoil
 ---
 
 ::image{src="/images/uploads/tg-671.jpg" alt="" width="column"}
+
 
 Каким вышло главное аниме этого лета? Шедевр, достойный похвалы от Кодзимы, или поверхностный проходняк про девушек-шпионок?
 
 Разбираемся в первом бонусном эпизоде этого сезона.
 
-**Как послушать этот и другие бонусы?** Есть несколько способов:
-
-💛 [Поддержать нас в группе VK](https://vk.com/podcast.baka)
-💚 [Подписаться в сервисе Boosty](https://boosty.to/bakapodcast)
-💙 Если вы не из России — [подписаться на нас на Patreon](https://www.patreon.com/bakapodcast)
+::anime-ref{id="lycoris-recoil" source="shikimori" source-id="50709"}
