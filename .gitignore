@@ -50,3 +50,7 @@ scripts/transcribe/state.json
 
 # лог долгого прогона сбора кандидатов
 .tmp-candidates-run.log
+
+# кэш ответов api.dtf.ru: чужие данные, качаются заново за секунду
+# (scripts/dtf/source.mjs)
+.tmp-dtf/
