@@ -2,21 +2,32 @@
 title: Бонусный выпуск | Пресвятые отроки
 date: 2023-04-19
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1196.jpg
-pullMedia: false
 noCover: false
-tgId: 1196
-tgUrl: https://t.me/podcastbaka/1196
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
 bonusLinks:
   boosty: ''
   patreon: ''
   tgClosed: ''
   vkDonat: ''
+pullMedia: false
+tgId: 1196
+tgUrl: https://t.me/podcastbaka/1196
 ---
 
 ::image{src="/images/uploads/tg-1196.jpg" alt="" width="column"}
+
 
 В этом выпуске мы обсуждаем, как Будда и Иисус проводят свой отпуск в пригороде Токио.
 
