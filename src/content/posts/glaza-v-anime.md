@@ -23,7 +23,7 @@ anime:
   - kawaii-dake-ja-nai-shikimori-san
 ---
 
-::image{src="/images/uploads/tg-247.jpg" alt="" caption="Аниме: Моя девушка не только милая" width="column"}
+::image{src="/images/uploads/tg-247.jpg" alt="" caption="Моя девушка не только милая, студия Doga Kobo" width="column"}
 
 
 В начале 70-х годов несколько девушек поставили себе цель — сделать профессию мангаки нормой для женщин. Они объединились в «Союз 24-го года» и стали одними из родоначальниц сёдзе (манги для девочек).
@@ -44,5 +44,6 @@ anime:
 
 
 ::image{src="/images/uploads/tg-250.jpg" alt="" width="column"}
+
 
 ::anime-ref{id="kawaii-dake-ja-nai-shikimori-san" source="shikimori" source-id="45613"}
