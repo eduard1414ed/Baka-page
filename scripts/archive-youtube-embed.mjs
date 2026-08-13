@@ -27,6 +27,30 @@ import { matchFor } from './archive-youtube-match.mjs';
 
 const CATEGORY_LABEL = { podcast: 'Выпуск', videoessay: 'Видеоэссе' };
 
+/**
+ * ПАРЫ, НАЗНАЧЕННЫЕ ЗАКАЗЧИКОМ ПОИМЁННО (13 августа 2026).
+ *
+ * Названием их не подтвердить: ролик на ютюбе переименован, и общих слов
+ * у поста с ним меньше порога. Правило, растянутое до этих восьми, начало бы
+ * склеивать и по-настоящему разные материалы — «Фрирен: настолько красиво?»
+ * с «Почему все демоны злые? | Фрирен». Поэтому не порог, а список.
+ *
+ * СПИСОК ОБЯЗАН ПАДАТЬ, А НЕ ПРОТУХАТЬ МОЛЧА. Если поста больше нет,
+ * или ролик исчез из выгрузки канала, или у поста уже стоит другой ролик —
+ * прогон останавливается. Иначе через полгода тут будет восемь строк,
+ * не делающих ничего, и никто об этом не узнает.
+ */
+const MANUAL = {
+	'ep-100': 'cwKMUoU_BHM', // … но в этом гениальность «Подземелья вкусностей»
+	'ep-90': '1r7ka2yXvw8', // Самый недооцененный сериал года? | Великая небесная стена
+	'ep-98': 'PfScvGgCWg0', // Идеальный романтический сериал? Любовь с кончиков пальцев
+	'ep-94': 'WhU1TMamekE', // Зачем смотреть Благословение небожителей?
+	'ep-123': 'nP6mxx3pgCo', // О чем не стоит жалеть? | Обычный роман в Коулуне
+	'ep-120': 'D4UrqEntAOU', // Как принять свое прошлое? «Еще вчера» | Видеоэссе
+	'ep-117': 'EKsTg96eWW4', // Как «О движении Земли» дает ответ на главный философский вопрос?
+	'ep-128': 'Bd05fD-6RI8', // Лучшие аниме 2025 года
+};
+
 const dir = (n) => (n && (n.type === 'leafDirective' || n.type === 'containerDirective') ? n.name : null);
 
 /** Блоки, перед которыми у выпуска встаёт видеоверсия: врезки и метки. */
@@ -207,7 +231,16 @@ async function main() {
 		const isEssay = cat === 'videoessay' && post.front?.category === 'podcast';
 		const head = isEssay ? retitleCategory(post.head) : null;
 
-		const m = matchFor(post.front?.title, videos);
+		// Назначенная вручную пара побеждает правило: заказчик подтвердил её
+		// глазами, а правило про переименованный ролик знать не может.
+		const manualId = MANUAL[post.id];
+		const m = manualId
+			? { v: videos.find((v) => v.id === manualId) }
+			: matchFor(post.front?.title, videos);
+		if (manualId && !m.v) {
+			console.error(`СПИСОК ПРОТУХ: ролика ${manualId} (для ${post.id}) нет в выгрузке канала.`);
+			process.exit(1);
+		}
 		const url = m ? `https://youtu.be/${m.v.id}` : null;
 		const next = url ? embed(post.body, cat, url) : null;
 
@@ -228,6 +261,14 @@ async function main() {
 			at: next ? next.at : head ? 'ролика нет — только категория' : 'только обложка',
 			wantsCover,
 		});
+	}
+
+	// ЗАСЛОН НА ПРОТУХШИЙ СПИСОК. Проверяется ДО показа и до записи.
+	const known = new Set(posts.map((p) => p.id));
+	const lost = Object.keys(MANUAL).filter((id) => !known.has(id));
+	if (lost.length) {
+		console.error(`СПИСОК ПРОТУХ: постов больше нет — ${lost.join(', ')}. Разбирать руками.`);
+		process.exit(1);
 	}
 
 	console.log('═'.repeat(96));
