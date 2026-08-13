@@ -1,15 +1,14 @@
 ---
 title: Пять аниме, в которых показывают косплей
 date: 2022-07-14
-category: note
-draft: true
+category: article
+draft: false
 description: ''
 cover: ''
 noCover: false
 externalUrl: ''
 externalSource: ''
 adLabel: ''
-anime: []
 animeSuggested: []
 mentionsHidden: ''
 speakers: ''
@@ -20,6 +19,10 @@ bonusLinks: null
 pullMedia: false
 tgId: 320
 tgUrl: https://t.me/podcastbaka/320
+anime:
+  - cosplay-complex
+  - genshiken
+  - watashi-ni-tenshi-ga-maiorita
 ---
 
 Продолжая тему косплея, решил посоветовать вам пять аниме, где главные герои увлечены своими косплейными хобби и делятся этой страстью с окружающими.
@@ -73,3 +76,9 @@ tgUrl: https://t.me/podcastbaka/320
 Одна из лучших романтических историй последних пары лет, невероятно обаятельные персонажи и море-море-море косплея.
 
 Подробно про это аниме мы говорили в [нашем бонусном эпизоде, послушайте](/posts/bonusnyy-vypusk-moya-farforovaya-kukla-vlyubilas/)!
+
+::anime-ref{id="cosplay-complex" source="shikimori" source-id="982"}
+
+::anime-ref{id="genshiken" source="shikimori" source-id="240"}
+
+::anime-ref{id="watashi-ni-tenshi-ga-maiorita" source="shikimori" source-id="37993"}
