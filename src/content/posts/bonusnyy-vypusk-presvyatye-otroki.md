@@ -9,7 +9,6 @@ noCover: false
 externalUrl: ''
 externalSource: ''
 adLabel: ''
-anime: []
 animeSuggested: []
 mentionsHidden: ''
 speakers: ''
@@ -24,6 +23,8 @@ bonusLinks:
 pullMedia: false
 tgId: 1196
 tgUrl: https://t.me/podcastbaka/1196
+anime:
+  - saint-oniisan
 ---
 
 ::image{src="/images/uploads/tg-1196.jpg" alt="" width="column"}
@@ -32,3 +33,5 @@ tgUrl: https://t.me/podcastbaka/1196
 В этом выпуске мы обсуждаем, как Будда и Иисус проводят свой отпуск в пригороде Токио.
 
 Большую часть времени мы вспоминаем самые смешные шутки из фильма, но все-таки успеваем рассказать немного о мангаке, написавшей оригинальную мангу, и об уникальном визуальном стиле этого аниме
+
+::anime-ref{id="saint-oniisan" source="shikimori" source-id="15775"}
