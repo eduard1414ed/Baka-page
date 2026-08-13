@@ -1,8 +1,8 @@
 ---
 title: Пять оригинальных пляжных эпизодов
 date: 2022-07-30
-category: note
-draft: true
+category: article
+draft: false
 description: ''
 cover: ''
 noCover: false
@@ -29,7 +29,6 @@ anime:
   - tenchi-muyou
   - shingeki-no-kyojin-the-final-season
 ---
-
 
 ::image{src="/images/uploads/pasted-image-1786616821846.webp" alt="" width="column"}
 
