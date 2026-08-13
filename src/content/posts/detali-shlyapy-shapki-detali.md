@@ -2,16 +2,29 @@
 title: Детали, шляпы, шапки, детали
 date: 2023-06-09
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1301.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1309
 tgUrl: https://t.me/podcastbaka/1309
+anime:
+  - oshi-no-ko
 ---
 
 ::image{src="/images/uploads/tg-1301.jpg" alt="" width="column"}
+
 
 Мы уже как-то [обсуждали,](/posts/modnik-saske/) что авторы манги предпочитают выбрать один-два костюма для своих героев и редко их меняют (если, конечно, это не манга про фэшн). Просто потому что так проще и быстрее рисовать.
 
@@ -21,11 +34,35 @@ tgUrl: https://t.me/podcastbaka/1309
 
 Прекрасный [аккаунт](https://twitter.com/aldeberu/status/1661551688770260992?s=46&t=6vTeItPlAX_WSAyLCcUzuA) в твиттере даже подсчитал общее количество головных уборов Каны, которые появились на данный момент в манге. Всего их было 47 (считая ленточки)
 
+
 ::image{src="/images/uploads/tg-1302.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1303.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1304.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1305.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1306.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1307.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1308.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1309.jpg" alt="" width="column"}
+
+::anime-ref{id="oshi-no-ko" source="shikimori" source-id="52034"}
