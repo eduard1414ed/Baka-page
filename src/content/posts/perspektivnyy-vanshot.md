@@ -2,15 +2,30 @@
 title: Перспективный ваншот
 date: 2022-09-08
 category: note
-draft: true
+draft: false
 description: ''
 cover: ''
-noCover: true
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 535
 tgUrl: https://t.me/podcastbaka/535
 ---
 
-Shounen Jump регулярно публикует в своих выпусках ваншоты. Некоторые из них скорее можно назвать проходными, но некоторым удаётся зацепить взгляд читателей и даже быть переведенными на другие языки.
+::image{src="/images/uploads/pasted-image-1786621000222.webp" alt="" width="column"}
+
+
+Shonen Jump регулярно публикует в своих выпусках ваншоты. Некоторые из них скорее можно назвать проходными, но некоторым удаётся зацепить взгляд читателей и даже быть переведенными на другие языки.
 
 Манга Roku no Meiya как раз относится к последним. Совсем недавно появился ее англоязычный перевод (на русском ее, кажется, до сих пор нет).
 
