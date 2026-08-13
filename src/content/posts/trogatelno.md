@@ -2,7 +2,7 @@
 title: Трогательно про кюдо
 date: 2023-06-28
 category: note
-draft: true
+draft: false
 description: ''
 cover: ''
 noCover: true
