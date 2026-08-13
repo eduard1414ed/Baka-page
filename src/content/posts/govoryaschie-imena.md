@@ -1,19 +1,30 @@
 ---
-title: Говорящие имена
+title: Говорящие имена в «Песни ночных сов»
 date: 2022-09-06
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-527.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 527
 tgUrl: https://t.me/podcastbaka/527
-animeSuggested:
-  - akira
+anime:
+  - yofukashi-no-uta
 ---
 
 ::image{src="/images/uploads/tg-527.jpg" alt="" width="column"}
+
 
 В классической литературе говорящие имена — очень частый приём, который позволяет быстро угадывать характеры героев или их скрытые мотивы.
 
@@ -28,3 +39,5 @@ animeSuggested:
 Ко YA-мори не спит по ночам, Акира ASA-и встаёт ранним утром, а Ма-HIRU Секи ведёт привычный дневной образ жизни.
 
 И их имена нам об этом рассказывают ещё до того, как это показывает сам сериал (сама манга).
+
+::anime-ref{id="yofukashi-no-uta" source="shikimori" source-id="50346"}
