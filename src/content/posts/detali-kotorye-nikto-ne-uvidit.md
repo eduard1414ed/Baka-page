@@ -2,7 +2,7 @@
 title: Детали, которые никто не увидит
 date: 2022-08-03
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-393.jpg
 noCover: false
@@ -66,5 +66,6 @@ anime:
 
 
 ::image{src="/images/uploads/tg-402.jpg" alt="" width="column"}
+
 
 ::anime-ref{id="redline" source="shikimori" source-id="6675"}
