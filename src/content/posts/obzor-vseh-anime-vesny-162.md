@@ -1,8 +1,8 @@
 ---
 title: Обзор всех аниме весны
 date: 2022-05-18
-category: note
-draft: true
+category: article
+draft: false
 description: ''
 cover: /images/uploads/pasted-image-1786578289506.webp
 noCover: false
@@ -46,7 +46,6 @@ anime:
   - shokei-shoujo-no-virgin-road
   - yuusha-yamemasu
 ---
-
 
 ::image{src="/images/uploads/pasted-image-1786578289506.webp" alt="" width="column"}
 
