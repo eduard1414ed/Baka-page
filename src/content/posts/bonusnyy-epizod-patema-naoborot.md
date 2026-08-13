@@ -2,29 +2,36 @@
 title: Бонусный эпизод | Патэма наоборот
 date: 2022-11-04
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-714.jpg
-pullMedia: false
 noCover: false
-tgId: 714
-tgUrl: https://t.me/podcastbaka/714
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
 bonusLinks:
   boosty: ''
   patreon: ''
   tgClosed: ''
   vkDonat: ''
+pullMedia: false
+tgId: 714
+tgUrl: https://t.me/podcastbaka/714
+anime:
+  - sakasama-no-patema
 ---
 
 ::image{src="/images/uploads/tg-714.jpg" alt="" width="column"}
+
 
 Боится ли Ксюша перевернутых людей? Каково это жить в слоенном пироге? И где на самом деле верх, а где низ?
 
 Разбираемся в новом бонусном эпизоде.
 
-**Как послушать этот и другие бонусы?** Есть несколько способов:
-
-💛 [Поддержать нас в группе VK](https://vk.com/podcast.baka)
-💚 [Подписаться в сервисе Boosty](https://boosty.to/bakapodcast)
-💙 Если вы не из России — [подписаться на нас на Patreon](https://www.patreon.com/bakapodcast)
-💜 Либо вступить в закрытый канал [прямо в телеграме](https://t.me/tribute/app?startapp=s26z)
+::anime-ref{id="sakasama-no-patema" source="shikimori" source-id="12477"}
