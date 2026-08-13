@@ -1,14 +1,15 @@
 ---
-title: Как Oshi no Ko вдохновляется трагедиями
+title: Как «Звездное дитя» вдохновляется трагедиями
 date: 2023-05-29
 category: article
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/dtf-oshi-no-ko-01.webp
 noCover: false
 externalUrl: ''
 externalSource: ''
 adLabel: ''
+anime: []
 animeSuggested: []
 mentionsHidden: ''
 speakers: ''
@@ -17,17 +18,22 @@ script: ''
 timecodes: ''
 bonusLinks: null
 pullMedia: false
+tgId: null
+tgUrl: ''
 ---
 
 ::image{src="/images/uploads/dtf-oshi-no-ko-01.webp" alt="" width="column"}
 
+
 «Звездное дитя» — рассказывает об обратной стороне шоу-бизнеса. Но еще страшнее становится, когда ты узнаешь, что многие истории из аниме основаны на реальных событиях.
 
-*Осторожно: дальше спойлеры к уже вышедшим сериям аниме*
+_Осторожно: дальше спойлеры к уже вышедшим сериям аниме_
 
 #### Маю Томита
 
-::image{src="/images/uploads/dtf-oshi-no-ko-02.webp" alt="" width="column"}
+
+::image{src="/images/uploads/dtf-oshi-no-ko-02.webp" alt="" caption="Маю Томита" width="column"}
+
 
 Oshi no Ko начинается с певицы Ай Хосино, которую преследует и впоследствие убивает один из фанатов. Ровно такая же история произошла в реальности в 2016 году с молодой певицей Маю Томита.
 
@@ -41,7 +47,9 @@ Oshi no Ko начинается с певицы Ай Хосино, котору�
 
 #### Хана Кимура
 
-::image{src="/images/uploads/dtf-oshi-no-ko-03.webp" alt="" width="column"}
+
+::image{src="/images/uploads/dtf-oshi-no-ko-03.webp" alt="" caption="Хана Кимура" width="column"}
+
 
 Другая страшная реальная история связана с героиней Акане, которая появляется в 6 серии. Она участвует в реалити-шоу и на эмоциях срывается на другую актрису. В результате ее начинают буллить в соцсетях — и это приводит к попытке суицида.
 
@@ -57,7 +65,9 @@ Oshi no Ko начинается с певицы Ай Хосино, котору�
 
 #### Асида Мана
 
-::image{src="/images/uploads/dtf-oshi-no-ko-04.webp" alt="" width="column"}
+
+::image{src="/images/uploads/dtf-oshi-no-ko-04.webp" alt="" caption="Асида Мана" width="column"}
+
 
 Напоследок самый безобидный источник вдохновения — для персонажа Каны.
 
