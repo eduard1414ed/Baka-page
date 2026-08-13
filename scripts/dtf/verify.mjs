@@ -60,6 +60,9 @@ const DROP = {
 	// Строка «Оригинал интервью — тут» ОСТАЁТСЯ: это указание на первоисточник,
 	// а не хвост площадки. Выброшены только теги DTF.
 	interview: [/^#\S/],
+	// Реклама канала — как в подборках 2023. Три звёздочки на DTF набраны
+	// заголовком: это черта-разделитель перед послесловием, а не вопрос.
+	jjk: [/^Читайте больше про аниме/, /^\*+$/],
 };
 
 const problemsOfImages = (raw) => {
@@ -293,6 +296,71 @@ async function checkInterview(raw) {
 	return problems;
 }
 
+// ─── Интервью «Магическая битва» ──────────────────────────────────────────
+//
+// ЧЕГО ЭТА ПРОВЕРКА НЕ УМЕЕТ, И ЭТО НАДО СКАЗАТЬ ВСЛУХ. Подписи под кадрами
+// тут ПРИДУМАНЫ (на DTF они пустые), значит сверять их не с чем: правильность
+// подписи знает только человек, который смотрел на кадр. Проверка утверждает
+// лишь то, что проверяемо, — подпись есть у каждого кадра кроме обложки,
+// и все они разные. Подпись, уехавшую к соседнему кадру, тут не поймает
+// ничто, кроме глаз заказчика; у «Долой безделье!» она поймана лишь потому,
+// что подпись там ОДНА и приехала из первоисточника.
+async function checkJjk(raw) {
+	const problems = [];
+	const article = await fetchArticle(1383597);
+
+	const want = norm(article.blocks
+		.filter((b) => b.type === 'text' || b.type === 'header' || b.type === 'incut')
+		.flatMap((b) => b.data.text.split(/<\/p>|<br\s*\/?>/i))
+		.map((chunk) => norm(strip(chunk)))
+		.filter((text) => text && !DROP.jjk.some((re) => re.test(text)))
+		// Известное отличие — СПИСКОМ, а не размягчением сравнения: у ссылки
+		// на выпуск подкаста текстом стоял сам адрес youtu.be, и он заменён
+		// названием выпуска (иначе ссылка врала бы собственными словами).
+		.map((text) => (text === 'https://youtu.be/TlZh4Kbalsk' ? 'Магическая битва | Лучший ли это сёнен или просто копия других аниме?' : text))
+		.join(' '));
+	const got = norm(plainMd(bodyOf(raw)));
+	if (want !== got) {
+		let i = 0; while (i < want.length && want[i] === got[i]) i++;
+		problems.push(`текст разошёлся на знаке ${i}: ждали ${JSON.stringify(want.slice(i, i + 50))}, получили ${JSON.stringify(got.slice(i, i + 50))}`);
+	}
+
+	// Вопросы — текстом и уровнем. Черта-разделитель «***» на DTF набрана
+	// заголовком, и в число вопросов не входит.
+	const wantHeads = article.blocks.filter((b) => b.type === 'header').map((b) => norm(strip(b.data.text))).filter((t) => !/^\*+$/.test(t));
+	const gotHeads = [...raw.matchAll(/^(#{1,6}) (.+)$/gm)].map((m) => ({ level: m[1].length, text: norm(m[2]) }));
+	if (wantHeads.join('\n') !== gotHeads.map((h) => h.text).join('\n'))
+		problems.push(`вопросы разошлись: у DTF ${wantHeads.length}, у нас ${gotHeads.length}`);
+	for (const head of gotHeads)
+		if (head.level !== 5) problems.push(`вопрос стоит заголовком ${head.level}, а не 5: «${head.text.slice(0, 50)}»`);
+
+	const wantImages = article.blocks.filter((b) => b.type === 'media').reduce((n, b) => n + b.data.items.length, 0);
+	const shots = [...raw.matchAll(/^::image\{([^}]*)\}$/gm)].map((m) => /caption="([^"]*)"/.exec(m[1])?.[1] ?? '');
+	if (wantImages !== shots.length) problems.push(`картинок у DTF ${wantImages}, у нас ${shots.length}`);
+
+	// Подпись есть у каждого кадра, кроме обложки, и все они разные.
+	for (const [index, caption] of shots.entries())
+		if (index > 0 && !caption) problems.push(`у ${index + 1}-го кадра нет подписи, а её просил заказчик`);
+	const named = shots.slice(1).filter(Boolean);
+	if (new Set(named).size !== named.length) problems.push('две подписи совпали — кадры подписаны одним текстом');
+
+	const wantBold = article.blocks.filter((b) => b.type === 'text').reduce((n, b) => n + (b.data.text.match(/<b>/g) || []).length, 0);
+	const gotBold = (bodyOf(raw).match(/\*\*[^*]+\*\*/g) || []).length;
+	if (wantBold !== gotBold) problems.push(`имён говорящих полужирным у DTF ${wantBold}, у нас ${gotBold}`);
+
+	if (/api\.dtf\.ru/.test(raw)) problems.push('осталась переадресация api.dtf.ru');
+	if (/google\.[a-z.]+\/url\?/.test(raw)) problems.push('осталась переадресация google.com/url');
+	if (/youtu\.?be/.test(raw)) problems.push('осталась ссылка на YouTube, а выпуск есть на сайте');
+	if (!raw.includes('](/posts/ep-47/)')) problems.push('пропала ссылка на выпуск /posts/ep-47/');
+	if (!/^tgId: 437$/m.test(raw)) problems.push('пропал tgId: 437 — импорт заведёт анонс из телеграма заново');
+	// Первоисточник интервью назван — это чужая работа, и ссылка на неё обязательна.
+	if (!raw.includes('crunchyroll.com')) problems.push('пропала ссылка на Crunchyroll — чьё это интервью');
+
+	problems.push(...checkCoverFirst(raw));
+	problems.push(...problemsOfImages(raw));
+	return problems;
+}
+
 // ─── Вид: обложка, порядок, подписи (правки заказчика 13 августа) ─────────
 function checkCoverFirst(raw) {
 	const problems = [];
@@ -338,6 +406,7 @@ const POSTS = [
 	{ slug: 'kakoe-anime-stoit-smotret-etim-letom-2023', name: 'подборка лета 2023', checks: [(raw) => checkPodborka2023(raw, 1922981)] },
 	{ slug: 'realnye-kartiny-v-mange-goluboy-period', name: '«Голубой период»', checks: [checkBluePeriod] },
 	{ slug: 'doloy-bezdele-intervyu-s-rezhisserom-anime-i-avtorom-originalnoy-mangi', name: 'интервью «Долой безделье!»', checks: [checkInterview] },
+	{ slug: 'intervyu-s-sozdatelyami-magicheskoy-bitvy', name: 'интервью «Магическая битва»', checks: [checkJjk] },
 ];
 
 async function runAll() {
@@ -369,6 +438,10 @@ async function selftest() {
 	// от первой же правки текста в админке, и заслон покраснеет на здоровом
 	// посте (в проекте это уже случалось — «Баки!» уехала в стоп-лист).
 	const firstQuestion = /^##### (.+)$/m.exec(talk)[1];
+	const jjk = fs.readFileSync(postPath('intervyu-s-sozdatelyami-magicheskoy-bitvy'), 'utf8');
+	// Подпись достаём ИЗ ДАННЫХ: вписанная именем, она протухнет от первой же
+	// правки заказчика в админке, и заслон покраснеет на здоровом посте.
+	const jjkCaption = /^::image\{[^}]*caption="([^"]*)"[^}]*\}$/m.exec(jjk)[1];
 
 	const cases = [
 		['зима 2022: потерян целый тайтл', () => checkZima2022(zima.replace(/#### \[Ниндзяла\]\([^)]*\)/, '')), true],
@@ -402,11 +475,22 @@ async function selftest() {
 			return checkInterview(blocks.join('\n\n'));
 		}, true],
 		['интервью: у обложки появилась подпись', () => checkInterview(talk.replace('dtf-doloy-bezdele-01.webp" alt=""', 'dtf-doloy-bezdele-01.webp" alt="" caption="Кадр из аниме"')), true],
+		['«Магическая битва»: у кадра пропала подпись', () => checkJjk(jjk.replace(` caption="${jjkCaption}"`, '')), true],
+		['«Магическая битва»: два кадра подписаны одинаково', () => {
+			const caps = [...jjk.matchAll(/^::image\{[^}]*caption="([^"]*)"[^}]*\}$/gm)].map((m) => m[1]);
+			return checkJjk(jjk.replace(` caption="${caps[1]}"`, ` caption="${caps[0]}"`));
+		}, true],
+		['«Магическая битва»: ссылка на выпуск осталась на YouTube', () => checkJjk(jjk.replace('[Магическая битва | Лучший ли это сёнен или просто копия других аниме?](/posts/ep-47/)', '[https://youtu.be/TlZh4Kbalsk](https://youtu.be/TlZh4Kbalsk)')), true],
+		['«Магическая битва»: пропала ссылка на Crunchyroll', () => checkJjk(jjk.replace(/\[поговорил\]\([^)]*\)/, 'поговорил')), true],
+		['«Магическая битва»: реклама канала вернулась', () => checkJjk(jjk.replace('##### Сэко-сан,', 'Читайте больше про аниме в нашем телеграм-канале\n\n##### Сэко-сан,')), true],
+		['«Магическая битва»: черта-разделитель вернулась заголовком', () => checkJjk(jjk.replace('Узнать больше о «Магической битве»', '##### ***\n\nУзнать больше о «Магической битве»')), true],
+		['«Магическая битва»: потерян tgId', () => checkJjk(jjk.replace(/^tgId: 437$/m, 'tgId: null')), true],
 		// Вторая половина: на здоровых файлах все проверки обязаны МОЛЧАТЬ.
 		['здоровый обзор зимы 2022', () => checkZima2022(zima), false],
 		['здоровый «Голубой период»', () => checkBluePeriod(bp), false],
 		['здоровая подборка весны 2023', () => checkPodborka2023(vesna, 1696863), false],
 		['здоровое интервью «Долой безделье!»', () => checkInterview(talk), false],
+		['здоровое интервью «Магическая битва»', () => checkJjk(jjk), false],
 	];
 
 	let ok = true;
