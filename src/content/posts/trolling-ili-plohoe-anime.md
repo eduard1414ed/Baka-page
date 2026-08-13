@@ -2,16 +2,29 @@
 title: Троллинг или плохое аниме?
 date: 2023-05-16
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1260.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1260
 tgUrl: https://t.me/podcastbaka/1260
+anime:
+  - kaminaki-sekai-no-kamisama-katsudou
 ---
 
 ::image{src="/images/uploads/tg-1260.jpg" alt="" width="column"}
+
 
 «KamiKatsu: Как быть богу в мире без богов?» — очередной исекай, который пытается посмеяться над штампами исекаев. Герой перемещается в новый мир, но вместо заданий в гильдии ему дают лопату и заставляют копать грядки.
 
@@ -27,4 +40,7 @@ tgUrl: https://t.me/podcastbaka/1260
 
 Ну либо это просто очень плохой и кринжовый сериал — такое тоже может быть.
 
+
 ::image{src="/images/uploads/tg-1261.jpg" alt="" width="column"}
+
+::anime-ref{id="kaminaki-sekai-no-kamisama-katsudou" source="shikimori" source-id="51693"}
