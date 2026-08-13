@@ -22,7 +22,6 @@ tgId: 1256
 tgUrl: https://t.me/podcastbaka/1256
 ---
 
-
 ::image{src="/images/uploads/dtf-doloy-bezdele-01.webp" alt="" width="column"}
 
 
@@ -192,4 +191,5 @@ tgUrl: https://t.me/podcastbaka/1256
 
 В это время года наступает время новых начал, и я надеюсь, что люди, которые испытывают трудности в отношениях, смогут найти подсказки и облегчить свои сердца благодаря Мицуми и ее друзьям. Я был бы счастлив, если бы вы наслаждались сериалом таким образом.
 
-Оригинал интервью — [тут](https://realsound.jp/movie/2023/04/post-1311555.html)
+
+::link{label="Оригинал интервью" url="https://realsound.jp/movie/2023/04/post-1311555.html"}
