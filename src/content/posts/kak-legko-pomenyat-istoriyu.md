@@ -2,16 +2,29 @@
 title: Как легко поменять историю?
 date: 2022-11-22
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-744.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 744
 tgUrl: https://t.me/podcastbaka/744
+anime:
+  - chainsaw-man
 ---
 
 ::image{src="/images/uploads/tg-744.jpg" alt="" width="column"}
+
 
 Иногда фанатские арты не только красивые, но могут заставить задуматься о том, как кардинально может измениться история, если слегка поменять какую-нибудь деталь.
 
@@ -21,6 +34,15 @@ tgUrl: https://t.me/podcastbaka/744
 
 Как вам такой сюжет?
 
+
 ::image{src="/images/uploads/tg-745.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-746.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-747.jpg" alt="" width="column"}
+
+::anime-ref{id="chainsaw-man" source="shikimori" source-id="44511"}
