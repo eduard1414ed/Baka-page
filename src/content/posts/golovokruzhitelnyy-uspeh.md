@@ -1,17 +1,27 @@
 ---
-title: Головокружительный успех
+title: Головокружительный успех «Рок-тихони!»
 date: 2023-01-23
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-962.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 962
 tgUrl: https://t.me/podcastbaka/962
+anime:
+  - bocchi-the-rock
 ---
-
-::image{src="/images/uploads/tg-962.jpg" alt="" width="column"}
 
 Продажи манги «Одинокий рокер» от Аки Хамадзи резко подскачили на фоне выхода сериала.
 
@@ -23,4 +33,10 @@ tgUrl: https://t.me/podcastbaka/962
 
 Осталось дождаться анонсов от CloverWorks.
 
+
+::image{src="/images/uploads/tg-962.jpg" alt="" width="column"}
+
+
 ::image{src="/images/uploads/tg-963.jpg" alt="" width="column"}
+
+::anime-ref{id="bocchi-the-rock" source="shikimori" source-id="47917"}
