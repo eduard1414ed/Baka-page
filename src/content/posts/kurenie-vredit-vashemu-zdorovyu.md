@@ -2,16 +2,29 @@
 title: Курение вредит вашему здоровью
 date: 2023-07-05
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1354.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1354
 tgUrl: https://t.me/podcastbaka/1354
+anime:
+  - super-no-ura-de-yani-suu-futari
 ---
 
 ::image{src="/images/uploads/tg-1354.jpg" alt="" width="column"}
+
 
 Сасаки — уставший офисный работник, который проживает каждый скучный  напряжённый день в ожидании одного и того же: похода в продуктовый. Ведь там есть Ямада, жизнерадостная продавщица, которая поднимает ему настроение.
 
@@ -27,4 +40,7 @@ tgUrl: https://t.me/podcastbaka/1354
 
 Я проглотил их за один вечер и теперь очень хочу еще
 
+
 ::image{src="/images/uploads/tg-1355.jpg" alt="" width="column"}
+
+::anime-ref{id="super-no-ura-de-yani-suu-futari" source="shikimori" source-id="62076"}
