@@ -2,17 +2,34 @@
 title: Что за «Несносные пришельцы»?
 date: 2022-10-15
 category: note
-draft: true
+draft: false
 description: ''
 cover: ''
 noCover: true
-tgId: 672
-tgUrl: https://t.me/podcastbaka/672
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 animeSuggested:
   - jujutsu-kaisen
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 672
+tgUrl: https://t.me/podcastbaka/672
+anime:
+  - urusei-yatsura-2022
+  - urusei-yatsura
 ---
 
 Появился официальный опенинг ремейка сериала Urusei Yatsura. Причем для его создания привлекли Синго Ямаситу — который рисовал опенинги для таких хитов, как «Магическая битва» и «Человек-бензопила».
+
+
+::video{youtube="https://youtu.be/pEVhv4eB8Q8"}
+
 
 Но что за Urusei Yatsura? Это первая манга одной из богатейших женщин Японии — Румико Такахаси. В 80-х будущая икона манги написала комедийную историю про студента и странную инопланетянку.
 
@@ -24,4 +41,6 @@ animeSuggested:
 
 Неудивительно, что студия прикладывает дополнительные усилия, привлекая к продакшну лучших из лучших, вроде Синго Ямаситы. Им не простят, если они «испортят» классику.
 
-https://youtu.be/pEVhv4eB8Q8
+::anime-ref{id="urusei-yatsura-2022" source="shikimori" source-id="50710"}
+
+::anime-ref{id="urusei-yatsura" source="shikimori" source-id="1293"}
