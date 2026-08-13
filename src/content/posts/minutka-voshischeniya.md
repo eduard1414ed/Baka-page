@@ -2,7 +2,7 @@
 title: Минутка восхищения «Песнями ночных сов»
 date: 2022-08-09
 category: note
-draft: true
+draft: false
 description: ''
 cover: ''
 noCover: false
@@ -47,5 +47,6 @@ anime:
 
 
 ::image{src="/images/uploads/tg-434.jpg" alt="" width="column"}
+
 
 ::anime-ref{id="yofukashi-no-uta" source="shikimori" source-id="50346"}
