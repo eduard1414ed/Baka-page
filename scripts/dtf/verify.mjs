@@ -72,6 +72,7 @@ const DROP = {
 	// заголовком: это черта-разделитель перед послесловием, а не вопрос.
 	jjk: [/^Читайте больше про аниме/, /^\*+$/],
 	openingi: [/делитесь в комментариях/i],
+	oshiNoKo: [/^Ещё больше интересных фактов|^Еще больше интересных фактов/],
 };
 
 const problemsOfImages = (raw) => {
@@ -433,6 +434,65 @@ async function checkOpeningi(raw, { edited } = {}) {
 	return problems;
 }
 
+// ─── «Как Oshi no Ko вдохновляется трагедиями» ────────────────────────────
+async function checkOshiNoKo(raw, { edited } = {}) {
+	const problems = [];
+	const article = await fetchArticle(1853775);
+	if (edited) return [...checkEdited(raw), ...checkCoverFirst(raw), ...problemsOfImages(raw)];
+
+	const want = norm(article.blocks
+		.filter((b) => b.type === 'text' || b.type === 'header' || b.type === 'incut')
+		.flatMap((b) => b.data.text.split(/<\/p>|<br\s*\/?>/i))
+		.map((chunk) => norm(strip(chunk)))
+		.filter((text) => text && !DROP.oshiNoKo.some((re) => re.test(text)))
+		.join(' '));
+	const got = norm(plainMd(bodyOf(raw)));
+	if (want !== got) {
+		let i = 0; while (i < want.length && want[i] === got[i]) i++;
+		problems.push(`текст разошёлся на знаке ${i}: ждали ${JSON.stringify(want.slice(i, i + 50))}, получили ${JSON.stringify(got.slice(i, i + 50))}`);
+	}
+
+	const wantHeads = article.blocks.filter((b) => b.type === 'header').map((b) => norm(strip(b.data.text)));
+	const gotHeads = [...raw.matchAll(/^(#{1,6}) (.+)$/gm)].map((m) => ({ level: m[1].length, text: norm(m[2]) }));
+	if (wantHeads.join('\n') !== gotHeads.map((h) => h.text).join('\n'))
+		problems.push(`разделы разошлись: у DTF ${wantHeads.length}, у нас ${gotHeads.length}`);
+	for (const head of gotHeads)
+		if (head.level !== 4) problems.push(`имя стоит заголовком ${head.level}, а не 4: «${head.text}»`);
+
+	// У каждого раздела свой кадр, и стоит он СРАЗУ под именем.
+	const blocks = blocksOf(raw);
+	for (const [index, block] of blocks.entries())
+		if (/^#### /.test(block) && !(blocks[index + 1] ?? '').startsWith('::image'))
+			problems.push(`у раздела нет кадра: ${block.slice(0, 40)}`);
+
+	const wantImages = article.blocks.filter((b) => b.type === 'media').reduce((n, b) => n + b.data.items.length, 0);
+	const gotImages = (raw.match(/^::image/gm) || []).length;
+	if (wantImages !== gotImages) problems.push(`картинок у DTF ${wantImages}, у нас ${gotImages}`);
+
+	// ПОДПИСЕЙ ТУТ БЫТЬ НЕ ДОЛЖНО, И ЭТО ПРОВЕРЯЕТСЯ. На снимках реальные люди —
+	// пережившая нападение, погибшая и ребёнок, — и подпись назвала бы их
+	// по имени без всякой возможности это проверить. Появится подпись
+	// в пересборке — значит кто-то сочинил её заново, и об этом надо узнать
+	// сразу. Подписи, поставленные ЗАКАЗЧИКОМ, сюда не попадают: у правленого
+	// поста эта ветка не работает вовсе, он свои источники знает.
+	for (const match of raw.matchAll(/^::image\{[^}]*caption="([^"]*)"[^}]*\}$/gm))
+		problems.push(`у кадра появилась сочинённая подпись про реального человека: «${match[1].slice(0, 50)}»`);
+
+	// Предупреждение о спойлерах — часть авторского текста и стоит ДО первого
+	// раздела. Уедь оно ниже — читатель встретит спойлер раньше предупреждения.
+	const warn = blocks.findIndex((b) => /Осторожно: дальше спойлеры/.test(b));
+	const firstHead = blocks.findIndex((b) => b.startsWith('#### '));
+	if (warn === -1) problems.push('пропало предупреждение о спойлерах');
+	else if (firstHead !== -1 && warn > firstHead) problems.push('предупреждение о спойлерах стоит ПОСЛЕ первого раздела');
+
+	if (/api\.dtf\.ru/.test(raw)) problems.push('осталась переадресация api.dtf.ru');
+	if (/t\.me\/podcastbaka/.test(raw)) problems.push('осталась реклама телеграм-канала');
+
+	problems.push(...checkCoverFirst(raw));
+	problems.push(...problemsOfImages(raw));
+	return problems;
+}
+
 /**
  * Что остаётся правдой у поста, который заказчик уже правил.
  *
@@ -510,6 +570,7 @@ const POSTS = [
 	{ slug: 'doloy-bezdele-intervyu-s-rezhisserom-anime-i-avtorom-originalnoy-mangi', name: 'интервью «Долой безделье!»', checks: [checkInterview], builder: './build-doloy-bezdele.mjs' },
 	{ slug: 'intervyu-s-sozdatelyami-magicheskoy-bitvy', name: 'интервью «Магическая битва»', checks: [checkJjk], builder: './build-jjk-intervyu.mjs' },
 	{ slug: 'samye-vazhnye-openingi-v-istorii', name: 'самые важные опенинги', checks: [checkOpeningi], builder: './build-openingi.mjs' },
+	{ slug: 'kak-oshi-no-ko-vdohnovlyaetsya-tragediyami', name: '«Оси но ко» и трагедии', checks: [checkOshiNoKo], builder: './build-oshi-no-ko.mjs' },
 ];
 
 /**
@@ -575,6 +636,7 @@ async function selftest() {
 	// Заголовок и ролик достаём ИЗ ДАННЫХ, а не вписываем именем.
 	const firstTitle = /^#### (.+)$/m.exec(ops)[1];
 	const firstVideo = /::video\{youtube="[^"]*v=([^"&]+)"\}/.exec(ops)[1];
+	const oshi = fs.readFileSync(postPath('kak-oshi-no-ko-vdohnovlyaetsya-tragediyami'), 'utf8');
 
 	/**
 	 * Подделать текст — и УБЕДИТЬСЯ, ЧТО ПОДДЕЛКА СОСТОЯЛАСЬ.
@@ -649,6 +711,18 @@ async function selftest() {
 		}, true],
 		['опенинги: призыв в комментарии вернулся', () => checkOpeningi(ops.trimEnd() + '\n\nИ после просмотра обязательно делитесь в комментариях, какие ваши любимые опенинги!\n'), true],
 		['опенинги: потерян tgId', () => checkOpeningi(ops.replace(/^tgId: 967$/m, 'tgId: null')), true],
+		['«Оси но ко»: кадру сочинили подпись про реального человека', () => checkOshiNoKo(forge(oshi, 'dtf-oshi-no-ko-02.webp" alt=""', 'dtf-oshi-no-ko-02.webp" alt="" caption="Маю Томита"')), true],
+		['«Оси но ко»: имя стоит третьим уровнем', () => checkOshiNoKo(forge(oshi, /^#### /m, '### ')), true],
+		['«Оси но ко»: пропало предупреждение о спойлерах', () => checkOshiNoKo(forge(oshi, /\*Осторожно: дальше спойлеры[^*]*\*\n\n/, '')), true],
+		['«Оси но ко»: предупреждение уехало ниже первого раздела', () => {
+			const parts = oshi.split(/\n\n/);
+			const w = parts.findIndex((b) => /Осторожно: дальше спойлеры/.test(b));
+			const [line] = parts.splice(w, 1);
+			parts.splice(parts.findIndex((b) => b.startsWith('#### ')) + 1, 0, line);
+			return checkOshiNoKo(parts.join('\n\n'));
+		}, true],
+		['«Оси но ко»: у раздела пропал кадр', () => checkOshiNoKo(forge(oshi, '::image{src="/images/uploads/dtf-oshi-no-ko-03.webp" alt="" width="column"}\n\n', '')), true],
+		['«Оси но ко»: реклама канала вернулась', () => checkOshiNoKo(oshi.trimEnd() + '\n\nЕще больше интересных фактов об аниме ищите в [нашем телеграм-канале](https://t.me/podcastbaka).\n'), true],
 		// Вторая половина: на здоровых файлах все проверки обязаны МОЛЧАТЬ.
 		['здоровый обзор зимы 2022', () => checkZima2022(zima), false],
 		['здоровый «Голубой период»', () => checkBluePeriod(bp), false],
@@ -680,6 +754,7 @@ async function selftest() {
 		['она же молчит, когда знает про правки', () => checkInterview(talk, { edited: true }), false],
 		['здоровое интервью «Магическая битва»', () => checkJjk(jjk), false],
 		['здоровые «Самые важные опенинги»', () => checkOpeningi(ops), false],
+		['здоровые «Оси но ко» и трагедии', () => checkOshiNoKo(oshi), false],
 	];
 
 	let ok = true;
