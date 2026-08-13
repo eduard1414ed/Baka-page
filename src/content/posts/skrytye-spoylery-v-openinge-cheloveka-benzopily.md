@@ -2,16 +2,29 @@
 title: Скрытые спойлеры в опенинге «Человека-бензопилы»
 date: 2022-10-25
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-695.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 695
 tgUrl: https://t.me/podcastbaka/695
+anime:
+  - chainsaw-man
 ---
 
 ::image{src="/images/uploads/tg-695.jpg" alt="" width="column"}
+
 
 Самая интересная и спойлерная деталь опенинга «Бензопилы» — это червь, которым Макима кормит Денджи.
 
@@ -28,3 +41,5 @@ tgUrl: https://t.me/podcastbaka/695
 То есть, этот червь превращает улиток в зомби, обреченных на смерть.
 
 Если вы читали мангу, вы уловили параллель, я думаю.
+
+::anime-ref{id="chainsaw-man" source="shikimori" source-id="44511"}
