@@ -2,16 +2,28 @@
 title: Когда фон рассказывает историю
 date: 2023-01-26
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-968.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 968
 tgUrl: https://t.me/podcastbaka/968
 ---
 
 ::image{src="/images/uploads/tg-968.jpg" alt="" width="column"}
+
 
 Прошлым летом у нас вышел [бонусный эпизод](/posts/bonusnyy-epizod-hyoka/) про сериала «Хёка» — и там мы больше всего хвалили его за визуальный стиль. Сейчас я изучаю подробнее работы Kyoto Animation и снова вспомнил про этот разговор.
 
@@ -29,8 +41,21 @@ tgUrl: https://t.me/podcastbaka/968
 
 Учитывая, что Kyoto Animation — одна из немногих студий, которая не отдает создание фонов на аутсорс, это пример грамотной и талантливой работы с арт-дирекшеном сериала.
 
+
 ::image{src="/images/uploads/tg-969.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-970.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-971.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-972.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-973.jpg" alt="" width="column"}
