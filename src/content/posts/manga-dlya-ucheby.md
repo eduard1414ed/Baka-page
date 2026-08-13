@@ -2,18 +2,30 @@
 title: Манга для учебы
 date: 2023-03-20
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1112.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1112
 tgUrl: https://t.me/podcastbaka/1112
 ---
 
 ::image{src="/images/uploads/tg-1112.jpg" alt="" width="column"}
 
-Пока истории в Shounen Jump становятся все более взрослыми и жестокими (именно там выходит [«Человек-Бензопила»](https://t.me/podcastbaka/830)), издательство решило создать отдельный журнал —  специально для младшеклассников.
+
+Пока истории в Shonen Jump становятся все более взрослыми и жестокими (именно там выходит [«Человек-Бензопила»](https://t.me/podcastbaka/830)), издательство решило создать отдельный журнал —  специально для младшеклассников.
 
 Bentame Jump (Study Jump) — обещает быть образовательным и рассказывать детям об устройстве флоры, фауны, мира, вселенной и вообще.
 
@@ -24,5 +36,3 @@ Bentame Jump (Study Jump) — обещает быть образовательн
 Но пока неизвестно, будут это просто ваншоты от этих авторов или полноценные серии.
 
 Я в детстве был фанатом энциклопедий и учился по ним. Поэтому если бы мне тогда дали такой журнал — я бы был в полном восторге.
-
-::image{src="/images/uploads/tg-1113.jpg" alt="" width="column"}
