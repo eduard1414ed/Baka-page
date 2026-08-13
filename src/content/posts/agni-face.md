@@ -2,16 +2,28 @@
 title: Agni Face
 date: 2022-12-21
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-824.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 824
 tgUrl: https://t.me/podcastbaka/824
 ---
 
 ::image{src="/images/uploads/tg-824.jpg" alt="" width="column"}
+
 
 Современный мир работает удивительным образом. В чарты легко может взлететь песня двадцатилетней давности, если ее кто-то вдруг вспомнит в тиктоке.
 
