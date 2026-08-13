@@ -1,19 +1,31 @@
 ---
-title: Снова про мангу
+title: Новая манга от создательницы «Стального алхимика»!
 date: 2023-06-16
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1319.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested:
+  - yomi-no-tsugai
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1319
 tgUrl: https://t.me/podcastbaka/1319
-animeSuggested:
+anime:
   - yomi-no-tsugai
 ---
 
 ::image{src="/images/uploads/tg-1319.jpg" alt="" width="column"}
+
 
 Такая сегодня неделя, что почти все посты о манге. Но надеюсь, вы не против.
 
@@ -24,3 +36,5 @@ animeSuggested:
 С этого момента манга съезжает с катушек и все оказывается не тем, чем кажется с первого взгляда. Не хочу вам спойлерить — почитайте сами.
 
 Да, дизайн персонажей похож на «Алхимика», но история, кажется, совсем другая. Вышло уже двенадцать глав.
+
+::anime-ref{id="yomi-no-tsugai" source="shikimori" source-id="62001"}
