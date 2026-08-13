@@ -2,7 +2,7 @@
 title: Два фильма — разные финалы
 date: 2023-05-19
 category: note
-draft: true
+draft: false
 description: ''
 cover: ''
 noCover: true
