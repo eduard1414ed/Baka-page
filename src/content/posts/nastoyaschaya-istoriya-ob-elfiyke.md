@@ -5,12 +5,27 @@ category: note
 draft: true
 description: ''
 cover: ''
-noCover: true
-tgId: 545
-tgUrl: https://t.me/podcastbaka/545
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
 animeSuggested:
   - sousou-no-frieren
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 545
+tgUrl: https://t.me/podcastbaka/545
+anime:
+  - sousou-no-frieren
 ---
+
+::image{src="/images/uploads/pasted-image-1786621074511.webp" alt="" width="column"}
+
 
 Слухи говорят о том, что манга Sousou no Frieren («Провожающая в последний путь Фрирен») получит аниме-адаптацию — и я решил, что это повод рассказать немного о том, почему она достойна внимания.
 
@@ -27,3 +42,5 @@ animeSuggested:
 Если вы устали от банального фэнтези и хотите взглянуть на привычные истории по-новому, или вы задумываетесь о том, как быстро бежит время — то это манга для вас.
 
 И я жду с нетерпением аниме.
+
+::anime-ref{id="sousou-no-frieren" source="shikimori" source-id="52991"}
