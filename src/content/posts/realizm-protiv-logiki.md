@@ -2,15 +2,31 @@
 title: Реализм против логики
 date: 2022-12-19
 category: note
-draft: true
+draft: false
 description: ''
 cover: ''
-noCover: true
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 815
 tgUrl: https://t.me/podcastbaka/815
+anime:
+  - yesterday-wo-utatte
 ---
 
-Пока болел на прошлой неделе посмотрел сериал «[Спой мне «Yesterday](https://shikimori.one/animes/39710-yesterday-wo-utatte)» — проект студии Doga, который вышел в 2020 году.
+::image{src="/images/uploads/pasted-image-1786624645776.webp" alt="" width="column"}
+
+
+Пока болел на прошлой неделе посмотрел сериал «Спой мне «Yesterday» — проект студии Doga, который вышел в 2020 году.
 
 Это редкое романтическое аниме, действия которого не происходят в школе или офисе.
 
@@ -27,3 +43,5 @@ tgUrl: https://t.me/podcastbaka/815
 И я был почти прав. Оригинальная манга Кэй Томэ выходила на протяжении 18 лет, и, конечно, рассказывала ту же историю гораздо подробнее и внимательнее к деталям.
 
 Поэтому если вы раньше смотрели этот сериал и разочаровались — советую обратить внимание на мангу. А если вы его еще не смотрели — то рекомендую только ради анимации и музыки любителям романтики.
+
+::anime-ref{id="yesterday-wo-utatte" source="shikimori" source-id="39710"}
