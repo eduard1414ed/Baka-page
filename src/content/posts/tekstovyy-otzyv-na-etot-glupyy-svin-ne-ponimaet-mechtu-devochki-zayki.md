@@ -1,5 +1,5 @@
 ---
-title: Текстовый отзыв на «Этот глупый свин не понимает мечту девочки-зайки»
+title: Обзор аниме «Этот глупый свин не понимает мечту девочки-зайки»
 date: 2022-05-15
 category: note
 draft: false
@@ -9,6 +9,14 @@ noCover: false
 externalUrl: ''
 externalSource: ''
 adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 109
 tgUrl: https://t.me/podcastbaka/109
 anime:
