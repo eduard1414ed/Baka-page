@@ -1,5 +1,5 @@
 ---
-title: Обзор всех аниме весны
+title: Обзор всех аниме весны 2022
 date: 2022-05-18
 category: article
 draft: false
