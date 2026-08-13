@@ -2,16 +2,29 @@
 title: Самая странная манга, которую вы прочтете (и не поймете)
 date: 2023-02-03
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-997.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 997
 tgUrl: https://t.me/podcastbaka/997
+anime:
+  - bobobo-bo-bo-bobo
 ---
 
 ::image{src="/images/uploads/tg-997.jpg" alt="" width="column"}
+
 
 Я тут проходил курс про Японию (попозже про него расскажу еще) и узнал про мангу «Бобобо-бо Бо-бобо». И не могу удержаться от того, чтобы рассказать о ней вам.
 
@@ -28,3 +41,5 @@ tgUrl: https://t.me/podcastbaka/997
 Поэтому и воспринимается все — как полнейший сюр.
 
 Преподаватель на курсе, который я смотрел, уже много лет живет в Японии, но когда он рассказывал о «Бобобо-бо Бо-бобо», он сказал: «После прочтения этой манги я понял, что еще очень многое не понимаю в японской культуре».
+
+::anime-ref{id="bobobo-bo-bo-bobo" source="shikimori" source-id="1050"}
