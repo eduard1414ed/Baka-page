@@ -2,16 +2,28 @@
 title: Эта девчонка милая... но опасная?
 date: 2023-06-14
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1312.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1312
 tgUrl: https://t.me/podcastbaka/1312
 ---
 
 ::image{src="/images/uploads/tg-1312.jpg" alt="" width="column"}
+
 
 Давненько не было обзоров на мангу, решил это исправить. «Эта девчонка милая... но опасная?» — это онгоинг от издания Comic Smart, в котором вышло уже 50 глав.
 
@@ -23,7 +35,17 @@ tgUrl: https://t.me/podcastbaka/1312
 
 Как вы поняли, «Эта девчонка милая» — совсем не оригинальное произведение. Но все важные элементы истории сделаны тут верно: героиня правда милая, комедийные моменты работают и вызывают улыбку, а наивность помогает расслабиться.
 
+
 ::image{src="/images/uploads/tg-1313.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1314.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1315.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-1316.jpg" alt="" width="column"}
