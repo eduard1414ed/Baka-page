@@ -2,14 +2,20 @@
 title: Не скучайте по Маомао
 date: 2026-07-29
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-4121.jpg
 noCover: false
 externalUrl: ''
 externalSource: ''
 adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
 timecodes: ''
+bonusLinks: null
 pullMedia: false
 tgId: 4121
 tgUrl: https://t.me/podcastbaka/4121
