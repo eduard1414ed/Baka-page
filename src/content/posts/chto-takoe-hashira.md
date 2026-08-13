@@ -5,13 +5,26 @@ category: note
 draft: true
 description: ''
 cover: /images/uploads/tg-1299.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1299
 tgUrl: https://t.me/podcastbaka/1299
+anime:
+  - kimetsu-no-yaiba
 ---
 
 ::image{src="/images/uploads/tg-1299.jpg" alt="" width="column"}
+
 
 Хашира — название элитных воинов в «Истребителе демонов». И дословно слово hashira переведено на русский довольно точно — «столпы».
 
@@ -24,3 +37,5 @@ tgUrl: https://t.me/podcastbaka/1299
 Так вот, для того, чтобы посчитать богов — используется метод «хашира».
 
 То есть, хашира — это не только столпы, но еще и перечисление богов. Вполне логично, учитывая их силу.
+
+::anime-ref{id="kimetsu-no-yaiba" source="shikimori" source-id="38000"}
