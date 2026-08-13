@@ -1,17 +1,27 @@
 ---
-title: Красота на мечах
+title: Красота на мечах — «Кагурабати»
 date: 2026-07-28
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-4113.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 4113
 tgUrl: https://t.me/podcastbaka/4113
+anime:
+  - kagurabachi
 ---
-
-::image{src="/images/uploads/tg-4113.jpg" alt="" width="column"}
 
 В нашем новом выпуске «Бунко!» мы подробно обсудили, как «Кагурабати» стал популярным благодаря мемам ([послушайте, если пропустили](/posts/bunko-kagurabati/)).
 
@@ -21,10 +31,35 @@ tgUrl: https://t.me/podcastbaka/4113
 
 «Кагурабати» — это не просто замемевшаяся манга, это еще и один из самых красивых новых сёненов.
 
+
+::image{src="/images/uploads/tg-4113.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-4114.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-4115.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-4116.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-4117.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-4118.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-4119.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-4120.jpg" alt="" width="column"}
+
+::anime-ref{id="kagurabachi" source="shikimori" source-id="64058"}
