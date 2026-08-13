@@ -29,6 +29,8 @@
 //   node scripts/archive-own-links.mjs --selftest  — подлоги
 //   node scripts/archive-own-links.mjs --only ep-115  — один пост целиком
 
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { readPostsRaw, writePostBody, parseBody, cutRanges } from './archive-clean-lib.mjs';
 import { effectiveCategory } from './archive-rules-measure.mjs';
 
@@ -40,10 +42,14 @@ const CATEGORY_LABEL = { podcast: 'Выпуск', note: 'Заметка', articl
  * все домены ссылок черновиков.
  */
 const OWN_PLATFORM = [
-	[/^https?:\/\/(www\.)?patreon\.com\/bakapodcast/i, 'Патреон подкаста'],
-	[/^https?:\/\/(www\.)?boosty\.to\/bakapodcast/i, 'Бусти подкаста'],
+	// ДОМЕН ЦЕЛИКОМ, А НЕ ОДИН ПУТЬ. Живой прогон нашёл
+	// `patreon.com/posts/bonusnyi-vypusk-109021331` — тот же Патреон, другой
+	// адрес, и правило по пути его не узнало.
+	[/^https?:\/\/(www\.)?patreon\.com\//i, 'Патреон подкаста'],
+	[/^https?:\/\/(www\.)?boosty\.to\//i, 'Бусти подкаста'],
 	[/^https?:\/\/(www\.)?vk\.com\/podcast\.baka/i, 'группа ВК подкаста'],
 	[/^https?:\/\/t\.me\/podcastbaka(\/|$|\?)/i, 'телеграм подкаста'],
+	[/^https?:\/\/t\.me\/bakapodcast(\/|$|\?)/i, 'чат подкаста в телеграме'],
 	[/^https?:\/\/t\.me\/\+nz2JG4WhGvQ2NjMy/i, 'закрытый телеграм по приглашению'],
 	[/^https?:\/\/t\.me\/tribute\/app/i, 'закрытый телеграм через Tribute'],
 	[/^https?:\/\/t\.me\/in_da_tresh(\/|$|\?)/i, 'телеграм монтажёра'],
@@ -73,8 +79,12 @@ function bareUrlOf(block) {
 	return /^https?:\/\/\S+$/.test(t) ? t : null;
 }
 
-function ownNameOf(url) {
-	const hit = OWN_PLATFORM.find(([re]) => re.test(url));
+export function ownNameOf(url) {
+	// АДРЕС ПОДРЕЗАЕМ. В архиве есть `[…](https://t.me/podcastbaka  )` —
+	// пробелы внутри скобок, и совпадение по концу строки не срабатывало:
+	// обвес уцелел молча.
+	const clean = String(url ?? '').trim();
+	const hit = OWN_PLATFORM.find(([re]) => re.test(clean));
 	return hit ? hit[1] : null;
 }
 
@@ -364,11 +374,19 @@ function selftest() {
 	console.log('Все подлоги сошлись.');
 }
 
-if (process.argv.includes('--selftest')) {
-	selftest();
-} else {
-	main().catch((err) => {
-		console.error('ПРАВКА УПАЛА:', err);
-		process.exit(1);
-	});
+// «Запустили напрямую или подключили?» — сравнение ПУТЯМИ, а не строками:
+// в пути к проекту русские буквы, и `import.meta.url` их кодирует, а
+// `process.argv[1]` нет (урок проекта). Без развилки любой `import` отсюда
+// запускал бы правку целиком — а она пишет в посты.
+const runDirectly = resolve(fileURLToPath(import.meta.url)) === resolve(process.argv[1] ?? '');
+
+if (runDirectly) {
+	if (process.argv.includes('--selftest')) {
+		selftest();
+	} else {
+		main().catch((err) => {
+			console.error('ПРАВКА УПАЛА:', err);
+			process.exit(1);
+		});
+	}
 }
