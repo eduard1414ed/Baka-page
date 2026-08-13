@@ -2,21 +2,32 @@
 title: Бонусный выпуск | Синяя тюрьма
 date: 2023-02-15
 category: bonus
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-1035.jpg
-pullMedia: false
 noCover: false
-tgId: 1035
-tgUrl: https://t.me/podcastbaka/1035
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
 bonusLinks:
   boosty: ''
   patreon: ''
   tgClosed: ''
   vkDonat: ''
+pullMedia: false
+tgId: 1035
+tgUrl: https://t.me/podcastbaka/1035
 ---
 
 ::image{src="/images/uploads/tg-1035.jpg" alt="" width="column"}
+
 
 Впервые в истории нашего подкаста мы обсуждаем спокон — спортивное аниме.
 
