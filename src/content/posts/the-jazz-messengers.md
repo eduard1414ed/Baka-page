@@ -9,7 +9,6 @@ noCover: false
 externalUrl: ''
 externalSource: ''
 adLabel: ''
-anime: []
 animeSuggested: []
 mentionsHidden: ''
 speakers: ''
@@ -20,6 +19,8 @@ bonusLinks: null
 pullMedia: false
 tgId: 1114
 tgUrl: https://t.me/podcastbaka/1114
+anime:
+  - cowboy-bebop
 ---
 
 ::image{src="/images/uploads/tg-1116.jpg" alt="" width="column"}
@@ -57,3 +58,5 @@ tgUrl: https://t.me/podcastbaka/1114
 
 
 ::image{src="/images/uploads/tg-1121.jpg" alt="" width="column"}
+
+::anime-ref{id="cowboy-bebop" source="shikimori" source-id="1"}
