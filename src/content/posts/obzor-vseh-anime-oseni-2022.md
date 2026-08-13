@@ -2,7 +2,7 @@
 title: Обзор всех аниме осени 2022 — что стоит посмотреть?
 date: 2022-11-19
 category: article
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/osen-2022-04.webp
 noCover: false
@@ -35,13 +35,16 @@ anime:
 
 ::image{src="/images/uploads/osen-2022-04.webp" alt="" width="column"}
 
+
 Осенью я снова смотрел новинки сезона — по две-три серии каждой — и рассказывал, что стоит вашего времени, а что можно смело пропустить.
 
 Здесь одиннадцать сериалов, в том порядке, в котором они выходили. Ну что, поехали?
 
 #### [Сделай это сам!](/anime/do-it-yourself/)
 
+
 ::image{src="/images/uploads/osen-2022-01.webp" alt="" caption="Сделай это сам!, студия PINE JAM" width="column"}
+
 
 Я очень ждал это аниме! По трейлерам мне казалось, что это будет идеальная замена моего любимого «Лагеря на свежем воздухе». Оправдались ли мои ожидания? Не совсем.
 
@@ -55,7 +58,9 @@ anime:
 
 #### [О моём перерождении в меч](/anime/tensei-shitara-ken-deshita/)
 
+
 ::image{src="/images/uploads/osen-2022-02.webp" alt="" caption="О моём перерождении в меч, студия C2C" width="column"}
+
 
 А вот и первый исекай в этом сезоне. И сразу не совсем обычный. Главный герой не просто возраждается в другом мире, но возраждается в виде умного меча, обладающего магией и телекинезом.
 
@@ -67,7 +72,9 @@ anime:
 
 #### [Я стала злодейкой, поэтому мне нужно заарканить последнего босса](/anime/akuyaku-reijou-nanode-last-boss-wo-kattemimashita/)
 
+
 ::image{src="/images/uploads/osen-2022-03.webp" alt="" caption="Я стала злодейкой, поэтому мне нужно заарканить последнего босса, студия Maho Film" width="column"}
+
 
 Этот сериал радость для фанатов сёдзё.
 
@@ -81,7 +88,9 @@ anime:
 
 #### [Рок-тихоня](/anime/bocchi-the-rock/)
 
+
 ::image{src="/images/uploads/osen-2022-04.webp" alt="" caption="Рок-тихоня, студия CloverWorks" width="column"}
+
 
 Что, если бы главной героиней K-On была панически скромная девочка, которая хорошо играет на гитаре на видео, но жутко нервничает и лажает в жизни?
 
@@ -95,7 +104,9 @@ anime:
 
 #### [Синяя тюрьма](/anime/blue-lock/)
 
+
 ::image{src="/images/uploads/osen-2022-05.webp" alt="" caption="Синяя тюрьма, студия 8bit" width="column"}
+
 
 Я не люблю спортивные аниме. Чаще всего, мне не нравится, как показывают сами матчи, не нравится уровень пафоса и банальность происходящего.
 
@@ -113,7 +124,9 @@ anime:
 
 #### [Больше, чем пара, меньше, чем любовники](/anime/fuufu-ijou-koibito-miman/)
 
+
 ::image{src="/images/uploads/osen-2022-06.webp" alt="" caption="Больше, чем пара, меньше, чем любовники, студия MOTHER" width="column"}
+
 
 В каждом сезоне, как я уже говорил летом и весной, и зимой, должно быть аниме, основанное на фан-сервисе. Это как раз такое.
 
@@ -127,7 +140,9 @@ anime:
 
 #### [Время ниндзя](/anime/shinobi-no-ittoki/)
 
+
 ::image{src="/images/uploads/osen-2022-07.webp" alt="" caption="Время ниндзя, студия TROYCA" width="column"}
+
 
 Главный герой узнает, что в реальном мире существуют ниндзя и, конечно, спрашивает, как и когда его будут учить ниндзюцу: техникам огня, воды и воздуха.
 
@@ -147,7 +162,9 @@ anime:
 
 #### [Университет сумасшедших людей](/anime/human-bug-daigaku/)
 
+
 ::image{src="/images/uploads/osen-2022-08.webp" alt="" caption="Университет сумасшедших людей, студия DLE" width="column"}
+
 
 Сатаке кажется неплохим парнем. Он работал, у него была любимая жена, а совсем недавно он начал интересоваться литературой. Вот только Сатаке – приговорен к смертной казни.
 
@@ -165,7 +182,9 @@ anime:
 
 #### [Жилой комплекс С](/anime/c-danchi/)
 
+
 ::image{src="/images/uploads/osen-2022-09.webp" alt="" caption="Жилой комплекс С, студия Akatsuki" width="column"}
+
 
 Хоррор — довольно редкий жанр для аниме. Как минимум поэтому аниме, сделанное на английском языке для adultswim, достойно внимания.
 
@@ -183,7 +202,9 @@ anime:
 
 #### [Любовные неудачи](/anime/renai-flops/)
 
+
 ::image{src="/images/uploads/osen-2022-10.webp" alt="" caption="Любовные неудачи, студия Passione" width="column"}
+
 
 Бывают хорошие гаремники. Например, «[Пять невест](/posts/poryadkovye-nomera/)» или «[Торадора](/posts/toradora-razbiraem-vseh-glavnyh-personazhey-i-pytaemsya-reshit-luchshee-li-eto-romanticheskoe-anime/)» (хотя я бы не называл его гаремником, но пусть будет).
 
@@ -201,7 +222,9 @@ anime:
 
 #### [Легенда о святом мече: Легенда маны](/anime/seiken-densetsu-legend-of-mana-the-teardrop-crystal/)
 
+
 ::image{src="/images/uploads/osen-2022-11.webp" alt="" caption="Легенда о святом мече: Легенда маны, студия Graphinica" width="column"}
+
 
 Сперва мне понравилась музыка и костюмы в этом аниме, а потом к концу первой серии я чуть не уснул.
 
