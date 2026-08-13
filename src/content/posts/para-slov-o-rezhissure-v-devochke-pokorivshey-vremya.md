@@ -2,13 +2,29 @@
 title: Пара слов о режиссуре в «Девочке покорившей время»
 date: 2022-06-03
 category: note
-draft: true
+draft: false
 description: ''
 cover: ''
 noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 184
 tgUrl: https://t.me/podcastbaka/184
+anime:
+  - toki-wo-kakeru-shoujo
 ---
+
+::video{video="https://storage.yandexcloud.net/baka-media/IMG_0503.mp4"}
+
 
 Мы обсуждали в [бонусном выпуске](/posts/bonusnyy-vypusk-devochka-pokorivshaya-vremya/) эту сцену из последней трети фильма. Главная героиня, Макото, растратив все возможности к прыжкам во времени, бежит к своему другу Тиаки, чтобы исправить свои собственные ошибки.
 
@@ -21,3 +37,5 @@ tgUrl: https://t.me/podcastbaka/184
 Она обретает силы — и обгоняет камеру, время и саму себя — в тот момент, когда возвращается в исходную важную точку.
 
 Вот как минута фильма без слов и музыки рассказывает историю персонажа. Это и есть хорошая режиссура.
+
+::anime-ref{id="toki-wo-kakeru-shoujo" source="shikimori" source-id="2236"}
