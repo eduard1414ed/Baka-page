@@ -5,7 +5,7 @@ category: article
 draft: false
 description: ''
 cover: /images/uploads/pasted-image-1786623654298.webp
-noCover: true
+noCover: false
 externalUrl: https://t-j.ru/bleach-comeback/
 externalSource: Т—Ж
 adLabel: ''

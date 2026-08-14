@@ -5,7 +5,7 @@ category: podcast
 draft: false
 description: ''
 cover: /images/uploads/pasted-image-1786649853334.webp
-noCover: true
+noCover: false
 externalUrl: https://youtu.be/L56uHwod56M
 externalSource: ''
 adLabel: ''
