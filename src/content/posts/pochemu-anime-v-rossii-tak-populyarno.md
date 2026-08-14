@@ -1,6 +1,6 @@
 ---
 title: Почему аниме в России так популярно?
-date: 2026-08-06
+date: 2026-07-27
 category: article
 draft: false
 publishAt: 2026-08-06T09:30:00Z

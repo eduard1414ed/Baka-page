@@ -5,7 +5,7 @@ category: note
 draft: false
 description: ''
 cover: /images/uploads/tg-294.jpg
-noCover: false
+noCover: true
 externalUrl: ''
 externalSource: ''
 adLabel: ''
@@ -58,5 +58,6 @@ anime:
 
 
 ::image{src="/images/uploads/tg-300.jpg" alt="" width="column"}
+
 
 ::anime-ref{id="jujutsu-kaisen" source="shikimori" source-id="40748"}
