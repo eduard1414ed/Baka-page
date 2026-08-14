@@ -76,7 +76,7 @@ tgUrl: https://t.me/podcastbaka/2749
 
 Но на фоне всего этого мы наблюдаем за романтическими отношениями двух невероятно харизматичных персонажей: Май и Сакуты. И одни только их диалоги ставят этот сериал на второе место в моем топе.
 
-Узнать подробнее: в нашем [выпуске подкаста](/posts/etot-glupyy-svin-ne-ponimaet-mechtu-devochki-zayki-kak-eto-anime-obmanyvaet-ozhidaniya-i-chto-takoe-zdorovye-otnosheniya/) или в [текстовом обзоре](/posts/tekstovyy-otzyv-na-etot-glupyy-svin-ne-ponimaet-mechtu-devochki-zayki/)
+Узнать подробнее: в нашем выпуске подкаста или в [текстовом обзоре](/posts/tekstovyy-otzyv-na-etot-glupyy-svin-ne-ponimaet-mechtu-devochki-zayki/)
 
 #### Торадора
 
@@ -88,4 +88,4 @@ tgUrl: https://t.me/podcastbaka/2749
 
 Для меня «Торадора» — эталон, по которому я измеряю другую романтику. Потому что несмотря на внешне шаблонную форму это аниме заставляет сочувствовать всем героям, заставляет тебя отгадывать загадки в их взаимоотношениях и дарит по-настоящему заслуженный финал.
 
-Узнать подробнее: в самом популярном (до сих пор!) [выпуске нашего подкаста](/posts/toradora-razbiraem-vseh-glavnyh-personazhey-i-pytaemsya-reshit-luchshee-li-eto-romanticheskoe-anime/)
+Узнать подробнее: в самом популярном (до сих пор!) выпуске нашего подкаста

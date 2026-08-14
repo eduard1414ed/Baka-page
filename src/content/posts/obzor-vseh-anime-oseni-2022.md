@@ -206,7 +206,7 @@ anime:
 ::image{src="/images/uploads/osen-2022-10.webp" alt="" caption="Любовные неудачи, студия Passione" width="column"}
 
 
-Бывают хорошие гаремники. Например, «[Пять невест](/posts/poryadkovye-nomera/)» или «[Торадора](/posts/toradora-razbiraem-vseh-glavnyh-personazhey-i-pytaemsya-reshit-luchshee-li-eto-romanticheskoe-anime/)» (хотя я бы не называл его гаремником, но пусть будет).
+Бывают хорошие гаремники. Например, «[Пять невест](/posts/poryadkovye-nomera/)» или «Торадора» (хотя я бы не называл его гаремником, но пусть будет).
 
 А есть гаремники плохие. Главное различие — в достоверности происходящего.
 

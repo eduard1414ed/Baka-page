@@ -26,7 +26,7 @@ anime:
 ::image{src="/images/uploads/tg-1442.jpg" alt="" width="column"}
 
 
-Последнюю неделю я читаю [«Реинкарнацию безработного»](/posts/reinkarnatsiya-bezrabotnogo-kak-rasskazat-idealnuyu-istoriyu-vzrosleniya-i-sdelat-horoshiy-isekay/) — и нахожусь одновременно в полном восторге и полном отрицании.
+Последнюю неделю я читаю «Реинкарнацию безработного» — и нахожусь одновременно в полном восторге и полном отрицании.
 
 ### Начну с восторгов
 
