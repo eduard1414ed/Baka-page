@@ -4,7 +4,7 @@ date: 2026-05-05
 category: article
 draft: false
 description: ''
-cover: /images/uploads/tg-3929.jpg
+cover: /images/uploads/pasted-image-1786699569995.webp
 noCover: false
 externalUrl: https://t-j.ru/manga-love-2026/
 externalSource: ''
@@ -41,7 +41,7 @@ anime:
   - bokura-ga-ita
 ---
 
-::image{src="/images/uploads/tg-3929.jpg" alt="" width="column"}
+::image{src="" alt="" width="column"}
 
 
 Вместе с прекрасными [Юлей Тарасюк](https://t.me/shoujo_josei) и [Женей Сударчиковым ](https://t.me/nekomatawithtea)собрали ультимативную подборку манги о любви. Получилось 30 тайтлов, начиная аж с 1986 года.
