@@ -42,7 +42,7 @@ const catalog = (strict) => [
 // `quotes: 'apply'` — тексты постов, галочка действует. Ниже отдельным разделом
 // проверяется, что в живой речи (`ignore`) она не действует.
 const ids = (text, strict) =>
-	findMentions(text, buildAnimeMatcher(catalog(strict), { quotes: 'apply' })).map((m) => m.id);
+	findMentions(text, buildAnimeMatcher(catalog(strict), { quotes: 'apply', speech: false })).map((m) => m.id);
 
 console.log('\n=== ГАЛОЧКА ВКЛЮЧЕНА: ЧТО НАХОДИТСЯ ===');
 
@@ -90,7 +90,7 @@ console.log('\n=== В ЖИВОЙ РЕЧИ ГАЛОЧКА НЕ ДЕЙСТВУЕТ
 	// 30 %. Действуй галочка и там — у «Акиры» ушли бы 9 ложных упоминаний
 	// в постах вместе с 30 верными в разговоре.
 	const speech = 'И вот тут монстр появляется на сороковой минуте, и это лучшая сцена';
-	const spoken = findMentions(speech, buildAnimeMatcher(catalog(true), { quotes: 'ignore' })).map((m) => m.id);
+	const spoken = findMentions(speech, buildAnimeMatcher(catalog(true), { quotes: 'ignore', speech: true })).map((m) => m.id);
 	const written = ids(speech, true);
 	check('в расшифровке название без кавычек находится', spoken.includes('monster'), spoken.join(', ') || 'НЕ НАШЛОСЬ');
 	check('а в тексте поста то же самое — нет', written.length === 0, written.join(', ') || 'молчит');
@@ -146,8 +146,8 @@ console.log('\n=== КАВЫЧКИ НИЧЕГО НЕ ДОКАЗЫВАЮТ САМ�
 console.log('\n=== НАСТОЯЩИЙ СПРАВОЧНИК, НАСТОЯЩИЕ ФРАЗЫ ИЗ АРХИВА ===');
 {
 	const real = (await readAnimeCollection()).map((entry) => ({ id: entry.data.id, data: entry.data }));
-	const post = buildAnimeMatcher(real, { quotes: 'apply' });
-	const speech = buildAnimeMatcher(real, { quotes: 'ignore' });
+	const post = buildAnimeMatcher(real, { quotes: 'apply', speech: false });
+	const speech = buildAnimeMatcher(real, { quotes: 'ignore', speech: true });
 	const found = (text, matcher = post) => findMentions(text, matcher).map((m) => m.id);
 
 	const cases = [

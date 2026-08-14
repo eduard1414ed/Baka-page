@@ -93,7 +93,7 @@ function isAnimeCard(url) {
  */
 export function findAnimeLinks(body, entries, front = {}) {
 	// 'ignore' — потому что кавычки мы спрашиваем сами, ниже, по внешнему тексту.
-	const matcher = buildAnimeMatcher(entries, { quotes: 'ignore' });
+	const matcher = buildAnimeMatcher(entries, { quotes: 'ignore', speech: false });
 	const strict = new Map();
 	for (const entry of entries) strict.set(entry.id, entry.data?.strictQuotes === true);
 
@@ -168,7 +168,7 @@ export function stripLinks(body, hits) {
  * в посте. Считается по тому же матчеру и в том же порядке, что у разметки.
  */
 export function isFirstMention(body, entries, id, offset) {
-	const matcher = buildAnimeMatcher(entries, { quotes: 'apply' });
+	const matcher = buildAnimeMatcher(entries, { quotes: 'apply', speech: false });
 	const tree = parseBody(body);
 	let first = null;
 	const walk = (node, inLink) => {

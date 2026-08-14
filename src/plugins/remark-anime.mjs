@@ -27,7 +27,7 @@ function animeMatcher() {
 	}
 
 	// `apply`: это ТЕКСТЫ ПОСТОВ, тут галочка «только в кавычках» действует.
-	matcherCache = buildAnimeMatcher(entries, { quotes: 'apply' });
+	matcherCache = buildAnimeMatcher(entries, { quotes: 'apply', speech: false });
 	return matcherCache;
 }
 

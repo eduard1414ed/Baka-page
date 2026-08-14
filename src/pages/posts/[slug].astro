@@ -269,10 +269,10 @@ const animeList = await getCollection('anime');
 const exceptions = makeExceptionFilter(post.data.mentionsHidden);
 
 const mentionTimes = showTranscript
-	? animeMentionedIn(transcriptData, buildAnimeMatcher(animeList, { quotes: 'ignore' }), exceptions)
+	? animeMentionedIn(transcriptData, buildAnimeMatcher(animeList, { quotes: 'ignore', speech: true }), exceptions)
 	: new Map();
 
-const inTextIds = animeMentionedInPostText(post, buildAnimeMatcher(animeList, { quotes: 'apply' }), exceptions);
+const inTextIds = animeMentionedInPostText(post, buildAnimeMatcher(animeList, { quotes: 'apply', speech: false }), exceptions);
 
 // Отменённый тайтл убирается и из отметок руками: поле «Тайтлы поста»
 // заполняется САМО при сохранении, поэтому «отметил и тут же отменил» —

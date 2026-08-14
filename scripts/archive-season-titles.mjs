@@ -296,7 +296,7 @@ async function main() {
 		const data = JSON.parse(await readFile(new URL(file, ANIME_DIR), 'utf8'));
 		if (data?.id) entries.push({ id: data.id, data });
 	}
-	const matcher = buildAnimeMatcher(entries, { quotes: 'ignore' });
+	const matcher = buildAnimeMatcher(entries, { quotes: 'ignore', speech: false });
 	const byId = new Map(entries.map((e) => [e.id, e.data]));
 	const catalogId = (name) => {
 		const hits = findMentions(name, matcher);

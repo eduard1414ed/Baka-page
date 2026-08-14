@@ -373,8 +373,8 @@ const withoutFrieren = entries.map((e) => ({
 			: e.data,
 }));
 
-const baseNoFrieren = buildAnimeMatcher(withoutFrieren, { quotes: 'ignore' });
-const baseNoFrierenPosts = buildAnimeMatcher(withoutFrieren, { quotes: 'apply' });
+const baseNoFrieren = buildAnimeMatcher(withoutFrieren, { quotes: 'ignore', speech: false });
+const baseNoFrierenPosts = buildAnimeMatcher(withoutFrieren, { quotes: 'apply', speech: false });
 
 const gainPosts = measureGain({ aliases: ['Фрирен'] }, baseNoFrierenPosts, postTexts, 'apply');
 const gainTr = measureGain({ aliases: ['Фрирен'] }, baseNoFrieren, trTexts, 'ignore');
@@ -417,7 +417,7 @@ check(
 // быть НУЛЁМ: вписанное второй раз не даёт ничего. Без этой половины первая
 // ничего не значит — замер, который всегда отвечает большим числом, так же
 // бесполезен, как замер, который всегда отвечает нулём.
-const baseReal = buildAnimeMatcher(entries.map((e) => ({ id: e.data.id, data: e.data })), { quotes: 'ignore' });
+const baseReal = buildAnimeMatcher(entries.map((e) => ({ id: e.data.id, data: e.data })), { quotes: 'ignore', speech: false });
 const already = measureGain({ aliases: ['Фрирен'] }, baseReal, trTexts, 'ignore');
 check(
 	'вписанное второй раз даёт ноль — упоминание уже забрал живой справочник',

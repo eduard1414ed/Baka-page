@@ -65,7 +65,7 @@ export async function main() {
 	// бы отвечать на свой единственный вопрос.
 	const matcher = buildAnimeMatcher(
 		entries.map((e) => ({ id: e.data.id, data: e.data })),
-		{ quotes: 'ignore' },
+		{ quotes: 'ignore', speech: false },
 	);
 
 	// Какие из названий тайтла — кусок до двоеточия. Известная болячка проекта:
@@ -125,7 +125,7 @@ export async function main() {
 	// а не все позиции: иначе число вышло бы больше, чем ссылок на страницах.
 	const linkMatcher = buildAnimeMatcher(
 		entries.map((e) => ({ id: e.data.id, data: e.data })),
-		{ quotes: 'apply' },
+		{ quotes: 'apply', speech: false },
 	);
 
 	const foundInPost = new Map();

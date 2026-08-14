@@ -144,7 +144,7 @@ export async function main() {
 	// название». Знаем — значит знаем, в кавычках оно или нет.
 	const matcher = buildAnimeMatcher(
 		entries.map((e) => ({ id: e.data.id, data: e.data })),
-		{ quotes: 'ignore' },
+		{ quotes: 'ignore', speech: false },
 	);
 	const known = new Set(matcher.map((m) => m.folded));
 	const knownSourceIds = new Set(entries.map((e) => e.data.sourceId).filter(Boolean));
@@ -460,7 +460,7 @@ export async function main() {
 
 	const basePosts = buildAnimeMatcher(
 		entries.map((e) => ({ id: e.data.id, data: e.data })),
-		{ quotes: 'apply' },
+		{ quotes: 'apply', speech: false },
 	);
 	const baseTranscripts = matcher;
 

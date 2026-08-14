@@ -32,7 +32,7 @@ const seenByFile = new Map(SEEN_2023.map((s) => [s.file, s]));
 
 async function build() {
 	const entries = await readAnimeCollection();
-	const matcher = buildAnimeMatcher(entries.map((e) => ({ id: e.data.id, data: e.data })), { quotes: 'ignore' });
+	const matcher = buildAnimeMatcher(entries.map((e) => ({ id: e.data.id, data: e.data })), { quotes: 'ignore', speech: false });
 	const byId = new Map(entries.map((e) => [e.data.id, e.data]));
 	const catalogFor = (name) => {
 		const hit = findMentions(name, matcher).find((m) => m.start === 0 && m.end === name.length);

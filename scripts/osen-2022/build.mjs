@@ -111,7 +111,7 @@ export async function assemble() {
 	const { buildAnimeMatcher, findMentions } = await import(new URL('../../src/lib/animeMentions.mjs', import.meta.url).href);
 	const entries = await readAnimeCollection();
 	const cards = new Map(entries.map((e) => [e.data.id, e.data]));
-	const matcher = buildAnimeMatcher(entries.map((e) => ({ id: e.data.id, data: e.data })), { quotes: 'ignore' });
+	const matcher = buildAnimeMatcher(entries.map((e) => ({ id: e.data.id, data: e.data })), { quotes: 'ignore', speech: false });
 	// Ссылку в каталог даёт СУЩЕСТВУЮЩИЙ матчер точным совпадением, а не свой
 	// список названий: второй список — это вторая копия правила «по чему ищем».
 	const catalogId = (name) => {

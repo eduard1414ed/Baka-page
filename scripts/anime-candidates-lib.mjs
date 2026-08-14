@@ -577,7 +577,13 @@ export function prepareTexts(texts) {
  *          (или выпусках), `live` — сколько из них видно на сайте сегодня.
  */
 export function measureGain(probe, baseMatcher, texts, quotes) {
-	const extra = buildAnimeMatcher([{ id: PROBE_ID, data: probe }], { quotes });
+	// `speech: false` ЗДЕСЬ ВЕРНО ПРИ ЛЮБОМ `quotes`, и это не небрежность.
+	// Матчер строится на ОДНУ пробную запись, которой в справочнике ещё нет,
+	// — а галочка «Не искать в расшифровках» это свойство заведённой карточки,
+	// и у пробы её не бывает. Ответить «речь» тут значило бы соврать про то,
+	// чего в данных нет. Живой справочник приезжает готовым матчером
+	// (`baseMatcher`), и свою строгость он принёс с собой.
+	const extra = buildAnimeMatcher([{ id: PROBE_ID, data: probe }], { quotes, speech: false });
 	if (extra.length === 0) return { mentions: 0, texts: 0, live: 0 };
 
 	const wanted = extra.map((item) => item.folded);

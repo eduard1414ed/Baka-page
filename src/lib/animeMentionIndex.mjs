@@ -114,9 +114,9 @@ export function animeMentionedInPostText(post, matcher, exceptions) {
 export function buildMentionIndex({ posts, transcripts, animeList }) {
 	// Живая речь: галочка «только в кавычках» в расшифровках не действует —
 	// кавычек в разговоре не бывает (см. src/lib/animeMentions.mjs).
-	const matcher = buildAnimeMatcher(animeList, { quotes: 'ignore' });
+	const matcher = buildAnimeMatcher(animeList, { quotes: 'ignore', speech: true });
 	// Тексты постов: там действует.
-	const postMatcher = buildAnimeMatcher(animeList, { quotes: 'apply' });
+	const postMatcher = buildAnimeMatcher(animeList, { quotes: 'apply', speech: false });
 	const byTranscriptId = new Map(transcripts.map((entry) => [entry.id, entry]));
 	const index = new Map();
 

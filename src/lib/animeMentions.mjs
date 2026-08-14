@@ -207,13 +207,41 @@ function searchNames(title) {
  * и галочка молча перестала бы действовать (или начала действовать) в целом
  * разделе сайта, а выглядело бы это как «всё хорошо».
  *
- * @param {{ id: string, data: { titleRu?: string, titleOriginal: string, aliases?: string[], aliasesAuto?: string[], strictQuotes?: boolean } }[]} entries
- * @param {{ quotes: 'apply' | 'ignore' }} options
+ * ВТОРАЯ ГАЛОЧКА — «Не искать в расшифровках» (`noSpeech`), заведена
+ * 14 августа 2026 по решению заказчика. Она нужна там, где первой не хватает:
+ * галочка про кавычки в живой речи не действует вовсе, и тайтл, названный
+ * обычным словом, ловится в разговоре сотнями раз. Замер того дня: «Город» —
+ * 220 реплик в 80 выпусках, «Монстр» — 89 в 25, и почти всё это про обычный
+ * город и обычного монстра. В текстах постов у обеих карточек чисто:
+ * там первая галочка работает.
+ *
+ * ПОЧЕМУ ОТДЕЛЬНОЙ ГАЛОЧКОЙ, А НЕ РАСШИРЕНИЕМ ПЕРВОЙ. Галочку про кавычки
+ * носят семь тайтлов, и у пятерых упоминания в речи настоящие: про «Акиру»
+ * есть бонусный выпуск, про «Киберпанк» — разговор. Распространи первую
+ * галочку на речь — и вместе с мусором ушло бы это. Кому опасно молчать
+ * в разговоре, решает человек по каждому тайтлу отдельно.
+ *
+ * СПРАШИВАЕТСЯ ОТДЕЛЬНЫМ ОТВЕТОМ, А НЕ ВЫВОДИТСЯ ИЗ `quotes`. Соблазн был:
+ * `quotes: 'ignore'` почти везде и значит «живая речь». Но не везде —
+ * тем же ключом пользуется отчёт разведки (`scripts/anime-quotes.mjs`),
+ * который как раз меряет, сколько галочка отняла бы. Выведи мы речь
+ * из `quotes` — отчёт молча перестал бы видеть эти тайтлы и начал бы врать
+ * ровно в сторону «всё хорошо».
+ *
+ * Значения по умолчанию нет и у этого ответа, по той же причине, что у первого.
+ *
+ * @param {{ id: string, data: { titleRu?: string, titleOriginal: string, aliases?: string[], aliasesAuto?: string[], strictQuotes?: boolean, noSpeech?: boolean } }[]} entries
+ * @param {{ quotes: 'apply' | 'ignore', speech: boolean }} options
  */
 export function buildAnimeMatcher(entries, options) {
 	if (options?.quotes !== 'apply' && options?.quotes !== 'ignore') {
 		throw new Error(
 			"buildAnimeMatcher: скажите, действует ли тут галочка «только в кавычках» — { quotes: 'apply' } для текстов постов, { quotes: 'ignore' } для живой речи и отчётов.",
+		);
+	}
+	if (typeof options?.speech !== 'boolean') {
+		throw new Error(
+			'buildAnimeMatcher: скажите, разбираем ли мы живую речь — { speech: true } для расшифровок, { speech: false } для текстов и отчётов. От этого зависит галочка «Не искать в расшифровках».',
 		);
 	}
 	const applyQuotes = options.quotes === 'apply';
@@ -222,6 +250,12 @@ export function buildAnimeMatcher(entries, options) {
 	const seen = new Set();
 
 	for (const entry of entries) {
+		// Тайтл, чьё название — обычное слово живой речи, в расшифровках
+		// не ищется вовсе: ни по названию, ни по падежным формам, ни по
+		// вариантам написания. Полумеры тут нет — падежи и дают основную массу
+		// ложных срабатываний («города», «городе», «монстра»).
+		if (options.speech && entry.data?.noSpeech === true) continue;
+
 		const strictTitle = applyQuotes && entry.data?.strictQuotes === true;
 		// Собственное имя тайтла — по нему решается старшинство при столкновении.
 		const canon = String(entry.data?.titleRu || entry.data?.titleOriginal || '');

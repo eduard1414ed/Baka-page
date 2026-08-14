@@ -61,7 +61,7 @@ async function askAniList(id) {
 
 async function collect() {
 	const entries = await readAnimeCollection();
-	const matcher = buildAnimeMatcher(entries.map((e) => ({ id: e.data.id, data: e.data })), { quotes: 'ignore' });
+	const matcher = buildAnimeMatcher(entries.map((e) => ({ id: e.data.id, data: e.data })), { quotes: 'ignore', speech: false });
 	const byId = new Map(entries.map((e) => [e.data.id, e.data]));
 	const catalogId = (name) => {
 		const hit = findMentions(name, matcher).find((m) => m.start === 0 && m.end === name.length);

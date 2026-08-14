@@ -58,7 +58,7 @@ const statLine = `${formatTimecode(lastEnd)} · ${voiceCount} ${plural(voiceCoun
 const animeList = await getCollection('anime');
 // Живая речь: галочка «только в кавычках» тут не действует — кавычек
 // в разговоре не бывает (см. src/lib/animeMentions.mjs).
-const matcher = buildAnimeMatcher(animeList, { quotes: 'ignore' });
+const matcher = buildAnimeMatcher(animeList, { quotes: 'ignore', speech: true });
 const exceptions = makeExceptionFilter(mentionsHidden);
 const linked = new Set<string>();
 

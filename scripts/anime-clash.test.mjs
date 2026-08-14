@@ -55,7 +55,7 @@ function law() {
 
 	const base = { id: 'seriya', data: { titleRu: 'Кошкин дом', titleOriginal: 'Kошkin dom' } };
 	const sequel = { id: 'seriya-vtoraya-chast', data: { titleRu: 'Кошкин дом: Вторая часть', titleOriginal: 'Kошkin dom: Part 2' } };
-	const q = { quotes: 'ignore' };
+	const q = { quotes: 'ignore', speech: false };
 
 	const who = (entries, text) => {
 		const hits = findMentions(text, matcherUnderTest(entries, q));
@@ -115,7 +115,7 @@ async function measure() {
 
 	console.log(`\n═══ ЗАМЕР по живому справочнику (${entries.length} тайтлов) ═══\n`);
 
-	const names = matcherUnderTest(entries, { quotes: 'ignore' });
+	const names = matcherUnderTest(entries, { quotes: 'ignore', speech: false });
 	const byId = new Map(entries.map((e) => [e.id, e.data]));
 
 	const byName = new Map();
@@ -157,7 +157,7 @@ async function measure() {
 	// это то самое, что видно на живом сайте.
 	console.log('\nконтрольные названия и их нынешние хозяева:');
 	for (const probe of ['Наруто', 'Стальной алхимик', 'Бездомный бог', 'Хоримия', 'Человек-бензопила', 'Блич', 'Ван-Пис', 'Хвост феи']) {
-		const hits = findMentions(probe, matcherUnderTest(entries, { quotes: 'ignore' }));
+		const hits = findMentions(probe, matcherUnderTest(entries, { quotes: 'ignore', speech: false }));
 		console.log(`  «${probe}» → ${hits[0]?.id ?? '(не найдено)'}`);
 	}
 

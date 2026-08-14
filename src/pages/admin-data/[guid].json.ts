@@ -32,7 +32,7 @@ export async function getStaticPaths() {
 	// Живая речь расшифровок: галочка «только в кавычках» тут не действует.
 	// Админка обязана показывать РОВНО те упоминания, которые попадут
 	// на страницу, иначе галочки отмены встанут не на те места.
-	const matcher = buildAnimeMatcher(animeList, { quotes: 'ignore' });
+	const matcher = buildAnimeMatcher(animeList, { quotes: 'ignore', speech: true });
 	const titles = Object.fromEntries(animeList.map((item) => [item.id, item.data.titleRu || item.data.titleOriginal]));
 
 	return transcripts.map((entry) => ({
