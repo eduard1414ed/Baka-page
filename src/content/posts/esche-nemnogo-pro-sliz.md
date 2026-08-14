@@ -4,9 +4,9 @@ date: 2024-08-14
 category: article
 draft: false
 description: ''
-cover: /images/uploads/tg-2315.jpg
+cover: ''
 noCover: false
-externalUrl: ''
+externalUrl: https://journal.tinkoff.ru/reincarnated-as-a-slime/
 externalSource: ''
 adLabel: ''
 animeSuggested: []

@@ -5,7 +5,7 @@ category: article
 draft: false
 description: ''
 cover: /images/uploads/pasted-image-1786656803628.webp
-noCover: true
+noCover: false
 externalUrl: https://www.kinopoisk.ru/media/article/4012222/
 externalSource: ''
 adLabel: ''
