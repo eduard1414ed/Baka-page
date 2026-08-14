@@ -9,8 +9,24 @@
 // РСС может быть недоступен или отдать не то, что мы ждём (пункт «подводные
 // камни» в ТЗ) — при любой ошибке возвращаем пустой список, а не роняем
 // сборку. Пост без пары в RSS просто останется без плеера.
+//
+// НО ОДНА МОРГНУВШАЯ СЕТЬ НЕ ИМЕЕТ ПРАВА СТОИТЬ САЙТУ ВСЕХ ПЛЕЕРОВ СРАЗУ
+// (ревизия 15 августа 2026, находка 1). Фид не отвечал уже дважды, и оба раза
+// это значило сборку без единого плеера и без единой длительности. Поэтому
+// поход к нему идёт с повторами — тем же кодом, что и все походы в чужие
+// сервисы (`scripts/retry.mjs`, одно место на проект; своя копия правила
+// «что считать сбоем сети» разошлась бы с ним молча). Паузы короткие: ждёт
+// не робот, а сборка, и за ней стоит человек.
+//
+// А ЕСЛИ НЕ ПОМОГЛО И ПЛЕЕРОВ НЕТ ВОВСЕ — сборку останавливает
+// `scripts/check-players.mjs`, последним шагом `npm run build`.
+
+import { сПовторами } from '../../scripts/retry.mjs';
 
 export const FEED_URL = 'https://cloud.mave.digital/33503';
+
+/** Паузы перед повторными заходами к фиду. */
+const ПАУЗЫ = [2000, 6000, 18000];
 
 const ITEM_RE = /<item>([\s\S]*?)<\/item>/g;
 
@@ -80,9 +96,16 @@ export async function fetchFeedItems() {
 	if (cachedItems) return cachedItems;
 
 	try {
-		const response = await fetch(FEED_URL);
-		if (!response.ok) throw new Error(`HTTP ${response.status}`);
-		const xml = await response.text();
+		const xml = await сПовторами(
+			async () => {
+				const response = await fetch(FEED_URL);
+				// Отказ хостинга — тоже повод зайти ещё раз: 502 и 503 у него
+				// живут секунды, а стоят нам всех плееров сайта.
+				if (!response.ok) throw new Error(`HTTP ${response.status}`);
+				return await response.text();
+			},
+			{ паузы: ПАУЗЫ, назвать: 'RSS подкаста', сказать: (text) => console.warn(`[podcastFeed]${text}`) },
+		);
 
 		const channelImage = attrField(xml, 'itunes:image', 'href') ?? textField(xml, 'url');
 
