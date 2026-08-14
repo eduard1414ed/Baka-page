@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import PlayerBar from '../components/PlayerBar.astro';
 import ToTop from '../components/ToTop.astro';
+import Analytics from '../components/Analytics.astro';
 import { SITE_NAME, SITE_DESCRIPTION, SITE_LANG, SITE_LOCALE, pageTitle, absoluteUrl } from '../lib/site.mjs';
 import { OG_WIDTH, OG_HEIGHT, OG_DEFAULT, ogUrlForPost } from '../lib/ogImage.mjs';
 import '../styles/global.css';
@@ -124,6 +125,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 		<!-- Переходы между страницами без полной перезагрузки — без этого плеер
 		     физически не может пережить переход на другую страницу, см. тз/04. -->
 		<ClientRouter />
+
+		<!-- Счётчики посещаемости — ЕДИНСТВЕННОЕ МЕСТО НА ВЕСЬ САЙТ.
+		     Стоит ПОСЛЕ <ClientRouter />, и это не случайно: счётчик считает
+		     переходы по событию `astro:page-load`, которое роутер и рассылает.
+		     Сам компонент — только скрипт, разметки он не добавляет ни байта. -->
+		<Analytics />
 	</head>
 	<body>
 		{/* Первый фокусируемый элемент страницы. Без него человек на клавиатуре
