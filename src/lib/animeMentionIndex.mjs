@@ -10,6 +10,7 @@ import { buildAnimeMatcher, collectMentions, findMentions } from './animeMention
 import { makeExceptionFilter, parseMentionExceptions } from './mentionExceptions.mjs';
 import { applyPostOverrides } from './transcriptOverrides.mjs';
 import { toPlainText } from './plainText.mjs';
+import { isExternalPost } from './externalPost.mjs';
 
 // Как страница поста находит свою расшифровку: сначала по полю `transcript`,
 // если автор его заполнил, иначе по audioGuid — файл расшифровки называется тем
@@ -90,12 +91,12 @@ export function animeHiddenInPost(post) {
  * и сборка ругалась бы на здоровое поле.
  *
  * @param {{ isHidden: (id: string, replica: number, offset: number) => boolean }} exceptions
- * @returns {string[]} id тайтлов, в порядке первого упоминания
+ * @returns {Map<string, number>} id тайтла → сколько раз назван, в порядке первого упоминания
  */
-export function animeMentionedInPostText(post, matcher, exceptions) {
+export function animeMentionCountsInPostText(post, matcher, exceptions) {
 	if (typeof exceptions?.isHidden !== 'function') {
 		throw new Error(
-			'animeMentionedInPostText: передайте фильтр исключений — makeExceptionFilter(post.data.mentionsHidden). ' +
+			'animeMentionCountsInPostText: передайте фильтр исключений — makeExceptionFilter(post.data.mentionsHidden). ' +
 				'Без него отменённый тайтл остался бы на странице тайтла, хотя ссылки в тексте уже нет.',
 		);
 	}
@@ -104,12 +105,39 @@ export function animeMentionedInPostText(post, matcher, exceptions) {
 	// Реплики и позиции у текста поста нет — якорь тут «тайтл × пост», то есть
 	// работает только запись `animeId:*`. Позиция не годится: тело поста правят
 	// в админке, и она сдвинулась бы молча.
-	const kept = found.filter((mention) => !exceptions.isHidden(mention.id, -1, -1));
-	return [...new Set(kept.map((mention) => mention.id))];
+	const counts = new Map();
+	for (const mention of found) {
+		if (exceptions.isHidden(mention.id, -1, -1)) continue;
+		counts.set(mention.id, (counts.get(mention.id) ?? 0) + 1);
+	}
+	return counts;
 }
 
 /**
- * @returns {Map<string, Map<string, number[]>>} id тайтла → (id поста → таймкоды)
+ * То же самое, но списком: КАКИЕ тайтлы названы, без счёта.
+ *
+ * Отдельной функцией, а не вторым разбором: страница поста спрашивает список
+ * (ей нужны марки под текстом), указатель ниже — счёт (им сортируются
+ * упоминания на странице тайтла). Разбор текста при этом ОДИН, и разойтись
+ * ответам негде: «в списке есть, а в счёте ноль» было бы неотличимо от правды.
+ *
+ * Map держит порядок вставки, поэтому «в порядке первого упоминания» соблюдено.
+ *
+ * @returns {string[]} id тайтлов, в порядке первого упоминания
+ */
+export function animeMentionedInPostText(post, matcher, exceptions) {
+	return [...animeMentionCountsInPostText(post, matcher, exceptions).keys()];
+}
+
+/**
+ * ЯЧЕЙКА УКАЗАТЕЛЯ — ДВА ЧИСЛА, А НЕ ОДНО. `times` это минуты разговора
+ * (их показывает карточка выпуска), `text` — сколько раз тайтл назван в тексте
+ * самого поста. Раньше в ячейке лежали только минуты, а текстовое упоминание
+ * записывалось пустым списком: «назван» и «назван восемь раз» выглядели
+ * одинаково. Сортировке упоминаний (`mentionWeight`) нужны оба.
+ *
+ * @returns {Map<string, Map<string, { times: number[], text: number }>>}
+ *          id тайтла → (id поста → ячейка)
  */
 export function buildMentionIndex({ posts, transcripts, animeList }) {
 	// Живая речь: галочка «только в кавычках» в расшифровках не действует —
@@ -134,9 +162,11 @@ export function buildMentionIndex({ posts, transcripts, animeList }) {
 	// нажимает и попадает в список, где его же поста нет.
 	// Таймкодов у текста не бывает — отсюда пустой список времён.
 	for (const post of posts) {
-		for (const animeId of animeMentionedInPostText(post, postMatcher, filters.get(post.id))) {
+		for (const [animeId, count] of animeMentionCountsInPostText(post, postMatcher, filters.get(post.id))) {
 			const perPost = index.get(animeId) ?? new Map();
-			if (!perPost.has(post.id)) perPost.set(post.id, []);
+			const cell = perPost.get(post.id) ?? { times: [], text: 0 };
+			cell.text = count;
+			perPost.set(post.id, cell);
 			index.set(animeId, perPost);
 		}
 	}
@@ -155,9 +185,15 @@ export function buildMentionIndex({ posts, transcripts, animeList }) {
 		// на странице выпуска, но не на своей собственной.
 		const data = applyPostOverrides(transcript.data, post.data);
 
+		// СЧЁТ ИЗ ТЕКСТА ЗДЕСЬ НЕ ЗАТИРАЕТСЯ. Раньше стояло `perPost.set(post.id,
+		// times)`, и у выпуска, где тайтл назван и в описании, и в разговоре,
+		// текстовые упоминания пропадали молча: список тайтлов от этого
+		// не менялся, а счёт для сортировки занижался.
 		for (const [animeId, times] of collectMentions(groupReplicas(data), matcher, filter)) {
 			const perPost = index.get(animeId) ?? new Map();
-			perPost.set(post.id, times);
+			const cell = perPost.get(post.id) ?? { times: [], text: 0 };
+			cell.times = times;
+			perPost.set(post.id, cell);
 			index.set(animeId, perPost);
 		}
 
@@ -196,10 +232,60 @@ export function animeMentionedIn(transcriptData, matcher, exceptions) {
 }
 
 /**
+ * ЧЕМ ВНЕШНИЙ МАТЕРИАЛ ПЕРЕВЕШИВАЕТ СВОЙ (решение заказчика 14 августа 2026).
+ *
+ * У поста, вышедшего на чужом сайте, тела почти нет: в нашем файле лежит
+ * анонс в два абзаца, а сам текст живёт на Т—Ж или Кинопоиске, и посчитать
+ * в нём упоминания нечем. Замер по архиву: из 350 карточек внешних постов
+ * на страницах тайтлов у 312 в тексте не находится НИ ОДНОГО упоминания —
+ * тайтлы там перечислены полем и вставками `::anime-ref`. Сортируй мы их
+ * по найденному — все внешние статьи легли бы на дно страницы, хотя каждая
+ * из них целиком про этот тайтл.
+ *
+ * Поэтому вес фиксированный, а не «по 10 за упоминание»: умножать нечего.
+ * Замер: два варианта разошлись бы всего на 4 страницах из 655, а объяснять
+ * пришлось бы оба.
+ */
+export const EXTERNAL_POST_WEIGHT = 10;
+
+/**
+ * СКОЛЬКО ВЕСИТ МАТЕРИАЛ НА СТРАНИЦЕ ТАЙТЛА — ОДНО ПРАВИЛО, ОДНО МЕСТО.
+ *
+ * Считаются вместе минуты разговора (сколько кусков выпуска про этот тайтл)
+ * и сколько раз он назван в тексте поста: у выпуска бывает и то, и другое.
+ *
+ * МИНИМУМ ЕДИНИЦА, А НЕ НОЛЬ. На страницу тайтла материал попадает двумя
+ * путями, и второй — отметка в поле «Тайтлы поста»: подборка сезона называет
+ * тайтлы вставками `::anime-ref`, словами в тексте их нет, и найденных
+ * упоминаний у неё ноль. Замер: таких карточек 124. Ноль утопил бы их ниже
+ * материалов, где тайтл помянут вскользь один раз, — а раз материал на этой
+ * странице оказался, тайтл он упоминает хотя бы раз. Решение заказчика
+ * 14 августа 2026.
+ *
+ * @param {object} post
+ * @param {number[]} times минуты разговора
+ * @param {number} text сколько раз назван в тексте поста
+ */
+export function mentionWeight(post, times, text) {
+	if (isExternalPost(post.data)) return EXTERNAL_POST_WEIGHT;
+	return Math.max(1, text + times.length);
+}
+
+/**
  * Посты, где тайтл упомянут: и те, у кого он стоит в поле `anime` (разметка
  * в тексте поста, тз/03), и те, где он прозвучал в расшифровке.
  *
- * @returns {{ post: object, times: number[] }[]} по дате, свежие сверху
+ * ПОРЯДОК — ПО ЧИСЛУ УПОМИНАНИЙ, СВЕРХУ САМЫЕ ЧАСТЫЕ (решение заказчика
+ * 14 августа 2026; до этого было по дате). Правило целиком в `mentionWeight`,
+ * второй копии нет: этот же порядок видит и счётчик каталога, он считает
+ * длину этого списка.
+ *
+ * ПРИ РАВНОМ СЧЁТЕ — ПО ДАТЕ, СВЕЖЕЕ СВЕРХУ. Это не мелочь на краю: замер
+ * по архиву дал 1906 карточек из 2761 с одинаковым счётом, то есть дату
+ * читатель видит чаще, чем сортировку по количеству. Прежнее поведение сайта
+ * там, где считать нечего.
+ *
+ * @returns {{ post: object, times: number[], weight: number }[]}
  */
 export function postsForAnime(animeId, posts, index) {
 	const perPost = index.get(animeId) ?? new Map();
@@ -213,6 +299,10 @@ export function postsForAnime(animeId, posts, index) {
 		// так что «отметил и тут же отменил» — обычное дело, а не противоречие.
 		.filter((post) => !animeHiddenInPost(post).has(animeId))
 		.filter((post) => perPost.has(post.id) || (post.data.anime ?? []).some((ref) => ref.id === animeId))
-		.map((post) => ({ post, times: perPost.get(post.id) ?? [] }))
-		.sort((a, b) => b.post.data.date.valueOf() - a.post.data.date.valueOf());
+		.map((post) => {
+			const cell = perPost.get(post.id);
+			const times = cell?.times ?? [];
+			return { post, times, weight: mentionWeight(post, times, cell?.text ?? 0) };
+		})
+		.sort((a, b) => b.weight - a.weight || b.post.data.date.valueOf() - a.post.data.date.valueOf());
 }
