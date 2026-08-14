@@ -2,10 +2,22 @@
 title: Какие исекаи посмотреть?
 date: 2023-09-06
 category: article
-draft: true
+draft: false
 description: ''
 cover: ''
-noCover: true
+noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 1497
 tgUrl: https://t.me/podcastbaka/1497
 ---
@@ -14,7 +26,9 @@ tgUrl: https://t.me/podcastbaka/1497
 
 #### Реинкарнация безработного
 
-::image{src="" alt="" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786688783083.webp" alt="" width="column"}
+
 
 Тридцатилетний неудачник перерождается в новом мире и пытается прожить в этот раз полную жизнь. Его ждут приключения, потрясающие друзья и щепотка пошлятины.
 
@@ -22,7 +36,9 @@ tgUrl: https://t.me/podcastbaka/1497
 
 #### Этот замечательный мир! (Коносуба)
 
-::image{src="" alt="" caption="Аниме студии Studio Deen" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786688797163.webp" alt="" caption="Аниме студии Studio Deen" width="column"}
+
 
 Комедийный исекай, который издевается над штампами аниме. Сериал наполнен абсурдным юмором, уморительными персонажами (у каждого из которых есть свой прибабах) и ламповыми моментами, помогающими отдохнуть.
 
@@ -30,7 +46,9 @@ tgUrl: https://t.me/podcastbaka/1497
 
 #### Нет игры — нет жизни
 
-::image{src="" alt="" caption="Аниме студии Madhouse" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786688808831.webp" alt="" caption="Аниме студии Madhouse" width="column"}
+
 
 Один из немногих исекаев с оригинальным миром. Брат с сестрой, Соре и Сиро, гениальные геймеры, которые попадают в мир, где все управляется играми.
 
@@ -40,7 +58,9 @@ tgUrl: https://t.me/podcastbaka/1497
 
 #### Сонни бой
 
-::image{src="" alt="" caption="Аниме студии Madhouse" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786688825113.webp" alt="" caption="Аниме студии Madhouse" width="column"}
+
 
 Я не видел ни в одной подборке исекаев это аниме, а тем не менее, там герои попадают в другие миры. Вот только это скорее набор философских притч, чем привычный исекай.
 
@@ -50,7 +70,9 @@ tgUrl: https://t.me/podcastbaka/1497
 
 #### Тусовщик Кунмин
 
-::image{src="" alt="" caption="Аниме студии P.A. Works" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786688838346.webp" alt="" caption="Аниме студии P.A. Works" width="column"}
+
 
 И последним пусть будет пример сразу двух необычных поджанров исекая. Это одновременно обратный исекай, где герой попадает из другого мира в наш, и исторический исекай, где другой мир — это просто другой временной период.
 

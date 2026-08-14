@@ -1,23 +1,40 @@
 ---
-title: Романтика сезона
+title: Романтика сезона — зима 2025
 date: 2025-01-22
 category: article
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-2690.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2690
 tgUrl: https://t.me/podcastbaka/2690
+anime:
+  - kono-kaisha-ni-suki-na-hito-ga-imasu
+  - kuroiwa-medaka-ni-watashi-no-kawaii-ga-tsuujinai
+  - class-no-daikirai-na-joshi-to-kekkon-suru-koto-ni-natta
 ---
 
 ::image{src="/images/uploads/tg-2690.jpg" alt="" width="column"}
+
 
 Как обычно, первым делом в этом сезоне решил оценить романтические сериалы. Глянул первые три тайтла:
 
 #### Я женился на однокласснице, которую ненавидел
 
-::image{src="" alt="" caption="Аниме студий Studio Gokumi и AXsiZ" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786690869578.webp" alt="" caption="Аниме студий Studio Gokumi и AXsiZ" width="column"}
+
 
 Сама завязка этого аниме мне кажется сомнительной. Главных героев-школьников сводят бабушка с дедушкой. Поощрять браки по расчету (да еще и с элементами шантажа) — такое себе.
 
@@ -25,24 +42,34 @@ tgUrl: https://t.me/podcastbaka/2690
 
 Это все еще аниме со всеми возможными штампами ромкомов, но оно все-таки оказалось чуть лучше, чем я предполагал.
 
-*6 раздражающих школьниц из 10*
+##### 6 раздражающих школьниц из 10
 
 #### Мэдака Куроива не понимает моей привлекательности
 
-::image{src="" alt="" caption="Аниме студии SynergySP" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786690887291.webp" alt="" caption="Аниме студии SynergySP" width="column"}
+
 
 Главной героиней все восхищаются кроме одноклассника Куроивы. Все потому что он сын настоятеля храма и скрывает свои эмоции. Все аниме — это одна растянутая шутка под разными соусами.
 
 К тому же главная героиня вообще не кажется интересной или привлекательной. Получается, что ни юмор не работает, ни романтика. Остается только фансервис.
 
-*3 панцушота из 10*
+##### 3 панцушота из 10
 
 #### Ты умеешь хранить секреты?
 
-::image{src="" alt="" caption="Аниме студии Blade" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786690907380.webp" alt="" caption="Аниме студии Blade" width="column"}
+
 
 История про тайную любовь двух коллег. Пожалуй, самая приятная романтика из всех трех. Служебный роман выглядит убедительно, герои уже находятся в серьезных отношениях (даже ночуют друг у друга, вот это да).
 
 И хотя здесь есть привычные штампы о секретных отношениях — они не единственное, что может предложить сериал. И это радует.
 
-*8 неловких ситуаций на работе из 10*
+##### 8 неловких ситуаций на работе из 10
+
+::anime-ref{id="kono-kaisha-ni-suki-na-hito-ga-imasu" source="shikimori" source-id="59361"}
+
+::anime-ref{id="kuroiwa-medaka-ni-watashi-no-kawaii-ga-tsuujinai" source="shikimori" source-id="58853"}
+
+::anime-ref{id="class-no-daikirai-na-joshi-to-kekkon-suru-koto-ni-natta" source="shikimori" source-id="59135"}

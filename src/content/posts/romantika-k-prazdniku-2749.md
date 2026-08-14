@@ -1,11 +1,23 @@
 ---
-title: Романтика к празднику
+title: Романтика ко Дню святого Валентина
 date: 2025-02-14
 category: article
-draft: true
+draft: false
 description: ''
 cover: ''
 noCover: true
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 2749
 tgUrl: https://t.me/podcastbaka/2749
 ---
@@ -16,7 +28,9 @@ tgUrl: https://t.me/podcastbaka/2749
 
 #### Со склонов Кокурико
 
-::image{src="" alt="" caption="Аниме студии Studio Ghibli" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786689966728.webp" alt="" caption="Аниме студии Studio Ghibli" width="column"}
+
 
 Полнометражный фильм от студии Ghibli, который снял сын Хайяо Миядзаки, Горо. Это история про члена школьной газеты Шуна и застенчивую девочку Уми. Которые вместе пытаются спасти любимое школьное здание от сноса, а еще разобраться в связи между их семьями.
 
@@ -26,7 +40,9 @@ tgUrl: https://t.me/podcastbaka/2749
 
 #### Орегайру
 
-::image{src="" alt="" caption="Аниме студии Brain's Base" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786690003413.webp" alt="" caption="Аниме студии Brain's Base" width="column"}
+
 
 Полное название сериала: «Как и ожидалось моя школьная романтическая жизнь не удалась». В нем главный герой, Хачиман, изначально высокомерный подросток-максималист, который считает, что все общение, дружба и любовь — это не что-то настоящее, а просто притворство и социальные нормы.
 
@@ -38,7 +54,9 @@ tgUrl: https://t.me/podcastbaka/2749
 
 #### Хоримия
 
-::image{src="" alt="" caption="Аниме студии CloverWorks" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786690013846.webp" alt="" caption="Аниме студии CloverWorks" width="column"}
+
 
 Один из самых расслабленных романтических сериалов, который при этом не лишен некоторой глубины в развитии персонажей.
 
@@ -48,7 +66,9 @@ tgUrl: https://t.me/podcastbaka/2749
 
 #### Этот глупый свин не понимает мечту девочки-зайки
 
-::image{src="" alt="" caption="Аниме студии CloverWorks" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786690023995.webp" alt="" caption="Аниме студии CloverWorks" width="column"}
+
 
 Единственный в этом списке сериал, где есть не только повседневность, но и какие-то мистические вещи.
 
@@ -60,7 +80,9 @@ tgUrl: https://t.me/podcastbaka/2749
 
 #### Торадора
 
-::image{src="" alt="" caption="Аниме студии J.C.Staff" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786690036181.webp" alt="" caption="Аниме студии J.C.Staff" width="column"}
+
 
 И на вершине этого топа — сериал про взвешенного и хозайственного Рюдзи и взбалмошную, но застенчивую Тайгу.
 

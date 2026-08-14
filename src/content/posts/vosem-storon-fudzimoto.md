@@ -2,22 +2,50 @@
 title: Восемь сторон Фудзимото
 date: 2025-11-11
 category: article
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3468.jpg
-pullMedia: false
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
+animeSuggested: []
+mentionsHidden: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3468
 tgUrl: https://t.me/podcastbaka/3468
 ---
 
 ::image{src="/images/uploads/tg-3468.jpg" alt="" width="column"}
 
+
 На прошлой неделе вышла антология ваншотов Тацуки Фудзимото, автора «Человека-бензопилы», которые он писал в молодости до первой сериализации, под названием «Тацуки Фудзимото: С семнадцати до двадцати шести». Какой она вышла?
 
 Первые серии: «Два цыплёнка во дворе», «Сасаки-кун останавливает пулю» и «Любовь слепа» — это то что мы в литературном институте называли этюдами. Такие сценарные упражнения: как сделать из скороговорки рассказ; а что если признания в любви будут прерывать все более нелепым образом; может ли учительница быть богиней.
 
+
+::image{src="/images/uploads/tg-3469.jpg" alt="" width="column"}
+
+
+
+::image{src="/images/uploads/tg-3470.jpg" alt="" width="column"}
+
+
 Но чем дальше, тем больше в историях появляется глубина. «Квалификация», «Пророчество о Наюте» — про семью и принятие странных людей, «Рапсодия русалки» — про силу любви, «Болезнь «когда я проснулся, то стал девочкой» — про гендерную дисфорию и принятие себя, «Старшая сестра младшей сестрички» — про зависть и талант.
+
+
+::image{src="/images/uploads/tg-3471.jpg" alt="" width="column"}
+
+
+
+::image{src="/images/uploads/tg-3472.jpg" alt="" width="column"}
+
 
 А вместе с глубиной появляются и повторяющиеся элементы, которые потом перекочуют и в большую мангу Фудзимото. Поедание человечины — появится в «Огненном ударе», образ малоэмпатичной младшей сестры — аж несколько раз в «Человеке-бензопиле».
 
@@ -25,10 +53,13 @@ tgUrl: https://t.me/podcastbaka/3468
 
 Серии делали разные студии: поэтому дизайн, настроение и качество у них тоже очень разное. Но как будто этому сборнику это даже идет. Так что советую не пропускать.
 
-::image{src="/images/uploads/tg-3469.jpg" alt="" width="column"}
-::image{src="/images/uploads/tg-3470.jpg" alt="" width="column"}
-::image{src="/images/uploads/tg-3471.jpg" alt="" width="column"}
-::image{src="/images/uploads/tg-3472.jpg" alt="" width="column"}
+
 ::image{src="/images/uploads/tg-3473.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3474.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-3475.jpg" alt="" width="column"}

@@ -2,14 +2,13 @@
 title: Подборка хэллоуинских эпизодов
 date: 2025-10-31
 category: article
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-3448.jpg
 noCover: false
 externalUrl: ''
 externalSource: ''
 adLabel: ''
-anime: []
 animeSuggested:
   - naruto
 mentionsHidden: ''
@@ -21,7 +20,12 @@ bonusLinks: null
 pullMedia: false
 tgId: 3448
 tgUrl: https://t.me/podcastbaka/3448
+anime:
+  - naruto-sd-rock-lee-no-seishun-full-power-ninden
+  - ouran-koukou-host-club
+  - saiki-kusuo-no-nan
 ---
+
 
 ::image{src="/images/uploads/tg-3448.jpg" alt="" width="column"}
 
@@ -30,7 +34,9 @@ tgUrl: https://t.me/podcastbaka/3448
 
 #### Хёка. Эпизод 14
 
-::image{src="" alt="" caption="Аниме студии Kyoto Animation" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786689468792.webp" alt="" caption="Аниме студии Kyoto Animation" width="column"}
+
 
 Одна из лучших арок slice-of-life сериала «Хёка» не посвящена полностью Хэллоуину, но ее события происходят во время этого праздника.
 
@@ -38,7 +44,9 @@ tgUrl: https://t.me/podcastbaka/3448
 
 #### Ох уж этот экстрасенс Сайки Кусуо! Эпизод 114
 
-::image{src="" alt="" caption="Аниме студий J.C.Staff и Egg Firm" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786689441729.webp" alt="" caption="Аниме студий J.C.Staff и Egg Firm" width="column"}
+
 
 Сайки Кусуо — невероятно сильный экстрасенс, который предпочитает жить спокойной жизнью.
 
@@ -46,13 +54,17 @@ tgUrl: https://t.me/podcastbaka/3448
 
 #### Клуб свиданий старшей школы Оран. Эпизод 21
 
-::image{src="" alt="" caption="Аниме студии Bones" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786689480928.webp" alt="" caption="Аниме студии Bones" width="column"}
+
 
 Клуб решает устроить хэллоуинский ивент, проверить одноклассников на смелость и покосплеить вампиров. Это очень смешная (а иногда и немного жутковатая) серия.
 
 #### Наруто: Весна юности Рока Ли. Эпизод 30
 
-::image{src="" alt="" caption="Аниме студии Studio Pierrot" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786689489393.webp" alt="" caption="Аниме студии Studio Pierrot" width="column"}
+
 
 Празднуют ли Хэллоуин в Конохе? В основном сериале «Наруто» нет ответа на этот вопрос, зато он есть в пародийном аниме про маленького Рока Ли.
 
@@ -60,8 +72,14 @@ tgUrl: https://t.me/podcastbaka/3448
 
 #### Пожиратель душ
 
-::image{src="" alt="" caption="Аниме студии Bones" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786689514162.webp" alt="" caption="Аниме студии Bones" width="column"}
+
 
 Ну и конечно, все серии самого хеллоуинского сёнена — Soul Eater. Смеющаяся кровавая луна, злые (и не очень) колдуньи, и много-много стиля.
 
-А если вы про «Пожирателя душ» никогда не слышали — советую наш [большой выпуск подкаста о нем.](https://t.me/podcastbaka/1622)
+::anime-ref{id="naruto-sd-rock-lee-no-seishun-full-power-ninden" source="shikimori" source-id="12979"}
+
+::anime-ref{id="ouran-koukou-host-club" source="shikimori" source-id="853"}
+
+::anime-ref{id="saiki-kusuo-no-nan" source="shikimori" source-id="33255"}

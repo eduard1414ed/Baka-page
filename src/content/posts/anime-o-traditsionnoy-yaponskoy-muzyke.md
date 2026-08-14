@@ -2,14 +2,13 @@
 title: Аниме о традиционной японской музыке
 date: 2023-03-30
 category: article
-draft: true
+draft: false
 description: ''
 cover: ''
-noCover: true
+noCover: false
 externalUrl: ''
 externalSource: ''
 adLabel: ''
-anime: []
 animeSuggested: []
 mentionsHidden: ''
 speakers: ''
@@ -20,6 +19,12 @@ bonusLinks: null
 pullMedia: false
 tgId: 1141
 tgUrl: https://t.me/podcastbaka/1141
+anime:
+  - sora-no-aosa-wo-shiru-hito-yo
+  - nitaboh
+  - aki-no-kanade
+  - kono-oto-tomare
+  - mashiro-no-oto
 ---
 
 Продолжая [разговор](/posts/anime-v-stile-traditsionnogo-izobrazitelnogo-iskusstva-2224/) о разных традиционных японских элементах в аниме — хочу в этот раз поговорить о музыке.
@@ -28,7 +33,9 @@ tgUrl: https://t.me/podcastbaka/1141
 
 #### Чистый звук
 
-::image{src="" alt="" caption="Аниме студии Shin-Ei Animation" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786688340200.webp" alt="" caption="Аниме студии Shin-Ei Animation" width="column"}
+
 
 Сериал делает игру на сямисэне центральной темой повествования.
 
@@ -38,7 +45,9 @@ tgUrl: https://t.me/podcastbaka/1141
 
 #### Задержите этот звук
 
-::image{src="" alt="" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786688353233.webp" alt="" width="column"}
+
 
 Рассказывает о кото, щипковом традиционном инструменте.
 
@@ -46,7 +55,9 @@ tgUrl: https://t.me/podcastbaka/1141
 
 #### Музыка Аки
 
-::image{src="" alt="" caption="Аниме студии J.C.Staff" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786688367081.webp" alt="" caption="Аниме студии J.C.Staff" width="column"}
+
 
 Короткое аниме про барабаны тайко.
 
@@ -54,7 +65,9 @@ tgUrl: https://t.me/podcastbaka/1141
 
 #### Нитабо
 
-::image{src="" alt="" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786688379915.webp" alt="" width="column"}
+
 
 Фильм про слепого музыканта, играющего на сямисэне, основанный на реальной истории.
 
@@ -62,14 +75,20 @@ tgUrl: https://t.me/podcastbaka/1141
 
 #### Познавшим синеву небес
 
-::image{src="" alt="" caption="Аниме студии CloverWorks" width="column"}
+
+::image{src="/images/uploads/pasted-image-1786688395030.webp" alt="" caption="Аниме студии CloverWorks" width="column"}
+
 
 Ну и напоследок не про музыкальные инструменты, а про вокальные традиции. В середине XX века в Японии возник жанр песни энка.
 
 В довольно необычном фильме, смешивающим путешествия во времени и музыку, главная героиня как раз пытается осовременить этот жанр.
 
-#### Спешал про музыку
+::anime-ref{id="sora-no-aosa-wo-shiru-hito-yo" source="shikimori" source-id="39569"}
 
-::image{src="" alt="" width="column"}
+::anime-ref{id="nitaboh" source="shikimori" source-id="1203"}
 
-А если вам интересно узнать еще не только об аниме про традиционную музыку, но и про музыку в целом — у нас на прошлой неделе [вышел эпизод](https://t.me/podcastbaka/1132) подкаста, где мы обсуждаем сразу четыре таких сериала: «Рок-тихоню», «Нану», «Тусовщика Кунмина» и «Твою апрельскую ложь».
+::anime-ref{id="aki-no-kanade" source="shikimori" source-id="29513"}
+
+::anime-ref{id="kono-oto-tomare" source="shikimori" source-id="38080"}
+
+::anime-ref{id="mashiro-no-oto" source="shikimori" source-id="42590"}
