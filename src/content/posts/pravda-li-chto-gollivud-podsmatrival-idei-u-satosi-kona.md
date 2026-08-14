@@ -4,7 +4,7 @@ date: 2026-08-14
 category: article
 draft: false
 description: ''
-cover: /images/uploads/anime-razvorot-204-228-ryadom-full.webp
+cover: /images/uploads/anime-razvorot-204-228-black-full.webp
 noCover: false
 externalUrl: ''
 externalSource: ''
