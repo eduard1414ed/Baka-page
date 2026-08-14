@@ -4,7 +4,7 @@ date: 2026-08-06
 category: article
 draft: false
 publishAt: 2026-08-06T09:30:00Z
-description: ''
+description: 'Специально для РБК Life причины этого интереса россиян объяснил Эдуард Царионов, редактор-составитель книги «Манга, моэ, исекай: Большой гид по аниме»'
 cover: /images/uploads/pasted-image-1786699831769.webp
 noCover: false
 externalUrl: https://www.rbc.ru/life/news/6a71ed2d9a7947ff7bf26114
