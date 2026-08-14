@@ -19,9 +19,10 @@
  * @property {Post | null} hero       Слот 1. Главный материал, большой, слева
  * @property {Post[]}      sidebar    Слот 2. Три карточки справа
  * @property {Post | null} podcast    Слот 3. Второй ряд, левый
- * @property {Post | null} second     Слот 4. Второй ряд, правый
+ * @property {Post[]}      second     Слот 4. Второй ряд, правый — до двух карточек
  * @property {Post | null} third      Слот 5. Третий ряд, левый
  * @property {Post[]}      notes      Слот 6. Короткие заметки, до четырёх
+ * @property {boolean}     pinnedMissing Закрепить просили, а материала нет
  * @property {string[]}    shownIds   Всё, что заняло слоты, — по одному разу
  */
 
@@ -42,9 +43,16 @@
  *   берётся обложка» живёт в `postCardMedia.mjs` и второй копии иметь не должно.
  *   Не передали — считаем, что картинка есть у всех, и слот 4 ведёт себя
  *   по-старому.
+ * @param {string | null} [options.pinnedId] Материал, закреплённый заказчиком
+ *   в первом слоте. Приезжает из полки «Главная» (`src/content/pages/home.md`),
+ *   и приезжает уже разобранным: здесь мы про админку не знаем ничего.
+ *   Пусто или материал не найден среди опубликованных — слот занимает
+ *   видеоэссе, как было. **Ответ «нашёлся или нет» отдаётся наружу
+ *   (`pinnedMissing`), а не проглатывается:** закрепить снесённый или
+ *   спрятанный в черновики материал — обычная ошибка, и молчать о ней нельзя.
  * @returns {HomeSlots}
  */
-export function pickHomeSlots(posts, { podcastCategories, hasMedia = () => true }) {
+export function pickHomeSlots(posts, { podcastCategories, hasMedia = () => true, pinnedId = null }) {
 	const taken = new Set();
 
 	/** Самый свежий из ещё не занятых, подходящий под условие. */
@@ -57,9 +65,21 @@ export function pickHomeSlots(posts, { podcastCategories, hasMedia = () => true 
 	const isCategory = (...ids) => (post) => ids.includes(post.data.category);
 	const isPodcast = (post) => podcastCategories.includes(post.data.category);
 
-	// Слот 1. Последнее видеоэссе. Видеоэссе может не быть ни одного —
-	// тогда главный материал это просто самое свежее, что есть.
-	const hero = take(isCategory('videoessay')) ?? take();
+	// Слот 1. ЗАКРЕПЛЁННЫЙ МАТЕРИАЛ, если он назначен, иначе последнее
+	// видеоэссе. Видеоэссе может не быть ни одного — тогда главный материал
+	// это просто самое свежее, что есть.
+	//
+	// ЗАКРЕПЛЁННЫЙ ВСЕГДА ОДИН, И ЭТО НЕ ПРОВЕРКА, А УСТРОЙСТВО: он записан
+	// одним полем на полке «Главная», а не галочкой в каждом посте. Галочками
+	// «включён ровно один» пришлось бы ПОДДЕРЖИВАТЬ — снимать её у прежнего
+	// при сохранении нового, то есть писать в два файла за одно сохранение,
+	// чего CMS не умеет (CLAUDE.md, «Одно сохранение CMS = один файл»).
+	// Решение заказчика 14 августа 2026 из двух предложенных.
+	const pinned = pinnedId ? (posts.find((post) => post.id === pinnedId) ?? null) : null;
+	if (pinned) taken.add(pinned.id);
+	const pinnedMissing = Boolean(pinnedId) && !pinned;
+
+	const hero = pinned ?? take(isCategory('videoessay')) ?? take();
 
 	// Слот 2. Три самых свежих любой категории из оставшихся.
 	const sidebar = [take(), take(), take()].filter(Boolean);
@@ -71,7 +91,18 @@ export function pickHomeSlots(posts, { podcastCategories, hasMedia = () => true 
 	// Выпусков может не быть вовсе — тогда следующий по хронологии.
 	const podcast = take(isPodcast) ?? take();
 
-	// Слот 4. Правый во втором ряду — ЗДЕСЬ КАРТИНКА ОБЯЗАТЕЛЬНА.
+	// Слот 4. Правый во втором ряду — ДВЕ КАРТОЧКИ, и у обеих КАРТИНКА
+	// ОБЯЗАТЕЛЬНА.
+	//
+	// ВТОРАЯ КАРТОЧКА ДОБАВЛЕНА 14 августа 2026 по решению заказчика, и она
+	// именно ДОБАВЛЕНА: витрина показывает теперь 8 материалов вместо 7,
+	// а третий ряд не тронут. Второй вариант — забрать материал у третьего
+	// ряда — заказчику предлагался и отвергнут: третий ряд остался бы вовсе
+	// без картинок.
+	//
+	// Обеих может не найтись: список кончился или у оставшихся нет обложек.
+	// Тогда карточек будет одна или ноль, и ряд перестроится сам — правила
+	// на это уже есть и описаны ниже.
 	//
 	// ПОЧЕМУ ИМЕННО ЗДЕСЬ, А НЕ ВЕЗДЕ. У этой колонки внутри своя сетка из двух
 	// дорожек — текст и картинка, — и сама колонка растянута на высоту ряда
@@ -86,7 +117,7 @@ export function pickHomeSlots(posts, { podcastCategories, hasMedia = () => true 
 	// одноколоночным сам (`.feature-row.single`). Это лучше пустого места:
 	// пустая половина ряда читается поломкой вёрстки, а широкий материал —
 	// решением.
-	const second = take(hasMedia);
+	const second = [take(hasMedia), take(hasMedia)].filter(Boolean);
 
 	// Слот 5. Левый в третьем ряду — ТО ЖЕ ПРАВИЛО, и вот почему оно нужно
 	// и здесь.
@@ -110,5 +141,5 @@ export function pickHomeSlots(posts, { podcastCategories, hasMedia = () => true 
 		Boolean,
 	);
 
-	return { hero, sidebar, podcast, second, third, notes, shownIds: [...taken] };
+	return { hero, sidebar, podcast, second, third, notes, pinnedMissing, shownIds: [...taken] };
 }

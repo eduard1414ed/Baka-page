@@ -10,7 +10,7 @@
 // «в макете их нет» была верна про верх и неверна про низ, и просидела ошибкой
 // пять частей. Оба блока — ОБЩИЕ КОМПОНЕНТЫ со страницей «О проекте»,
 // своей копии у главной нет.
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import PostFeed from '../components/PostFeed.astro';
 import SocialStrip from '../components/SocialStrip.astro';
@@ -49,12 +49,30 @@ for (const post of posts) {
 	media.set(post.id, await getCardMedia(post));
 }
 
+// Закреплённый материал первого слота — с полки «Главная» в админке.
+// Полки может не быть вовсе (файл заводится вместе с полем и переживает
+// удаление), поэтому `getEntry` спрашивается мягко.
+const homeShelf = await getEntry('pages', 'home');
+const pinnedId = homeShelf?.data.pinnedPost ?? null;
+
 // Какие категории считаются выпуском подкаста, знает content.config —
 // оттуда и берём, а не пишем список руками. Бонус попадает сюда сам.
 const slots = pickHomeSlots(posts, {
 	podcastCategories: categoriesShownIn('podcast'),
 	hasMedia: (post) => Boolean(media.get(post.id)),
+	pinnedId,
 });
+
+// ЛОМАТЬСЯ ГРОМКО ЛУЧШЕ, ЧЕМ ТИХО ВРАТЬ. Закрепили материал, а потом снесли
+// его или убрали в черновики — главная молча покажет видеоэссе, и заказчик
+// решит, что закрепление не работает. Сборку это не роняет: витрина цела,
+// беда только в одном поле.
+if (slots.pinnedMissing) {
+	console.warn(
+		`[главная] закреплён материал «${pinnedId}», но среди опубликованных его нет — ` +
+			'в первом слоте будет видеоэссе. Проверьте полку «Главная» в админке.',
+	);
+}
 
 const deckOf = (post: any) => postDescription(post, '', { maxLength: 240 });
 
@@ -218,8 +236,8 @@ const catalogMarks = shuffled.slice(0, CATALOG_POOL);
 				}
 
 				{
-					(slots.podcast || slots.second) && (
-						<section class="feature-row" class:list={{ single: !slots.podcast || !slots.second }}>
+					(slots.podcast || slots.second.length > 0) && (
+						<section class="feature-row" class:list={{ single: !slots.podcast || slots.second.length === 0 }}>
 							{slots.podcast && (
 								<article class="podcast-feature">
 									<PostKicker post={slots.podcast} />
@@ -237,33 +255,42 @@ const catalogMarks = shuffled.slice(0, CATALOG_POOL);
 								</article>
 							)}
 
-							{slots.second && (
-								<article class="article-feature">
-									<div>
-										<PostKicker post={slots.second} />
-										{/* Средний размер, а не крупный: в макете здесь стоял `title-lg`,
-										    но на живой странице он оказывается ВТОРЫМ крупным заголовком
-										    экрана и спорит с соседом по ряду — тот набран средним, а стоят
-										    они рядом. Крупный кегль остаётся ровно у одного материала
-										    главной, самого первого; решение заказчика 9 августа. */}
-										<h2 class="title-md">
-											<a class="stretch" {...linkOf(slots.second)}>
-												{slots.second.data.title}
-												{isExt(slots.second) && (
-													<span class="external" aria-label="откроется на другом сайте">
-														↗
-													</span>
-												)}
-											</a>
-										</h2>
-										{deckOf(slots.second) && <p class="deck">{deckOf(slots.second)}</p>}
-									</div>
-									{media.get(slots.second.id) && (
-									<div class="image">
-										<PostMedia post={slots.second} media={media.get(slots.second.id)!} sizes="(max-width: 760px) 100vw, 560px" />
-									</div>
-								)}
-								</article>
+							{/* ДВЕ КАРТОЧКИ В ОДНОЙ КОЛОНКЕ, А НЕ ДВА СЛОТА РЯДА. Вертикальную
+							    линию и растяжку по высоте ряда несёт КОЛОНКА, а карточка внутри
+							    знает только про себя: иначе линий было бы две — по одной на
+							    карточку, — и они разорвались бы по зазору между ними. Ровно
+							    то же правило, что у сайдбара первого экрана. */}
+							{slots.second.length > 0 && (
+								<div class="article-column">
+									{slots.second.map((post) => (
+										<article class="article-feature">
+											<div>
+												<PostKicker post={post} />
+												{/* Средний размер, а не крупный: в макете здесь стоял `title-lg`,
+												    но на живой странице он оказывается ВТОРЫМ крупным заголовком
+												    экрана и спорит с соседом по ряду — тот набран средним, а стоят
+												    они рядом. Крупный кегль остаётся ровно у одного материала
+												    главной, самого первого; решение заказчика 9 августа. */}
+												<h2 class="title-md">
+													<a class="stretch" {...linkOf(post)}>
+														{post.data.title}
+														{isExt(post) && (
+															<span class="external" aria-label="откроется на другом сайте">
+																↗
+															</span>
+														)}
+													</a>
+												</h2>
+												{deckOf(post) && <p class="deck">{deckOf(post)}</p>}
+											</div>
+											{media.get(post.id) && (
+												<div class="image">
+													<PostMedia post={post} media={media.get(post.id)!} sizes="(max-width: 760px) 100vw, 560px" />
+												</div>
+											)}
+										</article>
+									))}
+								</div>
 							)}
 						</section>
 					)
@@ -558,6 +585,25 @@ const catalogMarks = shuffled.slice(0, CATALOG_POOL);
 		gap: var(--sp-6);
 	}
 
+	/* Колонка правой половины второго ряда. Карточек в ней одна или две —
+	   решает `homeSlots`, а не вёрстка. Зазор между ними задаёт колонка,
+	   линию — вторая карточка (правило ниже). */
+	.article-column {
+		display: grid;
+		gap: var(--sp-6);
+	}
+
+	/* ЛИНИЮ МЕЖДУ КАРТОЧКАМИ РИСУЕТ ВТОРАЯ, а не обе по границе. Тот же приём,
+	   что у карточек сайдбара и у рядов ленты (§5 системы): нарисуй её обе —
+	   на стыке выйдут две линии с зазором между ними. И селектор именно
+	   `+ .article-feature`, а не `:not(:first-child)`: карточек всего две,
+	   а такой селектор переживёт появление третьей, не приписав линию
+	   единственной. */
+	.article-feature + .article-feature {
+		border-top: 1px solid var(--line);
+		padding-top: var(--sp-6);
+	}
+
 
 	.notes-index {
 		display: grid;
@@ -656,7 +702,7 @@ const catalogMarks = shuffled.slice(0, CATALOG_POOL);
 	   обрезками десктопной сетки. */
 	@media (max-width: 760px) {
 		.sidebar,
-		.article-feature,
+		.article-column,
 		.notes-index {
 			border-top: 1px solid var(--line);
 			padding-top: var(--sp-6);
@@ -719,7 +765,7 @@ const catalogMarks = shuffled.slice(0, CATALOG_POOL);
 		/* Колонки с линией тянутся на высоту ряда: иначе линия обрывается
 		   по низкой колонке, а не идёт вдоль высокой. */
 		.sidebar,
-		.article-feature,
+		.article-column,
 		.notes-index {
 			align-self: stretch;
 		}
@@ -734,12 +780,18 @@ const catalogMarks = shuffled.slice(0, CATALOG_POOL);
 			grid-column: 1 / 5;
 		}
 
-		.article-feature {
+		/* ЛИНИЯ И МЕСТО В СЕТКЕ — У КОЛОНКИ, РАСКЛАДКА — У КАРТОЧКИ. Пока
+		   карточка была одна, всё это стояло на ней; с двумя карточками линия
+		   слева удвоилась бы и разорвалась по зазору между ними. */
+		.article-column {
 			grid-column: 5 / 13;
-			grid-template-columns: 4fr 5fr;
-			align-items: center;
 			border-left: 1px solid var(--line);
 			padding-left: var(--sp-8);
+		}
+
+		.article-feature {
+			grid-template-columns: 4fr 5fr;
+			align-items: center;
 		}
 
 		.video-feature {
@@ -773,7 +825,7 @@ const catalogMarks = shuffled.slice(0, CATALOG_POOL);
 		}
 
 		.feature-row.single .podcast-feature,
-		.feature-row.single .article-feature {
+		.feature-row.single .article-column {
 			grid-column: 1 / 13;
 			border-left: 0;
 			padding-left: 0;
