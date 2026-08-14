@@ -57,6 +57,10 @@ export const GET: APIRoute = async () => {
 		urlEntry('/'),
 		urlEntry('/about/'),
 		urlEntry('/support/'),
+		// Соглашение — обычная публичная страница, и в карте ей место.
+		// Из поиска ПО САЙТУ она при этом исключена, но это разные вопросы:
+		// поиск по сайту и поисковик снаружи — не одно и то же.
+		urlEntry('/legal/'),
 		urlEntry('/anime/'),
 		...pagesOf(ARCHIVE_BASE, inArchive.length),
 		// Только категории со своей страницей. Скрытые («Бонус») страницы
