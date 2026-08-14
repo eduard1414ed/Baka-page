@@ -152,10 +152,12 @@ const Title = `h${level}` as 'h2' | 'h3';
 		align-self: start;
 	}
 
+	/* Цвет, вес и ГАРНИТУРА — общие, в global.css рядом с `.ext-arrow`:
+	   у Literata знака ↗ нет вовсе, и без явной гарнитуры он уезжает
+	   в системный эмодзи. Здесь только размер и посадка. */
 	.external {
 		display: inline-block;
 		margin-left: 0.2em;
-		color: var(--accent-text);
 		/* Стрелка не должна тянуть вниз строку заголовка. */
 		vertical-align: 0.1em;
 		font-size: 0.7em;
