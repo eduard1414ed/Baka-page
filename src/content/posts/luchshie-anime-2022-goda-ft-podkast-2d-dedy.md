@@ -1,7 +1,7 @@
 ---
 title: Лучшие аниме 2022 года ft подкаст «2D DEDы»
 date: 2023-01-18
-category: note
+category: podcast
 draft: false
 description: ''
 cover: /images/uploads/tg-954.jpg

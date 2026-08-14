@@ -1,7 +1,7 @@
 ---
 title: 'Можем повторить: «Призрак в доспехах»'
 date: 2025-10-07
-category: note
+category: podcast
 draft: false
 description: ''
 cover: /images/uploads/tg-3401.jpg

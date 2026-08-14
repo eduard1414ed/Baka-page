@@ -1,7 +1,7 @@
 ---
 title: 'Искусство аниме: эволюция и современность'
 date: 2025-04-28
-category: note
+category: podcast
 draft: false
 description: ''
 cover: /images/uploads/tg-2923.jpg
