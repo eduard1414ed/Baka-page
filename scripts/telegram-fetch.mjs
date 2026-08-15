@@ -60,6 +60,7 @@ import { botMessageToExport } from '../src/lib/telegramBotUpdate.mjs';
 import { parseChannelPage } from '../src/lib/telegramWebPost.mjs';
 import { photoFileName, photoSrc, withPhotos, savePhoto } from '../src/lib/telegramPhotos.mjs';
 import { buildAnimeMatcher } from '../src/lib/animeMentions.mjs';
+import { сроком } from './retry.mjs';
 
 const CHANNEL = 'podcastbaka';
 const API = 'https://api.telegram.org';
@@ -119,11 +120,11 @@ async function callApi(token, method, params = {}) {
 	const url = `${API}/bot${token}/${method}`;
 	let response;
 	try {
-		response = await fetch(url, {
+		response = await fetch(url, сроком({
 			method: 'POST',
 			headers: { 'content-type': 'application/json' },
 			body: JSON.stringify(params),
-		});
+		}));
 	} catch (error) {
 		throw new Error(`не удалось достучаться до телеграма (${method}): ${hideToken(error.message, token)}`);
 	}
@@ -153,7 +154,7 @@ async function getUpdates(token, offset) {
 async function downloadBotFile(token, fileId, dir) {
 	const info = await callApi(token, 'getFile', { file_id: fileId });
 	const url = `${API}/file/bot${token}/${info.file_path}`;
-	const response = await fetch(url);
+	const response = await fetch(url, сроком());
 	if (!response.ok) throw new Error(`файл не отдался (код ${response.status})`);
 	const to = join(dir, basename(info.file_path));
 	writeFileSync(to, Buffer.from(await response.arrayBuffer()));
@@ -162,7 +163,7 @@ async function downloadBotFile(token, fileId, dir) {
 
 /** Скачать картинку со страницы канала (запасной путь). */
 async function downloadWebFile(url, dir, index) {
-	const response = await fetch(url);
+	const response = await fetch(url, сроком());
 	if (!response.ok) throw new Error(`файл не отдался (код ${response.status})`);
 	const to = join(dir, `web-${index}.jpg`);
 	writeFileSync(to, Buffer.from(await response.arrayBuffer()));
@@ -480,7 +481,7 @@ async function main() {
 			const html = arg('page')
 				? readFileSync(arg('page'), 'utf8')
 				: await (async () => {
-						const response = await fetch(`https://t.me/s/${CHANNEL}`);
+						const response = await fetch(`https://t.me/s/${CHANNEL}`, сроком());
 						if (!response.ok) throw new Error(`страница канала ответила кодом ${response.status}`);
 						return response.text();
 					})();

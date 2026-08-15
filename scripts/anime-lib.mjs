@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { ANIME_POSTER_WIDTHS } from '../src/lib/animePoster.mjs';
 import { initMorph, computeAliasesAuto, strictQuotesHint } from './anime-cases-lib.mjs';
+import { сроком } from './retry.mjs';
 
 export const ROOT = new URL('../', import.meta.url);
 export const ANIME_CONTENT_DIR = new URL('src/content/anime/', ROOT);
@@ -22,7 +23,7 @@ export const ANIME_PUBLIC_DIR = new URL('public/anime/', ROOT);
 export const SHIKIMORI_PAUSE_MS = 1500;
 
 export async function downloadPoster(posterUrl, slug) {
-	const response = await fetch(posterUrl);
+	const response = await fetch(posterUrl, сроком());
 	if (!response.ok) {
 		throw new Error(`Не удалось скачать обложку: ${response.status}`);
 	}

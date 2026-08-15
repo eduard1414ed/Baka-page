@@ -18,7 +18,7 @@ import { fetchArticle, uploadsPath, ПАУЗЫ } from './source.mjs';
 // Вторая копия «повтора при сбое сети» жила здесь — со своим циклом и своим,
 // уже разошедшимся с домом списком сетевых бед (доревизия задачи 15,
 // находка 27). Дом один: `scripts/retry.mjs`.
-import { сПовторами } from '../retry.mjs';
+import { сПовторами, сроком } from '../retry.mjs';
 
 /**
  * Скачать все картинки статьи и положить сжатыми под именем `<prefix>-NN.webp`.
@@ -46,7 +46,7 @@ export async function fetchImages(articleId, prefix) {
 			// `сПовторами` перебрасывает последнюю ошибку наружу как есть.
 			const bytes = await сПовторами(
 				async () => {
-					const response = await fetch(`https://leonardo.osnova.io/${uuid}/`);
+					const response = await fetch(`https://leonardo.osnova.io/${uuid}/`, сроком());
 					if (!response.ok) throw new Error(`HTTP ${response.status} у ${uuid}`);
 					return Buffer.from(await response.arrayBuffer());
 				},

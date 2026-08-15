@@ -1,3 +1,4 @@
+import { сроком } from '../retry.mjs';
 // Источник данных о тайтле — Shikimori. Основной (пробуем первым).
 //
 // Форма модуля одинаковая для всех источников (см. anilist.mjs) —
@@ -22,7 +23,7 @@ function cleanDescription(description) {
 }
 
 async function request(path) {
-	const response = await fetch(`${BASE}${path}`, { headers: { 'User-Agent': USER_AGENT } });
+	const response = await fetch(`${BASE}${path}`, сроком({ headers: { 'User-Agent': USER_AGENT } }));
 	if (!response.ok) {
 		throw new Error(`Shikimori ответил ${response.status}`);
 	}
@@ -63,13 +64,13 @@ function sourceAliases(data) {
  */
 async function posterFromGraphql(animeId) {
 	try {
-		const response = await fetch(`${BASE}/api/graphql`, {
+		const response = await fetch(`${BASE}/api/graphql`, сроком({
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json', 'User-Agent': USER_AGENT },
 			body: JSON.stringify({
 				query: `{ animes(ids: "${animeId}", limit: 1) { poster { originalUrl } } }`,
 			}),
-		});
+		}));
 		if (!response.ok) return undefined;
 		const body = await response.json();
 		return body?.data?.animes?.[0]?.poster?.originalUrl ?? undefined;

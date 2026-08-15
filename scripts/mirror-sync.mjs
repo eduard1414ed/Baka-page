@@ -30,7 +30,7 @@ import { createHash, createHmac } from 'node:crypto';
 import { readdir, readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { join, resolve } from 'node:path';
-import { сПовторами } from './retry.mjs';
+import { сПовторами, сроком } from './retry.mjs';
 
 export const BUCKET = 'ru.bakapodcast.com';
 export const ENDPOINT = 'https://storage.yandexcloud.net';
@@ -191,11 +191,11 @@ function подписать({ method, key, query = {}, body = '', contentType })
 
 async function запрос({ method, key, query, body = '', contentType, extraHeaders = {} }) {
 	const { url, headers } = подписать({ method, key, query, body, contentType });
-	const response = await fetch(url, {
+	const response = await fetch(url, сроком({
 		method,
 		headers: { ...extraHeaders, ...headers },
 		body: method === 'PUT' ? body : undefined,
-	});
+	}));
 	if (!response.ok) {
 		const text = await response.text().catch(() => '');
 		const error = new Error(`${method} ${key || '(бакет)'} → ${response.status} ${text.slice(0, 300)}`);

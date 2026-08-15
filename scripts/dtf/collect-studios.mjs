@@ -16,7 +16,7 @@ import { fetchArticle, stripTags } from './source.mjs';
 // Третья копия «повтора при сбое сети» жила здесь — со своим циклом, своим
 // списком сетевых бед и отдельной веткой на 429. Дом один: `scripts/retry.mjs`
 // (доревизия задачи 15, находка 27; реестр называл две копии, их оказалось три).
-import { сПовторами } from '../retry.mjs';
+import { сПовторами, сроком } from '../retry.mjs';
 
 const { readAnimeCollection } = await import(new URL('../anime-cases-lib.mjs', import.meta.url).href);
 const { buildAnimeMatcher, findMentions } = await import(new URL('../../src/lib/animeMentions.mjs', import.meta.url).href);
@@ -46,11 +46,11 @@ async function askAniList(id) {
 	// кончился», поэтому последняя ошибка летит наружу как есть.
 	return сПовторами(
 		async () => {
-			const response = await fetch('https://graphql.anilist.co', {
+			const response = await fetch('https://graphql.anilist.co', сроком({
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(query),
-			});
+			}));
 			if (!response.ok) throw new Error(`HTTP ${response.status}`);
 			const json = await response.json();
 			if (json.errors) throw new Error(json.errors[0]?.message ?? 'ошибка GraphQL');

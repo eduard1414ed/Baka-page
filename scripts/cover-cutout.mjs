@@ -31,6 +31,7 @@ import sharp from 'sharp';
 import { fetchFeedItems } from '../src/lib/podcastFeed.mjs';
 import { coverIdFromUrl } from '../src/lib/episodeCover.mjs';
 import { cutoutIdForUpload } from '../src/lib/coverCutout.mjs';
+import { сроком } from './retry.mjs';
 
 // ────────────────────────────────────────────────────────────────────────────
 // ЧИСЛА, КОТОРЫЕ КРУТИТ ЗАКАЗЧИК. Все здесь, одним блоком (тз/12, таблица).
@@ -416,7 +417,7 @@ async function loadSource(cover, { refetch = false } = {}) {
 	// качать в этом случае нечего и незачем.
 	if (!cover.src.startsWith('http')) return readFile(cover.src);
 
-	const response = await fetch(cover.src);
+	const response = await fetch(cover.src, сроком());
 	if (!response.ok) throw new Error(`хостинг ответил ${response.status}`);
 	const buffer = Buffer.from(await response.arrayBuffer());
 
@@ -449,7 +450,7 @@ async function fetchOriginals(covers) {
 
 	for (const [index, cover] of todo.entries()) {
 		try {
-			const response = await fetch(cover.src);
+			const response = await fetch(cover.src, сроком());
 			if (!response.ok) throw new Error(`код ответа ${response.status}`);
 			const buffer = Buffer.from(await response.arrayBuffer());
 			await writeFile(sourcePath(cover), buffer);

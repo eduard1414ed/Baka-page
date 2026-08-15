@@ -24,6 +24,7 @@ import { fileURLToPath } from 'node:url';
 import { readPostsRaw, writePostBody, parseBody } from './archive-clean-lib.mjs';
 import { effectiveCategory } from './archive-rules-measure.mjs';
 import { matchFor } from './archive-youtube-match.mjs';
+import { сроком } from './retry.mjs';
 
 const CATEGORY_LABEL = { podcast: 'Выпуск', videoessay: 'Видеоэссе' };
 
@@ -190,10 +191,7 @@ async function fetchThumb(videoId) {
 	const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/120 Safari/537.36';
 	for (const name of ['maxresdefault', 'sddefault', 'hqdefault']) {
 		try {
-			const r = await fetch(`https://i.ytimg.com/vi/${videoId}/${name}.jpg`, {
-				headers: { 'User-Agent': UA },
-				signal: AbortSignal.timeout(20000),
-			});
+			const r = await fetch(`https://i.ytimg.com/vi/${videoId}/${name}.jpg`, сроком({ headers: { 'User-Agent': UA } }));
 			if (!r.ok) continue;
 			const buf = Buffer.from(await r.arrayBuffer());
 			if (buf.length > 10 * 1024) return { buf, name };

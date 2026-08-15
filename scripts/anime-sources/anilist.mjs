@@ -1,3 +1,4 @@
+import { сроком } from '../retry.mjs';
 // Источник данных о тайтле — AniList. Запасной: пробуем, только если
 // в Shikimori тайтл не нашёлся. Форма модуля та же, что у shikimori.mjs.
 //
@@ -73,11 +74,11 @@ function toEntry(data) {
 }
 
 async function request(query, variables) {
-	const response = await fetch(ENDPOINT, {
+	const response = await fetch(ENDPOINT, сроком({
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json', 'User-Agent': USER_AGENT },
 		body: JSON.stringify({ query, variables }),
-	});
+	}));
 
 	// "Не найдено" AniList отдаёт как ошибку с HTTP 404 — это не сбой, а нормальный ответ.
 	if (!response.ok && response.status !== 404) {

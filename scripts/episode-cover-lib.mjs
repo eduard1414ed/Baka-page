@@ -12,6 +12,7 @@ import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { EPISODE_COVER_WIDTHS, coverIdFromUrl } from '../src/lib/episodeCover.mjs';
+import { сроком } from './retry.mjs';
 
 const QUALITY = 82;
 
@@ -89,7 +90,7 @@ export async function downloadEpisodeCover(url) {
 	if (!id) return { status: 'foreign', id: null };
 	if (coverAlreadyDone(url)) return { status: 'skipped', id };
 
-	const response = await fetch(url);
+	const response = await fetch(url, сроком());
 	if (!response.ok) {
 		throw new Error(`Не удалось скачать обложку (${response.status}): ${url}`);
 	}

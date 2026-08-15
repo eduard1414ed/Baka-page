@@ -20,7 +20,7 @@ import { fileURLToPath } from 'node:url';
 // самые частые временные отказы чужого сервера. То есть пересборка поста
 // падала на моргнувшем DTF там, где остальной проект переждал бы и пошёл
 // дальше (доревизия задачи 15, находка 27).
-import { сПовторами } from '../retry.mjs';
+import { сПовторами, сроком } from '../retry.mjs';
 
 // Путь к корню достаём через fileURLToPath, а не через .pathname: русские
 // буквы в пути к проекту тот кодирует, и «файла нет» приходит про файл,
@@ -60,7 +60,7 @@ export async function fetchArticle(id) {
 
 	return сПовторами(
 		async () => {
-			const response = await fetch(`https://api.dtf.ru/v2.1/content?id=${id}`);
+			const response = await fetch(`https://api.dtf.ru/v2.1/content?id=${id}`, сроком());
 			if (!response.ok) throw new Error(`HTTP ${response.status}`);
 			const text = await response.text();
 			const parsed = JSON.parse(text);

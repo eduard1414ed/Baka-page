@@ -583,12 +583,48 @@ export function strictQuotesHint(titleRu) {
 
 // ─── Чтение справочника: нужно и пересчёту, и отчёту ────────────────────────
 
+/**
+ * ПУСТОЙ СПИСОК АДМИНКА ПИШЕТ ПУСТОЙ СТРОКОЙ, И ЭТО ЗАКОННАЯ ФОРМА НА ДИСКЕ.
+ *
+ * Sveltia на очищенное списковое поле кладёт `""`, а не пропускает его —
+ * записанный урок проекта, из-за которого схема сайта уже переживает пустоту
+ * в любом необязательном поле (`emptyToUndefined` в `src/content.config.ts`).
+ * **А до скриптов это правило не дошло:** они читают те же файлы СЫРЫМИ,
+ * мимо схемы. Замер 15 августа 2026: `aliases: ""` у двух карточек,
+ * `aliasesAuto: ""` у шести.
+ *
+ * Чем это уже стоило: `scripts/anime-cases.mjs` ПАДАЛ на первой такой карточке
+ * (`TypeError: было.every is not a function`), то есть робот падежных форм
+ * не отработал бы вовсе. Сайт при этом собирался — схему-то починили.
+ *
+ * ЧИНИМ ЧТЕНИЕ, А НЕ ДАННЫЕ. Переписать восемь карточек значило бы поспорить
+ * с тем, что пишет сама админка: первое же сохранение вернуло бы `""` назад.
+ */
+export function списком(значение) {
+	return Array.isArray(значение) ? значение : [];
+}
+
+/** Карточка, приведённая к тем же типам, какие даёт схема сайта. */
+export function нормализоватьКарточку(данные) {
+	return { ...данные, aliases: списком(данные?.aliases), aliasesAuto: списком(данные?.aliasesAuto) };
+}
+
+/**
+ * Весь справочник.
+ *
+ * `data` — приведённая карточка: списки списками, как их видит сайт.
+ * `сырое` — то, что лежит на диске, байт в байт. **Разделять их обязательно:**
+ * запись собирается из СЫРОГО, иначе приведение типов молча переписало бы
+ * `aliases: ""` в `aliases: []` у карточек, к которым пересчёт форм отношения
+ * не имеет, — и разница пришла бы на восемь чужих файлов.
+ */
 export async function readAnimeCollection() {
 	const files = (await readdir(ANIME_CONTENT_DIR)).filter((name) => name.endsWith('.json'));
 	const entries = [];
 	for (const file of files) {
 		const url = new URL(file, ANIME_CONTENT_DIR);
-		entries.push({ file, url, data: JSON.parse(await readFile(url, 'utf8')) });
+		const сырое = JSON.parse(await readFile(url, 'utf8'));
+		entries.push({ file, url, сырое, data: нормализоватьКарточку(сырое) });
 	}
 	return entries;
 }
@@ -598,10 +634,11 @@ export async function readAnimeCollection() {
  *
  * ПИШЕТСЯ РОВНО ОДНО ПОЛЕ. Остальное — вместе с `aliases`, `manual` и всем,
  * что человек правил руками, — переносится байт в байт: пересчёт форм не имеет
- * права стать поводом переписать карточку целиком.
+ * права стать поводом переписать карточку целиком. Поэтому основа записи —
+ * `сырое`, а не приведённая `data`.
  */
 export async function writeAliasesAuto(entry, forms) {
-	const next = { ...entry.data };
+	const next = { ...(entry.сырое ?? entry.data) };
 	if (forms.length > 0) next.aliasesAuto = forms;
 	else delete next.aliasesAuto;
 

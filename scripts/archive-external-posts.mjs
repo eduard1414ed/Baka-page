@@ -27,6 +27,7 @@ import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readPostsRaw, parseBody } from './archive-clean-lib.mjs';
 import { бедыШапки } from './frontmatter-guard.mjs';
+import { сроком } from './retry.mjs';
 
 const UA =
 	'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
@@ -120,17 +121,14 @@ export function stripUrl(body, url) {
 /** Кадр статьи со страницы Т—Ж. */
 async function fetchOgImage(url) {
 	try {
-		const r = await fetch(url, { headers: { 'User-Agent': UA }, redirect: 'follow', signal: AbortSignal.timeout(25000) });
+		const r = await fetch(url, сроком({ headers: { 'User-Agent': UA }, redirect: 'follow' }));
 		if (!r.ok) return null;
 		const html = await r.text();
 		const m =
 			html.match(/<meta[^>]+property=["']og:image["'][^>]*content=["']([^"']+)/i) ??
 			html.match(/<meta[^>]+content=["']([^"']+)["'][^>]*property=["']og:image["']/i);
 		if (!m) return null;
-		const img = await fetch(m[1].replace(/^http:/, 'https:'), {
-			headers: { 'User-Agent': UA },
-			signal: AbortSignal.timeout(25000),
-		});
+		const img = await fetch(m[1].replace(/^http:/, 'https:'), сроком({ headers: { 'User-Agent': UA } }));
 		if (!img.ok) return null;
 		const raw = Buffer.from(await img.arrayBuffer());
 		// Заглушка весит копейки; настоящая обложка — десятки килобайт.
