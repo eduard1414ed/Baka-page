@@ -21,7 +21,7 @@ export const shortStudio = (name) => name.replace(/^studio\s+/i, '');
  *
  * ДАННЫЕ СОБРАНЫ ОДИН РАЗ (studios.json) и в сеть больше не ходят: студия
  * у тайтла не меняется, а лишний поход к чужому сервису — лишний способ
- * упасть. Появится новый пост — соберите заново скриптом studios.mjs.
+ * упасть. Появится новый пост — соберите заново скриптом collect-studios.mjs.
  */
 export function studiosFor(title) {
 	const row = byName.get(title);
