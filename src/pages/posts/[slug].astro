@@ -38,7 +38,7 @@ import { hasUsableTimecodes } from '../../lib/transcript.mjs';
 import { applyPostOverrides } from '../../lib/transcriptOverrides.mjs';
 import { buildAnimeMatcher } from '../../lib/animeMentions.mjs';
 import { makeExceptionFilter } from '../../lib/mentionExceptions.mjs';
-import { animeHiddenInPost, animeMentionedIn, animeMentionedInPostText } from '../../lib/animeMentionIndex.mjs';
+import { animeHiddenInPost, animeMentionCountsInPostText, animeMentionedIn, sortAnimeByMentions } from '../../lib/animeMentionIndex.mjs';
 import { resolveEpisodeCover } from '../../lib/episodeCover.mjs';
 import { isPublished } from '../../lib/publishing.mjs';
 import { getPostTiming } from '../../lib/postTiming.mjs';
@@ -248,8 +248,10 @@ const timing = await getPostTiming(post);
 //      раз название в тексте стало ссылкой, марка под текстом обязана быть;
 //   3. расшифровка выпуска — то, что прозвучало вслух (тз/05, шаг 5).
 //
-// Порядок именно такой, повторы убираем. Спрашиваем про текст поста НЕ СВОИМ
-// кодом, а `animeMentionedInPostText` — тем же, которым это спрашивает указатель
+// Собираются они в этом порядке, повторы убираем, а сверху потом идёт
+// сортировка по количеству — она же и оставляет этот порядок там, где считать
+// нечего. Спрашиваем про текст поста НЕ СВОИМ кодом, а
+// `animeMentionCountsInPostText` — тем же, которым это спрашивает указатель
 // для страницы тайтла: две копии ответили бы по-разному, и несогласица вернулась
 // бы с другой стороны.
 //
@@ -266,7 +268,9 @@ const mentionTimes = showTranscript
 	? animeMentionedIn(transcriptData, buildAnimeMatcher(animeList, { quotes: 'ignore', speech: true }), exceptions)
 	: new Map();
 
-const inTextIds = animeMentionedInPostText(post, buildAnimeMatcher(animeList, { quotes: 'apply', speech: false }), exceptions);
+// Счёт, а не список: он нужен порядку марок ниже. Список из него получается
+// ключами, поэтому разбор текста тут по-прежнему ОДИН.
+const inTextCounts = animeMentionCountsInPostText(post, buildAnimeMatcher(animeList, { quotes: 'apply', speech: false }), exceptions);
 
 // Отменённый тайтл убирается и из отметок руками: поле «Тайтлы поста»
 // заполняется САМО при сохранении, поэтому «отметил и тут же отменил» —
@@ -274,9 +278,19 @@ const inTextIds = animeMentionedInPostText(post, buildAnimeMatcher(animeList, { 
 // и это одна и та же функция `animeHiddenInPost`, а не две проверки.
 const hiddenHere = animeHiddenInPost(post);
 
-const animeIds = [
-	...new Set([...(anime ?? []).map((ref: { id: string }) => ref.id), ...inTextIds, ...mentionTimes.keys()]),
-].filter((id) => !hiddenHere.has(id));
+// ПОРЯДОК МАРОК — ПО КОЛИЧЕСТВУ УПОМИНАНИЙ В ЭТОМ САМОМ МАТЕРИАЛЕ, СВЕРХУ
+// САМЫЕ ЧАСТЫЕ (решение заказчика 15 августа 2026). Правило целиком
+// в `sortAnimeByMentions`, второй копии нет — здесь только сбор трёх источников.
+// Ничья оставляет прежний порядок, а он и есть порядок этого списка: сначала
+// поле «Аниме» так, как его расставил человек, потом найденное в тексте,
+// потом прозвучавшее в разговоре.
+const animeIds = sortAnimeByMentions(
+	[...new Set([...(anime ?? []).map((ref: { id: string }) => ref.id), ...inTextCounts.keys(), ...mentionTimes.keys()])].filter(
+		(id) => !hiddenHere.has(id),
+	),
+	inTextCounts,
+	mentionTimes,
+);
 const animeEntries = (await Promise.all(animeIds.map((id) => getEntry('anime', id)))).filter(Boolean);
 
 // Слова упомянутых тайтлов для поиска — невидимой строкой в конце статьи,
