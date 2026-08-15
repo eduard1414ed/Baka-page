@@ -16,6 +16,7 @@
 		"Апокалипсис: Отеле"
 	],
 	"strictQuotes": true,
+	"noSpeech": true,
 	"aliasesAuto": [
 		"Апокалипсиса",
 		"Апокалипсису",
