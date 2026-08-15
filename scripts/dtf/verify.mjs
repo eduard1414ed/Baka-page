@@ -251,7 +251,7 @@ async function checkInterview(raw, { edited } = {}) {
 	// «знак в знак» — утверждение о ПЕРЕНОСЕ, и оно верно ровно до первой его
 	// правки. 13 августа он подписал десять кадров и добавил одиннадцатый:
 	// проверка покраснела на его работе, хотя сломано не было ничего.
-	if (edited) return [...checkEdited(raw), ...checkCoverFirst(raw), ...problemsOfImages(raw)];
+	if (edited) return [...checkEdited(raw, { ждётсяTgId: true }), ...checkCoverFirst(raw), ...problemsOfImages(raw)];  // анонс из телеграма был: номер обязан уцелеть
 
 	const want = norm(article.blocks
 		.filter((b) => b.type === 'text' || b.type === 'header')
@@ -323,7 +323,7 @@ async function checkInterview(raw, { edited } = {}) {
 async function checkJjk(raw, { edited } = {}) {
 	const problems = [];
 	const article = await fetchArticle(1383597);
-	if (edited) return [...checkEdited(raw), ...checkCoverFirst(raw), ...problemsOfImages(raw)];
+	if (edited) return [...checkEdited(raw, { ждётсяTgId: true }), ...checkCoverFirst(raw), ...problemsOfImages(raw)];  // анонс из телеграма был: номер обязан уцелеть
 
 	const want = norm(article.blocks
 		.filter((b) => b.type === 'text' || b.type === 'header' || b.type === 'incut')
@@ -381,7 +381,7 @@ async function checkJjk(raw, { edited } = {}) {
 async function checkOpeningi(raw, { edited } = {}) {
 	const problems = [];
 	const article = await fetchArticle(1589685);
-	if (edited) return [...checkEdited(raw), ...checkCoverFirst(raw), ...problemsOfImages(raw)];
+	if (edited) return [...checkEdited(raw, { ждётсяTgId: true }), ...checkCoverFirst(raw), ...problemsOfImages(raw)];  // анонс из телеграма был: номер обязан уцелеть
 
 	const want = norm(article.blocks
 		.filter((b) => b.type === 'text' || b.type === 'header')
@@ -438,7 +438,7 @@ async function checkOpeningi(raw, { edited } = {}) {
 async function checkOshiNoKo(raw, { edited } = {}) {
 	const problems = [];
 	const article = await fetchArticle(1853775);
-	if (edited) return [...checkEdited(raw), ...checkCoverFirst(raw), ...problemsOfImages(raw)];
+	if (edited) return [...checkEdited(raw, { ждётсяTgId: false }), ...checkCoverFirst(raw), ...problemsOfImages(raw)];  // анонса под этим адресом не было вовсе — см. build-oshi-no-ko.mjs
 
 	const want = norm(article.blocks
 		.filter((b) => b.type === 'text' || b.type === 'header' || b.type === 'incut')
@@ -506,12 +506,36 @@ async function checkOshiNoKo(raw, { edited } = {}) {
  *
  * Здесь перечислено то, что от правок не зависит вовсе: файлы на месте,
  * переадресаций нет, привязка к телеграму цела, разметка блоков не разъехалась.
+ *
+ * ЖДЁМ ЛИ МЫ ЗДЕСЬ ПРИВЯЗКУ К ТЕЛЕГРАМУ, ГОВОРИТ ВЫЗЫВАЮЩИЙ, И МОЛЧАНИЕ
+ * ЗАПРЕЩЕНО. Правило писалось по трём постам, у которых под тем же адресом
+ * лежал привезённый из телеграма АНОНС той же статьи: у них `tgId` обязан
+ * уцелеть, иначе импорт заведёт анонс заново. Четвёртый перенос — «Оси но ко» —
+ * анонса не имел вовсе, и это сказано прямо в его сборщике: «ЗДЕСЬ АНОНСА
+ * ПОД АДРЕСОМ НЕТ — впервые за четыре последних переноса». А проверка требовала
+ * номер у ВСЕХ и потому месяцами ругалась на здоровый пост — красная сверка,
+ * которую нечем сделать зелёной, живёт до первой уборки (доревизия задачи 15,
+ * находка 20).
+ *
+ * Значения по умолчанию у ответа нет: забудь вызывающий сказать — функция
+ * падает. Умолчание тут было бы тихой отменой правила у тех троих, ради
+ * которых оно и заведено.
+ *
+ * @param {string} raw содержимое файла поста
+ * @param {{ ждётсяTgId: boolean }} условия
  */
-function checkEdited(raw) {
+function checkEdited(raw, условия) {
+	if (typeof условия?.ждётсяTgId !== 'boolean') {
+		throw new Error(
+			'checkEdited: скажите ждётсяTgId — у поста, собранного поверх анонса из телеграма, ' +
+				'номер обязан уцелеть, а у поста без анонса его нет и не было.',
+		);
+	}
 	const problems = [];
 	if (/api\.dtf\.ru/.test(raw)) problems.push('осталась переадресация api.dtf.ru');
 	if (/google\.[a-z.]+\/url\?/.test(raw)) problems.push('осталась переадресация google.com/url');
-	if (!/^tgId: \d+$/m.test(raw)) problems.push('пропал tgId — импорт заведёт анонс из телеграма заново');
+	if (условия.ждётсяTgId && !/^tgId: \d+$/m.test(raw))
+		problems.push('пропал tgId — импорт заведёт анонс из телеграма заново');
 	// Пустая подпись — след правки, оборвавшейся на полпути: на странице она
 	// даёт голое «FIG. 03 —» без текста.
 	for (const match of raw.matchAll(/^::image\{[^}]*caption="(\s*)"[^}]*\}$/gm))
@@ -713,7 +737,14 @@ async function selftest() {
 		['опенинги: потерян tgId', () => checkOpeningi(ops.replace(/^tgId: 967$/m, 'tgId: null')), true],
 		['«Оси но ко»: кадру сочинили подпись про реального человека', () => checkOshiNoKo(forge(oshi, 'dtf-oshi-no-ko-02.webp" alt=""', 'dtf-oshi-no-ko-02.webp" alt="" caption="Маю Томита"')), true],
 		['«Оси но ко»: имя стоит третьим уровнем', () => checkOshiNoKo(forge(oshi, /^#### /m, '### ')), true],
-		['«Оси но ко»: пропало предупреждение о спойлерах', () => checkOshiNoKo(forge(oshi, /\*Осторожно: дальше спойлеры[^*]*\*\n\n/, '')), true],
+		// ЗНАК КУРСИВА СПРАШИВАЕМ У ТЕКСТА, А НЕ НАЗЫВАЕМ САМИ. Мы кладём в файл
+		// `*Осторожно…*`, а Sveltia при первом же сохранении переписывает это
+		// в `_Осторожно…_`. Само сравнение про это знает и снимает оба знака
+		// (см. `plainMd`), а подлог знал только звёздочку — и после первого
+		// сохранения поста заказчиком перестал что-либо заменять. Проверка
+		// падала целиком: подлог, ничего не заменивший, честно кричит об этом
+		// (доревизия задачи 15, находка 20).
+		['«Оси но ко»: пропало предупреждение о спойлерах', () => checkOshiNoKo(forge(oshi, /^[*_]Осторожно: дальше спойлеры[^*_\n]*[*_]\n\n/m, '')), true],
 		['«Оси но ко»: предупреждение уехало ниже первого раздела', () => {
 			const parts = oshi.split(/\n\n/);
 			const w = parts.findIndex((b) => /Осторожно: дальше спойлеры/.test(b));
@@ -721,7 +752,12 @@ async function selftest() {
 			parts.splice(parts.findIndex((b) => b.startsWith('#### ')) + 1, 0, line);
 			return checkOshiNoKo(parts.join('\n\n'));
 		}, true],
-		['«Оси но ко»: у раздела пропал кадр', () => checkOshiNoKo(forge(oshi, '::image{src="/images/uploads/dtf-oshi-no-ko-03.webp" alt="" width="column"}\n\n', '')), true],
+		// СТРОКУ КАДРА БЕРЁМ ИЗ ТЕКСТА, А НЕ ВЫПИСЫВАЕМ ЦЕЛИКОМ. Прежде тут стояла
+		// строка как есть — вместе с `alt=""` и без подписи. Заказчик подписал
+		// кадры (ровно то, что сборщик оставлял на его решение: имена реальных
+		// людей мы придумывать не вправе), строка перестала совпадать, и подлог
+		// начал падать. Ловим по адресу файла, остальное в строке — не наше дело.
+		['«Оси но ко»: у раздела пропал кадр', () => checkOshiNoKo(forge(oshi, /^::image\{[^}]*dtf-oshi-no-ko-03\.webp[^}]*\}\n\n/m, '')), true],
 		['«Оси но ко»: реклама канала вернулась', () => checkOshiNoKo(oshi.trimEnd() + '\n\nЕще больше интересных фактов об аниме ищите в [нашем телеграм-канале](https://t.me/podcastbaka).\n'), true],
 		// Вторая половина: на здоровых файлах все проверки обязаны МОЛЧАТЬ.
 		['здоровый обзор зимы 2022', () => checkZima2022(zima), false],
@@ -741,20 +777,34 @@ async function selftest() {
 		}, false],
 		// ЗАСЛОН ДЛЯ ПРАВЛЕНОГО ПОСТА — обе половины. Первая: он ловит то,
 		// что от правок не зависит и ломаться не должно никогда.
-		['правленый: осталась переадресация DTF', () => Promise.resolve(checkEdited(forge(talk, 'https://realsound.jp', 'https://api.dtf.ru/v2.8/redirect?to=https%3A%2F%2Frealsound.jp'))), true],
-		['правленый: потерян tgId', () => Promise.resolve(checkEdited(forge(talk, /^tgId: 1256$/m, 'tgId: null'))), true],
-		['правленый: у картинки пустая подпись', () => Promise.resolve(checkEdited(forge(talk, /caption="[^"]+"/, 'caption=""'))), true],
-		['правленый: в теле завёлся заголовок второго уровня', () => Promise.resolve(checkEdited(talk.replace(/^##### /m, '## '))), true],
+		['правленый: осталась переадресация DTF', () => Promise.resolve(checkEdited(forge(talk, 'https://realsound.jp', 'https://api.dtf.ru/v2.8/redirect?to=https%3A%2F%2Frealsound.jp'), { ждётсяTgId: true })), true],
+		['правленый: потерян tgId', () => Promise.resolve(checkEdited(forge(talk, /^tgId: 1256$/m, 'tgId: null'), { ждётсяTgId: true })), true],
+		['правленый: у картинки пустая подпись', () => Promise.resolve(checkEdited(forge(talk, /caption="[^"]+"/, 'caption=""'), { ждётсяTgId: true })), true],
+		['правленый: в теле завёлся заголовок второго уровня', () => Promise.resolve(checkEdited(talk.replace(/^##### /m, '## '), { ждётсяTgId: true })), true],
 		// Вторая половина: на ЖИВОМ правленом посте он обязан молчать. Без неё
 		// заслон, ругающийся на всё подряд, выглядел бы работающим.
-		['правленый: живой пост заказчика', () => Promise.resolve(checkEdited(talk)), false],
+		['правленый: живой пост заказчика', () => Promise.resolve(checkEdited(talk, { ждётсяTgId: true })), false],
 		// А сверка с DTF на этом же посте обязана и краснеть (правки — это
 		// отличия от DTF), и НЕ применяться, когда ей сказали про правки.
 		['сверка с DTF краснеет на правленом посте, если её не выключить', () => checkInterview(talk), true],
 		['она же молчит, когда знает про правки', () => checkInterview(talk, { edited: true }), false],
-		['здоровое интервью «Магическая битва»', () => checkJjk(jjk), false],
-		['здоровые «Самые важные опенинги»', () => checkOpeningi(ops), false],
-		['здоровые «Оси но ко» и трагедии', () => checkOshiNoKo(oshi), false],
+		// ДВА ЭТИХ ПОСТА ЗАКАЗЧИК УЖЕ ПРАВИЛ, И СПРАШИВАТЬ ИХ НАДО ТЕМ ЖЕ ПУТЁМ,
+		// КАКИМ ИХ СПРАШИВАЕТ НАСТОЯЩИЙ ПРОГОН. Прежде подлоги звали сверку
+		// с DTF напрямую, в обход развилки «правил ли человек», — и требовали
+		// от неё молчания. Пока постов никто не трогал, это сходилось; потом
+		// задача 19 собрала ссылки «Магической битвы» во врезку `::link`,
+		// а к «Оси но ко» заказчик дописал подписи под кадрами (ровно то, что
+		// сборщик оставлял на его решение: имена реальных людей мы придумывать
+		// не вправе). Оба поста стали законно отличаться от первоисточника,
+		// и подлоги начали кричать на здоровое — то есть проверка ругалась
+		// на работу заказчика (доревизия задачи 15, находка 20).
+		//
+		// Что сверка с DTF на правленом посте КРАСНЕЕТ — утверждается отдельно,
+		// строкой «сверка с DTF краснеет на правленом посте» выше. Здесь
+		// проверяется другое: тот путь, которым пост спрашивают на самом деле.
+		['здоровое интервью «Магическая битва» (его правил заказчик)', () => checkJjk(jjk, { edited: true }), false],
+		['здоровые «Самые важные опенинги» (их не трогали — сверка с DTF полная)', () => checkOpeningi(ops), false],
+		['здоровые «Оси но ко» и трагедии (их правил заказчик)', () => checkOshiNoKo(oshi, { edited: true }), false],
 	];
 
 	let ok = true;

@@ -96,12 +96,82 @@ export function brokenLinks(posts) {
 	return broken;
 }
 
+/**
+ * РАЗМЕТКА ССЫЛКИ, КОТОРАЯ НЕ СОБРАЛАСЬ. Читателю это видно как мусор в тексте:
+ * лишние скобки, адрес словами, ссылка в никуда.
+ *
+ * ЗАЧЕМ ОТДЕЛЬНО ОТ `brokenLinks`. Та спрашивает «есть ли страница у цели»,
+ * то есть про ЖИВОСТЬ адреса. Здесь вопрос про САМУ ЗАПИСЬ: адрес может быть
+ * прекрасным, а разметка вокруг него разорванной, и тогда ссылки просто нет.
+ * Раздел отчёта про это был обещан в разовом скрипте задачи 19 и не работал
+ * никогда: список, который он печатает, не заполнялся ни разу (доревизия
+ * задачи 15, находка 30). Пока он молчал, на двух опубликованных страницах
+ * жили: незакрытая круглая скобка в ep-106 (читатель видел «[», адрес,
+ * «](» и одинокую «)» абзацем ниже) и врезка ep-97, у которой в адрес
+ * затесался кусок markdown — то есть ссылка вела в никуда.
+ *
+ * ПРАВИЛА ДВА, И ОБА ВЫВЕДЕНЫ ИЗ ЭТИХ ДВУХ СЛУЧАЕВ, а не придуманы про запас:
+ *
+ *   1. В строке есть `](`, но ни одной ПОЛНОЙ пары `[…](…)` — значит скобка
+ *      не закрылась и ссылка рассыпалась.
+ *   2. В адресе внутри нашего блока (`url="…"`, `source-url="…"`) стоит `](`
+ *      или пробел — туда затекла разметка.
+ *
+ * ЧЕРНОВИКИ НЕ СПРАШИВАЮТСЯ — по той же причине, что и у соседки: страницы
+ * у них нет, читателю не видно, а ругани вышло бы на полторы тысячи строк.
+ *
+ * @param {Map<string, {draft: boolean, external: boolean, title: string, body: string}>} posts
+ */
+export function сломаннаяРазметкаСсылок(posts) {
+	const ПОЛНАЯ_ССЫЛКА = /\[[^\]]*\]\([^)\s]+\)/;
+	const АДРЕС_В_БЛОКЕ = /\b(?:source-)?url="([^"]*)"/g;
+	const out = [];
+
+	for (const [slug, post] of posts) {
+		if (post.draft) continue;
+
+		post.body.split('\n').forEach((line, index) => {
+			// НАШ БЛОК — НЕ MARKDOWN-ССЫЛКА, и правило про скобку к нему не относится:
+			// `](` внутри `url="…"` это затёкшая разметка, у неё своя причина ниже.
+			// Без этой оговорки одна беда называлась бы двумя причинами сразу,
+			// и в отчёте её пришлось бы читать дважды.
+			const нашБлок = /^::[a-z-]+\{/.test(line.trim());
+			if (!нашБлок && line.includes('](') && !ПОЛНАЯ_ССЫЛКА.test(line)) {
+				out.push({ slug, title: post.title, line: index + 1, why: 'круглая скобка не закрылась — ссылка рассыпалась', text: line.trim().slice(0, 100) });
+			}
+			for (const match of line.matchAll(АДРЕС_В_БЛОКЕ)) {
+				const url = match[1];
+				if (url.includes('](') || /\s/.test(url)) {
+					out.push({ slug, title: post.title, line: index + 1, why: 'в адрес затекла разметка — ссылка ведёт в никуда', text: url.slice(0, 100) });
+				}
+			}
+		});
+	}
+
+	return out;
+}
+
 export default function postLinksIntegration() {
 	return {
 		name: 'baka-post-links',
 		hooks: {
 			'astro:build:done': async ({ logger }) => {
-				const broken = brokenLinks(await readPosts(new URL('../../', import.meta.url)));
+				const posts = await readPosts(new URL('../../', import.meta.url));
+
+				const рассыпалось = сломаннаяРазметкаСсылок(posts);
+				if (рассыпалось.length) {
+					logger.warn(
+						`разметка ссылки не собралась: ${рассыпалось.length} ` +
+							`в ${new Set(рассыпалось.map((x) => x.slug)).size} опубликованных постах. ` +
+							'Читатель видит это мусором в тексте.',
+					);
+					for (const item of рассыпалось) {
+						logger.warn(`  ${item.slug}:${item.line} — ${item.why}`);
+						logger.warn(`      ${item.text}`);
+					}
+				}
+
+				const broken = brokenLinks(posts);
 				if (!broken.length) return;
 
 				const bySource = new Map();

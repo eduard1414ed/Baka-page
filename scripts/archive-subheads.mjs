@@ -220,18 +220,40 @@ export function planSubheads(body, front = {}, options = {}) {
 
 const BONUS = { category: 'bonus', bonusLinks: { boosty: '', patreon: '', tgClosed: '', vkDonat: '' } };
 
+// Образцы на случай, когда в архиве примеров не осталось: правка применена,
+// и живому примеру взяться неоткуда. Живой пример по-прежнему главный —
+// эти два берутся, только когда его нет.
+const ОБРАЗЕЦ_ЗАГОЛОВКА = '### **Что это вообще такое?**';
+
 async function selftest() {
 	const posts = await readPostsRaw();
 
 	let realHeading = null;
 	let realBlockPost = null;
 	for (const post of posts) {
-		const line = post.body.split('\n').find((l) => /^#{2,4} \*\*.+\*\*$/u.test(l));
+		// Жирный внутри заголовка бывает записан и звёздочками, и подчёркиваниями:
+		// админка переписывает разметку при сохранении, и знак решает не она,
+		// а разбор. Ищем ОБА вида — прежде искали только звёздочки.
+		const line = post.body.split('\n').find((l) => /^#{2,4} (\*\*.+\*\*|__.+__)$/u.test(l));
 		if (line && !realHeading) realHeading = line;
 		if (!realBlockPost && planSubheads(post.body, post.front).take.some((t) => t.kind === 'блок')) realBlockPost = post;
 	}
-	if (!realHeading) throw new Error('подлоги: в архиве нет ни одного заголовка с жирным — проверять нечем');
-	if (!realBlockPost) throw new Error('подлоги: в архиве нет ни одного блока ссылок — проверять нечем');
+
+	// ПУСТО — ЭТО СЛЕД СДЕЛАННОЙ РАБОТЫ, А НЕ ПОЛОМКА. Прежде проверка тут
+	// ПАДАЛА целиком, то есть переставала быть прогоняемой ровно после того,
+	// как сделала своё дело: блоков ссылок в архиве не осталось ни одного,
+	// потому что она их и убрала (доревизия задачи 15, находка 21).
+	const заголовокЖивой = realHeading !== null;
+	if (!заголовокЖивой) {
+		realHeading = ОБРАЗЕЦ_ЗАГОЛОВКА;
+		console.log('  ПРИМЕЧАНИЕ: заголовков с жирным в архиве не осталось — правка применена.');
+		console.log('              Беру записанный образец.');
+	}
+	if (!realBlockPost) {
+		console.log('  ПРИМЕЧАНИЕ: блоков ссылок в архиве не осталось — правка применена.');
+		console.log('              Случай «настоящий пост архива» пропускаю: подделать его');
+		console.log('              значило бы проверять свою выдумку, а не живые данные.');
+	}
 
 	// Настоящие адреса плашки: берём у той же функции, что и правило.
 	const shown = bonusSupportLinks({}).map((item) => item.url);
@@ -239,17 +261,12 @@ async function selftest() {
 
 	const cases = [
 		{
-			name: 'настоящий заголовок архива теряет жирный',
+			name: заголовокЖивой ? 'настоящий заголовок архива теряет жирный' : 'записанный образец заголовка теряет жирный',
 			body: `\n${realHeading}\n\nТекст.\n`,
 			front: {},
-			must: (r) => r.changed && !/\*\*/u.test(r.body) && /^\n#{2,4} [^*]/u.test(r.body),
+			must: (r) => r.changed && !/\*\*|__/u.test(r.body) && /^\n#{2,4} [^*_]/u.test(r.body),
 		},
-		{
-			name: 'НАСТОЯЩИЙ пост архива: блок ссылок уходит целиком',
-			body: realBlockPost.body,
-			front: realBlockPost.front,
-			must: (r) => r.take.some((t) => t.kind === 'блок') && !/boosty\.to/u.test(r.body) && r.body.endsWith('\n'),
-		},
+		// Случай на настоящем посте добавляется НИЖЕ и только если такой пост есть.
 		{
 			name: 'жирный абзац становится ### ',
 			body: '\nТекст.\n\n**Что это?**\n\nЕщё текст.\n',
@@ -354,6 +371,17 @@ async function selftest() {
 			must: (r) => !planSubheads(r.body, BONUS).changed,
 		},
 	];
+
+	// НАСТОЯЩИЙ ПОСТ АРХИВА — ТОЛЬКО ЕСЛИ ОН ЕСТЬ. Сочинить его вместо живого
+	// нельзя: сочинённый проверял бы нашу выдумку, а не данные заказчика.
+	if (realBlockPost) {
+		cases.push({
+			name: `НАСТОЯЩИЙ пост архива (${realBlockPost.id}): блок ссылок уходит целиком`,
+			body: realBlockPost.body,
+			front: realBlockPost.front,
+			must: (r) => r.take.some((t) => t.kind === 'блок') && !/boosty\.to/u.test(r.body) && r.body.endsWith('\n'),
+		});
+	}
 
 	let bad = 0;
 	for (const test of cases) {

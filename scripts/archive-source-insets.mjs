@@ -35,6 +35,9 @@ import { effectiveCategory } from './archive-rules-measure.mjs';
 // и случилось: у бонусов обвес записан эмодзи («💛 → ВК», «💚 → Бусти»),
 // формы 2а не имеет, и 2б собралась его сверстать.
 import { ownNameOf } from './archive-own-links.mjs';
+// Вопрос «разметка ссылки собралась?» задаётся ТЕМ ЖЕ правилом, что и в сборке:
+// своя копия отвечала бы про правило, которого на сайте нет.
+import { сломаннаяРазметкаСсылок } from '../src/plugins/post-links-integration.mjs';
 
 const CATEGORY_LABEL = { podcast: 'Выпуск', note: 'Заметка', article: 'Статья', videoessay: 'Видеоэссе', bonus: 'Бонус' };
 
@@ -321,6 +324,12 @@ async function main() {
 		if (!SCOPE.has(cat)) continue;
 		if (only && post.id !== only) continue;
 
+		for (const беда of сломаннаяРазметкаСсылок(
+			new Map([[post.id, { draft: false, external: false, title: post.front?.title ?? '', body: post.body }]]),
+		)) {
+			broken.push({ id: post.id, why: беда.why, line: беда.text });
+		}
+
 		const { lines, read, groups } = analyse(post.body);
 		read.forEach((r, i) => {
 			shapes[r.kind] = (shapes[r.kind] ?? 0) + 1;
@@ -365,11 +374,22 @@ async function main() {
 		console.log();
 	}
 
+	// БИТАЯ РАЗМЕТКА ССЫЛКИ. Раздел был обещан с первого дня, а список,
+	// который он печатает, не заполнялся НИ РАЗУ: напечататься он не мог
+	// никогда и читался как «битых ссылок нет» (доревизия задачи 15,
+	// находка 30). Теперь вопрос задаётся по-настоящему — и не своим
+	// правилом, а тем же, которое задаёт сборка на каждом прогоне
+	// (`сломаннаяРазметкаСсылок` в src/plugins/post-links-integration.mjs).
+	// Вторая копия правила разъехалась бы с первой: разовый скрипт смотрит
+	// черновики, сборка — опубликованное, и отвечать они обязаны одинаково.
 	if (broken.length) {
 		console.log('─'.repeat(94));
 		console.log(`БИТАЯ РАЗМЕТКА ССЫЛКИ — ${broken.length}. НЕ ТРОГАЮ, чинить руками.`);
 		console.log('─'.repeat(94));
-		for (const b of broken) console.log(`  ${b.id}: ${b.line.slice(0, 88)}`);
+		for (const b of broken) console.log(`  ${b.id}: ${b.why}\n      ${b.line.slice(0, 88)}`);
+		console.log();
+	} else {
+		console.log('Битой разметки ссылок не нашлось — спрошено тем же правилом, что и в сборке.');
 		console.log();
 	}
 
