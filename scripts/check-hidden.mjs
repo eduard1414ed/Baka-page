@@ -52,6 +52,26 @@ function specificity(selector) {
 const heavier = (a, b) => a[0] !== b[0] ? a[0] > b[0] : a[1] !== b[1] ? a[1] > b[1] : a[2] > b[2];
 
 /**
+ * СЧЁТЧИК ОХВАТА. «Пусто — нарушений нет» выглядит одинаково и когда нарушений
+ * правда нет, и когда проверка не увидела НИ ОДНОГО правила. За проект такое
+ * случалось шесть раз, и всегда в эту сторону (ревизия задачи 15, находка 6).
+ * Имена файлов стилей в проекте уже меняли — поменяются ещё раз, и без этих
+ * чисел мы узнаем об этом никогда.
+ */
+const охват = { страниц: 0, файловСтилей: 0, стилейВСтранице: 0, правил: 0, элементов: 0 };
+const прочитанныеФайлы = new Set();
+
+/**
+ * Файлы стилей, которые не прочитались.
+ *
+ * ГРОМКО, А НЕ `catch {}`. Прежде непрочитанный файл пропускался молча,
+ * и проверка спокойно отвечала «всё хорошо», не увидев половины правил.
+ * Пропуск законен ровно в двух случаях, и оба отсеиваются ДО чтения:
+ * библиотека поиска (её стилями сайт не пользуется) и внешний адрес.
+ */
+const непрочитанные = new Map();
+
+/**
  * Все правила собранного CSS: [селектор, объявления]. Медиазапросы разворачиваем.
  *
  * ЧИТАЕМ И ФАЙЛЫ, И СТИЛИ ВНУТРИ СТРАНИЦ. Astro часть правил кладёт файлом
@@ -67,13 +87,17 @@ function cssRules(html) {
 	for (const m of html.matchAll(/<link[^>]+rel="stylesheet"[^>]*>|<style[^>]*>([\s\S]*?)<\/style>/g)) {
 		if (m[1] !== undefined) {
 			sources.push(m[1]);
+			охват.стилейВСтранице++;
 			continue;
 		}
 		const href = m[0].match(/href="([^"]+)"/)?.[1];
 		if (!href || href.includes('pagefind') || /^https?:/.test(href)) continue;
 		try {
 			sources.push(readFileSync(join(DIST, href.replace(/^\//, '')), 'utf8'));
-		} catch { /* нет такого файла — пропускаем */ }
+			прочитанныеФайлы.add(href);
+		} catch (ошибка) {
+			непрочитанные.set(href, String(ошибка.message).split('\n')[0]);
+		}
 	}
 	let order = 0;
 	for (const source of sources) {
@@ -82,6 +106,7 @@ function cssRules(html) {
 			const selectors = match[1].trim();
 			if (selectors.startsWith('@')) continue;
 			for (const selector of selectors.split(',')) rules.push([selector.trim(), match[2], order]);
+			охват.правил++;
 			order++;
 		}
 	}
@@ -95,6 +120,7 @@ const sameWeight = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
 const problems = [];
 
 for (const page of walk(DIST).filter((f) => f.endsWith('.html') && !f.includes('pagefind'))) {
+	охват.страниц++;
 	const html = readFileSync(page, 'utf8');
 	const rules = cssRules(html).filter(([, decls]) => /(?:^|;)\s*display\s*:/.test(decls));
 
@@ -107,6 +133,7 @@ for (const page of walk(DIST).filter((f) => f.endsWith('.html') && !f.includes('
 	for (const tag of html.matchAll(/<(\w+)((?:\s+[^\s=>]+(?:=(?:"[^"]*"|'[^']*'|[^\s>]+))?)*)\s*\/?>/g)) {
 		const attrs = tag[2];
 		if (!/(?:^|\s)hidden(?:=|\s|$)/.test(attrs)) continue;
+		охват.элементов++;
 
 		const classAttr = attrs.match(/\sclass="([^"]*)"/)?.[1] ?? '';
 		const classes = classAttr.split(/\s+/).filter(Boolean);
@@ -138,6 +165,36 @@ for (const page of walk(DIST).filter((f) => f.endsWith('.html') && !f.includes('
 	}
 }
 
+охват.файловСтилей = прочитанныеФайлы.size;
+
+// ── ЧТО ИМЕННО РАЗОБРАНО ───────────────────────────────────────────────────
+// Число, которое вдруг стало нулём, видно сразу. Без этой строчки «нарушений
+// нет» у сломанной проверки и у здоровой выглядит одинаково.
+console.log(
+	`Разобрано: страниц ${охват.страниц}, файлов стилей ${охват.файловСтилей}, ` +
+		`стилей внутри страниц ${охват.стилейВСтранице}, правил с display ${охват.правил}, ` +
+		`элементов с hidden ${охват.элементов}.`,
+);
+
+let ослепла = false;
+
+// НЕПРОЧИТАННЫЙ ФАЙЛ — ГРОМКАЯ ОШИБКА. Молча пропустив его, проверка отвечает
+// «всё хорошо», не увидев половины правил страницы.
+if (непрочитанные.size > 0) {
+	console.log(`НЕ ПРОЧИТАЛОСЬ ФАЙЛОВ СТИЛЕЙ: ${непрочитанные.size}. Проверка видела не всё:`);
+	for (const [href, почему] of непрочитанные) console.log(`  ${href} — ${почему}`);
+	ослепла = true;
+}
+
+// ПОЛ ОХВАТА. Ноль страниц или ноль правил — это не «чисто», это «не смотрели».
+// Порог именно ноль: он не требует подбора и не устаревает от роста архива.
+for (const [что, сколько] of [['страниц', охват.страниц], ['правил с display', охват.правил], ['элементов с hidden', охват.элементов]]) {
+	if (сколько === 0) {
+		console.log(`ПРОВЕРКА ОСЛЕПЛА: ${что} разобрано 0 — это не «чисто», это «не смотрели».`);
+		ослепла = true;
+	}
+}
+
 const unique = [...new Set(problems)];
 if (unique.length === 0) {
 	console.log('Скрытое действительно скрыто: правил, перебивающих hidden, нет.');
@@ -146,3 +203,5 @@ if (unique.length === 0) {
 	for (const line of unique) console.log('  ' + line);
 	process.exitCode = 1;
 }
+
+if (ослепла) process.exitCode = 1;
