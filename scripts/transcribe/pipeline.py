@@ -178,7 +178,89 @@ def load_state():
 
 
 def save_state(state):
-	STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2))
+	"""Записать журнал ЦЕЛИКОМ ИЛИ НИКАК.
+
+	Журнал — единственное, что стоит между нами и повторной оплатой, а пишется
+	он поверх себя после каждого выпуска, то есть сотню раз за прогон. Прямая
+	запись сначала обрезает файл, а потом наполняет: оборви прогон ровно
+	в этот миг (выключили машину, кончилось место) — и на диске останется
+	огрызок, который не прочитается. Дальше `load_state` падает, а починить
+	его нечем: что было записано, знал только он сам.
+
+	Пишем во временный файл рядом и переставляем имя. Переименование внутри
+	одной папки атомарно: либо старый журнал, либо новый, середины не бывает.
+	"""
+	tmp = STATE_FILE.with_suffix(".json.tmp")
+	tmp.write_text(json.dumps(state, ensure_ascii=False, indent=2))
+	tmp.replace(STATE_FILE)
+
+
+# ─────────────────── ЗА ЧТО УЖЕ ЗАПЛАЧЕНО ───────────────────
+#
+# ВОПРОС ЗДЕСЬ ОДИН, А ОТВЕЧАТЬ НА НЕГО НАДО ИЗ ТРЁХ МЕСТ СРАЗУ, и это
+# не перестраховка, а разбор случившегося (доревизия задачи 15, находка 19).
+#
+# Раньше ответ был один: файл `state.json`. Он лежит рядом со скриптом,
+# закрыт `.gitignore` и потому существует ровно на той машине, где шла работа.
+# На машине заказчика в нём ОДНА запись, а готовых расшифровок в репозитории
+# СТО СОРОК ДВЕ. Запусти пайплайн отсюда — он честно сказал бы «уже сделано: 1»
+# и пошёл платить заново за сто сорок один выпуск. Ошибки не случилось только
+# потому, что отсюда его не запускали.
+#
+# Второй источник — папка `output/` рядом со скриптом. Она закрывает щель
+# внутри самого прогона: транскрипт ложится на диск ПЕРВЫМ действием после
+# оплаты, а журнал переписывается двумя действиями позже. Умри прогон между
+# ними — файл есть, в журнале его нет, и следующий заход платил бы второй раз
+# за то, что лежит у него под носом.
+#
+# Третий — расшифровки в репозитории (`src/content/transcripts/<guid>.json`).
+# Это единственная копия, которая переживает потерю сервера: она в git,
+# её имя И ЕСТЬ тот самый guid, по которому мы спрашиваем. На сервере этой
+# папки нет вовсе (туда копируют только `scripts/transcribe/`), и это законно.
+#
+# «ИСТОЧНИК НЕДОСТУПЕН» И «НЕ ОПЛАЧЕНО» — РАЗНЫЕ ОТВЕТЫ. Молча приравнять
+# первое ко второму значит заплатить дважды, поэтому недоступный источник
+# говорит о себе вслух и попадает в отчёт.
+REPO_TRANSCRIPTS = WORK_DIR.parent.parent / "src" / "content" / "transcripts"
+
+
+def paid_ledger(state=None):
+	"""Что известно про уже оплаченное — со всех трёх сторон.
+
+	@returns dict: guids (set), sources (list of str) — по строке на источник.
+	"""
+	state = load_state() if state is None else state
+	guids = set()
+	sources = []
+
+	from_state = {g for g, v in state.items() if v.get("status") == "done"}
+	guids |= from_state
+	sources.append(f"журнал state.json — {len(from_state)}")
+
+	if OUTPUT_DIR.exists():
+		from_output = {f.stem for f in OUTPUT_DIR.glob("*.json") if "." not in f.stem}
+		guids |= from_output
+		sources.append(f"папка output/ — {len(from_output)}")
+	else:
+		sources.append("папка output/ — НЕТ ЕЁ (это не «не оплачено», это «не знаю»)")
+
+	if REPO_TRANSCRIPTS.exists():
+		from_repo = {f.stem for f in REPO_TRANSCRIPTS.glob("*.json")}
+		guids |= from_repo
+		sources.append(f"расшифровки репозитория — {len(from_repo)}")
+	else:
+		sources.append(
+			f"расшифровки репозитория — НЕТ ПАПКИ {REPO_TRANSCRIPTS} "
+			"(на сервере так и должно быть: туда копируют только scripts/transcribe/)"
+		)
+
+	return {"guids": guids, "sources": sources}
+
+
+def print_ledger(ledger):
+	print(f"Уже оплачено (по всем источникам): {len(ledger['guids'])} выпусков.")
+	for line in ledger["sources"]:
+		print(f"   {line}")
 
 
 def download_audio(url, dest, attempts=3):
@@ -759,12 +841,14 @@ def run_archive(
 ):
 	"""Прогнать пачку выпусков подряд, продолжая с места обрыва."""
 	selected = select_part(episodes, part, of)
-	pending = [e for e in selected if state.get(e["guid"], {}).get("status") != "done"]
+	ledger = paid_ledger(state)
+	pending = [e for e in selected if e["guid"] not in ledger["guids"]]
 	done_already = len(selected) - len(pending)
 
 	where = f"часть {part} из {of}" if of else "весь архив"
 	print(f"Сервис: {provider.label}")
 	print(f"Задание: {where}")
+	print_ledger(ledger)
 	print(f"Выпусков в задании: {len(selected)}, уже сделано: {done_already}")
 
 	if not pending:
@@ -1028,13 +1112,18 @@ def estimate_archive(episodes, provider, state, of=None, used_credits=None):
 	all_sec = sum(e["duration_sec"] for e in episodes)
 	excluded = [e for e in episodes if is_excluded(e["title"])]
 	work = work_list(episodes)
-	pending = [e for e in work if state.get(e["guid"], {}).get("status") != "done"]
+	# СМЕТА И ПРОГОН ОБЯЗАНЫ СЧИТАТЬ ОДНО И ТО ЖЕ. Спроси смета один источник,
+	# а прогон другой — заказчик увидел бы «платить за 141», а прогон сделал бы
+	# один: два ответа на один вопрос, и какой из них правда, непонятно.
+	ledger = paid_ledger(state)
+	pending = [e for e in work if e["guid"] not in ledger["guids"]]
 
 	excluded_sec = sum(e["duration_sec"] for e in excluded)
 	total_sec = sum(e["duration_sec"] for e in work)
 	pending_sec = sum(e["duration_sec"] for e in pending)
 
 	print(f"Сервис: {provider.label}")
+	print_ledger(ledger)
 	print(f"Всего выпусков в RSS: {len(episodes)}, суммарно {all_sec/3600:.1f} ч")
 	print(
 		f"Исключено (готовый сценарий): {len(excluded)}, "
@@ -1081,7 +1170,7 @@ def estimate_archive(episodes, provider, state, of=None, used_credits=None):
 		print(f"Разбивка на {of} части (запускать по одной, в любом порядке):")
 		for n, chunk in enumerate(split_into_parts(work, of), start=1):
 			chunk_sec = sum(e["duration_sec"] for e in chunk)
-			left = [e for e in chunk if state.get(e["guid"], {}).get("status") != "done"]
+			left = [e for e in chunk if e["guid"] not in ledger["guids"]]
 			left_sec = sum(e["duration_sec"] for e in left)
 			mark = "готово" if not left else f"осталось {len(left)}"
 			print(
@@ -1207,11 +1296,19 @@ def main():
 	state = load_state()
 
 	if args.list:
+		# Список отвечает на тот же вопрос, что смета и прогон, — значит и спрашивать
+		# обязан то же самое. Пока он смотрел только в журнал, на машине заказчика
+		# 141 готовый выпуск числился «не обработан».
+		ledger = paid_ledger(state)
+		print_ledger(ledger)
+		print()
 		for ep in episodes:
 			if is_excluded(ep["title"]):
 				status = "исключён"
+			elif ep["guid"] in ledger["guids"]:
+				status = state.get(ep["guid"], {}).get("status", "готов")
 			else:
-				status = state.get(ep["guid"], {}).get("status", "не обработан")
+				status = "не обработан"
 			print(f"{ep['duration_sec']//60:>4}:{ep['duration_sec']%60:02d}  [{status:12}]  {ep['title']}  ({ep['guid']})")
 		return
 
@@ -1252,12 +1349,20 @@ def main():
 
 	# Повторно за уже сделанное не платим. Но если явно просят другой сервис
 	# или другое имя файла — это осознанное сравнение, пропускать не надо.
+	#
+	# Спрашиваем ВСЕ ТРИ источника, а не один журнал: почему — в шапке
+	# `paid_ledger`. Отказ печатает, откуда именно мы узнали, — иначе
+	# «пропускаю» неотличимо от «журнал соврал».
 	already = state.get(episode["guid"], {})
+	ledger = paid_ledger(state)
 	repeat_on_purpose = args.redo or args.out_suffix or (
 		already.get("provider") and already["provider"] != provider.id
 	)
-	if already.get("status") == "done" and not args.dry_run and not repeat_on_purpose:
-		print("Этот выпуск уже обработан, пропускаю (см. state.json).")
+	if episode["guid"] in ledger["guids"] and not args.dry_run and not repeat_on_purpose:
+		print("Этот выпуск уже обработан, пропускаю. Откуда это известно:")
+		for line in ledger["sources"]:
+			print(f"   {line}")
+		print("Всё-таки распознать заново — ключ --redo.")
 		return
 
 	if not api_key and not args.dry_run:
