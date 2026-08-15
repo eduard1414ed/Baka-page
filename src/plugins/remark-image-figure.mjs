@@ -2,6 +2,7 @@ import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { visit } from 'unist-util-visit';
 import { getImageVariantSrcs } from '../lib/imageVariants.mjs';
+import { unescapeAttr } from '../lib/directiveAttr.mjs';
 
 // ПРОПОРЦИЮ ПЛИТКИ ЗАДАЮТ САМИ КАДРЫ, А НЕ ЧИСЛО ИЗ СТИЛЕЙ.
 //
@@ -58,10 +59,6 @@ function medianRatio(items) {
 	return ratios.length % 2 === 1 ? ratios[Math.floor(middle)] : (ratios[middle - 1] + ratios[middle]) / 2;
 }
 
-// Значения атрибутов приходят экранированными из админки (см. public/admin/index.html) —
-// там кавычка ломает разбор синтаксиса директивы, поэтому её заменяют на &quot;.
-// Тут — обратная замена. Обе стороны должны экранировать одинаково.
-const unescapeAttr = (value = '') => value.replaceAll('&quot;', '"');
 
 // 4 картинки и меньше — сетка, 5 и больше — карусель.
 const CAROUSEL_THRESHOLD = 4;

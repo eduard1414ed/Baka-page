@@ -27,6 +27,7 @@ import { fileURLToPath } from 'node:url';
 import { fetchArticle, stripTags, blockToParagraphs, postPath, frontmatter } from './source.mjs';
 import { fetchImages } from './fetch-images.mjs';
 import { writeGuarded } from './guard.mjs';
+import { escapeAttr } from '../../src/lib/directiveAttr.mjs';
 
 const ID = 1805563;
 const SLUG = 'doloy-bezdele-intervyu-s-rezhisserom-anime-i-avtorom-originalnoy-mangi';
@@ -54,7 +55,7 @@ export async function build({ write = true } = {}) {
 			for (const _item of block.data.items) {
 				const { src, caption } = images[img++];
 				lines.push(caption
-					? `::image{src="${src}" alt="" caption="${caption}" width="column"}`
+					? `::image{src="${src}" alt="" caption="${escapeAttr(caption)}" width="column"}`
 					: `::image{src="${src}" alt="" width="column"}`);
 			}
 			continue;

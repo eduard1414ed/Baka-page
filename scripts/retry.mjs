@@ -24,7 +24,15 @@ export function sleep(ms) {
  * сетевого сбоя — либо `cause` у ошибки (так `fetch` заворачивает всё, что
  * случилось под ним), либо знакомое слово в тексте.
  */
-const СЕТЕВОЕ = /fetch failed|timeout|timed out|ECONN|ENOTFOUND|EAI_AGAIN|socket|network|terminated|502|503|504/i;
+/**
+ * 429 ЗДЕСЬ ПОТОМУ ЖЕ, ПОЧЕМУ 502–504: это не отказ по существу, а «сейчас
+ * не могу, спроси позже». Своя копия этого правила жила в `dtf/collect-studios.mjs`
+ * с отдельной веткой на 429 и своими паузами; когда копии сводили в одно место
+ * (доревизия задачи 15, находка 27), ветку надо было либо потерять, либо
+ * поднять сюда. Потерять нельзя: AniList отвечает 429 при обычном обходе
+ * справочника. Пауза после 429 берётся длиннее — её называет вызывающий.
+ */
+const СЕТЕВОЕ = /fetch failed|timeout|timed out|ECONN|ENOTFOUND|EAI_AGAIN|socket|network|terminated|429|502|503|504/i;
 
 export const похоженаСбойСети = (error) =>
 	Boolean(error?.cause) || СЕТЕВОЕ.test(String(error?.message ?? error));

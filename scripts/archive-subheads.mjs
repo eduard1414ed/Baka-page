@@ -48,7 +48,10 @@
 // и проверяется ТОЛЬКО подлогом; в отчёте печатается распределение длин,
 // чтобы это было видно, а не подразумевалось.
 
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { readPostsRaw, writePostBody, parseBody } from './archive-clean-lib.mjs';
+import { планСнятияЖирного } from './heading-bold.mjs';
 import { bonusSupportLinks } from '../src/data/platforms.js';
 
 export const MAX_HEAD_LENGTH = 80;
@@ -115,23 +118,13 @@ export function planSubheads(body, front = {}, options = {}) {
 		const kids = Array.isArray(node.children) ? node.children : [];
 
 		kids.forEach((child, index) => {
-			if (child.type === 'heading') {
-				const only = child.children.filter((c) => !(c.type === 'text' && !c.value.trim()));
-				if (only.length === 1 && only[0].type === 'strong') {
-					const text = innerSource(body, only[0]);
-					if (text !== null) {
-						take.push({
-							kind: 'заголовок',
-							start: child.position.start.offset,
-							end: child.position.end.offset,
-							plain: text.replace(/\s+/gu, ' ').trim(),
-							level: child.depth,
-						});
-					}
-				}
-				return;
-			}
-
+			// ЗАГОЛОВКИ ЗДЕСЬ НЕ РАЗБИРАЮТСЯ ВОВСЕ — их берёт общее правило
+			// ниже, `планСнятияЖирного`. Своя копия жила тут и отвечала иначе,
+			// чем копия в `archive-headings.mjs`: та смотрела только верхний
+			// уровень дерева, эта обходила дерево целиком. Одно правило
+			// заказчика — два ответа (доревизия задачи 15, находка 36).
+			// Заодно своя копия видела только заголовок, жирный ЦЕЛИКОМ,
+			// а «### Часть **жирная**, часть нет» пропускала молча.
 			if (child.type !== 'paragraph') return;
 			if (options.onlyHeadings) return;
 			if (inside([...ancestors, node], ['listItem', 'blockquote', 'containerDirective'])) return;
@@ -192,6 +185,15 @@ export function planSubheads(body, front = {}, options = {}) {
 	};
 	walk(tree, []);
 
+	// ── дело Б: у готового заголовка снимается жирный ──
+	// Правило одно на проект и лежит отдельным файлом: его же зовёт
+	// `archive-headings.mjs` и проверка сборки. Действует ВЕЗДЕ, включая
+	// заголовок внутри цитаты, спойлера и пункта списка (решение заказчика
+	// 15 августа 2026).
+	for (const h of планСнятияЖирного(tree, body).заголовки) {
+		take.push({ kind: 'заголовок', start: h.start, end: h.end, готовое: h.стало, plain: h.стало.replace(/^#+\s*/u, ''), level: h.уровень });
+	}
+
 	if (take.length === 0) return { body, take, skip, changed: false };
 
 	const sorted = [...take].sort((a, b) => a.start - b.start);
@@ -199,7 +201,11 @@ export function planSubheads(body, front = {}, options = {}) {
 	let cursor = 0;
 	for (const item of sorted) {
 		pieces.push(body.slice(cursor, item.start));
-		if (item.kind === 'заголовок') pieces.push('#'.repeat(item.level) + ' ' + item.plain);
+		// Заголовок не пересобирается, а РЕЖЕТСЯ: общее правило вернуло готовую
+		// строку, из которой вынуты ровно разделители жирного. Пересборка
+		// «решётки плюс текст» съедала бы хвостовой пробел и склеивала бы
+		// переносы внутри заголовка — то есть правила становилось бы два.
+		if (item.kind === 'заголовок') pieces.push(item.готовое);
 		else if (item.kind === 'абзац') pieces.push('### ' + item.plain);
 		// блок — не пишем ничего, он уходит целиком
 		cursor = item.end;
@@ -492,5 +498,17 @@ async function main() {
 	console.log(`\nЗаписано постов: ${done}.`);
 }
 
-if (process.argv.includes('--selftest')) await selftest();
-else await main();
+// ЗАПУСКАЕМСЯ ТОЛЬКО ТОГДА, КОГДА НАС ПОЗВАЛИ НАПРЯМУЮ. Без этой проверки файл
+// начинает работать от простого `import` — а `planSubheads` отсюда как раз
+// и берут соседи. Скрипт пишет во ВСЕ посты архива, и ключ `--write` достался
+// бы ему от чужой командной строки: он смотрит на общую.
+//
+// Сравниваем ПУТЯМИ, а не строками: в пути к проекту русские буквы, и
+// `import.meta.url` кодирует их (`%D0%A0%D0%B0…`), а `process.argv[1]` нет
+// (CLAUDE.md, урок про русские буквы в пути).
+const calledDirectly = resolve(fileURLToPath(import.meta.url)) === resolve(process.argv[1] ?? '');
+
+if (calledDirectly) {
+	if (process.argv.includes('--selftest')) await selftest();
+	else await main();
+}

@@ -26,6 +26,7 @@
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readPostsRaw, parseBody } from './archive-clean-lib.mjs';
+import { бедыШапки } from './frontmatter-guard.mjs';
 
 const UA =
 	'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
@@ -222,6 +223,16 @@ async function main() {
 
 	let covers = 0;
 	const noCover = [];
+	// ЗАСЛОН ПЕРЕД ЗАПИСЬЮ СОБИРАЕТ ВСЮ ПОРЦИЮ В ПАМЯТИ, а пишет потом.
+	// Кривая шапка роняет сборку ВСЕГО САЙТА, а не свой файл: Astro читает
+	// коллекцию целиком и падает на первом же нечитаемом посте. Половина
+	// записанной порции тут хуже всего — сайт лежит, а виноватого искать
+	// среди сотен файлов (доревизия задачи 15, находка 31).
+	//
+	// Адрес приезжает из ТЕЛА поста и подставляется в строку как есть — то есть
+	// это чужие данные, а не наши. Скачивание обложек при этом остаётся здесь,
+	// в первом проходе: оно ничего не портит, кладёт только картинки.
+	const порция = [];
 	for (const p of plan) {
 		let cover = null;
 		if (p.needsCover) {
@@ -252,9 +263,23 @@ async function main() {
 			console.error(`!! ${p.post.id}: правка не собралась, пост не тронут`);
 			continue;
 		}
-		await writeFile(new URL(p.post.file, POSTS_DIR), head + body, 'utf8');
+		порция.push({ p, cover, текст: head + body });
 	}
-	console.log(`ЗАПИСАНО постов: ${plan.length}, обложек со статей: ${covers}`);
+
+	// Шапку читает тот же `js-yaml`, каким её будет читать сборка, и сверяется
+	// не «разобралось без ошибки», а ЧТО разобралось: YAML умеет прочитать
+	// строку числом или датой, не поругавшись ни на что.
+	const беды = порция.flatMap(({ p, cover, текст }) =>
+		бедыШапки(p.post.id, текст, cover ? { externalUrl: p.url, cover, noCover: false } : { externalUrl: p.url }),
+	);
+	if (беды.length > 0) {
+		console.error('\n✗✗ ШАПКА НЕ ЧИТАЕТСЯ ОБРАТНО — НЕ ЗАПИСАНО НИЧЕГО:');
+		for (const беда of беды) console.error(`   ${беда}`);
+		process.exit(1);
+	}
+
+	for (const { p, текст } of порция) await writeFile(new URL(p.post.file, POSTS_DIR), текст, 'utf8');
+	console.log(`ЗАПИСАНО постов: ${порция.length}, обложек со статей: ${covers}. Шапка каждого прочитана обратно до записи.`);
 	if (noCover.length) console.log(`Обложка не далась у ${noCover.length}: ${noCover.join(', ')}`);
 
 	const again = [];

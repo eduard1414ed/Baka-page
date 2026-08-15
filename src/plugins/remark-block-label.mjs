@@ -1,7 +1,4 @@
-// Значения атрибутов приходят экранированными из админки (см. public/admin/index.html) —
-// там кавычка ломает разбор синтаксиса директивы, поэтому её заменяют на &quot;.
-const unescapeAttr = (value = '') => value.replaceAll('&quot;', '"');
-
+import { unescapeAttr } from '../lib/directiveAttr.mjs';
 /**
  * Подпись блока внутри текста материала: `::label{text="видеоверсия"}`.
  *

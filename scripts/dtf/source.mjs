@@ -13,6 +13,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+// ПОВТОР ПРИ СБОЕ СЕТИ — ОДНО МЕСТО НА ПРОЕКТ (`scripts/retry.mjs`). Здесь
+// жила своя копия и цикла, и правила «что считать сбоем сети», и она УЖЕ
+// разошлась с домом: сетевыми тут не считались отказ DNS (`ENOTFOUND`,
+// `EAI_AGAIN`), оборванное соединение (`terminated`) и ответы 502/503/504 —
+// самые частые временные отказы чужого сервера. То есть пересборка поста
+// падала на моргнувшем DTF там, где остальной проект переждал бы и пошёл
+// дальше (доревизия задачи 15, находка 27).
+import { сПовторами } from '../retry.mjs';
 
 // Путь к корню достаём через fileURLToPath, а не через .pathname: русские
 // буквы в пути к проекту тот кодирует, и «файла нет» приходит про файл,
@@ -30,12 +38,18 @@ export const ARTICLES = {
 	'realnye-kartiny-v-mange-goluboy-period': [1247167],
 };
 
+/** Сколько ждать перед каждым следующим заходом. Три паузы = четыре попытки. */
+export const ПАУЗЫ = [500, 1000, 1500];
+
 /**
  * Ответ api.dtf.ru по номеру статьи. Скачивается один раз и кладётся в кэш.
  *
- * ПОВТОРЯЕМ ТОЛЬКО СЕТЕВОЕ. «Такой статьи нет» повтором не лечится: три
- * захода с растущими паузами превращают честный отказ в минуту молчания
- * (CLAUDE.md). Признак сетевого сбоя — `cause` у ошибки либо знакомое слово.
+ * ПОВТОРЯЕМ ТОЛЬКО СЕТЕВОЕ, и что этим считать — знает `scripts/retry.mjs`.
+ * «Такой статьи нет» повтором не лечится: три захода с растущими паузами
+ * превращают честный отказ в минуту молчания (CLAUDE.md).
+ *
+ * МОЛЧАТЬ ТУТ НЕЛЬЗЯ: пустой ответ «статьи нет» неотличим от «интернет
+ * кончился», поэтому и своя ошибка, и чужая летят наружу как есть.
  */
 export async function fetchArticle(id) {
 	fs.mkdirSync(CACHE, { recursive: true });
@@ -44,9 +58,8 @@ export async function fetchArticle(id) {
 		return JSON.parse(fs.readFileSync(file, 'utf8')).result;
 	}
 
-	let last;
-	for (let attempt = 0; attempt < 4; attempt++) {
-		try {
+	return сПовторами(
+		async () => {
 			const response = await fetch(`https://api.dtf.ru/v2.1/content?id=${id}`);
 			if (!response.ok) throw new Error(`HTTP ${response.status}`);
 			const text = await response.text();
@@ -54,15 +67,9 @@ export async function fetchArticle(id) {
 			if (!parsed.result) throw new Error(`в ответе нет статьи ${id}`);
 			fs.writeFileSync(file, text);
 			return parsed.result;
-		} catch (error) {
-			const network = error.cause || /fetch failed|timeout|network|ECONN|socket/i.test(error.message);
-			last = error;
-			if (!network) break;
-			await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
-		}
-	}
-	// Молчать тут нельзя: пустой ответ «статьи нет» неотличим от «интернет кончился».
-	throw last ?? new Error(`api.dtf.ru не ответил про статью ${id} за четыре попытки`);
+		},
+		{ паузы: ПАУЗЫ, назвать: `статью ${id} с api.dtf.ru` },
+	);
 }
 
 export const stripTags = (html) => html.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();

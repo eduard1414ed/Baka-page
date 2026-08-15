@@ -36,6 +36,7 @@ import { fileURLToPath } from 'node:url';
 // Тот же разбор YAML, которым сборка читает шапку поста. Своего писать нельзя:
 // вопрос «прочитается ли это» имеет ровно один правильный источник ответа.
 import yaml from 'js-yaml';
+import { бедыШапки } from './frontmatter-guard.mjs';
 import { slugify } from '../src/lib/slug.mjs';
 import { buildAnimeMatcher, findMentions } from '../src/lib/animeMentions.mjs';
 import { manualTelegramPosts } from '../src/data/telegramImported.mjs';
@@ -816,33 +817,20 @@ export function renderPost(built, { files = [] } = {}) {
  * @returns {string[]} список бед; пусто — всё читается
  */
 export function frontmatterProblems(built, text) {
-	const head = text.split(/^---$/m)[1];
-	let parsed;
-	try {
-		parsed = yaml.load(head);
-	} catch (error) {
-		return [`№${built.id} (${built.slug}): шапка не читается — ${String(error.message).split('\n')[0]}`];
-	}
-
-	const problems = [];
-	const same = (field, want, got) => {
-		if (got !== want) problems.push(`№${built.id} (${built.slug}): поле «${field}» прочиталось как ${JSON.stringify(got)}, а клали ${JSON.stringify(want)}`);
+	// САМ ЗАСЛОН ЖИВЁТ В `scripts/frontmatter-guard.mjs` — одно правило
+	// на проект. Здесь остаётся только СПИСОК ПОЛЕЙ, за которые отвечает
+	// импорт: он у каждого свой, а разбор один.
+	const ждали = {
+		title: built.title,
+		category: built.category,
+		tgId: built.id,
+		tgUrl: `https://t.me/${CHANNEL}/${built.id}`,
+		draft: true,
+		date: built.date,
 	};
+	for (const [id, url] of Object.entries(built.bonusLinks ?? {})) ждали[`bonusLinks.${id}`] = url;
 
-	same('title', built.title, parsed.title);
-	same('category', built.category, parsed.category);
-	same('tgId', built.id, parsed.tgId);
-	same('tgUrl', `https://t.me/${CHANNEL}/${built.id}`, parsed.tgUrl);
-	same('draft', true, parsed.draft);
-	// Дату YAML читает датой — это и нужно; сверяем сам день.
-	const date = parsed.date instanceof Date ? parsed.date.toISOString().slice(0, 10) : String(parsed.date);
-	same('date', built.date, date);
-
-	for (const [id, url] of Object.entries(built.bonusLinks ?? {})) {
-		same(`bonusLinks.${id}`, url, parsed.bonusLinks?.[id]);
-	}
-
-	return problems;
+	return бедыШапки(`№${built.id} (${built.slug})`, text, ждали);
 }
 
 // ——— Что уже импортировано ———

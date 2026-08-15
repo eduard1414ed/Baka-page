@@ -13,6 +13,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { fetchArticle, stripTags } from './source.mjs';
+// Третья копия «повтора при сбое сети» жила здесь — со своим циклом, своим
+// списком сетевых бед и отдельной веткой на 429. Дом один: `scripts/retry.mjs`
+// (доревизия задачи 15, находка 27; реестр называл две копии, их оказалось три).
+import { сПовторами } from '../retry.mjs';
 
 const { readAnimeCollection } = await import(new URL('../anime-cases-lib.mjs', import.meta.url).href);
 const { buildAnimeMatcher, findMentions } = await import(new URL('../../src/lib/animeMentions.mjs', import.meta.url).href);
@@ -33,30 +37,27 @@ async function askAniList(id) {
 		query: 'query($id:Int){Media(id:$id){title{romaji} studios(isMain:true){nodes{name}}}}',
 		variables: { id },
 	};
-	let last;
-	for (let attempt = 0; attempt < 4; attempt++) {
-		try {
+	// ПОВТОРЯЕМ ТОЛЬКО СЕТЕВОЕ, и что этим считать — знает `scripts/retry.mjs`.
+	// «Такого тайтла нет» повтором не лечится. Паузы тут ДЛИННЕЕ обычных:
+	// AniList отвечает 429 «слишком частые запросы» при обходе справочника,
+	// и приходить к нему через полсекунды бессмысленно.
+	//
+	// Молчать нельзя: пустой ответ «студии нет» неотличим от «интернет
+	// кончился», поэтому последняя ошибка летит наружу как есть.
+	return сПовторами(
+		async () => {
 			const response = await fetch('https://graphql.anilist.co', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(query),
 			});
-			// Слишком частые запросы — тоже сетевое: ждём и пробуем снова.
-			if (response.status === 429) { last = new Error('AniList: слишком частые запросы (429)'); await new Promise((r) => setTimeout(r, 2000 * (attempt + 1))); continue; }
 			if (!response.ok) throw new Error(`HTTP ${response.status}`);
 			const json = await response.json();
 			if (json.errors) throw new Error(json.errors[0]?.message ?? 'ошибка GraphQL');
 			return json.data.Media;
-		} catch (error) {
-			// ПОВТОРЯЕМ ТОЛЬКО СЕТЕВОЕ: «такого тайтла нет» повтором не лечится.
-			const network = error.cause || /fetch failed|timeout|network|ECONN|socket/i.test(error.message);
-			last = error;
-			if (!network) break;
-			await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
-		}
-	}
-	// Молчать нельзя: пустой ответ «студии нет» неотличим от «интернет кончился».
-	throw last ?? new Error('AniList не ответил за четыре попытки');
+		},
+		{ паузы: [2000, 4000, 6000], назвать: `студии тайтла ${id} у AniList` },
+	);
 }
 
 async function collect() {

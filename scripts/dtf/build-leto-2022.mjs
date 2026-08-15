@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { fetchArticle, stripTags, blockToParagraphs, postPath, unwrapRedirect } from './source.mjs';
 import { writeGuarded } from './guard.mjs';
 import { captionFor } from './captions.mjs';
+import { escapeAttr } from '../../src/lib/directiveAttr.mjs';
 
 const { readAnimeCollection } = await import(new URL('../anime-cases-lib.mjs', import.meta.url).href);
 const { buildAnimeMatcher, findMentions } = await import(new URL('../../src/lib/animeMentions.mjs', import.meta.url).href);
@@ -62,7 +63,7 @@ async function build() {
 			if (id) { anime.push(id); lines.push(`#### [${name}](/anime/${id}/)`); }
 			else { noLink.push(name); lines.push(`#### ${name}`); }
 			const caption = captionFor(name);
-			for (const src of pending.splice(0)) lines.push(`::image{src="${src}" alt="" caption="${caption}" width="column"}`);
+			for (const src of pending.splice(0)) lines.push(`::image{src="${src}" alt="" caption="${escapeAttr(caption)}" width="column"}`);
 			continue;
 		}
 

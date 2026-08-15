@@ -20,6 +20,7 @@ import yaml from 'js-yaml';
 import { postPath } from '../dtf/source.mjs';
 import { shortStudio } from '../dtf/captions.mjs';
 import { writeGuarded } from '../dtf/guard.mjs';
+import { escapeAttr } from '../../src/lib/directiveAttr.mjs';
 
 const ROOT = fileURLToPath(new URL('../../', import.meta.url));
 const SLUG = 'obzor-vseh-anime-oseni-2022';
@@ -132,7 +133,7 @@ export async function assemble() {
 		const id = catalogId(name);
 		if (id) { anime.push(id); lines.push(`#### [${name}](/anime/${id}/)`); }
 		else { noLink.push(name); lines.push(`#### ${name}`); }
-		lines.push(`::image{src="${part.img}" alt="" caption="${captionFor(name, cards.get(id))}" width="column"}`);
+		lines.push(`::image{src="${part.img}" alt="" caption="${escapeAttr(captionFor(name, cards.get(id)))}" width="column"}`);
 		for (const paragraph of part.body.split(/\n\n+/).map((s) => s.trim()).filter(Boolean)) {
 			if (paragraph.startsWith('::anime-ref')) continue;
 			lines.push(paragraph);

@@ -26,7 +26,12 @@ import { readPostsRaw, POSTS_DIR } from './archive-clean-lib.mjs';
 // заказчик решает по одному набору пар, а удаляется другой, — и на живых
 // данных это уже случилось: пара, найденная по началу текста, пропала
 // и из плана, и из заслона.
-import { allPairs, plainBody } from './archive-duplicates.mjs';
+// СОРТ ПАРЫ — ОТТУДА ЖЕ. Он решает, какой из двух постов удалить, и считался
+// здесь вторым разом: своё деление на «дословную копию», «почти копию»
+// и «один длиннее», свой порог 90 %. Заказчик при этом принимает решение
+// по отчёту — то есть по ДРУГОМУ счёту. Сходились они не всегда: отчёт
+// сравнивал с порогом округлённый процент, а удаление — саму долю.
+import { allPairs, plainBody, сортПары } from './archive-duplicates.mjs';
 
 /**
  * Дата поста ЧИТАЕМОЙ СТРОКОЙ — с годом.
@@ -51,20 +56,6 @@ function stamp(front) {
 	return Number.isNaN(t) ? 0 : t;
 }
 
-/** Сорт пары: то же деление, что в отчёте `archive-duplicates.mjs`. */
-function kindOf(a, b) {
-	if (a.text === b.text) return 'дословная копия';
-	const shorter = a.text.length <= b.text.length ? a : b;
-	const longer = shorter === a ? b : a;
-	if (longer.text.startsWith(shorter.text) || longer.text.includes(shorter.text)) return 'один длиннее';
-	const words = (s) => new Set(s.split(' '));
-	const wa = words(a.text);
-	const wb = words(b.text);
-	const common = [...wa].filter((w) => wb.has(w)).length;
-	const share = common / Math.max(wa.size, wb.size);
-	return share >= 0.9 ? 'почти копия' : 'разные материалы';
-}
-
 async function main() {
 	const write = process.argv.includes('--write');
 	const posts = (await readPostsRaw()).map((p) => ({ ...p, text: plainBody(p.body), when: stamp(p.front) }));
@@ -75,7 +66,7 @@ async function main() {
 	const blocked = [];
 
 	for (const [a, b] of pairs) {
-		const kind = kindOf(a, b);
+		const kind = сортПары(a, b).вид;
 		if (kind === 'разные материалы' || kind === 'один длиннее') continue;
 
 		const newer = a.when === b.when ? (Number(a.front?.tgId ?? 0) >= Number(b.front?.tgId ?? 0) ? a : b) : a.when > b.when ? a : b;

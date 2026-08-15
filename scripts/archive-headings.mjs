@@ -20,73 +20,25 @@
 //   node scripts/archive-headings.mjs --write     — записать
 //   node scripts/archive-headings.mjs --selftest  — подлоги
 
-import { readPostsRaw, writePostBody, parseBody, cutRanges } from './archive-clean-lib.mjs';
-
-/** Все узлы поддерева (свой обход: нужны и вложенные `strong`). */
-function allNodes(node) {
-	const out = [];
-	const walk = (n) => {
-		out.push(n);
-		if (Array.isArray(n.children)) n.children.forEach(walk);
-	};
-	walk(node);
-	return out;
-}
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { readPostsRaw, writePostBody, parseBody } from './archive-clean-lib.mjs';
+import { телоБезЖирного } from './heading-bold.mjs';
 
 /**
- * Куски, которые надо вырезать из тела, чтобы у заголовков не осталось жирного.
+ * Новое тело поста — или null, если правки нет.
  *
- * У узла `strong` смещения охватывают ВЕСЬ узел вместе с `**`, а у его детей —
- * только содержимое. Значит вырезать надо ровно два зазора: от начала узла
- * до начала первого ребёнка и от конца последнего ребёнка до конца узла.
- * Так снимается и `**`, и `__`, и любая другая запись, какую поймёт разбор, —
- * длину разделителя мы не назначаем, а спрашиваем.
- *
- * @returns {{ cuts: {start:number,end:number}[], headings: {before:string, after:string}[] }}
+ * САМО ПРАВИЛО ЖИВЁТ В `scripts/heading-bold.mjs` — одно место на проект.
+ * Здесь оставалась его копия, и она отвечала ИНАЧЕ, чем копия в
+ * `archive-subheads.mjs`: смотрела только верхний уровень дерева, то есть
+ * заголовок внутри цитаты или пункта списка не трогала. Одно правило
+ * заказчика — два ответа, и какой сработает, решал запуск (доревизия
+ * задачи 15, находка 36).
  */
-function planFor(body) {
-	const tree = parseBody(body);
-	const cuts = [];
-	const headings = [];
-
-	for (const block of tree.children ?? []) {
-		if (block.type !== 'heading') continue;
-		const strongs = allNodes(block).filter((n) => n.type === 'strong');
-		if (!strongs.length) continue;
-
-		const local = [];
-		for (const s of strongs) {
-			const kids = s.children ?? [];
-			if (!kids.length) continue; // `****` без содержимого — не наш случай, не трогаем
-			const first = kids[0].position?.start?.offset;
-			const last = kids[kids.length - 1].position?.end?.offset;
-			const start = s.position?.start?.offset;
-			const end = s.position?.end?.offset;
-			if ([first, last, start, end].some((v) => typeof v !== 'number')) continue;
-			if (start < first) local.push({ start, end: first });
-			if (last < end) local.push({ start: last, end });
-		}
-		if (!local.length) continue;
-
-		const hStart = block.position.start.offset;
-		const hEnd = block.position.end.offset;
-		const before = body.slice(hStart, hEnd);
-		const after = cutRanges(
-			before,
-			local.map((c) => ({ start: c.start - hStart, end: c.end - hStart })),
-		);
-		headings.push({ before, after });
-		cuts.push(...local);
-	}
-
-	return { cuts, headings };
-}
-
-/** Новое тело поста — или null, если правки нет. */
-function fixBody(body) {
-	const { cuts, headings } = planFor(body);
-	if (!cuts.length) return null;
-	return { body: cutRanges(body, cuts), headings };
+export function fixBody(body) {
+	const план = телоБезЖирного(parseBody(body), body);
+	if (!план) return null;
+	return { body: план.тело, headings: план.заголовки.map((h) => ({ before: h.было, after: h.стало })) };
 }
 
 // ── ЗАМЕР ОДНООБРАЗИЯ ─────────────────────────────────────────────────────
@@ -191,7 +143,15 @@ const FAKES = [
 	['текст **жирный** в абзаце', null, 'жирный в тексте не трогаем'],
 	['`### **код**`', null, 'решётка и звёздочки внутри кода до заголовка не доезжают'],
 	['    ### **отступом**', null, 'блок с отступом — это код, а не заголовок'],
-	['> ### **в цитате**', null, 'заголовок внутри цитаты не наш: цитату не правим'],
+	// РЕШЕНИЕ ЗАКАЗЧИКА 15 АВГУСТА 2026, И ОНО ПЕРЕВЕРНУЛО ЭТОТ ПОДЛОГ.
+	// Прежде тут стояло «цитату не правим» — и ровно на этом два скрипта
+	// отвечали по-разному: соседний обходил дерево целиком и снимал.
+	// Заголовок есть заголовок, где бы он ни стоял; слова цитаты при этом
+	// не меняются, меняется только жирность.
+	['> ### **в цитате**', '> ### в цитате', 'заголовок внутри цитаты — тоже заголовок'],
+	['- ### **в пункте списка**', '- ### в пункте списка', 'заголовок внутри пункта списка — тоже заголовок'],
+	[':::spoiler{noun="кусок"}\n### **в спойлере**\n:::', ':::spoiler{noun="кусок"}\n### в спойлере\n:::', 'заголовок внутри спойлера — тоже заголовок'],
+	['> Обычная цитата с **жирным**', null, 'жирный в тексте цитаты — не заголовок, не трогаем'],
 	['Ссылка [**жирная**](https://x.ru)', null, 'жирный внутри ссылки в абзаце не трогаем'],
 	['### [**жирная ссылка**](https://x.ru)', '### [жирная ссылка](https://x.ru)', 'жирный внутри ссылки В ЗАГОЛОВКЕ снимаем'],
 ];
@@ -219,11 +179,23 @@ function selftest() {
 	console.log('Все подлоги сошлись.');
 }
 
-if (process.argv.includes('--selftest')) {
-	selftest();
-} else {
-	main().catch((err) => {
-		console.error('ПРАВКА УПАЛА:', err);
-		process.exit(1);
-	});
+// ЗАПУСКАЕМСЯ ТОЛЬКО ТОГДА, КОГДА НАС ПОЗВАЛИ НАПРЯМУЮ. Без этой проверки файл
+// начинает работать от простого `import` — а он пишет во ВСЕ посты архива,
+// и ключ `--write` достался бы ему от чужой командной строки: он смотрит
+// на общую.
+//
+// Сравниваем ПУТЯМИ, а не строками: в пути к проекту русские буквы, и
+// `import.meta.url` кодирует их (`%D0%A0%D0%B0…`), а `process.argv[1]` нет
+// (CLAUDE.md, урок про русские буквы в пути).
+const calledDirectly = resolve(fileURLToPath(import.meta.url)) === resolve(process.argv[1] ?? '');
+
+if (calledDirectly) {
+	if (process.argv.includes('--selftest')) {
+		selftest();
+	} else {
+		main().catch((err) => {
+			console.error('ПРАВКА УПАЛА:', err);
+			process.exit(1);
+		});
+	}
 }

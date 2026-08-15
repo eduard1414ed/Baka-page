@@ -8,7 +8,7 @@
 // Запуск: node scripts/sync-episodes.mjs — руками не нужен, но можно и вручную.
 
 import { readdir, readFile, writeFile } from 'node:fs/promises';
-import yaml from 'js-yaml';
+import { бедыШапки } from './frontmatter-guard.mjs';
 import { fetchFeedItems } from '../src/lib/podcastFeed.mjs';
 import { htmlToMarkdown } from '../src/lib/htmlToMarkdown.mjs';
 import { downloadEpisodeCover, writeCoverManifest } from './episode-cover-lib.mjs';
@@ -107,29 +107,16 @@ ${body}
  * @returns {string[]} список бед; пусто — читается
  */
 export function frontmatterProblems(slug, text, ждали) {
-	const head = text.split(/^---$/m)[1];
-	let parsed;
-	try {
-		parsed = yaml.load(head);
-	} catch (error) {
-		return [`${slug}: шапка не читается — ${String(error.message).split('\n')[0]}`];
-	}
-	if (!parsed || typeof parsed !== 'object') return [`${slug}: шапка прочиталась не полями, а ${JSON.stringify(parsed)}`];
-
-	const problems = [];
-	const same = (field, want, got) => {
-		if (got !== want) problems.push(`${slug}: поле «${field}» прочиталось как ${JSON.stringify(got)}, а клали ${JSON.stringify(want)}`);
-	};
-
-	same('title', ждали.title, parsed.title);
-	same('audioGuid', ждали.guid, parsed.audioGuid);
-	same('category', 'podcast', parsed.category);
-	same('draft', true, parsed.draft);
-	// Дату YAML читает датой — это и нужно; сверяем сам день.
-	const date = parsed.date instanceof Date ? parsed.date.toISOString().slice(0, 10) : String(parsed.date);
-	same('date', ждали.date, date);
-
-	return problems;
+	// САМ ЗАСЛОН ЖИВЁТ В `scripts/frontmatter-guard.mjs` — одно правило
+	// на проект. Здесь остаётся только СПИСОК ПОЛЕЙ, за которые отвечает
+	// этот робот: он у каждого свой, а разбор один.
+	return бедыШапки(slug, text, {
+		title: ждали.title,
+		audioGuid: ждали.guid,
+		category: 'podcast',
+		draft: true,
+		date: ждали.date,
+	});
 }
 
 async function main() {

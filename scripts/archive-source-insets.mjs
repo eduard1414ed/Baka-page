@@ -38,6 +38,9 @@ import { ownNameOf } from './archive-own-links.mjs';
 // Вопрос «разметка ссылки собралась?» задаётся ТЕМ ЖЕ правилом, что и в сборке:
 // своя копия отвечала бы про правило, которого на сайте нет.
 import { сломаннаяРазметкаСсылок } from '../src/plugins/post-links-integration.mjs';
+// Кавычка в значении атрибута директивы — одно правило на проект, и ту же
+// функцию зовут четыре плагина сборки на обратной замене.
+import { escapeAttr } from '../src/lib/directiveAttr.mjs';
 
 const CATEGORY_LABEL = { podcast: 'Выпуск', note: 'Заметка', article: 'Статья', videoessay: 'Видеоэссе', bonus: 'Бонус' };
 
@@ -240,13 +243,14 @@ function analyse(body) {
 }
 
 /**
- * ПРЯМАЯ КАВЫЧКА В ПОДПИСИ ЛОМАЕТ РАЗБОР ДИРЕКТИВЫ. Админка на этот случай
- * подменяет её на `&quot;`, а `remark-link-list.mjs` подменяет обратно —
- * обе стороны обязаны экранировать одинаково. В архиве такая подпись есть:
- * `The Brilliance of Naoki Urasawa's "Monster"` в ep-83. Без подмены упала бы
- * сборка целиком, а не один пост.
+ * ПРЯМАЯ КАВЫЧКА В ПОДПИСИ ЛОМАЕТ РАЗБОР ДИРЕКТИВЫ, и правило это живёт
+ * в одном месте — `src/lib/directiveAttr.mjs`. В архиве такая подпись есть,
+ * и не одна: `The Brilliance of Naoki Urasawa's "Monster"` в ep-83.
+ *
+ * Своё тут остаётся ровно одно — обрезка пробелов по краям: подпись врезки
+ * собирается из строки поста и хвостовой пробел притаскивает с собой.
  */
-const escapeAttr = (value) => String(value).replaceAll('"', '&quot;').trim();
+const обрезатьИЭкранировать = (value) => escapeAttr(String(value).trim());
 
 /**
  * Новое тело: группы заменены врезками.
@@ -273,12 +277,12 @@ function rewrite(body) {
 		if (g.lead !== null) {
 			const head = read[g.leadLine].head;
 			if (head) block.push(head, '');
-			block.push(`::label{text="${escapeAttr(g.lead)}"}`, '');
+			block.push(`::label{text="${обрезатьИЭкранировать(g.lead)}"}`, '');
 			out[g.leadLine] = [];
 		}
 		for (const j of g.members) {
 			const r = read[j];
-			block.push(`::link{label="${escapeAttr(r.label)}" url="${r.url}"}`, '');
+			block.push(`::link{label="${обрезатьИЭкранировать(r.label)}" url="${r.url}"}`, '');
 			out[j] = [];
 			rows.push(r);
 		}

@@ -1,7 +1,4 @@
-// Значения атрибутов приходят экранированными из админки (см. public/admin/index.html) —
-// та же логика, что и в remark-image-figure.mjs.
-const unescapeAttr = (value = '') => value.replaceAll('&quot;', '"');
-
+import { unescapeAttr } from '../lib/directiveAttr.mjs';
 /** Что подставляется, если автор ничего не написал. */
 const DEFAULT_NOUN = 'спойлер';
 

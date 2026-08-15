@@ -1,10 +1,7 @@
 import { visit } from 'unist-util-visit';
 import { hostOf } from '../lib/linkIcon.mjs';
+import { unescapeAttr } from '../lib/directiveAttr.mjs';
 
-// Значения атрибутов приходят экранированными из админки (см. public/admin/index.html) —
-// там кавычка ломает разбор синтаксиса директивы, поэтому её заменяют на &quot;.
-// Тут — обратная замена. Обе стороны должны экранировать одинаково.
-const unescapeAttr = (value = '') => value.replaceAll('&quot;', '"');
 
 const text = (value) => ({ type: 'text', value });
 const el = (tagName, properties, children) => ({ type: 'element', tagName, properties, children });

@@ -15,6 +15,8 @@
 //
 // Запуск: node scripts/archive-rules-scan.mjs [--json путь]
 
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { readPostsRaw, parseBody } from './archive-clean-lib.mjs';
 
 // ── общее ─────────────────────────────────────────────────────────────────
@@ -365,7 +367,19 @@ async function main() {
 	}
 }
 
-main().catch((err) => {
-	console.error('РАЗВЕДКА УПАЛА:', err);
-	process.exit(1);
-});
+// ЗАПУСКАЕМСЯ ТОЛЬКО ТОГДА, КОГДА НАС ПОЗВАЛИ НАПРЯМУЮ. Этот скрипт ничего
+// не пишет, но без развилки простой `import` отсюда прогонял бы всю разведку
+// и печатал её отчёт посреди чужого замера — ровно то, на чём наступили
+// с `archive-anime-links.mjs`.
+//
+// Сравниваем ПУТЯМИ, а не строками: в пути к проекту русские буквы, и
+// `import.meta.url` кодирует их (`%D0%A0%D0%B0…`), а `process.argv[1]` нет
+// (CLAUDE.md, урок про русские буквы в пути).
+const calledDirectly = resolve(fileURLToPath(import.meta.url)) === resolve(process.argv[1] ?? '');
+
+if (calledDirectly) {
+	main().catch((err) => {
+		console.error('РАЗВЕДКА УПАЛА:', err);
+		process.exit(1);
+	});
+}

@@ -14,7 +14,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
-import { fetchArticle, uploadsPath } from './source.mjs';
+import { fetchArticle, uploadsPath, ПАУЗЫ } from './source.mjs';
+// Вторая копия «повтора при сбое сети» жила здесь — со своим циклом и своим,
+// уже разошедшимся с домом списком сетевых бед (доревизия задачи 15,
+// находка 27). Дом один: `scripts/retry.mjs`.
+import { сПовторами } from '../retry.mjs';
 
 /**
  * Скачать все картинки статьи и положить сжатыми под именем `<prefix>-NN.webp`.
@@ -38,22 +42,16 @@ export async function fetchImages(articleId, prefix) {
 			result.push({ file: name, src: `/images/uploads/${name}`, caption: item.title ?? '' });
 			if (fs.existsSync(file)) continue;
 
-			let last;
-			let bytes = null;
-			for (let attempt = 0; attempt < 4 && !bytes; attempt++) {
-				try {
+			// Молчать нельзя: пропущенная картинка — дыра в посте, а не мелочь.
+			// `сПовторами` перебрасывает последнюю ошибку наружу как есть.
+			const bytes = await сПовторами(
+				async () => {
 					const response = await fetch(`https://leonardo.osnova.io/${uuid}/`);
 					if (!response.ok) throw new Error(`HTTP ${response.status} у ${uuid}`);
-					bytes = Buffer.from(await response.arrayBuffer());
-				} catch (error) {
-					last = error;
-					const network = error.cause || /fetch failed|timeout|network|ECONN|socket/i.test(error.message);
-					if (!network) break;
-					await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
-				}
-			}
-			// Молчать нельзя: пропущенная картинка — дыра в посте, а не мелочь.
-			if (!bytes) throw last ?? new Error(`leonardo.osnova.io не отдал ${uuid}`);
+					return Buffer.from(await response.arrayBuffer());
+				},
+				{ паузы: ПАУЗЫ, назвать: `картинку ${uuid}` },
+			);
 
 			await sharp(bytes)
 				.resize({ width: 2048, height: 2048, fit: 'inside', withoutEnlargement: true })

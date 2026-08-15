@@ -10,6 +10,7 @@ import { fetchArticle, stripTags, blockToParagraphs, splitIncut, postPath } from
 import { writeGuarded } from './guard.mjs';
 import { captionFor } from './captions.mjs';
 import { SEEN_2023 } from './titles-2023.mjs';
+import { escapeAttr } from '../../src/lib/directiveAttr.mjs';
 
 const { readAnimeCollection } = await import(new URL('../anime-cases-lib.mjs', import.meta.url).href);
 const { buildAnimeMatcher, findMentions } = await import(new URL('../../src/lib/animeMentions.mjs', import.meta.url).href);
@@ -55,7 +56,7 @@ async function build() {
 
 		const flush = (caption) => {
 			for (const src of pending.splice(0))
-				lines.push(caption ? `::image{src="${src}" alt="" caption="${caption}" width="column"}` : `::image{src="${src}" alt="" width="column"}`);
+				lines.push(caption ? `::image{src="${src}" alt="" caption="${escapeAttr(caption)}" width="column"}` : `::image{src="${src}" alt="" width="column"}`);
 		};
 
 		for (const block of article.blocks) {
@@ -95,7 +96,7 @@ async function build() {
 				const head = paragraphs[0]?.replace(/\*\*/g, '').replace(/:\s*$/, '') ?? '';
 				if (DROP.some((d) => d.re.test(head))) { dropped.push({ why: 'врезка-реклама канала', text: head.slice(0, 70) }); continue; }
 				flush(null);
-				lines.push(`::label{text="${job.incutLabel}"}`);
+				lines.push(`::label{text="${escapeAttr(job.incutLabel)}"}`);
 				for (const paragraph of paragraphs.slice(1)) lines.push(paragraph);
 				continue;
 			}

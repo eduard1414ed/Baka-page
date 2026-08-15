@@ -26,6 +26,8 @@
 // которых правка не касалась, это не трогает НИКОГДА: иначе разница пришла бы
 // на весь архив и собственно правку в ней было бы не найти.
 
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { readPostsRaw, writePostBody, parseBody, textNodes, cutRanges } from './archive-clean-lib.mjs';
 
 const HASHTAG = /(?<![\p{L}\p{N}_])#(\p{L}[\p{L}\p{N}_-]*)/gu;
@@ -379,5 +381,19 @@ async function main() {
 	console.log(`\nЗаписано постов: ${done}. Убрано хештегов: ${total}.`);
 }
 
-if (process.argv.includes('--selftest')) await selftest();
-else await main();
+// ЗАПУСКАЕМСЯ ТОЛЬКО ТОГДА, КОГДА НАС ПОЗВАЛИ НАПРЯМУЮ. Без этой проверки файл
+// начинает работать от простого `import` — а он тут пишет во ВСЕ посты архива,
+// и ключ `--write` достался бы ему от чужой командной строки: он смотрит
+// на общую. У соседа (`archive-anime-links.mjs`) довод записан прямо в коде,
+// и наступили на это в тот же день, когда он писался.
+//
+// Сравниваем ПУТЯМИ, а не строками: в пути к проекту русские буквы, и
+// `import.meta.url` кодирует их (`%D0%A0%D0%B0…`), а `process.argv[1]` нет.
+// Строчное сравнение не совпало бы НИКОГДА, и скрипт молча ничего не делал бы
+// (CLAUDE.md, урок про русские буквы в пути).
+const calledDirectly = resolve(fileURLToPath(import.meta.url)) === resolve(process.argv[1] ?? '');
+
+if (calledDirectly) {
+	if (process.argv.includes('--selftest')) await selftest();
+	else await main();
+}

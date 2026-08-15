@@ -9,6 +9,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { fetchArticle, stripTags, blockToParagraphs, postPath } from './source.mjs';
 import { writeGuarded } from './guard.mjs';
+import { escapeAttr } from '../../src/lib/directiveAttr.mjs';
 
 const SLUG = 'realnye-kartiny-v-mange-goluboy-period';
 
@@ -62,7 +63,7 @@ async function build() {
 					const src = `/images/uploads/dtf-blue-period-${String(img).padStart(2, '0')}.webp`;
 					if (!cover) cover = src;
 					const own = k === 0 && caption ? caption : null;
-					lines.push(own ? `::image{src="${src}" alt="" caption="${own}" width="column"}` : `::image{src="${src}" alt="" width="column"}`);
+					lines.push(own ? `::image{src="${src}" alt="" caption="${escapeAttr(own)}" width="column"}` : `::image{src="${src}" alt="" width="column"}`);
 				}
 				if (caption) caption = null;
 				continue;

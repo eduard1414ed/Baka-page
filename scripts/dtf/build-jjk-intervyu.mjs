@@ -17,6 +17,7 @@ import { fileURLToPath } from 'node:url';
 import { fetchArticle, stripTags, blockToParagraphs, unwrapRedirect, postPath, frontmatter } from './source.mjs';
 import { fetchImages } from './fetch-images.mjs';
 import { writeGuarded } from './guard.mjs';
+import { escapeAttr } from '../../src/lib/directiveAttr.mjs';
 
 const ID = 1383597;
 const SLUG = 'intervyu-s-sozdatelyami-magicheskoy-bitvy';
@@ -74,7 +75,7 @@ export async function build({ write = true } = {}) {
 				const { src } = images[img];
 				const caption = CAPTIONS[img++];
 				lines.push(caption
-					? `::image{src="${src}" alt="" caption="${caption}" width="column"}`
+					? `::image{src="${src}" alt="" caption="${escapeAttr(caption)}" width="column"}`
 					: `::image{src="${src}" alt="" width="column"}`);
 			}
 			continue;

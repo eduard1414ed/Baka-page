@@ -37,6 +37,7 @@ import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import yaml from 'js-yaml';
 import { readPostsRaw, POSTS_DIR, ANIME_DIR, parseBody } from './archive-clean-lib.mjs';
+import { бедыШапки } from './frontmatter-guard.mjs';
 import { buildAnimeMatcher, findMentions } from '../src/lib/animeMentions.mjs';
 import { toPlainText } from '../src/lib/plainText.mjs';
 import { initMorph, notNounPhraseStart } from './anime-cases-lib.mjs';
@@ -405,14 +406,37 @@ async function main() {
 
 	console.log('\n═══ ЗАПИСЬ ═══');
 	const queue = drafts.filter((r) => r.plan.changed && !SKIP.has(r.post.id));
-	let done = 0;
-	for (const { post, plan } of queue) {
-		const head = replaceTitle(post.head, plan.next);
-		await writeFile(new URL(post.file, POSTS_DIR), head + post.body, 'utf8');
-		done++;
-		console.log(`  ✓ ${done}/${queue.length}  ${post.id}  →  ${plan.next}`);
+
+	// ЗАСЛОН ПЕРЕД ЗАПИСЬЮ, И ОН СОБИРАЕТ ВСЮ ПОРЦИЮ В ПАМЯТИ. Кривая шапка
+	// роняет сборку ВСЕГО САЙТА, а не свой файл, — значит половина записанной
+	// порции хуже всего: сайт лежит, а виноватого искать среди сотен файлов.
+	// Хоть одна шапка не прочиталась — не пишется НИЧЕГО.
+	//
+	// Заголовок тут ПРИДУМЫВАЕТСЯ из содержимого поста, то есть приходит
+	// из чужого текста: двоеточие, кавычка, решётка в начале — всё это
+	// приезжает само. `replaceTitle` готовит значение самим `js-yaml`, и потому
+	// беда маловероятна; но «маловероятна» и «проверено» — разные слова,
+	// а цена ошибки одна и та же (доревизия задачи 15, находка 31).
+	const порция = queue.map(({ post, plan }) => ({
+		post,
+		plan,
+		текст: replaceTitle(post.head, plan.next) + post.body,
+	}));
+
+	const беды = порция.flatMap(({ post, plan, текст }) => бедыШапки(post.id, текст, { title: plan.next }));
+	if (беды.length > 0) {
+		console.error('\n✗✗ ШАПКА НЕ ЧИТАЕТСЯ ОБРАТНО — НЕ ЗАПИСАНО НИЧЕГО:');
+		for (const беда of беды) console.error(`   ${беда}`);
+		process.exit(1);
 	}
-	console.log(`\nЗаписано постов: ${done}.`);
+
+	let done = 0;
+	for (const { post, plan, текст } of порция) {
+		await writeFile(new URL(post.file, POSTS_DIR), текст, 'utf8');
+		done++;
+		console.log(`  ✓ ${done}/${порция.length}  ${post.id}  →  ${plan.next}`);
+	}
+	console.log(`\nЗаписано постов: ${done}. Шапка каждого прочитана обратно до записи.`);
 }
 
 const calledDirectly = resolve(fileURLToPath(import.meta.url)) === resolve(process.argv[1] ?? '');
