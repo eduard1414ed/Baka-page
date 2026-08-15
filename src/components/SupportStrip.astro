@@ -72,7 +72,7 @@ const support = platformsOfKind('support');
 			</div>
 			<div class="support-links">
 				{support.map((platform) => (
-					<a href={platform.url} target="_blank" rel="noopener noreferrer">
+					<a class="btn-large" href={platform.url} target="_blank" rel="noopener noreferrer">
 						{platform.label}
 						<span class="ext-arrow" aria-hidden="true">
 							↗
@@ -138,38 +138,18 @@ const support = platformsOfKind('support');
 	/* КНОПКИ ТАКИЕ ЖЕ, КАК В ХИРО СТРАНИЦЫ «ПОДДЕРЖАТЬ», а не мельче, как
 	   в макете: решение заказчика по живой странице. Это те же четыре кнопки
 	   с теми же адресами, и разный размер читался бы не как «тут поменьше»,
-	   а как две разные вещи. Высота 56 и поля 8/16 — оттуда же. */
-	.support-links a {
-		min-height: 56px;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 20px;
-		padding: var(--sp-2) var(--sp-4);
-		border: 1px solid var(--line);
-		color: var(--ink);
-		text-decoration: none;
-		font-size: var(--caption);
-		font-weight: 600;
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
-		transition:
-			border-color var(--transition-fast),
-			color var(--transition-fast);
-	}
+	   а как две разные вещи.
 
-	.support-links a:hover,
-	.support-links a:focus-visible {
-		border-color: var(--accent-text);
-		color: var(--accent-text);
-	}
+	   ВИДА КНОПКИ ЗДЕСЬ НЕТ ВОВСЕ — она берёт общий `.btn-large` в global.css,
+	   тот же, что кнопки «Поддержать», плашка бонуса и страница 404. Прежде
+	   тут лежала ПОЛНАЯ КОПИЯ его описания: шестнадцать объявлений байт в байт,
+	   плюс своё наведение, плюс своя семнадцатка у стрелки — при том что рядом
+	   с `.btn-large` в global.css стоит оговорка «трёх одинаковых семнадцаток
+	   быть не должно». Четвёртая лежала здесь (доревизия задачи 15, находка 22).
+	   Копии совпадали, поэтому расхождения не видел никто, — а блок этот стоит
+	   на ШЕСТИ страницах сайта, и любая правка кнопки обошла бы его стороной.
 
-	/* Кегль стрелки — своё дело каждого места; цвет и начертание берутся
-	   из общего `.ext-arrow` в global.css. */
-	.support-links .ext-arrow {
-		font-size: 17px;
-	}
-
+	   Месту остаётся только раскладка: сколько кнопок в ряду и какой он ширины. */
 	@media (min-width: 621px) {
 		/* Сетка ЗАПОЛНЯЮЩАЯ, а не схлопывающая: пустые дорожки сохраняются,
 		   и три кнопки не растягиваются во всю ширину, когда четвёртой нет. */
