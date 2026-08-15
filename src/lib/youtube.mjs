@@ -10,7 +10,10 @@ export function getYoutubeEmbedUrl(url) {
 	return id ? `https://www.youtube.com/embed/${id}` : null;
 }
 
-export function getYoutubeThumbnailUrl(url) {
-	const id = getYoutubeVideoId(url);
-	return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null;
-}
+// КАДРА С ЮТЮБА ПО ССЫЛКЕ ЗДЕСЬ БОЛЬШЕ НЕТ. `getYoutubeThumbnailUrl` брала
+// картинку карточки прямо с `img.youtube.com`, и звала её одна ступень
+// в `postCardMedia.mjs` — та, что читала снятое поле «Ссылка на ролик»
+// (решение заказчика 15 августа 2026). У видеоэссе архива кадр лежит
+// настоящим файлом в поле «Обложка»: так его положила задача 19, и это
+// не только замена — превью ссылки в телеграме чужой домен не разворачивает
+// вовсе (правило проекта «картинку превью отдавать со своего домена»).

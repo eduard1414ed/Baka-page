@@ -92,7 +92,7 @@ function hasMediaOutsideSpoiler(tree) {
 export default function remarkLeadCover() {
 	return (tree, file) => {
 		const frontmatter = file?.data?.astro?.frontmatter ?? {};
-		const { category, cover, noCover, youtube, video } = frontmatter;
+		const { category, cover, noCover } = frontmatter;
 
 		if (CATEGORIES_WITH_OWN_HERO.includes(category)) return;
 
@@ -101,10 +101,12 @@ export default function remarkLeadCover() {
 		if (noCover === true) return;
 		if (!cover) return;
 
-		// Ролик из поля поста показывается ВЫШЕ текста (страница материала),
-		// то есть место наверху занято так же, как у видеоэссе.
-		if (youtube || video) return;
-
+		// РОЛИК СЧИТАЕТСЯ КАРТИНКОЙ, и спрашивается он у ТЕЛА — ниже,
+		// в `hasMediaOutsideSpoiler` (`isMedia` пускает и `::video`).
+		// Прежде тут стояла отдельная строка про поля «Ссылка на ролик»
+		// и «Своё видео»: они ставили окошко ВЫШЕ текста, то есть занимали
+		// место наверху. Поля сняты решением заказчика 15 августа 2026,
+		// и случай остался один — блок в тексте.
 		if (hasMediaOutsideSpoiler(tree)) return;
 
 		// Сжатые копии умеет делать только jpg/jpeg/png; для остального

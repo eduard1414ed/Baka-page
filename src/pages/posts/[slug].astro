@@ -24,8 +24,6 @@ import { socialSource, coverSrcs } from '../../lib/postImage.mjs';
 import { absoluteUrl, SITE_NAME } from '../../lib/site.mjs';
 import { podcastEpisodeSchema, articleSchema, breadcrumbsSchema } from '../../lib/schema.mjs';
 import { categories, sectionOf } from '../../content.config';
-import { getYoutubeEmbedUrl } from '../../lib/youtube.mjs';
-import { ownVideoSrc } from '../../lib/ownVideo.mjs';
 import { parseTimecodeList } from '../../lib/timecode.mjs';
 import { findEpisodeByGuid } from '../../lib/podcastFeed.mjs';
 import { formatPostDate } from '../../lib/postDate.mjs';
@@ -116,7 +114,7 @@ export async function getStaticPaths() {
 const { post, episode, olderPost = null, newerPost = null } = Astro.props;
 const { Content } = await render(post);
 
-const { title, date, category, cover, youtube, video, bonusLinks, anime } = post.data;
+const { title, date, category, cover, bonusLinks, anime } = post.data;
 
 // Расшифровка (тз/05, шаг 5). Ищем сначала по полю `transcript`, если автор его
 // заполнил, иначе по audioGuid — у выпусков подкаста файл расшифровки называется
@@ -170,8 +168,6 @@ const sectionId = sectionOf(category);
 // в разделе выпусков, значит и в поиске он «Выпуски», и шапка у него выпускная.
 const isEpisode = sectionId === 'podcast';
 
-const youtubeEmbed = youtube ? getYoutubeEmbedUrl(youtube) : null;
-
 // Оглавление выпуска (тз/08, 9.3). Пусто — блока нет, и метки времени
 // в тексте работают ровно как работали: у 143 выпусков архива не меняется
 // ничего.
@@ -198,19 +194,17 @@ const isVideoEssay = category === 'videoessay';
 //
 // У видеоэссе с аудиоверсией на странице стоят оба плеера — ТЗ выбирает ролик.
 //
-// ПРО САМ РОЛИК ТУТ НИЧЕГО НЕ СКАЗАНО, И ЭТО НАРОЧНО. У живых видеоэссе архива
-// ролик стоит не в поле «Ссылка на ролик», а блоком прямо в тексте (`::video`),
-// и разметку ему делает другой файл. Требуй мы здесь заполненного поля —
-// перемотка не работала бы ровно там, где она нужна. Поэтому страница говорит
-// только «этот материал перематывает ролик», а какое из окошек на ней ролик,
-// разбирается скрипт ниже.
+// ПРО САМ РОЛИК ТУТ НИЧЕГО НЕ СКАЗАНО, И ЭТО НАРОЧНО. Ролик стоит блоком
+// прямо в тексте (`::video`), и разметку ему делает другой файл. Поэтому
+// страница говорит только «этот материал перематывает ролик», а какое
+// из окошек на ней ролик, разбирается скрипт ниже — он же добавляет ролику
+// разрешение `enablejsapi`, без которого управлять им снаружи нельзя.
+//
+// Прежде тут была вторая дорога: поле «Ссылка на ролик» ставило окошко
+// в шапку материала, и разрешение проставлялось ему сразу при сборке.
+// Поле снято решением заказчика 15 августа 2026 (было заполнено у нуля
+// постов), и дорога осталась одна.
 const youtubeSeek = timecodeRows.length > 0 && isVideoEssay;
-
-// `enablejsapi` разрешает управлять роликом снаружи. Ставим его ТОЛЬКО там,
-// где перемотка правда нужна: без таймкодов управлять нечем, и лишнего
-// разрешения на странице быть не должно. Ролику из текста то же разрешение
-// добавляет скрипт — он ниже сгиба и грузится лениво, так что это бесплатно.
-const youtubeSrc = youtubeSeek && youtubeEmbed ? `${youtubeEmbed}?enablejsapi=1` : youtubeEmbed;
 
 // Подпись над описанием. У статьи и заметки её нет: там текст и есть материал,
 // объявлять его нечем.
@@ -487,34 +481,12 @@ const postSearchMeta = [
 				)
 			}
 
-			{/* Плеер YouTube шириной 1000 (§14). Это ветка для поля «Ссылка
-			    на ролик» у поста; в архиве видеоэссе ролик обычно стоит блоком
-			    прямо в тексте (`::video{…}`) — тот получает ту же ширину
-			    правилом `.content > .video-wrap` ниже, чтобы страница выглядела
-			    одинаково независимо от того, как ролик вставили. */}
-			{
-				youtubeEmbed && (
-					<section class="youtube-wrap" aria-label="Видео">
-						<div class="youtube-frame">
-							<iframe
-								src={youtubeSrc}
-								title={title}
-								loading="lazy"
-								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-								allowfullscreen
-							/>
-						</div>
-					</section>
-				)
-			}
-
-			{
-				!youtubeEmbed && video && (
-					<section class="youtube-wrap" aria-label="Видео">
-						<video class="own-video" src={ownVideoSrc(video)} controls preload="metadata" />
-					</section>
-				)
-			}
+			{/* ЗДЕСЬ БЫЛИ ДВА ОКОШКА ВИДЕО В ШАПКЕ — из полей «Ссылка на ролик»
+			    и «Своё видео». Оба сняты решением заказчика 15 августа 2026:
+			    ролик вставляется кнопкой «Видео» прямо в текст, блоком `::video`,
+			    и получает ту же ширину 1000 правилом `.content > .video-wrap`
+			    ниже. Вид совпадал нарочно, то есть двери вели в одну комнату,
+			    а заполнены поля были у нуля постов из 747. */}
 
 			<section class="post-body">
 				{bodyLabel && <h2 class="body-label tech">{bodyLabel}</h2>}
@@ -1063,40 +1035,20 @@ const postSearchMeta = [
 		}
 	}
 
-	/* ——— Плеер YouTube и своё видео (§14) ——— */
+	/* ——— Своё видео в тексте (§14) ——— */
 
-	.youtube-wrap {
-		width: 100%;
-		max-width: var(--wide);
-		margin: 0 auto var(--sp-12);
-	}
-
-	.youtube-frame {
-		position: relative;
-		aspect-ratio: 16 / 9;
-		background: var(--ink);
-	}
-
-	.youtube-frame iframe {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		border: 0;
-	}
-
-	/* Своё видео — ОДНО ОПИСАНИЕ НА ОБА МЕСТА: в шапке материала из поля
-	   «Своё видео» и блоком прямо в тексте (`::video{video="…"}`). Двумя
-	   описаниями это уже было, и они разъехались: у ролика YouTube пропорция
-	   стояла, у своего видео не стояла нигде.
+	/* Описание ОДНО, и с 15 августа 2026 место у него тоже одно: блок
+	   `::video{video="…"}` прямо в тексте. Прежде их было два — сюда же
+	   ходило окошко из поля «Своё видео» в шапке материала, — и до того
+	   описаний было два, и они разъехались: у ролика YouTube пропорция
+	   стояла, у своего видео не стояла нигде. Поля сняты (были заполнены
+	   у нуля постов), окошко в шапке ушло вместе с ними.
 
 	   `aspect-ratio: auto 16 / 9` читается так: пропорцию берём из самого
 	   файла, как только браузер вычитает его заголовок, а 16/9 — подпорка
 	   на это время. Без подпорки <video> с неизвестными размерами встаёт
 	   стандартными 300×150, то есть широкой чёрной полосой в 150 px высотой,
-	   и материал выглядит сломанным. Ролику YouTube это не грозило: у него
-	   пропорция задана жёстко, размеров у окошка нет вовсе. */
-	.own-video,
+	   и материал выглядит сломанным. */
 	.content :global(.content-video) {
 		display: block;
 		width: 100%;
@@ -1876,7 +1828,6 @@ const postSearchMeta = [
 	   100vw вылезает за край документа и даёт горизонтальный скролл — тот
 	   самый, который на сайте запрещено прятать. */
 	@media (max-width: 620px) {
-		.youtube-wrap,
 		.content > :global(figure.gallery),
 		.content > :global(figure.figure-full),
 		.content > :global(.video-wrap),
@@ -1896,9 +1847,10 @@ const postSearchMeta = [
 		   не воспроизводится вовсе — заказчик увидел это на телефоне.
 		   Ширину поэтому называем числом: колонка плюс оба поля.
 
-		   Видео в ШАПКЕ материала (`.own-video`) сюда не входит и не должно:
-		   до краёв уходит его обёртка `.youtube-wrap`, а сам он занимает
-		   её сто процентов — то есть уже полную ширину. */
+		   Прежде тут была оговорка про видео в ШАПКЕ материала: оно сюда
+		   не входило, потому что до краёв уходила его обёртка. Шапочного
+		   видео больше нет — поля сняты 15 августа 2026, и случай остался
+		   один. */
 		.content > :global(.content-video) {
 			width: calc(100% + var(--gutter) * 2);
 		}
