@@ -34,7 +34,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readPostsRaw, writePostBody, parseBody, ANIME_DIR } from './archive-clean-lib.mjs';
-import { buildAnimeMatcher, findMentions, isQuotedAt, fold } from '../src/lib/animeMentions.mjs';
+import { buildAnimeMatcher, findMentions, isQuotedAt } from '../src/lib/animeMentions.mjs';
 import { parseMentionExceptions } from '../src/lib/mentionExceptions.mjs';
 
 /** Справочник тайтлов — читаем так же, как его читает разметка постов. */
@@ -438,8 +438,6 @@ async function main() {
 	}
 	console.log(`\nЗаписано постов: ${done}. Снято ссылок: ${drafts.length}.`);
 }
-
-void fold;
 
 // ЗАПУСКАЕМСЯ ТОЛЬКО ТОГДА, КОГДА НАС ПОЗВАЛИ НАПРЯМУЮ. Без этой проверки
 // простой `import { readAnime }` из соседнего скрипта прогонял всю разведку
