@@ -1,0 +1,54 @@
+# ЗАЩИТНЫЕ ЗАГОЛОВКИ ОТВЕТА. Файл читает Cloudflare при выкладке и наружу
+# не отдаёт: по адресу /_headers должен быть 404. Сторожит это
+# scripts/headers.test.mjs — он же проверяет заголовки на живом сайте.
+#
+# ЭТО ТОЛЬКО ДЛЯ bakapodcast.com. Зеркало ru.bakapodcast.com — голое
+# хранилище Яндекса, оно умеет отдавать лишь несколько заголовков про тип
+# и кэш, а Content-Security-Policy и остальные — не умеет вовсе. Поэтому
+# файл на зеркало не едет (scripts/mirror-sync.mjs, НЕ_ЕДЕТ_ФАЙЛЫ),
+# и защита там появится только вместе с CDN. Админки на зеркале нет,
+# так что главное прикрыто.
+
+/*
+  # Не угадывать тип файла по содержимому. Без этого картинку, в которую
+  # вписан текст скрипта, браузер может принять за скрипт и выполнить.
+  X-Content-Type-Options: nosniff
+
+  # При переходе наружу передавать только имя домена, без пути. Иначе чужой
+  # сайт видит в журнале, с какой именно страницы к нему пришли.
+  Referrer-Policy: strict-origin-when-cross-origin
+
+  # Год ходить сюда только по HTTPS, не пробуя обычный HTTP.
+  # БЕЗ includeSubDomains НАРОЧНО: он накрыл бы и ru.bakapodcast.com, то есть
+  # чужое хранилище, за исправность сертификата которого мы не отвечаем.
+  # И без preload: из списка предзагрузки браузеров не выписаться быстро.
+  Strict-Transport-Security: max-age=31536000
+
+  # Страницу нельзя показать в рамке на чужом сайте. Два заголовка про одно:
+  # frame-ancestors понимают нынешние браузеры, X-Frame-Options — старые.
+  Content-Security-Policy: frame-ancestors 'self'
+  X-Frame-Options: SAMEORIGIN
+
+/admin/*
+  # ОТДЕЛЬНЫЙ СПИСОК ДЛЯ АДМИНКИ — ЕДИНСТВЕННОЙ СТРАНИЦЫ С КЛЮЧОМ ОТ GITHUB.
+  #
+  # Главное здесь connect-src: он говорит, КУДА странице разрешено обращаться.
+  # Даже если однажды на неё попадёт чужой код, отправить украденный ключ ему
+  # будет некуда — в списке только те, с кем админка работает по делу.
+  #
+  # script-src ограничивает, ОТКУДА берётся код. unpkg остаётся (там сама
+  # программа CMS, и она прибита к версии с отпечатком в /admin/index.html),
+  # всё прочее — только со своего домена.
+  #
+  # ОТКУДА ВЗЯТ СПИСОК: не из головы, а разбором самой программы CMS —
+  # искал в её файле чужие адреса. cdn.jsdelivr.net там оказался шрифтом
+  # значков (Material Symbols): забудь его — админка осталась бы без иконок.
+  # shikimori и anilist зовёт наша служебная страница /admin/tools/.
+  #
+  # ГДЕ ОСЛАБЛЕНО НАРОЧНО И ПОЧЕМУ: 'unsafe-inline' у скриптов и стилей,
+  # blob: и data:, wasm-unsafe-eval — это то, чем программа CMS пользуется
+  # изнутри, и проверить каждое в браузере сейчас невозможно (вход через
+  # GitHub закрыт пометкой «спам»). Строгость там, где она стоит дёшево
+  # и стережёт ключ: список адресов, запрет чужих рамок и подмены базового
+  # адреса. Когда флаг снимут и админка оживёт — ослабления пересмотреть.
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://unpkg.com blob:; style-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; font-src 'self' data: https://unpkg.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; media-src 'self' data: blob:; connect-src 'self' https://api.github.com https://github.com https://unpkg.com https://cdn.jsdelivr.net https://baki-cms-auth.eduard1414ed.workers.dev https://shikimori.one https://shikimori.io https://graphql.anilist.co; frame-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'
