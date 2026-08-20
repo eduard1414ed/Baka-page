@@ -95,13 +95,27 @@ async function main() {
 	} catch {
 		// та же история: отсутствие записи приходит ошибкой
 	}
-	const выдают = caa.map((з) => з.issue ?? з.issuewild ?? '').filter(Boolean);
+	// Теги РАЗНЫЕ, и мешать их в одну кучу нельзя: issue — про обычные
+	// сертификаты, issuewild — про сертификаты со звёздочкой. Склеенные,
+	// они выглядят повторами одного и того же, и первый вывод этой проверки
+	// именно так и выглядел: одиннадцать строк, из которых пять «дубли».
+	const записи = caa
+		.map((з) => ({ тег: з.issue ? 'issue' : з.issuewild ? 'issuewild' : '', кто: з.issue ?? з.issuewild ?? '' }))
+		.filter((з) => з.кто);
+	// Сертификаты у нас на точные имена (bakapodcast.com, ru.bakapodcast.com),
+	// поэтому обязателен именно issue; issuewild показываем для полноты.
+	const выдают = записи.filter((з) => з.тег === 'issue').map((з) => з.кто);
 	console.log(`CAA (${домен})`);
 	if (!выдают.length) {
 		console.log('  ✗    записей нет — сертификат на домен может выпустить любой центр мира');
 		беды.push('нет записей CAA');
 	} else {
-		for (const строка of выдают) console.log(`       ${строка}`);
+		for (const тег of ['issue', 'issuewild']) {
+			const свои = записи.filter((з) => з.тег === тег);
+			if (!свои.length) continue;
+			console.log(`       ${тег} (${тег === 'issue' ? 'обычные сертификаты' : 'со звёздочкой'}): ${свои.length}`);
+			for (const з of свои) console.log(`         ${з.кто}`);
+		}
 		for (const { что, зачем } of ЖДЁМ_CAA) {
 			const есть = выдают.some((с) => с.includes(что));
 			console.log(`  ${есть ? 'ок  ' : '✗   '} ${что} — ${зачем}`);
