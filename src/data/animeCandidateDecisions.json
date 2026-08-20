@@ -13833,5 +13833,19 @@
 		"at": "2026-08-11T20:50:46.874Z",
 		"result": "вписано в «cowboy-bebop»: Ковбое",
 		"applied": "2026-08-11T20:51:37.182Z"
+	},
+	{
+		"id": "cand:2154",
+		"what": "create",
+		"sourceId": 2154,
+		"source": "shikimori",
+		"slug": "tekkon-kinkreet",
+		"title": "Железобетон",
+		"phrases": [
+			"Железобетон"
+		],
+		"at": "2026-08-20T08:47:03.282Z",
+		"result": "заведён: src/content/anime/tekkon-kinkreet.json",
+		"applied": "2026-08-20T08:47:12.307Z"
 	}
 ]
