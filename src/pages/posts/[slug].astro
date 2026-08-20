@@ -310,7 +310,7 @@ const pageDescription = postDescription(post, undefined);
 // сайта). Порядок и все оговорки — в socialSource, src/lib/postImage.mjs.
 //
 // Правило считается там, а не здесь, потому что его нужно знать двоим: этой
-// странице (она ставит теги) и сборке, которая рисует сам файл 1200×630
+// странице (она ставит теги) и сборке, которая рисует сам файл превью
 // (src/pages/og-sources.json.ts → src/plugins/og-images-integration.mjs).
 const ogImage = socialSource({
 	cover,

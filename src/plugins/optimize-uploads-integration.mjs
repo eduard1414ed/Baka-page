@@ -4,12 +4,18 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import sharp from 'sharp';
 import { IMAGE_WIDTHS, isOptimizableImage, getOgVariantSrc, isWantedByPages, collectUploadRefs, variantBase } from '../lib/imageVariants.mjs';
-import { OG_BACKGROUND } from '../lib/ogImage.mjs';
+import { OG_BACKGROUND, OG_MAX_SIDE } from '../lib/ogImage.mjs';
 
 const UPLOADS_DIR = 'images/uploads';
 
-/** Ширина jpeg-копии для превью в соцсетях. */
-const OG_WIDTH = 1200;
+/**
+ * Ширина jpeg-копии для превью в соцсетях. Число НЕ СВОЁ: это тот же предел
+ * стороны, по которому считает размер само превью (`OG_MAX_SIDE`). Своя копия
+ * числа стояла здесь до 20 августа 2026 и молча разошлась бы с первым же
+ * изменением предела — а разъехавшись, дала бы превью крупнее, чем исходник,
+ * из которого его делают.
+ */
+const OG_WIDTH = OG_MAX_SIDE;
 
 /**
  * Собрать весь html готовой сборки в одну строку — по ней проверяем, на какие
@@ -161,6 +167,16 @@ export default function optimizeUploadsIntegration() {
 					if (needsOg) {
 						await sharp(buffer)
 							.resize({ width: OG_WIDTH, withoutEnlargement: true })
+							// БЕЗ ЭТОЙ СТРОКИ ПРОЗРАЧНОЕ ЛОЖИТСЯ НА ЧЁРНОЕ, и это
+							// не догадка: у бонуса про «Железобетон» в телеграме
+							// вместо фигуры был чёрный квадрат (20 августа 2026).
+							// В соседней ветке — той, что делает такую же копию
+							// картинкам, которые мы не пережимаем, — строка была
+							// с самого начала. Ветки разошлись, когда в список
+							// пережимаемых добавили webp: до того webp ходил
+							// по соседней ветке, где фон на месте, и загруженная
+							// в админку прозрачная картинка была здесь невозможна.
+							.flatten({ background: OG_BACKGROUND })
 							.jpeg({ quality: 82 })
 							.toFile(fileURLToPath(new URL(ogName, uploadsUrl)));
 						ogCopies += 1;

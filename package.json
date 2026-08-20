@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node scripts/build-search-index.mjs && node scripts/check-players.mjs && node scripts/check-heading-bold.mjs",
+    "build": "astro build && node scripts/build-search-index.mjs && node scripts/check-players.mjs && node scripts/check-heading-bold.mjs && node scripts/og-size.test.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },

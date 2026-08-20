@@ -93,7 +93,7 @@ export function getEpisodeCoverSrcs(url) {
 export function getEpisodeCoverOgSrc(url) {
 	// Есть вырезанный персонаж — в превью идёт он, и своя jpeg-копия обложки
 	// для этого выпуска не делается вовсе. На бумагу его кладёт та же сборка,
-	// что рисует картинку 1200×630: прозрачный файл в телеграме может лечь
+	// что рисует превью в форме обложки: прозрачный файл в телеграме может лечь
 	// на чёрное, и персонаж пропадёт совсем.
 	const cutout = cutoutSocialSource(coverIdFromUrl(url));
 	if (cutout) return cutout;
