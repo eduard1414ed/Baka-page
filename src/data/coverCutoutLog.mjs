@@ -209,6 +209,7 @@ export default {
 	"pasted-image-1786699668992-webp": { status: "не по шаблону", hash: "a9c57f380fc629b6", why: "не квадрат (960×540)" },
 	"pasted-image-1786699831769-webp": { status: "не по шаблону", hash: "39cda2835c7cd9c7", why: "не квадрат (1600×900)" },
 	"pasted-image-1786822089405-webp": { status: "не по шаблону", hash: "df361bc78c267436", why: "не квадрат (2048×944)" },
+	"pasted-image-1787556719030-webp": { status: "не по шаблону", hash: "17746566aa483ceb", why: "не квадрат (1920×1080)" },
 	"photo_2022-05-14_23-01-04-jpg": { status: "готов", hash: "a08447830d32cc10" },
 	"photo_2022-05-14_23-05-13-jpg": { status: "готов", hash: "df9620c5fa84ac2b" },
 	"tg-1005-jpg": { status: "не по шаблону", hash: "720b30f45099bbc4", why: "не квадрат (1000×880)" },
