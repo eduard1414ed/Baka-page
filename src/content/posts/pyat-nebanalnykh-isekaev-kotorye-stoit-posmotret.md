@@ -55,7 +55,7 @@ anime:
 
 Хвалить хочется и музыкальный продакшн. И песни Эйко в самом сериале, и, особенно, опенинг — отличные танцевальные треки. Если вы любите поп-музыку, этот сериал для вас. 
 
-#### Мальчик и птица
+#### :anime[Мальчик и птица]{id="kimitachi-wa-dou-ikiru-ka" source="shikimori" source-id="36699"}
 
 
 ::image{src="/images/uploads/pasted-image-1787556007741.webp" alt="" caption="Студия Ghibli, 2023" width="column"}

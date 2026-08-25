@@ -33,20 +33,30 @@ const SSH_KEY = `${process.env.HOME}/.ssh/hetzner_baki`;
 const STATE_ON_SERVER = '/root/baka-state/last-deployed-commit';
 
 const say = (text) => console.log(text);
-const die = (text) => {
+
+// КОДЫ ВОЗВРАТА НАЗЫВАЮТ ШАГ, А НЕ ПРОСТО «НЕ ВЫШЛО». Скрипт зовётся не только
+// руками, но и запускатором (scripts/launch-deploy.mjs), а тому надо объяснить
+// заказчику человеческими словами, что именно случилось: «сборка упала, на сайт
+// ничего не поехало» и «сайт выложен, а зеркало отстало» — это разные новости
+// с разными действиями. Одинаковый код 1 на всё делает их неразличимыми.
+//   2 — есть незакоммиченное      10 — сборка не прошла
+//   3 — есть незапушенное         11 — не выложился основной сайт
+//   4 — отстали от хранилища      12 — не залилось зеркало
+//   5 — нет ключей зеркала
+const die = (text, code = 1) => {
 	console.error(`\n✗ ${text}\n`);
-	process.exit(1);
+	process.exit(code);
 };
 
 const git = (args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8' }).trim();
 
-const step = (title, command) => {
+const step = (title, command, code) => {
 	say(`\n── ${title}`);
 	const started = Date.now();
 	try {
 		execSync(command, { cwd: ROOT, stdio: 'inherit', env: process.env });
 	} catch {
-		die(`шаг «${title}» не прошёл. Ничего не выложено дальше этого места.`);
+		die(`шаг «${title}» не прошёл. Ничего не выложено дальше этого места.`, code);
 	}
 	say(`   готово за ${Math.round((Date.now() - started) / 1000)} с`);
 };
@@ -58,7 +68,7 @@ const dirty = git(['status', '--porcelain']);
 if (dirty) {
 	console.error('\n✗ В рабочей копии есть незакоммиченное:\n');
 	console.error(dirty.split('\n').slice(0, 15).map((l) => `    ${l}`).join('\n'));
-	die('Сначала закоммитьте и запушьте. Иначе сервер соберёт из репозитория\n  и затрёт то, чего в репозитории нет, — правка «пропадёт сама».');
+	die('Сначала закоммитьте и запушьте. Иначе сервер соберёт из репозитория\n  и затрёт то, чего в репозитории нет, — правка «пропадёт сама».', 2);
 }
 
 // ── заслон 2: всё ли запушено ──────────────────────────────────────────────
@@ -68,26 +78,26 @@ const remote = git(['rev-parse', 'origin/main']);
 if (local !== remote) {
 	const ahead = git(['rev-list', '--count', 'origin/main..HEAD']);
 	const behind = git(['rev-list', '--count', 'HEAD..origin/main']);
-	if (Number(ahead) > 0) die(`Есть ${ahead} незапушенных коммитов. Сначала «git push».`);
-	if (Number(behind) > 0) die(`Вы отстали от GitHub на ${behind} коммитов. Сначала «git pull».`);
+	if (Number(ahead) > 0) die(`Есть ${ahead} незапушенных коммитов. Сначала «git push».`, 3);
+	if (Number(behind) > 0) die(`Вы отстали от GitHub на ${behind} коммитов. Сначала «git pull».`, 4);
 }
 say(`  всё закоммичено и запушено, выкладываем ${local.slice(0, 8)}`);
 
 // ── ключи зеркала ──────────────────────────────────────────────────────────
 const envFile = resolve(ROOT, '.env');
-if (!existsSync(envFile)) die('Нет файла .env с ключами зеркала — без него зеркало не зальётся.');
+if (!existsSync(envFile)) die('Нет файла .env с ключами зеркала — без него зеркало не зальётся.', 5);
 for (const line of readFileSync(envFile, 'utf8').split('\n')) {
 	const match = line.match(/^(AWS_ACCESS_KEY_ID|AWS_SECRET_ACCESS_KEY)=(.*)$/);
 	if (match) process.env[match[1]] = match[2].trim();
 }
 if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
-	die('В .env нет ключей зеркала (AWS_ACCESS_KEY_ID и AWS_SECRET_ACCESS_KEY).');
+	die('В .env нет ключей зеркала (AWS_ACCESS_KEY_ID и AWS_SECRET_ACCESS_KEY).', 5);
 }
 
 // ── работа ─────────────────────────────────────────────────────────────────
-step('собираю сайт', 'npm run build');
-step('выкладываю на bakapodcast.com', 'npx wrangler deploy');
-step('заливаю зеркало ru.bakapodcast.com', 'node scripts/mirror-sync.mjs');
+step('собираю сайт', 'npm run build', 10);
+step('выкладываю на bakapodcast.com', 'npx wrangler deploy', 11);
+step('заливаю зеркало ru.bakapodcast.com', 'node scripts/mirror-sync.mjs', 12);
 
 // ── говорим серверу, что этот коммит уже выложен ───────────────────────────
 //
