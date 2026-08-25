@@ -1,17 +1,25 @@
 {
-	"id": "kimitachi-wa-dou-ikiru-ka",
-	"source": "shikimori",
-	"sourceId": 36699,
-	"titleRu": "Как поживаете?",
-	"titleOriginal": "Kimitachi wa Dou Ikiru ka",
-	"year": 2023,
-	"studio": "Studio Ghibli",
-	"poster": "/anime/kimitachi-wa-dou-ikiru-ka.jpg",
-	"synopsis": "У маленького Махито Маки тяжёлая судьба: разразившаяся в стране война унесла жизнь его матери Хими. Вместе с отцом, Макито переехал к своей тёте Нацуко. Однако и на новом месте жизнь не задалась: сверстники в школе его невзлюбили, а дома его преследует странная разговаривающая цапля, которая заявляет, что знает, где находится его мать. Однажды беременная Нацуко таинственно покинула дом, и последовавший за ней Макито обнаружил старинный замок.\nЧто ждёт Махито и что значат слова непонятной цапли?",
-	"url": "https://shikimori.io/animes/36699-kimitachi-wa-dou-ikiru-ka",
-	"sourceAliases": [
-		"Мальчик и цапля",
-		"How Do You Live?",
-		"The Boy and the Heron"
-	]
+  "id": "kimitachi-wa-dou-ikiru-ka",
+  "source": "shikimori",
+  "sourceId": 36699,
+  "titleRu": "Как поживаете?",
+  "titleOriginal": "Kimitachi wa Dou Ikiru ka",
+  "aliasesAuto": "",
+  "strictQuotes": true,
+  "noSpeech": false,
+  "year": 2023,
+  "studio": "Studio Ghibli",
+  "poster": "/anime/kimitachi-wa-dou-ikiru-ka.jpg",
+  "synopsis": "У маленького Махито Маки тяжёлая судьба: разразившаяся в стране война унесла жизнь его матери Хими. Вместе с отцом, Макито переехал к своей тёте Нацуко. Однако и на новом месте жизнь не задалась: сверстники в школе его невзлюбили, а дома его преследует странная разговаривающая цапля, которая заявляет, что знает, где находится его мать. Однажды беременная Нацуко таинственно покинула дом, и последовавший за ней Макито обнаружил старинный замок.\nЧто ждёт Махито и что значат слова непонятной цапли?",
+  "url": "https://shikimori.io/animes/36699-kimitachi-wa-dou-ikiru-ka",
+  "manual": [],
+  "aliases": [
+    "Мальчик и птица",
+    "Мальчик и цапля"
+  ],
+  "sourceAliases": [
+    "Мальчик и цапля",
+    "How Do You Live?",
+    "The Boy and the Heron"
+  ]
 }
