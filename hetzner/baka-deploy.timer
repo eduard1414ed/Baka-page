@@ -1,0 +1,12 @@
+[Unit]
+Description=Проверять раз в 10 минут, не пора ли пересобрать сайт
+
+[Timer]
+# Реже, чем опрос постов: сборка идёт почти шесть минут, и гнать её каждые
+# пять было бы бессмысленно — роботы всё равно ждут общего замка.
+OnBootSec=10min
+OnUnitActiveSec=10min
+Unit=baka-deploy.service
+
+[Install]
+WantedBy=timers.target

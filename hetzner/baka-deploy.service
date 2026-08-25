@@ -1,0 +1,19 @@
+[Unit]
+Description=Сборка сайта Баки и выкладка на оба адреса
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/baka-site
+# Ключи: Cloudflare — основной сайт, AWS — зеркало. Оба ВНЕ репозитория,
+# права 600. Без минуса: пропал файл — служба падает громко, а не выкладывает
+# половину молча.
+EnvironmentFile=/root/baka-secrets/cloudflare.env
+EnvironmentFile=/root/baka-secrets/mirror.env
+ExecStart=/root/baka-robot/run-deploy.sh
+# Сборка идёт ~6 минут, выкладка на два адреса ещё пара. Полчаса с запасом.
+TimeoutStartSec=1800
+
+[Install]
+WantedBy=multi-user.target
