@@ -1,0 +1,13 @@
+[Unit]
+Description=Обработчик кнопок /admin/tools/ (запуск роботов)
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/node /root/baka-robot/robot-api.mjs
+Restart=always
+RestartSec=5
+# Слушает только 127.0.0.1 — наружу выставляет Caddy.
+
+[Install]
+WantedBy=multi-user.target

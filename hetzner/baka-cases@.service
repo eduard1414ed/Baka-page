@@ -1,0 +1,14 @@
+[Unit]
+Description=Падежные формы тайтлов (%i)
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/baka-site
+# %i — режим: dry (только отчёт) или write (применить). Шаблон вместо двух
+# служб: код один, расходиться нечему.
+ExecStart=/root/baka-robot/run-cases.sh %i
+TimeoutStartSec=3600
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,12 @@
+[Unit]
+Description=Применить решения по кандидатам в тайтлы
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/baka-site
+ExecStart=/root/baka-robot/run-apply.sh
+TimeoutStartSec=3600
+
+[Install]
+WantedBy=multi-user.target

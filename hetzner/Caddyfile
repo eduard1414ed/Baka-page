@@ -1,0 +1,19 @@
+167-233-251-252.sslip.io {
+	root * /srv/video
+
+	# Кнопки /admin/tools/ зовут роботов через этот путь (задача 21).
+	# Обработчик слушает только 127.0.0.1 — снаружи он недоступен, наружу
+	# смотрит вот этот путь, и он же даёт HTTPS.
+	# Стоит ПЕРЕД общим handle: Caddy разбирает их по порядку.
+	handle /robot/* {
+		uri strip_prefix /robot
+		reverse_proxy 127.0.0.1:8099
+	}
+
+	handle /files/telegram-export/* {
+		respond 404
+	}
+	handle {
+		file_server
+	}
+}
