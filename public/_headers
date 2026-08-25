@@ -45,10 +45,17 @@
   # значков (Material Symbols): забудь его — админка осталась бы без иконок.
   # shikimori и anilist зовёт наша служебная страница /admin/tools/.
   #
+  # 167-233-251-252.sslip.io — СЕРВЕР HETZNER, туда /admin/tools/ отправляет
+  # нажатия кнопок: роботы переехали с GitHub Actions на него (задача 21).
+  # ЗАБЫТЬ ЭТОТ АДРЕС — ЗНАЧИТ ПОЛУЧИТЬ «Failed to fetch» И ИСКАТЬ ПРИЧИНУ
+  # ГДЕ УГОДНО, ТОЛЬКО НЕ ЗДЕСЬ: браузер режет запрос ещё до отправки,
+  # на сервер он не приходит вовсе, и в его журналах пусто. Так и вышло
+  # 25 августа 2026 — кнопка молчала, а виноват был этот список.
+  #
   # ГДЕ ОСЛАБЛЕНО НАРОЧНО И ПОЧЕМУ: 'unsafe-inline' у скриптов и стилей,
   # blob: и data:, wasm-unsafe-eval — это то, чем программа CMS пользуется
   # изнутри, и проверить каждое в браузере сейчас невозможно (вход через
   # GitHub закрыт пометкой «спам»). Строгость там, где она стоит дёшево
   # и стережёт ключ: список адресов, запрет чужих рамок и подмены базового
   # адреса. Когда флаг снимут и админка оживёт — ослабления пересмотреть.
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://unpkg.com blob:; style-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; font-src 'self' data: https://unpkg.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; media-src 'self' data: blob:; connect-src 'self' https://api.github.com https://github.com https://unpkg.com https://cdn.jsdelivr.net https://baki-cms-auth.eduard1414ed.workers.dev https://shikimori.one https://shikimori.io https://graphql.anilist.co; frame-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://unpkg.com blob:; style-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; font-src 'self' data: https://unpkg.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; media-src 'self' data: blob:; connect-src 'self' https://api.github.com https://github.com https://unpkg.com https://cdn.jsdelivr.net https://baki-cms-auth.eduard1414ed.workers.dev https://shikimori.one https://shikimori.io https://graphql.anilist.co https://167-233-251-252.sslip.io; frame-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'
