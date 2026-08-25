@@ -1,0 +1,13 @@
+[Unit]
+Description=Опрос репозитория каждые 5 минут вместо события push
+
+[Timer]
+# На GitHub этих роботов будил push с фильтром по src/content/posts.
+# Событий push на сервере нет, поэтому спрашиваем сами. Пять минут — это
+# задержка, с которой новый тайтл в посте станет ссылкой на сайте.
+OnBootSec=3min
+OnUnitActiveSec=5min
+Unit=baka-posts.service
+
+[Install]
+WantedBy=timers.target

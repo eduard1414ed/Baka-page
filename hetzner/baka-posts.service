@@ -1,0 +1,16 @@
+[Unit]
+Description=Роботы постов Баки (тайтлы, кандидаты, картинки телеграма)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/baka-site
+ExecStart=/root/baka-robot/run-on-posts.sh
+
+# Полчаса с запасом: разбор кандидатов ходит в Shikimori по одному тайтлу
+# с паузами, а забор картинок разбирает экспорт на 383 МБ.
+TimeoutStartSec=1800
+
+[Install]
+WantedBy=multi-user.target
