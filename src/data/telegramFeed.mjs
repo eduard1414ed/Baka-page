@@ -34,8 +34,8 @@
 // счёл бы пропущенным весь архив разом.
 export const telegramFeed = {
 	"offset": 232983439,
-	"lastSeenId": 4153,
+	"lastSeenId": 4163,
 	"lastPostAt": "2026-08-13T14:50:20.993Z",
-	"lastRunAt": "2026-08-13T14:50:20.993Z",
+	"lastRunAt": "2026-08-25T09:04:18.905Z",
 	"albums": {}
 };
