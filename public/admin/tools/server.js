@@ -32,10 +32,30 @@ export function forgetKey() {
 }
 
 async function call(path, options = {}) {
-	const response = await fetch(`${API}${path}`, {
-		...options,
-		headers: { Authorization: `Bearer ${secret}`, ...(options.headers ?? {}) },
-	});
+	// СБОЙ ЗАПРОСА НАДО ПОЙМАТЬ ЗДЕСЬ, ИНАЧЕ КНОПКА МОЛЧИТ.
+	// fetch бросает исключение, когда до сервера не достучались вовсе:
+	// он выключен, нет сети, браузер зарубил запрос по CORS. Без этого
+	// try исключение улетало наверх, и нажатие не давало НИКАКОГО ответа —
+	// ни хорошего, ни плохого. Поймано заказчиком 25.08.2026 на первой же
+	// попытке ввести ключ.
+	let response;
+	try {
+		response = await fetch(`${API}${path}`, {
+			...options,
+			headers: { Authorization: `Bearer ${secret}`, ...(options.headers ?? {}) },
+		});
+	} catch (error) {
+		return {
+			ok: false,
+			status: 0,
+			body: {},
+			offline: true,
+			error:
+				`Не достучался до сервера (${API}). Так бывает, если сервер выключен, ` +
+				`нет интернета — или страница открыта с адреса, которому сервер не доверяет. ` +
+				`Сейчас страница открыта с «${location.origin}». Подробности: ${error?.message ?? error}`,
+		};
+	}
 	let body = {};
 	try {
 		body = await response.json();
@@ -48,9 +68,10 @@ async function call(path, options = {}) {
 
 /** Ключ подходит? Спрашиваем состоянием любого робота — оно ничего не запускает. */
 export async function checkKey() {
-	const { ok, status } = await call('/status/deploy');
+	const { ok, status, error } = await call('/status/deploy');
 	if (ok) return { ok: true };
-	if (status === 401) return { ok: false, error: 'Ключ не подошёл. Проверьте, что скопировали его целиком.' };
+	if (error) return { ok: false, error };
+	if (status === 401) return { ok: false, error: 'Ключ не подошёл. Проверьте, что скопировали его целиком — без слов «ROBOT_API_SECRET=» в начале.' };
 	return { ok: false, error: `Сервер ответил ${status || 'молчанием'}. Возможно, он выключен.` };
 }
 
@@ -62,8 +83,9 @@ export async function checkKey() {
  * Чем кончилось — смотрим потом через `status`.
  */
 export async function runRobot(name) {
-	const { ok, status, body } = await call(`/run/${name}`, { method: 'POST' });
+	const { ok, status, body, error } = await call(`/run/${name}`, { method: 'POST' });
 	if (ok) return { ok: true };
+	if (error) return { ok: false, error };
 	if (status === 409) return { ok: false, busy: true, error: 'Этот робот уже работает — подождите, пока закончит.' };
 	if (status === 401) return { ok: false, error: 'Ключ не подошёл.' };
 	return { ok: false, error: body?.error || `Сервер ответил ${status || 'молчанием'}.` };

@@ -39,9 +39,15 @@ const ROBOTS = {
 const ALLOWED_ORIGINS = new Set([
 	'https://bakapodcast.com',
 	'https://www.bakapodcast.com',
-	'http://localhost:4321',
-	'http://127.0.0.1:4321',
 ]);
+
+// Локальная админка живёт на localhost, но НЕ ВСЕГДА на 4321: Astro берёт
+// следующий свободный порт, если этот занят, — и тогда страница открыта
+// с localhost:4322, а сервер такого адреса не знает. Браузер режет ответ
+// молча, и выглядит это как «кнопка ничего не делает». Поэтому localhost
+// разрешаем с любым портом: это машина заказчика, а не чужой сайт.
+const isLocal = (origin) => /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin ?? '');
+const allowed = (origin) => Boolean(origin) && (ALLOWED_ORIGINS.has(origin) || isLocal(origin));
 
 const SECRET = (() => {
 	const raw = readFileSync('/root/baka-secrets/robot-api.env', 'utf8');
@@ -66,7 +72,7 @@ const run = (args) =>
 
 const json = (res, status, body, origin) => {
 	const headers = { 'Content-Type': 'application/json; charset=utf-8' };
-	if (origin && ALLOWED_ORIGINS.has(origin)) {
+	if (allowed(origin)) {
 		headers['Access-Control-Allow-Origin'] = origin;
 		headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type';
 		headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS';

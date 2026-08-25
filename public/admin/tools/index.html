@@ -267,8 +267,26 @@
 				return true;
 			}
 
-			el.login.addEventListener('click', () => tryKey(el.key.value));
-			el.key.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryKey(el.key.value); });
+			// ЛЮБОЙ СБОЙ ОБЯЗАН БЫТЬ ВИДЕН НА СТРАНИЦЕ. Нажатие, после которого
+			// не происходит ничего, читается как «кнопка сломана», и искать
+			// причину идут не туда. Поэтому здесь ловится всё подряд, включая
+			// то, чего мы не предусмотрели.
+			async function onLogin() {
+				el.login.disabled = true;
+				el.who.textContent = 'проверяю…';
+				try {
+					await tryKey(el.key.value);
+				} catch (error) {
+					el.authError.textContent = `Не смог проверить ключ: ${error?.message ?? error}`;
+					show(el.authError, true);
+				} finally {
+					el.login.disabled = false;
+					if (!el.authError.hidden) el.who.textContent = '';
+				}
+			}
+
+			el.login.addEventListener('click', onLogin);
+			el.key.addEventListener('keydown', (e) => { if (e.key === 'Enter') onLogin(); });
 
 			// ── запуск ──────────────────────────────────────────────────────────
 			const lastPress = {};
