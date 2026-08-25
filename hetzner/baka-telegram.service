@@ -1,0 +1,17 @@
+[Unit]
+Description=Забор новых постов канала Баки из телеграма
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/baka-site
+# Токен бота @bakaparcerbot — ВНЕ репозитория, права 600. Это НЕ тот бот,
+# что шлёт уведомления: очередь телеграма выдаётся один раз, и два читателя
+# отбирали бы посты друг у друга.
+EnvironmentFile=/root/baka-secrets/telegram-fetch.env
+ExecStart=/root/baka-robot/run-telegram.sh
+TimeoutStartSec=1800
+
+[Install]
+WantedBy=multi-user.target

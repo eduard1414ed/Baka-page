@@ -1,0 +1,11 @@
+[Unit]
+Description=Расписание забора постов: 02, 08, 14, 20 UTC (как было на GitHub)
+
+[Timer]
+OnCalendar=*-*-* 02,08,14,20:00:00 UTC
+Persistent=true
+RandomizedDelaySec=180
+Unit=baka-telegram.service
+
+[Install]
+WantedBy=timers.target
