@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Выложить на сайт</title>
+<style>
+	:root {
+		--paper: #f6f3ee; --ink: #1c1a17; --muted: #6b6459;
+		--line: #ddd6ca; --accent: #b3576b; --good: #2f6b46; --bad: #a33a3a;
+	}
+	* { box-sizing: border-box; }
+	body {
+		margin: 0; padding: 32px 24px 64px; background: var(--paper); color: var(--ink);
+		font: 16px/1.55 -apple-system, "Helvetica Neue", Arial, sans-serif;
+	}
+	main { max-width: 780px; margin: 0 auto; }
+	h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: -0.01em; }
+	.sub { color: var(--muted); margin: 0 0 28px; }
+	button {
+		font: 600 18px/1 inherit; color: #fff; background: var(--accent);
+		border: 0; border-radius: 10px; padding: 20px 28px; width: 100%;
+		cursor: pointer; letter-spacing: 0.01em;
+	}
+	button:disabled { background: var(--muted); cursor: default; }
+	button:not(:disabled):hover { filter: brightness(1.08); }
+	.hint { color: var(--muted); font-size: 14px; margin: 10px 2px 0; }
+	.step {
+		margin: 24px 0 0; padding: 16px 18px; border: 1px solid var(--line);
+		border-radius: 10px; background: #fffdf9;
+	}
+	.step b { display: block; font-size: 15px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+	.step span { display: block; font-size: 19px; margin-top: 6px; }
+	.result { margin: 24px 0 0; padding: 18px 20px; border-radius: 10px; border: 2px solid; white-space: pre-wrap; }
+	.result.ok { border-color: var(--good); background: #f0f7f2; }
+	.result.no { border-color: var(--bad); background: #fbf1f1; }
+	.result h2 { margin: 0 0 8px; font-size: 19px; }
+	.result.ok h2 { color: var(--good); } .result.no h2 { color: var(--bad); }
+	.result a { color: inherit; }
+	details { margin-top: 18px; }
+	summary { cursor: pointer; color: var(--muted); font-size: 14px; }
+	pre {
+		margin: 10px 0 0; padding: 14px; background: #26231f; color: #e8e2d8;
+		border-radius: 8px; overflow: auto; max-height: 340px;
+		font: 12px/1.5 ui-monospace, Menlo, monospace; white-space: pre-wrap;
+	}
+	.links { margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 15px; }
+	.links a { color: var(--accent); }
+	.hidden { display: none; }
+</style>
+</head>
+<body>
+<main>
+	<h1>Выложить на сайт</h1>
+	<p class="sub">Заберёт чужое, добавит ваши правки, соберёт сайт и разложит на оба адреса.</p>
+
+	<button id="knopka">ВЫЛОЖИТЬ НА САЙТ</button>
+	<p class="hint">Перед нажатием сохраните всё в админке. Занимает 4–5 минут — вкладку не закрывайте.</p>
+
+	<div class="step hidden" id="shag"><b>Сейчас идёт</b><span id="shagText">—</span></div>
+
+	<div class="result hidden" id="itog"></div>
+
+	<details id="podrobno" class="hidden">
+		<summary>Показать всё, что происходило</summary>
+		<pre id="log"></pre>
+	</details>
+
+	<p class="links">
+		Админка: <a id="adminLink" href="#">открыть</a> &nbsp;·&nbsp;
+		Сайт: <a href="https://bakapodcast.com" target="_blank" rel="noreferrer">bakapodcast.com</a> &nbsp;·&nbsp;
+		<a href="https://ru.bakapodcast.com" target="_blank" rel="noreferrer">зеркало</a>
+	</p>
+</main>
+
+<script>
+	const knopka = document.getElementById('knopka');
+	const shag = document.getElementById('shag'), shagText = document.getElementById('shagText');
+	const itog = document.getElementById('itog'), podrobno = document.getElementById('podrobno');
+	const log = document.getElementById('log');
+	let opros = null;
+
+	fetch('/alive').then((r) => r.json()).then((d) => {
+		if (d.admin) document.getElementById('adminLink').href = d.admin;
+	}).catch(() => {});
+
+	knopka.addEventListener('click', async () => {
+		gasi('Начинаю…');
+		itog.className = 'result hidden';
+		try {
+			const otvet = await fetch('/deploy', { method: 'POST' });
+			if (otvet.status === 409) { gasi('Выкладка уже идёт'); }
+		} catch (e) {
+			// Кнопка обязана отвечать даже когда сервер молчит: без этого
+			// нажатие выглядит как «ничего не произошло». На этих граблях
+			// проект уже стоял — кнопки /admin/tools/ молчали именно так.
+			pokazhi(false, 'Не достучался до своего же сервера.',
+				'Окно «Открыть админку» закрыто или упало.\n\nЧТО ДЕЛАТЬ: щёлкните по ярлыку «Открыть-админку.command» ещё раз.');
+			return;
+		}
+		sledi();
+	});
+
+	function gasi(text) { knopka.disabled = true; knopka.textContent = 'ИДЁТ ВЫКЛАДКА…'; shag.classList.remove('hidden'); shagText.textContent = text; }
+	function vernu() { knopka.disabled = false; knopka.textContent = 'ВЫЛОЖИТЬ НА САЙТ'; }
+
+	function sledi() {
+		clearInterval(opros);
+		opros = setInterval(async () => {
+			let s;
+			try { s = await (await fetch('/state')).json(); } catch { return; }
+			if (s.lines && s.lines.length) {
+				podrobno.classList.remove('hidden');
+				log.textContent = s.lines.join('\n');
+				log.scrollTop = log.scrollHeight;
+			}
+			if (s.running) { gasi(s.step || 'Работаю…'); return; }
+			clearInterval(opros);
+			vernu();
+			shag.classList.add('hidden');
+			if (s.finished) pokazhi(s.ok, s.title, s.text);
+		}, 700);
+	}
+
+	function pokazhi(ok, zagolovok, text) {
+		itog.className = 'result ' + (ok ? 'ok' : 'no');
+		itog.innerHTML = '';
+		const h = document.createElement('h2');
+		h.textContent = (ok ? '✓ ' : '✗ ') + zagolovok;
+		const p = document.createElement('div');
+		p.textContent = text || '';
+		itog.append(h, p);
+	}
+</script>
+</body>
+</html>
