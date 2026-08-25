@@ -1,0 +1,16 @@
+[Unit]
+Description=Расписание робота выпусков: каждый день в 06:00 UTC (09:00 МСК)
+
+[Timer]
+OnCalendar=*-*-* 06:00:00 UTC
+
+# ГЛАВНОЕ ДЛЯ ПЕРЕЗАГРУЗКИ: если в 06:00 сервер был выключен, запуск
+# не потеряется — робот сходит сразу после включения.
+Persistent=true
+
+# Разброс в пару минут, чтобы не долбить чужие сервисы ровно в секунду.
+RandomizedDelaySec=120
+Unit=baka-episodes.service
+
+[Install]
+WantedBy=timers.target

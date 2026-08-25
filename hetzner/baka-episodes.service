@@ -1,0 +1,25 @@
+[Unit]
+Description=Робот выпусков Баки (добор из RSS, обложки, расшифровка)
+Documentation=https://github.com/eduard1414ed/Baka-page
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/baka-site
+
+# Ключ ElevenLabs для платной расшифровки. Лежит ВНЕ репозитория, права 600.
+# Минус перед путём: если файла нет, служба не падает — расшифровка просто
+# не сделается и скажет об этом, а добор выпусков отработает.
+EnvironmentFile=-/root/baki-transcripts/.env
+
+ExecStart=/root/baka-robot/run-episodes.sh
+
+# Полтора часа — как timeout-minutes: 90 в старом воркфлоу. Оборвать
+# оплаченное распознавание на середине значит выбросить деньги.
+TimeoutStartSec=5400
+
+# Робот не имеет права запуститься дважды разом: два git push в один
+# репозиторий подрались бы. Это замена concurrency из воркфлоу.
+[Install]
+WantedBy=multi-user.target
