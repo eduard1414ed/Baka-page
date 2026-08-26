@@ -84,6 +84,17 @@ if CHANGED=$(git -c core.quotepath=false diff --name-only "$LAST" "$NEW" 2>/dev/
 			src/data/telegramFeed.mjs) ;;
 			статус/*) ;;
 			hetzner/*) ;;
+			# ВЕБ-АНАЛИТИКА СБОРКОЙ НЕ ЧИТАЕТСЯ, И ЭТО ЗАМЕР, А НЕ ЗДРАВЫЙ СМЫСЛ.
+			# 26.08.2026 посчитано, что читает `npm run build`: он запускает
+			# не только `astro build`, но и четыре скрипта, среди которых
+			# `scripts/og-size.test.mjs` — то есть «файлы проверок не влияют»
+			# было бы ошибкой. Прогон по импортам от package.json
+			# и astro.config.mjs даёт из папки scripts/ ровно шесть файлов,
+			# и ни одного из scripts/analytics/. Связь тут ОДНОСТОРОННЯЯ:
+			# аналитика читает src/data/platforms.js, обратно — никогда.
+			# Заводя в scripts/analytics/ что-то, что читает сборка, эту
+			# строку надо снять. Заслон — scripts/deploy-idle.test.mjs.
+			scripts/analytics/*) ;;
 			*/*) SKIP=0 ;;   # всё остальное в любой папке — влияет
 			*.md) ;;         # документы в корне: CLAUDE.md, СТАТУС.md, README.md
 			*) SKIP=0 ;;     # незнакомый файл в корне — собираем на всякий случай
