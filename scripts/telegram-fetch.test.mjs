@@ -36,6 +36,7 @@ import {
 	isUnsettled,
 	classify,
 	missedOnPage,
+	askAgainForMissed,
 	confirmUpTo,
 	seenUpTo,
 	appendPhotos,
@@ -526,6 +527,78 @@ export function missProblems(find = missedOnPage) {
 	return problems;
 }
 
+/**
+ * ВТОРОЙ ВОПРОС БОТУ — с ожиданием, и только когда есть что искать.
+ *
+ * ОТКУДА ОН ВЗЯЛСЯ. 25 и 26 августа 2026 подряд пост висел на странице канала,
+ * а в очереди бота его ещё не было: №4163 вышел в 07:01 и доехал к 14:02,
+ * №4165 вышел в 07:01, в 08:02 очереди не достиг и лежал в ней в 09:30.
+ * Запасной путь такие посты забирает, но картинки берёт со страницы —
+ * то есть в том размере, в каком их показывает страница, а не в исходном.
+ *
+ * ПРОВЕРЯЕТСЯ ТРИ ВЕЩИ, И ВТОРАЯ ВАЖНА НЕ МЕНЬШЕ ПЕРВОЙ: вопрос задан там,
+ * где есть что искать; НЕ задан там, где искать нечего (иначе это двадцать
+ * секунд молчания на каждом заходе ни за чем); и ответ склеивается по номеру
+ * обновления, а не дописывается — второй вопрос задаётся с ТЕМ ЖЕ номером,
+ * значит телеграм отдаёт всё прежнее заново, и дописанный ответ завёл бы
+ * каждый пост дважды.
+ */
+export async function secondAskProblems(again = askAgainForMissed) {
+	const problems = [];
+	const quiet = () => {};
+	const page = [{ id: 4165, members: [{ id: 4165 }] }];
+	const late = { update_id: 232983443, channel_post: { message_id: 4165, date: 1787727690, chat: { id: -100 }, caption: 'Разочарование сезона' } };
+	const next = { update_id: 232983444, channel_post: { message_id: 4166, date: 1787727700, chat: { id: -100 }, caption: 'Следующий' } };
+	const ask = (lastSeenId, updates) =>
+		missedOnPage(page, {
+			lastSeenId,
+			botSeen: new Set(groupByMediaGroup(readUpdates(updates).messages).flatMap((post) => post.members.map((m) => m.id))),
+			known: new Map(),
+		});
+
+	// 1. Страница показывает то, чего у бота нет: вопрос задан, и с ожиданием.
+	const missed = ask(4164, []);
+	if (missed.length !== 1) problems.push('образец собран неверно: пропущенным считается не один пост — проверять дальше нечего');
+
+	let waited = null;
+	const got = await again([], {
+		missed,
+		ask: async (wait) => {
+			waited = wait;
+			return [late];
+		},
+		say: quiet,
+	});
+	if (waited === null) problems.push('страница показывает то, чего у бота нет, а второй вопрос не задан — пост уедет со страницы, с картинкой похуже');
+	else if (waited < 5) problems.push(`второй вопрос задан с ожиданием ${waited} с — это тот же «отдай что есть», от которого он и не помогает`);
+	if (got.updates.length !== 1) problems.push(`после второго вопроса обновлений ${got.updates.length}, а бот отдал одно`);
+	if (!got.askedAgain) problems.push('вопрос задан, а робот считает, что не задавал, — в письме будет сказано не то');
+	if (ask(4164, got.updates).length) problems.push('пост приехал от бота, а всё ещё числится пропущенным — его заберут ещё и со страницы');
+
+	// 2. Искать нечего — не спрашиваем. Цена ожидания платится только за дело.
+	let touched = false;
+	const idle = await again([], {
+		missed: [],
+		ask: async () => {
+			touched = true;
+			return [late];
+		},
+		say: quiet,
+	});
+	if (touched) problems.push('второй вопрос задан там, где искать нечего — это ожидание на каждом заходе просто так');
+	if (idle.askedAgain) problems.push('вопрос не задавался, а робот считает, что задавал');
+
+	// 3. Телеграм отдаёт с того же номера, то есть ПОВТОРЯЕТ уже отданное.
+	const dup = await again([late], { missed, ask: async () => [late, next], say: quiet });
+	if (dup.updates.length !== 2) problems.push(`повторно отданное обновление посчитано заново: обновлений ${dup.updates.length}, а разных два`);
+	if (dup.arrived.length !== 1) problems.push(`новыми названы ${dup.arrived.length} обновлений, а новое одно`);
+	if (dup.updates.map((u) => u.update_id).join(',') !== '232983443,232983444') {
+		problems.push('обновления идут не по возрастанию номера — очередь подтвердится не там, где надо');
+	}
+
+	return problems;
+}
+
 /** Отметка о забранном: читается, пишется и НЕ ТЕРЯЕТ пояснение. */
 export function stateProblems(read = readState, save = writeState) {
 	const problems = [];
@@ -710,6 +783,7 @@ async function main() {
 	bad += show(`случаи бота, живым синтаксисом: ${CASES.length}`, caseProblems(CASES));
 	bad += show('придерживание свежего альбома и отметка о забранном', holdProblems());
 	bad += show('пропуск бота узнаётся по странице канала', missProblems());
+	bad += show('второй вопрос боту: с ожиданием, только за делом и без дублей', await secondAskProblems());
 	bad += show('отметка читается, пишется и не теряет пояснение', stateProblems());
 	bad += show('дописывание снимков в уже заведённый пост', appendProblems());
 	bad += show('токен не попадает в вывод', tokenProblems());
@@ -749,7 +823,7 @@ async function main() {
  * как в жизни ошибаются, а не так, как удобно проверке: половина из них — это
  * настоящие поломки, которые в проекте уже случались.
  */
-function selftest({ messages, pages, webPosts }) {
+async function selftest({ messages, pages, webPosts }) {
 	console.log('САМОПРОВЕРКА: ломаю нарочно, проверки обязаны это поймать\n');
 
 	const traps = [
@@ -817,6 +891,38 @@ function selftest({ messages, pages, webPosts }) {
 		{
 			name: 'пропуск ищется сравнением с импортированным, а не с виденным',
 			problems: missProblems((page, { known }) => page.filter((p) => !known.has(p.id))),
+		},
+		{
+			name: 'второй вопрос боту задаётся ВСЕГДА — двадцать секунд молчания на каждом заходе ни за чем',
+			problems: await secondAskProblems(async (updates, { missed, ask, say = () => {} }) => {
+				void missed;
+				if (!ask) return { updates, askedAgain: false, arrived: [] };
+				say('');
+				const more = await ask(20);
+				const seen = new Set(updates.map((u) => u.update_id));
+				const arrived = more.filter((u) => !seen.has(u.update_id));
+				return { updates: [...updates, ...arrived].sort((a, b) => a.update_id - b.update_id), askedAgain: true, arrived };
+			}),
+		},
+		{
+			name: 'ответ на второй вопрос дописывается как есть — телеграм отдал прежнее заново, и посты завелись бы дважды',
+			problems: await secondAskProblems(async (updates, { missed, ask, say = () => {} }) => {
+				if (!missed.length || !ask) return { updates, askedAgain: false, arrived: [] };
+				say('');
+				const more = await ask(20);
+				return { updates: [...updates, ...more], askedAgain: true, arrived: more };
+			}),
+		},
+		{
+			name: 'второй вопрос задан без ожидания — тот же «отдай что есть», от которого он и не помогает',
+			problems: await secondAskProblems(async (updates, { missed, ask, say = () => {} }) => {
+				if (!missed.length || !ask) return { updates, askedAgain: false, arrived: [] };
+				say('');
+				const more = await ask(0);
+				const seen = new Set(updates.map((u) => u.update_id));
+				const arrived = more.filter((u) => !seen.has(u.update_id));
+				return { updates: [...updates, ...arrived].sort((a, b) => a.update_id - b.update_id), askedAgain: true, arrived };
+			}),
 		},
 		{
 			name: 'пропуск не ищется вовсе — «ничего не найдено» выдаётся за хороший ответ',

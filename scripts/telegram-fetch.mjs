@@ -86,6 +86,27 @@ const HOLD_SECONDS = 120;
 // не было. За проект проверки врали в сторону «всё хорошо» шесть раз.
 const SILENCE_DAYS = 7;
 
+// СКОЛЬКО ЖДАТЬ, ПЕРЕСПРАШИВАЯ БОТА. Обычный вопрос задаётся без ожидания
+// (`timeout: 0`): что лежит в очереди — то и отдай. Но 25 и 26 августа 2026
+// подряд вышло так, что пост уже висел на странице канала, а в очереди бота
+// его ещё не было: №4163 вышел в 07:01 и приехал боту только к 14:02, №4165
+// вышел в 07:01 и в 08:02 очереди не достиг, зато лежал в ней в 09:30.
+// Поэтому там, где страница показывает то, чего бот не принёс, вопрос
+// повторяется с ожиданием: телеграм отвечает сразу, как только обновление
+// появится, и молчит эти секунды, только если его правда нет.
+//
+// ДВАДЦАТЬ, А НЕ ТРИДЦАТЬ, — потому что срок одного похода в чужой сервис
+// в проекте один и равен тридцати секундам (`ТАЙМАУТ` в retry.mjs): попроси
+// мы у телеграма ждать столько же, ожидание и срок сошлись бы в одну точку,
+// и обычное «новостей нет» изредка обрывалось бы по сроку, то есть выглядело
+// сбоем связи. Десять секунд запаса эту встречу разводят.
+//
+// ЦЕНА. Вопрос задаётся не чаще раза за заход и только когда есть что искать,
+// то есть добавляет не больше двадцати секунд четырежды в сутки. Считать это
+// надо каждый раз, когда куда-то дописывается ожидание: в проекте уже было,
+// что три верных починки сложились в «сборка идёт 346 минут».
+const WAIT_SECONDS = 20;
+
 // ——— Токен не должен попасть в вывод ———
 
 export const hideToken = (text, token) => (token ? String(text).split(token).join('<токен>') : String(text));
@@ -140,12 +161,17 @@ async function callApi(token, method, params = {}) {
 	return data.result;
 }
 
-/** Новые посты канала. Очередь НЕ подтверждается — это делает следующий заход. */
-async function getUpdates(token, offset) {
+/**
+ * Новые посты канала. Очередь НЕ подтверждается — это делает следующий заход.
+ *
+ * `wait` — сколько секунд телеграму держать вопрос, если отвечать пока нечем.
+ * Ноль (обычный заход) значит «отдай что есть и не задерживай».
+ */
+async function getUpdates(token, offset, wait = 0) {
 	return callApi(token, 'getUpdates', {
 		offset,
 		limit: BATCH,
-		timeout: 0,
+		timeout: wait,
 		allowed_updates: ['channel_post', 'edited_channel_post'],
 	});
 }
@@ -323,6 +349,56 @@ export function missedOnPage(webPosts, { lastSeenId, botSeen, known }) {
 }
 
 /**
+ * ПЕРЕСПРОСИТЬ БОТА, КОГДА СТРАНИЦА ПОКАЗЫВАЕТ ТО, ЧЕГО ОН НЕ ПРИНЁС.
+ *
+ * ЗАЧЕМ. Запасной путь работает и без этого — со страницы пост заберётся
+ * и разберётся тем же кодом. Но картинки со страницы берутся в том размере,
+ * в каком их показывает страница, а бот отдаёт исходник. Двадцать секунд
+ * ожидания дешевле, чем пост с картинкой похуже, и гораздо дешевле, чем
+ * письмо о пропаже, из-за которого идут искать поломку (25 и 26 августа 2026
+ * такое письмо приходило дважды, а виноват был не робот и не бот).
+ *
+ * СПРАШИВАЕМ РОВНО ТОГДА, КОГДА ЕСТЬ ЧТО ИСКАТЬ. Не «всегда с ожиданием»:
+ * при обычном заходе искать нечего, и ожидание стало бы четырьмя минутами
+ * молчания в сутки ни за чем.
+ *
+ * ОТВЕТ СКЛЕИВАЕТСЯ ПО НОМЕРУ ОБНОВЛЕНИЯ, А НЕ ДОПИСЫВАЕТСЯ. Второй вопрос
+ * задаётся с ТЕМ ЖЕ номером, с которого спрашивали в первый раз, — значит
+ * телеграм отдаёт всё прежнее заново. Дописав ответ как есть, робот завёл бы
+ * каждый пост дважды.
+ *
+ * @param {any[]} updates    — что принёс первый вопрос
+ * @param {object} как
+ * @param {any[]} как.missed — посты со страницы, которых у бота нет
+ * @param {(wait: number) => Promise<any[]>} [как.ask] — как спросить ещё раз
+ * @param {(text: string) => void} [как.say]
+ */
+export async function askAgainForMissed(updates, { missed, ask, say = console.log }) {
+	if (!missed.length || !ask) return { updates, askedAgain: false, arrived: [] };
+
+	say(
+		`\nСтраница показывает ${missed.length} ${missed.length === 1 ? 'пост' : 'постов'}, которых бот не принёс ` +
+			`(${missed.map((p) => '№' + p.id).join(', ')}) — переспрашиваю бота с ожиданием ${WAIT_SECONDS} с.`,
+	);
+
+	const more = await ask(WAIT_SECONDS);
+	const seen = new Set(updates.map((u) => u.update_id));
+	const arrived = more.filter((u) => !seen.has(u.update_id));
+
+	say(
+		arrived.length
+			? `Со второго вопроса бот отдал ${arrived.length}: беру у него, а не со страницы.`
+			: 'Со второго вопроса бот не отдал ничего — добираю со страницы.',
+	);
+
+	return {
+		updates: [...updates, ...arrived].sort((a, b) => a.update_id - b.update_id),
+		askedAgain: true,
+		arrived,
+	};
+}
+
+/**
  * С какого мгновения считать молчание бота.
  *
  * ЗДЕСЬ БЫЛА ДЫРА, И РОВНО ТА, ОТ КОТОРОЙ ЗАЩИЩАЛО САМО ПРАВИЛО. Отметка
@@ -439,39 +515,32 @@ async function main() {
 	console.log(write ? '\nРЕЖИМ ЗАПИСИ.\n' : '\nРАЗВЕДКА: не пишется ничего.\n');
 
 	// ——— 1. Что принёс бот ———
+	//
+	// Вопрос вынесен отдельной функцией, потому что задавать его приходится
+	// дважды: второй раз — с ожиданием, если страница канала покажет то, чего
+	// бот не принёс. Ошибка ловится ЗДЕСЬ и превращается в пустой ответ:
+	// молчащий бот не повод бросать заход, у запасного пути своя дорога.
+	// В письмо она уходит один раз, сколько бы вопросов задано ни было.
 
-	let updates = [];
 	let botFailed = null;
-	if (!has('no-bot')) {
+	const askBot = async (wait) => {
 		try {
-			if (arg('updates')) updates = JSON.parse(readFileSync(arg('updates'), 'utf8'));
-			else if (!token) throw new Error('токена нет: нужен ключ --token= или переменная TG_BOT_TOKEN');
-			else updates = await getUpdates(token, state.offset);
+			if (arg('updates')) return JSON.parse(readFileSync(arg('updates'), 'utf8'));
+			if (!token) throw new Error('токена нет: нужен ключ --token= или переменная TG_BOT_TOKEN');
+			return await getUpdates(token, state.offset, wait);
 		} catch (error) {
-			botFailed = hideToken(error.message, token);
-			console.error(`БОТ НЕ ОТВЕТИЛ: ${botFailed}`);
-			attention.push(`**Бот не ответил.** ${botFailed}`);
+			const why = hideToken(error.message, token);
+			console.error(`БОТ НЕ ОТВЕТИЛ: ${why}`);
+			if (!botFailed) attention.push(`**Бот не ответил.** ${why}`);
+			botFailed = why;
+			return [];
 		}
-	}
+	};
 
-	const { messages: botMessages, edited } = readUpdates(updates);
-	let botPosts = groupByMediaGroup(botMessages);
-	console.log(`Бот принёс обновлений: ${updates.length}, сообщений: ${botMessages.length}, постов после сборки альбомов: ${botPosts.length}`);
-	if (updates.length === BATCH) {
-		const line = `Бот отдал ровно ${BATCH} обновлений — столько за раз и берём, остаток приедет следующим заходом.`;
-		console.log(line);
-		attention.push(`**${line}** Если такое повторится, значит робот отстаёт от канала.`);
-	}
+	let updates = has('no-bot') ? [] : await askBot(0);
+	console.log(`Бот принёс обновлений: ${updates.length}`);
 
-	// ——— 2. Придержать пачку, которая может быть ещё не целой ———
-
-	const held = botPosts.filter((post) => isUnsettled(post, nowUnix));
-	if (held.length) {
-		botPosts = botPosts.filter((post) => !held.includes(post));
-		console.log(`Придержано до следующего захода (альбом может быть ещё не целым): ${held.map((p) => '№' + p.id).join(', ')}`);
-	}
-
-	// ——— 3. Страница канала: спрашиваем ВСЕГДА ———
+	// ——— 2. Страница канала: спрашиваем ВСЕГДА ———
 
 	let webPosts = [];
 	let webMax = 0;
@@ -495,19 +564,70 @@ async function main() {
 		}
 	}
 
-	// Что бот принёс сам — включая придержанное: оно не потеряно, а отложено.
-	const botSeen = new Set([...botPosts, ...held].flatMap((post) => post.members.map((m) => m.id)));
 	const known = knownIds(postsDir);
 
-	const missed = missedOnPage(webPosts, { lastSeenId: state.lastSeenId, botSeen, known });
+	// ——— 3. Чего бот не принёс — и второй вопрос с ожиданием ———
+	//
+	// Разбор ответа бота собран в одну функцию нарочно: после второго вопроса
+	// его надо повторить ЦЕЛИКОМ. Пересчитай мы половину — придержанный альбом
+	// или список отредактированных разъехались бы с остальным, и молча.
+
+	const readBot = (list) => {
+		const { messages, edited } = readUpdates(list);
+		const all = groupByMediaGroup(messages);
+		const held = all.filter((post) => isUnsettled(post, nowUnix));
+		return {
+			messages,
+			edited,
+			posts: all.filter((post) => !held.includes(post)),
+			held,
+			// Что бот принёс сам — включая придержанное: оно не потеряно,
+			// а отложено, и запасным путём добирать его не надо.
+			seen: new Set(all.flatMap((post) => post.members.map((m) => m.id))),
+		};
+	};
+
+	let bot = readBot(updates);
+	let missed = missedOnPage(webPosts, { lastSeenId: state.lastSeenId, botSeen: bot.seen, known });
+
+	// Из файла (`--updates=`) второй вопрос вернул бы тот же файл, и спрашивать
+	// его незачем; молчащего бота второй раз тоже не тревожим — он уже сказал.
+	const again = await askAgainForMissed(updates, {
+		missed,
+		ask: has('no-bot') || botFailed || arg('updates') ? null : (wait) => askBot(wait),
+	});
+	if (again.arrived.length) {
+		updates = again.updates;
+		bot = readBot(updates);
+		missed = missedOnPage(webPosts, { lastSeenId: state.lastSeenId, botSeen: bot.seen, known });
+	}
+
+	const { messages: botMessages, edited, posts: botPosts, held } = bot;
+	console.log(
+		`\nБот принёс всего обновлений: ${updates.length}, сообщений: ${botMessages.length}, ` +
+			`постов после сборки альбомов: ${botPosts.length + held.length}`,
+	);
+	if (updates.length === BATCH) {
+		const line = `Бот отдал ровно ${BATCH} обновлений — столько за раз и берём, остаток приедет следующим заходом.`;
+		console.log(line);
+		attention.push(`**${line}** Если такое повторится, значит робот отстаёт от канала.`);
+	}
+	if (held.length) {
+		console.log(`Придержано до следующего захода (альбом может быть ещё не целым): ${held.map((p) => '№' + p.id).join(', ')}`);
+	}
 
 	if (missed.length) {
 		console.log(`\nБОТ ПРОПУСТИЛ ${missed.length} — добираю со страницы канала: ${missed.map((p) => '№' + p.id).join(', ')}`);
 		attention.push(
 			`**Бот пропустил ${missed.length} ${missed.length === 1 ? 'пост' : 'постов'}, они добраны со страницы канала:** ` +
 				missed.map((p) => `[№${p.id}](https://t.me/${CHANNEL}/${p.id})`).join(', ') +
-				'.\n\nПричины бывают две: робот не ходил дольше суток (телеграм держит невыданное боту около суток) ' +
-				'или бота не было в канале, когда пост вышел. Разметка со страницы разбирается тем же кодом, ' +
+				'.\n\n' +
+				(again.askedAgain ? `Бота я переспросил с ожиданием ${WAIT_SECONDS} с — он не отдал их и со второго раза. ` : '') +
+				'Причины бывают три. Первая: телеграм отдал пост боту с опозданием — так было 25 и 26 августа 2026, ' +
+				'пост выходил в 07:01, через час очередь бота была ещё пуста, а к обеду он в ней лежал; ' +
+				'тогда всё уже в порядке, пост забран, и делать ничего не надо. Вторая: робот не ходил дольше суток ' +
+				'(телеграм держит невыданное боту около суток). Третья: бота не было в канале, когда пост вышел — ' +
+				'проверьте, стоит ли он в администраторах. Разметка со страницы разбирается тем же кодом, ' +
 				'но картинки берутся в том размере, в каком их показывает страница, — посмотрите их глазами.',
 		);
 	}
