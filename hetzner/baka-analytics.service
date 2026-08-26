@@ -1,0 +1,23 @@
+[Unit]
+Description=Еженедельная сводка по сайту в телеграм
+After=network-online.target
+Wants=network-online.target
+# УПАЛ — НАПИШИ ОБ ЭТОМ. Без этой строки провалившийся заход виден только
+# в journalctl, то есть никому: заказчик просто не получит сводку и решит,
+# что читателей ноль. Пункт 5.1 задания.
+OnFailure=baka-fail@%n.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/baka-site
+# Токен бота и номер чата — те же, что у отчётов о сервере.
+EnvironmentFile=/root/baka-secrets/telegram.env
+# Ключи Метрики и Google. ВНЕ репозитория, права 600. Файла .env в рабочей
+# копии на сервере нет нарочно: файл в папке, где работает git, однажды
+# попадёт в чужой коммит, а переменная окружения — никогда.
+EnvironmentFile=/root/baka-secrets/analytics.env
+ExecStart=/root/baka-robot/run-analytics.sh 7
+TimeoutStartSec=600
+
+[Install]
+WantedBy=multi-user.target

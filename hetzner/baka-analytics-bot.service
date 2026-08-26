@@ -1,0 +1,22 @@
+[Unit]
+Description=Бот отвечает на вопросы про аналитику
+After=network-online.target
+Wants=network-online.target
+# Сдался после пяти попыток за пять минут — сказать об этом вслух.
+OnFailure=baka-fail@%n.service
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+WorkingDirectory=/root/baka-site
+EnvironmentFile=/root/baka-secrets/telegram.env
+EnvironmentFile=/root/baka-secrets/analytics.env
+ExecStart=/usr/bin/node /root/baka-robot/analytics-bot.mjs
+# Сеть отвалилась, телеграм ответил отказом, кончилась память — поднимаем
+# обратно. Пять секунд паузы, чтобы не биться в закрытую дверь без остановки.
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
