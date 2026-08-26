@@ -5,6 +5,7 @@ import Footer from '../components/Footer.astro';
 import PlayerBar from '../components/PlayerBar.astro';
 import ToTop from '../components/ToTop.astro';
 import Analytics from '../components/Analytics.astro';
+import AnalyticsEvents from '../components/AnalyticsEvents.astro';
 import { SITE_NAME, SITE_DESCRIPTION, SITE_LANG, SITE_LOCALE, pageTitle, absoluteUrl } from '../lib/site.mjs';
 import { OG_DEFAULT, ogUrlForPost } from '../lib/ogImage.mjs';
 import '../styles/global.css';
@@ -136,6 +137,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 		     переходы по событию `astro:page-load`, которое роутер и рассылает.
 		     Сам компонент — только скрипт, разметки он не добавляет ни байта. -->
 		<Analytics />
+
+		<!-- События для целей: плеер, транскрипт, поиск, тайтлы, уходы
+		     на площадки. СТОИТ ПОСЛЕ <Analytics />, И ЭТО НЕ ПОРЯДОК ДЛЯ КРАСОТЫ:
+		     очереди `ym` и `gtag` заводит тот компонент, а этот в них пишет.
+		     Поменяй местами — первые события уйдут в никуда, и молча. -->
+		<AnalyticsEvents />
 	</head>
 	<body>
 		{/* Первый фокусируемый элемент страницы. Без него человек на клавиатуре
