@@ -61,6 +61,10 @@ import { parseChannelPage } from '../src/lib/telegramWebPost.mjs';
 import { photoFileName, photoSrc, withPhotos, savePhoto } from '../src/lib/telegramPhotos.mjs';
 import { buildAnimeMatcher } from '../src/lib/animeMentions.mjs';
 import { сроком } from './retry.mjs';
+// Числительное — один код на весь проект: «1 пост», «4 поста», «5 постов».
+// Своё «пост / постов» на две формы врало ровно там, где робот и говорит:
+// на четырёх постах, добранных со страницы.
+import { withCount } from '../src/lib/plural.mjs';
 
 const CHANNEL = 'podcastbaka';
 const API = 'https://api.telegram.org';
@@ -377,7 +381,7 @@ export async function askAgainForMissed(updates, { missed, ask, say = console.lo
 	if (!missed.length || !ask) return { updates, askedAgain: false, arrived: [] };
 
 	say(
-		`\nСтраница показывает ${missed.length} ${missed.length === 1 ? 'пост' : 'постов'}, которых бот не принёс ` +
+		`\nСтраница показывает ${withCount(missed.length, ['пост', 'поста', 'постов'])}, которых бот не принёс ` +
 			`(${missed.map((p) => '№' + p.id).join(', ')}) — переспрашиваю бота с ожиданием ${WAIT_SECONDS} с.`,
 	);
 
@@ -619,7 +623,8 @@ async function main() {
 	if (missed.length) {
 		console.log(`\nБОТ ПРОПУСТИЛ ${missed.length} — добираю со страницы канала: ${missed.map((p) => '№' + p.id).join(', ')}`);
 		attention.push(
-			`**Бот пропустил ${missed.length} ${missed.length === 1 ? 'пост' : 'постов'}, они добраны со страницы канала:** ` +
+			`**Бот пропустил ${withCount(missed.length, ['пост', 'поста', 'постов'])}, ` +
+				`${missed.length === 1 ? 'он добран' : 'они добраны'} со страницы канала:** ` +
 				missed.map((p) => `[№${p.id}](https://t.me/${CHANNEL}/${p.id})`).join(', ') +
 				'.\n\n' +
 				(again.askedAgain ? `Бота я переспросил с ожиданием ${WAIT_SECONDS} с — он не отдал их и со второго раза. ` : '') +
