@@ -329,14 +329,31 @@ console.log(`Собранный файл: ${файл}\n`);
 		['https://mave.stream/baka', 'go_listen', 'Mave'],
 		['https://www.youtube.com/@bakapodcast', 'go_listen', 'канал на YouTube'],
 		['https://www.youtube.com/watch?v=Yjai1MjLXVA', null, 'ЧУЖОЙ ролик на YouTube'],
-		['https://t.me/podcastbaka', null, 'обычный телеграм-канал'],
+		// СОЦСЕТИ И КАНАЛЫ — цель go_social, заведена 26 августа 2026 взамен
+		// двух автоцелей Метрики. Строчка про t.me/podcastbaka до этого дня
+		// стояла с ждём=null: канал не считался ничем.
+		['https://t.me/podcastbaka', 'go_social', 'телеграм-канал подкаста'],
+		['https://t.me/bakapodcast', 'go_social', 'второй телеграм подкаста'],
+		['https://www.tiktok.com/@bakapodcast', 'go_social', 'TikTok подкаста'],
+		// ПЛАТНАЯ ПОДПИСКА И ОТКРЫТЫЙ КАНАЛ ЖИВУТ НА ОДНОМ ДОМЕНЕ t.me,
+		// и различает их начало адреса. Сверяем, что появление соцсетей
+		// не отобрало у Tribute его достижения.
+		['https://t.me/tribute/app?startapp=s26z&utm=tg', 'go_support', 'Tribute с хвостом — всё ещё платная'],
+		// ЗАПИСЬ ЖИВОГО ПОВЕДЕНИЯ, А НЕ ПОЖЕЛАНИЕ. Адрес Tribute записан
+		// в списке площадок ВМЕСТЕ с параметром ?startapp=…, сравнение идёт
+		// по началу — и ссылка без параметра короче записанной, значит
+		// не засчитывается никуда. На сайте таких нет: замер по всей сборке
+		// дал 1350 ссылок, все с параметром. Строчка стоит здесь затем, чтобы
+		// это было известным свойством, а не сюрпризом.
+		['https://t.me/tribute/app', null, 'Tribute БЕЗ параметра не считается (так сегодня)'],
+		['https://t.me/kakoy-to-chuzhoy-kanal', null, 'ЧУЖОЙ телеграм-канал из текста'],
 		['https://t-j.ru/anime-summer-2026/', null, 'ссылка на источник в тексте'],
 		['https://ru.bakapodcast.com/posts/ep-150/', null, 'внутренняя ссылка'],
 	];
 	for (const [адрес, ждём, подпись] of случаи) {
 		const о = await поднять('ru.bakapodcast.com');
 		о.вызватьНаДокументе('click', { target: о.зарегистрировать(new о.Узел([], { tag: 'a', href: адрес })) });
-		const пришло = имена(о).find((и) => и === 'go_support' || и === 'go_listen') ?? null;
+		const пришло = имена(о).find((и) => и === 'go_support' || и === 'go_listen' || и === 'go_social') ?? null;
 		проверить(`${подпись}`, пришло === ждём, `ждали ${ждём ?? 'ничего'}, пришло ${пришло ?? 'ничего'}`);
 	}
 	console.log();
