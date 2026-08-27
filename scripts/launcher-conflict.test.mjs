@@ -83,6 +83,9 @@ function построить() {
 
 	// Запускатор — настоящий, копируется прямо перед прогоном.
 	cpSync(ЗАПУСКАТОР, join(заказчик, 'scripts', 'launch-deploy.mjs'));
+	// Общий дом правил, который запускатор импортирует: без него он не
+	// запустится вовсе, и проверка соврала бы в сторону «сломано».
+	cpSync(join(ROOT, 'scripts', 'repo-news-lib.mjs'), join(заказчик, 'scripts', 'repo-news-lib.mjs'));
 	writeFileSync(join(заказчик, 'scripts', 'quick-deploy.mjs'), ЗАГЛУШКА);
 	writeFileSync(join(заказчик, 'scripts', 'sync-anime.mjs'), ЗАГЛУШКА_ТАЙТЛОВ);
 	гит(заказчик, ['add', '-A']);
