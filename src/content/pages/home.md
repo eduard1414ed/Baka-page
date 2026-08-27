@@ -1,3 +1,3 @@
 ---
-pinnedPost: pravda-li-chto-gollivud-podsmatrival-idei-u-satosi-kona
+pinnedPost: ep-153
 ---
