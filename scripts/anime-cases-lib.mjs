@@ -101,6 +101,54 @@ function nominative(parses) {
 	return parses.find((p) => p.tag.CAse === 'nomn') ?? null;
 }
 
+/** Части речи, которыми бывает согласованное определение. */
+const DEFINING = new Set(['ADJF', 'PRTF']);
+const NOUN_ONLY = new Set(['NOUN']);
+
+/** Разбор в именительном среди перечисленных частей речи. */
+function nominativeAs(parses, posts) {
+	return parses.find((p) => p.tag.CAse === 'nomn' && posts.has(String(p.tag.POST))) ?? null;
+}
+
+/**
+ * СУЩЕСТВИТЕЛЬНОЕ ОБЩЕГО РОДА: «убийца», «сирота», «умница». Словарь метит
+ * такие пометкой Ms-f и отвечает про них женским родом — а стоять они могут
+ * при мужском определении. Сверка рода на них врёт всегда: «Плачущий убийца»
+ * объявлялся несогласованным, определение выбрасывалось, и выходило
+ * «Плачущий убийцы».
+ */
+function commonGender(parse) {
+	return /\bMs-f\b/.test(String(parse.tag));
+}
+
+/**
+ * Согласовано ли определение с существительным.
+ *
+ * РОД СВЕРЯЕМ, ТОЛЬКО ЕСЛИ ОН ЕСТЬ У ОБОИХ И ОН НАСТОЯЩИЙ. У прилагательного
+ * во множественном числе рода не бывает вовсе, а у существительного общего
+ * рода он не свой, а по смыслу.
+ */
+function agrees(modParse, nounParse) {
+	if (!modParse) return false;
+	const sameGender =
+		!modParse.tag.GNdr || !nounParse.tag.GNdr || commonGender(nounParse) || modParse.tag.GNdr === nounParse.tag.GNdr;
+	return sameGender && modParse.tag.NMbr === nounParse.tag.NMbr;
+}
+
+/**
+ * Есть ли дальше по названию существительное в именительном, согласованное
+ * с этим определением. Вопрос задаётся слову, которое словарь читает и так,
+ * и эдак, — см. readAsMod в findHead.
+ */
+function nounAheadFor(adjParse, from, words, parsed) {
+	for (let i = from; i < words.length; i++) {
+		const noun = nominativeAs(parsed[i], NOUN_ONLY);
+		if (noun && agrees(adjParse, noun)) return true;
+	}
+	return false;
+}
+
+
 /**
  * Голова фразы и согласованные с ней определения перед ней.
  *
@@ -127,7 +175,16 @@ function findHead(words, parsed) {
 	// Тогда голова — само последнее определение: «Унесённые призраками»,
 	// «Провожающая в последний путь Фрирен» — существительного в именительном
 	// в этих названиях нет вовсе.
-	const finish = () => (mods.length > 0 ? { head: mods.at(-1), headParse: modParse, mods: mods.slice(0, -1) } : null);
+	// Разборы определений едут рядом с их номерами: у слова, которое словарь
+	// читает двумя способами, склонять надо ИМЕННО прилагательное. Спроси
+	// потом `nominative` заново — вернётся существительное, и словарь ответит
+	// отказом на признаки определения, а форма пропадёт молча.
+	let modParses = [];
+
+	const finish = () =>
+		mods.length > 0
+			? { head: mods.at(-1), headParse: modParse, mods: mods.slice(0, -1), modParses: modParses.slice(0, -1) }
+			: null;
 
 	for (let i = 0; i < words.length; i++) {
 		const parses = parsed[i];
@@ -140,26 +197,41 @@ function findHead(words, parsed) {
 		// с весом 0.00, поэтому спрашиваем ещё и про лучший разбор.
 		const usable = nom && best && !NOT_A_HEAD.has(String(best.tag.POST));
 
-		if (usable && post === 'NOUN') {
-			// Существительное в именительном — голова. Определения перед ним
-			// берём только согласованные: несогласованное относится не к нему.
-			//
-			// РОД СВЕРЯЕМ, ТОЛЬКО ЕСЛИ ОН ЕСТЬ У ОБОИХ. У прилагательного
-			// во множественном числе рода не бывает вовсе, а у существительного
-			// он остаётся — и сравнение «пусто против женского» объявляло
-			// «Королевские космические» несогласованными с «силами». Определения
-			// отбрасывались молча, и выходило «Королевские космические сил».
-			const sameGender = !modParse?.tag.GNdr || !nom.tag.GNdr || modParse.tag.GNdr === nom.tag.GNdr;
-			const agreed = modParse && sameGender && modParse.tag.NMbr === nom.tag.NMbr;
-			return { head: i, headParse: nom, mods: agreed ? mods : [] };
+		// СЛОВАРЬ ЧИТАЕТ ОДНО СЛОВО ДВУМЯ СПОСОБАМИ, И ВЕС У НИХ ОДИНАКОВЫЙ.
+		// «Мёртвые» — это и прилагательное, и существительное (мертвецы), оба
+		// разбора с весом 1.00. `nominative` берёт ПЕРВЫЙ, то есть решает
+		// порядок в словаре, — и «Мёртвые-мёртвые демоны» получали головой
+		// первое слово, а «демоны» оставались в именительном во всех падежах.
+		// Спор решается не весом, а тем, есть ли дальше существительное,
+		// согласованное с этим прочтением: есть — значит перед нами определение.
+		const asAdj = parses.length ? nominativeAs(parses, DEFINING) : null;
+		const asNoun = parses.length ? nominativeAs(parses, NOUN_ONLY) : null;
+		const readAsMod =
+			usable && asAdj && (!asNoun || asAdj.score >= asNoun.score) && nounAheadFor(asAdj, i + 1, words, parsed);
+
+		if (usable && post === 'NOUN' && !readAsMod) {
+			// Существительное в именительном — голова.
+			const agreed = agrees(modParse, nom);
+			// НЕСОГЛАСОВАННОЕ СУЩЕСТВИТЕЛЬНОЕ НЕ ОТМЕНЯЕТ НАБРАННЫХ ОПРЕДЕЛЕНИЙ,
+			// а значит, что фраза кончилась раньше него. Прежде определения
+			// в этом случае молча выбрасывались, и склонялось одно существительное:
+			// «Непостижимая Ахарэна» вместо «Непостижимой Ахарэн». Голова тут —
+			// последнее определение, как у «Унесённых призраками».
+			if (!agreed && mods.length > 0) return finish();
+			return { head: i, headParse: nom, mods: agreed ? mods : [], modParses: agreed ? modParses : [] };
 		}
 
-		if (usable && (post === 'ADJF' || post === 'PRTF')) {
+		if (usable && (post === 'ADJF' || post === 'PRTF' || readAsMod)) {
 			// Определение. Копим цепочку и идём дальше — вдруг за ней есть
 			// существительное.
-			if (modParse && (modParse.tag.GNdr !== nom.tag.GNdr || modParse.tag.NMbr !== nom.tag.NMbr)) mods = [];
+			const modNom = readAsMod ? asAdj : nom;
+			if (modParse && (modParse.tag.GNdr !== modNom.tag.GNdr || modParse.tag.NMbr !== modNom.tag.NMbr)) {
+				mods = [];
+				modParses = [];
+			}
 			mods.push(i);
-			modParse = nom;
+			modParses.push(modNom);
+			modParse = modNom;
 			continue;
 		}
 
@@ -170,6 +242,7 @@ function findHead(words, parsed) {
 		const done = finish();
 		if (done) return done;
 		mods = [];
+		modParses = [];
 		modParse = null;
 	}
 
@@ -248,7 +321,7 @@ export function inflectTitle(titleRu) {
 	const found = findHead(words, parsed);
 	if (!found) return [];
 
-	const { head, headParse, mods } = found;
+	const { head, headParse, mods, modParses } = found;
 
 	// СТРАДАТЕЛЬНОЕ ПРИЧАСТИЕ СКЛОНЯТЬ НЕЛЬЗЯ: словарь возводит его к глаголу
 	// и склоняет уже действительное. «Унесённые» → «Унёсших», а не
@@ -273,7 +346,13 @@ export function inflectTitle(titleRu) {
 	// и «Ходячий замок» с «Магической битвой» перестали склоняться вовсе.
 	// А назвать ЧИСЛО обязательно, и тоже у всех: без него словарь отвечает
 	// единственным, и «Королевские космические силы» становились «силе».
-	const gender = headParse.tag.GNdr;
+	const headIsCommon = commonGender(headParse);
+
+	// У СУЩЕСТВИТЕЛЬНОГО ОБЩЕГО РОДА РОД БЕРЁМ У ОПРЕДЕЛЕНИЯ, А НЕ У НЕГО.
+	// «Убийца» словарь помечает женским (Ms-f), и определения по нему уезжали
+	// в женский тоже: «Плачущей убийцы» при живом «Плачущего убийцу». Кто перед
+	// нами, знает как раз определение — оно род и показывает.
+	const gender = headIsCommon && modParses[0]?.tag.GNdr ? modParses[0].tag.GNdr : headParse.tag.GNdr;
 	const number = headParse.tag.NMbr;
 	const animacy = headParse.tag.ANim;
 	const headIsNoun = String(headParse.tag.POST) === 'NOUN';
@@ -291,8 +370,10 @@ export function inflectTitle(titleRu) {
 		out[wordAt[head]] = keepCase(words[head], inflectedHead.word);
 
 		let ok = true;
-		for (const m of mods) {
-			const inflectedMod = tryInflect(nominative(parsed[m]), forMods);
+		for (const [номер, m] of mods.entries()) {
+			// Разбор берём тот, по которому слово признано определением,
+			// а не спрашиваем словарь заново.
+			const inflectedMod = tryInflect(modParses[номер] ?? nominative(parsed[m]), forMods);
 			if (!inflectedMod) {
 				ok = false;
 				break;
