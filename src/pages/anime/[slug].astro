@@ -15,7 +15,7 @@ import PostCard from '../../components/PostCard.astro';
 import LoadMore from '../../components/LoadMore.astro';
 import { getAnimePosterSrcs, animeSocialSource } from '../../lib/animePoster.mjs';
 import { stampVar } from '../../lib/animeStamp.mjs';
-import { buildMentionIndex, postsForAnime } from '../../lib/animeMentionIndex.mjs';
+import { sharedMentionIndex, postsForAnime } from '../../lib/animeMentionIndex.mjs';
 import { formatTimecode } from '../../lib/timecode.mjs';
 import { isPublished } from '../../lib/publishing.mjs';
 import { plural } from '../../lib/plural.mjs';
@@ -25,6 +25,7 @@ import JsonLd from '../../components/JsonLd.astro';
 import SocialStrip from '../../components/SocialStrip.astro';
 import SupportStrip from '../../components/SupportStrip.astro';
 import { breadcrumbsSchema } from '../../lib/schema.mjs';
+import { индексируемостьСборки } from '../../lib/animeIndexability.mjs';
 
 export async function getStaticPaths() {
 	const animeList = await getCollection('anime');
@@ -37,15 +38,26 @@ export async function getStaticPaths() {
 	// Указатель «тайтл → выпуск → минуты» считаем ОДИН раз на всю сборку,
 	// а не заново на каждой странице тайтла: расшифровок 141, страниц тайтлов
 	// со временем станут сотни, и перечитывать одно другим вышло бы дорого.
-	const index = buildMentionIndex({ posts, transcripts, animeList });
+	const index = sharedMentionIndex({ posts, transcripts, animeList });
+
+	// ОТДАВАТЬ ЛИ СТРАНИЦУ ПОИСКОВИКАМ — вычисляется, а не ставится галочкой,
+	// и берётся ГОТОВЫМ из одной функции на весь сайт. Своего счёта страница
+	// не ведёт, хотя список упоминаний у неё на руках: вторая реализация
+	// правила разъехалась бы с картой сайта молча, а противоречивый сигнал
+	// поисковику хуже любого из двух ответов (src/lib/animeIndexability.mjs).
+	const решения = индексируемостьСборки({ posts, transcripts, animeList });
 
 	return animeList.map((entry) => ({
 		params: { slug: entry.id },
-		props: { entry, mentions: postsForAnime(entry.id, posts, index) },
+		props: {
+			entry,
+			mentions: postsForAnime(entry.id, posts, index),
+			noindex: !решения.get(entry.id).index,
+		},
 	}));
 }
 
-const { entry, mentions } = Astro.props;
+const { entry, mentions, noindex } = Astro.props;
 const { titleRu, titleOriginal, year, studio, poster, synopsis, url, source } = entry.data;
 const posterSrcs = getAnimePosterSrcs(poster);
 const displayTitle = titleRu || titleOriginal;
@@ -176,6 +188,7 @@ const crumbs = breadcrumbsSchema([
 	description={animeDescription}
 	ogUrl={animeSocialSource(poster) ? ogUrlForAnime(entry.id) : null}
 	imageAlt={displayTitle}
+	noindex={noindex}
 >
 	<JsonLd slot="head" data={crumbs} />
 	<div class="site">

@@ -1,38 +1,39 @@
 {
-  "id": "k-on",
-  "source": "shikimori",
-  "sourceId": 5680,
-  "titleRu": "Кэйон!",
-  "titleOriginal": "K-On!",
-  "strictQuotes": false,
-  "year": 2009,
-  "studio": "Kyoto Animation",
-  "poster": "/anime/k-on.jpg",
-  "synopsis": "Юи Хирасава — молодая и беззаботная девушка, только-только поступившая в старшую школу. В первый же день учёбы она замечает рекламный плакат «клуба лёгкой музыки» и, загоревшись желанием вступить туда, отправляется записываться в участники.",
-  "url": "https://shikimori.one/animes/5680-k-on",
-  "manual": [
-    "synopsis"
-  ],
-  "aliases": [
-    "Клуб лёгкой музыки",
-    "Keion",
-    "Кейон",
-    "K-ON! Season 1",
-    "Кэйон",
-    "Кэйона",
-    "Кейоне!",
-    "K-ON"
-  ],
-  "aliasesAuto": [
-    "Кэйона!",
-    "Кэйону!",
-    "Кэйоном!",
-    "Кэйоне!"
-  ],
-  "sourceAliases": [
-    "Клуб лёгкой музыки",
-    "Keion",
-    "K-ON! Season 1",
-    "K-ON!"
-  ]
+	"id": "k-on",
+	"source": "shikimori",
+	"sourceId": 5680,
+	"titleRu": "Кэйон!",
+	"titleOriginal": "K-On!",
+	"strictQuotes": false,
+	"year": 2009,
+	"studio": "Kyoto Animation",
+	"poster": "/anime/k-on.jpg",
+	"synopsis": "Юи Хирасава — молодая и беззаботная девушка, только-только поступившая в старшую школу. В первый же день учёбы она замечает рекламный плакат «клуба лёгкой музыки» и, загоревшись желанием вступить туда, отправляется записываться в участники.",
+	"url": "https://shikimori.one/animes/5680-k-on",
+	"franchise": "k_on",
+	"manual": [
+		"synopsis"
+	],
+	"aliases": [
+		"Клуб лёгкой музыки",
+		"Keion",
+		"Кейон",
+		"K-ON! Season 1",
+		"Кэйон",
+		"Кэйона",
+		"Кейоне!",
+		"K-ON"
+	],
+	"aliasesAuto": [
+		"Кэйона!",
+		"Кэйону!",
+		"Кэйоном!",
+		"Кэйоне!"
+	],
+	"sourceAliases": [
+		"Клуб лёгкой музыки",
+		"Keion",
+		"K-ON! Season 1",
+		"K-ON!"
+	]
 }

@@ -99,6 +99,12 @@ async function toEntry(data) {
 		posterUrl,
 		synopsis: cleanDescription(data.description),
 		url: data.url ? `${BASE}${data.url}` : undefined,
+		// Франшиза: один идентификатор на все сезоны, фильмы и арки одного
+		// произведения. Лежит в ЭТОМ ЖЕ ответе — отдельного запроса не нужно.
+		// По ней правило индексируемости понимает, кто кому сезон
+		// (src/lib/animeIndexability.mjs). Пустую строку приводим к null:
+		// «спросили, франшизы нет» обязано отличаться от «не спрашивали».
+		franchise: data.franchise || null,
 		sourceAliases: sourceAliases(data),
 	};
 }

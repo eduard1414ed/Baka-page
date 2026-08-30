@@ -13,7 +13,7 @@
 // он запоминается. Ключ — размеры трёх коллекций: если страница вдруг придёт
 // с другим набором данных, ответ будет посчитан заново, а не выдан чужой.
 
-import { buildMentionIndex, postsForAnime } from './animeMentionIndex.mjs';
+import { sharedMentionIndex, postsForAnime } from './animeMentionIndex.mjs';
 // Приведение текста к сравнимому виду и запись латиницы кириллицей — в одном
 // месте на сборку и на браузер: скрипт каталога приводит запрос той же
 // функцией, которой сборка привела данные.
@@ -63,7 +63,7 @@ export function buildCatalog({ posts, transcripts, animeList }) {
 	const key = `${posts.length}:${transcripts.length}:${animeList.length}`;
 	if (cache && cache.key === key) return cache.entries;
 
-	const index = buildMentionIndex({ posts, transcripts, animeList });
+	const index = sharedMentionIndex({ posts, transcripts, animeList });
 	const codes = catalogCodes(animeList);
 
 	const entries = [...animeList]

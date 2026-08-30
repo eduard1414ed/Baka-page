@@ -18,6 +18,7 @@ import { isExternalPost } from '../lib/externalPost.mjs';
 import { visibleCategories, categoriesShownIn } from '../content.config';
 import { absoluteUrl } from '../lib/site.mjs';
 import { ARCHIVE_BASE, pageCount, pageUrl } from '../lib/archive.mjs';
+import { индексируемостьСборки } from '../lib/animeIndexability.mjs';
 
 /**
  * Одна запись карты.
@@ -50,6 +51,21 @@ export const GET: APIRoute = async () => {
 	// на чужие сайты: своей страницы у них нет, но в ленте архива они стоят
 	// и на число страниц влияют.
 	const inArchive = await getCollection('posts', ({ data }) => isPublished(data));
+
+	// СТРАНИЦЫ ТАЙТЛОВ, ЗАКРЫТЫЕ ОТ ПОИСКОВИКОВ, В КАРТУ НЕ ИДУТ.
+	// Тот же довод, что у страницы поиска ниже: звать робота на страницу
+	// и тут же говорить ей «не индексируй» — противоречие, и Search Console
+	// на такое ругается. Решение берётся ГОТОВЫМ из той же функции, что ставит
+	// `noindex` в разметку страницы тайтла: одна функция на оба места —
+	// иначе карта однажды разошлась бы с сайтом молча, а разошедшись, дала бы
+	// поисковику два разных ответа на один вопрос.
+	//
+	// Набор постов тут ТОТ ЖЕ, что у src/pages/anime/[slug].astro (isPublished
+	// без прочих условий), и это не совпадение: разойдись наборы — указатель
+	// упоминаний построится второй раз и скажет об этом вслух
+	// (см. sharedMentionIndex).
+	const transcripts = await getCollection('transcripts');
+	const индексируется = индексируемостьСборки({ posts: inArchive, transcripts, animeList });
 	const pagesOf = (base: string, total: number) =>
 		Array.from({ length: pageCount(total) }, (_, i) => urlEntry(pageUrl(base, i + 1)));
 
@@ -73,7 +89,7 @@ export const GET: APIRoute = async () => {
 			return pagesOf(`/category/${category.id}/`, own.length);
 		}),
 		...posts.map((post) => urlEntry(`/posts/${post.id}/`, post.data.publishAt ?? post.data.date)),
-		...animeList.map((entry) => urlEntry(`/anime/${entry.id}/`)),
+		...animeList.filter((entry) => индексируется.get(entry.id).index).map((entry) => urlEntry(`/anime/${entry.id}/`)),
 	];
 
 	// /search/ в карту НЕ идёт: она закрыта noindex (см. src/pages/search.astro).

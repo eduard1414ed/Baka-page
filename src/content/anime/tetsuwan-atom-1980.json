@@ -1,30 +1,31 @@
 {
-  "id": "tetsuwan-atom-1980",
-  "source": "shikimori",
-  "sourceId": 3044,
-  "titleRu": "Могучий Атом (1980)",
-  "titleOriginal": "Tetsuwan Atom (1980)",
-  "strictQuotes": false,
-  "year": 1980,
-  "studio": "Tezuka Productions",
-  "poster": "/anime/tetsuwan-atom-1980.jpg",
-  "synopsis": "Цветной ремейк оригинального сериала «Могучий Атом» 1963 года.",
-  "url": "https://shikimori.io/animes/3044-tetsuwan-atom-1980",
-  "manual": [],
-  "aliases": [
-    "Astroboy",
-    "Astro Boy",
-    "Асторобой"
-  ],
-  "aliasesAuto": [
-    "Могучего Атома (1980)",
-    "Могучему Атому (1980)",
-    "Могучим Атомом (1980)",
-    "Могучем Атоме (1980)"
-  ],
-  "sourceAliases": [
-    "Astro Boy",
-    "Astroboy",
-    "Astro Boy (1980)"
-  ]
+	"id": "tetsuwan-atom-1980",
+	"source": "shikimori",
+	"sourceId": 3044,
+	"titleRu": "Могучий Атом (1980)",
+	"titleOriginal": "Tetsuwan Atom (1980)",
+	"strictQuotes": false,
+	"year": 1980,
+	"studio": "Tezuka Productions",
+	"poster": "/anime/tetsuwan-atom-1980.jpg",
+	"synopsis": "Цветной ремейк оригинального сериала «Могучий Атом» 1963 года.",
+	"url": "https://shikimori.io/animes/3044-tetsuwan-atom-1980",
+	"franchise": "atom",
+	"manual": [],
+	"aliases": [
+		"Astroboy",
+		"Astro Boy",
+		"Асторобой"
+	],
+	"aliasesAuto": [
+		"Могучего Атома (1980)",
+		"Могучему Атому (1980)",
+		"Могучим Атомом (1980)",
+		"Могучем Атоме (1980)"
+	],
+	"sourceAliases": [
+		"Astro Boy",
+		"Astroboy",
+		"Astro Boy (1980)"
+	]
 }
