@@ -1,29 +1,29 @@
 {
-	"id": "cyberpunk-edgerunners",
-	"source": "shikimori",
-	"sourceId": 42310,
-	"titleRu": "Киберпанк: Бегущие по краю",
-	"titleOriginal": "Cyberpunk: Edgerunners",
-	"strictQuotes": true,
-	"noSpeech": true,
-	"year": 2022,
-	"studio": "Trigger",
-	"poster": "/anime/cyberpunk-edgerunners.jpg",
-	"synopsis": "Найт-Сити — город будущего, оснащённый всевозможными новейшими технологиями. Город, где модификация тела не просто мечты безумных учёных, а реальность сродни обычной покупке. Именно там живёт наш юный герой, для которого этот город не является чем-то невообразимым, он знает всю его настоящую суть, где выживание не просто слово, а истинное лицо этого мира. В один миг потеряв всё, что имел, парень не опускает рук и в борьбе за выживание становится киберпанком — городским наёмником вне закона.",
-	"url": "https://shikimori.io/animes/42310-cyberpunk-edgerunners",
-	"franchise": "cyberpunk",
-	"manual": [],
-	"aliases": [
-		"The Cyberpunk Edgerunners",
-		"Киберпанк бегущие по лезвию"
-	],
-	"aliasesAuto": [
-		"Киберпанка",
-		"Киберпанку",
-		"Киберпанком",
-		"Киберпанке"
-	],
-	"sourceAliases": [
-		"null"
-	]
+  "id": "cyberpunk-edgerunners",
+  "source": "shikimori",
+  "sourceId": 42310,
+  "titleRu": "Киберпанк: Бегущие по краю",
+  "titleOriginal": "Cyberpunk: Edgerunners",
+  "strictQuotes": true,
+  "noSpeech": true,
+  "year": 2022,
+  "studio": "Trigger",
+  "poster": "/anime/cyberpunk-edgerunners.jpg",
+  "synopsis": "Найт-Сити — город будущего, оснащённый всевозможными новейшими технологиями. Город, где модификация тела не просто мечты безумных учёных, а реальность сродни обычной покупке. Именно там живёт наш юный герой, для которого этот город не является чем-то невообразимым, он знает всю его настоящую суть, где выживание не просто слово, а истинное лицо этого мира. В один миг потеряв всё, что имел, парень не опускает рук и в борьбе за выживание становится киберпанком — городским наёмником вне закона.",
+  "url": "https://shikimori.io/animes/42310-cyberpunk-edgerunners",
+  "franchise": "cyberpunk",
+  "manual": [],
+  "aliases": [
+    "The Cyberpunk Edgerunners",
+    "Киберпанк бегущие по лезвию"
+  ],
+  "aliasesAuto": [
+    "Киберпанка",
+    "Киберпанку",
+    "Киберпанком",
+    "Киберпанке"
+  ],
+  "sourceAliases": [
+    "null"
+  ]
 }
