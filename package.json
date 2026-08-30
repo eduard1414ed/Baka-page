@@ -7,7 +7,7 @@
 	},
 	"scripts": {
 		"dev": "astro dev",
-		"build": "astro build && node scripts/indexability-log.mjs && node scripts/build-search-index.mjs && node scripts/check-players.mjs && node scripts/check-heading-bold.mjs && node scripts/og-size.test.mjs && node scripts/indexability.test.mjs && node scripts/indexability-log.test.mjs && node scripts/indexability-pages.test.mjs",
+		"build": "astro build && node scripts/indexability-log.mjs --notify=notify-index.md && node scripts/build-search-index.mjs && node scripts/check-players.mjs && node scripts/check-heading-bold.mjs && node scripts/og-size.test.mjs && node scripts/indexability.test.mjs && node scripts/indexability-log.test.mjs && node scripts/indexability-pages.test.mjs",
 		"deploy": "node scripts/quick-deploy.mjs",
 		"indexability:report": "node scripts/indexability-report.mjs",
 		"preview": "astro preview",

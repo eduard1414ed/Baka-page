@@ -67,6 +67,7 @@ scripts/transcribe/state.json
 # рано или поздно попав в чужой коммит (задача 21).
 notify.md
 notify-covers.md
+notify-index.md
 notify-tg.md
 mirror-report.txt
 
