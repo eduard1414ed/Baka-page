@@ -187,7 +187,7 @@ export function setCover(head, path) {
  * всегда. Проверять размер обязательно — иначе в репозиторий уедет серый
  * прямоугольник, и на сайте он будет выглядеть настоящей обложкой.
  */
-async function fetchThumb(videoId) {
+export async function fetchThumb(videoId) {
 	const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/120 Safari/537.36';
 	for (const name of ['maxresdefault', 'sddefault', 'hqdefault']) {
 		try {
