@@ -22,11 +22,29 @@
 // Тогда проверка отвечала бы «плеер не объявлен» ВСЕГДА, в любом порядке
 // скриптов, — то есть меряла бы собственную бедность, а не порядок.
 
-/** Элемент, отвечающий на всё. Зачем именно так — в шапке файла. */
+/**
+ * Элемент, отвечающий на всё. Зачем именно так — в шапке файла.
+ *
+ * ТРИ ВЕЩИ ОН ДЕЛАЕТ ПО-НАСТОЯЩЕМУ, А НЕ ЗАГЛУШКОЙ: запоминает слушателей,
+ * складывает детей и умеет убрать себя от родителя. Первая редакция отвечала
+ * заглушкой и на это — и проверка фасада объявила поломкой исправный код:
+ * `remove()` ничего не делал, окошко оставалось в коробке, и выходило, будто
+ * ролик не закрывается. Сломан был измеритель, а не измеряемое.
+ */
 export function makeElement(свои = {}) {
 	const el = {
-		addEventListener() {},
-		removeEventListener() {},
+		слушатели: [],
+		addEventListener(событие, fn) {
+			this.слушатели.push([событие, fn]);
+		},
+		removeEventListener(событие, fn) {
+			const где = this.слушатели.findIndex(([с, f]) => с === событие && f === fn);
+			if (где !== -1) this.слушатели.splice(где, 1);
+		},
+		/** Позвать слушателей события — так, как это делает браузер. */
+		dispatch(событие, данные) {
+			for (const [с, fn] of [...this.слушатели]) if (с === событие) fn(данные ?? { type: событие });
+		},
 		querySelectorAll: () => [],
 		classList: { add() {}, remove() {}, contains: () => false, toggle() {} },
 		dataset: {},
@@ -42,10 +60,23 @@ export function makeElement(свои = {}) {
 			return this.hidden;
 		},
 		hasAttribute: () => false,
-		appendChild() {},
-		append() {},
+		appendChild(узел) {
+			this.append(узел);
+		},
+		append(...новые) {
+			for (const узел of новые) {
+				узел.parent = this;
+				this.children.push(узел);
+			}
+		},
 		insertBefore() {},
-		remove() {},
+		remove() {
+			const дети = this.parent?.children;
+			if (!дети) return;
+			const где = дети.indexOf(this);
+			if (где !== -1) дети.splice(где, 1);
+			this.parent = null;
+		},
 		contains: () => false,
 		closest: () => null,
 		focus() {},
@@ -111,7 +142,40 @@ export function makeCard({ guid, контролы, duration = '0' }) {
  * @param {object} опции
  * @param {any[]} опции.карточки Блоки, которые «лежат на странице».
  */
-export function makeWindow({ карточки = [] } = {}) {
+/**
+ * Фасад видеоэссе — с настоящей коробкой, кнопкой и кадром внутри.
+ *
+ * ЗДЕСЬ ПОДДЕЛКА ЧУТЬ БОГАЧЕ ОСТАЛЬНОГО, И ЭТО НЕ ПРИХОТЬ. Проверяемое
+ * поведение — «окошко ПОЯВИЛОСЬ в коробке, кнопка УШЛА из неё, при закрытии
+ * вернулась». Ответь дерево заглушкой, как везде, — спросить об этом было бы
+ * нечем, и проверка не смогла бы провалиться.
+ */
+export function makeFacade({ ролик }) {
+	const найти = (узлы, sel) => {
+		const класс = sel.startsWith('.') ? sel.slice(1) : null;
+		return узлы.find((узел) => (класс ? String(узел.className ?? '').split(/\s+/).includes(класс) : узел.tagName === sel)) ?? null;
+	};
+
+	const сцена = makeElement({ className: 'post-face-stage', children: [] });
+	сцена.querySelector = (sel) => найти(сцена.children, sel);
+
+	const кнопка = makeElement({ className: 'post-face-play' });
+	const кадр = makeElement({ className: 'post-face-frame' });
+	сцена.append(кадр, кнопка);
+
+	const фасад = makeElement({
+		className: 'post-face',
+		dataset: { youtube: ролик },
+		querySelector: (sel) => (sel === '.post-face-stage' ? сцена : сцена.querySelector(sel)),
+	});
+	фасад.сцена = сцена;
+	фасад.кнопка = кнопка;
+	фасад.окошко = () => сцена.querySelector('iframe');
+	фасад.кнопкаНаМесте = () => сцена.children.includes(кнопка);
+	return фасад;
+}
+
+export function makeWindow({ карточки = [], фасады = [] } = {}) {
 	const handlers = [];
 	const наблюдаемые = [];
 	let последнийНаблюдатель = null;
@@ -144,9 +208,13 @@ export function makeWindow({ карточки = [] } = {}) {
 		},
 		removeEventListener() {},
 		querySelector: (sel) => (sel === '[data-episode-card]' ? (карточки[0] ?? null) : makeElement()),
-		querySelectorAll: (sel) => (sel === '[data-episode-card]' ? карточки : []),
+		querySelectorAll: (sel) => {
+			if (sel === '[data-episode-card]') return карточки;
+			if (sel === '.post-face[data-youtube]') return фасады;
+			return [];
+		},
 		getElementById: элемент,
-		createElement: () => makeElement(),
+		createElement: (тег) => makeElement({ tagName: тег }),
 		body: тело,
 		documentElement: makeElement(),
 		head: makeElement(),
