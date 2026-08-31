@@ -350,10 +350,18 @@ const schema = isEpisode
 		})
 	: articleSchema({ url: pageUrl, title, description: pageDescription, image: ogImageAbsolute, date, modified });
 
-// Ролики YouTube, вставленные в текст (TASK-markup, пункт 1.2). Пока только
-// на страницах выпусков — так очерчена часть 1 задания; у видеоэссе ролики
-// тоже есть, и это отдельный разговор с заказчиком.
-const videoSchemas = isEpisode ? videoObjectsSchema(youtubeEmbedsInBody(post.body), pageUrl) : [];
+// Ролики YouTube, вставленные в текст (TASK-markup, пункт 1.2). На всех
+// страницах материалов, а не только у выпусков: решение заказчика 31 августа
+// 2026 — у 37 видеоэссе ролик и есть сам материал, и расшифровка разговора
+// принадлежит ему.
+//
+// КОМУ ДОСТАЁТСЯ РАСШИФРОВКА, РЕШАЕТСЯ ЗДЕСЬ, И ОТВЕТ ОДИН НА СТРАНИЦУ:
+// есть звук — она у звука (внутри PodcastEpisode), нет звука — у ролика.
+// Двум хозяевам сразу её отдавать нельзя: это было бы утверждение, что
+// разговоров на странице два.
+const videoSchemas = videoObjectsSchema(youtubeEmbedsInBody(post.body), pageUrl, {
+	transcript: isEpisode ? null : schemaTranscript,
+});
 
 // Крошки ведут в тот же раздел, что и ссылка «← назад» над заголовком,
 // и подписаны так же — расходиться им нельзя.

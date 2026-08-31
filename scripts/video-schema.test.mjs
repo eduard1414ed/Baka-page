@@ -1,4 +1,4 @@
-// РОЛИК НА СТРАНИЦЕ ВЫПУСКА ОБЯЗАН ИМЕТЬ СВОЙ ОБЪЕКТ РАЗМЕТКИ
+// РОЛИК НА СТРАНИЦЕ МАТЕРИАЛА ОБЯЗАН ИМЕТЬ СВОЙ ОБЪЕКТ РАЗМЕТКИ
 // (TASK-markup, пункт 1.2).
 //
 // ЗАЧЕМ ЭТА ПРОВЕРКА ВООБЩЕ ЕСТЬ. «Как выглядит вставка ролика» знают ДВА
@@ -43,8 +43,6 @@ const IFRAME_SRC_RE = /<iframe[^>]*\bsrc="(https:\/\/www\.youtube\.com\/embed\/[
 /** Что на странице: адреса роликов в разметке и адреса роликов в вёрстке. */
 function разобрать(html) {
 	const объекты = [];
-	let выпуск = false;
-
 	for (const [, json] of html.matchAll(LD_RE)) {
 		let data;
 		try {
@@ -52,7 +50,6 @@ function разобрать(html) {
 		} catch {
 			continue;
 		}
-		if (data['@type'] === 'PodcastEpisode') выпуск = true;
 		if (data['@type'] === 'VideoObject' && data.embedUrl) объекты.push(data.embedUrl);
 	}
 
@@ -62,7 +59,7 @@ function разобрать(html) {
 	// сам с собой.
 	const вёрстка = [...html.matchAll(IFRAME_SRC_RE)].map(([, src]) => src.split('?')[0]);
 
-	return { выпуск, объекты, вёрстка: [...new Set(вёрстка)] };
+	return { объекты, вёрстка: [...new Set(вёрстка)] };
 }
 
 const файлы = (await readdir(DIST, { withFileTypes: true })).filter((d) => d.isDirectory()).map((d) => d.name);
@@ -78,16 +75,18 @@ for (const slug of файлы) {
 
 	let html = await readFile(путь, 'utf8');
 
-	// ПОДЛОГ: у первой же страницы выпуска, где ролик есть, отнимаем его объект
+	// ПОДЛОГ: у первой же страницы, где ролик есть, отнимаем его объект
 	// разметки. Ровно то, что случится, если правило разбора текста перестанет
 	// узнавать вставку, которую плагин узнаёт.
-	if (selftest && !подложено && html.includes('"@type":"VideoObject"') && html.includes('PodcastEpisode')) {
+	if (selftest && !подложено && html.includes('"@type":"VideoObject"')) {
 		html = html.replace(/<script type="application\/ld\+json">\{"@context":"https:\/\/schema\.org","@type":"VideoObject".*?<\/script>/s, '');
 		подложено = true;
 	}
 
-	const { выпуск, объекты, вёрстка } = разобрать(html);
-	if (!выпуск) continue;
+	const { объекты, вёрстка } = разобрать(html);
+	// Страницы без единого ролика не считаем: их сотни, и «ноль равен нулю»
+	// в отчёте только прячет настоящее число.
+	if (объекты.length === 0 && вёрстка.length === 0) continue;
 
 	страниц += 1;
 	роликов += вёрстка.length;
@@ -102,7 +101,7 @@ for (const slug of файлы) {
 
 if (selftest) {
 	if (!подложено) {
-		console.error('✗ ПОДЛОГ НЕ УДАЛСЯ: не нашлось ни одной страницы выпуска с роликом — проверять нечего.');
+		console.error('✗ ПОДЛОГ НЕ УДАЛСЯ: не нашлось ни одной страницы с роликом — проверять нечего.');
 		process.exit(1);
 	}
 	if (беды.length === 0) {
@@ -120,4 +119,4 @@ if (беды.length > 0) {
 	process.exit(1);
 }
 
-console.log(`ок      Разметка роликов: страниц выпусков ${страниц}, роликов на них ${роликов}, у каждого свой объект.`);
+console.log(`ок      Разметка роликов: страниц с роликами ${страниц}, роликов на них ${роликов}, у каждого свой объект.`);
