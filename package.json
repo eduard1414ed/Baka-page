@@ -7,7 +7,7 @@
 	},
 	"scripts": {
 		"dev": "astro dev",
-		"build": "node scripts/check-post-refs.mjs && astro build && node scripts/indexability-log.mjs --notify=notify-index.md && node scripts/build-search-index.mjs && node scripts/check-players.mjs && node scripts/check-heading-bold.mjs && node scripts/og-size.test.mjs && node scripts/indexability.test.mjs && node scripts/indexability-log.test.mjs && node scripts/indexability-pages.test.mjs && node scripts/video-schema.test.mjs && node scripts/author-label.test.mjs && node scripts/material-insert.test.mjs && node scripts/post-ref-markup.test.mjs && node scripts/post-play-wiring.test.mjs && node scripts/post-face-youtube.test.mjs && node scripts/anime-hover-mask.test.mjs && node scripts/anime-hover-place.test.mjs",
+		"build": "node scripts/check-post-refs.mjs && astro build --force && node scripts/indexability-log.mjs --notify=notify-index.md && node scripts/build-search-index.mjs && node scripts/check-players.mjs && node scripts/check-heading-bold.mjs && node scripts/og-size.test.mjs && node scripts/indexability.test.mjs && node scripts/indexability-log.test.mjs && node scripts/indexability-pages.test.mjs && node scripts/video-schema.test.mjs && node scripts/author-label.test.mjs && node scripts/material-insert.test.mjs && node scripts/post-ref-markup.test.mjs && node scripts/post-play-wiring.test.mjs && node scripts/post-face-youtube.test.mjs && node scripts/anime-hover-mask.test.mjs && node scripts/anime-hover-place.test.mjs",
 		"deploy": "node scripts/quick-deploy.mjs",
 		"indexability:report": "node scripts/indexability-report.mjs",
 		"preview": "astro preview",
