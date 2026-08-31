@@ -21,6 +21,7 @@
 // не отменяет, а нативный ползунок даёт это даром. Дизайну важен вид и размер
 // цели — и то и другое стилями достижимо.
 import { platformsOfKind } from '../data/platforms.js';
+import PodcastPlatforms from './PodcastPlatforms.astro';
 
 interface Props {
 	guid: string;
@@ -31,11 +32,9 @@ interface Props {
 	durationSec?: number | null;
 	/** Левая подпись под плеером: «Бака! · выпуск №135». */
 	caption?: string | null;
-	/** Правая подпись. Есть только там, где таймкоды на странице действительно есть. */
-	hint?: string | null;
 }
 
-const { guid, audioUrl, title, cover, link, durationSec, caption = null, hint = null } = Astro.props;
+const { guid, audioUrl, title, cover, link, durationSec, caption = null } = Astro.props;
 
 // Куда отправить человека, если звук не отдался. Первая площадка «где слушать»
 // из общего списка — своего поля у поста под это нет и заводить его не за чем.
@@ -126,14 +125,20 @@ const fallbackPlatform = platformsOfKind('listen')[0];
 			</div>
 		</div>
 
-		{
-			(caption || hint) && (
-				<div class="ep-caption tech">
-					<span>{caption}</span>
-					<span>{hint}</span>
-				</div>
-			)
-		}
+		{/* СТРОКА ПОДПИСИ ПЛЕЕРА — ЭТО ТЕПЕРЬ ВЕРХНИЙ РЯД КОМПОНЕНТА ПЛОЩАДОК.
+		    Слева подпись «бака! · выпуск №152», справа кнопка «слушать
+		    в приложении ↓», под ними раскрывается панель — внутри плеера,
+		    между строкой и его нижней линией. Вид строки не изменился:
+		    её описание переехало в компонент как есть.
+
+		    ПРАВОГО СЛОТА С ПОДСКАЗКОЙ ПРО ТАЙМКОДЫ ЗДЕСЬ БОЛЬШЕ НЕТ —
+		    решение заказчика 31 августа 2026. Она стояла у всех выпусков
+		    с расшифровкой, а ниже, в самой расшифровке, стоит своя такая же
+		    («нажмите на время слева, чтобы перейти к фрагменту») — та
+		    остаётся. Место под кнопку освободила именно она. */}
+		<PodcastPlatforms id={`platforms-${guid}`}>
+			<span>{caption}</span>
+		</PodcastPlatforms>
 	</div>
 
 	{/* Третье состояние из справочника (блок 01): аудио не отдалось. Случай
@@ -209,13 +214,6 @@ const fallbackPlatform = platformsOfKind('listen')[0];
 		align-items: center;
 		gap: var(--sp-2);
 		padding-top: var(--sp-2);
-	}
-
-	.ep-caption {
-		display: grid;
-		gap: var(--sp-1);
-		margin-top: var(--sp-3);
-		color: var(--muted);
 	}
 
 	/* `:not([hidden])` тут обязателен, и это не перестраховка. Атрибут `hidden`
@@ -297,12 +295,6 @@ const fallbackPlatform = platformsOfKind('listen')[0];
 		.ep-tools {
 			grid-column: auto;
 			padding-top: 0;
-		}
-
-		.ep-caption {
-			display: flex;
-			justify-content: space-between;
-			gap: var(--sp-6);
 		}
 	}
 </style>

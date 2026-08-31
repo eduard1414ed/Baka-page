@@ -443,14 +443,14 @@ const crumbs = breadcrumbsSchema([
 	{ name: title, path: `/posts/${post.id}/` },
 ]);
 
-// Подписи под плеером (§13). Слева — что играет, справа — подсказка про
-// таймкоды, и она появляется ТОЛЬКО там, где таймкоды на странице правда есть:
-// обещание, которому нечего исполнить, хуже молчания.
+// Подпись под плеером (§13) — что играет. ПРАВОГО СЛОТА С ПОДСКАЗКОЙ ПРО
+// ТАЙМКОДЫ БОЛЬШЕ НЕТ: решением заказчика 31 августа 2026 место в нём отдано
+// кнопке «слушать в приложении ↓», а сама подсказка убрана совсем — такая же
+// стоит внутри расшифровки, рядом с тем, что объясняет.
 const playerNumber = episodeNumber(post.id);
 const playerCaption = isEpisode
 	? [SITE_NAME, playerNumber && `выпуск ${playerNumber}`].filter(Boolean).join(' · ')
 	: `${SITE_NAME} · аудиоверсия`;
-const playerHint = showTranscript ? 'Клик по таймкоду переносит плеер' : null;
 
 const backHref = `/category/${sectionId}/`;
 const isoDate = date.toISOString().slice(0, 10);
@@ -587,7 +587,6 @@ const postSearchMeta = [
 											link={`/posts/${post.id}/`}
 											durationSec={episode.durationSec}
 											caption={playerCaption}
-											hint={playerHint}
 										/>
 									</div>
 								)}
@@ -647,7 +646,6 @@ const postSearchMeta = [
 							link={`/posts/${post.id}/`}
 							durationSec={episode.durationSec}
 							caption={playerCaption}
-							hint={playerHint}
 						/>
 					</section>
 				)
