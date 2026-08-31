@@ -39,22 +39,43 @@
 // нескольким местам — блоку соцсетей, «О проекте», «Поддержать» и кнопкам
 // бонуса.
 //
-// ПОРЯДОК ВНУТРИ ВИДА ЗНАЧИМ ЕЩЁ В ОДНОМ МЕСТЕ: `EpisodePlayer.astro` берёт
-// ПЕРВУЮ площадку вида `listen` как запасную ссылку, когда аудио не отдалось.
-// Сейчас это YouTube; новые записи дописываются в конец своего вида.
+// ЗАВИСИМОСТИ ОТ «ПЕРВОЙ ПЛОЩАДКИ В СПИСКЕ» БОЛЬШЕ НЕТ, и это правка
+// 31 августа 2026. Здесь было записано: `EpisodePlayer.astro` берёт ПЕРВУЮ
+// площадку вида `listen` как запасную ссылку, когда аудио не отдалось, —
+// то есть перестановка списка молча меняла ссылку в плашке ошибки. Теперь
+// плашка показывает ВЕСЬ набор площадок тем же компонентом, что и панель
+// под плеером, и порядок списка на неё влияет ровно так же, как на всё
+// остальное. Мина обезврежена не тем, что о ней написано, а тем, что
+// единственный её потребитель перестал спрашивать «кто первый».
 export const platforms = [
+	// ——— ГДЕ СЛУШАТЬ ———
+	//
+	// ПОРЯДОК ЗДЕСЬ ЗАДАН ЗАКАЗЧИКОМ 31 августа 2026 И ЗНАЧИМ: ровно в нём
+	// площадки стоят в панели «слушать в приложении» под плеером и на
+	// странице «О проекте». Прежде первым стоял YouTube, и порядок был
+	// случайным — просто как дописывалось.
+	{ label: 'Apple Podcasts', url: 'https://podcasts.apple.com/podcast/id1577387113', kind: 'listen' },
+	{ label: 'Яндекс Музыка', url: 'https://music.yandex.ru/album/16989745', kind: 'listen' },
 	{ label: 'YouTube', url: 'https://www.youtube.com/@bakapodcast', kind: 'listen' },
+	{ label: 'Spotify', url: 'https://open.spotify.com/show/23VyxCbBLw6hh8NcsWZy7N', kind: 'listen' },
+	{ label: 'VK', url: 'https://vk.ru/podcast.baka', kind: 'listen' },
+	// ТРИ ПЛОЩАДКИ НИЖЕ НЕ ПОКАЗЫВАЮТСЯ НА «О ПРОЕКТЕ» — решение заказчика
+	// 31 августа 2026, когда они заводились. Признак стоит НА САМОЙ ПЛОЩАДКЕ,
+	// а не списком чужих имён внутри страницы: так же был устроен снятый
+	// `inFooter`, и по той же причине — страница не должна знать поимённо,
+	// кого ей не показывать.
+	{ label: 'Castbox', url: 'https://castbox.fm/channel/Бака!-id4436248?country=ru', kind: 'listen', inAbout: false },
+	{ label: 'Pocket Casts', url: 'https://pca.st/itunes/1577387113', kind: 'listen', inAbout: false },
+	{ label: 'Overcast', url: 'https://overcast.fm/itunes1577387113', kind: 'listen', inAbout: false },
+	{ label: 'Mave', url: 'https://mave.stream/baka', kind: 'listen' },
+
+	// ——— ГДЕ ОБЩАЕМСЯ ———
 	{
 		label: 'Telegram',
 		url: 'https://t.me/podcastbaka',
 		kind: 'social',
 		desc: 'Новости, мысли и новые материалы.',
 	},
-	{ label: 'Apple Podcasts', url: 'https://podcasts.apple.com/podcast/id1577387113', kind: 'listen' },
-	{ label: 'Яндекс Музыка', url: 'https://music.yandex.ru/album/16989745', kind: 'listen' },
-	{ label: 'Spotify', url: 'https://open.spotify.com/show/23VyxCbBLw6hh8NcsWZy7N', kind: 'listen' },
-	{ label: 'VK', url: 'https://vk.ru/podcast.baka', kind: 'listen' },
-	{ label: 'Mave', url: 'https://mave.stream/baka', kind: 'listen' },
 	{
 		label: 'TikTok',
 		url: 'https://www.tiktok.com/@bakapodcast',
@@ -98,6 +119,48 @@ export const platforms = [
 /** Площадки одного вида, в том же порядке, что в списке выше. */
 export function platformsOfKind(kind) {
 	return platforms.filter((platform) => platform.kind === kind);
+}
+
+// О пустых адресах говорится ОДИН РАЗ НА ПЛОЩАДКУ, а не при каждом вызове:
+// список спрашивают на каждой из полутора сотен страниц выпусков, и без
+// этого одна незаполненная площадка дала бы полторы сотни одинаковых строк
+// в логе сборки — то есть похоронила бы под собой всё остальное.
+const ужеСказаноОПустом = new Set();
+
+/**
+ * Площадки «где слушать» с непустым адресом.
+ *
+ * ПЛОЩАДКА БЕЗ АДРЕСА НЕ ПОКАЗЫВАЕТСЯ, НО И НЕ МОЛЧИТ. Ни пустой ячейки,
+ * ни мёртвой ссылки: и то и другое читатель принял бы за поломку сайта.
+ * Сборку это не роняет — отсутствующий адрес есть факт настройки, а не
+ * ошибка автора, и ронять из-за него выкладку всего сайта нельзя. Но
+ * и промолчать нельзя: незаполненная площадка иначе исчезла бы навсегда
+ * и незаметно.
+ *
+ * Пустая строка проверяется наравне с отсутствующим полем: админка пишет
+ * в незаполненное поле именно `''`, а не пропускает его.
+ */
+export function listenPlatforms() {
+	return platformsOfKind('listen').filter((platform) => {
+		const естьАдрес = typeof platform.url === 'string' && platform.url.trim() !== '';
+		if (!естьАдрес && !ужеСказаноОПустом.has(platform.label)) {
+			ужеСказаноОПустом.add(platform.label);
+			console.warn(`[площадки] «${platform.label}»: адреса нет — в списке «где слушать» не показана`);
+		}
+		return естьАдрес;
+	});
+}
+
+/**
+ * То же для страницы «О проекте» — без помеченных `inAbout: false`.
+ *
+ * ОТДЕЛЬНАЯ ФУНКЦИЯ, А НЕ НЕОБЯЗАТЕЛЬНЫЙ ДОВЕСОК К ПРЕДЫДУЩЕЙ: забытый
+ * довесок означал бы, что на «О проекте» молча приехали три лишние кнопки,
+ * и заметить это было бы некому. Забытая функция даёт то же, что было
+ * до правки, — а это состояние заказчик уже видел и принял.
+ */
+export function listenPlatformsForAbout() {
+	return listenPlatforms().filter((platform) => platform.inAbout !== false);
 }
 
 /**

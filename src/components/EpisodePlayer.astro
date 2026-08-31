@@ -20,7 +20,6 @@
 // роль для диктора, шаг, объявление позиции вслух; ничего из этого дизайн
 // не отменяет, а нативный ползунок даёт это даром. Дизайну важен вид и размер
 // цели — и то и другое стилями достижимо.
-import { platformsOfKind } from '../data/platforms.js';
 import PodcastPlatforms from './PodcastPlatforms.astro';
 
 interface Props {
@@ -36,9 +35,6 @@ interface Props {
 
 const { guid, audioUrl, title, cover, link, durationSec, caption = null } = Astro.props;
 
-// Куда отправить человека, если звук не отдался. Первая площадка «где слушать»
-// из общего списка — своего поля у поста под это нет и заводить его не за чем.
-const fallbackPlatform = platformsOfKind('listen')[0];
 ---
 
 {/* data-pagefind-ignore — плеер в поиск не берём (тз/06, шаг 1). Иначе в текст
@@ -146,13 +142,20 @@ const fallbackPlatform = platformsOfKind('listen')[0];
 	    делать дальше, а не пустой плеер, который молча не играет. */}
 	<div class="ep-error" hidden>
 		<p>Не удалось загрузить аудио. Попробуйте обновить страницу или послушать выпуск на площадке.</p>
-		{
-			fallbackPlatform && (
-				<a class="ep-error-link" href={fallbackPlatform.url} target="_blank" rel="noopener noreferrer">
-					Слушать на площадке «{fallbackPlatform.label}» <span aria-hidden="true">↗</span>
-				</a>
-			)
-		}
+
+		{/* ВЕСЬ НАБОР ПЛОЩАДОК, А НЕ ОДНА ССЫЛКА — решение заказчика
+		    31 августа 2026. Здесь стояла ссылка на ПЕРВУЮ площадку списка,
+		    и у неё было два изъяна сразу: человеку предлагался один выход
+		    вместо девяти, а перестановка списка молча меняла, какой именно.
+
+		    Список открыт, без кнопки раскрытия: сюда попадают, когда уже
+		    не работает, и прятать запасные пути за лишним нажатием значит
+		    чинить неудобство неудобством.
+
+		    Свой идентификатор, отличный от панели под плеером: оба блока
+		    живут на одной странице, и одинаковые id сделали бы `aria-controls`
+		    указывающим неизвестно на что. */}
+		<PodcastPlatforms id={`platforms-${guid}-error`} disclosure={false} />
 	</div>
 </div>
 
@@ -222,10 +225,13 @@ const fallbackPlatform = platformsOfKind('listen')[0];
 	   при этом правильная, атрибут на месте, а плашка «не удалось загрузить»
 	   висит на странице всегда, поверх исправно играющего плеера. Ровно это
 	   и случилось. */
+	/* `justify-items: start` ЗДЕСЬ БОЛЬШЕ НЕТ: он был заведён под кнопку
+	   с рамкой, которая иначе растянулась бы во всю ширину. Кнопки не стало,
+	   а список площадок наоборот обязан занимать всю ширину — иначе его
+	   колонки посчитались бы от ширины самого длинного названия. */
 	.ep-error:not([hidden]) {
 		display: grid;
 		gap: var(--sp-4);
-		justify-items: start;
 		padding: var(--sp-6) 0;
 	}
 
@@ -235,25 +241,6 @@ const fallbackPlatform = platformsOfKind('listen')[0];
 		font-size: var(--body-md);
 		line-height: 1.6;
 		color: var(--text);
-	}
-
-	.ep-error-link {
-		min-height: 44px;
-		display: inline-flex;
-		align-items: center;
-		gap: var(--sp-2);
-		padding: 0 14px;
-		border: 1px solid var(--line);
-		color: var(--ink);
-		font-size: var(--caption);
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
-	}
-
-	.ep-error-link:hover,
-	.ep-error-link:focus-visible {
-		border-color: var(--accent-text);
-		color: var(--accent-text);
 	}
 
 	.ep-progress {

@@ -22,7 +22,7 @@
 // уходит на свою строку, — расходятся только два числа и способ. Чинить
 // расхождение в этой задаче заказчик не поручал; названо и оставлено.
 
-import { platformsOfKind } from '../data/platforms.js';
+import { listenPlatforms } from '../data/platforms.js';
 import { FEED_URL } from '../lib/podcastFeed.mjs';
 
 interface Props {
@@ -35,30 +35,44 @@ interface Props {
 	 * основной адрес и зеркало обязаны собираться байт в байт).
 	 */
 	id: string;
+	/**
+	 * Есть ли кнопка раскрытия.
+	 *
+	 * `false` — списка не прячем вовсе: так он стоит в плашке «не удалось
+	 * загрузить аудио». Там за кнопкой его прятать нельзя — человек пришёл
+	 * туда потому, что у него УЖЕ не работает, и прятать от него запасные
+	 * пути за лишним нажатием значит чинить неудобство неудобством.
+	 */
+	disclosure?: boolean;
 }
 
-const { id } = Astro.props;
+const { id, disclosure = true } = Astro.props;
 
 // Площадки берутся из общего списка сайта, своего здесь нет и быть не может:
 // тот же список читают «О проекте» и разбор нажатий в счётчике. Порядок —
-// тот, что записан в файле.
-const listen = platformsOfKind('listen');
+// тот, что записан в файле. Площадки без адреса список отсеивает сам
+// и говорит о них в лог сборки.
+const listen = listenPlatforms();
 ---
 
 <div class="platforms">
-	<div class="pf-row tech">
-		<slot />
+	{disclosure && (
+		<div class="pf-row tech">
+			<slot />
 
-		{/* Это <button>, а не ссылка: он ничего не открывает, а раскрывает
-		    (§22 системы, ТЗ §3). Подпись набрана строчными нарочно —
-		    капслок ей даёт `.tech` у родителя, как и всему техническому
-		    слою сайта; своего `text-transform` кнопка не заводит. */}
-		<button type="button" class="pf-disc" aria-expanded="false" aria-controls={id}>
-			Слушать в приложении <span class="pf-chevron" aria-hidden="true">↓</span>
-		</button>
-	</div>
+			{/* Это <button>, а не ссылка: он ничего не открывает,
+			    а раскрывает (§22 системы, ТЗ §3). */}
+			<button type="button" class="pf-disc" aria-expanded="false" aria-controls={id}>
+				Слушать в приложении <span class="pf-chevron" aria-hidden="true">↓</span>
+			</button>
+		</div>
+	)}
 
-	<div class="pf-panel" id={id}>
+	{/* КЛАСС ВИДИМОСТИ СТАВИТСЯ ЗДЕСЬ, А НЕ СКРЫВАЕТСЯ В СКРИПТЕ: без кнопки
+	    раскрывать панель некому и нечем, и она обязана быть открытой уже
+	    в разметке — иначе у человека с выключенным JavaScript плашка ошибки
+	    осталась бы вовсе без запасных путей. */}
+	<div class:list={['pf-panel', { 'is-open': !disclosure }]} id={id}>
 		<div class="pf-grid">
 			{listen.map((platform) => (
 				<a
@@ -111,18 +125,23 @@ const listen = platformsOfKind('listen');
 	// на `astro:page-load`: оно приходит и при первом открытии страницы,
 	// и после каждого перехода. Тот же приём у транскрипта и у панели плеера.
 	function initPlatforms(root: HTMLElement) {
+		// КНОПКИ МОЖЕТ НЕ БЫТЬ ВОВСЕ (`disclosure={false}`), И ЭТО НЕ ПОВОД
+		// УХОДИТЬ: строка ленты с копированием есть в обоих случаях. Прежде
+		// здесь стоял общий выход `if (!disc) return`, и в плашке ошибки
+		// адрес перестал бы копироваться молча.
 		const disc = root.querySelector<HTMLButtonElement>('.pf-disc');
 		const panel = root.querySelector<HTMLElement>('.pf-panel');
-		if (!disc || !panel) return;
 
-		disc.addEventListener('click', () => {
-			// Состояние спрашивается У РАЗМЕТКИ, а не хранится в переменной:
-			// после перехода без перезагрузки узлы новые, а замыкание осталось
-			// бы от прежней страницы.
-			const opened = disc.getAttribute('aria-expanded') === 'true';
-			disc.setAttribute('aria-expanded', String(!opened));
-			panel.classList.toggle('is-open', !opened);
-		});
+		if (disc && panel) {
+			disc.addEventListener('click', () => {
+				// Состояние спрашивается У РАЗМЕТКИ, а не хранится
+				// в переменной: после перехода без перезагрузки узлы новые,
+				// а замыкание осталось бы от прежней страницы.
+				const opened = disc.getAttribute('aria-expanded') === 'true';
+				disc.setAttribute('aria-expanded', String(!opened));
+				panel.classList.toggle('is-open', !opened);
+			});
+		}
 
 		initCopy(root);
 	}

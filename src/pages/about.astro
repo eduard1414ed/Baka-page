@@ -31,7 +31,7 @@ import PlatformIcon from '../components/PlatformIcon.astro';
 import ImageMissing from '../components/ImageMissing.astro';
 import SocialStrip from '../components/SocialStrip.astro';
 import SupportStrip from '../components/SupportStrip.astro';
-import { platformsOfKind } from '../data/platforms.js';
+import { listenPlatformsForAbout } from '../data/platforms.js';
 import { getLinkIcon } from '../lib/linkIcon.mjs';
 import { breadcrumbsSchema } from '../lib/schema.mjs';
 import { excerptFromBody } from '../lib/excerpt.mjs';
@@ -63,7 +63,11 @@ const contactEmail = page?.data.contactEmail?.trim();
 
 // Только «Слушать подкаст»: два других блока со ссылками — общие компоненты,
 // и свой вид площадок каждый берёт сам из того же списка.
-const listen = platformsOfKind('listen');
+// НЕ ВЕСЬ ВИД `listen`, А ТОЛЬКО ТО, ЧТО ПОКАЗЫВАЕТСЯ ЗДЕСЬ. Castbox,
+// Pocket Casts и Overcast заведены 31 августа 2026 ради панели под плеером,
+// и на эту страницу они не идут — решение заказчика. Кого именно не пускать,
+// знает сама площадка, а не эта страница.
+const listen = listenPlatformsForAbout();
 
 // Описание для поисковика и превью — из первой фразы страницы, тем же
 // модулем, что у постов. Отдельного поля под него нет специально: ещё одно
