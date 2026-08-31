@@ -415,6 +415,370 @@
 						: `<div style="opacity:0.6;font-size:0.875rem">🔗 ${escapeHtml(data.label)} — ${escapeHtml(data.url)}</div>`,
 			});
 
+
+			// ═══ Кнопка «Наш материал» — врезка на другой материал сайта ═══
+			//
+			// В текст кладётся `::material{id="ep-152" label="ещё по теме" mode="play"}`,
+			// а превращает её в блок src/plugins/remark-post-ref.mjs при сборке.
+			//
+			// В ФАЙЛ ЛОЖИТСЯ ТОЛЬКО АДРЕС МАТЕРИАЛА. Ни заголовка, ни обложки,
+			// ни длительности, ни номера выпуска: всё это берётся из коллекции
+			// в момент сборки. Это ПЕРВАЯ вставка в проекте, которая хранит
+			// ссылку, а не данные, и потому сказано отдельно.
+			//
+			// Соблазн «раз уж мы всё равно знаем заголовок, сохраним и его»
+			// выглядит естественным — и он стоил бы дорого: сохранённый заголовок
+			// соврёт при первом же переименовании выпуска, И СБОРКА ПРИ ЭТОМ
+			// НЕ УПАДЁТ. Страница соберётся чисто, а во всех старых статьях
+			// останется старое название. Такое находят случайно и через полгода.
+			//
+			// МАТЕРИАЛ ВЫБИРАЕТСЯ ПОИСКОМ, А НЕ ВПИСЫВАЕТСЯ АДРЕСОМ. Набранный
+			// руками адрес — это опечатка, которая станет битой ссылкой, и не
+			// заметит её никто.
+			//
+			// ЭТО НЕ «ССЫЛКА ВРЕЗКОЙ». Та ведёт на ЧУЖОЙ адрес и складывается
+			// с соседними в один список; эта ведёт на НАШ материал, показывает
+			// его обложку и заголовок и стоит сама по себе. Имена разведены
+			// нарочно (решение заказчика 31 августа 2026): слова «ссылка»
+			// в новом пункте нет, слова «материал» — в старом.
+
+			// Список материалов готовит сборка (src/pages/admin-materials.json.ts).
+			// Качаем ОДИН раз на всю жизнь вкладки и держим обещание, а не готовый
+			// массив: пока первый запрос в пути, второе поле не пошлёт второй.
+			// Тот же приём, что у getAnimeIndex выше.
+			function getMaterialIndex() {
+				if (!window.__materialIndexPromise) {
+					window.__materialIndexPromise = fetch('/admin-materials.json')
+						.then((res) => (res.ok ? res.json() : []))
+						.catch(() => []);
+				}
+				return window.__materialIndexPromise;
+			}
+
+			// «е» и «ё» для поиска — одна буква, регистр не важен. То же правило,
+			// что у поиска упоминаний тайтлов на сайте: человек набирает «еще
+			// по теме» и «Ещё», и находиться должно и то и другое.
+			const foldSearch = (value) => String(value ?? '').toLowerCase().replaceAll('ё', 'е');
+
+			// СКОЛЬКО ПОКАЗЫВАЕМ ЗА РАЗ. Материалов почти семьсот, и вывалить их
+			// все в список — это мёртвая вкладка: каждая строка тянет картинку.
+			// Восемь — столько же, сколько отдаёт поиск по Shikimori у кнопки
+			// «Аниме», и столько же помещается на экран без прокрутки.
+			const MATERIALS_SHOWN = 8;
+
+			function searchMaterials(list, query) {
+				const q = foldSearch(query).trim();
+				// Пустая строка — свежие сверху. Список уже отсортирован сборкой,
+				// поэтому первые восемь и есть последние написанные: врезку почти
+				// всегда ставят на то, что писали недавно.
+				if (!q) return list.slice(0, MATERIALS_SHOWN);
+
+				const words = q.split(/\s+/).filter(Boolean);
+				return list
+					.filter((item) => {
+						// Ищем и по заголовку, и по адресу файла, и по номеру выпуска:
+						// «ep-152», «152» и «синкай» обязаны найти одно и то же.
+						const haystack = foldSearch(`${item.title} ${item.id} ${item.number ?? ''}`);
+						return words.every((word) => haystack.includes(word));
+					})
+					.slice(0, MATERIALS_SHOWN);
+			}
+
+			/** Строка под заголовком: «Подкаст · №152 · 12.08.2026». */
+			function materialMeta(item) {
+				return [item.type, item.number, item.date].filter(Boolean).join(' · ');
+			}
+
+			// Поле выбора материала — свой тип поля, потому что ищет по списку,
+			// который качается с сайта, а не по значению из формы. React передан
+			// самой Sveltia CMS глобально (h/createClass), как и у кнопки «Аниме».
+			const MaterialSearchControl = createClass({
+				getInitialState() {
+					return { query: '', picked: null, list: [], loading: true, missing: false };
+				},
+				componentDidMount() {
+					this._alive = true;
+					getMaterialIndex().then((list) => {
+						if (!this._alive) return;
+						// ОТКРЫЛИ УЖЕ ПОСТАВЛЕННЫЙ БЛОК: в файле лежит только адрес,
+						// заголовок и обложку достаём из списка. Именно поэтому
+						// переименование выпуска доезжает до всех старых врезок само.
+						const id = (this.props.value || {}).id;
+						const picked = id ? list.find((item) => item.id === id) : null;
+						// АДРЕС ЕСТЬ, А МАТЕРИАЛА В СПИСКЕ НЕТ — это НЕ то же самое,
+						// что «ничего не выбрано». Материал сняли с публикации, удалили
+						// или переименовали файл; молча показать пустое поле значило бы
+						// потерять врезку при первом же сохранении. Говорим вслух.
+						this.setState({ list, loading: false, picked: picked ?? null, missing: Boolean(id && !picked) });
+					});
+				},
+				componentWillUnmount() {
+					this._alive = false;
+				},
+				isValid() {
+					return (this.props.value || {}).id ? true : { error: { message: 'Выберите материал из списка' } };
+				},
+				handleQueryChange(e) {
+					this.setState({ query: e.target.value });
+				},
+				handlePick(item) {
+					this.setState({ picked: item, query: '', missing: false });
+					// В значение поля кладём и то, что нужно ТОЛЬКО ЭКРАНУ (заголовок,
+					// можно ли играть). В ФАЙЛ уедет один `id` — это решает toBlock
+					// ниже, а не форма.
+					this.props.onChange({ id: item.id, title: item.title, canPlay: item.canPlay, whyNot: item.whyNot });
+				},
+				handleReset() {
+					this.setState({ picked: null, query: '', missing: false });
+					this.props.onChange({ id: '', title: '', canPlay: false, whyNot: null });
+				},
+				render() {
+					const { query, picked, list, loading, missing } = this.state;
+					const children = [];
+
+					if (picked) {
+						children.push(
+							h(
+								'div',
+								{
+									key: 'picked',
+									style: {
+										display: 'flex',
+										alignItems: 'center',
+										gap: '8px',
+										padding: '6px 8px',
+										background: '#eaf5ea',
+										borderRadius: '4px',
+										fontSize: '13px',
+										color: '#1a1a1a',
+									},
+								},
+								picked.thumb
+									? h('img', {
+											key: 'thumb',
+											src: picked.thumb,
+											loading: 'lazy',
+											style: { width: '48px', height: '27px', objectFit: 'cover', borderRadius: '2px', flexShrink: 0 },
+										})
+									: null,
+								h(
+									'span',
+									{ key: 'text', style: { flex: '1 1 auto', minWidth: 0 } },
+									h('b', {}, picked.title),
+									h('br'),
+									`${materialMeta(picked)} · /posts/${picked.id}/`,
+								),
+								h('button', { key: 'reset', type: 'button', onClick: this.handleReset }, 'Выбрать другой'),
+							),
+						);
+
+						// ПОДСКАЗКА, А НЕ ЗАПРЕТ. Поле «Что делает» — соседнее, и своё
+						// значение оно от нас не примет: CMS отдаёт каждому полю только
+						// его собственное. Значит сказать можно, а помешать нельзя —
+						// и потому ровно то же правило стоит заслоном в сборке, где
+						// оно уже может уронить (src/lib/postRef.mjs, один файл на оба).
+						if (!picked.canPlay) {
+							children.push(
+								h(
+									'div',
+									{ key: 'why', style: { marginTop: '6px', fontSize: '13px', color: '#8a4b00' } },
+									`Играть здесь этот материал не может: ${picked.whyNot}. Оставьте «Ведёт на материал» — иначе сборка сайта остановится.`,
+								),
+							);
+						}
+
+						return h('div', {}, children);
+					}
+
+					if (missing) {
+						children.push(
+							h(
+								'div',
+								{ key: 'missing', style: { marginBottom: '6px', fontSize: '13px', color: '#a3000c' } },
+								`Материала «${(this.props.value || {}).id}» в списке нет. Он снят с публикации, удалён или переименован — выберите материал заново, иначе сборка сайта остановится.`,
+							),
+						);
+					}
+
+					children.push(
+						h('input', {
+							key: 'input',
+							id: this.props.forID,
+							className: this.props.classNameWrapper,
+							type: 'text',
+							placeholder: loading ? 'Гружу список материалов…' : 'Заголовок, адрес или номер выпуска…',
+							value: query,
+							disabled: loading,
+							onChange: this.handleQueryChange,
+							style: { width: '100%', marginBottom: '6px', boxSizing: 'border-box' },
+						}),
+					);
+
+					if (loading) {
+						return h('div', {}, children);
+					}
+
+					// СПИСОК ПУСТ САМ ПО СЕБЕ — это не «ничего не нашлось». Файл
+					// не отдался (сайт ещё ни разу не собирался после этой правки,
+					// сеть моргнула), и молчать об этом нельзя: человек решит,
+					// что материалов на сайте нет.
+					if (list.length === 0) {
+						children.push(
+							h(
+								'div',
+								{ key: 'nolist', style: { fontSize: '13px', color: '#a3000c' } },
+								'Список материалов не загрузился (/admin-materials.json). Он готовится при сборке сайта — если сайт ещё не собирался после обновления, соберите его.',
+							),
+						);
+						return h('div', {}, children);
+					}
+
+					const results = searchMaterials(list, query);
+
+					if (results.length === 0) {
+						children.push(h('div', { key: 'empty', style: { fontSize: '13px', opacity: 0.7 } }, 'Ничего не нашлось.'));
+						return h('div', {}, children);
+					}
+
+					children.push(
+						h(
+							'ul',
+							{
+								key: 'results',
+								style: { listStyle: 'none', margin: 0, padding: 0, border: '1px solid #ccc', borderRadius: '4px' },
+							},
+							results.map((item) =>
+								h(
+									'li',
+									{
+										key: item.id,
+										onClick: () => this.handlePick(item),
+										style: {
+											display: 'flex',
+											gap: '8px',
+											alignItems: 'center',
+											padding: '6px 8px',
+											cursor: 'pointer',
+											borderBottom: '1px solid #eee',
+										},
+									},
+									item.thumb
+										? h('img', {
+												key: 'thumb',
+												src: item.thumb,
+												loading: 'lazy',
+												style: { width: '48px', height: '27px', objectFit: 'cover', borderRadius: '2px', flexShrink: 0 },
+											})
+										: h('span', { key: 'nothumb', style: { width: '48px', flexShrink: 0 } }),
+									h(
+										'span',
+										{ key: 'text', style: { minWidth: 0 } },
+										h('b', {}, item.title),
+										h('br'),
+										h('span', { style: { opacity: 0.7 } }, materialMeta(item) + (item.external ? ' · на чужом сайте' : '')),
+									),
+								),
+							),
+						),
+					);
+
+					// Показано не всё — говорим об этом. Иначе список из восьми
+					// строк читается как «больше ничего и нет».
+					const всего = searchMaterials(list, query).length;
+					if (всего === MATERIALS_SHOWN) {
+						children.push(
+							h(
+								'div',
+								{ key: 'more', style: { marginTop: '4px', fontSize: '12px', opacity: 0.7 } },
+								query.trim() ? 'Показаны первые восемь — уточните запрос.' : 'Показаны восемь самых свежих — начните печатать.',
+							),
+						);
+					}
+
+					return h('div', {}, children);
+				},
+			});
+
+			const MaterialSearchPreview = createClass({
+				render() {
+					const value = this.props.value || {};
+					return h('span', {}, value.title ? `▣ ${value.title}` : '');
+				},
+			});
+
+			CMS.registerFieldType('material-search', MaterialSearchControl, MaterialSearchPreview);
+
+			CMS.registerEditorComponent({
+				id: 'material',
+				label: 'Наш материал',
+				icon: 'article',
+				fields: [
+					{ label: 'Материал', name: 'match', widget: 'material-search' },
+					{
+						label: 'Подпись блока',
+						name: 'label',
+						widget: 'string',
+						required: false,
+						hint: 'Пусто — встанет «ещё по теме». Впишите своё, если хочется точнее: «мы уже разбирали это», «если хочется коротко», «послушать прямо здесь». Квадратные скобки и заглавные буквы сайт добавит сам.',
+					},
+					{
+						label: 'Что делает',
+						name: 'mode',
+						widget: 'select',
+						default: 'link',
+						options: [
+							{ label: 'Ведёт на материал', value: 'link' },
+							{ label: 'Играет здесь', value: 'play' },
+						],
+						hint: '«Играет здесь» бывает только у выпуска подкаста и у видеоэссе. У статьи, заметки, бонуса и материала на чужом сайте играть нечего — там это остановит сборку сайта.',
+					},
+				],
+				pattern: /^::material\{([^\n]*)\}$/,
+				fromBlock: (match) => {
+					const attrs = {};
+					const re = /([\w-]+)="((?:[^"])*)"/g;
+					let m;
+
+					while ((m = re.exec(match[1]))) {
+						attrs[m[1]] = m[2].replaceAll('&quot;', '"');
+					}
+
+					// Заголовок в форму НЕ КЛАДЁМ — его в файле нет и быть не должно.
+					// Поле само достанет его из списка по адресу (componentDidMount).
+					return {
+						match: { id: attrs.id || '' },
+						label: attrs.label || '',
+						mode: attrs.mode === 'play' ? 'play' : 'link',
+					};
+				},
+				toBlock: (data) => {
+					const id = (data.match || {}).id;
+					if (!id) return '';
+
+					const parts = [`id="${escapeAttr(id)}"`];
+					// Подпись пишем, только когда автор её задал: базовое значение
+					// живёт в сборке одним местом. Впиши мы «ещё по теме» в каждый
+					// файл — и смена базовой подписи потребовала бы правки всех врезок
+					// архива, причём тех, где автор её вовсе не выбирал.
+					if (String(data.label ?? '').trim()) parts.push(`label="${escapeAttr(String(data.label).trim())}"`);
+					// То же и с режимом: «ведёт» — это умолчание, и в файле его нет.
+					if (data.mode === 'play') parts.push('mode="play"');
+
+					// Перенос строки по краям — иначе, вставленная посреди фразы,
+					// директива читается просто текстом, а не блоком.
+					return `\n::material{${parts.join(' ')}}\n`;
+				},
+				// Первая строка без тега — см. isBlankData выше: иначе Sveltia
+				// заберёт себе этот тег при вставке текста из соцсетей.
+				toPreview: (data) => {
+					const m = data.match || {};
+					if (!m.id) return 'Наш материал (не выбран)';
+					const подпись = String(data.label ?? '').trim() || 'ещё по теме';
+					const что = data.mode === 'play' ? 'играет здесь' : 'ведёт на материал';
+					return `<div style="opacity:0.6;font-size:0.875rem">▣ [ ${escapeHtml(подпись)} ] ${escapeHtml(m.title || m.id)} — ${что}</div>`;
+				},
+			});
+
 			// Кнопка «Аниме» — метка тайтла в тексте: :anime[Текст]{id="frieren" source="shikimori" source-id="9253"}.
 			// id — slug тайтла в справочнике (src/content/anime/), source/source-id — Shikimori
 			// или AniList id, по нему робот на GitHub Actions потом точно (без поиска по названию,

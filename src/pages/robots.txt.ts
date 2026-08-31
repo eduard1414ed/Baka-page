@@ -38,6 +38,7 @@ const ЗАКРЫТО: { путь: string; почему?: string }[] = [
 	},
 	{ путь: '/admin-posts.json', почему: 'Служебные файлы данных для админки — это не страницы, а куски JSON.' },
 	{ путь: '/admin-data/' },
+	{ путь: '/admin-materials.json' },
 	{ путь: '/anime-index.json' },
 	{ путь: '/anime-fields.json' },
 	{ путь: '/anime-alias-hints.json' },

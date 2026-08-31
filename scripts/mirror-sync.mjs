@@ -70,6 +70,7 @@ export const НЕ_ЕДЕТ_ФАЙЛЫ = [
 	// положило бы файл обычной страницей и отдавало бы всем желающим.
 	'_headers',
 	'admin-posts.json',
+	'admin-materials.json',
 	'anime-fields.json',
 	'anime-alias-hints.json',
 	'anime-index.json',

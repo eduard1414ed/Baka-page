@@ -155,7 +155,7 @@ collections:
         # показывает в меню ТОЛЬКО перечисленное здесь: зарегистрировать кнопку
         # в index.html мало, её надо ещё вписать сюда. Забудете — кнопки просто
         # не будет, и никакой ошибки при этом не появится.
-        editor_components: [code-block, figure, video, block-label, link-row, spoiler-start, spoiler-end, spoiler-inline, anime]
+        editor_components: [code-block, figure, video, block-label, link-row, material, spoiler-start, spoiler-end, spoiler-inline, anime]
       # Своё описание материала. Пусто — сайт берёт первый осмысленный абзац
       # текста, как было всегда. Заполнено — побеждает сразу в четырёх местах:
       # подводка на карточке, описание для поисковика, превью ссылки в чате
