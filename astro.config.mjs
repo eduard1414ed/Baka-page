@@ -10,6 +10,7 @@ import remarkSpoiler from './src/plugins/remark-spoiler.mjs';
 import remarkVideo from './src/plugins/remark-video.mjs';
 import remarkLinkList from './src/plugins/remark-link-list.mjs';
 import remarkBlockLabel from './src/plugins/remark-block-label.mjs';
+import remarkPostRef from './src/plugins/remark-post-ref.mjs';
 import remarkAnime from './src/plugins/remark-anime.mjs';
 import remarkTimecode from './src/plugins/remark-timecode.mjs';
 import optimizeUploadsIntegration from './src/plugins/optimize-uploads-integration.mjs';
@@ -70,6 +71,16 @@ export default defineConfig({
 			// Подпись блока внутри текста — тоже до спойлера, чтобы спрятанный
 			// блок уносил её вместе с собой одним куском.
 			remarkBlockLabel,
+			// Врезка на другой материал сайта. СТРОГО ЗДЕСЬ:
+			//   после remarkBlockLabel — врезка сама рисует свою подпись
+			//     `[ ещё по теме ]`, и чужая подпись, поставленная автором
+			//     отдельным блоком, к этому моменту уже разобрана;
+			//   до remarkAnime — иначе название тайтла внутри заголовка врезки
+			//     стало бы ссылкой на тайтл ВНУТРИ ссылки на материал, а вложенных
+			//     ссылок не бывает: у слова пропало бы нажатие целиком;
+			//   до remarkSpoiler — чтобы спрятанный блок уносил врезку с собой
+			//     одним куском, как уже уносит галерею и список ссылок.
+			remarkPostRef,
 			remarkAnime,
 			remarkTimecode,
 			remarkSpoiler,
