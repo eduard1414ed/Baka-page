@@ -1,7 +1,8 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { visit } from 'unist-util-visit';
-import { buildAnimeMatcher, findMentions } from '../lib/animeMentions.mjs';
+import { buildAnimeMatcher, findMentions, indexOfQuoteNear, isOpeningQuote } from '../lib/animeMentions.mjs';
+import { catalogCodes } from '../lib/animeCatalog.mjs';
 import { parseMentionExceptions } from '../lib/mentionExceptions.mjs';
 
 const ANIME_CONTENT_DIR = new URL('../content/anime/', import.meta.url);
@@ -10,9 +11,13 @@ const ANIME_CONTENT_DIR = new URL('../content/anime/', import.meta.url);
 // 1594, тайтлов 53, и перечитывать одно другим значило бы сотни лишних
 // обращений к диску. Внутри одной сборки справочник не меняется.
 let matcherCache = null;
+let entriesCache = null;
 
-function animeMatcher() {
-	if (matcherCache) return matcherCache;
+// Справочник, разобранный один раз на сборку. Просят его двое — матчер (по чему
+// искать) и нумерация (какой номер поставить сноской), и читать диск дважды
+// ради этого незачем.
+function catalogEntries() {
+	if (entriesCache) return entriesCache;
 
 	const entries = [];
 	for (const file of readdirSync(fileURLToPath(ANIME_CONTENT_DIR))) {
@@ -26,8 +31,15 @@ function animeMatcher() {
 		}
 	}
 
+	entriesCache = entries;
+	return entries;
+}
+
+function animeMatcher() {
+	if (matcherCache) return matcherCache;
+
 	// `apply`: это ТЕКСТЫ ПОСТОВ, тут галочка «только в кавычках» действует.
-	matcherCache = buildAnimeMatcher(entries, { quotes: 'apply', speech: false });
+	matcherCache = buildAnimeMatcher(catalogEntries(), { quotes: 'apply', speech: false });
 	return matcherCache;
 }
 
@@ -68,15 +80,138 @@ function warnUnknownAnime(id, postId) {
 	);
 }
 
-function autoLinkNode(id, text) {
+// НОМЕР СНОСКИ — ТОТ ЖЕ, ЧТО КИКЕРОМ В МАРКЕ (решение заказчика 31 августа
+// 2026, тз/тз-ссылка-на-аниме.md §2.2). Считает его общий animeCatalog.mjs —
+// тот самый, что нумерует каталог и обе формы марки. Своего счёта тут нет
+// намеренно: копии разъехались бы молча, и один тайтл получил бы в строке одну
+// цифру, а в марке под текстом другую. Заметить это можно было бы только сверив
+// две части одной страницы глазами.
+//
+// В СТРОКЕ НОМЕР БЕЗ ВЕДУЩИХ НУЛЕЙ («⁴⁷»), в марке остаётся «CAT. 047»:
+// там это подпись поля каталога, здесь — сноска в тексте.
+let codesCache = null;
+
+function catalogNumber(id) {
+	if (!codesCache) codesCache = catalogCodes(catalogEntries());
+	// У тайтла, чей файл не разобрался, номера нет — тогда сноски просто
+	// не будет. Ссылка при этом остаётся: `known` считает файлы, а не разбор.
+	return codesCache.get(id)?.order ?? null;
+}
+
+// СТРОЕНИЕ ССЫЛКИ. Название и номер — РАЗНЫЕ элементы, и это не украшение:
+// подчёркивание висит на названии, а не на самой ссылке, потому что
+// `text-decoration` от предка у потомка снять нельзя — линия протянулась бы
+// и под цифрами (тз §2.2).
+//
+// У номера две пометки, и обе по делу:
+//   `aria-hidden` — диктору цифра не говорит ничего сверх самой ссылки,
+//     а «Фрирен четырнадцать» посреди фразы это мусор в речи;
+//   `data-pagefind-ignore` — иначе номер уехал бы в поисковый индекс вплотную
+//     к названию, как уже уезжали счётчик галереи и подпись кнопки спойлера.
+const LINK_CLASS = 'anime-mention anime-mention--text';
+const NAME_CLASS = 'anime-mention-name';
+const NUM_CLASS = 'anime-mention-num';
+
+// КАВЫЧКИ ЗАБИРАЮТСЯ ВНУТРЬ ССЫЛКИ (решение заказчика 31 августа 2026).
+//
+// Надстрочный номер стоит СРАЗУ ЗА названием, поэтому у названия в кавычках он
+// оказывался ВНУТРИ них: «Моб Психо 100³⁶⁵». Читается это опечаткой — цифра
+// влезла в чужое название. Лечится не снятием кавычек (их убирать заказчик
+// как раз не хочет), а тем, что ссылка забирает их себе: подчёркивание идёт
+// под «…», номер встаёт за закрывающей — «Моб Психо 100»³⁶⁵.
+//
+// ГДЕ СТОЯТ КАВЫЧКИ, СПРАШИВАЕМ У ОБЩЕГО ПРАВИЛА (`indexOfQuoteNear`), того же,
+// по которому работает галочка «только в кавычках». Своя проверка разошлась бы
+// с ним молча: у неё был бы свой список кавычек и свой хвост.
+//
+// ХВОСТ В 8 ЗНАКОВ БЕЗ БУКВ — часть того же правила, и он тут кстати:
+// «Магическая битва 2» отдаёт ссылке всю фразу вместе с номером сезона.
+//
+// А ЕСЛИ КАВЫЧКА ОТКРЫЛАСЬ, НО НЕ ЗАКРЫЛАСЬ — НОМЕРА НЕ БУДЕТ ВОВСЕ, и это
+// не мелочь, а признание. «Истребителя демонов: Бесконечная крепость» —
+// отдельный фильм, а ссылкой стало короткое название сериала: сработало
+// правило «искать название до двоеточия». Номер — это АДРЕС КАРТОЧКИ
+// справочника, и ставить его внутрь чужого названия значит утверждать, что
+// в кавычках стоит эта карточка. Она там не стоит.
+//
+// Подчёркивание, переход и марка при наведении остаются: сериал в этой фразе
+// действительно назван, увести читателя на его страницу честно. Врёт только
+// цифра, её и убираем. Таких мест в архиве 10 против 999 обычных, и все десять
+// исчезнут сами, как только полные названия заведут в справочнике: ссылкой
+// станет вся фраза (длинное название забирает кусок раньше короткого,
+// см. сортировку в animeMentions.mjs).
+/**
+ * @returns {{ начало: number, конец: number, частьФразы: boolean }}
+ *   границы ссылки с кавычками и признак «кавычки чужие».
+ */
+function сКавычками(текст, начало, конец) {
+	const открывающая = indexOfQuoteNear(текст, начало - 1, -1);
+	if (открывающая === -1) return { начало, конец, частьФразы: false };
+
+	// СТОРОНА КАВЫЧКИ ТУТ РЕШАЕТ ВСЁ. Слева от упоминания сплошь и рядом стоит
+	// ЗАКРЫВАЮЩАЯ кавычка соседнего тайтла — «Боруто», «Фури-кури», Приоритет… —
+	// и принять её за начало фразы значит отнять номер у невиновного. Так
+	// и случилось на первом же прогоне: три ссылки из 1317.
+	const закрывающая = indexOfQuoteNear(текст, конец, 1);
+	if (закрывающая === -1) return { начало, конец, частьФразы: isOpeningQuote(текст[открывающая]) };
+
+	return { начало: открывающая, конец: закрывающая + 1, частьФразы: false };
+}
+
+function numberProps() {
+	return { class: NUM_CLASS, 'aria-hidden': 'true', 'data-pagefind-ignore': 'true' };
+}
+
+function autoLinkNode(id, text, безНомера = false) {
+	const number = безНомера ? null : catalogNumber(id);
+	const children = [
+		{ type: 'element', tagName: 'span', properties: { class: NAME_CLASS }, children: [{ type: 'text', value: text }] },
+	];
+
+	if (number !== null) {
+		children.push({
+			type: 'element',
+			tagName: 'sup',
+			properties: numberProps(),
+			children: [{ type: 'text', value: String(number) }],
+		});
+	}
+
 	return {
 		type: 'animeAutoLink',
 		data: {
 			hName: 'a',
-			hProperties: { href: `/anime/${id}`, class: 'anime-mention' },
-			hChildren: [{ type: 'text', value: text }],
+			hProperties: { href: `/anime/${id}`, class: LINK_CLASS },
+			hChildren: children,
 		},
 	};
+}
+
+/**
+ * То же строение для метки `:anime[…]`, но обёртка тут mdast-овая, а не готовая
+ * разметка. Внутри метки лежит ДЕРЕВО markdown — название бывает набрано
+ * курсивом, — и подмени мы его готовым текстом, разметка внутри пропала бы.
+ */
+function mentionChildren(id, children, слева = '', справа = '', безНомера = false) {
+	const number = безНомера ? null : catalogNumber(id);
+	const внутри = [
+		...(слева ? [{ type: 'text', value: слева }] : []),
+		...children,
+		...(справа ? [{ type: 'text', value: справа }] : []),
+	];
+	const wrapped = [
+		{ type: 'animeMentionName', children: внутри, data: { hName: 'span', hProperties: { class: NAME_CLASS } } },
+	];
+
+	if (number !== null) {
+		wrapped.push({
+			type: 'animeMentionNum',
+			children: [],
+			data: { hName: 'sup', hProperties: numberProps(), hChildren: [{ type: 'text', value: String(number) }] },
+		});
+	}
+
+	return wrapped;
 }
 
 /**
@@ -88,6 +223,21 @@ function autoLinkNode(id, text) {
  *
  * Первое упоминание каждого id в посте становится ссылкой на /anime/id,
  * повторные — обычный текст (см. тз/03-тайтлы.md, п. 4).
+ *
+ * ЧТО ИМЕННО КЛАДЁТСЯ В СТРАНИЦУ (тз/тз-ссылка-на-аниме.md, §2.2):
+ *
+ *   <a href="/anime/frieren" class="anime-mention anime-mention--text"
+ *     ><span class="anime-mention-name">Фрирен</span
+ *     ><sup class="anime-mention-num" aria-hidden="true"
+ *            data-pagefind-ignore="true">14</sup></a>
+ *
+ * КЛАССА ДВА, И ВТОРОЙ НУЖЕН НЕ ДЛЯ КРАСОТЫ. `anime-mention` значит «ссылка
+ * на страницу тайтла» — его же ставит расшифровка выпуска (Transcript.astro),
+ * и по нему считает нажатия аналитика. `anime-mention--text` значит «и она
+ * стоит в тексте материала»: вид (чернила, волосяная линия, сноска) достаётся
+ * только ей. В расшифровке ссылка выглядит как прежде — решение заказчика
+ * 31 августа 2026; там же 1066 таких ссылок, и сноска посреди живой речи
+ * читалась бы сором.
  *
  * ИЩЕТСЯ ВЕСЬ СПРАВОЧНИК, А НЕ ТОЛЬКО ТАЙТЛЫ ЭТОГО ПОСТА (хвост 44, решение
  * заказчика 11 августа 2026). Любое название из справочника, встреченное
@@ -205,7 +355,35 @@ export default function remarkAnime() {
 			}
 
 			seen.add(id);
-			node.data = { hName: 'a', hProperties: { href: `/anime/${id}`, class: 'anime-mention' } };
+
+			// У метки `:anime[…]` кавычки лежат не внутри узла, а в СОСЕДНИХ
+			// текстовых узлах — их приходится переносить внутрь руками.
+			// Правило то же самое, просто спрошено у двух строк порознь:
+			// слева смотрим назад от последнего знака, справа вперёд от первого.
+			const пред = parent.children[index - 1];
+			const след = parent.children[index + 1];
+			const открывающая =
+				пред?.type === 'text' ? indexOfQuoteNear(пред.value, пред.value.length - 1, -1) : -1;
+			const закрывающая = след?.type === 'text' ? indexOfQuoteNear(след.value, 0, 1) : -1;
+
+			let слева = '';
+			let справа = '';
+			if (открывающая !== -1 && закрывающая !== -1) {
+				слева = пред.value.slice(открывающая);
+				справа = след.value.slice(0, закрывающая + 1);
+				пред.value = пред.value.slice(0, открывающая);
+				след.value = след.value.slice(закрывающая + 1);
+			}
+
+			// Кавычка ОТКРЫЛАСЬ, а закрылась не рядом — метка стоит на ЧАСТИ фразы
+			// в кавычках, и номер был бы неправдой. Слово «открылась» тут ключевое:
+			// закрывающая кавычка соседнего тайтла началом фразы не является.
+			// Довод целиком у `сКавычками`.
+			const частьФразы =
+				открывающая !== -1 && закрывающая === -1 && isOpeningQuote(пред.value[открывающая]);
+
+			node.data = { hName: 'a', hProperties: { href: `/anime/${id}`, class: LINK_CLASS } };
+			node.children = mentionChildren(id, node.children, слева, справа, частьФразы);
 		});
 
 		// Служебная метка (см. описание выше) — ничего не показываем, просто убираем узел.
@@ -244,12 +422,13 @@ export default function remarkAnime() {
 			const hit = findMentions(node.value, matcher).find((mention) => pending.has(mention.id));
 			if (!hit) return;
 
-			const before = node.value.slice(0, hit.start);
-			const after = node.value.slice(hit.end);
+			const границы = сКавычками(node.value, hit.start, hit.end);
+			const before = node.value.slice(0, границы.начало);
+			const after = node.value.slice(границы.конец);
 
 			const replacement = [];
 			if (before) replacement.push({ type: 'text', value: before });
-			replacement.push(autoLinkNode(hit.id, node.value.slice(hit.start, hit.end)));
+			replacement.push(autoLinkNode(hit.id, node.value.slice(границы.начало, границы.конец), границы.частьФразы));
 			if (after) replacement.push({ type: 'text', value: after });
 
 			parent.children.splice(index, 1, ...replacement);
