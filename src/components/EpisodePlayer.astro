@@ -81,7 +81,7 @@ const fallbackPlatform = platformsOfKind('listen')[0];
 				    можно было положить ровно на линию таймлайна: её середина
 				    и есть середина обёртки. */}
 				<div class="ep-progress">
-					<input class="ep-range" type="range" min="0" max="0" step="1" value="0" aria-label="Перемотка" />
+					<input class="ep-range seek" type="range" min="0" max="0" step="1" value="0" aria-label="Перемотка" />
 				</div>
 			</div>
 
@@ -184,50 +184,14 @@ const fallbackPlatform = platformsOfKind('listen')[0];
 		font-variant-numeric: tabular-nums;
 	}
 
-	/* Ползунок: видимая полоса 3, высота элемента 44 — вся она и есть зона
-	   захвата. Проигранная часть рисуется градиентом по переменной `--played`,
-	   её ставит скрипт (PlayerBar.astro): у ползунка в вебките нет отдельного
-	   слоя заливки, а два разных способа для двух браузеров разъехались бы. */
-	.ep-range {
-		--played: 0%;
-		appearance: none;
-		-webkit-appearance: none;
-		display: block;
-		width: 100%;
-		height: 44px;
-		margin: 0;
-		background: transparent;
-		cursor: pointer;
-	}
+	/* Ползунок описан в базе (src/styles/global.css, класс `.seek`): такой же
+	   стоит теперь в мини-плеере врезки на материал, а два описания одного
+	   контрола разъехались бы молча — сначала высотой зоны захвата, потом
+	   цветом пройденной части.
 
-	.ep-range::-webkit-slider-runnable-track {
-		height: 3px;
-		background: linear-gradient(to right, var(--accent-brand) 0 var(--played), var(--line-strong) var(--played) 100%);
-	}
-
-	.ep-range::-webkit-slider-thumb {
-		appearance: none;
-		-webkit-appearance: none;
-		width: 14px;
-		height: 14px;
-		margin-top: -5.5px;
-		border: 0;
-		border-radius: 50%;
-		background: var(--accent-brand);
-	}
-
-	.ep-range::-moz-range-track {
-		height: 3px;
-		background: linear-gradient(to right, var(--accent-brand) 0 var(--played), var(--line-strong) var(--played) 100%);
-	}
-
-	.ep-range::-moz-range-thumb {
-		width: 14px;
-		height: 14px;
-		border: 0;
-		border-radius: 50%;
-		background: var(--accent-brand);
-	}
+	   `ep-range` остаётся ХВАТОМ ДЛЯ СКРИПТА, а не видом: по нему панель
+	   находит ползунок этого плеера (PlayerBar.astro, bindEpisodePlayers).
+	   Ровно так же устроены соседи — `ep-toggle play`, `ep-back15 jump-btn`. */
 
 	/* На узком экране инструменты уходят на свою строку: втискивать их
 	   в один ряд с ползунком — это промахи пальцем. */
