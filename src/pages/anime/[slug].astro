@@ -24,7 +24,11 @@ import { animeSearchExtras } from '../../lib/animeSearch.mjs';
 import JsonLd from '../../components/JsonLd.astro';
 import SocialStrip from '../../components/SocialStrip.astro';
 import SupportStrip from '../../components/SupportStrip.astro';
-import { breadcrumbsSchema } from '../../lib/schema.mjs';
+import { breadcrumbsSchema, animeSchema, mentionsListSchema } from '../../lib/schema.mjs';
+import { animeTitle, animeDescription } from '../../lib/animeMeta.mjs';
+import { lastModifiedISO, animeFilePath } from '../../lib/lastModified.mjs';
+import { postHref } from '../../lib/externalPost.mjs';
+import { absoluteUrl } from '../../lib/site.mjs';
 import { индексируемостьСборки } from '../../lib/animeIndexability.mjs';
 
 export async function getStaticPaths() {
@@ -129,7 +133,61 @@ const mentionsNote =
 		? `${displayTitle} в подкасте «Бака!»: ${mentions.length} ${plural(mentions.length, ['упоминание', 'упоминания', 'упоминаний'])} в выпусках и постах.`
 		: `${displayTitle} — карточка тайтла в подкасте «Бака!».`;
 
-const animeDescription = firstSentence(synopsisParagraphs.join(' ')) ?? mentionsNote;
+// ЧТО СТОИТ В ВЫДАЧЕ ПОД ЗАГОЛОВКОМ (TASK-markup, 2.3).
+//
+// ПОРЯДОК ИСТОЧНИКОВ ПЕРЕВЁРНУТ 31 августа 2026: сначала свои данные («в каких
+// выпусках обсуждали, сколько раз прозвучало»), и только если своих материалов
+// нет вовсе — прежний кусок синопсиса. Синопсис приходит с Shikimori и стоит
+// слово в слово на десятках сайтов: в выдаче наша страница была неотличима
+// от чужой карточки того же аниме.
+//
+// ВИДИМЫЙ СИНОПСИС НА СТРАНИЦЕ НЕ ТРОНУТ — он ниже, как и был. Меняется
+// только мета-тег.
+const собственноеОписание = animeDescription({ mentions });
+const описаниеСтраницы = собственноеОписание ?? firstSentence(synopsisParagraphs.join(' ')) ?? mentionsNote;
+
+// ЗАГОЛОВОК (TASK-markup, 2.2). Пусто — страница остаётся на прежнем шаблоне
+// «{название} — Бака!»: своих материалов нет или новый не влезает в предел,
+// а резать название задание запрещает. Правило целиком в src/lib/animeMeta.mjs,
+// там же замер по всему архиву.
+const заголовокСтраницы = animeTitle({ name: displayTitle, year, mentions });
+
+// Когда карточку тайтла правили в последний раз — для `dateModified`.
+// Спрашиваем git тем же кодом, что и страницы материалов.
+const animeModified = lastModifiedISO(animeFilePath(entry.id));
+
+// Разметка самого произведения и списка упоминаний (TASK-markup, 2.1).
+// Постер берём КРУПНЫЙ — тот же файл, что показан на странице.
+const posterAbsolute = posterSrcs.length > 0 ? absoluteUrl(posterSrcs[posterSrcs.length - 1].src) : null;
+const animeUrl = absoluteUrl(`/anime/${entry.id}/`);
+
+const сущность = animeSchema({
+	url: animeUrl,
+	name: displayTitle,
+	alternateName: titleOriginal,
+	year,
+	image: posterAbsolute,
+	sameAs: url,
+	modified: animeModified,
+	// Типа произведения в справочнике нет ни у одной карточки — см. пояснение
+	// у `animeSchemaType`. Спрашиваем поле, которого пока не существует,
+	// нарочно: заведётся — заработает само.
+	kind: (entry.data as { kind?: string }).kind,
+});
+
+// Список ведёт теми же адресами, что и карточки на странице: `postHref` —
+// одно место на проект, у внешней статьи он отдаёт чужой сайт.
+const списокУпоминаний =
+	mentions.length > 0
+		? mentionsListSchema({
+				url: animeUrl,
+				name: displayTitle,
+				items: mentions.map(({ post }: { post: any }) => ({
+					href: absoluteUrl(postHref(post)),
+					title: post.data.title,
+				})),
+			})
+		: null;
 
 // ЧТО ПОИСК ПО САЙТУ ПОКАЗЫВАЕТ В РЕЗУЛЬТАТЕ-ТАЙТЛЕ (часть 8).
 //
@@ -185,12 +243,15 @@ const crumbs = breadcrumbsSchema([
     а «из чего делать превью» решает одна функция на страницу и на сборку. */}
 <Layout
 	title={displayTitle}
-	description={animeDescription}
+	titleFull={заголовокСтраницы}
+	description={описаниеСтраницы}
 	ogUrl={animeSocialSource(poster) ? ogUrlForAnime(entry.id) : null}
 	imageAlt={displayTitle}
 	noindex={noindex}
 >
 	<JsonLd slot="head" data={crumbs} />
+	<JsonLd slot="head" data={сущность} />
+	{списокУпоминаний && <JsonLd slot="head" data={списокУпоминаний} />}
 	<div class="site">
 		{/* Что берёт в поиск Pagefind — см. пояснение в src/pages/posts/[slug].astro.
 		    У тайтла в индекс идёт название, оригинальное название и описание;

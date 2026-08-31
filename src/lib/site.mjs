@@ -21,6 +21,10 @@
 
 export const SITE_URL = 'https://ru.bakapodcast.com';
 export const SITE_NAME = 'Бака!';
+// Родительный падеж имени сайта — «разбор в 12 материалах «Баки!»».
+// Живёт РЯДОМ с именительным нарочно: склонять название кодом нечем,
+// а вписанное в другой файл оно пережило бы переименование сайта молча.
+export const SITE_NAME_GENITIVE = 'Баки!';
 export const SITE_TITLE = 'Бака! — подкаст об аниме';
 export const SITE_DESCRIPTION = 'Подкаст об аниме и о том, что скрывается между кадрами';
 
