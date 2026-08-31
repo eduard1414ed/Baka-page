@@ -169,9 +169,9 @@ const сущность = animeSchema({
 	image: posterAbsolute,
 	sameAs: url,
 	modified: animeModified,
-	// Типа произведения в справочнике нет ни у одной карточки — см. пояснение
-	// у `animeSchemaType`. Спрашиваем поле, которого пока не существует,
-	// нарочно: заведётся — заработает само.
+	// Сериал, фильм или просто «произведение» — решает `animeSchemaType`
+	// по полю справочника. Поле проставлено всем 659 карточкам прогоном
+	// scripts/anime-kind.mjs; нет его — страница получит `CreativeWork`.
 	kind: (entry.data as { kind?: string }).kind,
 });
 

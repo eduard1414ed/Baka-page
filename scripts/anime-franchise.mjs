@@ -23,146 +23,24 @@
 // Поле `franchise` приходит в том же ответе `GET /api/animes/<id>`, который
 // проект уже умеет запрашивать: новых обращений к чужому серверу задача
 // не добавляет, просто читается ещё одно поле ответа.
+//
+// ВСЯ МАШИНЕРИЯ — В scripts/anime-field-lib.mjs, общая с добором типа
+// произведения (`anime-kind.mjs`). Здесь только то, чем эти два похода
+// различаются.
 
-import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
-
-const ПАПКА = new URL('../src/content/anime/', import.meta.url);
-const USER_AGENT = 'BakaPodcastSite/1.0 (+https://github.com/eduard1414ed/Baka-page)';
-
-/**
- * Пауза между запросами.
- *
- * У проекта записано 1500 мс (`SHIKIMORI_PAUSE_MS` в anime-lib.mjs), но замер
- * 30 августа 2026 показал, что этого мало: прогон по 15 тайтлам с паузой
- * 1200 мс дал 13 отказов из 15, и выглядело это как «поля franchise
- * не существует». Сломан был измеритель, а не измеряемое. Берём 2000.
- */
-const ПАУЗА = 2000;
-
-const спать = (мс) => new Promise((r) => setTimeout(r, мс));
-
-/**
- * Сетевой ли сбой.
- *
- * ПОВТОРЯТЬ НАДО ТОЛЬКО СЕТЕВОЕ: «тайтла с таким номером нет» повтором
- * не лечится, а три захода с паузами превращают честный отказ в минуту
- * молчания. `fetch` заворачивает всё, что случилось под ним, в `cause`.
- */
-const сетевая = (e) => Boolean(e?.cause) || /network|fetch failed|socket|ECONN|ETIMEDOUT|EAI_AGAIN/i.test(e?.message ?? '');
-
-async function спроситьShikimori(sourceId) {
-	for (let попытка = 1; ; попытка++) {
-		try {
-			const ответ = await fetch(`https://shikimori.io/api/animes/${sourceId}`, {
-				headers: { 'User-Agent': USER_AGENT },
-				signal: AbortSignal.timeout(20000),
-			});
-			if (ответ.status === 429 || ответ.status >= 500) {
-				// Слишком часто спрашиваем или сервер прилёг — это сетевое,
-				// повторяем с растущей паузой.
-				throw Object.assign(new Error(`ответ ${ответ.status}`), { cause: 'частота' });
-			}
-			if (!ответ.ok) return { беда: `ответ ${ответ.status}` };
-			const данные = await ответ.json();
-			// Пустую строку и отсутствие поля читаем одинаково — «одиночка».
-			return { франшиза: данные.franchise || null };
-		} catch (e) {
-			if (попытка >= 3 || !сетевая(e)) return { беда: e.message };
-			await спать(ПАУЗА * попытка * 2);
-		}
-	}
-}
-
-/**
- * Каким отступом набран файл.
- *
- * В репозитории живут ДВА формата, и это не беспорядок: робот
- * (`writeAnimeEntry`) пишет табом, а админка Sveltia — двумя пробелами.
- * То есть пробелами набраны ровно те карточки, которые заказчик правил
- * руками, — 37 штук на 30 августа 2026.
- *
- * Приводить их к своему виду нельзя: диффа получается на весь файл, тронуты
- * оказываются именно правленные человеком карточки, а первое же сохранение
- * в админке вернёт пробелы обратно. Дописывая одно поле, отступ надо взять
- * у самого файла.
- */
-function отступФайла(текст) {
-	const m = текст.match(/\n(\t| +)"/);
-	return m ? m[1] : '\t';
-}
-
-/** Вставить ключ `franchise` после `url`, сохранив порядок остальных. */
-function сПолем(карточка, франшиза) {
-	const готово = {};
-	let вставлено = false;
-	for (const [k, v] of Object.entries(карточка)) {
-		if (k === 'franchise') continue; // старое значение выкидываем, поставим на своё место
-		готово[k] = v;
-		if (k === 'url') {
-			готово.franchise = франшиза;
-			вставлено = true;
-		}
-	}
-	// У трёх карточек архива нет `url` — им поле уходит в конец, но уходит.
-	if (!вставлено) готово.franchise = франшиза;
-	return готово;
-}
-
-async function главная() {
-	const арг = process.argv.slice(2);
-	const обновить = арг.includes('--обновить');
-	const сколькоАрг = арг.find((a) => a.startsWith('--сколько='));
-	const предел = сколькоАрг ? Number(сколькоАрг.split('=')[1]) : Infinity;
-
-	const файлы = (await readdir(ПАПКА)).filter((f) => f.endsWith('.json')).sort();
-	let взято = 0;
-	let сфраншизой = 0;
-	let одиночек = 0;
-	let пропущено = 0;
-	const беды = [];
-
-	for (const файл of файлы) {
-		if (взято >= предел) break;
-		const путь = new URL(файл, ПАПКА);
-		const сырое = await readFile(путь, 'utf8');
-		const карточка = JSON.parse(сырое);
-		const отступ = отступФайла(сырое);
-
-		if (карточка.source !== 'shikimori') { пропущено++; continue; }
-		if (!обновить && 'franchise' in карточка) { пропущено++; continue; }
-
-		const { франшиза, беда } = await спроситьShikimori(карточка.sourceId);
-		if (беда) {
-			беды.push(`${карточка.id}: ${беда}`);
-			console.log(`✗ ${карточка.id} — ${беда}`);
-		} else {
-			await writeFile(путь, JSON.stringify(сПолем(карточка, франшиза), null, отступ) + '\n', 'utf8');
-			взято++;
-			if (франшиза) { сфраншизой++; } else { одиночек++; }
-			console.log(`  ${карточка.id} → ${франшиза ?? '(одиночка)'}`);
-		}
-		await спать(ПАУЗА);
-	}
-
-	console.log('');
-	console.log(`Записано карточек: ${взято} (с франшизой ${сфраншизой}, одиночек ${одиночек}).`);
-	console.log(`Пропущено (поле уже есть либо не Shikimori): ${пропущено}.`);
-	if (беды.length > 0) {
-		console.log(`Не ответили: ${беды.length}. Прогнать скрипт ещё раз — он возьмётся только за них.`);
-		for (const б of беды.slice(0, 20)) console.log('   ' + б);
-	}
-	// ПРОГОН, У КОТОРОГО ОТВАЛИЛСЯ ИСТОЧНИК, ОБЯЗАН КРИЧАТЬ. Ноль записанных
-	// при непустой очереди — это не «всё уже сделано», это «сеть молчит».
-	if (взято === 0 && беды.length > 0) {
-		console.error('✗ Не записано НИ ОДНОЙ карточки, а отказов ' + беды.length + ' — источник не отвечает.');
-		return 1;
-	}
-	return 0;
-}
+import { доборПоля } from './anime-field-lib.mjs';
 
 // Русские буквы в пути: import.meta.url их кодирует, process.argv[1] — нет.
 if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {
-	process.exitCode = await главная();
+	process.exitCode = await доборПоля({
+		имяПоля: 'franchise',
+		// Пустую строку и отсутствие поля читаем одинаково — «одиночка».
+		прочитать: (данные) => данные.franchise || null,
+		послеКлюча: 'url',
+		назвать: (франшиза) => франшиза ?? '(одиночка)',
+		считать: (франшиза) => (франшиза ? 'с франшизой' : 'одиночек'),
+		арг: process.argv.slice(2),
+	});
 }

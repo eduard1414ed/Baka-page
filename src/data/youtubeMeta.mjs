@@ -179,6 +179,11 @@ export const youtubeMeta = {
 		"uploadDate": "2023-10-30T07:00:10-07:00",
 		"description": "По промокоду BAKABOOK 45 дней подписки Плюс с опцией Букмейт бесплатно: https://clck.ru/36ArsE\n\nМы записали большой специальный эпизод про самый хеллоуинский сёнен — Soul Eater. Почему это невероятно стильный сериал? Что помешало ему стать хитом? И стоит ли читать оригинальную мангу сегодня? \n\nА еще мы поговорили о китайской новелле и втором сезоне дуньхуа «Благословение небожителей» вместе с Евгением Сударчиковым \n\nНаш потрясающий телеграм-канал: https://t.me/podcastbaka\n\nТаймкоды: \n00:00 — Опенинг \n01:50 — О чем «Пожиратель душ»?\n05:46 — Тим Бёртон, Gorillaz и другие источники \n14:09 — Как была собрана команда мечты?\n33:14 — Обсуждаем «Благословение небожителей»\n52:08 — Как построен сюжет в Soul Eater?\n01:18:10 — Эндинг\n\n*Промокод действует только для новых пользователей из РФ\nРеклама. ООО «ЯНДЕКС МУЗЫКА». ИНН 970512104. Erid: LjN8KVHHY"
 	},
+	"GkB_VmpDhPw": {
+		"name": "K-ON! Opening -Cagayake! GIRLS",
+		"uploadDate": "2018-11-19T06:20:43-08:00",
+		"description": "K-ON! - Cagayake! GIRLS by Houkago Tea Time\n(Opening 01)\n\nChatting Now\n\nGACHI de KASHIMASHI Never Ending Girls' Talk\n\nshuugyou CHAIMU made matenai\n\nchikoku wa shite mo soutai wa Non Non Non\n\nseiippai Study After School\n\nDOKIDOKI ga tomannai FURU SUROTTORU na nounai\n\nkibou yokubou bonnou RIBON kakete housou\n\nNETA dossari mochiyori New Type Version buchikomi\n\ndanshi kinsei no PURI chou koi tsuzutta nikkichou\n\nSUKAATO take NISENCHI tsumetara tobu yo\n\nkinou yori tooku ototoi yori OKUTAABU takaku\n\nJumping Now\n\nGACHI de URUWASHI Never Ending Girls' life\n\nhibi MAJI RAIBU da shi mattanashi\n\nhayaokishite mo hayane wa Non Non Non\n\nmeippai Shouting WASSHOI\n\nGACHI de SUBARASHI Never Ending Girls' Song\n\ngogo TIITAIMU ni wa motte koi\n\nkataomoi demo gyokusai de Here We Go\n\nutaeba Shining After School\n\nfuwafuwa ikiteru sei jiken bakkashi EBURIDEI\n\nbibun sekibun wa tsuishi toubun ren ai wa chuushi\n\nniji genme ni wa naku yo yojigen da shi ibukuro\n\nYABA tsui ni genkai chou WEITO kaita maru hi chou\n\nmaegami SANMIRI kittara mieta\n\ntouan masshiro demo mirai ga BARAiro nara yoku ne\n\nChatting Now\n\nGACHI de KASHIMASHI Never Ending Girls' Talk\n\nshuugyou CHAIMU made matenai\n\nchikoku wa shite mo soutai wa Non Non Non\n\nseiippai Study ENJOI\n\nGACHI de SUBARASHI Never Ending Girls' Song\n\ngogo TIITAIMU ni wa motte koi\n\nkatayaburi na KOODO demo Here We Go\n\nutaeba Shining After School\n\neien ni RUUPU suru\n\nSAIZU down up down up\n\ndemo kibun itsudemo\n\nup up up & up\n\natsumaru dake de waraeru nante\n\nutau dake de shiawase nante\n\nkanari chikyuu ni yasashii EKO jan\n\nJumping Now\n\nGACHI de URUWASHI Never Ending Girls' life\n\nhibi MAJI RAIBU da shi mattanashi\n\nhayaokishite mo hayane wa Non Non Non\n\nmeippai Shouting WASSHOI\n\nGACHI de SUBARASHI Never Ending Girls' Song\n\ngogo TIITAIMU ni wa motte koi\n\nkataomoi demo gyokusai de Here We Go\n\nutaeba Shining After School\n\nSo\n\nShining Shiner Shiniest\n\nGirls be ambitious & shine\n\nShining Shiner Shiniest\n\nGirls be ambitious & shine\n\nShining Shiner Shiniest\n\nGirls be ambitious & shine\n\nShining Shiner Shiniest\n\nGirls be ambitious & shine\n\nShining Shiner Shiniest\n\nGirls be ambitious & shine\n\nShining Shiner Shiniest\n\nGirls be ambitious & shine"
+	},
 	"H-1EItu8aSE": {
 		"недоступен": 404
 	},
@@ -276,6 +281,11 @@ export const youtubeMeta = {
 		"uploadDate": "2022-05-22T01:14:44-07:00",
 		"description": "Мы продолжаем изучать демографии в аниме и в этот раз поговорим о сёдзё. \n\nОткуда появилось сёдзё? Как этому помог американский ситком? И почему его становится все меньше среди новых аниме? \n\nАниме, которые я советую: \nСёнен-ай — «Роза Версаля», «Сасаки и Миано»\nМахо-сёдзё — «Ведьма Салли», «Сейлор Мун»\nРомантика — «Корзинка фруктов», «Достучаться до тебя»\n\nНаш чат: https://t.me/bakapodcast\nПодписаться отдельно на «Врата аниме»: https://pc.st/1622158142\n\nТаймкоды: \n\n00:00 — Опенинг\n01:18 — Начало сёдзё\n08:20 — Девушки реформируют сёдзё\n13:46 — Так что такое сёдзё\n18:45 — Эндинг"
 	},
+	"PrOvemF8Axo": {
+		"name": "My Home Hero | OFFICIAL TRAILER",
+		"uploadDate": "2022-12-01T14:15:00-08:00",
+		"description": "Watch My Home Hero here: https://got.cr/cc-mhhpv\n\nCrunchyroll Collection brings you the latest clips, openings, full episodes, and more from your favorite anime!\n\nFREE 14-DAY CRUNCHYROLL TRIAL 🌟 https://got.cr/cc-14dayspv\n\n#MyHomeHero #Anime #Crunchyroll"
+	},
 	"QiY7w4kKEwQ": {
 		"name": "Astro Boy Opening 1963",
 		"uploadDate": "2011-01-11T15:46:52-08:00"
@@ -363,6 +373,11 @@ export const youtubeMeta = {
 		"uploadDate": "2026-03-26T01:00:28-07:00",
 		"description": "Любимые книги и комиксы подкаста «Бака!» — на полке в «Яндекс Книгах»: https://clck.ru/3STrou\n\n«Меланхолия Харухи Судзумии» — тайтл, который идеально попал в аудиторию середины нулевых и изменил индустрию. Он стал первым примером того, как можно завоевать интернет-аудиторию, какую популярность может принести удачный танец, и на какое настоящее кино способна студия Kyoto Animation. \n\nОднако сегодня удивительным образом лучше всего у «Харухи Судзумии» получается учить тому, с какой осторожностью стоит относиться к собственным желаниям. И через сюжет, и благодаря персонажам, и даже самой историей своего создания. \n\nВеликолепный монтаж видеоэссе — Ваня Королёв: https://t.me/in_da_tresh\n\nПодписаться, чтобы не пропустить бонусные выпуски «Баки!» можно здесь: \nBoosty — https://boosty.to/bakapodcast\nVK — https://vk.com/podcast.baka\nPatreon — https://www.patreon.com/bakapodcast\nTelegram — https://t.me/+nz2JG4WhGvQ2NjMy\n\nТаймкоды:\n00:00 — Интро Харухи Судзумии\n01:30 — Ирония Харухи Судзумии\n6:09 — Ирония Харухи Судзумии (2)\n10:15 — (Бесконечная) Ирония Харухи Судзумии\n14:00 — Исчезновение Харухи Судзумии\n17:57 — Меланхолия Харухи Судзумии\n21:24 — Почти Харухи Судзумия\n\nРеклама. ООО «Яндекс Музыка». ИНН 9705121040. erid: 2VtzquyGTNV"
 	},
+	"WWWTWgyYYAk": {
+		"name": "「Creditless」Neon Genesis Evangelion OP / Opening「UHD 60FPS」",
+		"uploadDate": "2023-12-25T04:00:33-08:00",
+		"description": "Shinseiki Evangelion Opening Theme \"Zankoku na Tenshi no Thesis\" by Yoko Takahashi\nTV Anime \"Neon Genesis Evangelion\" Opening Theme\nLyrics by @Bruhclan69 \n\n------------------------------------------------------------------------------------\n⎚ Anime : Neon Genesis Evangelion (Season 1) (1995) / NGE, Evangelion (1995)\n✎ Artist / Singer : Yoko Takahashi\n♫ Song Title : Zankoku na Tenshi no Thesis (残酷な天使のテーゼ, A Cruel Angel's Thesis)\n\n➤Endcard made by me\n➤Support me on Patreon (4k 23FPS Downloads): https://patreon.com/triaxvfx\n------------------------------------------------------------------------------------\nCopyright:\nBe aware this channel is only for promotion purpose. All music belongs to the original creators.\n\nTriaxFx"
+	},
 	"WhU1TMamekE": {
 		"name": "Зачем смотреть Благословение небожителей?",
 		"uploadDate": "2024-03-09T07:50:37-08:00",
@@ -382,6 +397,11 @@ export const youtubeMeta = {
 		"name": "Как «Монолог фармацевта» обманывает зрителя?",
 		"uploadDate": "2024-08-05T23:54:44-07:00",
 		"description": "«Монолог фармацевта» — это идеально сконструированная иллюзия. От тщательно продуманных детективных историй до сэттинга, лишь притворяющегося настоящим Древним Китаем. \n\nВ этом выпуске подкаста мы попробуем разобраться во всех этих иллюзиях и понять, как они работают.\n\nА еще в середине выпуска мы обсудим новую мангу о фигурном катании — «Медалистка». Купить мангу серии «Медалистка» Цурумаикады можно в интернет-магазине Читай-город: https://www.chitai-gorod.ru/books-series/medalistka-2693?partnerid=1002188&utm_source=azbooka&utm_medium=cpa&utm_campaign=promocode-bekam25\nПромокод: BAKAM25\nСкидка 25% Срок действия: 06.08.24-03.09.2024\n\nНаш потрясающий телеграм-канал: https://t.me/podcastbaka\n\nНаши бонусы можно найти тут: \nBoosty: https://boosty.to/bakapodcast\nPatreon: https://patreon.com/bakapodcast    \nVK: https://vk.com/podcast.baka\nЛибо вступить в закрытый канал прямо в телеграме: https://t.me/tribute/app?startapp=s26z\n\nТаймкоды: \n00:00 — О чем история\n10:56 — Про мангу «Медалистка»\n19:25 — Маомао лучшая?\n27:22 — Про власть и статус \n36:40 — Как появилось аниме\n52:09 — Эндинг\n\nВеликолепный монтаж выпуска — Ваня Королёв: https://t.me/in_da_tresh\n\nРеклама. ООО \"Издательская группа \"Азбука-Аттикус\". ИНН 7719633799 . Сайт: azbooka.ru. erid: LjN8KLCvJ"
+	},
+	"YcgFC0Mf-ME": {
+		"name": "TVアニメ『君は放課後インソムニア』第3弾PV【4月10日放送開始】",
+		"uploadDate": "2023-03-05T03:00:20-08:00",
+		"description": "TVアニメ『君は放課後インソムニア』4月10日よりテレ東ほかにて毎週月曜24時から放送開始！\nhttps://kimisomu-anime.com\n\n■放送情報\nテレビ東京、テレビ大阪、テレビ愛知、テレビせとうち、テレビ北海道、TVQ九州放送にて4月10日（月）より、毎週月曜24時から放送開始\n北陸放送にて4月13日（木）より、毎週木曜25時25分放送開始\nBSテレビ東京にて4月10日(月)　より毎週月曜深夜24時30分から放送開始\n※放送日時は変更になる可能性があります\n\n\n■ストーリー\n『曲がいると、学校に行きたいと思う。これってどんな関係なんだろう。』\n\n不眠症に悩む高校生・中身丸太は、文化祭の準備を抜け出して入った物置になっている天文台で同じく不眠症の曲伊咲と出会う。二人は秘密の場所を共有することになり...? \n\n⻘春漫画の旗手・オジロマコトの原作を、若手スタッフ陣がアニメ化。\n\n＜あなたの眠れない夜にも、きっと意味がある――＞\n\n■スタッフ\n監督：池田ユウキ\nシリーズ構成・脚本：池田臨太郎\nキャラクターデザイン：福田裕樹\n美術監督：大西達朗\n美術設定：平澤晃弘\n美術背景：草薙\n色彩設計：小野寺笑子\n2Dワークス：中村倫子\n3Dワークス：山崎嘉雅\n撮影監督：姫野めぐみ\n撮影：グラフィニカ\n編集：長谷川舞（editz）\n音響監督：本山哲\n音楽：林ゆうき\nオープニングテーマ：aiko「いつ逢えたら」\nエンディングテーマ：Homecomings「ラプス」\nアニメーション制作：ライデンフィルム\n\n■キャスト\n中見丸太：佐藤 元\n曲 伊咲：田村 好\n白丸 結：戸松 遥\n受川太鳳：山下誠一郎\n蟹川モトコ：Lynn\n穴水かなみ：藤原夏海\n野々三奈：諸星すみれ\n倉敷兎子：能登麻美子\n灰田塁：狩野 翔\n\n\n■書籍情報\n原作コミックス『君は放課後インソムニア』\n著者： オジロマコト（小学館／BIG SPIRITS COMICS）\n第1集～第11集 好評発売中\nhttps://bigcomicbros.net/work/6437/\n\n実写化＆アニメ化を記念して\n原作マンガ『君は放課後インソムニア』オリジナルグッズが初登場！\n\n作中で倉敷先生が来ている「鳥獣戯画Tシャツ」\n二人のシャツが透明なのでお好きな風景にかざせる「アクリルスタンド」\n作品ファンによるTwitter応募から選ばれた「コマTシャツ」\n\nなど９アイテムがSPISHOP限定で発売中！\nhttps://www.pal-shop.jp/category/SP_002_001_013/\n\n©オジロマコト・小学館／アニメ「君ソム」製作委員会"
 	},
 	"Yx1dyQfutw8": {
 		"name": "Что значит быть взрослым? Чему учит манга «Соланин» | Видеоэссе",
@@ -417,6 +437,16 @@ export const youtubeMeta = {
 		"name": "Самые недооцененные аниме | Вампиры, исекаи и фильм от Ghibli",
 		"uploadDate": "2024-08-19T23:52:11-07:00",
 		"description": "Мы решили попробовать новый формат — и вместо подробного обсуждения одного тайтла рассказать вам о 6 аниме, которые мы считаем недооцененными. \n\nВ этом выпуске: повседневности об искусстве, родительстве и айдолах, исекай про вампиров и даже один фильм студии Ghibli\n\nПодпишись на соцсети издательства «Комильфо»!\nВК — https://vk.com/komilfobook?eridLjN8KZKvH\nТГ — https://t.me/komilfobook?eridLjN8KZKvH\n\nНаш потрясающий телеграм-канал: https://t.me/podcastbaka\n\nНаши бонусы можно найти тут: \nBoosty: https://boosty.to/bakapodcast\nPatreon: https://patreon.com/bakapodcast    \nVK: https://vk.com/podcast.baka\nЛибо вступить в закрытый канал прямо в телеграме: https://t.me/tribute/app?startapp=s26z\n\nТаймкоды: \n00:00 — Опенинг\n01:09 — Каракули\n05:34 — Недооцененная манга?\n07:37 — Кролик\n13:04 — Опасная женщина\n17:39 — Мешки под глазами\n22:27 — Беги, Хиёри!\n28:25 — Это драконы\n34:08 — Эндинг\n\nВеликолепный монтаж выпуска — Ваня Королёв: https://t.me/in_da_tresh"
+	},
+	"aaHZdwPZX6g": {
+		"name": "Hell's Paradise | OFFICIAL TRAILER",
+		"uploadDate": "2022-11-19T12:30:00-08:00",
+		"description": "Watch Hell's Paradise on Crunchyroll! https://got.cr/cc-hppv\n\nGabimaru reigns as the strongest and most ruthless assassin in his village. But now finds himself on death row—with only one way out: retrieve the Elixir of Life from a sinister island. Longing for freedom, he accepts the challenge. But with fellow convicts vying for the same prize and demonic beasts lurking, how will Gabimaru survive this harrowing quest?\n\nCrunchyroll Collection brings you the latest clips, openings, full episodes, and more from your favorite anime!\n\nFREE 14-DAY CRUNCHYROLL TRIAL 🌟 https://got.cr/cc-14dayspv\n\n#HellsParadise #Anime #Crunchyroll"
+	},
+	"bXgip0F6qdc": {
+		"name": "Dr. STONE New World | OFFICIAL TRAILER",
+		"uploadDate": "2023-03-12T05:59:56-07:00",
+		"description": "Watch Dr. STONE NEW WORLD on Crunchyroll! https://got.cr/cc-dsnwpv\n\nSeveral thousand years after a mysterious phenomenon that turns all of humanity to stone, the extraordinarily intelligent, science-driven boy, Senku Ishigami, awakens.\n\nFacing a world of stone and the total collapse of civilization, Senku makes up his mind to use science to rebuild the world. Starting with his super strong childhood friend Taiju Oki, who awakened at the same time, they will begin to rebuild civilization from nothing...\n\nDepicting two million years of scientific history from the Stone Age to present day, the unprecedented crafting adventure story is about to begin!\n\nCrunchyroll Collection brings you the latest clips, openings, full episodes, and more from your favorite anime!\n\nFREE 14-DAY CRUNCHYROLL TRIAL 🌟 https://got.cr/cc-14dayspv\n\n#DrSTONE #Anime #Crunchyroll"
 	},
 	"cwKMUoU_BHM": {
 		"name": "... но в этом гениальность «Подземелья вкусностей»",
@@ -461,6 +491,11 @@ export const youtubeMeta = {
 		"uploadDate": "2022-08-06T02:00:13-07:00",
 		"description": "わたしがやらなきゃ だから邪魔しないで　お願い...\n\n▼『ウタカタララバイ』 Streaming & Download \nhttps://ado.lnk.to/fleeting_lullabyID\n\n~ウタ from ONE PIECE FILM RED~\n\n---------------------\n■2022.8.10 CD＆Digital Release\n【ウタ】Ado Full Album 『ウタの歌 ONE PIECE FILM RED』\nhttps://ado.lnk.to/utanoutaID\nhttps://sp.universal-music.co.jp/ado/uta-no-uta/\n------------------------\n\n▼Ado meets #OP_FILMRED\nhttps://www.onepiece-film.jp/uta/\n\n▼abt “ウタ & ウタカタララバイ” ウタ日記 #4\nhttps://youtu.be/VQA1WpxcFgg\n\nVo : Ado\nhttps://twitter.com/ado1024imokenp\n\nLyrics：TOPHAMHAT-KYO (FAKE TYPE.)\nMusic：FAKE TYPE.\nArrangement：DYES IWASAKI (FAKE TYPE.)\nhttps://www.faketype.net/\n\nGuitar : Johngarabushi\r\nVocal Edit & Mix : Shunsuke Shibusawa\r\n\nMovie Director : Wotakichi(NIN)\n\nProducer：千木良卓也（Takuya Chigira)\nhttps://twitter.com/chigira_takuya\n\n▼inst音源\nhttps://piapro.jp/t/444u\n\n#Ado #ウタ #FleetingLullaby #UTA #ウタ_ウタカタララバイ #FAKETYPE #ヲタきち"
 	},
+	"idiI4-o7dB8": {
+		"name": "Wonder Egg Priority Opening  \"Sudachi no Uta\" by  Anemoneria",
+		"uploadDate": "2021-01-19T09:52:53-08:00",
+		"description": "#ワンダーエッグ・プライオリティ#ワンエグ #wep_anime\n\nAnime of the Season \"Wonder Egg Priority\" is a story about troubled girls,written by famous Japanese Screenwriter  Shinji Nojima .\nDirected by Wakabayashi Shin\nStudio :- Cloverworks"
+	},
 	"jOjMCN6Q1Tw": {
 		"name": "Как победить тревогу? «Негативный позитивный рыбак» — не то, чем кажется",
 		"uploadDate": "2025-10-23T01:01:00-07:00",
@@ -473,6 +508,11 @@ export const youtubeMeta = {
 		"name": "Тетрадь смерти | Почему это не идеальная история и какие детали в ней можно упустить?",
 		"uploadDate": "2022-06-22T00:27:11-07:00",
 		"description": "https://flowwow.com/s/BAKA — по промокоду BAKA скидка 10% на Flowwow до конца сентября! Не упустите сезон пионов 🌺\n\nВ этом выпуске мы решили обсудить культовый сериал, которым мы восхищались в детстве. \n\nПервую половину эпизода мы посвятили минусам «Тетради смерти»: почему вторая половина сезона такая сумбурная? как автор не дал раскрыться женским героиням? и действительно ли Лайт — максималист-подросток? \n\nЗато во второй части мы подробно хвалим сериал и вспоминаем лучшие моменты из него. \n\nТаймкоды: \n00:00 — Опенинг \n01:55 — Что пошло не так?\n15:35 — Гениальные две сцены\n28:07 — Хвалим музыку\n30:04 — Противоречивый финал\n38:14 — Маленькая деталь и визуальный стиль\n41:47 — Эндинг\n\nНаш телеграм-канал: https://t.me/podcastbaka\nГруппа в ВК: https://vk.com/podcast.baka\nПатреон: https://www.patreon.com/bakapodcast\n\nСписок материалов по выпуску о «Тетради смерти». Так как в сорокаминутном выпуске обсудить всю глубину сериала невозможно, мы составили список дополнительных материалов: \n\n1. A Brief Retrospective - The Good, The Bad and The Ugly - Death Note in 2021\nhttps://youtu.be/R3SpLo88qCQ\n\n2. What's in an OP? - Death Note's Heavy Christian Symbolism\nhttps://youtu.be/_THHWWbs-70\n\n3. The Brilliance of Death Note's Potato Chip Scene (Yes, Really)\nhttps://youtu.be/eoHC_rfX50U\n\n4. How Death Note Got Bad\nhttps://youtu.be/oupFT0Tsbzw\n\n5. The Endings of Death Note: How One Difference Shapes a Series\nhttps://youtu.be/6sml46UKs88\n\n6. Death Note Color Theory\nhttps://youtu.be/ctlDAsDZ4hA\n\n7. How Mello got Light\nhttps://youtu.be/aQfZYOpJPR0\n\n8. The Boy Who Cornered God | Death Note Analysis\nhttps://youtu.be/vT8KC6gl9IQ\n\n9. Тетрадь Смерти и Атака Титанов - два шедевра снятых одним человеком / Как правильно адаптировать?\nhttps://youtu.be/AFQAmjRSWkU\n\n10. The Lie That Crushed God | Death Note Analysis\nhttps://youtu.be/uh31Qb7RalA\n\n11. The Crazy Thing You Don't Realise About Death Note - Light Loses in Episode 2\nhttps://youtu.be/RigOKwdkOkk\n\n#аниме #тетрадьсмерти #анимеклип"
+	},
+	"keti2rbgI6c": {
+		"name": "Mushoku Tensei: Jobless Reincarnation Season 2 | OFFICIAL TRAILER",
+		"uploadDate": "2022-07-03T15:00:30-07:00",
+		"description": "Watch Mushoku Tensei: Jobless Reincarnation on Crunchyroll! https://got.cr/cc-mtjrpv\n\nWhen a 34-year-old underachiever gets run over by a truck, his story doesn't end there. Reincarnated in a new world as an infant, Rudy will seize every opportunity to live the life he's always wanted. Armed with new friends, some freshly acquired magical abilities, and the courage to do the things he's always dreamed of, he's embarking on an epic adventure—with all of his past experience intact!\n\nCrunchyroll Collection brings you the latest clips, openings, full episodes, and more from your favorite anime!\n\nFREE 14-DAY CRUNCHYROLL TRIAL 🌟 https://got.cr/cc-14dayspv\n\n#MushokuTensei #Anime #Crunchyroll"
 	},
 	"l7ehW_8b68c": {
 		"name": "Кобаяси и её горничная-дракон | Как показать взрослых людей и рассмешить дракона",
@@ -512,6 +552,11 @@ export const youtubeMeta = {
 		"uploadDate": "2026-03-12T01:00:49-07:00",
 		"description": "Любимые книги и комиксы подкаста «Бака!» — на полке в «Яндекс Книгах»: https://clck.ru/3STrou\n\nОдиночество — это чувство, знакомое всем. Но мало кто осознает, что каждый из нас в любой момент времени на самом деле — один. И никто другой, даже самый близкий человек, никто и никогда не сможет тебя до конца понять. И не сможет узнать, как именно выглядит твое одиночество. \n\nОб этом — главный сериал этой зимы, «Дневник разных стран». И наше новое видеоэссе. \n\nВеликолепный монтаж видеоэссе — Ваня Королёв: https://t.me/in_da_tresh\n\nПодписаться, чтобы не пропустить бонусные выпуски «Баки!» можно здесь: \nBoosty — https://boosty.to/bakapodcast\nVK — https://vk.com/podcast.baka\nPatreon — https://www.patreon.com/bakapodcast\nTelegram — https://t.me/+nz2JG4WhGvQ2NjMy\n\nТаймкоды:\n00:00 — Интро\n02:06 — Потеря\n06:00 — Любовь\n11:23 — Свобода\n15:02 — Противоречия\n16:23 — Рекомендации\n\nРеклама. ООО «Яндекс Музыка». ИНН 9705121040. erid: 2VtzqwiBDQR"
 	},
+	"odo1D1rKgVs": {
+		"name": "Ислам Ганджаев: озвучка аниме, личный бренд и немного коучинга | Специальный выпуск",
+		"uploadDate": "2022-06-29T01:00:21-07:00",
+		"description": "Это первый специальный выпуск в этом сезоне подкаста! И в нем мы позвали в гости актера озвучания, голос Тандзиро, Фалько и других персонажей любимых аниме — Ислама Ганджаева. \n\nКак озвучивают аниме в России? Бывает ли дубляж лучше оригинала? Можно ли нам стать озвучкерами? И как соцсети помогают лучше понять себя?     \n\nТаймкоды: \n0:00 — Про нестудийную озвучку\n1:25 — Опенинг\n2:45 — Как решил озвучивать аниме \n6:30 — Как выглядят демки\n8:35 — Отличие японской озвучки от русской\n14:12 — Про отыгрыш эмоций\n16:35 — Аниме vs кино\n21:33 — Как попасть в озвучку\n24:30 — Вникают ли японцы в процесс озвучки \n31:04 — Как утверждаются голоса персонажей \n31:37 — Что сейчас будет с озвучкой аниме \n32:05 — Насколько выгодно заниматься озвучкой \n38:17 — Про кастинги\n39:21 — Соцсети и познание себя\n43:15 — Фрустрация и психология\n49:00 — Общение с аудиторией \n52:55 — Помогают ли соцсети актерам озвучания\n54:19 — Какие роли в аниме ещё хотел бы озвучить\n56:09 — Эндинг\n\nПодписаться на подкаст на других платформах: https://pc.st/1577387113\nНаш телеграм-канал: https://t.me/podcastbaka\n\nСоцсети Ислама: \nТелеграм-канал — https://t.me/gan_islam\nТик-ток — https://vt.tiktok.com/ZSdmsseBA/\nТвич — https://www.twitch.tv/gan_islam\n\n#бакаподкаст #подкаст #аниме #исламганджаев #манга"
+	},
 	"oeIbxw9s3wo": {
 		"name": "Rurouni Kenshin | OFFICIAL TRAILER #3",
 		"uploadDate": "2023-06-24T12:00:28-07:00",
@@ -531,6 +576,11 @@ export const youtubeMeta = {
 		"name": "Лучшее аниме о смысле жизни — «Сонни бой» | Видеоэссе",
 		"uploadDate": "2024-11-28T23:29:14-08:00",
 		"description": "Жизнь кажется бессмысленной, скучной, а еще страшной, несправедливой и жутко обидной. Только и всего. И ровно с этого чувства, с желания сбежать из этой жизни и начинаются события одного из самых оригинальных аниме последних лет — «Сонни бой». \n\nО чем рассказывает эта история, и как она поддерживает даже в самые тяжелые времена?\n\nПриобрести мангу от издательства «Комильфо»: https://vk.cc/cFnUJh\n\nНаш телеграм-канал — https://t.me/podcastbaka\n\nПодписаться, чтобы не пропустить бонусные выпуски «Баки!» можно здесь: \nBoosty — https://boosty.to/bakapodcast\nVK — https://vk.com/podcast.baka\nPatreon — https://patreon.com/bakapodcast  \nTelegram — https://t.me/+nz2JG4WhGvQ2NjMy\n\nВеликолепный монтаж видеоэссе — Ваня Королёв: https://t.me/in_da_tresh\n\nТаймкоды: \n00:00 — Жизнь бессмыслена\n01:10 — Сюжет аниме\n03:31 — История создания\n05:19 — О реализме\n07:49 — Вавилонская башня\n11:42 — Смысл жизни\n14:56 — Жизнь бессмысленна. Но только и всего\n16:44 — BECK и Горе-учитель"
+	},
+	"pmanD_s7G3U": {
+		"name": "Demon Slayer | OP | \"Gurenge\" by LiSA HD",
+		"uploadDate": "2019-04-09T19:56:56-07:00",
+		"description": "Subscribe to Funimation's YouTube Channel for all your anime downunder https://weareani.me/sjvgdsLiSA is performing the series' opening theme song \"Gurenge\" (紅蓮華). Join us in watching 'Demon Slayer', simulcasting now on AnimeLab! 👹 http://mad.mn/slay\n\nSubscribe to our channel for all the latest updates & videos!\n\nWebsite: http://www.animelab.com\nLike us on Facebook: http://www.facebook.com/animelab\nFollow us on Twitter: http://www.twitter.com/animelab\n\n© 2014 AnimeLab"
 	},
 	"pvN9IbhHuZs": {
 		"name": "Лучшая манга о счастье — «Жизнь в одноэтажном доме» | Видеоэссе",
@@ -638,6 +688,11 @@ export const youtubeMeta = {
 		"name": "Звездное дитя | Насколько реально показан мир японского шоу-бизнеса? ft. сэйю Женя Давидюк",
 		"uploadDate": "2023-07-10T23:56:00-07:00",
 		"description": "Мы возвращаемся с седьмым сезоном подкаста! И в первом выпуске мы обсуждаем главное аниме весны — «Звездное дитя». \n\nКак произведение Аки Акасаки жонглирует жанрами? Почему Кана — лучшая героиня первого сезона? И можно ли стать айдолом в двадцать пять? \n\nВо всем этом нам помогает разобраться сэйю и певица, которая уже больше 15 лет живет в Японии, Женя Давидюк. \n\nЗаписаться на курсы сэйю можно здесь: https://www.jvtacademy.com/russia/voice_acting/\n\nПодписаться, чтобы не пропустить бонусные выпуски «Баки!» можно здесь: \nBoosty — https://boosty.to/bakapodcast\nVK — https://vk.com/podcast.baka\nPatreon — https://www.patreon.com/bakapodcast\nTelegram — https://t.me/tribute/app?startapp=s26z\n\nНаш великолепный телеграм-канал — https://t.me/podcastbaka\n\n#бака #звездноедитя"
+	},
+	"yU7AJxVOZKQ": {
+		"name": "Skip and Loafer | Official Trailer | Crunchyroll",
+		"uploadDate": "2022-07-16T06:45:03-07:00",
+		"description": "Watch Skip and Loafer on Crunchyroll! https://got.cr/cc-salpv\n\nThis country girl is ready for the big city! Well, at least she thought she was. Mitsumi’s dream is to attend a prestigious school and make the world a better place. But when she finally gets to Tokyo, it turns out she isn’t exactly prepared for city life. Luckily, she runs into Shima, a sweet and handsome classmate who becomes her first friend! Can she make it in Tokyo with Shima by her side?\n\nCrunchyroll Collection brings you the latest clips, openings, full episodes, and more from your favorite anime!\n\nFREE 14-DAY CRUNCHYROLL TRIAL 🌟 https://got.cr/cc-14dayspv\n\n#SkipandLoafer #Anime #Crunchyroll"
 	},
 	"yYAgBRO-aT8": {
 		"name": "【荒木哲郎×SawanoHiroyuki[nZk]：Hata Motohiro】『COLORs』／TOHO animation ミュージックフィルムズ",

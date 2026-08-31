@@ -105,6 +105,10 @@ async function toEntry(data) {
 		// (src/lib/animeIndexability.mjs). Пустую строку приводим к null:
 		// «спросили, франшизы нет» обязано отличаться от «не спрашивали».
 		franchise: data.franchise || null,
+		// Тип произведения — сериал, фильм, OVA. Лежит в этом же ответе,
+		// отдельного запроса не нужно. Пустую строку приводим к null по тому же
+		// доводу, что и франшизу: «спросили, не назван» ≠ «не спрашивали».
+		kind: data.kind || null,
 		sourceAliases: sourceAliases(data),
 	};
 }

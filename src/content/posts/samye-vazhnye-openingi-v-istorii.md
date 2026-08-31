@@ -99,7 +99,7 @@ anime:
 #### Евангелион
 
 
-::video{youtube="https://www.youtube.com/watch?v=fShlVhCfHig"}
+::video{youtube="https://www.youtube.com/watch?v=WWWTWgyYYAk"}
 
 
 Правда, за появлением штампов всегда следует их переворачивание и разрушение. И с этим лучше всего справился «Евангелион».
@@ -135,7 +135,7 @@ anime:
 #### K-ON
 
 
-::video{youtube="https://www.youtube.com/watch?v=m7_-RBl0lfY"}
+::video{youtube="https://www.youtube.com/watch?v=GkB_VmpDhPw"}
 
 
 K сериалу K-On можно относиться по-разному: любить за легкий юмор и уютную повседневность или ненавидеть за отсутствие развития персонажей и скучный сюжет. Но чего точно нельзя отрицать — K-On стал ключевым сериалом для развития культа «милых девочек, которые делают милые вещи».
@@ -145,7 +145,7 @@ K сериалу K-On можно относиться по-разному: лю�
 #### Истребитель демонов
 
 
-::video{youtube="https://www.youtube.com/watch?v=vFFyX928D9k"}
+::video{youtube="https://www.youtube.com/watch?v=pmanD_s7G3U"}
 
 
 Наконец, последний опенинг в этом списке здесь по двум причинам.

@@ -24,7 +24,7 @@ import { socialSource, coverSrcs } from '../../lib/postImage.mjs';
 import { absoluteUrl, SITE_NAME } from '../../lib/site.mjs';
 import { podcastEpisodeSchema, articleSchema, breadcrumbsSchema, videoObjectsSchema } from '../../lib/schema.mjs';
 import { lastModifiedISO, postFilePath } from '../../lib/lastModified.mjs';
-import { authorPerson, ИМЯ_НА_СТРАНИЦЕ } from '../../lib/author.mjs';
+import { authorFor, ИМЯ_НА_СТРАНИЦЕ } from '../../lib/author.mjs';
 import { youtubeEmbedsInBody } from '../../lib/youtube.mjs';
 import { categories, sectionOf } from '../../content.config';
 import { parseTimecodeList } from '../../lib/timecode.mjs';
@@ -335,12 +335,16 @@ const modified = lastModifiedISO(postFilePath(post.id));
 // на странице нет.
 const schemaTranscript = transcriptData ? transcriptPlainText(transcriptData) : null;
 
-// АВТОР МАТЕРИАЛА — ЧЕЛОВЕК СО СТРАНИЦЫ «О ПРОЕКТЕ» (TASK-markup, 3.1).
+// АВТОР МАТЕРИАЛА (TASK-markup, 3.1). Спрашиваем ДВА источника, и первый
+// сильнее: подпись «Автор текста: …» в поле маркировки — она поставлена
+// человеком про ЭТОТ текст, а ведущий проекта только умолчание.
+// Замер 31 августа 2026: подписей 23, настоящих реклам в том же поле 4.
+//
 // Данные живые: описание и телеграм заказчик правит в админке, и правка
 // доезжает до разметки сама. Переименовали ведущего — говорим об этом вслух
 // и оставляем издателя автором: молчать про подмену нельзя, а сочинять нечего.
 const about = await getEntry('pages', 'about');
-const author = authorPerson(about?.data);
+const author = authorFor(post.data, about?.data);
 if (!author) {
 	console.warn(
 		`[автор] На странице «О проекте» нет ведущего по имени «${ИМЯ_НА_СТРАНИЦЕ}» — ` +
