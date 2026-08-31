@@ -200,6 +200,12 @@ function блокПлеер({ пост, медиа, время, подпись, 
 		hName: 'div',
 		hProperties: {
 			class: 'post-play',
+			// `data-episode-card` — ПРИЗНАК «ЗДЕСЬ ЕСТЬ ВЫПУСК И ЕГО КНОПКИ».
+			// По нему панель плеера подключает блок и решает, показываться ли
+			// самой (PlayerBar.astro). Своего кода воспроизведения у врезки нет
+			// вовсе — и не должно быть: звук на странице один, `<audio>` один,
+			// и двух источников не бывает по устройству, а не по договорённости.
+			'data-episode-card': '',
 			// ДАННЫЕ ВЫПУСКА ЛЕЖАТ АТРИБУТАМИ, а поведение навешивает скрипт —
 			// ровно как у плеера на странице выпуска (EpisodePlayer.astro).
 			// Убрать любой из этих атрибутов значит убрать всё поведение: блок
@@ -217,13 +223,18 @@ function блокПлеер({ пост, медиа, время, подпись, 
 				эл('span', { class: 'post-ref-title' }, [текст(пост.data.title)]),
 			]),
 			эл('div', { class: 'post-play-ctl' }, [
-				эл('button', { type: 'button', class: 'play play--inset post-play-toggle', 'aria-label': 'Слушать выпуск' }, [
+				// ХВАТЫ ДЛЯ СКРИПТА — ТЕ ЖЕ ИМЕНА, ЧТО У ПЛЕЕРА ВЫПУСКА (`ep-…`).
+				// Не потому, что это врезка выпуска, а потому что подключает их
+				// один и тот же код: заведи мы свои имена, у панели появился бы
+				// второй набор селекторов, то есть вторая реализация подключения.
+				// Вид при этом даёт второй класс рядом — `play`, `seek`, `tech`.
+				эл('button', { type: 'button', class: 'ep-toggle play play--inset', 'aria-label': 'Слушать выпуск' }, [
 					значокИграть(),
 					значокПауза(),
 				]),
-				эл('span', { class: 'post-play-time tech post-play-current' }, [текст('00:00')]),
+				эл('span', { class: 'ep-time-current post-play-time tech' }, [текст('00:00')]),
 				эл('input', {
-					class: 'post-play-range seek',
+					class: 'ep-range seek',
 					type: 'range',
 					min: '0',
 					max: String(выпуск.durationSec ?? 0),
@@ -231,7 +242,7 @@ function блокПлеер({ пост, медиа, время, подпись, 
 					value: '0',
 					'aria-label': 'Перемотка',
 				}),
-				эл('span', { class: 'post-play-time tech' }, [текст(formatClock(выпуск.durationSec ?? 0))]),
+				эл('span', { class: 'ep-time-duration post-play-time tech' }, [текст(formatClock(выпуск.durationSec ?? 0))]),
 			]),
 			эл('div', { class: 'post-play-foot' }, [
 				// Длительность здесь не повторяется — она уже стоит в строке

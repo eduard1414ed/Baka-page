@@ -166,6 +166,9 @@
 		// это выбор без разницы, читатель не понимает, какой из них главный.
 		let mainPlayerVisible = false;
 		let observer: IntersectionObserver | null = null;
+		// Кто из блоков сейчас на экране. Множество, а не флаг: блоков бывает
+		// несколько, и «виден хоть один» — это их сумма, а не ответ последнего.
+		const видимыеБлоки = new Set<Element>();
 
 		function updateBar() {
 			const shouldShow = Boolean(currentGuid) && !mainPlayerVisible;
@@ -174,23 +177,44 @@
 		}
 
 		// Пересчитывается при каждом переходе между страницами: панель переживает
-		// переход, а развёрнутый плеер — нет, и наблюдать надо за новым.
+		// переход, а блоки на странице — нет, и наблюдать надо за новыми.
+		//
+		// БЛОКОВ ТЕПЕРЬ БЫВАЕТ НЕСКОЛЬКО, И ЭТО ГЛАВНАЯ ПРАВКА ЗДЕСЬ. Раньше
+		// спрашивался ОДИН — `querySelector('.episode-player')`, первый на
+		// странице. Пока плеер на странице был один, разницы не было; с врезками
+		// на материалы на одной странице легко сходятся развёрнутый плеер выпуска
+		// и мини-плеер врезки на другой выпуск, а то и два мини-плеера подряд.
+		// Первый найденный оказался бы не тем, за кем надо следить, и панель
+		// пряталась бы или показывалась невпопад.
+		//
+		// ПАНЕЛЬ СКРЫТА, ПОКА ВИДЕН ХОТЬ ОДИН блок того же выпуска: показывать
+		// её рядом с блоком, где те же кнопки, — это выбор без разницы, читатель
+		// не понимает, какой из них главный. Ушли все за край экрана — панель
+		// появилась, и звуком по-прежнему можно управлять.
 		function watchMainPlayer() {
 			observer?.disconnect();
 			observer = null;
+			видимыеБлоки.clear();
 			mainPlayerVisible = false;
 
-			const card = document.querySelector<HTMLElement>('.episode-player');
-			if (card && currentGuid && card.dataset.guid === currentGuid) {
-				// До первого ответа наблюдателя считаем плеер видимым: обычный
-				// случай — человек только что нажал на нём play, значит плеер
+			const блоки = [...document.querySelectorAll<HTMLElement>('[data-episode-card]')].filter(
+				(блок) => currentGuid && блок.dataset.guid === currentGuid,
+			);
+
+			if (блоки.length > 0) {
+				// До первого ответа наблюдателя считаем блок видимым: обычный
+				// случай — человек только что нажал на нём play, значит блок
 				// перед глазами. Иначе панель успевала бы мигнуть и спрятаться.
 				mainPlayerVisible = true;
 				observer = new IntersectionObserver((entries) => {
-					mainPlayerVisible = entries[0].isIntersecting;
+					for (const запись of entries) {
+						if (запись.isIntersecting) видимыеБлоки.add(запись.target);
+						else видимыеБлоки.delete(запись.target);
+					}
+					mainPlayerVisible = видимыеБлоки.size > 0;
 					updateBar();
 				});
-				observer.observe(card);
+				for (const блок of блоки) observer.observe(блок);
 			}
 
 			updateBar();
@@ -264,6 +288,12 @@
 		// Три состояния развёрнутого плеера из справочника (блок 01). Панель
 		// внизу их не показывает: у неё нет ни таймлайна, ни места под текст
 		// ошибки, а состояние всё равно видно на странице выпуска.
+		//
+		// ЗДЕСЬ НАРОЧНО КЛАСС, А НЕ ПРИЗНАК `data-episode-card`. Речь о плашке
+		// «не удалось загрузить», а она есть только у развёрнутого плеера:
+		// у мини-плеера во врезке места под текст ошибки нет — как и у панели.
+		// Спроси мы тут признак, врезка получала бы классы состояния, которые
+		// ничего не рисуют, и следующий пошёл бы искать, почему они не видны.
 		function setState(state: 'ready' | 'loading' | 'error') {
 			document.querySelectorAll<HTMLElement>('.episode-player').forEach((card) => {
 				const own = card.dataset.guid === currentGuid;
@@ -402,7 +432,11 @@
 			| undefined;
 		if (!api) return;
 
-		document.querySelectorAll<HTMLElement>('.episode-player').forEach((card) => {
+		// ПО ПРИЗНАКУ, А НЕ ПО ИМЕНИ КЛАССА. Таких блоков на сайте двое:
+		// развёрнутый плеер страницы выпуска (EpisodePlayer.astro) и мини-плеер
+		// внутри врезки на материал (src/plugins/remark-post-ref.mjs). Третий
+		// появится — впишет себе тот же признак и заработает, не трогая этот файл.
+		document.querySelectorAll<HTMLElement>('[data-episode-card]').forEach((card) => {
 			const guid = card.dataset.guid;
 			if (!guid) return;
 
@@ -414,7 +448,13 @@
 			const rateFace = card.querySelector<HTMLElement>('.speed-face');
 			const timeCurrent = card.querySelector<HTMLSpanElement>('.ep-time-current');
 			const timeDuration = card.querySelector<HTMLSpanElement>('.ep-time-duration');
-			if (!toggle || !back15 || !fwd15 || !range || !rateSelect || !timeCurrent || !timeDuration) return;
+			// ОБЯЗАТЕЛЬНЫ ТРОЕ, ОСТАЛЬНЫЕ НЕТ — и это не послабление, а разница
+			// между блоками. У мини-плеера во врезке нет ни перемотки ±15,
+			// ни выбора скорости: это врезка посреди статьи, а не страница
+			// выпуска, и семь целей в ней были бы промахами пальцем. Кнопка,
+			// дорожка и текущее время есть у обоих — без них блок не плеер вовсе,
+			// и такой блок мы не подключаем, а не «подключаем наполовину».
+			if (!toggle || !range || !timeCurrent) return;
 
 			const { audio } = api;
 			const isActive = () => api.getGuid() === guid;
@@ -429,7 +469,7 @@
 			const fallbackDuration = Number(card.dataset.duration || 0);
 			if (fallbackDuration > 0) {
 				range.max = String(Math.floor(fallbackDuration));
-				timeDuration.textContent = formatTime(fallbackDuration);
+				if (timeDuration) timeDuration.textContent = formatTime(fallbackDuration);
 			}
 
 			toggle.addEventListener('click', () => {
@@ -441,11 +481,11 @@
 				}
 			});
 
-			back15.addEventListener('click', () => {
+			back15?.addEventListener('click', () => {
 				if (isActive()) audio.currentTime = Math.max(0, audio.currentTime - 15);
 			});
 
-			fwd15.addEventListener('click', () => {
+			fwd15?.addEventListener('click', () => {
 				if (isActive()) audio.currentTime = Math.min(audio.duration || Infinity, audio.currentTime + 15);
 			});
 
@@ -460,7 +500,7 @@
 				scrubbing = false;
 			});
 
-			rateSelect.addEventListener('change', () => {
+			rateSelect?.addEventListener('change', () => {
 				if (isActive()) audio.playbackRate = Number(rateSelect.value);
 				if (rateFace) rateFace.textContent = rateSelect.options[rateSelect.selectedIndex]?.text ?? '1×';
 			});
@@ -493,11 +533,13 @@
 				}
 
 				setPlayIcon(toggle, !audio.paused);
-				rateSelect.value = String(audio.playbackRate);
-				if (rateFace) rateFace.textContent = rateSelect.options[rateSelect.selectedIndex]?.text ?? '1×';
+				if (rateSelect) {
+					rateSelect.value = String(audio.playbackRate);
+					if (rateFace) rateFace.textContent = rateSelect.options[rateSelect.selectedIndex]?.text ?? '1×';
+				}
 				if (audio.duration) {
 					range.max = String(Math.floor(audio.duration));
-					timeDuration.textContent = formatTime(audio.duration);
+					if (timeDuration) timeDuration.textContent = formatTime(audio.duration);
 				}
 				if (!scrubbing) {
 					range.value = String(Math.floor(audio.currentTime));
@@ -541,6 +583,11 @@
 					return;
 				}
 
+				// И ЗДЕСЬ НАРОЧНО КЛАСС, А НЕ ПРИЗНАК. Таймкод перематывает выпуск
+				// ЭТОЙ страницы, а не тот, на который посреди текста стоит врезка:
+				// нажатие на «12:04» в расшифровке обязано двигать расшифровку.
+				// Спроси мы признак — таймкод мог бы попасть в чужой мини-плеер,
+				// и перемотался бы не тот выпуск, причём молча.
 				const card = document.querySelector<HTMLElement>('.episode-player');
 
 				// ПЕРЕХОД ОТМЕНЯЕМ ТОЛЬКО ТОГДА, КОГДА ПРАВДА ЕСТЬ ЧТО ПЕРЕМОТАТЬ.

@@ -40,6 +40,10 @@
 import { readFile, readdir, writeFile, unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+// ПОДДЕЛКА ОКНА — ОБЩАЯ. Жила здесь; переехала, когда таких проверок стало
+// две (см. scripts/post-play-wiring.test.mjs): вторая копия разъехалась бы
+// с первой правкой, и разошёлся бы не вид, а ответ «а так ли ведёт себя браузер».
+import { makeWindow } from './player-window-stub.mjs';
 
 const DIST = new URL('../dist/', import.meta.url);
 
@@ -63,105 +67,6 @@ async function findEpisodePage() {
 /** Имена собранных скриптов страницы, В ТОМ ЖЕ ПОРЯДКЕ, что в разметке. */
 function scriptsOf(html) {
 	return [...html.matchAll(/src="\/(_astro\/[^"]+\.js)"/g)].map((m) => m[1]);
-}
-
-/**
- * Маленькая подделка окна.
- *
- * Ей не нужно уметь всю страницу: вопрос у проверки один — КОГДА появляется
- * `window.__bakaPlayer`. Поэтому поиск по разметке отвечает «ничего не нашёл»,
- * и модули просто регистрируют свои обработчики, ничего не рисуя.
- */
-function makeWindow() {
-	const handlers = [];
-	const empty = () => [];
-
-	// ЭЛЕМЕНТ ОТВЕЧАЕТ НА ВСЁ, И ЭТО НАРОЧНО. Панель плеера при запуске ищет
-	// полтора десятка кнопок по id и сразу вешает на них слушатели; верни
-	// подделка «ничего не нашла» — запуск падал бы на первой же кнопке
-	// и до объявления `window.__bakaPlayer` не доходил никогда. Тогда проверка
-	// отвечала бы «плеер не объявлен» ВСЕГДА, в любом порядке скриптов, —
-	// то есть меряла бы собственную бедность, а не порядок. Именно это
-	// и поймал `--selftest` в первой редакции.
-	const makeElement = () => {
-		const el = {
-			addEventListener() {},
-			removeEventListener() {},
-			querySelectorAll: empty,
-			classList: { add() {}, remove() {}, contains: () => false, toggle() {} },
-			dataset: {},
-			style: { setProperty() {}, removeProperty() {} },
-			setAttribute() {},
-			removeAttribute() {},
-			getAttribute: () => null,
-			appendChild() {},
-			append() {},
-			insertBefore() {},
-			remove() {},
-			contains: () => false,
-			closest: () => null,
-			focus() {},
-			blur() {},
-			click() {},
-			scrollIntoView() {},
-			getBoundingClientRect: () => ({ top: 0, bottom: 0, left: 0, right: 0, width: 0, height: 0 }),
-			children: [],
-			childNodes: [],
-			textContent: '',
-			innerHTML: '',
-			value: '',
-			hidden: false,
-			disabled: false,
-			checked: false,
-			// свойства звука — панель читает их при запуске
-			currentTime: 0,
-			duration: 0,
-			paused: true,
-			playbackRate: 1,
-			readyState: 0,
-			networkState: 0,
-			src: '',
-			play: () => Promise.resolve(),
-			pause() {},
-			load() {},
-		};
-		el.querySelector = () => makeElement();
-		return el;
-	};
-
-	const documentStub = {
-		addEventListener(name, fn) {
-			handlers.push({ name, fn });
-		},
-		removeEventListener() {},
-		querySelector: () => makeElement(),
-		querySelectorAll: empty,
-		getElementById: () => makeElement(),
-		createElement: () => makeElement(),
-		body: makeElement(),
-		documentElement: makeElement(),
-		head: makeElement(),
-	};
-
-	const win = {
-		document: documentStub,
-		addEventListener() {},
-		removeEventListener() {},
-		matchMedia: () => ({ matches: false, addEventListener() {}, removeEventListener() {} }),
-		requestAnimationFrame: (fn) => fn(),
-		getSelection: () => ({ toString: () => '' }),
-		location: { hash: '', pathname: '/', href: 'https://ru.bakapodcast.com/' },
-		history: { state: null, replaceState() {}, pushState() {} },
-		localStorage: { getItem: () => null, setItem() {}, removeItem() {} },
-		sessionStorage: { getItem: () => null, setItem() {}, removeItem() {} },
-		IntersectionObserver: class {
-			observe() {}
-			disconnect() {}
-		},
-		HTMLMediaElement: { HAVE_CURRENT_DATA: 2, HAVE_NOTHING: 0, NETWORK_NO_SOURCE: 3 },
-	};
-
-	return { win, documentStub, handlers };
 }
 
 /** Исполнить собранные скрипты в заданном порядке поверх подделки. */
