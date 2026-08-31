@@ -33,6 +33,7 @@ import { formatPostDate } from '../../lib/postDate.mjs';
 import { episodeNumber, episodeNumberValue } from '../../lib/postMeta.mjs';
 import { animeSearchWords } from '../../lib/animeSearch.mjs';
 import AnimeBadge from '../../components/AnimeBadge.astro';
+import AnimeHoverCard from '../../components/AnimeHoverCard.astro';
 import ContentHeader from '../../components/ContentHeader.astro';
 import PostKicker from '../../components/PostKicker.astro';
 import EpisodePlayer from '../../components/EpisodePlayer.astro';
@@ -44,6 +45,10 @@ import { makeExceptionFilter } from '../../lib/mentionExceptions.mjs';
 import { animeHiddenInPost, animeMentionCountsInPostText, animeMentionedIn, sortAnimeByMentions } from '../../lib/animeMentionIndex.mjs';
 import { resolveEpisodeCover } from '../../lib/episodeCover.mjs';
 import { isPublished } from '../../lib/publishing.mjs';
+import { buildCatalog } from '../../lib/animeCatalog.mjs';
+import { stampVar } from '../../lib/animeStamp.mjs';
+import { getAnimePosterSrcs } from '../../lib/animePoster.mjs';
+import { plural } from '../../lib/plural.mjs';
 import { getPostTiming } from '../../lib/postTiming.mjs';
 import { isExternalPost } from '../../lib/externalPost.mjs';
 import { getCardMedia } from '../../lib/postCardMedia.mjs';
@@ -295,6 +300,56 @@ const animeIds = sortAnimeByMentions(
 	mentionTimes,
 );
 const animeEntries = (await Promise.all(animeIds.map((id) => getEntry('anime', id)))).filter(Boolean);
+
+// ДАННЫЕ ДЛЯ МАРКИ ПРИ НАВЕДЕНИИ (тз/тз-ссылка-на-аниме.md, §4). Собираются
+// ПРИ СБОРКЕ и кладутся в страницу готовыми: к Шикимори во время просмотра
+// не ходит никто, а справочник и так уже собран.
+//
+// БЕРЁМ ТОТ ЖЕ СПИСОК, ЧТО У МАРОК ПОД ТЕКСТОМ, и это не совпадение: `animeIds`
+// — объединение поля «Тайтлы поста», найденного в тексте и прозвучавшего
+// в разговоре, минус отменённое. Ссылки в теле ставит `remark-anime` тем же
+// матчером, каким тут посчитан `inTextCounts`, а ссылки в расшифровке — по
+// `mentionTimes`. То есть список заведомо покрывает все ссылки страницы;
+// лишнее в нём безвредно (данные просто не спросят), а недостача означала бы
+// ссылку без марки. Разойтись эти два пути могут только на названии, разорванном
+// разметкой посередине («**Атака** титанов»), — замер по всем 1595 постам
+// 11 августа 2026 дал ноль таких мест.
+//
+// ЧИСЛО УПОМИНАНИЙ — КАТАЛОЖНОЕ, а не «сколько раз прозвучало в этом выпуске»
+// (решение заказчика 31 августа 2026). Марка всплывает и над обычной статьёй,
+// где расшифровки нет вовсе, и «0 фрагментов» там было бы неправдой о тайтле.
+//
+// АРГУМЕНТЫ У `buildCatalog` РОВНО ТЕ ЖЕ, ЧТО У КАТАЛОГА И ГЛАВНОЙ, включая
+// фильтр постов. Указатель упоминаний разбирает 141 расшифровку и потому
+// запоминается по длинам трёх коллекций: возьми мы здесь другой фильтр —
+// ключ не совпал бы, и вся эта работа делалась бы второй раз за сборку.
+const catalogPosts = await getCollection('posts', ({ data }) => isPublished(data));
+const catalogTranscripts = await getCollection('transcripts');
+const catalogById = new Map(
+	buildCatalog({ posts: catalogPosts, transcripts: catalogTranscripts, animeList }).map((item) => [item.id, item]),
+);
+
+const hoverTitles = animeEntries.map((entry) => {
+	const item = catalogById.get(entry!.id);
+	const posters = getAnimePosterSrcs(entry!.data.poster);
+	const count = item?.count ?? 0;
+
+	return {
+		id: entry!.id,
+		href: `/anime/${entry!.id}/`,
+		code: item?.code ?? null,
+		title: entry!.data.titleRu || entry!.data.titleOriginal,
+		// Две строки, как в блоке каталога на главной: одной строкой перенос рвал
+		// её по любому пробелу, и число отрывалось от своего слова.
+		meta: [
+			[entry!.data.year, entry!.data.studio].filter(Boolean).join(' · '),
+			count > 0 ? `${count} ${plural(count, ['упоминание', 'упоминания', 'упоминаний'])}` : '',
+		] as [string, string],
+		// Постер 320w: колонка в марке 120 px, этого хватает и на плотный экран.
+		poster: posters.length > 0 ? posters[0].src : null,
+		stamp: stampVar(entry!.id),
+	};
+});
 
 // Слова упомянутых тайтлов для поиска — невидимой строкой в конце статьи,
 // см. комментарий у самой строки ниже.
@@ -672,6 +727,12 @@ const postSearchMeta = [
 				</span>
 			)}
 		</article>
+
+		{/* Марка при наведении стоит ЗА ПРЕДЕЛАМИ `<article>` по той же причине,
+		    что и два блока ниже: `data-pagefind-body` висит на самой статье,
+		    и всё, что внутри, уходит в поисковый индекс текстом материала.
+		    Внутри статьи её склад данных стал бы частью цитат в выдаче. */}
+		<AnimeHoverCard titles={hoverTitles} />
 
 		{/* ДВА ХВОСТОВЫХ БЛОКА — ЗА ПРЕДЕЛАМИ `<article>`, и это не оформление,
 		    а условие: `data-pagefind-body` стоит на самой статье, и всё, что
