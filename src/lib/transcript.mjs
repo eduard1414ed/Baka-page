@@ -96,3 +96,28 @@ export function groupReplicas(transcript, maxBlockSec = MAX_BLOCK_SEC) {
 
 	return blocks;
 }
+
+// Вся расшифровка одной строкой — для поля `transcript` в разметке
+// Schema.org (TASK-markup, пункт 1.1). Читателю она не показывается: это тот
+// же текст, что уже стоит на странице, но названный своим именем — «запись
+// разговора», а не «текст статьи».
+//
+// СКЛЕИВАЕМ ИЗ БЛОКОВ, А НЕ ИЗ РЕПЛИК НАПРЯМУЮ, ровно затем, чтобы имена
+// голосов стояли там же, где их видит читатель: `groupReplicas` уже решил,
+// где речь одного человека продолжается, а где заговорил другой. Своя
+// склейка разошлась бы с показанной страницей молча.
+//
+// Таймкодов тут нет намеренно. На странице они органы управления — нажал
+// и перемотал; в сплошном тексте это мусор посреди фразы, и поисковик
+// прочитает их словами.
+export function transcriptPlainText(transcript) {
+	const blocks = groupReplicas(transcript);
+	if (blocks.length === 0) return null;
+
+	const текст = blocks
+		.map((block) => (block.continues ? block.text : `${block.name}: ${block.text}`))
+		.join('\n')
+		.trim();
+
+	return текст || null;
+}

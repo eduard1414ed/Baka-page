@@ -22,19 +22,21 @@ import JsonLd from '../../components/JsonLd.astro';
 import { postDescription } from '../../lib/excerpt.mjs';
 import { socialSource, coverSrcs } from '../../lib/postImage.mjs';
 import { absoluteUrl, SITE_NAME } from '../../lib/site.mjs';
-import { podcastEpisodeSchema, articleSchema, breadcrumbsSchema } from '../../lib/schema.mjs';
+import { podcastEpisodeSchema, articleSchema, breadcrumbsSchema, videoObjectsSchema } from '../../lib/schema.mjs';
+import { lastModifiedISO, postFilePath } from '../../lib/lastModified.mjs';
+import { youtubeEmbedsInBody } from '../../lib/youtube.mjs';
 import { categories, sectionOf } from '../../content.config';
 import { parseTimecodeList } from '../../lib/timecode.mjs';
 import { findEpisodeByGuid } from '../../lib/podcastFeed.mjs';
 import { formatPostDate } from '../../lib/postDate.mjs';
-import { episodeNumber } from '../../lib/postMeta.mjs';
+import { episodeNumber, episodeNumberValue } from '../../lib/postMeta.mjs';
 import { animeSearchWords } from '../../lib/animeSearch.mjs';
 import AnimeBadge from '../../components/AnimeBadge.astro';
 import ContentHeader from '../../components/ContentHeader.astro';
 import PostKicker from '../../components/PostKicker.astro';
 import EpisodePlayer from '../../components/EpisodePlayer.astro';
 import Transcript from '../../components/Transcript.astro';
-import { hasUsableTimecodes } from '../../lib/transcript.mjs';
+import { hasUsableTimecodes, transcriptPlainText } from '../../lib/transcript.mjs';
 import { applyPostOverrides } from '../../lib/transcriptOverrides.mjs';
 import { buildAnimeMatcher } from '../../lib/animeMentions.mjs';
 import { makeExceptionFilter } from '../../lib/mentionExceptions.mjs';
@@ -321,11 +323,37 @@ const ogImage = socialSource({
 const pageUrl = absoluteUrl(`/posts/${post.id}/`);
 const ogImageAbsolute = absoluteUrl(ogImage);
 
+// КОГДА ФАЙЛ МАТЕРИАЛА ПРАВИЛИ В ПОСЛЕДНИЙ РАЗ (TASK-markup, пункт 1.3).
+// Своего поля в шапке поста для этого нет: спрашиваем git — см.
+// src/lib/lastModified.mjs, там же про то, почему не время файла.
+const modified = lastModifiedISO(postFilePath(post.id));
+
+// РАСШИФРОВКА В РАЗМЕТКУ — ТЕМ ЖЕ ТЕКСТОМ, ЧТО ВИДИТ ЧИТАТЕЛЬ, и ровно
+// в тех же случаях: нет пригодной расшифровки — нет и поля. Второй источник
+// тут завести нельзя, иначе поисковику пообещали бы разговор, которого
+// на странице нет.
+const schemaTranscript = transcriptData ? transcriptPlainText(transcriptData) : null;
+
 // Выпуск размечаем как PodcastEpisode, всё остальное — как Article.
 // По разделу, а не по категории: бонус лежит в разделе выпусков.
 const schema = isEpisode
-	? podcastEpisodeSchema({ url: pageUrl, title, description: pageDescription, image: ogImageAbsolute, date, episode })
-	: articleSchema({ url: pageUrl, title, description: pageDescription, image: ogImageAbsolute, date });
+	? podcastEpisodeSchema({
+			url: pageUrl,
+			title,
+			description: pageDescription,
+			image: ogImageAbsolute,
+			date,
+			modified,
+			episode,
+			number: episodeNumberValue(post.id),
+			transcript: schemaTranscript,
+		})
+	: articleSchema({ url: pageUrl, title, description: pageDescription, image: ogImageAbsolute, date, modified });
+
+// Ролики YouTube, вставленные в текст (TASK-markup, пункт 1.2). Пока только
+// на страницах выпусков — так очерчена часть 1 задания; у видеоэссе ролики
+// тоже есть, и это отдельный разговор с заказчиком.
+const videoSchemas = isEpisode ? videoObjectsSchema(youtubeEmbedsInBody(post.body), pageUrl) : [];
 
 // Крошки ведут в тот же раздел, что и ссылка «← назад» над заголовком,
 // и подписаны так же — расходиться им нельзя.
@@ -403,6 +431,7 @@ const postSearchMeta = [
 >
 	<JsonLd slot="head" data={schema} />
 	<JsonLd slot="head" data={crumbs} />
+	{videoSchemas.map((video) => <JsonLd slot="head" data={video} />)}
 	<div class="site">
 		{/* data-pagefind-body — что берёт в поиск Pagefind (тз/06, шаг 1). Стоит
 		    на <article>, поэтому шапка, подвал и закреплённый плеер из Layout.astro

@@ -20,7 +20,22 @@ const EPISODE_ID_RE = /^ep-(\d+)$/;
  * @returns {string | null}
  */
 export function episodeNumber(id) {
+	const number = episodeNumberValue(id);
+	return number === null ? null : `№${number}`;
+}
+
+/**
+ * Тот же номер, но числом — для разметки Schema.org (`episodeNumber`).
+ *
+ * Отдельная функция, а не разбор знака «№» на месте: правило «откуда берётся
+ * номер» обязано жить в одном месте, иначе вторая копия однажды перестанет
+ * знать про запасное имя `ep-a1b2c3d4` и выдаст NaN.
+ *
+ * @param {string} id Имя файла выпуска без расширения (post.id).
+ * @returns {number | null}
+ */
+export function episodeNumberValue(id) {
 	const match = EPISODE_ID_RE.exec(id ?? '');
-	// Number() убирает возможный ведущий ноль: «ep-007» → «№7».
-	return match ? `№${Number(match[1])}` : null;
+	// Number() убирает возможный ведущий ноль: «ep-007» → 7.
+	return match ? Number(match[1]) : null;
 }

@@ -44,35 +44,113 @@ export function isoDuration(seconds) {
  * мы не копируем (см. CLAUDE.md), поэтому адрес тот же, что у плеера. Если
  * RSS в момент сборки не ответил, `episode` будет null и поля просто не будет:
  * разметка станет беднее, но останется верной.
+ *
+ * `@id` С ХВОСТОМ `#episode`, А НЕ ГОЛЫЙ АДРЕС СТРАНИЦЫ. На странице живут
+ * несколько объектов разметки — выпуск, ролики, крошки, — и `@id` у каждого
+ * обязан быть свой: два объекта с одним именем поисковик читает как один,
+ * склеивая поля. Адрес страницы принадлежит самой странице.
+ *
+ * `transcript` — ГЛАВНОЕ ПОЛЕ ЭТОЙ РАЗМЕТКИ (TASK-markup, часть 1). Полный
+ * текст разговора уже лежит на странице обычными абзацами, и поисковику он
+ * виден как текст статьи. Это поле говорит, чтó он на самом деле такое —
+ * запись разговора. Расшифровки единственное, чего нет больше нигде,
+ * и назвать их своим именем стоит дороже любого другого поля здесь.
+ * Текст НЕ ОБРЕЗАЕТСЯ: обрезанная расшифровка — это обещание, которого
+ * страница не держит.
+ *
+ * СТОИТ ОНО ВНУТРИ `associatedMedia`, А НЕ У САМОГО ВЫПУСКА, И ЭТО НЕ ВКУС.
+ * В задании поле нарисовано у `PodcastEpisode` — validator.schema.org
+ * отвечает на такую разметку `UNKNOWN_FIELD: transcript, PodcastEpisode`:
+ * у Schema.org `transcript` принадлежит `AudioObject` и `VideoObject`,
+ * то есть самой записи, а не рассказу о ней. Переставили на один уровень
+ * ниже — ошибок ноль, смысл тот же: «вот у этого звука есть вот такая
+ * расшифровка». Проверено запросом к валидатору, а не чтением документации.
  */
-export function podcastEpisodeSchema({ url, title, description, image, date, episode }) {
+export function podcastEpisodeSchema({ url, title, description, image, date, modified, episode, number, transcript }) {
 	const duration = episode?.durationSec ? isoDuration(episode.durationSec) : null;
 
 	return {
 		'@context': 'https://schema.org',
 		'@type': 'PodcastEpisode',
-		'@id': url,
+		'@id': `${url}#episode`,
 		url,
 		name: title,
 		description,
 		datePublished: date.toISOString(),
+		...(modified ? { dateModified: modified } : {}),
+		// Номер выпуска — числом, а не строкой «№135»: `episodeNumber`
+		// у Schema.org число, и знак номера в нём был бы русской типографикой
+		// внутри машинного поля. Номера нет у бонуса и у выпуска с запасным
+		// именем файла (см. src/lib/postMeta.mjs) — тогда нет и поля.
+		...(number ? { episodeNumber: number } : {}),
 		...(image ? { image } : {}),
 		...(duration ? { timeRequired: duration } : {}),
 		partOfSeries: podcastSeries(),
 		...(episode?.audioUrl
 			? {
 					associatedMedia: {
-						'@type': 'MediaObject',
+						// AudioObject, а не общий MediaObject: тип известен точно,
+						// а общий отвечает «какое-то медиа» там, где можно
+						// ответить «звук».
+						'@type': 'AudioObject',
 						contentUrl: episode.audioUrl,
+						// Формат берём У САМОГО АДРЕСА, а не назначаем: хостинг
+						// подкаста отдаёт mp3, и это видно по расширению файла.
+						...(audioFormat(episode.audioUrl) ? { encodingFormat: audioFormat(episode.audioUrl) } : {}),
 						...(duration ? { duration } : {}),
+						...(transcript ? { transcript } : {}),
 					},
 				}
 			: {}),
 	};
 }
 
+/**
+ * Тип аудиофайла по его адресу — или null, если расширение незнакомое.
+ *
+ * Спрашиваем адрес, а не пишем `audio/mpeg` постоянной: у всех 144 выпусков
+ * архива сейчас mp3, но хостинг подкаста может отдать и другое, а неверный
+ * тип хуже отсутствующего — по нему решают, чем файл открывать.
+ */
+function audioFormat(url) {
+	const ТИПЫ = { mp3: 'audio/mpeg', m4a: 'audio/mp4', aac: 'audio/aac', ogg: 'audio/ogg', wav: 'audio/wav' };
+	const ext = String(url).split('?')[0].split('.').pop()?.toLowerCase();
+	return ТИПЫ[ext] ?? null;
+}
+
+/**
+ * Встроенные ролики YouTube — по объекту на ролик (TASK-markup, пункт 1.2).
+ *
+ * ЧЕГО ЗДЕСЬ НЕТ И ПОЧЕМУ. `name`, `description` и `uploadDate` в источнике
+ * не существуют: ролик стоит в тексте блоком `::video{youtube="…"}`, и всё,
+ * что о нём известно, — это его адрес. Заголовок поста роликом не является:
+ * в одном выпуске их бывает несколько, и назвать каждый именем выпуска
+ * значило бы соврать про все, кроме первого. Пустое поле лучше выдуманного —
+ * см. «Чего не делать» в задании.
+ *
+ * `thumbnailUrl` при этом не выдумка, а правило адресов самого YouTube:
+ * кадр ролика лежит по имени ролика. Картинку эту мы никуда не грузим
+ * и на страницу не ставим — она только называется в разметке.
+ *
+ * @param {string[]} embedUrls Адреса вида https://www.youtube.com/embed/<id>
+ * @param {string} pageUrl Адрес страницы — нужен `@id`, чтобы два ролика
+ *   на одной странице не слились в один объект.
+ */
+export function videoObjectsSchema(embedUrls, pageUrl) {
+	return embedUrls.map((embedUrl) => {
+		const id = embedUrl.split('/').pop();
+		return {
+			'@context': 'https://schema.org',
+			'@type': 'VideoObject',
+			'@id': `${pageUrl}#video-${id}`,
+			embedUrl,
+			thumbnailUrl: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+		};
+	});
+}
+
 /** Обычный пост: заметка, статья, видеоэссе. */
-export function articleSchema({ url, title, description, image, date }) {
+export function articleSchema({ url, title, description, image, date, modified }) {
 	return {
 		'@context': 'https://schema.org',
 		'@type': 'Article',
@@ -81,6 +159,7 @@ export function articleSchema({ url, title, description, image, date }) {
 		headline: title,
 		description,
 		datePublished: date.toISOString(),
+		...(modified ? { dateModified: modified } : {}),
 		...(image ? { image } : {}),
 		author: publisher(),
 		publisher: publisher(),
