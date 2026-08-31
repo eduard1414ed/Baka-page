@@ -174,8 +174,17 @@ export function videoObjectsSchema(embedUrls, pageUrl, { transcript = null } = {
 	});
 }
 
-/** Обычный пост: заметка, статья, видеоэссе. */
-export function articleSchema({ url, title, description, image, date, modified }) {
+/**
+ * Обычный пост: заметка, статья, видеоэссе.
+ *
+ * АВТОР — ЧЕЛОВЕК, ИЗДАТЕЛЬ — ОРГАНИЗАЦИЯ (TASK-markup, 3.1). Раньше обоими
+ * был сайт, и получалось «текст написал сайт». Кто именно человек и откуда
+ * про него известно — см. src/lib/author.mjs; сюда он приезжает готовым,
+ * потому что данные о нём живут в коллекции, а этот файл коллекций не читает.
+ *
+ * НЕ ПРИЕХАЛ — ОСТАЁТСЯ ОРГАНИЗАЦИЯ. Беднее, но не ложь.
+ */
+export function articleSchema({ url, title, description, image, date, modified, author }) {
 	return {
 		'@context': 'https://schema.org',
 		'@type': 'Article',
@@ -186,7 +195,7 @@ export function articleSchema({ url, title, description, image, date, modified }
 		datePublished: date.toISOString(),
 		...(modified ? { dateModified: modified } : {}),
 		...(image ? { image } : {}),
-		author: publisher(),
+		author: author ?? publisher(),
 		publisher: publisher(),
 	};
 }

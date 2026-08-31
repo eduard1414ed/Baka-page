@@ -110,7 +110,7 @@ const metaLines = catalogMeta ?? (metaParts.length > 0 ? [metaParts.join(' · ')
 		    держится на пропорции постера, и дыра в ней ломала бы ряд.
 		    Узкий вариант: подпись в марку не помещается. */}
 		{posterSrcs.length > 0 ? (
-			<img src={posterSrcs[0].src} alt="" loading="lazy" width="120" height="168" />
+			<img src={posterSrcs[0].src} alt={`Постер «${displayTitle}»`} loading="lazy" width="120" height="168" />
 		) : (
 			<ImageMissing compact />
 		)}

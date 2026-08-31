@@ -331,6 +331,18 @@ const SCOPES = [
 			return box.innerHTML;
 		}
 
+		// ВНУТРИ ЗНАЧЕНИЯ АТРИБУТА КАВЫЧКУ НАДО ЭКРАНИРОВАТЬ ОТДЕЛЬНО.
+		// `esc` строит текст через textContent, а тот трогает только `&`, `<`
+		// и `>`: двойная кавычка проезжает как есть и закрывает атрибут раньше
+		// времени. Пока в атрибуты уезжали только адреса картинок, это ничего
+		// не значило; с подписями (TASK-markup, 3.2) туда поехали заголовки
+		// материалов, которые заказчик набирает руками. Сегодня кавычки нет
+		// ни в одном из 754 заголовков и ни в одном из 658 названий — но она
+		// появится ровно в тот день, когда её никто не ждёт.
+		function escAttr(text: string) {
+			return esc(text).replaceAll('"', '&quot;');
+		}
+
 		function timecode(seconds: number) {
 			const s = Math.max(0, Math.floor(seconds));
 			const mm = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
@@ -536,7 +548,12 @@ const SCOPES = [
 				`<span class="perf-side perf-right" aria-hidden="true"></span>` +
 				// Постера нет — заглушка, а не дыра: марка держится на пропорции
 				// постера. Разметка общая на все три места, где заглушка рождается.
-				(poster ? `<img src="${esc(poster)}" alt="" loading="lazy">` : imageMissingHtml({ compact: true })) +
+				// Подпись — то же «Постер «…»», что у марки на странице материала
+				// (TASK-markup, 3.2). Название берём из метки индекса, а не
+				// из заголовка результата: там оно уже с подсветкой запроса.
+				(poster
+					? `<img src="${escAttr(poster)}" alt="Постер «${escAttr(data.meta?.title ?? '')}»" loading="lazy">`
+					: imageMissingHtml({ compact: true })) +
 				`</span>` +
 				`<div class="anime-copy">` +
 				`<h3 class="anime-title">${highlight(data.meta?.title ?? '', query)}</h3>` +
@@ -692,7 +709,9 @@ const SCOPES = [
 			if (thumb) {
 				const box = document.createElement('div');
 				box.className = data.meta?.shape === 'square' ? 'material-thumb is-square' : 'material-thumb';
-				box.innerHTML = `<img src="${esc(thumb)}" alt="" loading="lazy">`;
+				// Подпись — заголовок материала, как и у карточки в ленте.
+				// Из data.meta, а не из размеченного подсветкой заголовка.
+				box.innerHTML = `<img src="${escAttr(thumb)}" alt="${escAttr(data.meta?.title ?? '')}" loading="lazy">`;
 				link.append(box);
 			} else {
 				link.classList.add('no-thumb');

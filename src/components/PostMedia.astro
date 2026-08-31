@@ -32,6 +32,12 @@ const { post, media, sizes, loading = 'lazy' } = Astro.props;
 // Квадрат — у РАЗДЕЛА «Подкаст», а не у категории: бонус это тоже выпуск,
 // и обложка у него такая же квадратная.
 const shape = sectionOf(post.data.category) === 'podcast' ? 'square' : 'wide';
+
+// ПОДПИСЬ К КАРТИНКЕ — ЗАГОЛОВОК МАТЕРИАЛА (TASK-markup, пункт 3.2).
+// Пустая подпись значит «картинка декоративная, не читай», и для обложки
+// материала это неправда: по ней он и опознаётся в поиске по картинкам.
+// Подставляем готовый заголовок, ничего не сочиняя.
+const alt = String(post.data.title ?? '').trim();
 ---
 
 {
@@ -41,7 +47,7 @@ const shape = sectionOf(post.data.category) === 'podcast' ? 'square' : 'wide';
 				src={media.src}
 				srcset={media.srcset ?? undefined}
 				sizes={media.srcset ? sizes : undefined}
-				alt=""
+				alt={alt}
 				loading={loading}
 			/>
 			{media.play && (

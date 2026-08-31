@@ -72,7 +72,7 @@ const factsLine = [year, studio].filter(Boolean).join(' · ');
 						src={posterSrcs[0].src}
 						srcset={posterSrcs.map((source) => `${source.src} ${source.width}w`).join(', ')}
 						sizes="(max-width: 620px) 45vw, 220px"
-						alt=""
+						alt={`Постер «${title}»`}
 						loading="lazy"
 					/>
 				) : (
