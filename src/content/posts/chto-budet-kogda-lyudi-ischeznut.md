@@ -12,6 +12,7 @@ adLabel: ''
 animeSuggested:
   - apocalypse-hotel
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -40,5 +41,9 @@ anime:
 А еще экшен — прекрасно исполненный студией CygamesPictures, отвественной за нашумевших «Девочек-пони».
 
 И в итоге сформулировать одним предложением, что такое «Апокалипсис: Отель» — не получается. Но очевидно, что это что-то очень увлекательное и оригинальное.
+
+
+::material{id="ep-142"}
+
 
 ::anime-ref{id="apocalypse-hotel" source="shikimori" source-id="59675"}

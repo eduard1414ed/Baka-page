@@ -11,6 +11,7 @@ externalSource: ''
 adLabel: ''
 animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -36,5 +37,10 @@ anime:
 
 
 ::image{src="/images/uploads/tg-3639.jpg" alt="" width="column"}
+
+
+
+::material{id="hayp-ili-tak"}
+
 
 ::anime-ref{id="yuusha-kei-ni-shosu-choubatsu-yuusha-9004-tai-keimu-kiroku" source="shikimori" source-id="56009"}

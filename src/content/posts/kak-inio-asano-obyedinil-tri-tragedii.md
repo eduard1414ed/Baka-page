@@ -48,6 +48,7 @@ anime:
 При этом, важно еще и то, что события происходят именно в последний день лета, в конце августа. Но об этом я подробно рассказываю [в нашем новом видеоэссе](https://ru.bakapodcast.com/posts/ep-153/):
 
 
-::video{youtube="https://youtu.be/s83Ca5QJmC0?si=kHBPbiT2rbcFhtY4"}
+::material{id="ep-153" mode="play"}
+
 
 ::anime-ref{id="dead-dead-demons-dededede-destruction" source="shikimori" source-id="51358"}

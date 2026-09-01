@@ -12,6 +12,7 @@ adLabel: ''
 anime: []
 animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -51,3 +52,7 @@ tgUrl: https://t.me/podcastbaka/3750
 
 
 ::image{src="/images/uploads/tg-3754.jpg" alt="" width="column"}
+
+
+
+::material{id="ep-152" label="Целый выпуск подкаста об этом аниме"}

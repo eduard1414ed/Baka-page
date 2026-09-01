@@ -11,6 +11,7 @@ externalSource: ''
 adLabel: ''
 animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -46,5 +47,10 @@ anime:
 
 
 ::image{src="/images/uploads/tg-3171.jpg" alt="" width="column"}
+
+
+
+::material{id="gorod-komediya-na-million"}
+
 
 ::anime-ref{id="city-the-animation" source="shikimori" source-id="59898"}

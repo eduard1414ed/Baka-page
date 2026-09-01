@@ -12,6 +12,7 @@ adLabel: ''
 anime: []
 animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -41,3 +42,6 @@ tgUrl: https://t.me/podcastbaka/3101
 ... [и так далее](https://t.me/tadanomaria/2155).
 
 То есть, «Бофурин» — это деревья, защитники полей, при этом явно добрые и хорошие, колокольчики ведь. Красиво.
+
+
+::material{id="bonusnyy-vypusk-vetrolom"}

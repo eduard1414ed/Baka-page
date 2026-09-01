@@ -11,6 +11,7 @@ externalSource: ''
 adLabel: ''
 animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -38,5 +39,9 @@ anime:
 Из-за того, что название написано хираганой, а не иероглифами, все эти варианты работают одновременно. То есть в самом названии зашит сюжет аниме о мангаке, который скрывает от дочери свою работу.
 
 И гениально, и совершенно недоступно для полноценного перевода.
+
+
+::material{id="skrytye-veschi-shutki-shutki-i-esche-raz-shutki"}
+
 
 ::anime-ref{id="kakushigoto" source="shikimori" source-id="40716"}

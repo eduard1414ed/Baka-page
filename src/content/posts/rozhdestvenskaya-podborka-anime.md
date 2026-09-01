@@ -11,6 +11,7 @@ externalSource: ''
 adLabel: ''
 animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -24,7 +25,6 @@ anime:
   - ookami-kodomo-no-ame-to-yuki
 ---
 
-
 ::image{src="/images/uploads/tg-3584.jpg" alt="" width="column"}
 
 
@@ -37,6 +37,10 @@ anime:
 
 
 Начнем с новинок. Изобретательный сериал от студии Science SARU про детей, Санта-Клауса и кризис рождаемости в Японии. Сериал чуть серьезнее, чем кажется на первый взгляд, но он все равно учит главному: верить в чудеса и не бояться взрослеть.
+
+
+::material{id="santu-vyzyvali"}
+
 
 #### Однажды в Токио
 
@@ -53,6 +57,10 @@ anime:
 
 
 Это картина Мамору Хосоды о молодой матери, которая в одиночку растит двоих детей. Не совсем новогодний (хотя зимних сцен там много), но однозначно отличный семейный фильм для просмотра в праздники.
+
+
+::material{id="ep-110" mode="play"}
+
 
 ::anime-ref{id="tokyo-godfathers" source="shikimori" source-id="759"}
 

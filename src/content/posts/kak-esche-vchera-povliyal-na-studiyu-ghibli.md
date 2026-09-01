@@ -11,6 +11,7 @@ externalSource: ''
 adLabel: ''
 animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -40,6 +41,10 @@ anime:
 
 Сейчас сложно себе представить, какой это был рискованный ход. Любой провал мог повлиять не только на сборы конкретного фильма, но и привести к тому, что молодая студия рассыпется как карточный домик. К счастью, этого не произошло.
 
-«Еще вчера» стал внезапным хитом проката: а как и почему, [смотрите все-таки в эссе](https://youtu.be/D4UrqEntAOU).
+«Еще вчера» стал внезапным хитом проката: а как и почему, [смотрите все-таки в эссе](https://youtu.be/D4UrqEntAOU):
+
+
+::material{id="ep-120" label="Прямо тут" mode="play"}
+
 
 ::anime-ref{id="omoide-poroporo" source="shikimori" source-id="1029"}

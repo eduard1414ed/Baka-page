@@ -12,6 +12,7 @@ adLabel: ''
 anime: []
 animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -65,3 +66,7 @@ tgUrl: https://t.me/podcastbaka/3050
 
 
 ::image{src="/images/uploads/tg-3059.jpg" alt="" width="column"}
+
+
+
+::material{id="ep-83"}

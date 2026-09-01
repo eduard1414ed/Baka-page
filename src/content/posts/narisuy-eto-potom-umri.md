@@ -9,12 +9,17 @@ noCover: true
 externalUrl: ''
 externalSource: ''
 adLabel: ''
+animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
 timecodes: ''
 bonusLinks: null
+pullMedia: false
+tgId: null
+tgUrl: ''
 anime:
   - egao-no-taenai-shokuba-desu
   - zenshuu
@@ -27,6 +32,10 @@ anime:
 
 
 По понятным причинам я фанат всех тайтлов про мангак и аниматоров. Мне понравилась прошлогодняя комедия :anime[Рабочее место, где вы не можете не улыбаться]{id="egao-no-taenai-shokuba-desu" source="shikimori" source-id="57859"} про мангаку-интроверта. Я был приятно удивлен исекаем :anime[Zenshuu]{id="zenshuu" source="shikimori" source-id="58502"} про мангаку в другом мире. Ну и про :anime[Белая коробка]{id="shirobako" source="shikimori" source-id="25835"} мы записали целый эпизод подкаста. 
+
+
+::material{id="ep-96" label="Послушать прямо здесь" mode="play"}
+
 
 Поэтому я не могу пройти мимо онгоинга :anime[Нарисуй это, потом умри]{id="kore-kaite-shine" source="shikimori" source-id="61280"} — уютной комедии уже про разочаровавшуюся мангаку и ее оптимистичную ученицу. 
 

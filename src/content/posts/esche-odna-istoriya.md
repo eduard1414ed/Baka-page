@@ -13,6 +13,7 @@ anime: []
 animeSuggested:
   - apocalypse-hotel
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -38,3 +39,7 @@ tgUrl: https://t.me/podcastbaka/3767
 
 
 ::image{src="/images/uploads/tg-3768.jpg" alt="" width="column"}
+
+
+
+::material{id="ep-142" label="Смотреть эссе прямо тут" mode="play"}

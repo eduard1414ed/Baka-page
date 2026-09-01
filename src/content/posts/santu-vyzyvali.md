@@ -12,6 +12,7 @@ adLabel: ''
 anime: []
 animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -55,3 +56,7 @@ tgUrl: https://t.me/podcastbaka/3415
 
 
 ::image{src="/images/uploads/tg-3420.jpg" alt="" caption="Дизайн персонажей — отдельная фишка" width="column"}
+
+
+
+::material{id="rozhdestvenskaya-podborka-anime"}

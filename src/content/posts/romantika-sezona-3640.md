@@ -11,6 +11,7 @@ externalSource: ''
 adLabel: ''
 animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -25,7 +26,6 @@ anime:
   - prism-rondo
   - uruwashi-no-yoi-no-tsuki
 ---
-
 
 ::image{src="/images/uploads/tg-3640.jpg" alt="" width="column"}
 
@@ -67,6 +67,10 @@ anime:
 Главное достоинство тайтла — совершенно прекрасный вайб. Очень добрый, милый и ненавязчивый. При этом герои уже в первой серии признаются друг другу в чувствах. Так что это уверенная заявка на главную романтику сезона.
 
 ##### 8 неловких разговоров из 10
+
+
+::material{id="idealniy-sloubern-ty-i-ya-polnye-protivopolozhnosti"}
+
 
 #### Прекрасная вечерняя луна
 

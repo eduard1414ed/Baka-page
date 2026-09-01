@@ -1,5 +1,5 @@
 ---
-title: Лучшая премьера сезона
+title: Лучшая премьера весны — Троецарствие Японии
 date: 2026-04-13
 category: note
 draft: false
@@ -9,7 +9,15 @@ noCover: true
 externalUrl: ''
 externalSource: ''
 adLabel: ''
+animeSuggested: []
+mentionsHidden: ''
+transcript: ''
+speakers: ''
+corrections: ''
+script: ''
 timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 3887
 tgUrl: https://t.me/podcastbaka/3887
 anime:

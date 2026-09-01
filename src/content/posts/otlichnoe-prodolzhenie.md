@@ -11,6 +11,7 @@ externalSource: ''
 adLabel: ''
 animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -50,5 +51,10 @@ anime:
 
 
 ::image{src="/images/uploads/tg-3256.jpg" alt="" width="column"}
+
+
+
+::material{id="bonusnyy-vypusk-moya-farforovaya-kukla-vlyubilas"}
+
 
 ::anime-ref{id="sono-bisque-doll-wa-koi-wo-suru-season-2" source="shikimori" source-id="53065"}

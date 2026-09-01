@@ -12,6 +12,7 @@ adLabel: ''
 anime: []
 animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -67,3 +68,7 @@ tgUrl: https://t.me/podcastbaka/3627
 
 
 ::image{src="/images/uploads/tg-3636.jpg" alt="" width="column"}
+
+
+
+::material{id="tarantino-v-vostorge"}

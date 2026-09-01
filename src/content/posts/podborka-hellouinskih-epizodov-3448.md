@@ -12,6 +12,7 @@ adLabel: ''
 animeSuggested:
   - naruto
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -25,7 +26,6 @@ anime:
   - ouran-koukou-host-club
   - saiki-kusuo-no-nan
 ---
-
 
 ::image{src="/images/uploads/tg-3448.jpg" alt="" width="column"}
 
@@ -41,6 +41,10 @@ anime:
 Одна из лучших арок slice-of-life сериала «Хёка» не посвящена полностью Хэллоуину, но ее события происходят во время этого праздника.
 
 В серии нет ничего страшного, герои просто участвуют в кулинарном соревновании. Но костюмы героев, интересный сюжет и немного удачи могут подарить вам хорошее настроение.
+
+
+::material{id="bonusnyy-epizod-hyoka"}
+
 
 #### Ох уж этот экстрасенс Сайки Кусуо! Эпизод 114
 
@@ -77,6 +81,10 @@ anime:
 
 
 Ну и конечно, все серии самого хеллоуинского сёнена — Soul Eater. Смеющаяся кровавая луна, злые (и не очень) колдуньи, и много-много стиля.
+
+
+::material{id="ep-87" label="Целый подкаст об этом аниме" mode="play"}
+
 
 ::anime-ref{id="naruto-sd-rock-lee-no-seishun-full-power-ninden" source="shikimori" source-id="12979"}
 

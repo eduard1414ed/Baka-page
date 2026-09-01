@@ -12,6 +12,7 @@ adLabel: ''
 anime: []
 animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -35,9 +36,13 @@ tgUrl: https://t.me/podcastbaka/3481
 
 Однако авторы идут по другому пути. Класс чистый. Дети совершенно обычные и даже милые. Все подчеркнуто светлое, залитое солнцем.
 
+
 ::image{src="/images/uploads/tg-3482.jpg" alt="" width="column"}
 
+
+
 ::image{src="/images/uploads/tg-3483.jpg" alt="" width="column"}
+
 
 Но солнце это не мягкое и комфортное. Оно оставляет жесткие тени, создавая контрастную картинку.
 
@@ -51,3 +56,7 @@ tgUrl: https://t.me/podcastbaka/3481
 
 
 ::image{src="/images/uploads/tg-3485.jpg" alt="" width="column"}
+
+
+
+::material{id="santu-vyzyvali"}

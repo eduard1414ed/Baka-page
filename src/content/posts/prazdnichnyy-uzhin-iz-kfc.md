@@ -12,6 +12,7 @@ adLabel: ''
 anime: []
 animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -34,3 +35,6 @@ tgUrl: https://t.me/podcastbaka/3421
 И у них получилось! Сегодня по данным KFC, рождественские наборы могут составлять около трети всех их годовых продаж в Японии.
 
 Кфсишные новогодние куриные наборы можно даже встретить в некоторых аниме. Вспомните в каких?
+
+
+::material{id="santu-vyzyvali"}

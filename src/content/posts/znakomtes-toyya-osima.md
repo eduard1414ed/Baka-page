@@ -12,6 +12,7 @@ adLabel: ''
 anime: []
 animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -47,3 +48,7 @@ tgUrl: https://t.me/podcastbaka/3201
 
 
 ::image{src="/images/uploads/tg-3205.jpg" alt="" width="column"}
+
+
+
+::material{id="pro-samyy-zhutkiy-serial-sezona"}

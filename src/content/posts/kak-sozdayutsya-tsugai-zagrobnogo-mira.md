@@ -12,6 +12,7 @@ adLabel: ''
 anime: []
 animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -53,3 +54,7 @@ tgUrl: https://t.me/podcastbaka/4007
 
 
 ::image{src="/images/uploads/tg-4012.jpg" alt="" width="column"}
+
+
+
+::material{id="kto-takie-tsugai"}

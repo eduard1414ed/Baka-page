@@ -12,6 +12,7 @@ adLabel: ''
 anime: []
 animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -38,3 +39,6 @@ tgUrl: https://t.me/podcastbaka/3442
 «Человек-бензопила» продолжает ощущаться как высокобюджетное кино. С киношной постановкой, с разнообразными планами, с постоянными референсами на другие фильмы. Так теперь еще и на большом экране.
 
 Поэтому если в вашем городе показывают «Человека-бензопилу. История Резе» — сходить советую!
+
+
+::material{id="chelovek-benzopila-istoriya-reze-romantika-protiv-ekshena"}

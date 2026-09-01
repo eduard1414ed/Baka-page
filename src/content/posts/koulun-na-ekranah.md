@@ -11,6 +11,7 @@ externalSource: ''
 adLabel: ''
 animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -23,7 +24,6 @@ anime:
   - street-fighter-ii-v
   - crying-freeman
 ---
-
 
 ::image{src="/images/uploads/tg-3200.jpg" alt="" width="column"}
 
@@ -61,6 +61,10 @@ anime:
 
 
 Хотя события фильма Мамору Осии происходят не в Китае, в визуальном язык города будущего явно читаются образы Коулуна. Здесь и неоновые вывески, и плотная пугающая застройка, и даже низко пролетающие на посадку самолеты. Причем авторы не просто взяли Гонконг за образец — они буквально [перерисовали](/posts/nastoyaschiy-gorod-buduschego/) некоторые улицы по фотографиям.
+
+
+::material{id="ep-123" label="Ну и конечно здесь" mode="play"}
+
 
 ::anime-ref{id="street-fighter-ii-v" source="shikimori" source-id="876"}
 

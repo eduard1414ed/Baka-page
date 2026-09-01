@@ -11,6 +11,7 @@ externalSource: ''
 adLabel: ''
 animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -37,4 +38,7 @@ anime:
 
 За анимацию отвечает студия Doga Kobo (:anime[«Звездное дитя»]{id="oshi-no-ko" source="shikimori" source-id="52034"}, :anime[«Медуза не умеет плавать в ночи»]{id="yoru-no-kurage-wa-oyogenai" source="shikimori" source-id="54839"}), поэтому картинка выглядит приятно.
 
-«Хоть я и бездарная злодейка» — не шедевр, но вполне подойдет тем, кто любит такой сеттинг или сильно скучает по Маомао
+«Хоть я и бездарная злодейка» — не шедевр, но вполне подойдет тем, кто любит такой сеттинг или сильно скучает по Маомао.
+
+
+::material{id="ep-103"}
