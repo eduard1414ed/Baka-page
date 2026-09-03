@@ -190,4 +190,5 @@ export default [
 	"tg-94-jpg",
 	"tg-99-jpg",
 	"Пони-png",
+	"Твой цвет-webp",
 ];
