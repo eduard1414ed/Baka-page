@@ -174,6 +174,7 @@ export default [
 	"tg-3968-jpg",
 	"tg-4035-jpg",
 	"tg-4086-jpg",
+	"tg-4179-jpg",
 	"tg-438-jpg",
 	"tg-459-jpg",
 	"tg-47-jpg",
