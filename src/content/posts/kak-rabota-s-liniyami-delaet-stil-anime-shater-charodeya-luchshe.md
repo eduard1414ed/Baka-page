@@ -2,19 +2,33 @@
 title: Как работа с линиями делает стиль аниме «Шатер чародея» лучше?
 date: 2026-09-04
 category: note
-draft: true
+draft: false
 description: ''
-cover: /images/uploads/tg-4180.jpg
+cover: /images/uploads/tg-4183.jpg
 noCover: false
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+animeSuggested:
+  - tenmaku-no-jaadugar
+mentionsHidden: ''
+transcript: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
 tgId: 4180
 tgUrl: https://t.me/podcastbaka/4180
-animeSuggested:
+anime:
   - tenmaku-no-jaadugar
 ---
 
-::image{src="/images/uploads/tg-4180.jpg" alt="" width="column"}
+::image{src="/images/uploads/tg-4182.jpg" alt="" width="column"}
 
-«[Шатёр чародея](https://ru.bakapodcast.com/anime/tenmaku-no-jaadugar/)» — один из самых красивых сериалов этого года. От мусульманской культуры Персии до быта кочевников-монголов — все показано с невероятным вниманием к деталям. И в собственном нетипичном стиле.
+
+«Шатёр чародея» — один из самых красивых сериалов этого года. От мусульманской культуры Персии до быта кочевников-монголов — все показано с невероятным вниманием к деталям. И в собственном нетипичном стиле.
 
 Дело в том, что оригинальная манга для создания атмосферы использует инструменты, которые тяжело повторить в анимации. Вычурные паттерны, плоскую перспективу и книжные элементы, свойственные скорее иллюстрациям, чем манге или комиксам.
 
@@ -22,11 +36,18 @@ animeSuggested:
 
 Но — что зацепило меня — это казалось бы небольшая деталь, которая на самом деле кардинально меняет ощущение от картины. Если вы присмотритесь к тому, как выглядят персонажи в кадре — вы поймете, что у них не всегда есть привычная для аниме темная обводка.
 
+::image{src="/images/uploads/tg-4180.jpg" alt="" width="column"}
+
+::image{src="/images/uploads/tg-4181.jpg" alt="" width="column"}
+
 Такие линии нужны и для анимации (потому что покраска идет потом, и сперва анимация без цвета), и для зрителя — чтобы отделять героев от фонов. Но в «Шатре чародея» эти линии есть не всегда — в результате персонажи и фон не  отделены друг от друга. Это придает особенную мягкость рисунку и, на мой вкус, подчеркивает всю стилистику. Без этого аниме бы казалось более обычным.
 
 Причем создателям [пришлось изобрести](https://youtu.be/Nb556gQFySA?si=K0tNeBzy1a0iITdP) новый специальный способ отделять и стирать эти линии на постобработке. Потому что рисовать без них анимацию — очень тяжело и требует куда больше времени.
 
-::image{src="/images/uploads/tg-4181.jpg" alt="" width="column"}
-::image{src="/images/uploads/tg-4182.jpg" alt="" width="column"}
 ::image{src="/images/uploads/tg-4183.jpg" alt="" width="column"}
+
+
+
 ::image{src="/images/uploads/tg-4184.jpg" alt="" width="column"}
+
+::anime-ref{id="tenmaku-no-jaadugar" source="shikimori" source-id="61483"}
