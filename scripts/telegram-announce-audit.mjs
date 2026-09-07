@@ -41,6 +41,7 @@ import {
 	ANNOUNCE_HOSTS,
 	siteSlugs,
 	ourMaterialSlugs,
+	announcedMaterialSlug,
 	VIDEOESSAY_ANNOUNCE,
 } from './telegram-import.mjs';
 
@@ -556,30 +557,102 @@ function selftest() {
 	//     отняло семь постов, из них четыре — ни за что (№4165, 4166, 4169,
 	//     4180: ссылки вели на карточку тайтла). Проверяется парами, как
 	//     и площадки: правило обязано ловить наше и пропускать чужое.
+	// АНОНС — ЭТО ГОЛАЯ ССЫЛКА В КОНЦЕ, И КАЖДОЕ СЛОВО ЗДЕСЬ ПРОВЕРЯЕТСЯ
+	//     ОТДЕЛЬНОЙ ПАРОЙ. Все случаи взяты из живых постов №4154–4180,
+	//     а не придуманы: голая в конце — так написаны №4163, 4170, 4178;
+	//     словом в теле — так написаны №4165, 4166, 4169, 4180; голая в конце
+	//     на чужой сайт — так написан №4156; голая и словом в одном посте —
+	//     так написаны №4154 и №4170.
+	const голаяВКонце = (id, href, хвост = []) =>
+		look(groupAlbums([msg(id, '2026-09-01T12:00:00', [bold('Заголовок\n\n'), plain('Текст поста. '), bareLink(href), ...хвост])])[0], МАТЕРИАЛЫ);
+
 	check(
-		'ссылка на наш материал — отнято',
-		withLink(30, 'https://ru.bakapodcast.com/posts/osennie-anime/').lostToAnnounce === true,
-		withLink(30, 'https://ru.bakapodcast.com/posts/osennie-anime/').reason,
+		'голая ссылка на наш материал в конце — отнято',
+		голаяВКонце(30, 'https://ru.bakapodcast.com/posts/osennie-anime/').lostToAnnounce === true,
+		голаяВКонце(30, 'https://ru.bakapodcast.com/posts/osennie-anime/').reason,
 	);
 	check(
 		'домен без приставки ru — тоже наш',
-		withLink(31, 'https://bakapodcast.com/posts/osennie-anime').lostToAnnounce === true,
-		withLink(31, 'https://bakapodcast.com/posts/osennie-anime').reason,
+		голаяВКонце(31, 'https://bakapodcast.com/posts/osennie-anime').lostToAnnounce === true,
+		голаяВКонце(31, 'https://bakapodcast.com/posts/osennie-anime').reason,
 	);
 	check(
-		'ссылка на карточку тайтла — НЕ тронута (так терялся №4180)',
-		withLink(32, 'https://ru.bakapodcast.com/anime/tenmaku-no-jaadugar/').reason === null,
-		withLink(32, 'https://ru.bakapodcast.com/anime/tenmaku-no-jaadugar/').reason,
+		'хвостовой перевод строки анонса не отменяет',
+		голаяВКонце(32, 'https://ru.bakapodcast.com/posts/osennie-anime/', [plain('\n')]).lostToAnnounce === true,
+		голаяВКонце(32, 'https://ru.bakapodcast.com/posts/osennie-anime/', [plain('\n')]).reason,
+	);
+
+	// Главная половина правила: ссылка СЛОВОМ на свой же материал — сноска
+	// по ходу рассказа, а не анонс. Заказчик так пишет (№4170: и словом
+	// в начале, и голой в конце), и на этом старое правило теряло посты.
+	check(
+		'ссылка СЛОВОМ на наш материал — НЕ тронута',
+		withLink(33, 'https://ru.bakapodcast.com/posts/osennie-anime/').reason === null,
+		withLink(33, 'https://ru.bakapodcast.com/posts/osennie-anime/').reason,
 	);
 	check(
-		'ссылка на главную — НЕ тронута',
-		withLink(33, 'https://ru.bakapodcast.com/').reason === null,
-		withLink(33, 'https://ru.bakapodcast.com/').reason,
+		'голая ссылка на наш материал, но НЕ в конце, — не тронута',
+		голаяВКонце(34, 'https://ru.bakapodcast.com/posts/osennie-anime/', [plain(' и дальше ещё текст.')]).reason === null,
+		голаяВКонце(34, 'https://ru.bakapodcast.com/posts/osennie-anime/', [plain(' и дальше ещё текст.')]).reason,
+	);
+	// ЧТО СЧИТАЕТСЯ ОБЪЯВЛЕННЫМ МАТЕРИАЛОМ — СПРАШИВАЕТСЯ У ПРАВИЛА НАПРЯМУЮ.
+	// Через отсев эту половину уронить НЕЛЬЗЯ: сними правило вопрос «наш ли
+	// это сайт и страница ли это материала» — чужой адрес всё равно не пройдёт
+	// вторую половину, потому что материала с таким именем у нас нет.
+	// Проверено подлогом: правило сломано, проверка через отсев молчит.
+	const объявлено = (href, хвост = []) =>
+		announcedMaterialSlug([bold('Заголовок\n\n'), plain('Текст. '), bareLink(href), ...хвост]);
+
+	check(
+		'голая в конце на наш материал — объявлен ровно он',
+		объявлено('https://ru.bakapodcast.com/posts/osennie-anime/') === 'osennie-anime',
+		String(объявлено('https://ru.bakapodcast.com/posts/osennie-anime/')),
 	);
 	check(
-		'ссылка на материал, которого у нас НЕТ, — не тронута',
-		withLink(34, 'https://ru.bakapodcast.com/posts/takogo-posta-net/').reason === null,
-		withLink(34, 'https://ru.bakapodcast.com/posts/takogo-posta-net/').reason,
+		'голая в конце на карточку тайтла — не объявлено ничего',
+		объявлено('https://ru.bakapodcast.com/anime/osennie-anime/') === null,
+		String(объявлено('https://ru.bakapodcast.com/anime/osennie-anime/')),
+	);
+	check(
+		'голая в конце на главную — не объявлено ничего',
+		объявлено('https://ru.bakapodcast.com/') === null,
+		String(объявлено('https://ru.bakapodcast.com/')),
+	);
+	check(
+		'голая в конце на ЧУЖОЙ сайт — не объявлено ничего',
+		объявлено('https://dtf.ru/anime/osennie-anime') === null,
+		String(объявлено('https://dtf.ru/anime/osennie-anime')),
+	);
+	check(
+		'голая, но не последняя — не объявлено ничего',
+		объявлено('https://ru.bakapodcast.com/posts/osennie-anime/', [plain(' и ещё текст')]) === null,
+		String(объявлено('https://ru.bakapodcast.com/posts/osennie-anime/', [plain(' и ещё текст')])),
+	);
+	check(
+		'ссылка СЛОВОМ последней — не объявлено ничего',
+		announcedMaterialSlug([plain('Текст. '), wordLink('тут', 'https://ru.bakapodcast.com/posts/osennie-anime/')]) === null,
+		String(announcedMaterialSlug([plain('Текст. '), wordLink('тут', 'https://ru.bakapodcast.com/posts/osennie-anime/')])),
+	);
+
+	check(
+		'голая ссылка в конце на карточку тайтла — не тронута (так терялся №4180)',
+		голаяВКонце(35, 'https://ru.bakapodcast.com/anime/tenmaku-no-jaadugar/').reason === null,
+		голаяВКонце(35, 'https://ru.bakapodcast.com/anime/tenmaku-no-jaadugar/').reason,
+	);
+	check(
+		'голая ссылка в конце на главную — не тронута',
+		голаяВКонце(36, 'https://ru.bakapodcast.com/').reason === null,
+		голаяВКонце(36, 'https://ru.bakapodcast.com/').reason,
+	);
+	check(
+		'голая ссылка в конце на материал, которого НЕТ, — не тронута',
+		голаяВКонце(37, 'https://ru.bakapodcast.com/posts/takogo-posta-net/').reason === null,
+		голаяВКонце(37, 'https://ru.bakapodcast.com/posts/takogo-posta-net/').reason,
+	);
+	check(
+		'голая ссылка в конце на ЧУЖОЙ сайт — не тронута (так написан №4156)',
+		голаяВКонце(38, 'https://www.kinopoisk.ru/the-ghost-in-the-shell-2026-review/').reason === null,
+		голаяВКонце(38, 'https://www.kinopoisk.ru/the-ghost-in-the-shell-2026-review/').reason,
 	);
 	// ЧТО СЧИТАЕТСЯ НАШИМ ДОМЕНОМ — СПРАШИВАЕТСЯ У САМОГО ПРАВИЛА, а не через
 	// отсев. Через отсев такую проверку уронить НЕЛЬЗЯ: даже узнавай правило
