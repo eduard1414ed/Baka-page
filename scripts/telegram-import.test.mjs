@@ -35,6 +35,7 @@ import {
 	selectPosts,
 	postYear,
 	skipReason,
+	siteSlugs,
 	plainOf,
 	ALBUM_ID_GAP,
 	ALBUM_SECONDS_GAP,
@@ -43,6 +44,11 @@ import {
 } from './telegram-import.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
+
+// Материалы сайта для правила «анонс уже существующего материала». Берутся
+// НАСТОЯЩИЕ: проверки идут по настоящему экспорту, и подложный список отвечал бы
+// про правило, которого нет. Пусто он не бывает — постов в репозитории сотни.
+const НАШИ_МАТЕРИАЛЫ = siteSlugs(join(root, 'src/content/posts'));
 const arg = (name, fallback = null) => {
 	const found = process.argv.find((a) => a.startsWith(`--${name}=`));
 	return found ? found.slice(name.length + 3) : fallback;
@@ -227,7 +233,7 @@ function textProblems(allPosts, render) {
 	const problems = [];
 
 	for (const post of allPosts) {
-		if (skipReason(post)) continue;
+		if (skipReason(post, { нашиМатериалы: НАШИ_МАТЕРИАЛЫ })) continue;
 		const entities = post.caption.text_entities ?? [];
 		const body = bodyEntities(entities, extractTitle(entities));
 		const want = flat(dropListMarks(plainOf(body)));
@@ -304,7 +310,7 @@ function orphanProblems(messages, group) {
 function headProblems(allPosts, render) {
 	const problems = [];
 	for (const post of allPosts) {
-		if (skipReason(post)) continue;
+		if (skipReason(post, { нашиМатериалы: НАШИ_МАТЕРИАЛЫ })) continue;
 		const built = buildPost(post);
 		problems.push(...frontmatterProblems(built, render(built)));
 	}
@@ -327,7 +333,7 @@ const INVISIBLE_CHARS = /[\u00AD\u200B\u2060\uFEFF]/u;
 function invisibleProblems(allPosts, extract) {
 	const problems = [];
 	for (const post of allPosts) {
-		if (skipReason(post)) continue;
+		if (skipReason(post, { нашиМатериалы: НАШИ_МАТЕРИАЛЫ })) continue;
 		const title = extract(post.caption.text_entities ?? [])?.title;
 		if (title && INVISIBLE_CHARS.test(title)) {
 			problems.push(`№${post.id}: в заголовке невидимый знак — «${title}» даст адрес «${slugify(title)}»`);
@@ -359,7 +365,7 @@ function dateFormatProblems(allPosts, render) {
 	else if (!PLAIN_DATE.test(theirs)) problems.push(`админка пишет дату иначе: «${theirs}» — правило устарело`);
 
 	for (const post of allPosts) {
-		if (skipReason(post)) continue;
+		if (skipReason(post, { нашиМатериалы: НАШИ_МАТЕРИАЛЫ })) continue;
 		const built = buildPost(post);
 		const ours = render(built).split(/^---$/m)[1].split('\n').find((line) => line.startsWith('date:'));
 		if (!PLAIN_DATE.test(ours)) {

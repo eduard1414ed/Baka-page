@@ -27,6 +27,8 @@
 import { readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+const root = fileURLToPath(new URL('..', import.meta.url));
 import {
 	groupAlbums,
 	skipReason,
@@ -37,6 +39,8 @@ import {
 	plainOf,
 	urlsOf,
 	ANNOUNCE_HOSTS,
+	siteSlugs,
+	ourMaterialSlugs,
 	VIDEOESSAY_ANNOUNCE,
 } from './telegram-import.mjs';
 
@@ -92,9 +96,9 @@ export function announceHostsHit(entities) {
  * означает, что пост в остальном годный — не репост, не опрос, не видео,
  * с текстом. То есть ровно тот пост, который правило анонса ОТНИМАЕТ.
  */
-export function look(post) {
+export function look(post, нашиМатериалы) {
 	const entities = post.caption.text_entities ?? [];
-	const reason = skipReason(post);
+	const reason = skipReason(post, { нашиМатериалы });
 	const plain = squeeze(plainOf(entities));
 	const urls = urlsOf(entities);
 	const hosts = announceHostsHit(entities);
@@ -418,6 +422,10 @@ function selftest() {
 	const cases = [];
 	const check = (name, ok, got) => cases.push({ name, ok, got });
 
+	// Материалы сайта здесь ПОДЛОЖНЫЕ, а не настоящие: проверка правила анонса
+	// не должна падать от того, что заказчик переименовал или снёс пост.
+	const МАТЕРИАЛЫ = new Set(['osennie-anime', 'kak-poyavilas-legenda-o-beskonechnom-lete']);
+
 	// 1. Ссылка СЛОВОМ на бусти — это анонс БОНУСНОГО выпуска. Он не
 	//    выбрасывается, а приезжает черновиком категории «Бонус», и ссылка
 	//    на конкретный выпуск уезжает в поле плашки подписки.
@@ -428,7 +436,7 @@ function selftest() {
 			wordLink('Boosty', 'https://boosty.to/bakapodcast/posts/abcCase'),
 		]),
 	])[0];
-	let seen = look(post);
+	let seen = look(post, МАТЕРИАЛЫ);
 	check('ссылка словом на boosty — пост НЕ выбрасывается', seen.reason === null, seen.reason);
 	check('и категория у него «бонус»', seen.category === 'bonus', seen.category);
 	let links = bonusLinksOf(post.caption.text_entities);
@@ -453,7 +461,7 @@ function selftest() {
 			wordLink('канал', 'https://t.me/podcastbaka/123'),
 		]),
 	])[0];
-	seen = look(post);
+	seen = look(post, МАТЕРИАЛЫ);
 	links = bonusLinksOf(post.caption.text_entities);
 	check('это тоже бонус', seen.category === 'bonus', seen.category);
 	check('общий адрес патреона в поле НЕ вписан', links.patreon === '', links.patreon);
@@ -464,12 +472,12 @@ function selftest() {
 	post = groupAlbums([
 		msg(2, '2022-06-02T12:00:00', [plain('Слушать тут: '), bareLink('https://music.yandex.ru/album/123')]),
 	])[0];
-	seen = look(post);
+	seen = look(post, МАТЕРИАЛЫ);
 	check('голый адрес на Яндекс Музыку — отнято', seen.lostToAnnounce === true, seen.reason);
 
 	// 3. Пост без ссылок вообще не должен трогаться.
 	post = groupAlbums([msg(3, '2022-06-03T12:00:00', [bold('Заметка\n\n'), plain('Просто текст без ссылок.')])])[0];
-	seen = look(post);
+	seen = look(post, МАТЕРИАЛЫ);
 	check('пост без ссылок — не отнято', seen.lostToAnnounce === false && seen.reason === null, seen.reason);
 
 	// 4. Ютюб И pc.st — анонс видеоэссе, и это ДРУГАЯ строка причины.
@@ -481,7 +489,7 @@ function selftest() {
 			wordLink('других площадках', 'https://pc.st/e/xyz'),
 		]),
 	])[0];
-	seen = look(post);
+	seen = look(post, МАТЕРИАЛЫ);
 	check('ютюб и pc.st — анонс видеоэссе', seen.lostToVideoessay === true, seen.reason);
 	check('и это НЕ считается отнятым списком площадок', seen.lostToAnnounce === false, seen.reason);
 
@@ -489,7 +497,7 @@ function selftest() {
 	post = groupAlbums([
 		msg(5, '2022-06-05T12:00:00', [plain('Разбор ролика '), wordLink('вот тут', 'https://youtu.be/qqq')]),
 	])[0];
-	seen = look(post);
+	seen = look(post, МАТЕРИАЛЫ);
 	check('один только ютюб — ничего не отнято', seen.reason === null, seen.reason);
 
 	// 6. Ссылка на площадку ЕСТЬ, но пост выброшен раньше — по видео в альбоме.
@@ -500,7 +508,7 @@ function selftest() {
 			file: 'video_files/x.mp4',
 		}),
 	])[0];
-	seen = look(post);
+	seen = look(post, МАТЕРИАЛЫ);
 	check('пост с видео и ссылкой — отнят вложением, а не анонсом', seen.lostToAnnounce === false && /вложение/.test(seen.reason ?? ''), seen.reason);
 
 	// 7. Длинный текст без единой приметы анонса — обязан попасть в «не похож».
@@ -508,7 +516,7 @@ function selftest() {
 	post = groupAlbums([
 		msg(7, '2022-06-07T12:00:00', [bold('Про фестиваль\n\n'), plain(long), plain(' Мы есть и '), wordLink('в ВК', 'https://vk.com/podcast.baka')]),
 	])[0];
-	seen = look(post);
+	seen = look(post, МАТЕРИАЛЫ);
 	check('длинный текст без примет — примет ноль', seen.words.length === 0, seen.words.join());
 	check('и он отнят правилом анонса (то есть попадёт в список)', seen.lostToAnnounce === true, seen.reason);
 
@@ -517,13 +525,13 @@ function selftest() {
 	post = groupAlbums([
 		msg(8, '2022-06-08T12:00:00', [bold('Выпуск 12\n\n'), plain('Уже вышел! Слушайте в '), wordLink('ВК', 'https://vk.com/podcast.baka')]),
 	])[0];
-	seen = look(post);
+	seen = look(post, МАТЕРИАЛЫ);
 	check('настоящий анонс — приметы найдены', seen.words.length > 0, seen.words.join());
 
 	// 8б. ДВЕ ПОЧИНЕННЫЕ СТРОКИ СПИСКА. Обе проверяются парой «наше против
 	//     чужого»: строка обязана ловить наше и пропускать чужое, а не просто
 	//     что-нибудь ловить.
-	const withLink = (id, href) => look(groupAlbums([msg(id, '2025-06-01T12:00:00', [plain('Вот тут: '), wordLink('ссылка', href)])])[0]);
+	const withLink = (id, href) => look(groupAlbums([msg(id, '2025-06-01T12:00:00', [plain('Вот тут: '), wordLink('ссылка', href)])])[0], МАТЕРИАЛЫ);
 
 	check('наш подкаст на Mave — отнято', withLink(20, 'https://baka.mave.digital/ep-116').lostToAnnounce === true, withLink(20, 'https://baka.mave.digital/ep-116').reason);
 	check(
@@ -542,6 +550,71 @@ function selftest() {
 		withLink(23, 'https://open.spotify.com/album/4FgJzhpKSyeOutddvPLXWs').reason,
 	);
 
+	// 8г. НАШ СОБСТВЕННЫЙ САЙТ. Правило про него сменилось 7 сентября 2026:
+	//     было «есть ссылка на наш домен → анонс», стало «ссылка на страницу
+	//     МАТЕРИАЛА, и материал у нас есть». Замер живых данных: старое правило
+	//     отняло семь постов, из них четыре — ни за что (№4165, 4166, 4169,
+	//     4180: ссылки вели на карточку тайтла). Проверяется парами, как
+	//     и площадки: правило обязано ловить наше и пропускать чужое.
+	check(
+		'ссылка на наш материал — отнято',
+		withLink(30, 'https://ru.bakapodcast.com/posts/osennie-anime/').lostToAnnounce === true,
+		withLink(30, 'https://ru.bakapodcast.com/posts/osennie-anime/').reason,
+	);
+	check(
+		'домен без приставки ru — тоже наш',
+		withLink(31, 'https://bakapodcast.com/posts/osennie-anime').lostToAnnounce === true,
+		withLink(31, 'https://bakapodcast.com/posts/osennie-anime').reason,
+	);
+	check(
+		'ссылка на карточку тайтла — НЕ тронута (так терялся №4180)',
+		withLink(32, 'https://ru.bakapodcast.com/anime/tenmaku-no-jaadugar/').reason === null,
+		withLink(32, 'https://ru.bakapodcast.com/anime/tenmaku-no-jaadugar/').reason,
+	);
+	check(
+		'ссылка на главную — НЕ тронута',
+		withLink(33, 'https://ru.bakapodcast.com/').reason === null,
+		withLink(33, 'https://ru.bakapodcast.com/').reason,
+	);
+	check(
+		'ссылка на материал, которого у нас НЕТ, — не тронута',
+		withLink(34, 'https://ru.bakapodcast.com/posts/takogo-posta-net/').reason === null,
+		withLink(34, 'https://ru.bakapodcast.com/posts/takogo-posta-net/').reason,
+	);
+	// ЧТО СЧИТАЕТСЯ НАШИМ ДОМЕНОМ — СПРАШИВАЕТСЯ У САМОГО ПРАВИЛА, а не через
+	// отсев. Через отсев такую проверку уронить НЕЛЬЗЯ: даже узнавай правило
+	// свой сайт подстрокой «bakapodcast» (так и напишут «для простоты»),
+	// чужой адрес всё равно не пройдёт вторую половину — материала с таким
+	// адресом у нас нет. Проверено подлогом: правило сломано, проверка молчит.
+	// Поэтому спрашиваем прямо: что ты достаёшь из этого адреса?
+	const достаёт = (href) => ourMaterialSlugs([{ type: 'text_link', text: 'ссылка', href }]);
+
+	check(
+		'наша страница у ЧУЖИХ (t.me/bakapodcast) — адресов материалов ноль',
+		достаёт('https://t.me/bakapodcast/osennie-anime').length === 0,
+		достаёт('https://t.me/bakapodcast/osennie-anime').join(),
+	);
+	check(
+		'ютюб с нашим именем — адресов материалов ноль',
+		достаёт('https://www.youtube.com/@bakapodcast/posts/osennie-anime').length === 0,
+		достаёт('https://www.youtube.com/@bakapodcast/posts/osennie-anime').join(),
+	);
+	check(
+		'наш адрес материала — достаётся ровно он',
+		достаёт('https://ru.bakapodcast.com/posts/osennie-anime/').join() === 'osennie-anime',
+		достаёт('https://ru.bakapodcast.com/posts/osennie-anime/').join(),
+	);
+	check(
+		'наша карточка тайтла — адресов материалов ноль',
+		достаёт('https://ru.bakapodcast.com/anime/k-on/').length === 0,
+		достаёт('https://ru.bakapodcast.com/anime/k-on/').join(),
+	);
+	check(
+		'голый адрес без «https://» — тоже разбирается',
+		достаёт('bakapodcast.com/posts/osennie-anime').join() === 'osennie-anime',
+		достаёт('bakapodcast.com/posts/osennie-anime').join(),
+	);
+
 	// 8в. Бонус решается РАНЬШЕ правила видеоэссе. В живых данных такого поста
 	//     нет ни одного, поэтому проверить это можно только подлогом — иначе
 	//     порядок правил остался бы непроверенным до первого такого поста.
@@ -556,7 +629,7 @@ function selftest() {
 			wordLink('бусти', 'https://boosty.to/bakapodcast/posts/zzz'),
 		]),
 	])[0];
-	seen = look(post);
+	seen = look(post, МАТЕРИАЛЫ);
 	check('бонус сильнее правила видеоэссе', seen.reason === null && seen.category === 'bonus', `${seen.reason} / ${seen.category}`);
 
 	// 9. Альбом склеивается в ОДИН пост: иначе счёт по годам врал бы,
@@ -567,7 +640,7 @@ function selftest() {
 		msg(11, '2022-06-09T12:00:01', [], { photo: 'photos/c.jpg' }),
 	]);
 	check('альбом из трёх снимков — один пост', album.length === 1, `постов ${album.length}`);
-	check('и все три снимка при нём', look(album[0]).photos === 3, `фото ${look(album[0]).photos}`);
+	check('и все три снимка при нём', look(album[0], МАТЕРИАЛЫ).photos === 3, `фото ${look(album[0], МАТЕРИАЛЫ).photos}`);
 
 	// 10. Домен вытаскивается из адреса, а не берётся целой строкой.
 	check('домен из адреса со схемой и путём', hostOf('https://www.youtube.com/watch?v=1') === 'youtube.com', hostOf('https://www.youtube.com/watch?v=1'));
@@ -614,7 +687,9 @@ function main() {
 	// Склейка альбомов идёт по ВСЕМУ архиву, а не по выбранному году: иначе
 	// на границе года пост потерял бы свои фотографии.
 	const posts = groupAlbums(data.messages);
-	const looks = posts.map(look);
+	// Материалы сайта настоящие: правило анонса спрашивает у них, а не гадает.
+	const нашиМатериалы = siteSlugs(join(root, 'src/content/posts'));
+	const looks = posts.map((post) => look(post, нашиМатериалы));
 
 	// Разобрать конкретные посты целиком: спор о правиле всегда упирается
 	// в два-три поста, и смотреть их надо не по огрызку в 150 знаков.

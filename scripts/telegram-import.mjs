@@ -77,8 +77,22 @@ const CHANNEL = 'podcastbaka';
 //
 // `music.yandex` и `podcasts.apple` не тронуты: замер не нашёл ни одного поста,
 // потерянного из-за них. Сужать строку без доказанной ошибки незачем.
+//
+// НАШЕГО СОБСТВЕННОГО ДОМЕНА В ЭТОМ СПИСКЕ БОЛЬШЕ НЕТ — он живёт отдельным
+// правилом ниже (`ourMaterialSlugs`). Строка `bakapodcast.com` стояла здесь
+// с самого начала и НИКОГДА НЕ БЫЛА ПРОВЕРЕНА НА ЖИВЫХ ДАННЫХ: в экспорте
+// канала до 10 августа 2026 наш домен не встречается ни разу (замер: 2963
+// ссылки, нашего домена — ноль), потому что сайта тогда ещё не было.
+// Первые же настоящие данные её и опровергли — замер семи постов, отсеянных
+// роботом с 25 августа по 4 сентября 2026:
+//
+//   верный отсев (ссылка на свой материал): №4163, 4170, 4178 — три
+//   ЛОЖНЫЙ отсев (ссылка на страницу тайтла): №4165, 4166, 4169, 4180 — четыре
+//
+// То есть правило теряло БОЛЬШЕ, чем ловило, и теряло молча. Заказчик ставит
+// ссылки на свой сайт по ходу рассказа — на карточку тайтла, на подборку, —
+// и ссылка сама по себе про анонс не говорит ничего.
 export const ANNOUNCE_HOSTS = [
-	'bakapodcast.com',
 	'baka.mave.digital',
 	'music.yandex',
 	'podcasts.apple',
@@ -540,6 +554,58 @@ export function titleLineTail(entities, title) {
 	return out.trim();
 }
 
+// ——— Наш собственный сайт ———
+
+// СТРАНИЦА МАТЕРИАЛА У НАС ОДНА И ЗОВЁТСЯ `/posts/<адрес>` — это не догадка,
+// а строение сайта: `src/pages/posts/[slug].astro`. Всё остальное на домене
+// материалом НЕ является: `/anime/…` — карточка тайтла, `/archive`,
+// `/category/…`, `/search`, `/about`, `/support` и `/` — разделы.
+const OUR_SITE = 'bakapodcast.com';
+
+/**
+ * Адреса НАШИХ материалов, на которые ведёт пост (только они, без разделов).
+ *
+ * ХОЗЯИН АДРЕСА СПРАШИВАЕТСЯ У РАЗБОРА, А НЕ ПОИСКОМ ПОДСТРОКИ. `t.me/
+ * bakapodcast` и `youtube.com/@bakapodcast` — это наши страницы у чужих,
+ * а не наш сайт, и совпасть с ними подстрока может в любой день. Домен
+ * с приставкой (`ru.bakapodcast.com`) и без неё — оба наши.
+ */
+export function ourMaterialSlugs(entities) {
+	const out = [];
+	for (const url of urlsOf(entities)) {
+		let разобран;
+		try {
+			// Голый адрес в телеграме приезжает без «https://» — без него `URL`
+			// прочитал бы «bakapodcast.com» схемой и молча ответил бы не тем.
+			разобран = new URL(/^[a-z]+:\/\//.test(url) ? url : `https://${url}`);
+		} catch {
+			continue;
+		}
+		const хост = разобран.hostname.replace(/^www\./, '');
+		if (хост !== OUR_SITE && !хост.endsWith(`.${OUR_SITE}`)) continue;
+		const части = разобран.pathname.split('/').filter(Boolean);
+		if (части.length === 2 && части[0] === 'posts') out.push(части[1]);
+	}
+	return out;
+}
+
+/**
+ * Адреса всех материалов, которые на сайте есть. Имя файла и есть адрес.
+ *
+ * ЧЕРНОВИКИ И МАТЕРИАЛЫ С ЧУЖИХ САЙТОВ СЧИТАЮТСЯ СУЩЕСТВУЮЩИМИ, хотя своей
+ * страницы у них нет. Так и надо: правило спрашивает «завёл ли я уже такой
+ * материал», а не «открывается ли эта страница прямо сейчас». Черновик
+ * заказчик допишет, у внешнего материала карточка ведёт наружу, — в обоих
+ * случаях вторая запись о том же не нужна.
+ */
+export function siteSlugs(postsDir) {
+	return new Set(
+		readdirSync(postsDir)
+			.filter((n) => n.endsWith('.md'))
+			.map((n) => basename(n, '.md').toLowerCase()),
+	);
+}
+
 // ——— Отсев ———
 
 /** Анонс бонусного выпуска: ссылка на Boosty или Patreon. */
@@ -548,8 +614,26 @@ export function isBonus(entities) {
 	return BONUS_HOSTS.some((host) => urls.some((url) => url.includes(host)));
 }
 
-/** Причина, по которой пост не импортируется. `null` — импортируется. */
-export function skipReason(post) {
+/**
+ * Причина, по которой пост не импортируется. `null` — импортируется.
+ *
+ * СПИСОК МАТЕРИАЛОВ САЙТА СПРАШИВАЕТСЯ У ВЫЗЫВАЮЩЕГО, И МОЛЧАНИЕ ЗАПРЕЩЕНО.
+ * Значения по умолчанию тут нет нарочно: забудь вызывающий этот ответ — и
+ * правило анонса молча перестало бы действовать (или начало бы отсеивать всё
+ * подряд), а выглядело бы это как «всё хорошо». Без ответа функция ПАДАЕТ.
+ *
+ * @param {object} post
+ * @param {object} как
+ * @param {Set<string>} как.нашиМатериалы — адреса материалов сайта (`siteSlugs`)
+ */
+export function skipReason(post, { нашиМатериалы } = {}) {
+	if (!(нашиМатериалы instanceof Set)) {
+		throw new Error(
+			'skipReason: нужен список материалов сайта — skipReason(пост, { нашиМатериалы: siteSlugs(папкаПостов) }). ' +
+				'Без него правило анонса отвечало бы наугад.',
+		);
+	}
+
 	for (const m of post.members) {
 		if (m.type !== 'message') return 'служебное сообщение канала';
 		if (m.forwarded_from) return `репост чужого канала («${m.forwarded_from}»)`;
@@ -565,6 +649,16 @@ export function skipReason(post) {
 	// материала. Замер архива: постов, где бонус спорит с правилом видеоэссе,
 	// ноль, но порядок всё равно назван явно — данные меняются, порядок нет.
 	if (isBonus(entities)) return null;
+
+	// НАШ САЙТ СПРАШИВАЕТСЯ ДВУМЯ ВОПРОСАМИ, А НЕ ОДНИМ: ведёт ли ссылка
+	// на страницу МАТЕРИАЛА и есть ли этот материал у нас. Ссылка на карточку
+	// тайтла, на подборку или на главную — это ссылка по ходу рассказа,
+	// и постом она быть не мешает (замер выше: так потерялись четыре поста
+	// из семи). Ссылка на материал, которого у нас нет, тоже не отсев:
+	// ошибка здесь несимметрична — лишний черновик заказчик увидит и удалит,
+	// а молча выброшенный пост не появится нигде и узнать о нём неоткуда.
+	const свои = ourMaterialSlugs(entities).filter((slug) => нашиМатериалы.has(slug));
+	if (свои.length) return `анонс уже существующего материала (/posts/${свои[0]})`;
 
 	const urls = urlsOf(entities);
 	const hit = ANNOUNCE_HOSTS.find((host) => urls.some((url) => url.includes(host)));
@@ -928,6 +1022,8 @@ async function main() {
 	const matcher = buildAnimeMatcher(entries, { quotes: 'apply', speech: false });
 
 	const known = knownIds(postsDir);
+	// Материалы сайта — для правила «анонс уже существующего».
+	const нашиМатериалы = siteSlugs(postsDir);
 
 	console.log(`Экспорт: ${exportDir}`);
 	console.log(`Сообщений ${data.messages.length}, постов после склейки альбомов ${allPosts.length}.`);
@@ -941,7 +1037,7 @@ async function main() {
 	for (const post of posts) {
 		if (post.members.length > 1) albums.push(post);
 
-		const reason = skipReason(post);
+		const reason = skipReason(post, { нашиМатериалы });
 		if (reason) {
 			skipped.push({ id: post.id, date: post.caption.date.slice(0, 10), reason, text: squeeze(plainOf(post.caption.text_entities)).slice(0, 60) });
 			continue;

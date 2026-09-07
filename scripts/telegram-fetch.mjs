@@ -49,6 +49,7 @@ import { fileURLToPath } from 'node:url';
 import {
 	buildPost,
 	knownIds,
+	siteSlugs,
 	renderPost,
 	frontmatterProblems,
 	skipReason,
@@ -303,7 +304,7 @@ export function isUnsettled(post, nowUnix) {
  * отсева, они вылетели бы как «сообщение без текста», и половина альбома
  * пропала бы молча, а пост выглядел бы целым.
  */
-export function classify(posts, { known, albums, matcher = [] }) {
+export function classify(posts, { known, нашиМатериалы, albums, matcher = [] }) {
 	const skipped = [];
 	const already = [];
 	const addToAlbum = [];
@@ -316,7 +317,7 @@ export function classify(posts, { known, albums, matcher = [] }) {
 			continue;
 		}
 
-		const reason = skipReason(post);
+		const reason = skipReason(post, { нашиМатериалы });
 		if (reason) {
 			skipped.push({
 				id: post.id,
@@ -569,6 +570,8 @@ async function main() {
 	}
 
 	const known = knownIds(postsDir);
+	// Материалы сайта — для правила «анонс уже существующего материала».
+	const нашиМатериалы = siteSlugs(postsDir);
 
 	// ——— 3. Чего бот не принёс — и второй вопрос с ожиданием ———
 	//
@@ -664,7 +667,7 @@ async function main() {
 	);
 
 	const all = [...botPosts.map((p) => ({ post: p, from: 'бот' })), ...missed.map((p) => ({ post: p, from: 'страница' }))];
-	const { skipped, already, addToAlbum, ready } = classify(all, { known, albums: state.albums, matcher });
+	const { skipped, already, addToAlbum, ready } = classify(all, { known, нашиМатериалы, albums: state.albums, matcher });
 
 	console.log(`\n=== ПРОПУЩЕНО: ${skipped.length} ===`);
 	for (const s of skipped) console.log(`  №${s.id} (${s.from})  ${s.reason}\n      «${s.text}…»`);
