@@ -432,8 +432,13 @@ const schema = isEpisode
 // есть звук — она у звука (внутри PodcastEpisode), нет звука — у ролика.
 // Двум хозяевам сразу её отдавать нельзя: это было бы утверждение, что
 // разговоров на странице два.
+//
+// ОПИСАНИЕ МАТЕРИАЛА ЕДЕТ ЗАПАСНЫМ: у ролика своего описания может не быть,
+// а поле это необязательное — Google просит его отдельной строкой «можно
+// улучшить». Подмена законна только для него, см. src/lib/schema.mjs.
 const videoSchemas = videoObjectsSchema(youtubeEmbedsInBody(post.body), pageUrl, {
 	transcript: isEpisode ? null : schemaTranscript,
+	description: pageDescription || null,
 });
 
 // Крошки ведут в тот же раздел, что и ссылка «← назад» над заголовком,

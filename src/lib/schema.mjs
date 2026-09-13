@@ -130,10 +130,28 @@ function audioFormat(url) {
  * и положили ответ в репозиторий — src/data/youtubeMeta.mjs, пишет его
  * scripts/fetch-youtube-meta.mjs. Сборка в сеть не ходит.
  *
- * ЧЕГО В КЭШЕ НЕТ — ТОГО НЕТ И В РАЗМЕТКЕ. Одиннадцать роликов архива YouTube
- * закрыл или удалил (отвечает 403 и 404): у них остаётся только адрес.
- * Пустое поле лучше выдуманного, а объект всё равно нужен — окошко-то
- * на странице стоит.
+ * ЧЕГО В КЭШЕ НЕТ — ТОГО НЕТ И В РАЗМЕТКЕ, А БЕЗ ИМЕНИ И ДАТЫ НЕТ И САМОГО
+ * ОБЪЕКТА. Прежде объект печатался всегда, хоть из одного адреса: считалось,
+ * что окошко на странице стоит, значит и разметка ему положена. 13 сентября
+ * 2026 Google Search Console ответил на это письмом «отсутствует поле name,
+ * отсутствует поле uploadDate» и пометкой «к показу в результатах поиска
+ * не допускается». Оба поля у `VideoObject` ОБЯЗАТЕЛЬНЫЕ, и огрызок без них
+ * не даёт ничего, кроме ошибки в консоли: разметка без обязательных полей
+ * хуже отсутствующей. Теперь такой ролик молча выпадает из разметки —
+ * окошко на странице остаётся, читатель ничего не теряет.
+ *
+ * Случилось это с ep-154: пост вышел 10 сентября с новым роликом, а кэш
+ * последний раз писался 31 августа, и про этот ролик не знал ничего.
+ * ЗНАЧИТ, ДЫРА ОТКРЫВАЕТСЯ САМА — при каждом выпуске с новым роликом, пока
+ * `scripts/fetch-youtube-meta.mjs` никто не позвал. Заслон на это стоит
+ * в сборке: scripts/video-schema.test.mjs.
+ *
+ * ОПИСАНИЕ — ПОЛЕ НЕОБЯЗАТЕЛЬНОЕ, И ЕМУ РАЗРЕШЕНА ПОДМЕНА. Его у ролика
+ * может не быть вовсе: у двух старых заставок в «Самых важных опенингах»
+ * описание пустое на самом YouTube. Тогда берётся описание материала —
+ * страница и ролик там об одном, и это не выдумка, а пересказ соседним
+ * текстом. Имя и дату так подменить нельзя: дата поста и дата выхода ролика
+ * — разные вещи, и Google их сверяет.
  *
  * `thumbnailUrl` не из кэша, а из правила адресов самого YouTube: кадр ролика
  * лежит по имени ролика. Сверено с тем, что отдаёт oEmbed, — адрес совпадает
@@ -150,27 +168,40 @@ function audioFormat(url) {
  * @param {string[]} embedUrls Адреса вида https://www.youtube.com/embed/<id>
  * @param {string} pageUrl Адрес страницы — нужен `@id`, чтобы два ролика
  *   на одной странице не слились в один объект.
- * @param {{transcript?: string|null}} [что] Расшифровка, если она принадлежит
- *   ролику, а не звуку.
+ * @param {{transcript?: string|null, description?: string|null}} [что]
+ *   `transcript` — расшифровка, если она принадлежит ролику, а не звуку;
+ *   `description` — описание материала, запасное на случай ролика без своего.
  */
-export function videoObjectsSchema(embedUrls, pageUrl, { transcript = null } = {}) {
+export function videoObjectsSchema(embedUrls, pageUrl, { transcript = null, description = null } = {}) {
+	// «Ролик на странице один» считается по ВСЕМ окошкам страницы, а не по тем,
+	// что дожили до разметки. Вопрос тут не «сколько объектов вышло», а «чей
+	// это разговор», и выпавший из разметки ролик на него влияет так же.
 	const один = embedUrls.length === 1;
 
-	return embedUrls.map((embedUrl) => {
+	return embedUrls.flatMap((embedUrl) => {
 		const id = embedUrl.split('/').pop();
 		const про = youtubeMeta[id] ?? {};
 
-		return {
-			'@context': 'https://schema.org',
-			'@type': 'VideoObject',
-			'@id': `${pageUrl}#video-${id}`,
-			...(про.name ? { name: про.name } : {}),
-			...(про.description ? { description: про.description } : {}),
-			...(про.uploadDate ? { uploadDate: про.uploadDate } : {}),
-			embedUrl,
-			thumbnailUrl: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
-			...(transcript && один ? { transcript } : {}),
-		};
+		// ТРИ ОБЯЗАТЕЛЬНЫХ ПОЛЯ ИЛИ НИЧЕГО. `thumbnailUrl` строится из имени
+		// ролика, поэтому спрашиваем само имя: пустое — и адрес кадра вышел бы
+		// указывающим в никуда.
+		if (!про.name || !про.uploadDate || !id) return [];
+
+		const описание = про.description || description || null;
+
+		return [
+			{
+				'@context': 'https://schema.org',
+				'@type': 'VideoObject',
+				'@id': `${pageUrl}#video-${id}`,
+				name: про.name,
+				...(описание ? { description: описание } : {}),
+				uploadDate: про.uploadDate,
+				embedUrl,
+				thumbnailUrl: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+				...(transcript && один ? { transcript } : {}),
+			},
+		];
 	});
 }
 
