@@ -42,6 +42,10 @@ anime:
 
 И, кстати, Ину-О появится в «Мир танцует» тоже, но уже сам как второстепенный персонаж. А какая из этих двух историй нравится больше вам?
 
+
+::material{id="bonusnyy-vypusk-inu-o"}
+
+
 ::anime-ref{id="inu-ou" source="shikimori" source-id="39938"}
 
 ::anime-ref{id="world-is-dancing" source="shikimori" source-id="63347"}
