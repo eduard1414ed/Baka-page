@@ -4,7 +4,7 @@ date: 2026-09-14
 category: article
 draft: false
 description: ''
-cover: ''
+cover: /images/uploads/pasted-image-1789376343105.webp
 noCover: false
 externalUrl: https://t-j.ru/anime-autumn-2026/
 externalSource: ''
