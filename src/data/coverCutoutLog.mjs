@@ -214,6 +214,8 @@ export default {
 	"pasted-image-1786822089405-webp": { status: "не по шаблону", hash: "df361bc78c267436", why: "не квадрат (2048×944)" },
 	"pasted-image-1787556719030-webp": { status: "не по шаблону", hash: "17746566aa483ceb", why: "не квадрат (1920×1080)" },
 	"pasted-image-1788162984502-webp": { status: "не по шаблону", hash: "c692459eb0856237", why: "не квадрат (2048×1152)" },
+	"pasted-image-1789374031194-webp": { status: "не по шаблону", hash: "70baa750b1079393", why: "не квадрат (1200×632)" },
+	"pasted-image-1789376343105-webp": { status: "не по шаблону", hash: "2e05f238e512aece", why: "не квадрат (760×403)" },
 	"photo_2022-05-14_23-01-04-jpg": { status: "готов", hash: "a08447830d32cc10" },
 	"photo_2022-05-14_23-05-13-jpg": { status: "готов", hash: "df9620c5fa84ac2b" },
 	"tg-1005-jpg": { status: "не по шаблону", hash: "720b30f45099bbc4", why: "не квадрат (1000×880)" },
