@@ -9,7 +9,6 @@ noCover: false
 externalUrl: ''
 externalSource: ''
 adLabel: ''
-anime: []
 animeSuggested: []
 mentionsHidden: ''
 transcript: ''
@@ -25,6 +24,8 @@ bonusLinks:
 pullMedia: false
 tgId: 4194
 tgUrl: https://t.me/podcastbaka/4194
+anime:
+  - ansatsu-kyoushitsu
 ---
 
 ::image{src="/images/uploads/tg-4194.jpg" alt="" width="column"}
@@ -33,3 +34,5 @@ tgUrl: https://t.me/podcastbaka/4194
 «Класс убийц» — хит середины десятых годов, который прошел мимо нас. В попытке исправить это упущение мы решили пересмотреть этот сёнен. И даже не представляли, что нас ждет.
 
 Ненавидел ли мангака Юсэй Мацуи школу? Сколько нужно школьников, чтобы убить одного осьминога? При чем здесь Ягами Лайт? И можно ли назвать нас с Ксюшей скуфами?
+
+::anime-ref{id="ansatsu-kyoushitsu" source="shikimori" source-id="24833"}
