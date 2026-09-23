@@ -36,7 +36,7 @@ export const telegramFeed = {
 	"offset": 232983486,
 	"lastSeenId": 4199,
 	"lastPostAt": "2026-09-23T08:00:53.792Z",
-	"lastRunAt": "2026-09-23T14:01:40.721Z",
+	"lastRunAt": "2026-09-23T20:02:23.953Z",
 	"albums": {
 		"14305965453808114": {
 			"slug": "oboi-i-kalendari",
