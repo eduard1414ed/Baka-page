@@ -2,18 +2,31 @@
 title: «Ты и я полные противоположности» и «Ледяная стена» происходят в одной вселенной?
 date: 2026-09-23
 category: note
-draft: true
+draft: false
 description: ''
 cover: /images/uploads/tg-4199.jpg
 noCover: false
-tgId: 4199
-tgUrl: https://t.me/podcastbaka/4199
+externalUrl: ''
+externalSource: ''
+adLabel: ''
+anime: []
 animeSuggested:
   - koori-no-jouheki
   - seihantai-na-kimi-to-boku
+mentionsHidden: ''
+transcript: ''
+speakers: ''
+corrections: ''
+script: ''
+timecodes: ''
+bonusLinks: null
+pullMedia: false
+tgId: 4199
+tgUrl: https://t.me/podcastbaka/4199
 ---
 
 ::image{src="/images/uploads/tg-4199.jpg" alt="" width="column"}
+
 
 События двух главных романтических тайтлов этого года хоть и не связаны напрямую, но происходят совсем рядом.
 
