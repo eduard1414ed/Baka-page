@@ -13,7 +13,7 @@ import { loadCorpus, animeName } from './lib.mjs';
 const args = process.argv.slice(2);
 const outDir = args.includes('--out') ? args[args.indexOf('--out') + 1] : join(homedir(), 'baka-audit/crosslinks/data');
 
-const { posts, anime, mismatches } = await loadCorpus();
+const { posts, anime, mismatches, unusedExceptions } = await loadCorpus();
 const pub = posts.filter((p) => p.published);
 
 await mkdir(outDir, { recursive: true });
@@ -44,7 +44,9 @@ const ext = pub.filter((p) => p.external);
 console.log(`Внешние посты: ${ext.length}, текста ${ext.reduce((s, p) => s + p.textChars, 0)} знаков`);
 
 console.log(`\nРасхождений «указатель сайта против суммы по блокам»: ${mismatches.length}`);
-for (const m of mismatches.slice(0, 20)) console.log('  ' + m);
+for (const m of mismatches) console.log('  ' + m);
+console.log(`Исключений проекта, не нашедших своего упоминания: ${unusedExceptions.length}`);
+for (const m of unusedExceptions) console.log('  ✗ ' + m);
 
 for (const id of ['deti-ubiytsy', 'santu-vyzyvali']) {
 	const p = pub.find((x) => x.id === id);

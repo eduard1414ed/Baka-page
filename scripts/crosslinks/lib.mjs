@@ -29,6 +29,26 @@ import { canPlayInline } from '../../src/lib/postRef.mjs';
 
 const ANIME_DIR = new URL('../../src/content/anime/', import.meta.url);
 
+// ИСКЛЮЧЕНИЯ УПОМИНАНИЙ ПРОЕКТА (сессия 1б). Поле «Упоминания тайтлов» в самом
+// посте — правка опубликованного поста, её делает только Эд; поэтому ложные
+// упоминания, мешающие перелинковке, снимаются здесь, списком «пост + тайтл».
+// Нет файла — нет исключений. Запись с постом или тайтлом, которых нет, —
+// опечатка, и о ней говорится вслух (`unusedExceptions` в ответе loadCorpus).
+const EXCEPTIONS_FILE = new URL('../../статус/перелинковка/исключения-упоминаний.json', import.meta.url);
+
+export async function loadProjectExceptions(file = EXCEPTIONS_FILE) {
+	let list;
+	try {
+		list = JSON.parse(await readFile(file, 'utf8'));
+	} catch (e) {
+		if (e.code === 'ENOENT') return [];
+		throw new Error(`Не читается список исключений ${file}: ${e.message}`);
+	}
+	if (!Array.isArray(list)) throw new Error(`Список исключений ${file} — не массив`);
+	for (const x of list) if (!x?.post || !x?.anime) throw new Error(`Исключение без поста или тайтла: ${JSON.stringify(x)}`);
+	return list;
+}
+
 /** Справочник тайтлов — так же, как его читает разметка постов. */
 export async function loadAnime() {
 	const files = (await readdir(ANIME_DIR)).filter((name) => name.endsWith('.json')).sort();
@@ -89,8 +109,15 @@ function kindOf(node) {
  *
  * @returns {Promise<{ posts: object[], anime: object[], mismatches: string[] }>}
  */
-export async function loadCorpus({ now = new Date() } = {}) {
+export async function loadCorpus({ now = new Date(), exceptions = null } = {}) {
 	const anime = await loadAnime();
+	const projectExceptions = exceptions ?? (await loadProjectExceptions());
+	const projectHidden = new Map(); // пост → Set тайтлов
+	for (const x of projectExceptions) {
+		if (!projectHidden.has(x.post)) projectHidden.set(x.post, new Set());
+		projectHidden.get(x.post).add(x.anime);
+	}
+	const usedExceptions = new Set();
 	const animeById = new Map(anime.map((a) => [a.id, a]));
 	const matcher = buildAnimeMatcher(anime, { quotes: 'apply', speech: false });
 	// Для заголовка поста: тайтл с галочкой «только в кавычках» засчитывается
@@ -123,6 +150,8 @@ export async function loadCorpus({ now = new Date() } = {}) {
 		const external = isExternalPost(data);
 		const category = data.category ?? '';
 		const hidden = new Set(parseMentionExceptions(data.mentionsHidden ?? '').hiddenAnime);
+		const ownHidden = projectHidden.get(r.id) ?? new Set();
+		for (const id of ownHidden) hidden.add(id);
 
 		// Сколько тайтлов в куске текста — тем же матчером, с теми же отменами.
 		const mentionsIn = (plain) => {
@@ -194,6 +223,11 @@ export async function loadCorpus({ now = new Date() } = {}) {
 			matcher,
 			makeExceptionFilter(data.mentionsHidden),
 		);
+		// Исключение проекта указатель сайта не знает: сверяем без него.
+		for (const id of ownHidden) {
+			if (official.has(id)) usedExceptions.add(`${r.id}→${id}`);
+			official.delete(id);
+		}
 		// Сверка в обе стороны и по числу. Явная метка `:anime[…]{id}`, которую
 		// матчер не узнал, даёт законное «по блокам больше» — она помечается.
 		for (const id of new Set([...official.keys(), ...Object.keys(textAnime)])) {
@@ -224,7 +258,10 @@ export async function loadCorpus({ now = new Date() } = {}) {
 		});
 	}
 
-	return { posts, anime, mismatches };
+	const unusedExceptions = projectExceptions
+		.filter((x) => !usedExceptions.has(`${x.post}→${x.anime}`))
+		.map((x) => `${x.post} → ${x.anime}: такого упоминания в тексте поста нет`);
+	return { posts, anime, mismatches, unusedExceptions };
 }
 
 /** Короткое имя тайтла для отчётов. */
