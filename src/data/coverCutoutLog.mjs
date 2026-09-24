@@ -118,6 +118,7 @@ export default {
 	"91ae87d0-3a6d-49e6-91ec-30d2d2d868e2": { status: "готов", hash: "80790cb320fe8950" },
 	"9267e034-81cc-44e6-8a0a-24be35073108": { status: "готов", hash: "e0928110ca491d88" },
 	"937dde48-e617-4938-8ba8-3c4103f7fff3": { status: "готов", hash: "cbdd5e4d25391bec" },
+	"9595b281-b444-4ed0-a1fc-c5200dc42321": { status: "готов", hash: "b19a149263348399" },
 	"960ccaa9-466d-413d-a2f9-ac07301b15a5": { status: "готов", hash: "0bcda9293cfe2506" },
 	"97207275-4f29-4268-84ed-cd51740372f4": { status: "не по шаблону", hash: "88645b7f85309a6f", why: "рамка не найдена — обложка не по шаблону" },
 	"9a3770a1-f53a-4c6c-b62e-51bba9ab10bb": { status: "готов", hash: "8896327e471cd77f" },
