@@ -24,7 +24,6 @@ anime:
   - sayonara-lara
 ---
 
-
 ::image{src="/images/uploads/pasted-image-1790241113151.webp" alt="" caption="Sayonara Lara, 2026" width="column"}
 
 
@@ -59,5 +58,9 @@ anime:
 
 
 Это невероятно красивый тайтл, который явно сделан с той самой истинной любовью и талантом. Это все еще претендент на лучший оригинальный сериал этого года. Но увы, ему не хватило собранности и четкости донесения своих грандиозных концепций, чтобы стать чем-то большим.
+
+
+::material{id="privet-lara"}
+
 
 ::anime-ref{id="sayonara-lara" source="shikimori" source-id="58878"}

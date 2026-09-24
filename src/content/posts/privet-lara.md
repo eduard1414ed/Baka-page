@@ -12,6 +12,7 @@ adLabel: ''
 anime: []
 animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -36,3 +37,6 @@ tgUrl: https://t.me/podcastbaka/4095
 Это кропотливая ручная работа. Но в такой анимации чувствуется мягкость, глубина и текстура, присущая только физическому рисунку.
 
 Очень ценю такой подход и советую посмотреть «Прощай, Лара!»
+
+
+::material{id="nedoobyasnennaya-krasota-proschay-lara"}
