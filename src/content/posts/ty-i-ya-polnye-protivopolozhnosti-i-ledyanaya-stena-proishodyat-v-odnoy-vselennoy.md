@@ -5,7 +5,7 @@ category: note
 draft: false
 description: ''
 cover: /images/uploads/tg-4199.jpg
-noCover: false
+noCover: true
 externalUrl: ''
 externalSource: ''
 adLabel: ''
