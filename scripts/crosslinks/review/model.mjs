@@ -168,7 +168,8 @@ export async function buildReview({ file = CANDIDATES_FILE, only = null } = {}) 
 		for (const b of src.blocks) {
 			if (b.kind !== 'material') continue;
 			let j = b.n - 1;
-			while (j >= 0 && src.blocks[j].kind === 'image') j--;
+			// через картинки и служебную строку раздела `#####` (как apply.mjs)
+			while (j >= 0 && (src.blocks[j].kind === 'image' || (src.blocks[j].kind === 'heading' && src.blocks[j].depth >= 5))) j--;
 			if (src.blocks[j]?.kind === 'text') insertedAnchor[b.target] = j;
 		}
 		// Пост изменился после поиска — места заново по первым словам абзаца.

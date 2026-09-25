@@ -222,6 +222,13 @@ try {
 	const ytB2 = ytB.replace('uT0zSFjRc5Y', 'Lv1OjQh3Rjk');
 	red('снята ссылка на чужой ролик YouTube', ytB2, ytA, [{ ...ytU[0], from: ytU[0].from.replace('uT0zSFjRc5Y', 'Lv1OjQh3Rjk') }], 'нет ссылки на эту цель');
 
+	// ——— Служебная строка раздела между абзацем и вставкой (пачка 2, подборки) ———
+	const svcB = '---\ntitle: x\n---\n\nМы [обсуждали в подкасте](/posts/ep-133/) это аниме.\n\n##### Количество серий: 6\n';
+	const svcU = [{ target: 'ep-133', from: '[обсуждали в подкасте](/posts/ep-133/)', to: 'обсуждали в подкасте' }];
+	const svc = verifyChange(svcB, '---\ntitle: x\n---\n\nМы обсуждали в подкасте это аниме.\n\n##### Количество серий: 6\n\n\n::material{id="ep-133"}\n', { unlinks: svcU, tgToId, ytToIds });
+	say(svc.ok, `служебная строка «#####» между абзацем и вставкой — зелёный${svc.ok ? '' : ': ' + svc.problems.join('; ')}`);
+	red('настоящий заголовок между абзацем и вставкой', svcB.replace('#####', '##'), '---\ntitle: x\n---\n\nМы обсуждали в подкасте это аниме.\n\n## Количество серий: 6\n\n\n::material{id="ep-133"}\n', svcU, 'не в абзаце перед вставкой');
+
 	// ——— 5. Здоровое вне пачки ———
 	const eof = verifyChange('---\ntitle: x\n---\n\nАбзац.\n', '---\ntitle: x\n---\n\nАбзац.\n\n\n::material{id="ep-1"}\n');
 	say(eof.ok, `вставка в конец файла — зелёный${eof.ok ? '' : ': ' + eof.problems.join('; ')}`);

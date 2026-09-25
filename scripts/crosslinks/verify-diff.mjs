@@ -84,7 +84,9 @@ function matchLine(b, a, pool, used) {
 	return null;
 }
 
-const IMAGE_LINE = /^(?:!\[|::(?:image|gallery|video)\b)/u;
+// Между абзацем и вставкой могут стоять картинки и служебная строка раздела
+// `##### Количество серий: 6` (так же в apply.mjs, isImageNode).
+const IMAGE_LINE = /^(?:!\[|::(?:image|gallery|video)\b|#{5,6}\s)/u;
 
 /**
  * @param {Buffer|string} before

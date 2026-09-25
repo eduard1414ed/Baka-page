@@ -337,6 +337,39 @@
   "reasonText": "слабая связь"
  },
  {
+  "key": "belyy-albom-triumfalnoe-prodolzhenie→ep-127",
+  "source": "belyy-albom-triumfalnoe-prodolzhenie",
+  "target": "ep-127",
+  "from": "main",
+  "kind": "theme",
+  "confidence": "слабый",
+  "channels": [
+   "themes"
+  ],
+  "batch": 2,
+  "targetKind": "videoessay",
+  "place": {
+   "afterBlock": 12,
+   "anchorBlock": 12,
+   "anchorWords": "Сценаристы дают тебе выбор, за кого болеть и переживать, показывая"
+  },
+  "originalPlace": {
+   "afterBlock": 12,
+   "anchorBlock": 12,
+   "anchorWords": "Сценаристы дают тебе выбор, за кого болеть и переживать, показывая"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "16528f205922",
+  "reason": "weak",
+  "comment": null,
+  "decidedAt": "2026-09-25T13:59:07.220Z",
+  "reasonText": "слабая связь"
+ },
+ {
   "key": "chto-eto-za-palki-na-kladbischah→tszyanshi",
   "source": "chto-eto-za-palki-na-kladbischah",
   "target": "tszyanshi",
@@ -368,6 +401,39 @@
   "reason": "better",
   "comment": "заменена на «История одной сцены и всего «Шаман Кинга»»",
   "decidedAt": "2026-09-25T11:39:24.566Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "dobro-pozhalovat-v-teatr→ep-81",
+  "source": "dobro-pozhalovat-v-teatr",
+  "target": "ep-81",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "podcast",
+  "place": {
+   "afterBlock": 8,
+   "anchorBlock": 5,
+   "anchorWords": "P.S. Ну и конечно, новый сезон «Звездного дитя» — новая"
+  },
+  "originalPlace": {
+   "afterBlock": 8,
+   "anchorBlock": 5,
+   "anchorWords": "P.S. Ну и конечно, новый сезон «Звездного дитя» — новая"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "2369d06b3a3a",
+  "reason": "better",
+  "comment": "заменена на «Как «Звездное дитя» вдохновляется трагедиями»",
+  "decidedAt": "2026-09-25T14:06:01.387Z",
   "reasonText": "цель неудачная, есть лучше"
  },
  {
@@ -641,6 +707,238 @@
   "reasonText": "цель неудачная, есть лучше"
  },
  {
+  "key": "komediynyy-tayming→bonusnyy-vypusk-horimiya",
+  "source": "komediynyy-tayming",
+  "target": "bonusnyy-vypusk-horimiya",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 11,
+   "anchorBlock": 5,
+   "anchorWords": "И мне кажется, манга «Хоримия» очень недооценена именно как комедия."
+  },
+  "originalPlace": {
+   "afterBlock": 11,
+   "anchorBlock": 5,
+   "anchorWords": "И мне кажется, манга «Хоримия» очень недооценена именно как комедия."
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "d5e76911f7f7",
+  "reason": "better",
+  "comment": "заменена на «Как полюбить себя? «Хоримия» — не то, чем кажется»",
+  "decidedAt": "2026-09-25T14:07:07.503Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "lechebnoe-anime→ep-25",
+  "source": "lechebnoe-anime",
+  "target": "ep-25",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "podcast",
+  "place": {
+   "afterBlock": 4,
+   "anchorBlock": 4,
+   "anchorWords": "Японцам в середине 90-х годов очень нужно было что-то, что"
+  },
+  "originalPlace": {
+   "afterBlock": 4,
+   "anchorBlock": 4,
+   "anchorWords": "Японцам в середине 90-х годов очень нужно было что-то, что"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "4ed00555db16",
+  "reason": "better",
+  "comment": "заменена на «Врата аниме №4 | Иясикей. Жанр, который лечит душу»",
+  "decidedAt": "2026-09-25T14:12:01.969Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "luchshie-anime-pro-demonov→chto-eto-za-palki-na-kladbischah",
+  "source": "luchshie-anime-pro-demonov",
+  "target": "chto-eto-za-palki-na-kladbischah",
+  "from": "main",
+  "kind": "theme",
+  "confidence": "средний",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 2,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 25,
+   "anchorBlock": 24,
+   "anchorWords": "Мальчик из знатной английской семьи заключает договор с демоном: тот"
+  },
+  "originalPlace": {
+   "afterBlock": 25,
+   "anchorBlock": 24,
+   "anchorWords": "Мальчик из знатной английской семьи заключает договор с демоном: тот"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "52eaad7135cf",
+  "reason": "weak",
+  "comment": null,
+  "decidedAt": "2026-09-25T14:08:35.687Z",
+  "reasonText": "слабая связь"
+ },
+ {
+  "key": "luchshie-anime-srezhissirovannye-zhenschinami→nogi-zerkalo-dushi",
+  "source": "luchshie-anime-srezhissirovannye-zhenschinami",
+  "target": "nogi-zerkalo-dushi",
+  "from": "main",
+  "kind": "person",
+  "confidence": "сильный",
+  "channels": [
+   "themes"
+  ],
+  "batch": 2,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 16,
+   "anchorBlock": 16,
+   "anchorWords": "Ну и куда же без Мари Окады. Пожалуй, одной из"
+  },
+  "originalPlace": {
+   "afterBlock": 16,
+   "anchorBlock": 16,
+   "anchorWords": "Ну и куда же без Мари Окады. Пожалуй, одной из"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "63f7a118e3e4",
+  "reason": "weak",
+  "comment": null,
+  "decidedAt": "2026-09-25T13:50:46.748Z",
+  "reasonText": "слабая связь"
+ },
+ {
+  "key": "malenkie-detali→ep-11",
+  "source": "malenkie-detali",
+  "target": "ep-11",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "podcast",
+  "place": {
+   "afterBlock": 3,
+   "anchorBlock": 1,
+   "anchorWords": "Но если обратить внимание на его позы и слова —"
+  },
+  "originalPlace": {
+   "afterBlock": 3,
+   "anchorBlock": 1,
+   "anchorWords": "Но если обратить внимание на его позы и слова —"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "3220a881cea9",
+  "reason": "better",
+  "comment": "заменена на «Наруто. Введение. Страна Волн | За что мы любим Забузу и не любим Сакуру?»",
+  "decidedAt": "2026-09-25T14:14:44.253Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "manga-chelovek-benzopila-menshe-chem-za-sem-chasov-sobrala-2-milliona-prosmotrov→dzhodzho-stardust-crusaders-kak-araki-nashel-zolotuyu-zhilu",
+  "source": "manga-chelovek-benzopila-menshe-chem-za-sem-chasov-sobrala-2-milliona-prosmotrov",
+  "target": "dzhodzho-stardust-crusaders-kak-araki-nashel-zolotuyu-zhilu",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 2,
+   "anchorBlock": 2,
+   "anchorWords": "Второй причиной могла быть меньшая цензура (и это все ещё"
+  },
+  "originalPlace": {
+   "afterBlock": 2,
+   "anchorBlock": 2,
+   "anchorWords": "Второй причиной могла быть меньшая цензура (и это все ещё"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "50db6c741fdc",
+  "reason": "weak",
+  "comment": null,
+  "decidedAt": "2026-09-25T13:56:38.820Z",
+  "reasonText": "слабая связь"
+ },
+ {
+  "key": "manga-kak-videoigra→bunko-mertvye-mertvye-demony",
+  "source": "manga-kak-videoigra",
+  "target": "bunko-mertvye-mertvye-demony",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 9,
+   "anchorBlock": 7,
+   "anchorWords": "И Асано важно, чтобы не только эти места ощущались реальными,"
+  },
+  "originalPlace": {
+   "afterBlock": 9,
+   "anchorBlock": 7,
+   "anchorWords": "И Асано важно, чтобы не только эти места ощущались реальными,"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "692afaf5a563",
+  "reason": "better",
+  "comment": "заменена на «Как Инио Асано объединил три трагедии?»",
+  "decidedAt": "2026-09-25T14:00:05.004Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
   "key": "mesta-iz-klinka-rassekayuschego-demonov-v-realnoy-zhizni→ep-58",
   "source": "mesta-iz-klinka-rassekayuschego-demonov-v-realnoy-zhizni",
   "target": "ep-58",
@@ -675,6 +973,105 @@
   "reasonText": "цель неудачная, есть лучше"
  },
  {
+  "key": "moda-i-manga→bonusnyy-epizod-goluboy-period",
+  "source": "moda-i-manga",
+  "target": "bonusnyy-epizod-goluboy-period",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 6,
+   "anchorBlock": 4,
+   "anchorWords": "Если вы, вдруг, ещё не слышали про «Голубой период», обязательно"
+  },
+  "originalPlace": {
+   "afterBlock": 6,
+   "anchorBlock": 4,
+   "anchorWords": "Если вы, вдруг, ещё не слышали про «Голубой период», обязательно"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "a22b3740c341",
+  "reason": "better",
+  "comment": "заменена на ««Голубой период» — лучшее аниме о труде и таланте»",
+  "decidedAt": "2026-09-25T13:57:01.253Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "modnik-saske→ep-51",
+  "source": "modnik-saske",
+  "target": "ep-51",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "podcast",
+  "place": {
+   "afterBlock": 11,
+   "anchorBlock": 11,
+   "anchorWords": "А пока, как вы думаете, на каком костюме Кисимото стоило"
+  },
+  "originalPlace": {
+   "afterBlock": 11,
+   "anchorBlock": 11,
+   "anchorWords": "А пока, как вы думаете, на каком костюме Кисимото стоило"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "98414042f27e",
+  "reason": "better",
+  "comment": "заменена на «Ёкай, вдохновивший Саске»",
+  "decidedAt": "2026-09-25T14:11:18.120Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "moy-2016→100-velikih-filmov-xxi-veka",
+  "source": "moy-2016",
+  "target": "100-velikih-filmov-xxi-veka",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 7,
+   "anchorBlock": 7,
+   "anchorWords": "«Ветер крепчает! Значит – жить старайся!»"
+  },
+  "originalPlace": {
+   "afterBlock": 7,
+   "anchorBlock": 7,
+   "anchorWords": "«Ветер крепчает! Значит – жить старайся!»"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "4fb3213fd033",
+  "reason": "better",
+  "comment": "заменена на «Добрый дядюшка»",
+  "decidedAt": "2026-09-25T14:14:56.020Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
   "key": "multivselennaya-milyh-devochek→golovokruzhitelnyy-uspeh",
   "source": "multivselennaya-milyh-devochek",
   "target": "golovokruzhitelnyy-uspeh",
@@ -706,6 +1103,39 @@
   "reason": "better",
   "comment": "заменена на «Полный восторг — «Рок-тихоня!»»",
   "decidedAt": "2026-09-25T11:47:28.641Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "nastoyaschiy-gorod-buduschego→bonusnyy-vypusk-prizrak-v-dospehah-sindrom-odinochki",
+  "source": "nastoyaschiy-gorod-buduschego",
+  "target": "bonusnyy-vypusk-prizrak-v-dospehah-sindrom-odinochki",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 9,
+   "anchorBlock": 6,
+   "anchorWords": "И в итоге город получился не только в аниме одним"
+  },
+  "originalPlace": {
+   "afterBlock": 9,
+   "anchorBlock": 6,
+   "anchorWords": "И в итоге город получился не только в аниме одним"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "fae32e8be705",
+  "reason": "better",
+  "comment": "заменена на «Призрак в Доспехах | Как киберпанк стал отражением реальности, и о чем на самом деле этот фильм»",
+  "decidedAt": "2026-09-25T14:06:15.086Z",
   "reasonText": "цель неудачная, есть лучше"
  },
  {
@@ -843,6 +1273,270 @@
   "reasonText": "цель неудачная, есть лучше"
  },
  {
+  "key": "nogi-zerkalo-dushi→skrytye-spoylery-v-openinge-cheloveka-benzopily",
+  "source": "nogi-zerkalo-dushi",
+  "target": "skrytye-spoylery-v-openinge-cheloveka-benzopily",
+  "from": "main",
+  "kind": "broad",
+  "confidence": "средний",
+  "channels": [
+   "themes"
+  ],
+  "batch": 2,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 4,
+   "anchorBlock": 4,
+   "anchorWords": "Недавно я пересматривал несколько серий и обратил внимание на эту"
+  },
+  "originalPlace": {
+   "afterBlock": 4,
+   "anchorBlock": 4,
+   "anchorWords": "Недавно я пересматривал несколько серий и обратил внимание на эту"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "63938e621218",
+  "reason": "weak",
+  "comment": null,
+  "decidedAt": "2026-09-25T14:07:16.986Z",
+  "reasonText": "слабая связь"
+ },
+ {
+  "key": "obzor-anime-bezdomnyy-bog→anime-o-traditsionnoy-yaponskoy-muzyke",
+  "source": "obzor-anime-bezdomnyy-bog",
+  "target": "anime-o-traditsionnoy-yaponskoy-muzyke",
+  "from": "main",
+  "kind": "theme",
+  "confidence": "слабый",
+  "channels": [
+   "themes"
+  ],
+  "batch": 2,
+  "targetKind": "article",
+  "place": {
+   "afterBlock": 23,
+   "anchorBlock": 23,
+   "anchorWords": "Чего стоит только разговор с падающим с небоскреба парнем."
+  },
+  "originalPlace": {
+   "afterBlock": 23,
+   "anchorBlock": 23,
+   "anchorWords": "Чего стоит только разговор с падающим с небоскреба парнем."
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "fefd021fd2a1",
+  "reason": "weak",
+  "comment": null,
+  "decidedAt": "2026-09-25T13:51:57.131Z",
+  "reasonText": "слабая связь"
+ },
+ {
+  "key": "obzor-anime-bezdomnyy-bog→kak-loshad-prevratilas-v-anime",
+  "source": "obzor-anime-bezdomnyy-bog",
+  "target": "kak-loshad-prevratilas-v-anime",
+  "from": "main",
+  "kind": "theme",
+  "confidence": "слабый",
+  "channels": [
+   "themes"
+  ],
+  "batch": 2,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 14,
+   "anchorBlock": 14,
+   "anchorWords": "В итоге весь сериал посвящён их приключениям. Они либо сражаются"
+  },
+  "originalPlace": {
+   "afterBlock": 14,
+   "anchorBlock": 14,
+   "anchorWords": "В итоге весь сериал посвящён их приключениям. Они либо сражаются"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "fefd021fd2a1",
+  "reason": "better",
+  "comment": null,
+  "decidedAt": "2026-09-25T13:51:51.931Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "obzor-ot-podpischika-ranobe-rukovodstvo-genialnogo-printsa→bonusnyy-vypusk-konosuba",
+  "source": "obzor-ot-podpischika-ranobe-rukovodstvo-genialnogo-printsa",
+  "target": "bonusnyy-vypusk-konosuba",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 1,
+   "anchorBlock": 1,
+   "anchorWords": "Ранобэ повествует о принце, который стал регентом государства Натра, и"
+  },
+  "originalPlace": {
+   "afterBlock": 1,
+   "anchorBlock": 1,
+   "anchorWords": "Ранобэ повествует о принце, который стал регентом государства Натра, и"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "c8fd3c704af2",
+  "reason": "weak",
+  "comment": null,
+  "decidedAt": "2026-09-25T13:55:07.537Z",
+  "reasonText": "слабая связь"
+ },
+ {
+  "key": "obzor-ot-podpischika-ranobe-rukovodstvo-genialnogo-printsa→kakoe-anime-stoit-smotret-etoy-vesnoy-2023",
+  "source": "obzor-ot-podpischika-ranobe-rukovodstvo-genialnogo-printsa",
+  "target": "kakoe-anime-stoit-smotret-etoy-vesnoy-2023",
+  "from": "main",
+  "kind": "subject",
+  "confidence": "сильный",
+  "channels": [
+   "themes"
+  ],
+  "batch": 2,
+  "targetKind": "article",
+  "place": {
+   "afterBlock": 5,
+   "anchorBlock": 5,
+   "anchorWords": "Если вы искали взрослую, но при этом не жестокую историю"
+  },
+  "originalPlace": {
+   "afterBlock": 5,
+   "anchorBlock": 5,
+   "anchorWords": "Если вы искали взрослую, но при этом не жестокую историю"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "c8fd3c704af2",
+  "reason": "weak",
+  "comment": null,
+  "decidedAt": "2026-09-25T13:55:14.221Z",
+  "reasonText": "слабая связь"
+ },
+ {
+  "key": "obzor-vseh-anime-leta-2022→zom-100-v-plohoy-kompanii",
+  "source": "obzor-vseh-anime-leta-2022",
+  "target": "zom-100-v-plohoy-kompanii",
+  "from": "main",
+  "kind": "title",
+  "confidence": "средний",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 108,
+   "anchorBlock": 108,
+   "anchorWords": "Вывод: если вы фанатели в детстве по сеге, читали «Игроманию»"
+  },
+  "originalPlace": {
+   "afterBlock": 108,
+   "anchorBlock": 108,
+   "anchorWords": "Вывод: если вы фанатели в детстве по сеге, читали «Игроманию»"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "ec09a8361114",
+  "reason": "better",
+  "comment": null,
+  "decidedAt": "2026-09-25T13:53:48.065Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "obzor-vseh-anime-oseni-2022→osennie-anime",
+  "source": "obzor-vseh-anime-oseni-2022",
+  "target": "osennie-anime",
+  "from": "main",
+  "kind": "title",
+  "confidence": "слабый",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "article",
+  "place": {
+   "afterBlock": 9,
+   "anchorBlock": 9,
+   "anchorWords": "В итоге: это отличный иясикей, от которого я ждал другого."
+  },
+  "originalPlace": {
+   "afterBlock": 9,
+   "anchorBlock": 9,
+   "anchorWords": "В итоге: это отличный иясикей, от которого я ждал другого."
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "0aa28cff3d32",
+  "reason": "weak",
+  "comment": null,
+  "decidedAt": "2026-09-25T13:57:22.221Z",
+  "reasonText": "слабая связь"
+ },
+ {
+  "key": "obzor-vseh-anime-vesny-162→kak-kitaytsy-fleksyat-svoimi-openingami",
+  "source": "obzor-vseh-anime-vesny-162",
+  "target": "kak-kitaytsy-fleksyat-svoimi-openingami",
+  "from": "main",
+  "kind": "title",
+  "confidence": "средний",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 55,
+   "anchorBlock": 55,
+   "anchorWords": "Смотреть дальше: нет, но из-за рисовки и милого посыла можно"
+  },
+  "originalPlace": {
+   "afterBlock": 55,
+   "anchorBlock": 55,
+   "anchorWords": "Смотреть дальше: нет, но из-за рисовки и милого посыла можно"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "44545f2370cc",
+  "reason": "weak",
+  "comment": null,
+  "decidedAt": "2026-09-25T14:04:45.937Z",
+  "reasonText": "слабая связь"
+ },
+ {
   "key": "panelnaya-nostalgiya-po-schastlivomu-detstvu→kak-sdelat-iz-obychnyh-predmetov-pingvinov",
   "source": "panelnaya-nostalgiya-po-schastlivomu-detstvu",
   "target": "kak-sdelat-iz-obychnyh-predmetov-pingvinov",
@@ -873,6 +1567,72 @@
   "reason": "better",
   "comment": null,
   "decidedAt": "2026-09-25T11:32:42.166Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "po-pervym-seriyam→osennie-anime",
+  "source": "po-pervym-seriyam",
+  "target": "osennie-anime",
+  "from": "main",
+  "kind": "title",
+  "confidence": "слабый",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "article",
+  "place": {
+   "afterBlock": 16,
+   "anchorBlock": 16,
+   "anchorWords": "Можно посмотреть для отдыха"
+  },
+  "originalPlace": {
+   "afterBlock": 16,
+   "anchorBlock": 16,
+   "anchorWords": "Можно посмотреть для отдыха"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "c55d8a4692a2",
+  "reason": "weak",
+  "comment": null,
+  "decidedAt": "2026-09-25T13:57:58.070Z",
+  "reasonText": "слабая связь"
+ },
+ {
+  "key": "pochemu-ne-institut→bonusnyy-epizod-goluboy-period",
+  "source": "pochemu-ne-institut",
+  "target": "bonusnyy-epizod-goluboy-period",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 7,
+   "anchorBlock": 7,
+   "anchorWords": "Вот и выходит, что есть масса тайтлов про школу, заметное"
+  },
+  "originalPlace": {
+   "afterBlock": 7,
+   "anchorBlock": 7,
+   "anchorWords": "Вот и выходит, что есть масса тайтлов про школу, заметное"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "673de6832344",
+  "reason": "better",
+  "comment": "заменена на ««Голубой период» — лучшее аниме о труде и таланте»",
+  "decidedAt": "2026-09-25T13:58:08.436Z",
   "reasonText": "цель неудачная, есть лучше"
  },
  {
@@ -1045,6 +1805,39 @@
   "reasonText": "цель неудачная, есть лучше"
  },
  {
+  "key": "pyat-originalnyh-plyazhnyh-epizodov→ep-25",
+  "source": "pyat-originalnyh-plyazhnyh-epizodov",
+  "target": "ep-25",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "podcast",
+  "place": {
+   "afterBlock": 26,
+   "anchorBlock": 26,
+   "anchorWords": "К сожалению, до настоящего пляжного эпизода эта серия чуть-чуть не"
+  },
+  "originalPlace": {
+   "afterBlock": 26,
+   "anchorBlock": 26,
+   "anchorWords": "К сожалению, до настоящего пляжного эпизода эта серия чуть-чуть не"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "4340e3698127",
+  "reason": "better",
+  "comment": "заменена на «Атака титанов. Третий сезон | Почему Армин лучший и что находится в подвале?»",
+  "decidedAt": "2026-09-25T14:01:20.820Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
   "key": "ranniy-dizayn-personazhey-v-kovboe-bibope→fey-valentayn-yaponka-kitayanka-ili-vovse-skazhem-italyanka",
   "source": "ranniy-dizayn-personazhey-v-kovboe-bibope",
   "target": "fey-valentayn-yaponka-kitayanka-ili-vovse-skazhem-italyanka",
@@ -1113,6 +1906,138 @@
   "reasonText": "цель неудачная, есть лучше"
  },
  {
+  "key": "re-zero-vstrechaet-mafiyu-v-kosmose→ep-123",
+  "source": "re-zero-vstrechaet-mafiyu-v-kosmose",
+  "target": "ep-123",
+  "from": "main",
+  "kind": "theme",
+  "confidence": "слабый",
+  "channels": [
+   "themes"
+  ],
+  "batch": 2,
+  "targetKind": "videoessay",
+  "place": {
+   "afterBlock": 2,
+   "anchorBlock": 2,
+   "anchorWords": "В хорошей игре много разных выборов, которые ведут к разным"
+  },
+  "originalPlace": {
+   "afterBlock": 2,
+   "anchorBlock": 2,
+   "anchorWords": "В хорошей игре много разных выборов, которые ведут к разным"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "e58c7edfcb5f",
+  "reason": "weak",
+  "comment": null,
+  "decidedAt": "2026-09-25T13:59:51.570Z",
+  "reasonText": "слабая связь"
+ },
+ {
+  "key": "realnye-kartiny-v-mange-goluboy-period→bonusnyy-epizod-goluboy-period",
+  "source": "realnye-kartiny-v-mange-goluboy-period",
+  "target": "bonusnyy-epizod-goluboy-period",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 67,
+   "anchorBlock": 67,
+   "anchorWords": "К сожалению, у манги «Голубой период» нет официального издания на"
+  },
+  "originalPlace": {
+   "afterBlock": 67,
+   "anchorBlock": 67,
+   "anchorWords": "К сожалению, у манги «Голубой период» нет официального издания на"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "22b48513a1c0",
+  "reason": "better",
+  "comment": "заменена на ««Голубой период» — лучшее аниме о труде и таланте»",
+  "decidedAt": "2026-09-25T13:58:17.787Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "revers-inzheniring→ep-106",
+  "source": "revers-inzheniring",
+  "target": "ep-106",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "podcast",
+  "place": {
+   "afterBlock": 9,
+   "anchorBlock": 6,
+   "anchorWords": "Вот, например, раскадровка целой сцены из последнего сезона «Моб Психо"
+  },
+  "originalPlace": {
+   "afterBlock": 9,
+   "anchorBlock": 6,
+   "anchorWords": "Вот, например, раскадровка целой сцены из последнего сезона «Моб Психо"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "e277c42bdb61",
+  "reason": "better",
+  "comment": "заменена на «Моб Психо 100 | Почему в этом сериале невозможный продакшн и как комедия раздвигает границы»",
+  "decidedAt": "2026-09-25T14:00:19.236Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "romantika-k-prazdniku-2749→bonusnyy-vypusk-horimiya",
+  "source": "romantika-k-prazdniku-2749",
+  "target": "bonusnyy-vypusk-horimiya",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 17,
+   "anchorBlock": 17,
+   "anchorWords": "Узнать подробнее: в бонусном эпизоде"
+  },
+  "originalPlace": {
+   "afterBlock": 17,
+   "anchorBlock": 17,
+   "anchorWords": "Узнать подробнее: в бонусном эпизоде"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "8e1d863c25eb",
+  "reason": "better",
+  "comment": "заменена на «Как полюбить себя? «Хоримия» — не то, чем кажется»",
+  "decidedAt": "2026-09-25T13:52:32.565Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
   "key": "rukovodstvo-po-tomu-kak-byt-devochkoy→reinkarnatsiya-bezrabotnogo-vtoroy-sezon-ne-prosto-anime-pro-potentsiyu",
   "source": "rukovodstvo-po-tomu-kak-byt-devochkoy",
   "target": "reinkarnatsiya-bezrabotnogo-vtoroy-sezon-ne-prosto-anime-pro-potentsiyu",
@@ -1144,6 +2069,39 @@
   "reason": "better",
   "comment": "заменена на «Реинкарнация безработного | Как рассказать идеальную историю взросления и сделать хороший исекай?»",
   "decidedAt": "2026-09-25T11:35:35.334Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "shok-v-dospehah→bonusnyy-vypusk-prizrak-v-dospehah-sindrom-odinochki",
+  "source": "shok-v-dospehah",
+  "target": "bonusnyy-vypusk-prizrak-v-dospehah-sindrom-odinochki",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 7,
+   "anchorBlock": 7,
+   "anchorWords": "А как вам новый «Призрак в доспехах»?"
+  },
+  "originalPlace": {
+   "afterBlock": 7,
+   "anchorBlock": 7,
+   "anchorWords": "А как вам новый «Призрак в доспехах»?"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "f1f571b5220d",
+  "reason": "better",
+  "comment": "заменена на «10 самых ожидаемых аниме лета 2026 года»",
+  "decidedAt": "2026-09-25T14:06:52.736Z",
   "reasonText": "цель неудачная, есть лучше"
  },
  {
@@ -1214,6 +2172,72 @@
   "reasonText": "цель неудачная, есть лучше"
  },
  {
+  "key": "sotsiofobushki→multivselennaya-milyh-devochek",
+  "source": "sotsiofobushki",
+  "target": "multivselennaya-milyh-devochek",
+  "from": "main",
+  "kind": "subject",
+  "confidence": "сильный",
+  "channels": [
+   "themes"
+  ],
+  "batch": 2,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 10,
+   "anchorBlock": 10,
+   "anchorWords": "И мне кажется, что каждый может выбрать более подходящий для"
+  },
+  "originalPlace": {
+   "afterBlock": 10,
+   "anchorBlock": 10,
+   "anchorWords": "И мне кажется, что каждый может выбрать более подходящий для"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "8c5a3e0b70af",
+  "reason": "weak",
+  "comment": null,
+  "decidedAt": "2026-09-25T13:56:05.670Z",
+  "reasonText": "слабая связь"
+ },
+ {
+  "key": "stat-vzroslym→fludovypusk-gruziya",
+  "source": "stat-vzroslym",
+  "target": "fludovypusk-gruziya",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 5,
+   "anchorBlock": 5,
+   "anchorWords": "А еще больше рекомендаций новой манги есть в нашем недавнем"
+  },
+  "originalPlace": {
+   "afterBlock": 5,
+   "anchorBlock": 5,
+   "anchorWords": "А еще больше рекомендаций новой манги есть в нашем недавнем"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "dfc0b39434a7",
+  "reason": "better",
+  "comment": "заменена на «Бунко! | Рекомендуем новую мангу»",
+  "decidedAt": "2026-09-25T14:10:24.803Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
   "key": "turbo-babka→ne-prosto-benger",
   "source": "turbo-babka",
   "target": "ne-prosto-benger",
@@ -1248,6 +2272,39 @@
   "reasonText": "цель неудачная, есть лучше"
  },
  {
+  "key": "vnebrachnyy-syn-garri-pottera-i-vanpanchmena→zhizn-devushki-karatelya-ochen-izobretatelnyy-serial",
+  "source": "vnebrachnyy-syn-garri-pottera-i-vanpanchmena",
+  "target": "zhizn-devushki-karatelya-ochen-izobretatelnyy-serial",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 11,
+   "anchorBlock": 11,
+   "anchorWords": "И если вы любите такой юмор, на сериал стоит обратить"
+  },
+  "originalPlace": {
+   "afterBlock": 11,
+   "anchorBlock": 11,
+   "anchorWords": "И если вы любите такой юмор, на сериал стоит обратить"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "556e6a947156",
+  "reason": "weak",
+  "comment": null,
+  "decidedAt": "2026-09-25T14:13:41.603Z",
+  "reasonText": "слабая связь"
+ },
+ {
   "key": "volshebnaya-kuhnya→ep-115",
   "source": "volshebnaya-kuhnya",
   "target": "ep-115",
@@ -1279,6 +2336,39 @@
   "reason": "better",
   "comment": "заменена на «Какими получились первые две серии «Ателье колдовских колпаков»?»",
   "decidedAt": "2026-09-25T11:49:01.576Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "vse-na-svoih-mestah-dazhe-tsveta→dandadan-romantika-pod-sousom-bezumiya",
+  "source": "vse-na-svoih-mestah-dazhe-tsveta",
+  "target": "dandadan-romantika-pod-sousom-bezumiya",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 14,
+   "anchorBlock": 12,
+   "anchorWords": "У нее, кстати, очень красивый сайт с кейсами, обязательно полистайте."
+  },
+  "originalPlace": {
+   "afterBlock": 14,
+   "anchorBlock": 12,
+   "anchorWords": "У нее, кстати, очень красивый сайт с кейсами, обязательно полистайте."
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "51e5954cf186",
+  "reason": "better",
+  "comment": "заменена на «Знакомьтесь: Софи Ли»",
+  "decidedAt": "2026-09-25T14:07:47.920Z",
   "reasonText": "цель неудачная, есть лучше"
  },
  {
@@ -1348,6 +2438,39 @@
   "comment": "заменена на ««Провожающая в последний путь Фрирен»: 5 причин, почему это одно из лучших аниме года»",
   "decidedAt": "2026-09-25T11:38:54.675Z",
   "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "zhizn-devushki-karatelya-ochen-izobretatelnyy-serial→vnebrachnyy-syn-garri-pottera-i-vanpanchmena",
+  "source": "zhizn-devushki-karatelya-ochen-izobretatelnyy-serial",
+  "target": "vnebrachnyy-syn-garri-pottera-i-vanpanchmena",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 2,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 9,
+   "anchorBlock": 8,
+   "anchorWords": "В последней вышедшей серии (10) за экшн-сцены взялся Кэнъитиро Аоки,"
+  },
+  "originalPlace": {
+   "afterBlock": 9,
+   "anchorBlock": 8,
+   "anchorWords": "В последней вышедшей серии (10) за экшн-сцены взялся Кэнъитиро Аоки,"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "d89ceceabb7d",
+  "reason": "weak",
+  "comment": null,
+  "decidedAt": "2026-09-25T14:14:10.686Z",
+  "reasonText": "слабая связь"
  },
  {
   "key": "znakomtes-sofi-li→deti-ubiytsy",

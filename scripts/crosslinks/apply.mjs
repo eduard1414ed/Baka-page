@@ -119,8 +119,14 @@ function nodes(body) {
 	}));
 }
 
-/** Узел — картинка (абзац из одних картинок или блок картинки/галереи/видео). */
+/**
+ * Узел, который стоит между абзацем-якорем и вставкой и не мешает ей:
+ * картинка (абзац из одних картинок, блок картинки/галереи/видео) или
+ * служебная строка раздела `##### Количество серий: 6` (lib.mjs: заголовок
+ * 5-го уровня раздела не открывает). Настоящий заголовок — мешает.
+ */
 function isImageNode(n) {
+	if (n.type === 'heading' && n.depth >= 5) return true;
 	if (n.type === 'leafDirective' || n.type === 'containerDirective') return ['image', 'gallery', 'video'].includes(n.name);
 	if (n.type !== 'paragraph') return false;
 	const kids = (n.children ?? []).filter((c) => !(c.type === 'text' && !c.value.trim()));
