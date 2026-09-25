@@ -8,6 +8,7 @@
 import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
+import { linkKind, KIND_LABEL } from './kinds.mjs';
 
 const file = process.argv[2] ?? join(homedir(), 'baka-audit/crosslinks/candidates/candidates.json');
 const { candidates, forStep5, sources, rules } = JSON.parse(await readFile(file, 'utf8'));
@@ -21,16 +22,7 @@ console.log(`Источников: ${sources}; получили хотя бы о
 console.log(`Кандидатов всего: ${candidates.length}; основных ${main.length}, запасных ${candidates.filter((c) => c.status === 'запасной').length}, отсеянных ${candidates.filter((c) => c.status === 'отсеян').length}, в список шага 5: ${forStep5.length}`);
 console.log('Основные по каналам:', by(main, (c) => (c.channels ?? ['titles']).join('+')));
 console.log('Основные по уверенности:', by(main, (c) => c.confidence));
-// Вид связи по старшей причине канала «темы» (сессия 1в): узкая / широкая тема,
-// повод, человек, студия, тайтл-предмет, «по мотивам».
-const kind = (c) => {
-	const r = (c.reasons ?? []).filter((x) => x.channel === 'themes');
-	if (!r.length) return 'только тайтл';
-	const s = new Set(r.map((x) => x.signal));
-	for (const k of ['motive', 'subject', 'person', 'studio']) if (s.has(k)) return k;
-	return r.some((x) => x.broad) ? 'широкая тема + сигнал' : 'тема';
-};
-console.log('Основные по виду тематической связи:', by(main, kind));
+console.log('Основные по виду тематической связи:', by(main, (c) => KIND_LABEL[linkKind(c)]));
 console.log('Основные по типу сигнала:', by(main, (c) => c.signal));
 console.log('Основные по типу цели:', by(main, (c) => (c.flags.external ? 'внешний' : c.targetCategory)));
 console.log('Отсеяны по причине:', by(candidates.filter((c) => c.status === 'отсеян'), (c) => c.statusWhy));

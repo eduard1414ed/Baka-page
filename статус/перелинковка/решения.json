@@ -1,0 +1,721 @@
+{
+ "approved": [
+  {
+   "key": "a-vot-i-leto-2147→ep-133",
+   "source": "a-vot-i-leto-2147",
+   "target": "ep-133",
+   "from": "manual",
+   "kind": "manual",
+   "confidence": "—",
+   "channels": [],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "Подробнее можно послушать в нашем бонусном выпуске."
+   },
+   "originalPlace": {
+    "afterBlock": 30,
+    "anchorBlock": 30,
+    "anchorWords": "Очень милое повседневное аниме о ностальгии и настоящей дружбе."
+   },
+   "moved": true,
+   "manual": true,
+   "replaces": null,
+   "play": true,
+   "label": null,
+   "fingerprint": "b27b03d01045",
+   "decidedAt": "2026-09-25T09:56:46.369Z"
+  },
+  {
+   "key": "a-vot-i-leto-2147→ep-8",
+   "source": "a-vot-i-leto-2147",
+   "target": "ep-8",
+   "from": "manual",
+   "kind": "manual",
+   "confidence": "—",
+   "channels": [],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 25,
+    "anchorBlock": 25,
+    "anchorWords": "Подробнее можно послушать в выпуске подкаста."
+   },
+   "originalPlace": {
+    "afterBlock": 30,
+    "anchorBlock": 30,
+    "anchorWords": "Очень милое повседневное аниме о ностальгии и настоящей дружбе."
+   },
+   "moved": true,
+   "manual": true,
+   "replaces": null,
+   "play": true,
+   "label": null,
+   "fingerprint": "b27b03d01045",
+   "decidedAt": "2026-09-25T09:57:33.685Z"
+  },
+  {
+   "key": "a-vot-i-leto-2147→letniy-roman-na-maksimalkah",
+   "source": "a-vot-i-leto-2147",
+   "target": "letniy-roman-na-maksimalkah",
+   "from": "main",
+   "kind": "title",
+   "confidence": "средний",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 12,
+    "anchorBlock": 12,
+    "anchorWords": "Подробнее можно почитать в текстовом обзоре."
+   },
+   "originalPlace": {
+    "afterBlock": 30,
+    "anchorBlock": 30,
+    "anchorWords": "Очень милое повседневное аниме о ностальгии и настоящей дружбе."
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": "Подробнее",
+   "fingerprint": "b27b03d01045",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T09:58:09.153Z"
+  },
+  {
+   "key": "a-vot-i-leto-2147→slova-puzyryatsya-podobno-gazirovke-glavnoe-letnee-anime",
+   "source": "a-vot-i-leto-2147",
+   "target": "slova-puzyryatsya-podobno-gazirovke-glavnoe-letnee-anime",
+   "from": "main",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 18,
+    "anchorBlock": 18,
+    "anchorWords": "Подробнее можно почитать в текстовом обзоре."
+   },
+   "originalPlace": {
+    "afterBlock": 18,
+    "anchorBlock": 18,
+    "anchorWords": "Подробнее можно почитать в текстовом обзоре."
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "b27b03d01045",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T09:56:57.453Z"
+  },
+  {
+   "key": "anime-o-traditsionnoy-yaponskoy-muzyke→chistyy-zvuk-kak-zvuchit-tvoy-syamisen",
+   "source": "anime-o-traditsionnoy-yaponskoy-muzyke",
+   "target": "chistyy-zvuk-kak-zvuchit-tvoy-syamisen",
+   "from": "main",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "Аниме невероятно атмосферно и красиво показывает сам процесс игры."
+   },
+   "originalPlace": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "Аниме невероятно атмосферно и красиво показывает сам процесс игры."
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "f3aa12e14d93",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T10:03:22.471Z"
+  },
+  {
+   "key": "anime-o-traditsionnoy-yaponskoy-muzyke→ep-67",
+   "source": "anime-o-traditsionnoy-yaponskoy-muzyke",
+   "target": "ep-67",
+   "from": "main",
+   "kind": "theme",
+   "confidence": "слабый",
+   "channels": [
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "videoessay",
+   "place": {
+    "afterBlock": 22,
+    "anchorBlock": 22,
+    "anchorWords": "В довольно необычном фильме, смешивающим путешествия во времени и музыку,"
+   },
+   "originalPlace": {
+    "afterBlock": 22,
+    "anchorBlock": 22,
+    "anchorWords": "В довольно необычном фильме, смешивающим путешествия во времени и музыку,"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "f3aa12e14d93",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T10:03:30.438Z"
+  },
+  {
+   "key": "detali-kotorye-nikto-ne-uvidit→ep-50",
+   "source": "detali-kotorye-nikto-ne-uvidit",
+   "target": "ep-50",
+   "from": "main",
+   "kind": "motive",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 1,
+    "anchorBlock": 1,
+    "anchorWords": "В новом выпуске мы говорим о том, почему фильм Red"
+   },
+   "originalPlace": {
+    "afterBlock": 2,
+    "anchorBlock": 2,
+    "anchorWords": "Это можно исправить, если смотреть не сам фильм, а артбук"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": null,
+   "play": true,
+   "label": null,
+   "fingerprint": "00689f35b50b",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T10:04:21.438Z"
+  },
+  {
+   "key": "dobryy-dyadyushka→hayao-miyadzaki-ot-printsessy-mononoke-do-malchika-i-ptitsy",
+   "source": "dobryy-dyadyushka",
+   "target": "hayao-miyadzaki-ot-printsessy-mononoke-do-malchika-i-ptitsy",
+   "from": "main",
+   "kind": "person",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "external",
+   "place": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "Так что за сказочными фильмами и образом доброго дядюшки —"
+   },
+   "originalPlace": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "Так что за сказочными фильмами и образом доброго дядюшки —"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "abc540c245c9",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T10:06:06.772Z"
+  },
+  {
+   "key": "gorod-krepost-koulun→ep-123",
+   "source": "gorod-krepost-koulun",
+   "target": "ep-123",
+   "from": "main",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "videoessay",
+   "place": {
+    "afterBlock": 12,
+    "anchorBlock": 8,
+    "anchorWords": "След Коулуна можно найти и в «Призраке в доспехах», и"
+   },
+   "originalPlace": {
+    "afterBlock": 12,
+    "anchorBlock": 8,
+    "anchorWords": "След Коулуна можно найти и в «Призраке в доспехах», и"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "a238723b2d31",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T10:04:59.688Z"
+  },
+  {
+   "key": "kak-knizhnye-magaziny-povliyali-na-oblozhki-mangi→bonusnyy-vypusk-v-les-gde-mertsayut-svetlyachki",
+   "source": "kak-knizhnye-magaziny-povliyali-na-oblozhki-mangi",
+   "target": "bonusnyy-vypusk-v-les-gde-mertsayut-svetlyachki",
+   "from": "main",
+   "kind": "motive",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 14,
+    "anchorBlock": 8,
+    "anchorWords": "Так что наслаждайтесь дизайном Hana to Yume Comics пока можете"
+   },
+   "originalPlace": {
+    "afterBlock": 1,
+    "anchorBlock": 1,
+    "anchorWords": "Ответ оказался сложнее, чем то, что все эти работы вышли"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "c6285fea67ac",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T10:02:55.538Z"
+  },
+  {
+   "key": "kak-osii-i-miyadzaki-pomogli-studii-gainax→ep-135",
+   "source": "kak-osii-i-miyadzaki-pomogli-studii-gainax",
+   "target": "ep-135",
+   "from": "main",
+   "kind": "studio",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "Именно их высокая оценка помогла дать добро на производство первого"
+   },
+   "originalPlace": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "Именно их высокая оценка помогла дать добро на производство первого"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": "Узнать больше",
+   "fingerprint": "97f7f9dcf0b0",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T09:53:31.281Z"
+  },
+  {
+   "key": "neveroyatnye-raskadrovki-satosi-kona→ep-12",
+   "source": "neveroyatnye-raskadrovki-satosi-kona",
+   "target": "ep-12",
+   "from": "main",
+   "kind": "person",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 4,
+    "anchorBlock": 4,
+    "anchorWords": "И вот я нашёл одну из страниц такой раскадровки к"
+   },
+   "originalPlace": {
+    "afterBlock": 4,
+    "anchorBlock": 4,
+    "anchorWords": "И вот я нашёл одну из страниц такой раскадровки к"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "161e78410656",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T10:02:15.888Z"
+  },
+  {
+   "key": "nostalgiya-opasna→ep-123",
+   "source": "nostalgiya-opasna",
+   "target": "ep-123",
+   "from": "main",
+   "kind": "broad",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "videoessay",
+   "place": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "Пожалуй, это самый интригующий тайтл этого сезона."
+   },
+   "originalPlace": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "Пожалуй, это самый интригующий тайтл этого сезона."
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "76b56ddca861",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T10:05:57.739Z"
+  },
+  {
+   "key": "para-slov-o-rezhissure-v-devochke-pokorivshey-vremya→bonusnyy-vypusk-devochka-pokorivshaya-vremya",
+   "source": "para-slov-o-rezhissure-v-devochke-pokorivshey-vremya",
+   "target": "bonusnyy-vypusk-devochka-pokorivshaya-vremya",
+   "from": "main",
+   "kind": "motive",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "Вот как минута фильма без слов и музыки рассказывает историю"
+   },
+   "originalPlace": {
+    "afterBlock": 2,
+    "anchorBlock": 2,
+    "anchorWords": "Посмотрите, как работает камера. Она движется с постоянной скоростью, за"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "e70349a87239",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T10:03:09.721Z"
+  },
+  {
+   "key": "pervye-vpechatleniya-ot-prosmotra-istrebitelya-demonov-beskonechnaya-krepost-post-ot-ksyushi→ep-58",
+   "source": "pervye-vpechatleniya-ot-prosmotra-istrebitelya-demonov-beskonechnaya-krepost-post-ot-ksyushi",
+   "target": "ep-58",
+   "from": "main",
+   "kind": "subject",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 5,
+    "anchorBlock": 5,
+    "anchorWords": "Так что советую захватить платочки для слез."
+   },
+   "originalPlace": {
+    "afterBlock": 5,
+    "anchorBlock": 5,
+    "anchorWords": "Так что советую захватить платочки для слез."
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "6c6daf32cb16",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T10:03:48.754Z"
+  },
+  {
+   "key": "puteshestvie-syuny-i-skazaniya-o-zemnomore-2330→bonusnyy-vypusk-skazaniya-zemnomorya",
+   "source": "puteshestvie-syuny-i-skazaniya-o-zemnomore-2330",
+   "target": "bonusnyy-vypusk-skazaniya-zemnomorya",
+   "from": "main",
+   "kind": "broad",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 13,
+    "anchorBlock": 9,
+    "anchorWords": "Учитывая это, кажется символичным, что «Сказания» начинаются со сцены убийства"
+   },
+   "originalPlace": {
+    "afterBlock": 13,
+    "anchorBlock": 9,
+    "anchorWords": "Учитывая это, кажется символичным, что «Сказания» начинаются со сцены убийства"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "36791bdc1c32",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T10:06:14.072Z"
+  },
+  {
+   "key": "samaya-dolgaya-manga-v-istorii-shonen-jump→vedmnadzor-anime-sitkom-kotoryy-my-zasluzhili",
+   "source": "samaya-dolgaya-manga-v-istorii-shonen-jump",
+   "target": "vedmnadzor-anime-sitkom-kotoryy-my-zasluzhili",
+   "from": "main",
+   "kind": "motive",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 1,
+    "anchorBlock": 1,
+    "anchorWords": "В бонусном выпуске про «Ведьмнадзор» мы с Ксюшей обсуждали, что"
+   },
+   "originalPlace": {
+    "afterBlock": 2,
+    "anchorBlock": 2,
+    "anchorWords": "Так рекордсменом по количеству лет непрерывной публикации считается Kochira Katsushika-ku"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "9ff9d215f7eb",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T10:04:48.772Z"
+  },
+  {
+   "key": "spisok-pyati-tselebnyh-anime→bonusnyy-vypusk-v-loferah-vpripryzhku",
+   "source": "spisok-pyati-tselebnyh-anime",
+   "target": "bonusnyy-vypusk-v-loferah-vpripryzhku",
+   "from": "main",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 14,
+    "anchorBlock": 14,
+    "anchorWords": "Главный повседневный сериал прошлого года. Легкая и смешная история об"
+   },
+   "originalPlace": {
+    "afterBlock": 14,
+    "anchorBlock": 14,
+    "anchorWords": "Главный повседневный сериал прошлого года. Легкая и смешная история об"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "265343138061",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T09:53:02.595Z"
+  },
+  {
+   "key": "spisok-pyati-tselebnyh-anime→ep-133",
+   "source": "spisok-pyati-tselebnyh-anime",
+   "target": "ep-133",
+   "from": "main",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 8,
+    "anchorBlock": 8,
+    "anchorWords": "История дружбы 23-летнего каллиграфа Ханды Сэйсю с шестилетней Нару. Из-за"
+   },
+   "originalPlace": {
+    "afterBlock": 8,
+    "anchorBlock": 8,
+    "anchorWords": "История дружбы 23-летнего каллиграфа Ханды Сэйсю с шестилетней Нару. Из-за"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": true,
+   "label": null,
+   "fingerprint": "265343138061",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T09:52:41.161Z"
+  },
+  {
+   "key": "spisok-pyati-tselebnyh-anime→ep-134",
+   "source": "spisok-pyati-tselebnyh-anime",
+   "target": "ep-134",
+   "from": "main",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 5,
+    "anchorBlock": 5,
+    "anchorWords": "Конечно, куда же без классики. Аниме о том, как компания"
+   },
+   "originalPlace": {
+    "afterBlock": 5,
+    "anchorBlock": 5,
+    "anchorWords": "Конечно, куда же без классики. Аниме о том, как компания"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": true,
+   "label": null,
+   "fingerprint": "265343138061",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T09:52:35.162Z"
+  },
+  {
+   "key": "spisok-pyati-tselebnyh-anime→ep-39",
+   "source": "spisok-pyati-tselebnyh-anime",
+   "target": "ep-39",
+   "from": "main",
+   "kind": "theme",
+   "confidence": "средний",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "videoessay",
+   "place": {
+    "afterBlock": 11,
+    "anchorBlock": 11,
+    "anchorWords": "Если вам нужно что-то с капелькой магии в истории, то"
+   },
+   "originalPlace": {
+    "afterBlock": 11,
+    "anchorBlock": 11,
+    "anchorWords": "Если вам нужно что-то с капелькой магии в истории, то"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "265343138061",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T09:52:57.678Z"
+  },
+  {
+   "key": "zhit-i-naslazhdatsya-prostoy-zhiznyu→ep-114",
+   "source": "zhit-i-naslazhdatsya-prostoy-zhiznyu",
+   "target": "ep-114",
+   "from": "main",
+   "kind": "broad",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "videoessay",
+   "place": {
+    "afterBlock": 5,
+    "anchorBlock": 5,
+    "anchorWords": "Очень советую эту мангу всем, кто хочет немного замедлиться и"
+   },
+   "originalPlace": {
+    "afterBlock": 5,
+    "anchorBlock": 5,
+    "anchorWords": "Очень советую эту мангу всем, кто хочет немного замедлиться и"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "84c11e06d263",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T10:02:39.071Z"
+  }
+ ],
+ "deferred": [],
+ "cursor": {
+  "post": "krasota-na-mechah",
+  "at": "2026-09-25T10:09:14.897Z"
+ }
+}

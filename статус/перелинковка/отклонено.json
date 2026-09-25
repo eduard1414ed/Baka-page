@@ -1,0 +1,68 @@
+[
+ {
+  "key": "a-vot-i-leto-2147→kak-sdelat-iz-obychnyh-predmetov-pingvinov",
+  "source": "a-vot-i-leto-2147",
+  "target": "kak-sdelat-iz-obychnyh-predmetov-pingvinov",
+  "from": "main",
+  "kind": "title",
+  "confidence": "средний",
+  "channels": [
+   "titles"
+  ],
+  "batch": 1,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 25,
+   "anchorBlock": 25,
+   "anchorWords": "Подробнее можно послушать в выпуске подкаста."
+  },
+  "originalPlace": {
+   "afterBlock": 25,
+   "anchorBlock": 25,
+   "anchorWords": "Подробнее можно послушать в выпуске подкаста."
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "b27b03d01045",
+  "reason": "better",
+  "comment": null,
+  "decidedAt": "2026-09-25T09:57:23.536Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "a-vot-i-leto-2147→potrogat-travu",
+  "source": "a-vot-i-leto-2147",
+  "target": "potrogat-travu",
+  "from": "main",
+  "kind": "title",
+  "confidence": "слабый",
+  "channels": [
+   "titles"
+  ],
+  "batch": 1,
+  "targetKind": "article",
+  "place": {
+   "afterBlock": 6,
+   "anchorBlock": 6,
+   "anchorWords": "Подробнее можно послушать в нашем бонусном выпуске."
+  },
+  "originalPlace": {
+   "afterBlock": 6,
+   "anchorBlock": 6,
+   "anchorWords": "Подробнее можно послушать в нашем бонусном выпуске."
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "b27b03d01045",
+  "reason": "better",
+  "comment": null,
+  "decidedAt": "2026-09-25T09:56:42.420Z",
+  "reasonText": "цель неудачная, есть лучше"
+ }
+]

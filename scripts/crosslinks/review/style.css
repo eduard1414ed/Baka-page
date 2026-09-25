@@ -1,0 +1,178 @@
+/* ПЕРЕЛИНКОВКА — СТРАНИЦА РЕВЬЮ. Рабочий инструмент, не страница сайта:
+   дизайн-система сайта тут не обязательна. Но плашка вставки нарочно
+   повторяет `.post-ref` сайта (src/styles/global.css) — подпись в скобках,
+   миниатюра 120, заголовок Literata 20, метастрока моно капслоком, — чтобы
+   на ревью было видно, как вставка встанет в текст. Шрифты — сайта. */
+
+@font-face { font-family: 'Literata'; src: url('fonts/Literata-Variable.woff2') format('woff2'); font-weight: 200 900; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url('fonts/Inter-Variable.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: 'IBM Plex Mono'; src: url('fonts/IBMPlexMono-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'IBM Plex Mono'; src: url('fonts/IBMPlexMono-SemiBold.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+
+:root {
+	--paper: #f8f6f0;
+	--card: #fffdf8;
+	--ink: #151515;
+	--muted: #69645d;
+	--faint: #9a948a;
+	--line: #cbc6bc;
+	--line-soft: #e4e0d7;
+	--accent: #a64e65;
+	--ok: #2f6b3f;
+	--ok-bg: #e6f0e4;
+	--no: #9b2f2f;
+	--no-bg: #f5e3df;
+	--wait: #7a6a2a;
+	--wait-bg: #f1ecd6;
+	--focus: #2c5d8f;
+	--display: 'Literata', Georgia, serif;
+	--body: 'Inter', Arial, sans-serif;
+	--tech: 'IBM Plex Mono', Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+html { scrollbar-gutter: stable; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 17px/1.55 var(--body); }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: var(--accent); }
+
+.tech { font-family: var(--tech); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* ——— Верхняя строка ——— */
+.bar {
+	position: sticky; top: 0; z-index: 20;
+	display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center;
+	padding: 10px 24px; background: var(--paper); border-bottom: 1px solid var(--line);
+}
+.bar .where { font-weight: 600; }
+.bar .where small { font-weight: 400; color: var(--muted); }
+.bar .spacer { flex: 1; }
+.progress { height: 6px; width: 180px; background: var(--line-soft); border-radius: 3px; overflow: hidden; }
+.progress i { display: block; height: 100%; background: var(--ok); }
+.btn {
+	border: 1px solid var(--line); background: var(--card); border-radius: 6px;
+	padding: 6px 12px; cursor: pointer; white-space: nowrap;
+}
+.btn:hover { border-color: var(--ink); }
+.btn kbd, .keys kbd {
+	font-family: var(--tech); font-size: 11px; border: 1px solid var(--line); border-radius: 3px;
+	padding: 0 4px; margin-left: 6px; color: var(--muted); background: var(--paper);
+}
+.btn.ok { background: var(--ok-bg); border-color: var(--ok); color: var(--ok); }
+.btn.no { background: var(--no-bg); border-color: var(--no); color: var(--no); }
+.btn.wait { background: var(--wait-bg); border-color: var(--wait); color: var(--wait); }
+.btn.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+.banner { padding: 10px 24px; background: var(--wait-bg); color: var(--wait); border-bottom: 1px solid var(--line); }
+.banner.bad { background: var(--no-bg); color: var(--no); }
+
+/* ——— Раскладка: текст поста слева, запасные и своя цель справа ——— */
+.layout { display: grid; grid-template-columns: minmax(0, 760px) minmax(280px, 380px); gap: 40px; justify-content: center; padding: 28px 24px 120px; }
+@media (max-width: 1100px) { .layout { grid-template-columns: minmax(0, 760px); } }
+
+.post-head h1 { font-family: var(--display); font-weight: 450; font-size: 34px; line-height: 1.15; margin: 0 0 8px; }
+.post-head .meta { color: var(--muted); }
+.post-head .meta a { margin-left: 10px; }
+.summary-line { margin: 14px 0 26px; color: var(--muted); }
+
+/* ——— Сжатый текст поста ——— */
+.blk { position: relative; margin: 0 0 12px; padding: 2px 10px 2px 12px; border-left: 3px solid transparent; border-radius: 3px; }
+.blk.text { color: var(--muted); font-size: 16px; cursor: pointer; }
+.blk.text.full { color: var(--ink); font-size: 17px; }
+.blk.text:hover { background: #f0ede4; }
+.blk .n { position: absolute; left: -34px; top: 3px; width: 26px; text-align: right; font: 11px var(--tech); color: var(--faint); }
+.blk.heading { font-family: var(--display); font-weight: 600; font-size: 20px; margin-top: 22px; }
+.blk.chip { color: var(--faint); font: 12px var(--tech); text-transform: uppercase; letter-spacing: 0.05em; }
+.blk.existing { color: var(--muted); font-size: 14px; border: 1px dashed var(--line); border-left-width: 1px; padding: 6px 10px; }
+.moving .blk.text, .moving .blk.heading, .moving .blk.chip, .moving .blk.existing { cursor: crosshair; }
+.moving .blk:hover { background: #e6eef6; border-left-color: var(--focus); }
+.moving .blk.target-here { background: #e6eef6; border-left-color: var(--focus); }
+
+/* ——— Вставка на ревью ——— */
+.ins { margin: 26px 0 30px; border: 1px solid var(--line); border-left: 6px solid var(--line); border-radius: 8px; background: var(--card); }
+.ins.current { box-shadow: 0 0 0 2px var(--focus); }
+.ins.approved { border-left-color: var(--ok); }
+.ins.rejected { border-left-color: var(--no); opacity: 0.62; }
+.ins.deferred { border-left-color: var(--wait); }
+.ins-top { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 8px 14px; border-bottom: 1px solid var(--line-soft); font-size: 14px; color: var(--muted); }
+.ins-top b { color: var(--ink); }
+.state { font: 600 12px var(--tech); text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 8px; border-radius: 3px; }
+.state.approved { background: var(--ok-bg); color: var(--ok); }
+.state.rejected { background: var(--no-bg); color: var(--no); }
+.state.deferred { background: var(--wait-bg); color: var(--wait); }
+.state.pending { background: var(--line-soft); color: var(--muted); }
+
+/* Плашка — как .post-ref на сайте. */
+.ref { padding: 18px 20px 16px; }
+.ref .label { font: 12px var(--tech); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+.ref .label::before { content: '[\00a0'; }
+.ref .label::after { content: '\00a0]'; }
+.ref-row { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 12px; align-items: center; }
+.ref.no-cover .ref-row { grid-template-columns: minmax(0, 1fr); }
+.ref-thumb { width: 120px; aspect-ratio: 16 / 9; object-fit: cover; display: block; background: var(--line-soft); }
+.ref-thumb.square { aspect-ratio: 1; object-fit: contain; background: transparent; }
+.ref-title { font-family: var(--display); font-size: 20px; line-height: 1.15; }
+.ref-title .arrow { color: var(--accent); }
+.ref-meta { margin-top: 8px; font: 12px var(--tech); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.ref.play { border-bottom: 1px solid var(--line); margin: 0 14px; padding-inline: 6px; }
+.play-btn { width: 44px; height: 44px; border-radius: 50%; background: var(--ink); color: var(--paper); display: inline-grid; place-items: center; font-size: 15px; margin-right: 12px; vertical-align: middle; }
+.ref.play .ref-row { grid-template-columns: 56px minmax(0, 1fr) 90px; }
+.ref.play.no-cover .ref-row { grid-template-columns: 56px minmax(0, 1fr); }
+.ref.play .ref-thumb { width: 90px; }
+
+.about { padding: 0 20px 4px; font-size: 15px; color: var(--muted); }
+.about b { color: var(--ink); font-weight: 500; }
+
+.why { padding: 10px 20px 4px; font-size: 15px; }
+.why ul { margin: 4px 0 0; padding-left: 20px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 20px 0; }
+.tag { font: 12px var(--tech); padding: 2px 8px; border-radius: 3px; background: var(--line-soft); color: var(--ink); }
+.tag.strong { background: var(--ok-bg); color: var(--ok); }
+.tag.medium { background: var(--wait-bg); color: var(--wait); }
+.tag.weak { background: var(--no-bg); color: var(--no); }
+.tag.note { background: #eae4f2; color: #4b3a6b; }
+.tag.warn { background: var(--no-bg); color: var(--no); font-weight: 600; }
+
+.acts { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 20px; border-top: 1px solid var(--line-soft); margin-top: 12px; align-items: center; }
+.opts { display: flex; flex-wrap: wrap; gap: 10px 16px; padding: 0 20px 14px; align-items: center; font-size: 15px; }
+.opts input[type='text'] { border: 1px solid var(--line); border-radius: 6px; padding: 5px 9px; min-width: 260px; background: #fff; }
+.opts .hint { color: var(--muted); font-size: 13px; }
+.reasons { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 20px 14px; }
+.reasons textarea { width: 100%; min-height: 54px; border: 1px solid var(--line); border-radius: 6px; padding: 6px 9px; background: #fff; }
+
+/* ——— Правая колонка ——— */
+.side { overflow-x: hidden; position: sticky; top: 70px; align-self: start; max-height: calc(100vh - 90px); overflow: auto; }
+.side h2 { font: 600 13px var(--tech); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0 0 10px; }
+.side section { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 14px; margin-bottom: 16px; }
+.res { border-top: 1px solid var(--line-soft); padding: 10px 0; font-size: 14px; }
+.res:first-of-type { border-top: 0; padding-top: 0; }
+.res .t { font-family: var(--display); font-size: 16px; line-height: 1.2; }
+.res .m { color: var(--muted); font-size: 13px; margin: 3px 0 6px; }
+.res .b { display: flex; gap: 6px; flex-wrap: wrap; }
+.res .btn { padding: 3px 8px; font-size: 13px; }
+.search input { width: 100%; border: 1px solid var(--line); border-radius: 6px; padding: 7px 10px; background: #fff; }
+.search .hit { display: block; width: 100%; text-align: left; border: 0; border-top: 1px solid var(--line-soft); background: none; padding: 7px 2px; cursor: pointer; font-size: 14px; }
+.search .hit:hover, .search .hit.sel { background: #f0ede4; }
+.search .hit small { color: var(--muted); }
+
+/* ——— Клавиши — блок в правой колонке ——— */
+.keys { font-size: 14px; line-height: 1.85; }
+.keys kbd { margin: 0 8px 0 0; }
+.btn.wrap { white-space: normal; text-align: left; max-width: 100%; }
+
+/* ——— Сводка пачки ——— */
+.overlay { position: fixed; inset: 0; background: rgba(21, 21, 21, 0.35); z-index: 50; display: grid; place-items: start center; overflow: auto; padding: 40px 16px; }
+.sheet { background: var(--paper); border-radius: 10px; max-width: 900px; width: 100%; padding: 26px 30px; }
+.sheet h2 { font-family: var(--display); font-weight: 450; font-size: 28px; margin: 0 0 6px; }
+.sheet h3 { font: 600 13px var(--tech); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 26px 0 8px; }
+.sheet table { border-collapse: collapse; width: 100%; font-size: 15px; }
+.sheet td, .sheet th { border-bottom: 1px solid var(--line-soft); padding: 6px 8px; text-align: right; }
+.sheet td:first-child, .sheet th:first-child { text-align: left; }
+.sheet th { font-weight: 600; color: var(--muted); font-size: 13px; }
+.toast { position: fixed; right: 18px; bottom: 18px; z-index: 60; background: var(--ink); color: var(--paper); padding: 8px 14px; border-radius: 6px; font-size: 14px; }
+.toast.bad { background: var(--no); }
+
+/* «Заменить цель» — поиск прямо под плашкой. */
+.opts.replace { display: block; }
+.opts.replace input { width: 100%; margin-bottom: 6px; }
+.opts.replace .hint { display: block; margin-bottom: 6px; }

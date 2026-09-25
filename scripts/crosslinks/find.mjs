@@ -13,7 +13,12 @@
 // предлагается повторно; места рядом с существующей вставкой заняты; потолок
 // на цель считает и их. В репозиторий не пишет ничего.
 //
-// Формат отклонённых: JSON-массив строк «источник→цель» или объектов { key }.
+// Формат отклонённых: JSON-массив строк «источник→цель» или объектов { key }
+// (страница ревью пишет объекты: key, source, target, reason, comment…).
+//
+// С сессии 2 в результат пишутся `fingerprints` — отпечатки файлов постов-
+// источников на момент поиска. По ним страница ревью (review/) замечает, что
+// пост изменился после поиска, и ищет место вставки заново по первым словам.
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
@@ -24,6 +29,7 @@ import { loadCorpus } from './lib.mjs';
 import { findTitleCandidates, mergeCandidates, RULES } from './finder.mjs';
 import { buildCandidates } from './pipeline.mjs';
 import { readDictionary } from './dictionary.mjs';
+import { fingerprint } from './review/fresh.mjs';
 
 const REPO = fileURLToPath(new URL('../../', import.meta.url));
 const args = process.argv.slice(2);
@@ -96,7 +102,9 @@ const result = {
 	sources: posts.filter((p) => p.ownPage && RULES.sourceCategories.includes(p.category)).length,
 	candidates,
 	forStep5: forStep5.filter((c) => !fresh || fresh.has(c.source) || fresh.has(c.target)),
+	fingerprints: {},
 };
+for (const id of new Set(candidates.map((c) => c.source))) result.fingerprints[id] = await fingerprint(id);
 await writeFile(join(outDir, `candidates${stamp}.json`), JSON.stringify(result, null, 1));
 console.log(`Кандидатов: ${candidates.length} (основных ${candidates.filter((c) => c.status === 'основной').length}), для шага 5: ${result.forStep5.length}. Отклонённых в списке: ${rejected.size}.`);
 if (stats) console.log(`Слияние: найдено обоими каналами ${stats.merged}, снято фильтром ${stats.filtered}, решений охвата ${stats.coverage}.`);
