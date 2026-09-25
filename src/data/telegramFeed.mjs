@@ -33,10 +33,10 @@
 // приехать запасным путём, со страницы канала. Поставь мы здесь ноль, робот
 // счёл бы пропущенным весь архив разом.
 export const telegramFeed = {
-	"offset": 232983504,
-	"lastSeenId": 4210,
-	"lastPostAt": "2026-09-25T08:03:17.562Z",
-	"lastRunAt": "2026-09-25T08:03:17.562Z",
+	"offset": 232983511,
+	"lastSeenId": 4217,
+	"lastPostAt": "2026-09-25T14:03:17.756Z",
+	"lastRunAt": "2026-09-25T14:03:17.756Z",
 	"albums": {
 		"14305965453808114": {
 			"slug": "oboi-i-kalendari",
@@ -63,6 +63,19 @@ export const telegramFeed = {
 				4208,
 				4209,
 				4210
+			]
+		},
+		"14322731968526306": {
+			"slug": "u-menya-plohie-novosti-dlya-vashego-svobodnogo-vremeni-osennyaya-podborka-anime-uzhe-na-ivi",
+			"tgId": 4211,
+			"photoIds": [
+				4211,
+				4212,
+				4213,
+				4214,
+				4215,
+				4216,
+				4217
 			]
 		}
 	}
