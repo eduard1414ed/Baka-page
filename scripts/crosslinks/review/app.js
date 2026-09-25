@@ -354,7 +354,7 @@
 		const d = decision(c.key);
 		const pl = placeOf(c);
 		const warns = placeWarnings(p, c, pl?.afterBlock);
-		const stName = { pending: 'не решено', approved: 'одобрено', rejected: 'отклонено', deferred: 'отложено' }[st];
+		const stName = { pending: 'не решено', approved: p.inserted?.includes(c.target) ? 'одобрено · вписано' : 'одобрено', rejected: 'отклонено', deferred: 'отложено' }[st];
 		const fromName = { main: '', reserve: ' · из запасных', manual: ' · своя цель' }[c.from];
 		const lost = d?.placeLost || c.placeLost;
 		let html = `<div class="ins ${st}${idx === UI.cur ? ' current' : ''}" data-idx="${idx}">`;

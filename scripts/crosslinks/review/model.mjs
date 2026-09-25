@@ -66,7 +66,14 @@ export async function buildReview({ file = CANDIDATES_FILE, only = null } = {}) 
 	const cards = new Map(JSON.parse(await readFile(join(REPO, 'статус/перелинковка/карточки.json'), 'utf8')).cards.map((c) => [c.id, c]));
 	const raw = new Map((await readPostsRaw()).map((r) => [r.id, { id: r.id, data: normalizeFrontmatter(r.front), body: r.body }]));
 
+	// Закрытые посты (find.mjs, решение Эда 2 к сессии 3) показываются и тогда,
+	// когда основных у них не осталось: после вписывания пара — уже стоящая
+	// вставка, и поиск её больше не предлагает. Пачку такого поста берём
+	// из решений, а не из кандидатов.
+	const closed = new Set(found.closed ?? []);
+	const approved = JSON.parse(await readFile(join(REPO, 'статус/перелинковка/решения.json'), 'utf8').catch(() => '{}')).approved ?? [];
 	const bySource = new Map();
+	for (const id of closed) if (!only || only.includes(id)) bySource.set(id, []);
 	for (const c of found.candidates) {
 		if (c.status !== 'основной' && c.status !== 'запасной') continue;
 		if (only && !only.includes(c.source)) continue;
@@ -129,8 +136,10 @@ export async function buildReview({ file = CANDIDATES_FILE, only = null } = {}) 
 	const out = [];
 	for (const [sid, list] of bySource) {
 		const mains = list.filter((c) => c.status === 'основной');
-		if (!mains.length) continue;
+		if (!mains.length && !closed.has(sid)) continue;
 		const src = byId.get(sid);
+		if (!src) continue;
+		const decidedBatches = approved.filter((a) => a.source === sid && a.batch != null).map((a) => a.batch);
 		const reserves = list
 			.filter((c) => c.status === 'запасной')
 			.sort((a, b) => ['слабый', 'средний', 'сильный'].indexOf(b.confidence) - ['слабый', 'средний', 'сильный'].indexOf(a.confidence) || b.weight - a.weight);
@@ -165,8 +174,11 @@ export async function buildReview({ file = CANDIDATES_FILE, only = null } = {}) 
 			categoryLabel: CAT_LABEL[src.category] ?? src.category,
 			date: src.date,
 			url: `${SITE_URL}/posts/${sid}/`,
-			batch: batchOfPost(mains),
-			best: Math.max(...mains.map((c) => c.weight)),
+			batch: mains.length ? batchOfPost(mains) : Math.min(...decidedBatches, 5),
+			best: mains.length ? Math.max(...mains.map((c) => c.weight)) : 0,
+			closed: closed.has(sid),
+			// Цели, уже вписанные в файл поста блоком ::material.
+			inserted: src.blocks.filter((b) => b.kind === 'material').map((b) => b.target),
 			fingerprint: now,
 			changed,
 			blocks,

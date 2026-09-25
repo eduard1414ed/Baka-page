@@ -20,11 +20,18 @@
 //   6. Потолок на цель — общий для обоих каналов, считая уже стоящие вставки;
 //      мягкий, как в сессии 1: превысившие помечаются `capCount`, а не снимаются.
 //
+// planned (сессия 3): одобренные Эдом, но ещё не вписанные пары — Map
+// источник → [{ key, target, afterBlock }]. Считаются УЖЕ СТОЯЩИМИ вставками:
+// занимают место для плотности и «не ближе абзаца», входят в потолок на цель
+// (решение Эда 3 к сессии 3). Сама одобренная пара остаётся основной, но места
+// заново не ищет и второй раз не считается. Вписанные вставки (::material
+// в файле) учитываются как раньше — они уже блоки поста.
+//
 // stripExisting: посты без вставок (проверка на 71). Карточки разметчика хранят
 // ИСХОДНЫЕ номера блоков, поэтому при снятии вставок номера в карточках
 // пересчитываются той же картой, что и сами посты.
 
-import { findTitleCandidates, mergeCandidates, densityLimit, RULES } from './finder.mjs';
+import { findTitleCandidates, mergeCandidates, densityLimit, describePlace, tailStart, RULES } from './finder.mjs';
 import { findThemeCandidates, THEME_RULES } from './themes.mjs';
 import { applyCoverage } from './coverage.mjs';
 import { classifyAnime } from './lib.mjs';
@@ -59,7 +66,7 @@ function filterVerdict(card, cand) {
 /**
  * @returns {{ candidates: object[], forStep5: object[], stats: object }}
  */
-export function buildCandidates({ posts: rawPosts, anime, cards: rawCards, broad = new Set(), occasions = new Set(), rejected = new Set(), stripExisting = false }) {
+export function buildCandidates({ posts: rawPosts, anime, cards: rawCards, broad = new Set(), occasions = new Set(), rejected = new Set(), stripExisting = false, planned = new Map() }) {
 	let posts = rawPosts;
 	let cards = rawCards;
 	if (stripExisting) {
@@ -124,6 +131,17 @@ export function buildCandidates({ posts: rawPosts, anime, cards: rawCards, broad
 		const m = merged.find((c) => c.key === t.key);
 		if (m) m.place = t.place;
 	}
+	// «По мотивам», сдвинутое за 2-й абзац, — в конец текста (перед карточками
+	// тайтлов). Ревью первой пачки (сессия 3): такое место Эд не оставил ни разу,
+	// 0 из 4 — переносил либо к самой фразе о выпуске, либо в конец; конец он
+	// принимал 10 из 10, и он не рвёт мысль (вопрос в 1-м абзаце, ответ во 2-м).
+	// Решение Эда 25.09.2026: «Ок, я если что руками подвину».
+	for (const c of merged) {
+		if (c.place?.mode !== 'сдвинуто за 2-й абзац' || !c.reasons.some((r) => r.signal === 'motive')) continue;
+		const src = byId.get(c.source);
+		const end = tailStart(src) - 1;
+		if (end >= 0) c.place = describePlace(src, end, 'конец');
+	}
 
 	// Совпадение цели с разделом источника: сколько ГЛАВНЫХ тайтлов цели названо
 	// в разделе (или абзаце), где встанет вставка. Пример Эда 1в: в «Романтике
@@ -172,8 +190,10 @@ export function buildCandidates({ posts: rawPosts, anime, cards: rawCards, broad
 		if (!bySource.has(c.source)) bySource.set(c.source, []);
 		bySource.get(c.source).push(c);
 	}
+	const approvedKeys = new Set([...planned.values()].flat().map((a) => a.key));
 	for (const [sid, list] of bySource) {
 		const src = byId.get(sid);
+		for (const x of list.filter((x) => !x.status && approvedKeys.has(x.key))) (x.status = 'основной'), (x.statusWhy = 'одобрено Эдом');
 		const live = list.filter((x) => !x.status && x.place);
 		for (const x of list.filter((x) => !x.status && !x.place)) (x.status = 'отсеян'), (x.statusWhy = 'не нашлось места по правилам');
 		// Цель по тому же тайтлу (канал «тайтлы», тайтл-предмет, «по мотивам»)
@@ -198,7 +218,7 @@ export function buildCandidates({ posts: rawPosts, anime, cards: rawCards, broad
 		const coveredPeople = new Set();
 		const sections = new Set(live.map((x) => src.blocks[x.place.afterBlock]?.section).filter((s) => s != null));
 		const cap = densityLimit(src, sections.size);
-		const taken = src.blocks.filter((b) => b.kind === 'material').map((b) => b.n);
+		const taken = [...src.blocks.filter((b) => b.kind === 'material').map((b) => b.n), ...(planned.get(sid) ?? []).map((a) => a.afterBlock)];
 		const existingCount = taken.length;
 		let placed = 0;
 		for (const x of live) {
@@ -219,7 +239,8 @@ export function buildCandidates({ posts: rawPosts, anime, cards: rawCards, broad
 	// 6. Потолок на цель: уже стоящие вставки + основные обоих каналов по весу.
 	const onTarget = new Map();
 	for (const p of posts) for (const b of p.blocks) if (b.kind === 'material') onTarget.set(b.target, (onTarget.get(b.target) ?? 0) + 1);
-	for (const x of merged.filter((x) => x.status === 'основной').sort((a, b) => LEVELS.indexOf(b.confidence) - LEVELS.indexOf(a.confidence) || b.weight - a.weight)) {
+	for (const a of [...planned.values()].flat()) onTarget.set(a.target, (onTarget.get(a.target) ?? 0) + 1);
+	for (const x of merged.filter((x) => x.status === 'основной' && !approvedKeys.has(x.key)).sort((a, b) => LEVELS.indexOf(b.confidence) - LEVELS.indexOf(a.confidence) || b.weight - a.weight)) {
 		const n = (onTarget.get(x.target) ?? 0) + 1;
 		onTarget.set(x.target, n);
 		x.flags = { ...x.flags, capCount: n > RULES.targetCap ? n - 1 : null };

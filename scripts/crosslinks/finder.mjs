@@ -50,7 +50,7 @@ function textUpTo(post, b) {
 }
 
 /** Хвост поста, куда вставку не ставят: карточки тайтлов и служебные блоки. */
-function tailStart(post) {
+export function tailStart(post) {
 	let i = post.blocks.length;
 	while (i > 0) {
 		const k = post.blocks[i - 1].kind;

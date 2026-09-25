@@ -16,6 +16,7 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { KIND_LABEL, BATCH_LABEL } from './kinds.mjs';
+import { DEFAULT_LABEL } from './review/model.mjs';
 
 const REPO = fileURLToPath(new URL('../../', import.meta.url));
 const args = process.argv.slice(2);
@@ -92,4 +93,17 @@ if (manual.length) {
 	// какие цели Эд находит сам, а поиск — нет.
 	console.log('\nСвои цели Эда (материал для правки правил):');
 	for (const r of manual) console.log(`  ${r.source} → ${r.target}`);
+}
+
+// Подпись по умолчанию на странице ревью — копия ПОДПИСЬ_ПО_УМОЛЧАНИЮ из
+// src/plugins/remark-post-ref.mjs (там она не экспортируется; код сайта
+// не трогаем — решение Эда 4 к сессии 3). Разъехались — Эд видит на ревью
+// не ту подпись, что будет на сайте: говорим вслух.
+{
+	const src = await readFile(join(REPO, 'src/plugins/remark-post-ref.mjs'), 'utf8');
+	const m = src.match(/const ПОДПИСЬ_ПО_УМОЛЧАНИЮ = \{([^}]*)\}/u);
+	const site = m ? Object.fromEntries([...m[1].matchAll(/(\w+):\s*'([^']*)'/gu)].map((x) => [x[1], x[2]])) : null;
+	const same = site && JSON.stringify(site) === JSON.stringify(DEFAULT_LABEL);
+	if (same) console.log('\nПодпись по умолчанию: копия на странице ревью совпадает с сайтом.');
+	else console.log(`\n⚠ ПОДПИСЬ ПО УМОЛЧАНИЮ РАЗЪЕХАЛАСЬ: на сайте ${site ? JSON.stringify(site) : '(не нашлась в remark-post-ref.mjs)'}, на странице ревью ${JSON.stringify(DEFAULT_LABEL)}. Поправьте DEFAULT_LABEL в scripts/crosslinks/review/model.mjs.`);
 }
