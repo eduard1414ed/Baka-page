@@ -57,4 +57,7 @@ anime:
 ::image{src="/images/uploads/pasted-image-1786604791436.webp" alt="" width="column"}
 
 
+::material{id="ep-53"}
+
+
 ::anime-ref{id="spy-x-family" source="shikimori" source-id="50265"}

@@ -40,4 +40,8 @@ anime:
 
 Именно желтая окантовка делает визуально из разрозненных разноцветных героев одну команду. И именно такая деталь заставляет, пусть и неосознанно, вас запоминать этих персонажей. А значит — запоминать и все аниме.
 
+
+::material{id="bonusnyy-vypusk-konosuba"}
+
+
 ::anime-ref{id="kono-subarashii-sekai-ni-shukufuku-wo" source="shikimori" source-id="30831"}

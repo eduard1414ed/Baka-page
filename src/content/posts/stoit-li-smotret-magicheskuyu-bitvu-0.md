@@ -60,4 +60,8 @@ anime:
 
 Это блюдо предназначено исключительно для фанатов истории Гэгэ Акутами. Но им оно придется идеально по вкусу.
 
+
+::material{id="ep-47"}
+
+
 ::anime-ref{id="jujutsu-kaisen-0-movie" source="shikimori" source-id="48561"}

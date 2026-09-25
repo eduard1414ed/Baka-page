@@ -50,4 +50,8 @@ anime:
 
 Но, как часто бывает, если бы в истории была только одна сторона (положительная или отрицательная, не важно), то герой никогда бы не смог дойти до конца. И поддержка Шизуки, и интриги Харуно оказываются одинаково важны для развития Хатимана и всей истории.
 
+
+::material{id="mnogoznachnyy-vizualnyy-element"}
+
+
 ::anime-ref{id="yahari-ore-no-seishun-love-comedy-wa-machigatteiru" source="shikimori" source-id="14813"}

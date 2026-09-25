@@ -43,4 +43,8 @@ anime:
 
 ::image{src="/images/uploads/tg-2756.jpg" alt="" width="column"}
 
+
+::material{id="usy-lapy-i-hvost"}
+
+
 ::anime-ref{id="bakeneko-anzu-chan" source="shikimori" source-id="54603"}

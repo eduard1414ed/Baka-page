@@ -53,6 +53,10 @@ anime:
 
 ##### Количество серий: 112
 
+
+::material{id="yokay-vdohnovivshiy-saske"}
+
+
 #### Манускрипт ниндзя
 
 

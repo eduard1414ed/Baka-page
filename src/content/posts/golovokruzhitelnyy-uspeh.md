@@ -39,4 +39,8 @@ anime:
 
 ::image{src="/images/uploads/tg-963.jpg" alt="" width="column"}
 
+
+::material{id="polnyy-vostorg"}
+
+
 ::anime-ref{id="bocchi-the-rock" source="shikimori" source-id="47917"}

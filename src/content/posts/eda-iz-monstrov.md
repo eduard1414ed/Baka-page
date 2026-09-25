@@ -51,4 +51,8 @@ anime:
 
 ::image{src="/images/uploads/tg-2126.jpg" alt="" width="column"}
 
+
+::material{id="ep-100"}
+
+
 ::anime-ref{id="dungeon-meshi" source="shikimori" source-id="52701"}

@@ -49,4 +49,8 @@ anime:
 
 ::image{src="/images/uploads/tg-1017.jpg" alt="" width="column"}
 
+
+::material{id="ep-68"}
+
+
 ::anime-ref{id="koukaku-kidoutai" source="shikimori" source-id="43"}

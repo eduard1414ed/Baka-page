@@ -40,6 +40,10 @@ anime:
 
 ::image{src="/images/uploads/tg-2209.jpg" alt="" width="column"}
 
+
+::material{id="bonusnyy-vypusk-proza-brodyachih-psov"}
+
+
 ::anime-ref{id="isekai-shikkaku" source="shikimori" source-id="52367"}
 
 ::anime-ref{id="bungou-stray-dogs" source="shikimori" source-id="31478"}

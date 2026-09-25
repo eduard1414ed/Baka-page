@@ -40,3 +40,6 @@ Kotoyama, автор оригинальной истории, большой ф�
 В итоге группа разрешила использовать свои песни, и даже написала специально одну новую для опенинга, [Daten](https://youtu.be/HRL5Cp_mPeo). А Kotoyama взамен [нарисовал](https://www.reddit.com/r/manga/comments/vrlhh2/art_yofukashi_no_uta_illustration_by_kotoyama_for/) несколько артов специально для промо песен Creepy Nuts.
 
 Вот такая вот взаимная любовь и взаимное вдохновение рэпа и манги подарили нам «Песнь ночных сов».
+
+
+::material{id="bonusnyy-vypusk-pesn-nochnyh-sov"}

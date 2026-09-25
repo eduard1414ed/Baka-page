@@ -34,4 +34,8 @@ anime:
 
 «Грудь Аски больше, чем обычно, потому что Синдзи так мерещится?»
 
+
+::material{id="ep-6"}
+
+
 ::anime-ref{id="shinseiki-evangelion" source="shikimori" source-id="30"}

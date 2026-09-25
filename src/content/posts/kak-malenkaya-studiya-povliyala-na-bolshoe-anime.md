@@ -38,4 +38,8 @@ anime:
 
 Вот таким удивительным образом маленькая студия Minakata Lab повлияла своей работой и на мангу «Великая небесная стена», и на то, каким получилось аниме.
 
+
+::material{id="ep-90"}
+
+
 ::anime-ref{id="tengoku-daimakyou" source="shikimori" source-id="53393"}

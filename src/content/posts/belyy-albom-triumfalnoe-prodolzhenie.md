@@ -56,4 +56,8 @@ anime:
 
 Это аниме стоит посмотреть, чтобы узнать в нем себя_._
 
+
+::material{id="anime-belyy-albom-pro-lyubov-shou-biznes-iskusstvo-muzyki"}
+
+
 ::anime-ref{id="white-album-2" source="shikimori" source-id="18245"}

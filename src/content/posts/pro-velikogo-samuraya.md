@@ -36,4 +36,8 @@ anime:
 
 К сожалению, в интернете не нашла подлинное изображение Дзюбэя, но держите фрагмент свитка школы Синкаге-рю, которую основал его дед.
 
+
+::material{id="manuskript-nindzya-ili-povest-o-dzyubee-nindzya-vetra"}
+
+
 ::anime-ref{id="juubee-ninpuuchou" source="shikimori" source-id="617"}

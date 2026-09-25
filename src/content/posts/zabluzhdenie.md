@@ -33,4 +33,8 @@ anime:
 Тем временем Зери в финале:
 ( ´ ω \` )
 
+
+::material{id="ep-146"}
+
+
 ::anime-ref{id="sousou-no-frieren" source="shikimori" source-id="52991"}

@@ -47,4 +47,8 @@ P.S. В аниме, кстати, с этим напортачили. Потом
 
 ::image{src="/images/uploads/tg-1426.jpg" alt="" width="column"}
 
+
+::material{id="ep-83"}
+
+
 ::anime-ref{id="monster" source="shikimori" source-id="19"}

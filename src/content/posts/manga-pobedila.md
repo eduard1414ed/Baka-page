@@ -37,3 +37,6 @@ tgUrl: https://t.me/podcastbaka/3313
 ::image{src="/images/uploads/tg-3313.jpg" alt="" width="column"}
 
 ::image{src="/images/uploads/tg-3314.jpg" alt="" width="column"}
+
+
+::material{id="bunko-kagurabati"}

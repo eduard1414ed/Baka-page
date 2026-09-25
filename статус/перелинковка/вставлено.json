@@ -1,5 +1,30 @@
 [
  {
+  "key": "100-velikih-filmov-xxi-veka→moy-2016",
+  "source": "100-velikih-filmov-xxi-veka",
+  "target": "moy-2016",
+  "afterWords": "А какие фильмы выбрали бы вы?",
+  "line": "::material{id=\"moy-2016\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "5-anime-kotorye-mozhno-posmotret-za-vyhodnye→bonusnyy-vypusk-furi-kuri",
+  "source": "5-anime-kotorye-mozhno-posmotret-za-vyhodnye",
+  "target": "bonusnyy-vypusk-furi-kuri",
+  "afterWords": "Зато это аниме (которое мы обсуждали в подкасте) постоянно удивляет",
+  "line": "::material{id=\"bonusnyy-vypusk-furi-kuri\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z",
+  "unlinks": [
+   {
+    "mode": "words",
+    "from": "[обсуждали в подкасте](/posts/bonusnyy-vypusk-furi-kuri/)",
+    "to": "обсуждали в подкасте",
+    "anchorWords": "Зато это аниме (которое мы обсуждали в подкасте) постоянно удивляет",
+    "at": "2026-09-25T14:17:59.711Z"
+   }
+  ]
+ },
+ {
   "key": "a-kakie-fillery-smotret→bonusnyy-epizod-naruto-bikochu",
   "source": "a-kakie-fillery-smotret",
   "target": "bonusnyy-epizod-naruto-bikochu",
@@ -159,6 +184,30 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "angel-i-demon→mnogoznachnyy-vizualnyy-element",
+  "source": "angel-i-demon",
+  "target": "mnogoznachnyy-vizualnyy-element",
+  "afterWords": "Но, как часто бывает, если бы в истории была только",
+  "line": "::material{id=\"mnogoznachnyy-vizualnyy-element\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "anime-belyy-albom-pro-lyubov-shou-biznes-iskusstvo-muzyki→belyy-albom-triumfalnoe-prodolzhenie",
+  "source": "anime-belyy-albom-pro-lyubov-shou-biznes-iskusstvo-muzyki",
+  "target": "belyy-albom-triumfalnoe-prodolzhenie",
+  "afterWords": "Однако, впереди нас ждёт продолжение «Белого альбома», действия которого разворачиваются",
+  "line": "::material{id=\"belyy-albom-triumfalnoe-prodolzhenie\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "anime-kak-meynstrim→ep-47",
+  "source": "anime-kak-meynstrim",
+  "target": "ep-47",
+  "afterWords": "Мне больше всего нравится толстовка Нобары, отсылающая к последним эпизодам",
+  "line": "::material{id=\"ep-47\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "anime-o-traditsionnoy-yaponskoy-muzyke→chistyy-zvuk-kak-zvuchit-tvoy-syamisen",
   "source": "anime-o-traditsionnoy-yaponskoy-muzyke",
   "target": "chistyy-zvuk-kak-zvuchit-tvoy-syamisen",
@@ -175,6 +224,14 @@
   "line": "::material{id=\"ep-67\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
   "commit": "939ccef8"
+ },
+ {
+  "key": "anime-pronikaet-v-sport→bonusnyy-vypusk-sinyaya-tyurma",
+  "source": "anime-pronikaet-v-sport",
+  "target": "bonusnyy-vypusk-sinyaya-tyurma",
+  "afterWords": "Мы уже видели, как культура аниме проникает в фэшн, а",
+  "line": "::material{id=\"bonusnyy-vypusk-sinyaya-tyurma\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  },
  {
   "key": "anime-v-stile-traditsionnogo-izobrazitelnogo-iskusstva-2224→bonusnyy-vypusk-inu-o",
@@ -201,12 +258,44 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "belyy-albom-triumfalnoe-prodolzhenie→anime-belyy-albom-pro-lyubov-shou-biznes-iskusstvo-muzyki",
+  "source": "belyy-albom-triumfalnoe-prodolzhenie",
+  "target": "anime-belyy-albom-pro-lyubov-shou-biznes-iskusstvo-muzyki",
+  "afterWords": "Это аниме стоит посмотреть, чтобы узнать в нем себя.",
+  "line": "::material{id=\"anime-belyy-albom-pro-lyubov-shou-biznes-iskusstvo-muzyki\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "bez-spoylerov→bonusnyy-vypusk-moya-farforovaya-kukla-vlyubilas",
+  "source": "bez-spoylerov",
+  "target": "bonusnyy-vypusk-moya-farforovaya-kukla-vlyubilas",
+  "afterWords": "А еще эта глава делает очень счастливым! Так что если",
+  "line": "::material{id=\"bonusnyy-vypusk-moya-farforovaya-kukla-vlyubilas\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "blagouhayuschiy-tsvetok-rastsvetaet-s-dostoinstvom→bunko-blagouhayuschiy-tsvetok-rastsvetaet-s-dostoinstvom",
+  "source": "blagouhayuschiy-tsvetok-rastsvetaet-s-dostoinstvom",
+  "target": "bunko-blagouhayuschiy-tsvetok-rastsvetaet-s-dostoinstvom",
+  "afterWords": "Ну и еще тут абсолютно великолепный рисунок. Костюмы, выражения лиц,",
+  "line": "::material{id=\"bunko-blagouhayuschiy-tsvetok-rastsvetaet-s-dostoinstvom\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "bolshoy-skelet→tszyanshi",
   "source": "bolshoy-skelet",
   "target": "tszyanshi",
   "afterWords": "Так что когда в следующий раз встретите гигантский скелет, вы",
   "line": "::material{id=\"tszyanshi\"}",
   "insertedAt": "2026-09-25T11:54:30.140Z"
+ },
+ {
+  "key": "boy-kak-tanets→ep-26",
+  "source": "boy-kak-tanets",
+  "target": "ep-26",
+  "afterWords": "В результате такой тщательной работы даже спустя 18 лет бои",
+  "line": "::material{id=\"ep-26\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  },
  {
   "key": "chto-eto-za-palki-na-kladbischah→ep-124",
@@ -223,6 +312,14 @@
   "afterWords": "Возможно, третьего сезона «Бездомного бога» нет только потому, что авторы",
   "line": "::material{id=\"bonusnyy-vypusk-bezdomnyy-bog\"}",
   "insertedAt": "2026-09-25T11:54:30.140Z"
+ },
+ {
+  "key": "chto-oznachayut-tsveta-na-raskadrovkah→ep-81",
+  "source": "chto-oznachayut-tsveta-na-raskadrovkah",
+  "target": "ep-81",
+  "afterWords": "Например, в этом рисунке из «Ребенка идола», синим и желтым",
+  "line": "::material{id=\"ep-81\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  },
  {
   "key": "chto-proishodit-v-studii-mappa→intervyu-s-sozdatelyami-magicheskoy-bitvy",
@@ -257,6 +354,14 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "dandadan-v-kino-post-ot-ksyushi→dandadan-romantika-pod-sousom-bezumiya",
+  "source": "dandadan-v-kino-post-ot-ksyushi",
+  "target": "dandadan-romantika-pod-sousom-bezumiya",
+  "afterWords": "Одно удовольствие смеяться над шутками Турбобабки не в одиночестве, а",
+  "line": "::material{id=\"dandadan-romantika-pod-sousom-bezumiya\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "detali-kotorye-nikto-ne-uvidit→ep-50",
   "source": "detali-kotorye-nikto-ne-uvidit",
   "target": "ep-50",
@@ -266,12 +371,52 @@
   "commit": "939ccef8"
  },
  {
+  "key": "detali-shlyapy-shapki-detali→ep-81",
+  "source": "detali-shlyapy-shapki-detali",
+  "target": "ep-81",
+  "afterWords": "Прекрасный аккаунт в твиттере даже подсчитал общее количество головных уборов",
+  "line": "::material{id=\"ep-81\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "devochki-i-pushki→bonusnyy-vypusk-likoris-rekoil",
+  "source": "devochki-i-pushki",
+  "target": "bonusnyy-vypusk-likoris-rekoil",
+  "afterWords": "Одна из главных премьер 2022 года, которая покорила всех отношениями",
+  "line": "::material{id=\"bonusnyy-vypusk-likoris-rekoil\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "devochki-i-pushki→bonusnyy-vypusk-shkola-ubiyts",
+  "source": "devochki-i-pushki",
+  "target": "bonusnyy-vypusk-shkola-ubiyts",
+  "afterWords": "Ну и для любителей фан-сервиса. В академии Сэйсё каждая девушка,",
+  "line": "::material{id=\"bonusnyy-vypusk-shkola-ubiyts\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "dizayn-personazhey-cheloveka-benzopily→chelovek-benzopila-istoriya-reze-romantika-protiv-ekshena",
   "source": "dizayn-personazhey-cheloveka-benzopily",
   "target": "chelovek-benzopila-istoriya-reze-romantika-protiv-ekshena",
   "afterWords": "Напомню, что фильм уже вышел 19 сентября в Японии, а",
   "line": "::material{id=\"chelovek-benzopila-istoriya-reze-romantika-protiv-ekshena\"}",
   "insertedAt": "2026-09-25T11:54:30.140Z"
+ },
+ {
+  "key": "dizaynerskie-stulya-kak-sposob-rasskazat-o-geroyah-bolshe→ep-53",
+  "source": "dizaynerskie-stulya-kak-sposob-rasskazat-o-geroyah-bolshe",
+  "target": "ep-53",
+  "afterWords": "Сейчас ходит много споров на тему справедливости высоких оценок аниме",
+  "line": "::material{id=\"ep-53\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "dobro-pozhalovat-v-teatr→kak-oshi-no-ko-vdohnovlyaetsya-tragediyami",
+  "source": "dobro-pozhalovat-v-teatr",
+  "target": "kak-oshi-no-ko-vdohnovlyaetsya-tragediyami",
+  "afterWords": "P.S. Ну и конечно, новый сезон «Звездного дитя» — новая",
+  "line": "::material{id=\"kak-oshi-no-ko-vdohnovlyaetsya-tragediyami\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  },
  {
   "key": "dobryy-dyadyushka→hayao-miyadzaki-ot-printsessy-mononoke-do-malchika-i-ptitsy",
@@ -283,6 +428,14 @@
   "commit": "939ccef8"
  },
  {
+  "key": "doloy-bezdele-intervyu-s-rezhisserom-anime-i-avtorom-originalnoy-mangi→bonusnyy-vypusk-v-loferah-vpripryzhku",
+  "source": "doloy-bezdele-intervyu-s-rezhisserom-anime-i-avtorom-originalnoy-mangi",
+  "target": "bonusnyy-vypusk-v-loferah-vpripryzhku",
+  "afterWords": "В это время года наступает время новых начал, и я",
+  "line": "::material{id=\"bonusnyy-vypusk-v-loferah-vpripryzhku\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "drugie-kiry-eschyo-dve-istorii-iz-mira-tetradi-smerti→ep-43",
   "source": "drugie-kiry-eschyo-dve-istorii-iz-mira-tetradi-smerti",
   "target": "ep-43",
@@ -291,12 +444,36 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "drugoy-likoris-rikoil→bonusnyy-vypusk-likoris-rekoil",
+  "source": "drugoy-likoris-rikoil",
+  "target": "bonusnyy-vypusk-likoris-rekoil",
+  "afterWords": "Поэтому сериал в итоге стал куда более жизнерадостным, ярким и",
+  "line": "::material{id=\"bonusnyy-vypusk-likoris-rekoil\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "dvoynoe-znachenie→ep-86",
   "source": "dvoynoe-znachenie",
   "target": "ep-86",
   "afterWords": "Интересно, что неймдропинг произошел именно в восьмой серии. Потому что",
   "line": "::material{id=\"ep-86\"}",
   "insertedAt": "2026-09-25T11:54:30.140Z"
+ },
+ {
+  "key": "eda-iz-monstrov→ep-100",
+  "source": "eda-iz-monstrov",
+  "target": "ep-100",
+  "afterWords": "А еще больше примеров и сравнение кадров с мангой и",
+  "line": "::material{id=\"ep-100\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "esche-nemnogo-pro-lofery→bonusnyy-vypusk-v-loferah-vpripryzhku",
+  "source": "esche-nemnogo-pro-lofery",
+  "target": "bonusnyy-vypusk-v-loferah-vpripryzhku",
+  "afterWords": "Такое внимание к деталям заслуживает большой похвалы.",
+  "line": "::material{id=\"bonusnyy-vypusk-v-loferah-vpripryzhku\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  },
  {
   "key": "esche-odna-istoriya-o-kakashi→ep-51",
@@ -315,12 +492,28 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "eto-vse-igra-slov-2073→bonusnyy-vypusk-ubey-ili-umri",
+  "source": "eto-vse-igra-slov-2073",
+  "target": "bonusnyy-vypusk-ubey-ili-umri",
+  "afterWords": "На самом деле в этом сериале юмор на уровне языка",
+  "line": "::material{id=\"bonusnyy-vypusk-ubey-ili-umri\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "fey-valentayn-yaponka-kitayanka-ili-vovse-skazhem-italyanka→ranniy-dizayn-personazhey-v-kovboe-bibope",
   "source": "fey-valentayn-yaponka-kitayanka-ili-vovse-skazhem-italyanka",
   "target": "ranniy-dizayn-personazhey-v-kovboe-bibope",
   "afterWords": "Мне вообще нравится такой подход, потому что на самом деле",
   "line": "::material{id=\"ranniy-dizayn-personazhey-v-kovboe-bibope\"}",
   "insertedAt": "2026-09-25T11:54:30.140Z"
+ },
+ {
+  "key": "filmy-kompilyatsii→bonusnyy-vypusk-plach-devichey-gruppy",
+  "source": "filmy-kompilyatsii",
+  "target": "bonusnyy-vypusk-plach-devichey-gruppy",
+  "afterWords": "Поэтому в последние годы компиляции стали выходить даже у не",
+  "line": "::material{id=\"bonusnyy-vypusk-plach-devichey-gruppy\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  },
  {
   "key": "final-ataki-titanov-chto-delat-teper→ep-33",
@@ -339,6 +532,38 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "fotorealistichnaya-germaniya→ep-83",
+  "source": "fotorealistichnaya-germaniya",
+  "target": "ep-83",
+  "afterWords": "P.S. В аниме, кстати, с этим напортачили. Потому что в",
+  "line": "::material{id=\"ep-83\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "glazami-drugih→ep-100",
+  "source": "glazami-drugih",
+  "target": "ep-100",
+  "afterWords": "Я бы тоже хотел узнать, как я выгляжу в глазах",
+  "line": "::material{id=\"ep-100\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "god-garri-pottera→magiya-i-muskuly-esli-by-on-byl-sereznym",
+  "source": "god-garri-pottera",
+  "target": "magiya-i-muskuly-esli-by-on-byl-sereznym",
+  "afterWords": "В итоге многообещающее аниме оказалось проходным и совсем не обязательным",
+  "line": "::material{id=\"magiya-i-muskuly-esli-by-on-byl-sereznym\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "golovokruzhitelnyy-uspeh→polnyy-vostorg",
+  "source": "golovokruzhitelnyy-uspeh",
+  "target": "polnyy-vostorg",
+  "afterWords": "Осталось дождаться анонсов от CloverWorks.",
+  "line": "::material{id=\"polnyy-vostorg\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "gorod-krepost-koulun→ep-123",
   "source": "gorod-krepost-koulun",
   "target": "ep-123",
@@ -346,6 +571,14 @@
   "line": "::material{id=\"ep-123\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
   "commit": "939ccef8"
+ },
+ {
+  "key": "gospozha-kaguya-i-animator-s-filippin→ep-62",
+  "source": "gospozha-kaguya-i-animator-s-filippin",
+  "target": "ep-62",
+  "afterWords": "Режиссура неонового эндинга лучшего, на данный момент, аниме в мире",
+  "line": "::material{id=\"ep-62\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  },
  {
   "key": "govoryaschie-imena→da-snova-pro-pesn-nochnyh-sov",
@@ -380,6 +613,46 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "intervyu-s-sozdatelyami-magicheskoy-bitvy→ep-47",
+  "source": "intervyu-s-sozdatelyami-magicheskoy-bitvy",
+  "target": "ep-47",
+  "afterWords": "Мацутани: Мы испытываем невероятную благодарность перед нашими фанатами. Спасибо вам!",
+  "line": "::material{id=\"ep-47\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "ispolzovanie-kart-taro-v-anime→ep-25",
+  "source": "ispolzovanie-kart-taro-v-anime",
+  "target": "ep-25",
+  "afterWords": "Во втором сезоне крушение башни является не только важной сюжетной",
+  "line": "::material{id=\"ep-25\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "ispolzovanie-kart-taro-v-anime→ep-60",
+  "source": "ispolzovanie-kart-taro-v-anime",
+  "target": "ep-60",
+  "afterWords": "🃏Именно так таро могут превратиться из «карточек для гадания» в",
+  "line": "::material{id=\"ep-60\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "ispolzovanie-kart-taro-v-anime→ep-82",
+  "source": "ispolzovanie-kart-taro-v-anime",
+  "target": "ep-82",
+  "afterWords": "Автор «ДжоДжо» всегда отличался своим нестандартным подходом к использованию отсылок.",
+  "line": "::material{id=\"ep-82\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "ispolzovanie-kart-taro-v-anime→ep-92",
+  "source": "ispolzovanie-kart-taro-v-anime",
+  "target": "ep-92",
+  "afterWords": "Аниме, покорившее сердца зрителей религиозными отсылками, не прошло и мимо",
+  "line": "::material{id=\"ep-92\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "istoricheskiy-dzhirayya→ep-119",
   "source": "istoricheskiy-dzhirayya",
   "target": "ep-119",
@@ -394,6 +667,22 @@
   "afterWords": "А это значит, официально, что они с президентом школьного совета",
   "line": "::material{id=\"ep-62\"}",
   "insertedAt": "2026-09-25T11:54:30.140Z"
+ },
+ {
+  "key": "kak-ergo-proksi-zaigryvaet-s-matritsey→ep-92",
+  "source": "kak-ergo-proksi-zaigryvaet-s-matritsey",
+  "target": "ep-92",
+  "afterWords": "То есть отсылка переворачивается, как бы говоря нам — и",
+  "line": "::material{id=\"ep-92\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "kak-fanfiki-izmenili-anime→re-zero-shedevr-ili-ocherednoy-isekay",
+  "source": "kak-fanfiki-izmenili-anime",
+  "target": "re-zero-shedevr-ili-ocherednoy-isekay",
+  "afterWords": "Но люди не стали искать другую площадку, а начали писать",
+  "line": "::material{id=\"re-zero-shedevr-ili-ocherednoy-isekay\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  },
  {
   "key": "kak-kitaytsy-fleksyat-svoimi-openingami→ep-145",
@@ -438,6 +727,14 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "kak-malenkaya-studiya-povliyala-na-bolshoe-anime→ep-90",
+  "source": "kak-malenkaya-studiya-povliyala-na-bolshoe-anime",
+  "target": "ep-90",
+  "afterWords": "Вот таким удивительным образом маленькая студия Minakata Lab повлияла своей",
+  "line": "::material{id=\"ep-90\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "kak-oshi-no-ko-vdohnovlyaetsya-tragediyami→ep-81",
   "source": "kak-oshi-no-ko-vdohnovlyaetsya-tragediyami",
   "target": "ep-81",
@@ -453,6 +750,30 @@
   "line": "::material{id=\"ep-135\" label=\"Узнать больше\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
   "commit": "939ccef8"
+ },
+ {
+  "key": "kak-samuray-champlu-prodolzhaet-izobrazitelnuyu-traditsiyu-mangi→ep-26",
+  "source": "kak-samuray-champlu-prodolzhaet-izobrazitelnuyu-traditsiyu-mangi",
+  "target": "ep-26",
+  "afterWords": "Карикатуры тоба-э, особенно популярные в Японии XVIII-XIX вв., в значительной",
+  "line": "::material{id=\"ep-26\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "kak-sdelat-iz-obychnyh-predmetov-pingvinov→ep-8",
+  "source": "kak-sdelat-iz-obychnyh-predmetov-pingvinov",
+  "target": "ep-8",
+  "afterWords": "Поэтому очень рекомендую следить за Хироясой!.",
+  "line": "::material{id=\"ep-8\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "kak-vyglyadit-grafik-raboty-kompozitora-v-anime→ep-146",
+  "source": "kak-vyglyadit-grafik-raboty-kompozitora-v-anime",
+  "target": "ep-146",
+  "afterWords": "Затем создаются ноты, записи и микширование, и после этого всё",
+  "line": "::material{id=\"ep-146\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  },
  {
   "key": "kakie-isekai-posmotret→bonusnyy-vypusk-konosuba",
@@ -531,6 +852,14 @@
   ]
  },
  {
+  "key": "kakoy-poluchilas-novaya-manga-po-magicheskoy-bitve→ep-47",
+  "source": "kakoy-poluchilas-novaya-manga-po-magicheskoy-bitve",
+  "target": "ep-47",
+  "afterWords": "Прибавьте к этому быстрый сюжет (всего 25 глав), приправленный парочкой",
+  "line": "::material{id=\"ep-47\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "kakoy-vyshla-novaya-seriya-ataki-titanov→ep-33",
   "source": "kakoy-vyshla-novaya-seriya-ataki-titanov",
   "target": "ep-33",
@@ -545,6 +874,30 @@
   "afterWords": "У обеих манг есть свои плюсы и минусы, поэтому аниме",
   "line": "::material{id=\"ep-103\" mode=\"play\"}",
   "insertedAt": "2026-09-25T11:54:30.140Z"
+ },
+ {
+  "key": "kazhetsya-ya-ne-prav→ep-102",
+  "source": "kazhetsya-ya-ne-prav",
+  "target": "ep-102",
+  "afterWords": "Так что все-таки «Кайдзю» своего зрителя находит, причем очень успешно.",
+  "line": "::material{id=\"ep-102\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "kogda-fon-rasskazyvaet-istoriyu→bonusnyy-epizod-hyoka",
+  "source": "kogda-fon-rasskazyvaet-istoriyu",
+  "target": "bonusnyy-epizod-hyoka",
+  "afterWords": "Учитывая, что Kyoto Animation — одна из немногих студий, которая",
+  "line": "::material{id=\"bonusnyy-epizod-hyoka\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "komediynyy-tayming→ep-116",
+  "source": "komediynyy-tayming",
+  "target": "ep-116",
+  "afterWords": "И мне кажется, манга «Хоримия» очень недооценена именно как комедия.",
+  "line": "::material{id=\"ep-116\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  },
  {
   "key": "kon→dizayn-personazhey-cheloveka-benzopily",
@@ -563,12 +916,143 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "kto-iz-nih-vret→pravila-smertelnoy-migratsii",
+  "source": "kto-iz-nih-vret",
+  "target": "pravila-smertelnoy-migratsii",
+  "afterWords": "Собственно, вопрос для тех, кто не читал мангу. Вы догадались,",
+  "line": "::material{id=\"pravila-smertelnoy-migratsii\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "lechebnoe-anime→ep-39",
+  "source": "lechebnoe-anime",
+  "target": "ep-39",
+  "afterWords": "Японцам в середине 90-х годов очень нужно было что-то, что",
+  "line": "::material{id=\"ep-39\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "luchshie-anime-pro-demonov→yokay-vdohnovivshiy-saske",
+  "source": "luchshie-anime-pro-demonov",
+  "target": "yokay-vdohnovivshiy-saske",
+  "afterWords": "Это один из первых современных сёненов, из которого потом черпали",
+  "line": "::material{id=\"yokay-vdohnovivshiy-saske\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "luchshie-anime-srezhissirovannye-zhenschinami→bonusnyy-vypusk-yuri-na-ldu",
+  "source": "luchshie-anime-srezhissirovannye-zhenschinami",
+  "target": "bonusnyy-vypusk-yuri-na-ldu",
+  "afterWords": "Успешный сериал о фигуристах сняла Саё Ямамото, которая до этого",
+  "line": "::material{id=\"bonusnyy-vypusk-yuri-na-ldu\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z",
+  "unlinks": [
+   {
+    "mode": "words",
+    "from": "[фигуристах](/posts/bonusnyy-vypusk-yuri-na-ldu/)",
+    "to": "фигуристах",
+    "anchorWords": "Успешный сериал о фигуристах сняла Саё Ямамото, которая до этого",
+    "at": "2026-09-25T14:17:59.711Z"
+   }
+  ]
+ },
+ {
+  "key": "luchshie-anime-srezhissirovannye-zhenschinami→ep-134",
+  "source": "luchshie-anime-srezhissirovannye-zhenschinami",
+  "target": "ep-134",
+  "afterWords": "Дебютная работа Наоко Ямады в качестве режиссерки целого аниме. И",
+  "line": "::material{id=\"ep-134\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z",
+  "unlinks": [
+   {
+    "mode": "words",
+    "from": "[K-On заложил моду](/posts/ep-134/)",
+    "to": "K-On заложил моду",
+    "anchorWords": "Дебютная работа Наоко Ямады в качестве режиссерки целого аниме. И",
+    "at": "2026-09-25T14:17:59.711Z"
+   }
+  ]
+ },
+ {
+  "key": "luchshie-anime-srezhissirovannye-zhenschinami→ep-136",
+  "source": "luchshie-anime-srezhissirovannye-zhenschinami",
+  "target": "ep-136",
+  "afterWords": "Классический исекай про игры, к которому все никак не выйдет",
+  "line": "::material{id=\"ep-136\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z",
+  "unlinks": [
+   {
+    "mode": "words",
+    "from": "[исекай про игры,](/posts/ep-136/)",
+    "to": "исекай про игры,",
+    "anchorWords": "Классический исекай про игры, к которому все никак не выйдет",
+    "at": "2026-09-25T14:17:59.711Z"
+   }
+  ]
+ },
+ {
+  "key": "luchshie-anime-srezhissirovannye-zhenschinami→kogda-plachut-tsikady-atmosfera-i-bezumie",
+  "source": "luchshie-anime-srezhissirovannye-zhenschinami",
+  "target": "kogda-plachut-tsikady-atmosfera-i-bezumie",
+  "afterWords": "Сериал, который может вызвать депрессию, был снят Тиаки Кон. Одна",
+  "line": "::material{id=\"kogda-plachut-tsikady-atmosfera-i-bezumie\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "lyubuemsya-3990→tvorcheskaya-svoboda",
+  "source": "lyubuemsya-3990",
+  "target": "tvorcheskaya-svoboda",
+  "afterWords": "Особенно мне нравится рассматривать детализированные арты с реквизитом для сцен.",
+  "line": "::material{id=\"tvorcheskaya-svoboda\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "madhouse-snova-raduet→ep-117",
   "source": "madhouse-snova-raduet",
   "target": "ep-117",
   "afterWords": "Однако если вы фанат исторических жестоких драм в духе «Саги",
   "line": "::material{id=\"ep-117\"}",
   "insertedAt": "2026-09-25T11:54:30.140Z"
+ },
+ {
+  "key": "magiya-i-muskuly-esli-by-on-byl-sereznym→god-garri-pottera",
+  "source": "magiya-i-muskuly-esli-by-on-byl-sereznym",
+  "target": "god-garri-pottera",
+  "afterWords": "В итоге ответ на вопрос, стоит ли смотреть этот сериал,",
+  "line": "::material{id=\"god-garri-pottera\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "malenkie-detali→ep-2",
+  "source": "malenkie-detali",
+  "target": "ep-2",
+  "afterWords": "Но если обратить внимание на его позы и слова —",
+  "line": "::material{id=\"ep-2\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "manga-chelovek-benzopila-menshe-chem-za-sem-chasov-sobrala-2-milliona-prosmotrov→ep-112",
+  "source": "manga-chelovek-benzopila-menshe-chem-za-sem-chasov-sobrala-2-milliona-prosmotrov",
+  "target": "ep-112",
+  "afterWords": "Так что я думаю, нас в скором времени ждет ещё",
+  "line": "::material{id=\"ep-112\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "manga-kak-videoigra→kak-inio-asano-obyedinil-tri-tragedii",
+  "source": "manga-kak-videoigra",
+  "target": "kak-inio-asano-obyedinil-tri-tragedii",
+  "afterWords": "И Асано важно, чтобы не только эти места ощущались реальными,",
+  "line": "::material{id=\"kak-inio-asano-obyedinil-tri-tragedii\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "manga-pobedila→bunko-kagurabati",
+  "source": "manga-pobedila",
+  "target": "bunko-kagurabati",
+  "afterWords": "Если даже Бэтмену, чтобы привлечь аудиторию, надо делать отсылки на",
+  "line": "::material{id=\"bunko-kagurabati\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  },
  {
   "key": "mesta-iz-klinka-rassekayuschego-demonov-v-realnoy-zhizni→ep-56",
@@ -595,12 +1079,52 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "mnogoznachnyy-vizualnyy-element→angel-i-demon",
+  "source": "mnogoznachnyy-vizualnyy-element",
+  "target": "angel-i-demon",
+  "afterWords": "Пустая вывеска класса наполняется красками так же, как постепенно наполняется",
+  "line": "::material{id=\"angel-i-demon\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "moda-i-manga→ep-113",
+  "source": "moda-i-manga",
+  "target": "ep-113",
+  "afterWords": "Если вы, вдруг, ещё не слышали про «Голубой период», обязательно",
+  "line": "::material{id=\"ep-113\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "modnik-saske→yokay-vdohnovivshiy-saske",
+  "source": "modnik-saske",
+  "target": "yokay-vdohnovivshiy-saske",
+  "afterWords": "А пока, как вы думаете, на каком костюме Кисимото стоило",
+  "line": "::material{id=\"yokay-vdohnovivshiy-saske\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "monstry-ili-lyudi→nastoyaschaya-istoriya-ob-elfiyke",
   "source": "monstry-ili-lyudi",
   "target": "nastoyaschaya-istoriya-ob-elfiyke",
   "afterWords": "Сейчас на английском доступно уже четыре главы. И выходить они",
   "line": "::material{id=\"nastoyaschaya-istoriya-ob-elfiyke\"}",
   "insertedAt": "2026-09-25T11:54:30.140Z"
+ },
+ {
+  "key": "moy-2016→dobryy-dyadyushka",
+  "source": "moy-2016",
+  "target": "dobryy-dyadyushka",
+  "afterWords": "«Ветер крепчает! Значит – жить старайся!»",
+  "line": "::material{id=\"dobryy-dyadyushka\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "moy-lyubimyy-tip-postov-o-friren→ep-146",
+  "source": "moy-lyubimyy-tip-postov-o-friren",
+  "target": "ep-146",
+  "afterWords": "Огромная по объемам работа, благодаря которой персонажи в сериале выглядят",
+  "line": "::material{id=\"ep-146\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  },
  {
   "key": "multivselennaya-milyh-devochek→esche-rybalka",
@@ -619,6 +1143,39 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "nasledstvennost→ep-50",
+  "source": "nasledstvennost",
+  "target": "ep-50",
+  "afterWords": "Посмотрите, кстати, наш эпизод, если ещё не успели.",
+  "line": "::material{id=\"ep-50\" mode=\"play\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z",
+  "unlinks": [
+   {
+    "mode": "words",
+    "from": "[наш эпизод](/posts/ep-50/)",
+    "to": "наш эпизод",
+    "anchorWords": "Посмотрите, кстати, наш эпизод, если ещё не успели.",
+    "at": "2026-09-25T14:17:59.711Z"
+   }
+  ]
+ },
+ {
+  "key": "nastoyaschaya-istoriya-ob-elfiyke→ep-146",
+  "source": "nastoyaschaya-istoriya-ob-elfiyke",
+  "target": "ep-146",
+  "afterWords": "И я жду с нетерпением аниме.",
+  "line": "::material{id=\"ep-146\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "nastoyaschiy-gorod-buduschego→ep-68",
+  "source": "nastoyaschiy-gorod-buduschego",
+  "target": "ep-68",
+  "afterWords": "И в итоге город получился не только в аниме одним",
+  "line": "::material{id=\"ep-68\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "ne-prosto-benger→dandadan-romantika-pod-sousom-bezumiya",
   "source": "ne-prosto-benger",
   "target": "dandadan-romantika-pod-sousom-bezumiya",
@@ -633,6 +1190,14 @@
   "afterWords": "И мне очень любопытно наблюдать, какой из путей, о которых",
   "line": "::material{id=\"ep-74\"}",
   "insertedAt": "2026-09-25T11:54:30.140Z"
+ },
+ {
+  "key": "nenuzhnoe-prodolzhenie→nindzya-kamui-ekshen-anime-o-mesti-v-duhe-dzhona-uika",
+  "source": "nenuzhnoe-prodolzhenie",
+  "target": "nindzya-kamui-ekshen-anime-o-mesti-v-duhe-dzhona-uika",
+  "afterWords": "Звучит история так, будто студия хочет продолжать работу, а вот",
+  "line": "::material{id=\"nindzya-kamui-ekshen-anime-o-mesti-v-duhe-dzhona-uika\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  },
  {
   "key": "neveroyatnye-raskadrovki-satosi-kona→ep-12",
@@ -652,6 +1217,22 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "nikto-ne-govorit-pro-kaydzyu→ep-102",
+  "source": "nikto-ne-govorit-pro-kaydzyu",
+  "target": "ep-102",
+  "afterWords": "P.S. при этом, вернусь все-таки к этой мысли, «Кайдзю номер",
+  "line": "::material{id=\"ep-102\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "nogi-zerkalo-dushi→ep-4",
+  "source": "nogi-zerkalo-dushi",
+  "target": "ep-4",
+  "afterWords": "Посмотрите, это очень талантливо:",
+  "line": "::material{id=\"ep-4\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "nostalgiya-opasna→ep-123",
   "source": "nostalgiya-opasna",
   "target": "ep-123",
@@ -661,12 +1242,28 @@
   "commit": "939ccef8"
  },
  {
+  "key": "o-dizayne-personazhey→golovokruzhitelnyy-uspeh",
+  "source": "o-dizayne-personazhey",
+  "target": "golovokruzhitelnyy-uspeh",
+  "afterWords": "P.S. Кстати, деталь по обложке как раз — видно, насколько",
+  "line": "::material{id=\"golovokruzhitelnyy-uspeh\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "o-net-opyat-inoplanetyane→ep-47",
   "source": "o-net-opyat-inoplanetyane",
   "target": "ep-47",
   "afterWords": "И первая реакция на нее была неоднозначная, потому что в",
   "line": "::material{id=\"ep-47\"}",
   "insertedAt": "2026-09-25T11:54:30.140Z"
+ },
+ {
+  "key": "obzor-anime-bezdomnyy-bog→bonusnyy-vypusk-bezdomnyy-bog",
+  "source": "obzor-anime-bezdomnyy-bog",
+  "target": "bonusnyy-vypusk-bezdomnyy-bog",
+  "afterWords": "Получается и вывод такой же. Ни туда, ни сюда.",
+  "line": "::material{id=\"bonusnyy-vypusk-bezdomnyy-bog\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  },
  {
   "key": "obzor-anime-gospozha-kaguya→ep-127",
@@ -701,12 +1298,188 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "obzor-anime-hyoka→bonusnyy-epizod-hyoka",
+  "source": "obzor-anime-hyoka",
+  "target": "bonusnyy-epizod-hyoka",
+  "afterWords": "Поэтому приговор: очень среднее аниме. Рекомендую глянуть только первую серию,",
+  "line": "::material{id=\"bonusnyy-epizod-hyoka\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "obzor-filma-slova-puzyryatsya-podobno-gazirovke→slova-puzyryatsya-podobno-gazirovke-glavnoe-letnee-anime",
+  "source": "obzor-filma-slova-puzyryatsya-podobno-gazirovke",
+  "target": "slova-puzyryatsya-podobno-gazirovke-glavnoe-letnee-anime",
+  "afterWords": "Если хочется отдохнуть, побыть в романтичном настроении — то вполне.",
+  "line": "::material{id=\"slova-puzyryatsya-podobno-gazirovke-glavnoe-letnee-anime\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "obzor-filma-tvoyo-imya→ep-99",
   "source": "obzor-filma-tvoyo-imya",
   "target": "ep-99",
   "afterWords": "А я дополнительно благодарен Синкаю, за героиню для обложки «Баки!»",
   "line": "::material{id=\"ep-99\"}",
   "insertedAt": "2026-09-25T11:54:30.140Z"
+ },
+ {
+  "key": "obzor-vseh-anime-leta-2022→bonusnyy-vypusk-likoris-rekoil",
+  "source": "obzor-vseh-anime-leta-2022",
+  "target": "bonusnyy-vypusk-likoris-rekoil",
+  "afterWords": "Вердикт: буду смотреть до самого конца и ждать новые сезоны",
+  "line": "::material{id=\"bonusnyy-vypusk-likoris-rekoil\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "obzor-vseh-anime-leta-2022→bonusnyy-vypusk-pesn-nochnyh-sov",
+  "source": "obzor-vseh-anime-leta-2022",
+  "target": "bonusnyy-vypusk-pesn-nochnyh-sov",
+  "afterWords": "Вердикт: идеальное аниме для ночного просмотра",
+  "line": "::material{id=\"bonusnyy-vypusk-pesn-nochnyh-sov\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "obzor-vseh-anime-leta-2022→ep-115",
+  "source": "obzor-vseh-anime-leta-2022",
+  "target": "ep-115",
+  "afterWords": "Вывод: если вы фанатели в детстве по сеге, читали «Игроманию»",
+  "line": "::material{id=\"ep-115\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "obzor-vseh-anime-leta-2022→obzor-vseh-anime-vesny-162",
+  "source": "obzor-vseh-anime-leta-2022",
+  "target": "obzor-vseh-anime-vesny-162",
+  "afterWords": "Вывод: удивлён, что про сериал вообще никто не говорит, он",
+  "line": "::material{id=\"obzor-vseh-anime-vesny-162\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "obzor-vseh-anime-oseni-2022→bonusnyy-vypusk-sinyaya-tyurma",
+  "source": "obzor-vseh-anime-oseni-2022",
+  "target": "bonusnyy-vypusk-sinyaya-tyurma",
+  "afterWords": "В итоге: советую глянуть первую серию, вы либо умрете от",
+  "line": "::material{id=\"bonusnyy-vypusk-sinyaya-tyurma\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "obzor-vseh-anime-oseni-2022→ep-85",
+  "source": "obzor-vseh-anime-oseni-2022",
+  "target": "ep-85",
+  "afterWords": "В итоге: не отвратительно, но и не великолепно, для фанатов",
+  "line": "::material{id=\"ep-85\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "obzor-vseh-anime-oseni-2022→obzor-vseh-anime-leta-2022",
+  "source": "obzor-vseh-anime-oseni-2022",
+  "target": "obzor-vseh-anime-leta-2022",
+  "afterWords": "В итоге: проходное детское аниме с приятным визуальным стилем, смело",
+  "line": "::material{id=\"obzor-vseh-anime-leta-2022\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "obzor-vseh-anime-oseni-2022→polnyy-vostorg",
+  "source": "obzor-vseh-anime-oseni-2022",
+  "target": "polnyy-vostorg",
+  "afterWords": "В итоге: претендент на самое смешное аниме года, смотреть обязательно",
+  "line": "::material{id=\"polnyy-vostorg\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "obzor-vseh-anime-vesny-162→ep-53",
+  "source": "obzor-vseh-anime-vesny-162",
+  "target": "ep-53",
+  "afterWords": "Смотреть дальше: да, конечно",
+  "line": "::material{id=\"ep-53\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "obzor-vseh-anime-vesny-162→ep-74",
+  "source": "obzor-vseh-anime-vesny-162",
+  "target": "ep-74",
+  "afterWords": "Смотреть дальше: да, отличная комедия",
+  "line": "::material{id=\"ep-74\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "obzor-vseh-anime-vesny-162→glaza-v-anime",
+  "source": "obzor-vseh-anime-vesny-162",
+  "target": "glaza-v-anime",
+  "afterWords": "Смотреть дальше: да, конечно. Это отличное аниме, несмотря на мое",
+  "line": "::material{id=\"glaza-v-anime\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "obzor-vseh-anime-vesny-162→obzor-vseh-anime-zimy-2022",
+  "source": "obzor-vseh-anime-vesny-162",
+  "target": "obzor-vseh-anime-zimy-2022",
+  "afterWords": "Смотреть дальше: нет, банальная муть",
+  "line": "::material{id=\"obzor-vseh-anime-zimy-2022\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "obzor-vseh-anime-vesny-162→zhizn-devushki-karatelya-ochen-izobretatelnyy-serial",
+  "source": "obzor-vseh-anime-vesny-162",
+  "target": "zhizn-devushki-karatelya-ochen-izobretatelnyy-serial",
+  "afterWords": "Смотреть дальше: да, отличное приключение с оригинальными идеями",
+  "line": "::material{id=\"zhizn-devushki-karatelya-ochen-izobretatelnyy-serial\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "obzor-vseh-anime-zimy-2022→ep-37",
+  "source": "obzor-vseh-anime-zimy-2022",
+  "target": "ep-37",
+  "afterWords": "Смотреть дальше: нет, но могу рекомендовать другим",
+  "line": "::material{id=\"ep-37\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "obzor-vseh-anime-zimy-2022→multivselennaya-milyh-devochek",
+  "source": "obzor-vseh-anime-zimy-2022",
+  "target": "multivselennaya-milyh-devochek",
+  "afterWords": "Смотреть дальше: в грустные вечера — можно",
+  "line": "::material{id=\"multivselennaya-milyh-devochek\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "obzor-vseh-anime-zimy-2022→obzor-ot-podpischika-ranobe-rukovodstvo-genialnogo-printsa",
+  "source": "obzor-vseh-anime-zimy-2022",
+  "target": "obzor-ot-podpischika-ranobe-rukovodstvo-genialnogo-printsa",
+  "afterWords": "Смотреть дальше: как минимум еще несколько серий точно",
+  "line": "::material{id=\"obzor-ot-podpischika-ranobe-rukovodstvo-genialnogo-printsa\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "operatorskaya-rabota-v-k-on-409→ep-134",
+  "source": "operatorskaya-rabota-v-k-on-409",
+  "target": "ep-134",
+  "afterWords": "Ещё забавно, что Ямада в постановке таких кадров иногда даже",
+  "line": "::material{id=\"ep-134\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "operatorskaya-rabota-v-seme-shpiona→ep-53",
+  "source": "operatorskaya-rabota-v-seme-shpiona",
+  "target": "ep-53",
+  "afterWords": "И это не единственные примеры. Попозже можно сделать про это",
+  "line": "::material{id=\"ep-53\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "operatorskaya-rabota-v-vayolet-evergarden→ep-69",
+  "source": "operatorskaya-rabota-v-vayolet-evergarden",
+  "target": "ep-69",
+  "afterWords": "То есть, историю нам рассказывают не только словами и действиями",
+  "line": "::material{id=\"ep-69\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "opyat-osamu-dadzay→bonusnyy-vypusk-proza-brodyachih-psov",
+  "source": "opyat-osamu-dadzay",
+  "target": "bonusnyy-vypusk-proza-brodyachih-psov",
+  "afterWords": "(правда, в остальном новый сериал — это исекай, но закроем",
+  "line": "::material{id=\"bonusnyy-vypusk-proza-brodyachih-psov\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  },
  {
   "key": "panelnaya-nostalgiya-po-schastlivomu-detstvu→ep-101",
@@ -726,6 +1499,38 @@
   "commit": "939ccef8"
  },
  {
+  "key": "peresmotr→bonusnyy-vypusk-horimiya",
+  "source": "peresmotr",
+  "target": "bonusnyy-vypusk-horimiya",
+  "afterWords": "Вот так внезапно мой список ожидания пополнился летним аниме «Хоримия:",
+  "line": "::material{id=\"bonusnyy-vypusk-horimiya\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "personazhi-kotorye-v-vostorge-ot-anime-figurok→bonusnyy-vypusk-moya-farforovaya-kukla-vlyubilas",
+  "source": "personazhi-kotorye-v-vostorge-ot-anime-figurok",
+  "target": "bonusnyy-vypusk-moya-farforovaya-kukla-vlyubilas",
+  "afterWords": "Поэтому помните, что искренний интерес — это никогда не стыдно.",
+  "line": "::material{id=\"bonusnyy-vypusk-moya-farforovaya-kukla-vlyubilas\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "personazhi-kotorye-v-vostorge-ot-anime-figurok→bunko-gatiakuta-tak-slozhno-lyubit-otaku-brodyaga",
+  "source": "personazhi-kotorye-v-vostorge-ot-anime-figurok",
+  "target": "bunko-gatiakuta-tak-slozhno-lyubit-otaku-brodyaga",
+  "afterWords": "Поэтому не стоит скрывать свои интересы от близких.",
+  "line": "::material{id=\"bunko-gatiakuta-tak-slozhno-lyubit-otaku-brodyaga\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "personazhi-kotorye-v-vostorge-ot-anime-figurok→ep-57",
+  "source": "personazhi-kotorye-v-vostorge-ot-anime-figurok",
+  "target": "ep-57",
+  "afterWords": "Поэтому всегда можно попробовать заработать на том, что вам нравится.",
+  "line": "::material{id=\"ep-57\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "pervye-vpechatleniya-ot-prosmotra-istrebitelya-demonov-beskonechnaya-krepost-post-ot-ksyushi→ep-58",
   "source": "pervye-vpechatleniya-ot-prosmotra-istrebitelya-demonov-beskonechnaya-krepost-post-ot-ksyushi",
   "target": "ep-58",
@@ -733,6 +1538,38 @@
   "line": "::material{id=\"ep-58\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
   "commit": "939ccef8"
+ },
+ {
+  "key": "pesn-nochnyh-sov→bonusnyy-vypusk-pesn-nochnyh-sov",
+  "source": "pesn-nochnyh-sov",
+  "target": "bonusnyy-vypusk-pesn-nochnyh-sov",
+  "afterWords": "Ну и финал истории получился на мой взгляд идеальным. Манга",
+  "line": "::material{id=\"bonusnyy-vypusk-pesn-nochnyh-sov\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "po-pervym-seriyam→bonusnyy-vypusk-adskiy-ray",
+  "source": "po-pervym-seriyam",
+  "target": "bonusnyy-vypusk-adskiy-ray",
+  "afterWords": "Жду, что следующие серии будут круче.",
+  "line": "::material{id=\"bonusnyy-vypusk-adskiy-ray\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "po-pervym-seriyam→detektiv-naoborot",
+  "source": "po-pervym-seriyam",
+  "target": "detektiv-naoborot",
+  "afterWords": "Бросаю после первой серии.",
+  "line": "::material{id=\"detektiv-naoborot\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "po-pervym-seriyam→ep-90",
+  "source": "po-pervym-seriyam",
+  "target": "ep-90",
+  "afterWords": "Буду ждать каждую серию.",
+  "line": "::material{id=\"ep-90\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  },
  {
   "key": "po-sledam-tragediy→ep-93",
@@ -743,12 +1580,36 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "pochemu-ne-institut→ep-113",
+  "source": "pochemu-ne-institut",
+  "target": "ep-113",
+  "afterWords": "Вот и выходит, что есть масса тайтлов про школу, заметное",
+  "line": "::material{id=\"ep-113\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "podruga-starshey-sestry→bez-spoylerov",
   "source": "podruga-starshey-sestry",
   "target": "bez-spoylerov",
   "afterWords": "Так что если искали какой-нибудь романтический онгоинг — смело забирайте",
   "line": "::material{id=\"bez-spoylerov\"}",
   "insertedAt": "2026-09-25T11:54:30.140Z"
+ },
+ {
+  "key": "polnyy-vostorg→ep-74",
+  "source": "polnyy-vostorg",
+  "target": "ep-74",
+  "afterWords": "Студия CloverWorks в этом сезоне снова на высоте.",
+  "line": "::material{id=\"ep-74\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "polsezona-tuda-polsezona-syuda→kurenie-vredit-vashemu-zdorovyu",
+  "source": "polsezona-tuda-polsezona-syuda",
+  "target": "kurenie-vredit-vashemu-zdorovyu",
+  "afterWords": "Вы уже успели глянуть мини-серии? Что думаете?",
+  "line": "::material{id=\"kurenie-vredit-vashemu-zdorovyu\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  },
  {
   "key": "potrogat-travu→bunko-v-loferah-vpripryzhku-ili-doloy-bezdele",
@@ -775,6 +1636,22 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "pravila-smertelnoy-migratsii→kto-iz-nih-vret",
+  "source": "pravila-smertelnoy-migratsii",
+  "target": "kto-iz-nih-vret",
+  "afterWords": "Позже появятся и новые правила, но пока получается примерно так.",
+  "line": "::material{id=\"kto-iz-nih-vret\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "pravilnye-tokiyskie-mstiteli→bonusnyy-vypusk-vetrolom",
+  "source": "pravilnye-tokiyskie-mstiteli",
+  "target": "bonusnyy-vypusk-vetrolom",
+  "afterWords": "Я не жду от сериала ничего сверхестественного и вряд ли",
+  "line": "::material{id=\"bonusnyy-vypusk-vetrolom\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "pro-dizayn-doloy-bezdele→bonusnyy-vypusk-v-loferah-vpripryzhku",
   "source": "pro-dizayn-doloy-bezdele",
   "target": "bonusnyy-vypusk-v-loferah-vpripryzhku",
@@ -783,12 +1660,68 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "pro-marketing→dandadan-romantika-pod-sousom-bezumiya",
+  "source": "pro-marketing",
+  "target": "dandadan-romantika-pod-sousom-bezumiya",
+  "afterWords": "Вот что делает грамотный маркетинг.",
+  "line": "::material{id=\"dandadan-romantika-pod-sousom-bezumiya\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "pro-velikogo-samuraya→manuskript-nindzya-ili-povest-o-dzyubee-nindzya-vetra",
+  "source": "pro-velikogo-samuraya",
+  "target": "manuskript-nindzya-ili-povest-o-dzyubee-nindzya-vetra",
+  "afterWords": "К сожалению, в интернете не нашла подлинное изображение Дзюбэя, но",
+  "line": "::material{id=\"manuskript-nindzya-ili-povest-o-dzyubee-nindzya-vetra\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "pro-vizualnyy-stil-dorohedoro→ep-132",
+  "source": "pro-vizualnyy-stil-dorohedoro",
+  "target": "ep-132",
+  "afterWords": "Для издания Dorohedoro Gengaten 2020 она как раз показала часть",
+  "line": "::material{id=\"ep-132\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "prodolzhaya-razgovor-o-talantah→pervye-vpechatleniya-ot-anime-po-cyberpunk",
   "source": "prodolzhaya-razgovor-o-talantah",
   "target": "pervye-vpechatleniya-ot-anime-po-cyberpunk",
   "afterWords": "Теперь еще больше задумываюсь о том, чтобы все-таки посмотреть этот",
   "line": "::material{id=\"pervye-vpechatleniya-ot-anime-po-cyberpunk\"}",
   "insertedAt": "2026-09-25T11:54:30.140Z"
+ },
+ {
+  "key": "produmannyy-dizayn-personazhey→bonusnyy-vypusk-konosuba",
+  "source": "produmannyy-dizayn-personazhey",
+  "target": "bonusnyy-vypusk-konosuba",
+  "afterWords": "Именно желтая окантовка делает визуально из разрозненных разноцветных героев одну",
+  "line": "::material{id=\"bonusnyy-vypusk-konosuba\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "pronikaya-v-realnost→bonusnyy-epizod-hyoka",
+  "source": "pronikaya-v-realnost",
+  "target": "bonusnyy-epizod-hyoka",
+  "afterWords": "И оказалось ровно в такой же концепции сделан эндинг нового",
+  "line": "::material{id=\"bonusnyy-epizod-hyoka\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "prorabotka-anime→ep-43",
+  "source": "prorabotka-anime",
+  "target": "ep-43",
+  "afterWords": "Нашел тут как раз страницу с такими наработками для «Тетради",
+  "line": "::material{id=\"ep-43\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "prostye-momenty→bonusnyy-vypusk-prioritet-chudo-yaytsa",
+  "source": "prostye-momenty",
+  "target": "bonusnyy-vypusk-prioritet-chudo-yaytsa",
+  "afterWords": "Так что, радуюсь тому, что открыл для себя этот опенинг,",
+  "line": "::material{id=\"bonusnyy-vypusk-prioritet-chudo-yaytsa\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  },
  {
   "key": "puteshestvie-syuny-i-skazaniya-o-zemnomore-2330→bonusnyy-vypusk-skazaniya-zemnomorya",
@@ -800,6 +1733,55 @@
   "commit": "939ccef8"
  },
  {
+  "key": "pyat-anime-v-kotoryh-pokazyvayut-kospley→bonusnyy-vypusk-moya-farforovaya-kukla-vlyubilas",
+  "source": "pyat-anime-v-kotoryh-pokazyvayut-kospley",
+  "target": "bonusnyy-vypusk-moya-farforovaya-kukla-vlyubilas",
+  "afterWords": "Подробно про это аниме мы говорили в нашем бонусном эпизоде,",
+  "line": "::material{id=\"bonusnyy-vypusk-moya-farforovaya-kukla-vlyubilas\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z",
+  "unlinks": [
+   {
+    "mode": "words",
+    "from": "[нашем бонусном эпизоде, послушайте](/posts/bonusnyy-vypusk-moya-farforovaya-kukla-vlyubilas/)",
+    "to": "нашем бонусном эпизоде, послушайте",
+    "anchorWords": "Подробно про это аниме мы говорили в нашем бонусном эпизоде,",
+    "at": "2026-09-25T14:17:59.711Z"
+   }
+  ]
+ },
+ {
+  "key": "pyat-anime-v-kotoryh-pokazyvayut-kospley→bunko-gatiakuta-tak-slozhno-lyubit-otaku-brodyaga",
+  "source": "pyat-anime-v-kotoryh-pokazyvayut-kospley",
+  "target": "bunko-gatiakuta-tak-slozhno-lyubit-otaku-brodyaga",
+  "afterWords": "Одна из героинь этого аниме про офисных работников-отаку, Ханако Коянаги",
+  "line": "::material{id=\"bunko-gatiakuta-tak-slozhno-lyubit-otaku-brodyaga\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "pyat-originalnyh-plyazhnyh-epizodov→ep-144",
+  "source": "pyat-originalnyh-plyazhnyh-epizodov",
+  "target": "ep-144",
+  "afterWords": "Теперь они должны расследовать это дело, которое оказывается совсем не",
+  "line": "::material{id=\"ep-144\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "pyat-originalnyh-plyazhnyh-epizodov→ep-29",
+  "source": "pyat-originalnyh-plyazhnyh-epizodov",
+  "target": "ep-29",
+  "afterWords": "К сожалению, до настоящего пляжного эпизода эта серия чуть-чуть не",
+  "line": "::material{id=\"ep-29\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "pyat-originalnyh-plyazhnyh-epizodov→pora-poest",
+  "source": "pyat-originalnyh-plyazhnyh-epizodov",
+  "target": "pora-poest",
+  "afterWords": "Герои учатся не только и не столько вкусно готовить, сколько",
+  "line": "::material{id=\"pora-poest\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "ranniy-dizayn-personazhey-v-kovboe-bibope→ep-16",
   "source": "ranniy-dizayn-personazhey-v-kovboe-bibope",
   "target": "ep-16",
@@ -808,12 +1790,151 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "razdvigaya-granitsy→ep-100",
+  "source": "razdvigaya-granitsy",
+  "target": "ep-100",
+  "afterWords": "Круто, когда в студии ты можешь попробовать себя в разных",
+  "line": "::material{id=\"ep-100\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "razmyshleniya-o-ranobe→ep-57",
   "source": "razmyshleniya-o-ranobe",
   "target": "ep-57",
   "afterWords": "В итоге я уже неделю не могу отлипнуть от ранобэ,",
   "line": "::material{id=\"ep-57\"}",
   "insertedAt": "2026-09-25T11:54:30.140Z"
+ },
+ {
+  "key": "re-zero-vstrechaet-mafiyu-v-kosmose→re-zero-shedevr-ili-ocherednoy-isekay",
+  "source": "re-zero-vstrechaet-mafiyu-v-kosmose",
+  "target": "re-zero-shedevr-ili-ocherednoy-isekay",
+  "afterWords": "Впрочем, не исключаю, что фанатам «Игры в кальмара» и других",
+  "line": "::material{id=\"re-zero-shedevr-ili-ocherednoy-isekay\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "realnye-kartiny-v-mange-goluboy-period→ep-113",
+  "source": "realnye-kartiny-v-mange-goluboy-period",
+  "target": "ep-113",
+  "afterWords": "К сожалению, у манги «Голубой период» нет официального издания на",
+  "line": "::material{id=\"ep-113\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "rebekka-ot-kotoroy-hoteli-otkazatsya→gramotnaya-reklama",
+  "source": "rebekka-ot-kotoroy-hoteli-otkazatsya",
+  "target": "gramotnaya-reklama",
+  "afterWords": "Но в случае с Ребеккой, увидев вот этот ранний дизайн,",
+  "line": "::material{id=\"gramotnaya-reklama\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "revers-inzheniring→ep-64",
+  "source": "revers-inzheniring",
+  "target": "ep-64",
+  "afterWords": "Вот, например, раскадровка целой сцены из последнего сезона «Моб Психо",
+  "line": "::material{id=\"ep-64\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "romantika-k-prazdniku-2749→angel-i-demon",
+  "source": "romantika-k-prazdniku-2749",
+  "target": "angel-i-demon",
+  "afterWords": "Узнать подробнее: в наших постах про сериал — раз, два,",
+  "line": "::material{id=\"angel-i-demon\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "romantika-k-prazdniku-2749→bonusnyy-epizod-so-sklonov-kokuriko",
+  "source": "romantika-k-prazdniku-2749",
+  "target": "bonusnyy-epizod-so-sklonov-kokuriko",
+  "afterWords": "Узнать подробнее: можно в нашем бонусном эпизоде",
+  "line": "::material{id=\"bonusnyy-epizod-so-sklonov-kokuriko\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z",
+  "unlinks": [
+   {
+    "mode": "words",
+    "from": "[можно в нашем бонусном эпизоде](/posts/bonusnyy-epizod-so-sklonov-kokuriko/)",
+    "to": "можно в нашем бонусном эпизоде",
+    "anchorWords": "Узнать подробнее: можно в нашем бонусном эпизоде",
+    "at": "2026-09-25T14:17:59.711Z"
+   }
+  ]
+ },
+ {
+  "key": "romantika-k-prazdniku-2749→ep-116",
+  "source": "romantika-k-prazdniku-2749",
+  "target": "ep-116",
+  "afterWords": "Узнать подробнее: в бонусном эпизоде",
+  "line": "::material{id=\"ep-116\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "romantika-k-prazdniku-2749→ep-34",
+  "source": "romantika-k-prazdniku-2749",
+  "target": "ep-34",
+  "afterWords": "Узнать подробнее: в нашем выпуске подкаста или в текстовом обзоре",
+  "line": "::material{id=\"ep-34\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z",
+  "unlinks": [
+   {
+    "mode": "words",
+    "from": "[выпуске подкаста](/posts/ep-34/)",
+    "to": "выпуске подкаста",
+    "anchorWords": "Узнать подробнее: в нашем выпуске подкаста или в текстовом обзоре",
+    "at": "2026-09-25T14:17:59.711Z"
+   }
+  ]
+ },
+ {
+  "key": "romantika-k-prazdniku-2749→ep-4",
+  "source": "romantika-k-prazdniku-2749",
+  "target": "ep-4",
+  "afterWords": "Узнать подробнее: в самом популярном (до сих пор!) выпуске нашего",
+  "line": "::material{id=\"ep-4\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z",
+  "unlinks": [
+   {
+    "mode": "words",
+    "from": "[выпуске нашего подкаста](/posts/ep-4/)",
+    "to": "выпуске нашего подкаста",
+    "anchorWords": "Узнать подробнее: в самом популярном (до сих пор!) выпуске нашего",
+    "at": "2026-09-25T14:17:59.711Z"
+   }
+  ]
+ },
+ {
+  "key": "romantika-sezona-2478→neznakomtsy-v-drugoy-zhizni",
+  "source": "romantika-sezona-2478",
+  "target": "neznakomtsy-v-drugoy-zhizni",
+  "afterWords": "История об отношениях между детьми двух разных семей якудза. Моя",
+  "line": "::material{id=\"neznakomtsy-v-drugoy-zhizni\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "romantika-sezona-2478→parochka-romantik",
+  "source": "romantika-sezona-2478",
+  "target": "parochka-romantik",
+  "afterWords": "В итоге как-то этот сезон хорошей романтикой не радует (кроме",
+  "line": "::material{id=\"parochka-romantik\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "romantika-sezona→romantika-sezona-3640",
+  "source": "romantika-sezona",
+  "target": "romantika-sezona-3640",
+  "afterWords": "В целом, завязка рассказана в названии. Воительницу Серафину берут в",
+  "line": "::material{id=\"romantika-sezona-3640\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "romantika-sezona→ty-i-ya-polnye-protivopolozhnosti-i-ledyanaya-stena-proishodyat-v-odnoy-vselennoy",
+  "source": "romantika-sezona",
+  "target": "ty-i-ya-polnye-protivopolozhnosti-i-ledyanaya-stena-proishodyat-v-odnoy-vselennoy",
+  "afterWords": "При этом если «Ты и я — полные противоположности» были",
+  "line": "::material{id=\"ty-i-ya-polnye-protivopolozhnosti-i-ledyanaya-stena-proishodyat-v-odnoy-vselennoy\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  },
  {
   "key": "rukovodstvo-po-tomu-kak-byt-devochkoy→ep-57",
@@ -859,12 +1980,92 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "samye-vazhnye-openingi-v-istorii→chto-za-nesnosnye-prisheltsy",
+  "source": "samye-vazhnye-openingi-v-istorii",
+  "target": "chto-za-nesnosnye-prisheltsy",
+  "afterWords": "И это отразилось в жизнерадостном опенинге сериала про инопланетянку Лам.",
+  "line": "::material{id=\"chto-za-nesnosnye-prisheltsy\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "samye-vazhnye-openingi-v-istorii→ep-134",
+  "source": "samye-vazhnye-openingi-v-istorii",
+  "target": "ep-134",
+  "afterWords": "После выхода K-On случился бум аниме про школьные музыкальные группы",
+  "line": "::material{id=\"ep-134\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "samye-vazhnye-openingi-v-istorii→ep-26",
+  "source": "samye-vazhnye-openingi-v-istorii",
+  "target": "ep-26",
+  "afterWords": "Но мы остановились именно на «Чамплу» из-за жанра музыки. Этот",
+  "line": "::material{id=\"ep-26\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "samye-vazhnye-openingi-v-istorii→ep-56",
+  "source": "samye-vazhnye-openingi-v-istorii",
+  "target": "ep-56",
+  "afterWords": "Если вы хотите больше узнать об истории опенингов, о том,",
+  "line": "::material{id=\"ep-56\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "samye-vazhnye-openingi-v-istorii→ep-6",
+  "source": "samye-vazhnye-openingi-v-istorii",
+  "target": "ep-6",
+  "afterWords": "Таким образом Ева показала, как можно работать с традицией, при",
+  "line": "::material{id=\"ep-6\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "samye-vazhnye-openingi-v-istorii→seylor-mun-i-moda",
+  "source": "samye-vazhnye-openingi-v-istorii",
+  "target": "seylor-mun-i-moda",
+  "afterWords": "Тени главных героинь, показывающие двойственность из жизни, лепестки роз, как",
+  "line": "::material{id=\"seylor-mun-i-moda\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "saundtrek-v-mange→blich-vremennyy-shinigami",
   "source": "saundtrek-v-mange",
   "target": "blich-vremennyy-shinigami",
   "afterWords": "К сожалению, аниме из-за авторских прав не могло использовать эту",
   "line": "::material{id=\"blich-vremennyy-shinigami\"}",
   "insertedAt": "2026-09-25T11:54:30.140Z"
+ },
+ {
+  "key": "seylor-mun-i-moda→ep-37",
+  "source": "seylor-mun-i-moda",
+  "target": "ep-37",
+  "afterWords": "Еще пару примеров оставлю в иллюстрациях к посту. Какой из",
+  "line": "::material{id=\"ep-37\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "shaman-king-2001-vs-shaman-king-2021→ep-124",
+  "source": "shaman-king-2001-vs-shaman-king-2021",
+  "target": "ep-124",
+  "afterWords": "Этот пример показателен, потому что весь ремейк 2021 года ощущается",
+  "line": "::material{id=\"ep-124\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "shok-v-dospehah→10-samyh-ozhidaemyh-anime-leta-2026-goda",
+  "source": "shok-v-dospehah",
+  "target": "10-samyh-ozhidaemyh-anime-leta-2026-goda",
+  "afterWords": "А как вам новый «Призрак в доспехах»?",
+  "line": "::material{id=\"10-samyh-ozhidaemyh-anime-leta-2026-goda\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "skrytye-brillianty→ep-6",
+  "source": "skrytye-brillianty",
+  "target": "ep-6",
+  "afterWords": "«Грудь Аски больше, чем обычно, потому что Синдзи так мерещится?»",
+  "line": "::material{id=\"ep-6\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  },
  {
   "key": "skrytye-spoylery-v-openinge-cheloveka-benzopily→kakim-vyshel-novyy-film-po-cheloveku-benzopile",
@@ -924,6 +2125,14 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "sotsiofobushki→bonusnyy-vypusk-u-komi-san-problemy-s-obscheniem",
+  "source": "sotsiofobushki",
+  "target": "bonusnyy-vypusk-u-komi-san-problemy-s-obscheniem",
+  "afterWords": "И мне кажется, что каждый может выбрать более подходящий для",
+  "line": "::material{id=\"bonusnyy-vypusk-u-komi-san-problemy-s-obscheniem\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "spisok-pyati-tselebnyh-anime→bonusnyy-vypusk-v-loferah-vpripryzhku",
   "source": "spisok-pyati-tselebnyh-anime",
   "target": "bonusnyy-vypusk-v-loferah-vpripryzhku",
@@ -960,6 +2169,79 @@
   "commit": "939ccef8"
  },
  {
+  "key": "srabotala-li-polutorachasovaya-premera-rebyonka-idola→ep-81",
+  "source": "srabotala-li-polutorachasovaya-premera-rebyonka-idola",
+  "target": "ep-81",
+  "afterWords": "Не уверен на сто процентов, что дальнейший сезон сможет выдержать",
+  "line": "::material{id=\"ep-81\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "stat-vzroslym→bunko-rekomenduem-novuyu-mangu",
+  "source": "stat-vzroslym",
+  "target": "bunko-rekomenduem-novuyu-mangu",
+  "afterWords": "А еще больше рекомендаций новой манги есть в нашем недавнем",
+  "line": "::material{id=\"bunko-rekomenduem-novuyu-mangu\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z",
+  "unlinks": [
+   {
+    "mode": "words",
+    "from": "[недавнем выпуске подкаста «Бунко!» — обратите внимание](/posts/bunko-rekomenduem-novuyu-mangu/)",
+    "to": "недавнем выпуске подкаста «Бунко!» — обратите внимание",
+    "anchorWords": "А еще больше рекомендаций новой манги есть в нашем недавнем",
+    "at": "2026-09-25T14:17:59.711Z"
+   }
+  ]
+ },
+ {
+  "key": "stil-studii-ghibli→bonusnyy-epizod-so-sklonov-kokuriko",
+  "source": "stil-studii-ghibli",
+  "target": "bonusnyy-epizod-so-sklonov-kokuriko",
+  "afterWords": "Самый яркий пример — «Со склонов Кокурико». От изначальной сёдзе-манги",
+  "line": "::material{id=\"bonusnyy-epizod-so-sklonov-kokuriko\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "stoit-li-smotret-magicheskuyu-bitvu-0→ep-47",
+  "source": "stoit-li-smotret-magicheskuyu-bitvu-0",
+  "target": "ep-47",
+  "afterWords": "Это блюдо предназначено исключительно для фанатов истории Гэгэ Акутами. Но",
+  "line": "::material{id=\"ep-47\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "tekstovyy-otzyv-na-etot-glupyy-svin-ne-ponimaet-mechtu-devochki-zayki→ep-34",
+  "source": "tekstovyy-otzyv-na-etot-glupyy-svin-ne-ponimaet-mechtu-devochki-zayki",
+  "target": "ep-34",
+  "afterWords": "Советую ли я смотреть? Да. Хотя бы ради диалогов Маи",
+  "line": "::material{id=\"ep-34\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "the-jazz-messengers→ep-16",
+  "source": "the-jazz-messengers",
+  "target": "ep-16",
+  "afterWords": "Но вообще я им делюсь просто потому что красиво.",
+  "line": "::material{id=\"ep-16\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "totoro-vstrechaet-garfilda→usy-lapy-i-hvost",
+  "source": "totoro-vstrechaet-garfilda",
+  "target": "usy-lapy-i-hvost",
+  "afterWords": "Когда Андзу совсем нечем заняться, он ездит по округе без",
+  "line": "::material{id=\"usy-lapy-i-hvost\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "tszyanshi→ep-124",
+  "source": "tszyanshi",
+  "target": "ep-124",
+  "afterWords": "Где еще вы можете вспомнить этих «вампиров»?",
+  "line": "::material{id=\"ep-124\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "turbo-babka→dandadan-v-kino-post-ot-ksyushi",
   "source": "turbo-babka",
   "target": "dandadan-v-kino-post-ot-ksyushi",
@@ -992,12 +2274,44 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "vdohnovenie-za-vdohnoveniem-za-vdohnoveniem→bonusnyy-vypusk-pesn-nochnyh-sov",
+  "source": "vdohnovenie-za-vdohnoveniem-za-vdohnoveniem",
+  "target": "bonusnyy-vypusk-pesn-nochnyh-sov",
+  "afterWords": "Вот такая вот взаимная любовь и взаимное вдохновение рэпа и",
+  "line": "::material{id=\"bonusnyy-vypusk-pesn-nochnyh-sov\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "vitruvianskiy-animeshnik→santu-vyzyvali",
+  "source": "vitruvianskiy-animeshnik",
+  "target": "santu-vyzyvali",
+  "afterWords": "Ну, а в случае с аниме — не всегда человека",
+  "line": "::material{id=\"santu-vyzyvali\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "vkusnaya-eda→ep-143",
+  "source": "vkusnaya-eda",
+  "target": "ep-143",
+  "afterWords": "При этом еда в этом аниме не играет важную роль,",
+  "line": "::material{id=\"ep-143\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "vliyanie-na-realnuyu-zhizn→voleybol-kakim-poluchilsya-vtoroy-sezon",
   "source": "vliyanie-na-realnuyu-zhizn",
   "target": "voleybol-kakim-poluchilsya-vtoroy-sezon",
   "afterWords": "Оказалось, что история Хинаты и его друзей буквально вдохновляет подростков",
   "line": "::material{id=\"voleybol-kakim-poluchilsya-vtoroy-sezon\"}",
   "insertedAt": "2026-09-25T11:54:30.140Z"
+ },
+ {
+  "key": "vnebrachnyy-syn-garri-pottera-i-vanpanchmena→magiya-i-muskuly-esli-by-on-byl-sereznym",
+  "source": "vnebrachnyy-syn-garri-pottera-i-vanpanchmena",
+  "target": "magiya-i-muskuly-esli-by-on-byl-sereznym",
+  "afterWords": "И если вы любите такой юмор, на сериал стоит обратить",
+  "line": "::material{id=\"magiya-i-muskuly-esli-by-on-byl-sereznym\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  },
  {
   "key": "vnezapnye-paralleli→ep-75",
@@ -1016,6 +2330,38 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "vopreki-3d→bonusnyy-vypusk-plach-devichey-gruppy",
+  "source": "vopreki-3d",
+  "target": "bonusnyy-vypusk-plach-devichey-gruppy",
+  "afterWords": "Так что, если вы, как и я, пропускали «Плач девичьей",
+  "line": "::material{id=\"bonusnyy-vypusk-plach-devichey-gruppy\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "vse-kontsovki-steins-gate-pochti→ep-72",
+  "source": "vse-kontsovki-steins-gate-pochti",
+  "target": "ep-72",
+  "afterWords": "Окабэ отказывается менять обратно пол Рукако на мужской и дает",
+  "line": "::material{id=\"ep-72\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "vse-na-svoih-mestah-dazhe-tsveta→znakomtes-sofi-li",
+  "source": "vse-na-svoih-mestah-dazhe-tsveta",
+  "target": "znakomtes-sofi-li",
+  "afterWords": "У нее, кстати, очень красивый сайт с кейсами, обязательно полистайте.",
+  "line": "::material{id=\"znakomtes-sofi-li\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "vse-prodolzheniya-shaman-kinga→ep-124",
+  "source": "vse-prodolzheniya-shaman-kinga",
+  "target": "ep-124",
+  "afterWords": "Если вы хотите погрузиться глубже в жизнь героев из оригинала",
+  "line": "::material{id=\"ep-124\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "vsegda-znal-chto-mezhdu-akamaru-i-naruto-mnogo-obschego→ep-3",
   "source": "vsegda-znal-chto-mezhdu-akamaru-i-naruto-mnogo-obschego",
   "target": "ep-3",
@@ -1032,6 +2378,22 @@
   "insertedAt": "2026-09-25T11:54:30.140Z"
  },
  {
+  "key": "vzroslenie-za-50-sekund→bonusnyy-epizod-volchi-deti-ame-i-yuki",
+  "source": "vzroslenie-za-50-sekund",
+  "target": "bonusnyy-epizod-volchi-deti-ame-i-yuki",
+  "afterWords": "И поэтому фильм так интересно воспринимается и смотрится",
+  "line": "::material{id=\"bonusnyy-epizod-volchi-deti-ame-i-yuki\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
+  "key": "zabluzhdenie→ep-146",
+  "source": "zabluzhdenie",
+  "target": "ep-146",
+  "afterWords": "Тем временем Зери в финале: ( ´ ω \\ )",
+  "line": "::material{id=\"ep-146\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "zhit-i-naslazhdatsya-prostoy-zhiznyu→ep-114",
   "source": "zhit-i-naslazhdatsya-prostoy-zhiznyu",
   "target": "ep-114",
@@ -1041,11 +2403,27 @@
   "commit": "939ccef8"
  },
  {
+  "key": "zhizn-devushki-karatelya-ochen-izobretatelnyy-serial→ep-85",
+  "source": "zhizn-devushki-karatelya-ochen-izobretatelnyy-serial",
+  "target": "ep-85",
+  "afterWords": "Если вы любите приключенческий фантастический экшн — то «Жизнь девушки-карателя»",
+  "line": "::material{id=\"ep-85\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
+ },
+ {
   "key": "znakomtes-sofi-li→vse-na-svoih-mestah-dazhe-tsveta",
   "source": "znakomtes-sofi-li",
   "target": "vse-na-svoih-mestah-dazhe-tsveta",
   "afterWords": "Она работала над «Скотт Пилигрим жмёт на газ», «Дандаданом» и",
   "line": "::material{id=\"vse-na-svoih-mestah-dazhe-tsveta\"}",
   "insertedAt": "2026-09-25T11:54:30.140Z"
+ },
+ {
+  "key": "zom-100-v-plohoy-kompanii→bonusnyy-vypusk-predsmertnyy-spisok-zombi",
+  "source": "zom-100-v-plohoy-kompanii",
+  "target": "bonusnyy-vypusk-predsmertnyy-spisok-zombi",
+  "afterWords": "А учитывая, что это дебютный проект студии Bug Films, все",
+  "line": "::material{id=\"bonusnyy-vypusk-predsmertnyy-spisok-zombi\"}",
+  "insertedAt": "2026-09-25T14:17:59.711Z"
  }
 ]

@@ -40,4 +40,8 @@ anime:
 
 ::image{src="/images/uploads/tg-3756.jpg" alt="" width="column"}
 
+
+::material{id="pravila-smertelnoy-migratsii"}
+
+
 ::anime-ref{id="jujutsu-kaisen-shimetsu-kaiyuu-zenpen" source="shikimori" source-id="57658"}

@@ -47,6 +47,10 @@ anime:
 
 И мне кажется, что каждый может выбрать более подходящий для своего вкуса. Какой подход кажется интереснее вам?
 
+
+::material{id="bonusnyy-vypusk-u-komi-san-problemy-s-obscheniem"}
+
+
 ::anime-ref{id="bocchi-the-rock" source="shikimori" source-id="47917"}
 
 ::anime-ref{id="komi-san-wa-comyushou-desu" source="shikimori" source-id="48926"}

@@ -39,6 +39,10 @@ anime:
 
 ::image{src="/images/uploads/tg-1326.jpg" alt="" width="column"}
 
+
+::material{id="bonusnyy-vypusk-horimiya"}
+
+
 ::anime-ref{id="horimiya" source="shikimori" source-id="42897"}
 
 ::anime-ref{id="horimiya-piece" source="shikimori" source-id="54856"}

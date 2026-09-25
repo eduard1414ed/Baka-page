@@ -40,4 +40,7 @@ anime:
 ::image{src="/images/uploads/tg-461.jpg" alt="" width="column"}
 
 
+::material{id="bonusnyy-epizod-so-sklonov-kokuriko"}
+
+
 ::anime-ref{id="coquelicot-zaka-kara" source="shikimori" source-id="10029"}

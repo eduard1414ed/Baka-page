@@ -43,4 +43,8 @@ anime:
 
 И я жду с нетерпением аниме.
 
+
+::material{id="ep-146"}
+
+
 ::anime-ref{id="sousou-no-frieren" source="shikimori" source-id="52991"}

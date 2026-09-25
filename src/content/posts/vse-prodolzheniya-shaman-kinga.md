@@ -35,6 +35,10 @@ anime:
 
 Если вы хотите погрузиться глубже в жизнь героев из оригинала — то советую читать «Зеро». А если узнать новую историю в знакомой вселенной — то остальные сиквелы.
 
+
+::material{id="ep-124"}
+
+
 ::anime-ref{id="shaman-king" source="shikimori" source-id="154"}
 
 ::anime-ref{id="shaman-king-flowers" source="shikimori" source-id="51673"}

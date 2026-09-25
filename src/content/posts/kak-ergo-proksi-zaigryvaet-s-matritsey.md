@@ -38,4 +38,8 @@ anime:
 
 То есть отсылка переворачивается, как бы говоря нам — и матрица ложь, и реальный мир тоже ложь.
 
+
+::material{id="ep-92"}
+
+
 ::anime-ref{id="ergo-proxy" source="shikimori" source-id="790"}

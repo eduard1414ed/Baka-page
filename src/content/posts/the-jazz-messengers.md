@@ -59,4 +59,8 @@ anime:
 
 ::image{src="/images/uploads/tg-1121.jpg" alt="" width="column"}
 
+
+::material{id="ep-16"}
+
+
 ::anime-ref{id="cowboy-bebop" source="shikimori" source-id="1"}

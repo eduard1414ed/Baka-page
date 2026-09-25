@@ -60,4 +60,7 @@ anime:
 ::image{src="/images/uploads/tg-300.jpg" alt="" width="column"}
 
 
+::material{id="ep-47"}
+
+
 ::anime-ref{id="jujutsu-kaisen" source="shikimori" source-id="40748"}

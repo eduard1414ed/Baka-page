@@ -48,4 +48,8 @@ anime:
 
 Впрочем, не исключаю, что фанатам «Игры в кальмара» и других подобных шоу, «Гносия» может зайти.
 
+
+::material{id="re-zero-shedevr-ili-ocherednoy-isekay"}
+
+
 ::anime-ref{id="gnosia" source="shikimori" source-id="60427"}

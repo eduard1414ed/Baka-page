@@ -37,4 +37,8 @@ anime:
 
 ::image{src="/images/uploads/tg-381.jpg" alt="" width="column"}
 
+
+::material{id="bonusnyy-vypusk-likoris-rekoil"}
+
+
 ::anime-ref{id="lycoris-recoil" source="shikimori" source-id="50709"}

@@ -42,4 +42,8 @@ anime:
 
 Ну и еще тут абсолютно великолепный рисунок. Костюмы, выражения лиц, большие панели — восторг. Очень советую!
 
+
+::material{id="bunko-blagouhayuschiy-tsvetok-rastsvetaet-s-dostoinstvom"}
+
+
 ::anime-ref{id="kaoru-hana-wa-rin-to-saku" source="shikimori" source-id="59845"}

@@ -65,4 +65,8 @@ anime:
 
 ::image{src="/images/uploads/tg-1309.jpg" alt="" width="column"}
 
+
+::material{id="ep-81"}
+
+
 ::anime-ref{id="oshi-no-ko" source="shikimori" source-id="52034"}

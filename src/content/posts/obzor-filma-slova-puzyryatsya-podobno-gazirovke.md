@@ -41,4 +41,8 @@ anime:
 
 Если хочется отдохнуть, побыть в романтичном настроении — то вполне. Я удовольствие получил.
 
+
+::material{id="slova-puzyryatsya-podobno-gazirovke-glavnoe-letnee-anime"}
+
+
 ::anime-ref{id="cider-no-you-ni-kotoba-ga-wakiagaru" source="shikimori" source-id="39175"}

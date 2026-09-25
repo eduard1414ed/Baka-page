@@ -38,6 +38,10 @@ anime:
 
 Так что я думаю, нас в скором времени ждет ещё больше топовых тайтлов в онлайне.
 
+
+::material{id="ep-112"}
+
+
 ::anime-ref{id="chainsaw-man" source="shikimori" source-id="44511"}
 
 ::anime-ref{id="jojo-no-kimyou-na-bouken-tv" source="shikimori" source-id="14719"}

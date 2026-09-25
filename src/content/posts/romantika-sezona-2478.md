@@ -44,6 +44,10 @@ anime:
 
 ##### 4 воткнутых в глаз вилки из 10
 
+
+::material{id="neznakomtsy-v-drugoy-zhizni"}
+
+
 #### Вы правда женитесь?
 
 
@@ -105,6 +109,10 @@ anime:
 ———
 
 В итоге как-то этот сезон хорошей романтикой не радует (кроме «Голубой шкатулки»). Печально!
+
+
+::material{id="parochka-romantik"}
+
 
 ::anime-ref{id="raise-wa-tanin-ga-ii" source="shikimori" source-id="56964"}
 

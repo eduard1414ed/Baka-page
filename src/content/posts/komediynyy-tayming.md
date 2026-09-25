@@ -59,4 +59,7 @@ anime:
 ::image{src="/images/uploads/tg-1374.jpg" alt="" width="column"}
 
 
+::material{id="ep-116"}
+
+
 ::anime-ref{id="horimiya" source="shikimori" source-id="42897"}

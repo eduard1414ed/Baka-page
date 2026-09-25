@@ -43,4 +43,8 @@ anime:
 
 Позже появятся и новые правила, но пока получается примерно так. Стало ли понятнее?
 
+
+::material{id="kto-iz-nih-vret"}
+
+
 ::anime-ref{id="jujutsu-kaisen-shimetsu-kaiyuu-zenpen" source="shikimori" source-id="57658"}

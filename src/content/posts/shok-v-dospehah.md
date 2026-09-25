@@ -40,4 +40,8 @@ anime:
 
 А как вам новый «Призрак в доспехах»?
 
+
+::material{id="10-samyh-ozhidaemyh-anime-leta-2026-goda"}
+
+
 ::anime-ref{id="koukaku-kidoutai-tv" source="shikimori" source-id="58929"}

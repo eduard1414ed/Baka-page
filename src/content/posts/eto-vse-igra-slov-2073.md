@@ -32,4 +32,8 @@ Kill la Kill («Убить или быть убитым») — одно из с�
 
 На самом деле в этом сериале юмор на уровне языка — не редкость. И даже само название Kill la Kill — это игра слов, но об этом вы поподробнее узнаете в завтрашнем бонусном эпизоде подкаста 😉
 
+
+::material{id="bonusnyy-vypusk-ubey-ili-umri"}
+
+
 ::anime-ref{id="kill-la-kill" source="shikimori" source-id="18679"}

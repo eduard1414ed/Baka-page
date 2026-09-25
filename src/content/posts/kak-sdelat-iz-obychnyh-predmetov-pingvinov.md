@@ -38,4 +38,8 @@ anime:
 
 ::image{src="/images/uploads/tg-356.jpg" alt="" width="column"}
 
+
+::material{id="ep-8"}
+
+
 ::anime-ref{id="penguin-highway" source="shikimori" source-id="37407"}

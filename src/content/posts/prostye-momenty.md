@@ -39,4 +39,8 @@ anime:
 
 Так что, радуюсь тому, что открыл для себя этот опенинг, и удивляюсь, как события из жизни могут менять восприятие художественных произведений.
 
+
+::material{id="bonusnyy-vypusk-prioritet-chudo-yaytsa"}
+
+
 ::anime-ref{id="wonder-egg-priority" source="shikimori" source-id="43299"}

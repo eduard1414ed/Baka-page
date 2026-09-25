@@ -43,4 +43,8 @@ anime:
 
 ::image{src="/images/uploads/tg-242.jpg" alt="" width="column"}
 
+
+::material{id="ep-43"}
+
+
 ::anime-ref{id="death-note" source="shikimori" source-id="1535"}

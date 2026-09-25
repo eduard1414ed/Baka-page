@@ -47,4 +47,8 @@ P.S. Ну и конечно, новый сезон «Звездного дитя
 
 ::image{src="/images/uploads/tg-2253.jpg" alt="" width="column"}
 
+
+::material{id="kak-oshi-no-ko-vdohnovlyaetsya-tragediyami"}
+
+
 ::anime-ref{id="oshi-no-ko-2nd-season" source="shikimori" source-id="55791"}

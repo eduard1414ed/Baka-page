@@ -311,6 +311,10 @@ anime:
 
 **Смотреть дальше:** нет, но могу рекомендовать другим
 
+
+::material{id="ep-37"}
+
+
 #### [Шэнму](/anime/shenmue-the-animation/)
 
 ::image{src="/images/uploads/dtf-zima-2022-03.webp" alt="" caption="Шэнму, студия Telecom Animation Film" width="column"}
@@ -371,6 +375,10 @@ anime:
 
 **Смотреть дальше:** в грустные вечера — можно
 
+
+::material{id="multivselennaya-milyh-devochek"}
+
+
 #### [Руководство гениального принца по вызволению страны из долгов](/anime/tensai-ouji-no-akaji-kokka-saisei-jutsu/)
 
 ::image{src="/images/uploads/zima-2022-tg-116.webp" alt="" caption="Руководство гениального принца по вызволению страны из долгов, студия Yokohama Animation Lab" width="column"}
@@ -384,6 +392,10 @@ anime:
 **Оценка:** 7 (и может быть выше, если смешные сцены будут разбавляться сюжетом)
 
 **Смотреть дальше:** как минимум еще несколько серий точно
+
+
+::material{id="obzor-ot-podpischika-ranobe-rukovodstvo-genialnogo-printsa"}
+
 
 ::anime-ref{id="cue" source="shikimori" source-id="43735"}
 

@@ -51,6 +51,10 @@ anime:
 
 А пока, как вы думаете, на каком костюме Кисимото стоило остановиться?
 
+
+::material{id="yokay-vdohnovivshiy-saske"}
+
+
 ::anime-ref{id="naruto" source="shikimori" source-id="20"}
 
 ::anime-ref{id="naruto-shippuuden" source="shikimori" source-id="1735"}

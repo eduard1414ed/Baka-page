@@ -35,6 +35,10 @@ anime:
 
 Этот пример показателен, потому что весь ремейк 2021 года ощущается именно так. Плоско, линейно, без всяких деталей. Словно это краткий пересказ произведения для сочинения.
 
+
+::material{id="ep-124"}
+
+
 ::anime-ref{id="shaman-king" source="shikimori" source-id="154"}
 
 ::anime-ref{id="shaman-king-2021" source="shikimori" source-id="42205"}

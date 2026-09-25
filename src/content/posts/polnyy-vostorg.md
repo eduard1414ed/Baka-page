@@ -51,4 +51,8 @@ anime:
 
 ::image{src="/images/uploads/tg-649.jpg" alt="" width="column"}
 
+
+::material{id="ep-74"}
+
+
 ::anime-ref{id="bocchi-the-rock" source="shikimori" source-id="47917"}

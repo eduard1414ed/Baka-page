@@ -44,4 +44,8 @@ anime:
 
 ::image{src="/images/uploads/tg-1472.jpg" alt="" width="column"}
 
+
+::material{id="bonusnyy-vypusk-v-loferah-vpripryzhku"}
+
+
 ::anime-ref{id="skip-to-loafer" source="shikimori" source-id="50416"}

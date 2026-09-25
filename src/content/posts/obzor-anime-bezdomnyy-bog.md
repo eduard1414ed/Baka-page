@@ -88,4 +88,8 @@ anime:
 
 Получается и вывод такой же. Ни туда, ни сюда. 
 
+
+::material{id="bonusnyy-vypusk-bezdomnyy-bog"}
+
+
 ::anime-ref{id="noragami" source="shikimori" source-id="20507"}

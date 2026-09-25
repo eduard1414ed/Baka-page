@@ -44,3 +44,6 @@ P.S. Кстати, деталь по обложке как раз — видно
 
 
 ::image{src="/images/uploads/tg-935.jpg" alt="" width="column"}
+
+
+::material{id="golovokruzhitelnyy-uspeh"}

@@ -48,4 +48,8 @@ anime:
 
 И если вы любите такой юмор, на сериал стоит обратить внимание.
 
+
+::material{id="magiya-i-muskuly-esli-by-on-byl-sereznym"}
+
+
 ::anime-ref{id="mashle" source="shikimori" source-id="52211"}

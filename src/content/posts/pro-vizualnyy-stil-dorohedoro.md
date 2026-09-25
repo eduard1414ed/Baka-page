@@ -56,4 +56,7 @@ anime:
 ::image{src="/images/uploads/pasted-image-1786622264702.webp" alt="" width="column"}
 
 
+::material{id="ep-132"}
+
+
 ::anime-ref{id="dorohedoro" source="shikimori" source-id="38668"}

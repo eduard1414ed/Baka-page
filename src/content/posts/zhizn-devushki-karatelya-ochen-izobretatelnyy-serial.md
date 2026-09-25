@@ -56,6 +56,10 @@ anime:
 
 Если вы любите приключенческий фантастический экшн — то «Жизнь девушки-карателя» ваш идеальный выбор.
 
+
+::material{id="ep-85"}
+
+
 ::anime-ref{id="shokei-shoujo-no-virgin-road" source="shikimori" source-id="47162"}
 
 ::anime-ref{id="one-punch-man" source="shikimori" source-id="30276"}

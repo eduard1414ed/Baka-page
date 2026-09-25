@@ -57,4 +57,8 @@ anime:
 
 ::image{src="/images/uploads/tg-2656.jpg" alt="" width="column"}
 
+
+::material{id="ep-37"}
+
+
 ::anime-ref{id="bishoujo-senshi-sailor-moon" source="shikimori" source-id="530"}

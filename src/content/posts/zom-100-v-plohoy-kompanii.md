@@ -40,6 +40,10 @@ anime:
 
 А учитывая, что это дебютный проект студии Bug Films, все может закончиться совсем печально.
 
+
+::material{id="bonusnyy-vypusk-predsmertnyy-spisok-zombi"}
+
+
 ::anime-ref{id="isekai-ojisan" source="shikimori" source-id="49220"}
 
 ::anime-ref{id="zom-100-zombie-ni-naru-made-ni-shitai-100-no-koto" source="shikimori" source-id="54112"}

@@ -42,6 +42,10 @@ anime:
 
 ::image{src="/images/uploads/tg-2370.jpg" alt="" width="column"}
 
+
+::material{id="bonusnyy-vypusk-pesn-nochnyh-sov"}
+
+
 ::anime-ref{id="yofukashi-no-uta" source="shikimori" source-id="50346"}
 
 ::anime-ref{id="yofukashi-no-uta-season-2" source="shikimori" source-id="58390"}

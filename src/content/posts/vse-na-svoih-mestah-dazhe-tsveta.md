@@ -66,4 +66,7 @@ anime:
 ::image{src="/images/uploads/tg-2457.jpg" alt="" width="column"}
 
 
+::material{id="znakomtes-sofi-li"}
+
+
 ::anime-ref{id="dandadan" source="shikimori" source-id="57334"}

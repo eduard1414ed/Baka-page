@@ -36,4 +36,8 @@ anime:
 
 Мы уже [видели](/posts/moda-i-manga/), как культура аниме проникает в фэшн, а вот теперь оно уже в большом спорте.
 
+
+::material{id="bonusnyy-vypusk-sinyaya-tyurma"}
+
+
 ::anime-ref{id="blue-lock" source="shikimori" source-id="49596"}

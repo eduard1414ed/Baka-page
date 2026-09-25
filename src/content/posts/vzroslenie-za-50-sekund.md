@@ -41,4 +41,8 @@ anime:
 
 И поэтому фильм так интересно воспринимается и смотрится
 
+
+::material{id="bonusnyy-epizod-volchi-deti-ame-i-yuki"}
+
+
 ::anime-ref{id="ookami-kodomo-no-ame-to-yuki" source="shikimori" source-id="12355"}

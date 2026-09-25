@@ -43,4 +43,8 @@ anime:
 
 В результате такой тщательной работы даже спустя 18 лет бои в «Самурае Чамплу» выглядят безумно привлекательно.
 
+
+::material{id="ep-26"}
+
+
 ::anime-ref{id="samurai-champloo" source="shikimori" source-id="205"}

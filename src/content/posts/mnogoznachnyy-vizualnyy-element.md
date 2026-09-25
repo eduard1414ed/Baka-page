@@ -53,4 +53,7 @@ anime:
 ::image{src="/images/uploads/pasted-image-1786620626181.webp" alt="" width="column"}
 
 
+::material{id="angel-i-demon"}
+
+
 ::anime-ref{id="yahari-ore-no-seishun-love-comedy-wa-machigatteiru" source="shikimori" source-id="14813"}

@@ -34,4 +34,8 @@ anime:
 
 Звучит история так, будто студия хочет продолжать работу, а вот канал платить за него — не очень. И их можно понять, «Ниндзя Камуи» начинался очень неплохо, но в итоге завершился печально, растеряв всю аудиторию.
 
+
+::material{id="nindzya-kamui-ekshen-anime-o-mesti-v-duhe-dzhona-uika"}
+
+
 ::anime-ref{id="ninja-kamui" source="shikimori" source-id="56285"}

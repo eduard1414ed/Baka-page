@@ -59,3 +59,6 @@ tgUrl: https://t.me/podcastbaka/3990
 
 
 ::image{src="/images/uploads/tg-3998.jpg" alt="" width="column"}
+
+
+::material{id="tvorcheskaya-svoboda"}

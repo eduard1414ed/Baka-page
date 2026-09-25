@@ -46,4 +46,8 @@ anime:
 
 В итоге многообещающее аниме оказалось проходным и совсем не обязательным к просмотру. Хотя если вы любите «Поттера», то заценить стоит.
 
+
+::material{id="magiya-i-muskuly-esli-by-on-byl-sereznym"}
+
+
 ::anime-ref{id="nanatsu-no-maken-ga-shihai-suru" source="shikimori" source-id="50582"}

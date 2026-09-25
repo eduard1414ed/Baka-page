@@ -43,6 +43,10 @@ anime:
 
 ::image{src="/images/uploads/tg-2738.jpg" alt="" width="column"}
 
+
+::material{id="bonusnyy-vypusk-plach-devichey-gruppy"}
+
+
 ::anime-ref{id="girls-band-cry" source="shikimori" source-id="55102"}
 
 ::anime-ref{id="bocchi-the-rock" source="shikimori" source-id="47917"}

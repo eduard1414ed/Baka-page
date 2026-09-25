@@ -41,4 +41,8 @@ Vercreek стал заметным благодаря умелому соеди�
 
 Режиссура неонового эндинга лучшего, на данный момент, аниме в мире по версии зрителей — очередной шаг Vercreek на пути к этой мечте.
 
+
+::material{id="ep-62"}
+
+
 ::anime-ref{id="kaguya-sama-wa-kokurasetai-ultra-romantic" source="shikimori" source-id="43608"}

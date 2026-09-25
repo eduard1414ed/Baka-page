@@ -59,4 +59,8 @@ anime:
 
 Советую ли я смотреть? Да. Хотя бы ради диалогов Маи и Сакуты.
 
+
+::material{id="ep-34"}
+
+
 ::anime-ref{id="seishun-buta-yarou-wa-bunny-girl-senpai-no-yume-wo-minai" source="shikimori" source-id="37450"}

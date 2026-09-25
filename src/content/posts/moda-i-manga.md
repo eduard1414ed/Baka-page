@@ -37,4 +37,8 @@ anime:
 
 ::image{src="/images/uploads/tg-458.jpg" alt="" width="column"}
 
+
+::material{id="ep-113"}
+
+
 ::anime-ref{id="blue-period" source="shikimori" source-id="46352"}

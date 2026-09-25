@@ -42,4 +42,8 @@ anime:
 
 Вот что делает грамотный маркетинг.
 
+
+::material{id="dandadan-romantika-pod-sousom-bezumiya"}
+
+
 ::anime-ref{id="dandadan" source="shikimori" source-id="57334"}
