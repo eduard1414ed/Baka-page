@@ -16,13 +16,22 @@
 //      у неизменённого поста пометки нет;
 //   5. кривое решение отвергается и файлов не портит.
 // Каждая проверка печатает ок/ПРОВАЛ; код выхода 1, если провалилась хоть одна.
+//
+// ОТ ЖИВЫХ ДАННЫХ ПРОЕКТА НЕ ЗАВИСИТ (с 25.09.2026). Раньше подставной файл
+// кандидатов строился из живого candidates.json, а find.mjs в конце читал
+// живой решения.json — и после вписывания пачки 1 проверка покраснела на
+// здоровом сервере: «неизменённый» пост оказался изменённым, одобренная пара —
+// уже вписанной. Теперь проверка сама прогоняет find.mjs во временную папку
+// с ПУСТЫМИ решениями и отказами — это её подставной файл кандидатов, точно
+// под нынешние посты, — а все решения живут в подставной папке и в find.mjs
+// передаются явно (--rejected, --decisions). Посты читаются настоящие: сервер
+// в них не пишет, и это проверяется.
 
 import { spawn, execFileSync } from 'node:child_process';
 import { mkdtemp, readFile, readdir, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { CANDIDATES_FILE } from './model.mjs';
 
 const HERE = fileURLToPath(new URL('./', import.meta.url));
 const REPO = fileURLToPath(new URL('../../../', import.meta.url));
@@ -37,10 +46,13 @@ const box = await mkdtemp(join(tmpdir(), 'crosslinks-review-'));
 const dir = join(box, 'решения');
 const gitBefore = gitStatus();
 
+// Свой файл кандидатов: find.mjs во временную папку, без решений и отказов.
+const findOut = join(box, 'find-0');
+execFileSync(process.execPath, [join(HERE, '../find.mjs'), '--rejected', join(box, 'нет-отказов.json'), '--decisions', join(box, 'нет-решений.json'), '--out', findOut], { encoding: 'utf8' });
 // Подставной файл кандидатов: у одного поста «чужой» отпечаток и сдвинутые
 // номера блоков (как если бы выше вставили два абзаца); у второго — ещё и
 // первые слова абзаца, которых в посте нет.
-const real = JSON.parse(await readFile(CANDIDATES_FILE, 'utf8'));
+const real = JSON.parse(await readFile(join(findOut, 'candidates.json'), 'utf8'));
 const mains = real.candidates.filter((c) => c.status === 'основной');
 const shifted = mains.find((c) => c.place.anchorBlock >= 3 && mains.filter((x) => x.source === c.source).length === 1);
 const lost = mains.find((c) => c.source !== shifted.source && mains.filter((x) => x.source === c.source).length === 1);
@@ -142,11 +154,12 @@ try {
 
 	// 2. find.mjs читает отклонённое.
 	const out = join(box, 'find');
-	execFileSync(process.execPath, [join(HERE, '../find.mjs'), '--rejected', join(dir, 'отклонено.json'), '--out', out], { encoding: 'utf8' });
+	execFileSync(process.execPath, [join(HERE, '../find.mjs'), '--rejected', join(dir, 'отклонено.json'), '--decisions', join(dir, 'решения.json'), '--out', out], { encoding: 'utf8' });
 	const again = JSON.parse(await readFile(join(out, 'candidates.json'), 'utf8'));
 	check(again.rejectedCount === 1, `find.mjs прочитал отклонённых: ${again.rejectedCount}`);
 	check(!again.candidates.some((c) => c.key === m1.key), `отклонённая пара ${m1.key} больше не предлагается`);
-	check(again.candidates.some((c) => c.key === m2.key), 'одобренная пара осталась (контроль: поиск работает)');
+	// Контроль: пара, с которой решение сняли («вернуть не решено»), снова предлагается.
+	check(again.candidates.some((c) => c.key === m3.key), `пара без решения по-прежнему предлагается (${m3.key}) — контроль: поиск работает`);
 } catch (e) {
 	console.error(e);
 	code = 1;
