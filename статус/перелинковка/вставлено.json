@@ -6,7 +6,7 @@
   "afterWords": "Подробнее можно послушать в нашем бонусном выпуске.",
   "line": "::material{id=\"ep-133\" mode=\"play\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  },
  {
   "key": "a-vot-i-leto-2147→ep-8",
@@ -15,7 +15,7 @@
   "afterWords": "Подробнее можно послушать в выпуске подкаста.",
   "line": "::material{id=\"ep-8\" mode=\"play\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  },
  {
   "key": "a-vot-i-leto-2147→letniy-roman-na-maksimalkah",
@@ -24,7 +24,7 @@
   "afterWords": "Подробнее можно почитать в текстовом обзоре.",
   "line": "::material{id=\"letniy-roman-na-maksimalkah\" label=\"Подробнее\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  },
  {
   "key": "a-vot-i-leto-2147→slova-puzyryatsya-podobno-gazirovke-glavnoe-letnee-anime",
@@ -33,7 +33,7 @@
   "afterWords": "Подробнее можно почитать в текстовом обзоре.",
   "line": "::material{id=\"slova-puzyryatsya-podobno-gazirovke-glavnoe-letnee-anime\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  },
  {
   "key": "anime-o-traditsionnoy-yaponskoy-muzyke→chistyy-zvuk-kak-zvuchit-tvoy-syamisen",
@@ -42,7 +42,7 @@
   "afterWords": "Аниме невероятно атмосферно и красиво показывает сам процесс игры.",
   "line": "::material{id=\"chistyy-zvuk-kak-zvuchit-tvoy-syamisen\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  },
  {
   "key": "anime-o-traditsionnoy-yaponskoy-muzyke→ep-67",
@@ -51,7 +51,7 @@
   "afterWords": "В довольно необычном фильме, смешивающим путешествия во времени и музыку,",
   "line": "::material{id=\"ep-67\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  },
  {
   "key": "detali-kotorye-nikto-ne-uvidit→ep-50",
@@ -60,7 +60,7 @@
   "afterWords": "В новом выпуске мы говорим о том, почему фильм Red",
   "line": "::material{id=\"ep-50\" mode=\"play\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  },
  {
   "key": "dobryy-dyadyushka→hayao-miyadzaki-ot-printsessy-mononoke-do-malchika-i-ptitsy",
@@ -69,7 +69,7 @@
   "afterWords": "Так что за сказочными фильмами и образом доброго дядюшки —",
   "line": "::material{id=\"hayao-miyadzaki-ot-printsessy-mononoke-do-malchika-i-ptitsy\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  },
  {
   "key": "gorod-krepost-koulun→ep-123",
@@ -78,7 +78,7 @@
   "afterWords": "След Коулуна можно найти и в «Призраке в доспехах», и",
   "line": "::material{id=\"ep-123\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  },
  {
   "key": "kak-knizhnye-magaziny-povliyali-na-oblozhki-mangi→bonusnyy-vypusk-v-les-gde-mertsayut-svetlyachki",
@@ -87,7 +87,7 @@
   "afterWords": "Так что наслаждайтесь дизайном Hana to Yume Comics пока можете",
   "line": "::material{id=\"bonusnyy-vypusk-v-les-gde-mertsayut-svetlyachki\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  },
  {
   "key": "kak-osii-i-miyadzaki-pomogli-studii-gainax→ep-135",
@@ -96,7 +96,7 @@
   "afterWords": "Именно их высокая оценка помогла дать добро на производство первого",
   "line": "::material{id=\"ep-135\" label=\"Узнать больше\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  },
  {
   "key": "neveroyatnye-raskadrovki-satosi-kona→ep-12",
@@ -105,7 +105,7 @@
   "afterWords": "И вот я нашёл одну из страниц такой раскадровки к",
   "line": "::material{id=\"ep-12\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  },
  {
   "key": "nostalgiya-opasna→ep-123",
@@ -114,7 +114,7 @@
   "afterWords": "Пожалуй, это самый интригующий тайтл этого сезона.",
   "line": "::material{id=\"ep-123\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  },
  {
   "key": "para-slov-o-rezhissure-v-devochke-pokorivshey-vremya→bonusnyy-vypusk-devochka-pokorivshaya-vremya",
@@ -123,7 +123,7 @@
   "afterWords": "Вот как минута фильма без слов и музыки рассказывает историю",
   "line": "::material{id=\"bonusnyy-vypusk-devochka-pokorivshaya-vremya\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  },
  {
   "key": "pervye-vpechatleniya-ot-prosmotra-istrebitelya-demonov-beskonechnaya-krepost-post-ot-ksyushi→ep-58",
@@ -132,7 +132,7 @@
   "afterWords": "Так что советую захватить платочки для слез.",
   "line": "::material{id=\"ep-58\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  },
  {
   "key": "puteshestvie-syuny-i-skazaniya-o-zemnomore-2330→bonusnyy-vypusk-skazaniya-zemnomorya",
@@ -141,7 +141,7 @@
   "afterWords": "Учитывая это, кажется символичным, что «Сказания» начинаются со сцены убийства",
   "line": "::material{id=\"bonusnyy-vypusk-skazaniya-zemnomorya\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  },
  {
   "key": "samaya-dolgaya-manga-v-istorii-shonen-jump→vedmnadzor-anime-sitkom-kotoryy-my-zasluzhili",
@@ -150,7 +150,7 @@
   "afterWords": "В бонусном выпуске про «Ведьмнадзор» мы с Ксюшей обсуждали, что",
   "line": "::material{id=\"vedmnadzor-anime-sitkom-kotoryy-my-zasluzhili\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  },
  {
   "key": "spisok-pyati-tselebnyh-anime→bonusnyy-vypusk-v-loferah-vpripryzhku",
@@ -159,7 +159,7 @@
   "afterWords": "Главный повседневный сериал прошлого года. Легкая и смешная история об",
   "line": "::material{id=\"bonusnyy-vypusk-v-loferah-vpripryzhku\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  },
  {
   "key": "spisok-pyati-tselebnyh-anime→ep-133",
@@ -168,7 +168,7 @@
   "afterWords": "История дружбы 23-летнего каллиграфа Ханды Сэйсю с шестилетней Нару. Из-за",
   "line": "::material{id=\"ep-133\" mode=\"play\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  },
  {
   "key": "spisok-pyati-tselebnyh-anime→ep-134",
@@ -177,7 +177,7 @@
   "afterWords": "Конечно, куда же без классики. Аниме о том, как компания",
   "line": "::material{id=\"ep-134\" mode=\"play\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  },
  {
   "key": "spisok-pyati-tselebnyh-anime→ep-39",
@@ -186,7 +186,7 @@
   "afterWords": "Если вам нужно что-то с капелькой магии в истории, то",
   "line": "::material{id=\"ep-39\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  },
  {
   "key": "zhit-i-naslazhdatsya-prostoy-zhiznyu→ep-114",
@@ -195,6 +195,6 @@
   "afterWords": "Очень советую эту мангу всем, кто хочет немного замедлиться и",
   "line": "::material{id=\"ep-114\"}",
   "insertedAt": "2026-09-25T10:31:08.096Z",
-  "commit": null
+  "commit": "939ccef8"
  }
 ]
