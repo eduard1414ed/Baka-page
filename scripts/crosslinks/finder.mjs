@@ -351,13 +351,12 @@ export function findTitleCandidates({ posts, anime, stripExisting = false, rejec
 				cand.status = 'отсеян';
 				cand.statusWhy = 'не нашлось места по правилам';
 			} else {
-				// Обычная ссылка на ту же цель в абзаце места → список шага 5.
+				// Обычная ссылка на ту же цель в абзаце места. До сессии 3б такая пара
+				// уходила в список шага 5; теперь (решение Эда 25.09.2026) — обычный
+				// кандидат: страница ревью покажет дубль, вставлялка снимет ссылку
+				// (unlink.mjs). Пометка остаётся — для отчётов.
 				const anchor = src.blocks[cand.place.anchorBlock];
-				if (anchor?.ownLinks?.some((l) => l.target === p.tgt.id)) {
-					cand.status = 'шаг 5';
-					cand.statusWhy = `в абзаце уже есть обычная ссылка на цель`;
-					forStep5.push(cand);
-				}
+				if (anchor?.ownLinks?.some((l) => l.target === p.tgt.id)) cand.flags.linkHere = true;
 				const elsewhere = src.blocks.filter((b) => b.ownLinks?.some((l) => l.target === p.tgt.id)).map((b) => textUpTo(src, b.n));
 				if (elsewhere.length) cand.flags.linkElsewhere = elsewhere;
 			}

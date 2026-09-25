@@ -29,6 +29,7 @@ import { canPlayInline } from '../../../src/lib/postRef.mjs';
 import { categories, sectionOf } from '../../../src/data/categories.js';
 import { SITE_URL } from '../../../src/lib/site.mjs';
 import { fingerprint, reanchor } from './fresh.mjs';
+import { dupKind, DUP_KIND_LABEL, fragmentFor, sentenceView } from '../unlink.mjs';
 
 export const REPO = fileURLToPath(new URL('../../../', import.meta.url));
 export const CANDIDATES_FILE = join(homedir(), 'baka-audit/crosslinks/candidates/candidates.json');
@@ -152,7 +153,24 @@ export async function buildReview({ file = CANDIDATES_FILE, only = null } = {}) 
 			textN: b.textN ?? null,
 			anime: b.kind === 'anime-ref' ? animeName(anime, b.animeId) : null,
 			material: b.kind === 'material' ? { target: b.target, title: byId.get(b.target)?.title ?? b.target } : null,
+			// Ссылки на свои материалы в блоке — для «в этом абзаце уже есть
+			// ссылка на эту цель» (сессия 3б). Вид и «было → станет» считает
+			// unlink.mjs, у страницы своей копии правила нет.
+			dups: (b.links ?? []).map((l) => {
+				const kind = dupKind(l);
+				const w = kind === 'manual' ? null : fragmentFor(b, l, 'words');
+				return { raw: l.raw, target: l.target, targets: l.targets, youtube: Boolean(l.youtube), kind, kindLabel: DUP_KIND_LABEL[kind], words: l.words, parts: l.parts, view: sentenceView(b, l).view, wordsFrag: w && !w.error ? w : null, wordsError: w?.error ?? null };
+			}),
 		}));
+		// Абзац-якорь вписанной вставки — текстовый блок прямо перед ней
+		// (через картинки): тот, в котором apply.mjs будет снимать дубль.
+		const insertedAnchor = {};
+		for (const b of src.blocks) {
+			if (b.kind !== 'material') continue;
+			let j = b.n - 1;
+			while (j >= 0 && src.blocks[j].kind === 'image') j--;
+			if (src.blocks[j]?.kind === 'text') insertedAnchor[b.target] = j;
+		}
 		// Пост изменился после поиска — места заново по первым словам абзаца.
 		// Нет отпечатка в файле кандидатов (старый прогон) — сверять не с чем,
 		// и это говорится вслух, а не считается «не изменился».
@@ -179,6 +197,7 @@ export async function buildReview({ file = CANDIDATES_FILE, only = null } = {}) 
 			closed: closed.has(sid),
 			// Цели, уже вписанные в файл поста блоком ::material.
 			inserted: src.blocks.filter((b) => b.kind === 'material').map((b) => b.target),
+			insertedAnchor,
 			fingerprint: now,
 			changed,
 			blocks,
@@ -189,7 +208,7 @@ export async function buildReview({ file = CANDIDATES_FILE, only = null } = {}) 
 	// Внутри пачки — сначала посты с самым весомым кандидатом.
 	out.sort((a, b) => a.batch - b.batch || b.best - a.best || a.id.localeCompare(b.id));
 
-	return {
+	const result = {
 		made: found.made,
 		hasFingerprints: Boolean(found.fingerprints),
 		rules: { minTextBefore: RULES.minTextBefore, minTextBetween: RULES.minTextBetween },
@@ -201,4 +220,9 @@ export async function buildReview({ file = CANDIDATES_FILE, only = null } = {}) 
 		// выбирается из любого материала, и плашка у неё та же.
 		targets: Object.fromEntries(targets),
 	};
+	// Блоки постов как их разобрал lib.mjs (с разметкой и местами ссылок) —
+	// серверу, для «своего варианта» и проверки решения. Страница их не получает:
+	// свойство не перечисляемое и в JSON не попадает.
+	Object.defineProperty(result, 'corpus', { value: byId, enumerable: false });
+	return result;
 }

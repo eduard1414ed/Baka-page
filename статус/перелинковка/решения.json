@@ -1,6 +1,369 @@
 {
  "approved": [
   {
+   "key": "a-kakie-fillery-smotret→bonusnyy-epizod-naruto-bikochu",
+   "source": "a-kakie-fillery-smotret",
+   "target": "bonusnyy-epizod-naruto-bikochu",
+   "from": "main",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 2,
+    "anchorBlock": 2,
+    "anchorWords": "Шино, Хината и Наруто ищут жука бикочу, который по запаху"
+   },
+   "originalPlace": {
+    "afterBlock": 29,
+    "anchorBlock": 29,
+    "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": "слушать про арку",
+   "fingerprint": "19ccdf830c3d",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:41:11.989Z"
+  },
+  {
+   "key": "a-kakie-fillery-smotret→bonusnyy-epizod-naruto-ohotnik-za-prestupnikami",
+   "source": "a-kakie-fillery-smotret",
+   "target": "bonusnyy-epizod-naruto-ohotnik-za-prestupnikami",
+   "from": "reserve",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 17,
+    "anchorBlock": 17,
+    "anchorWords": "Двое посторонних пытаются проникнуть в Коноху, приняв (не очень-то удачно)"
+   },
+   "originalPlace": {
+    "afterBlock": 29,
+    "anchorBlock": 29,
+    "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": "слушать про арку",
+   "fingerprint": "19ccdf830c3d",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:46:18.674Z"
+  },
+  {
+   "key": "a-kakie-fillery-smotret→bonusnyy-epizod-naruto-smeyuschiysya-shino",
+   "source": "a-kakie-fillery-smotret",
+   "target": "bonusnyy-epizod-naruto-smeyuschiysya-shino",
+   "from": "reserve",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 25,
+    "anchorBlock": 25,
+    "anchorWords": "Шино и Наруто должны не засмеяться на похоронах."
+   },
+   "originalPlace": {
+    "afterBlock": 29,
+    "anchorBlock": 29,
+    "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": "слушать про арку",
+   "fingerprint": "19ccdf830c3d",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:44:01.356Z"
+  },
+  {
+   "key": "a-kakie-fillery-smotret→bonusnyy-epizod-naruto-strana-morya",
+   "source": "a-kakie-fillery-smotret",
+   "target": "bonusnyy-epizod-naruto-strana-morya",
+   "from": "reserve",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "Наруто, Шино и Ино вместе с Анко должны справиться с"
+   },
+   "originalPlace": {
+    "afterBlock": 29,
+    "anchorBlock": 29,
+    "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": "слушать про арку",
+   "fingerprint": "19ccdf830c3d",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:42:09.571Z"
+  },
+  {
+   "key": "a-kakie-fillery-smotret→bonusnyy-epizod-naruto-strana-nano",
+   "source": "a-kakie-fillery-smotret",
+   "target": "bonusnyy-epizod-naruto-strana-nano",
+   "from": "reserve",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 8,
+    "anchorBlock": 8,
+    "anchorWords": "Наруто, Хината и Чёджи отправляються помочь жителям маленькой страны."
+   },
+   "originalPlace": {
+    "afterBlock": 29,
+    "anchorBlock": 29,
+    "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": "слушать про арку",
+   "fingerprint": "19ccdf830c3d",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:42:18.321Z"
+  },
+  {
+   "key": "a-kakie-fillery-smotret→bonusnyy-epizod-naruto-strana-ptits",
+   "source": "a-kakie-fillery-smotret",
+   "target": "bonusnyy-epizod-naruto-strana-ptits",
+   "from": "reserve",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 4,
+    "anchorBlock": 4,
+    "anchorWords": "Неджи, Тентен и Наруто расследуют появление призрака — Белого Нороимуси."
+   },
+   "originalPlace": {
+    "afterBlock": 29,
+    "anchorBlock": 29,
+    "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": "слушать про арку",
+   "fingerprint": "19ccdf830c3d",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:41:45.320Z"
+  },
+  {
+   "key": "a-kakie-fillery-smotret→bonusnyy-epizod-naruto-tretiy-velikiy-zver",
+   "source": "a-kakie-fillery-smotret",
+   "target": "bonusnyy-epizod-naruto-tretiy-velikiy-zver",
+   "from": "reserve",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 29,
+    "anchorBlock": 29,
+    "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+   },
+   "originalPlace": {
+    "afterBlock": 29,
+    "anchorBlock": 29,
+    "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "19ccdf830c3d",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:44:52.454Z"
+  },
+  {
+   "key": "a-kakie-fillery-smotret→bonusnyy-epizod-naruto-v-poiskah-klada",
+   "source": "a-kakie-fillery-smotret",
+   "target": "bonusnyy-epizod-naruto-v-poiskah-klada",
+   "from": "reserve",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 21,
+    "anchorBlock": 21,
+    "anchorWords": "Наруто и Джирайя пытаются поймать почтальонов и предотвратить войну."
+   },
+   "originalPlace": {
+    "afterBlock": 29,
+    "anchorBlock": 29,
+    "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": "слушать про арку",
+   "fingerprint": "19ccdf830c3d",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:45:30.773Z"
+  },
+  {
+   "key": "a-kakie-fillery-smotret→bonusnyy-vypusk-naruto-klan-kurama",
+   "source": "a-kakie-fillery-smotret",
+   "target": "bonusnyy-vypusk-naruto-klan-kurama",
+   "from": "reserve",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 12,
+    "anchorBlock": 12,
+    "anchorWords": "Предыстория Куренай и ее прошлой ученицы из давно забытого клана."
+   },
+   "originalPlace": {
+    "afterBlock": 29,
+    "anchorBlock": 29,
+    "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": "слушать про арку",
+   "fingerprint": "19ccdf830c3d",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:43:01.639Z"
+  },
+  {
+   "key": "a-kakie-fillery-smotret→bonusnyy-vypusk-naruto-menma",
+   "source": "a-kakie-fillery-smotret",
+   "target": "bonusnyy-vypusk-naruto-menma",
+   "from": "reserve",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 14,
+    "anchorBlock": 14,
+    "anchorWords": "Наруто, Неджи и Тен-тен помогают некоему Мэнме вернуть свою память."
+   },
+   "originalPlace": {
+    "afterBlock": 29,
+    "anchorBlock": 29,
+    "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": "слушать про арку",
+   "fingerprint": "19ccdf830c3d",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:43:19.671Z"
+  },
+  {
+   "key": "a-kakie-fillery-smotret→bonusnyy-vypusk-naruto-odinnadtsat-iz-konohi",
+   "source": "a-kakie-fillery-smotret",
+   "target": "bonusnyy-vypusk-naruto-odinnadtsat-iz-konohi",
+   "from": "reserve",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 10,
+    "anchorBlock": 10,
+    "anchorWords": "Большая команда под руководством Шикамару спасают Коноху от старого врага."
+   },
+   "originalPlace": {
+    "afterBlock": 29,
+    "anchorBlock": 29,
+    "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": "слушать про арку",
+   "fingerprint": "19ccdf830c3d",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:42:39.272Z"
+  },
+  {
    "key": "a-vot-i-leto-2147→ep-133",
    "source": "a-vot-i-leto-2147",
    "target": "ep-133",
@@ -26,7 +389,18 @@
    "play": true,
    "label": null,
    "fingerprint": "b27b03d01045",
-   "decidedAt": "2026-09-25T09:56:46.369Z"
+   "decidedAt": "2026-09-25T11:20:40.961Z",
+   "unlink": [
+    {
+     "raw": "[в нашем бонусном выпуске.](/posts/ep-133/)",
+     "kind": "words",
+     "mode": "words",
+     "from": "[в нашем бонусном выпуске.](/posts/ep-133/)",
+     "to": "в нашем бонусном выпуске.",
+     "pre": "Подробнее можно послушать ",
+     "post": ""
+    }
+   ]
   },
   {
    "key": "a-vot-i-leto-2147→ep-8",
@@ -39,8 +413,8 @@
    "batch": 1,
    "targetKind": "podcast",
    "place": {
-    "afterBlock": 25,
-    "anchorBlock": 25,
+    "afterBlock": 28,
+    "anchorBlock": 28,
     "anchorWords": "Подробнее можно послушать в выпуске подкаста."
    },
    "originalPlace": {
@@ -54,7 +428,18 @@
    "play": true,
    "label": null,
    "fingerprint": "b27b03d01045",
-   "decidedAt": "2026-09-25T09:57:33.685Z"
+   "decidedAt": "2026-09-25T11:20:55.310Z",
+   "unlink": [
+    {
+     "raw": "[в выпуске подкаста.](/posts/ep-8/)",
+     "kind": "words",
+     "mode": "words",
+     "from": "[в выпуске подкаста.](/posts/ep-8/)",
+     "to": "в выпуске подкаста.",
+     "pre": "Подробнее можно послушать ",
+     "post": ""
+    }
+   ]
   },
   {
    "key": "a-vot-i-leto-2147→letniy-roman-na-maksimalkah",
@@ -69,8 +454,8 @@
    "batch": 1,
    "targetKind": "note",
    "place": {
-    "afterBlock": 12,
-    "anchorBlock": 12,
+    "afterBlock": 13,
+    "anchorBlock": 13,
     "anchorWords": "Подробнее можно почитать в текстовом обзоре."
    },
    "originalPlace": {
@@ -86,7 +471,18 @@
    "fingerprint": "b27b03d01045",
    "reason": null,
    "comment": null,
-   "decidedAt": "2026-09-25T09:58:09.153Z"
+   "decidedAt": "2026-09-25T11:21:02.893Z",
+   "unlink": [
+    {
+     "raw": "[в текстовом обзоре.](/posts/letniy-roman-na-maksimalkah/)",
+     "kind": "words",
+     "mode": "words",
+     "from": "[в текстовом обзоре.](/posts/letniy-roman-na-maksimalkah/)",
+     "to": "в текстовом обзоре.",
+     "pre": "Подробнее можно почитать ",
+     "post": ""
+    }
+   ]
   },
   {
    "key": "a-vot-i-leto-2147→slova-puzyryatsya-podobno-gazirovke-glavnoe-letnee-anime",
@@ -102,8 +498,8 @@
    "batch": 1,
    "targetKind": "bonus",
    "place": {
-    "afterBlock": 18,
-    "anchorBlock": 18,
+    "afterBlock": 20,
+    "anchorBlock": 20,
     "anchorWords": "Подробнее можно почитать в текстовом обзоре."
    },
    "originalPlace": {
@@ -115,11 +511,44 @@
    "manual": false,
    "replaces": null,
    "play": false,
-   "label": null,
+   "label": "Подробнее",
    "fingerprint": "b27b03d01045",
    "reason": null,
    "comment": null,
-   "decidedAt": "2026-09-25T09:56:57.453Z"
+   "decidedAt": "2026-09-25T11:21:40.878Z"
+  },
+  {
+   "key": "agni-face→vosem-storon-fudzimoto",
+   "source": "agni-face",
+   "target": "vosem-storon-fudzimoto",
+   "from": "reserve",
+   "kind": "person",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "article",
+   "place": {
+    "afterBlock": 7,
+    "anchorBlock": 7,
+    "anchorWords": "А что было дальше вы знаете. И, кстати, теперь Фудзимото"
+   },
+   "originalPlace": {
+    "afterBlock": 7,
+    "anchorBlock": 7,
+    "anchorWords": "А что было дальше вы знаете. И, кстати, теперь Фудзимото"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": "agni-face→kak-legko-pomenyat-istoriyu",
+   "play": false,
+   "label": null,
+   "fingerprint": "8030ae7c6a41",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:48:04.798Z"
   },
   {
    "key": "anime-o-traditsionnoy-yaponskoy-muzyke→chistyy-zvuk-kak-zvuchit-tvoy-syamisen",
@@ -187,6 +616,333 @@
    "decidedAt": "2026-09-25T10:03:30.438Z"
   },
   {
+   "key": "anime-v-stile-traditsionnogo-izobrazitelnogo-iskusstva-2224→bonusnyy-vypusk-inu-o",
+   "source": "anime-v-stile-traditsionnogo-izobrazitelnogo-iskusstva-2224",
+   "target": "bonusnyy-vypusk-inu-o",
+   "from": "main",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 21,
+    "anchorBlock": 21,
+    "anchorWords": "И благодаря этому соединению рождается настоящая рок-опера в реалиях феодальной"
+   },
+   "originalPlace": {
+    "afterBlock": 21,
+    "anchorBlock": 21,
+    "anchorWords": "И благодаря этому соединению рождается настоящая рок-опера в реалиях феодальной"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "748fe4fe04f9",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:29:50.897Z"
+  },
+  {
+   "key": "anime-v-stile-traditsionnogo-izobrazitelnogo-iskusstva-2224→ep-154",
+   "source": "anime-v-stile-traditsionnogo-izobrazitelnogo-iskusstva-2224",
+   "target": "ep-154",
+   "from": "main",
+   "kind": "title",
+   "confidence": "слабый",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "videoessay",
+   "place": {
+    "afterBlock": 5,
+    "anchorBlock": 5,
+    "anchorWords": "Это очень красивая, но печальная сказка, нарисованная с помощью пастельных"
+   },
+   "originalPlace": {
+    "afterBlock": 5,
+    "anchorBlock": 5,
+    "anchorWords": "Это очень красивая, но печальная сказка, нарисованная с помощью пастельных"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "748fe4fe04f9",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:29:20.247Z"
+  },
+  {
+   "key": "anime-v-stile-traditsionnogo-izobrazitelnogo-iskusstva-2224→mononoke-eksperiment-na-vseh-urovnyah",
+   "source": "anime-v-stile-traditsionnogo-izobrazitelnogo-iskusstva-2224",
+   "target": "mononoke-eksperiment-na-vseh-urovnyah",
+   "from": "main",
+   "kind": "broad",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 17,
+    "anchorBlock": 17,
+    "anchorWords": "Для того, чтобы изгнать демонов, Аптекарю нужно знать «Форму», «Суть»"
+   },
+   "originalPlace": {
+    "afterBlock": 17,
+    "anchorBlock": 17,
+    "anchorWords": "Для того, чтобы изгнать демонов, Аптекарю нужно знать «Форму», «Суть»"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "748fe4fe04f9",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:29:47.898Z"
+  },
+  {
+   "key": "bolshoy-skelet→tszyanshi",
+   "source": "bolshoy-skelet",
+   "target": "tszyanshi",
+   "from": "main",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "Так что когда в следующий раз встретите гигантский скелет, вы"
+   },
+   "originalPlace": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "Так что когда в следующий раз встретите гигантский скелет, вы"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "8db706471eb4",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:39:14.765Z"
+  },
+  {
+   "key": "chto-eto-za-palki-na-kladbischah→ep-124",
+   "source": "chto-eto-za-palki-na-kladbischah",
+   "target": "ep-124",
+   "from": "reserve",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "videoessay",
+   "place": {
+    "afterBlock": 5,
+    "anchorBlock": 3,
+    "anchorWords": "Сотобы часто появляются и в аниме. Чаще всего, как просто"
+   },
+   "originalPlace": {
+    "afterBlock": 5,
+    "anchorBlock": 3,
+    "anchorWords": "Сотобы часто появляются и в аниме. Чаще всего, как просто"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": "chto-eto-za-palki-na-kladbischah→tszyanshi",
+   "play": false,
+   "label": null,
+   "fingerprint": "3998929528c3",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:39:24.589Z"
+  },
+  {
+   "key": "chto-obschego-mezhdu-bezdomnym-bogom-i-atakoy-titanov→bonusnyy-vypusk-bezdomnyy-bog",
+   "source": "chto-obschego-mezhdu-bezdomnym-bogom-i-atakoy-titanov",
+   "target": "bonusnyy-vypusk-bezdomnyy-bog",
+   "from": "main",
+   "kind": "subject",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "Возможно, третьего сезона «Бездомного бога» нет только потому, что авторы"
+   },
+   "originalPlace": {
+    "afterBlock": 2,
+    "anchorBlock": 2,
+    "anchorWords": "Если вы о нем никогда не слышали — это сериал-пародия"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "fdfc77695e27",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:29:03.331Z"
+  },
+  {
+   "key": "chto-proishodit-v-studii-mappa→intervyu-s-sozdatelyami-magicheskoy-bitvy",
+   "source": "chto-proishodit-v-studii-mappa",
+   "target": "intervyu-s-sozdatelyami-magicheskoy-bitvy",
+   "from": "main",
+   "kind": "studio",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "article",
+   "place": {
+    "afterBlock": 7,
+    "anchorBlock": 7,
+    "anchorWords": "Не очень понятно, что MAPPA будет делать дальше — выжимать"
+   },
+   "originalPlace": {
+    "afterBlock": 7,
+    "anchorBlock": 7,
+    "anchorWords": "Не очень понятно, что MAPPA будет делать дальше — выжимать"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "f92c2eed7b18",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:34:14.333Z"
+  },
+  {
+   "key": "chto-takoe-hashira→ep-58",
+   "source": "chto-takoe-hashira",
+   "target": "ep-58",
+   "from": "main",
+   "kind": "subject",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "То есть, хашира — это не только столпы, но еще"
+   },
+   "originalPlace": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "То есть, хашира — это не только столпы, но еще"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "1a707540511a",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:33:57.050Z"
+  },
+  {
+   "key": "chto-znachit-bezhat→ep-141",
+   "source": "chto-znachit-bezhat",
+   "target": "ep-141",
+   "from": "main",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "videoessay",
+   "place": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "На этот год, кстати, анонсирована экранизация «Стометровки» в формате полнометражного"
+   },
+   "originalPlace": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "На этот год, кстати, анонсирована экранизация «Стометровки» в формате полнометражного"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "13b5588b621d",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:26:46.663Z"
+  },
+  {
+   "key": "da-snova-pro-pesn-nochnyh-sov→govoryaschie-imena",
+   "source": "da-snova-pro-pesn-nochnyh-sov",
+   "target": "govoryaschie-imena",
+   "from": "main",
+   "kind": "broad",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 8,
+    "anchorBlock": 8,
+    "anchorWords": "Получается, что ощущения героев передаются не словами или даже эмоциями"
+   },
+   "originalPlace": {
+    "afterBlock": 8,
+    "anchorBlock": 8,
+    "anchorWords": "Получается, что ощущения героев передаются не словами или даже эмоциями"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "b650a492ab7c",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:37:32.818Z"
+  },
+  {
    "key": "detali-kotorye-nikto-ne-uvidit→ep-50",
    "source": "detali-kotorye-nikto-ne-uvidit",
    "target": "ep-50",
@@ -218,6 +974,39 @@
    "reason": null,
    "comment": null,
    "decidedAt": "2026-09-25T10:04:21.438Z"
+  },
+  {
+   "key": "dizayn-personazhey-cheloveka-benzopily→chelovek-benzopila-istoriya-reze-romantika-protiv-ekshena",
+   "source": "dizayn-personazhey-cheloveka-benzopily",
+   "target": "chelovek-benzopila-istoriya-reze-romantika-protiv-ekshena",
+   "from": "main",
+   "kind": "subject",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 6,
+    "anchorBlock": 3,
+    "anchorWords": "Напомню, что фильм уже вышел 19 сентября в Японии, а"
+   },
+   "originalPlace": {
+    "afterBlock": 6,
+    "anchorBlock": 3,
+    "anchorWords": "Напомню, что фильм уже вышел 19 сентября в Японии, а"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "5178bce22ebf",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:39:09.747Z"
   },
   {
    "key": "dobryy-dyadyushka→hayao-miyadzaki-ot-printsessy-mononoke-do-malchika-i-ptitsy",
@@ -253,6 +1042,233 @@
    "decidedAt": "2026-09-25T10:06:06.772Z"
   },
   {
+   "key": "drugie-kiry-eschyo-dve-istorii-iz-mira-tetradi-smerti→ep-43",
+   "source": "drugie-kiry-eschyo-dve-istorii-iz-mira-tetradi-smerti",
+   "target": "ep-43",
+   "from": "main",
+   "kind": "motive",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 10,
+    "anchorBlock": 10,
+    "anchorWords": "Опять же, детективной истории не очень много, зато сам план"
+   },
+   "originalPlace": {
+    "afterBlock": 10,
+    "anchorBlock": 10,
+    "anchorWords": "Опять же, детективной истории не очень много, зато сам план"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": true,
+   "label": null,
+   "fingerprint": "d731ed9800c6",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:30:44.232Z"
+  },
+  {
+   "key": "dvoynoe-znachenie→ep-86",
+   "source": "dvoynoe-znachenie",
+   "target": "ep-86",
+   "from": "main",
+   "kind": "broad",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "videoessay",
+   "place": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "Интересно, что неймдропинг произошел именно в восьмой серии. Потому что"
+   },
+   "originalPlace": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "Интересно, что неймдропинг произошел именно в восьмой серии. Потому что"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "f048725d093f",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:38:21.269Z"
+  },
+  {
+   "key": "esche-odna-istoriya-o-kakashi→ep-51",
+   "source": "esche-odna-istoriya-o-kakashi",
+   "target": "ep-51",
+   "from": "main",
+   "kind": "motive",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 4,
+    "anchorBlock": 4,
+    "anchorWords": "На английском можно найти новеллу целиком, а на русский пока"
+   },
+   "originalPlace": {
+    "afterBlock": 4,
+    "anchorBlock": 4,
+    "anchorWords": "На английском можно найти новеллу целиком, а на русский пока"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": true,
+   "label": null,
+   "fingerprint": "bc9cda045e66",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:26:50.613Z"
+  },
+  {
+   "key": "esche-para-slov-o-hayaside-kyu→ep-132",
+   "source": "esche-para-slov-o-hayaside-kyu",
+   "target": "ep-132",
+   "from": "reserve",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 10,
+    "anchorBlock": 5,
+    "anchorWords": "Заметьте, кстати, сколько разных вариантов спецназовцев — вот откуда столько"
+   },
+   "originalPlace": {
+    "afterBlock": 10,
+    "anchorBlock": 5,
+    "anchorWords": "Заметьте, кстати, сколько разных вариантов спецназовцев — вот откуда столько"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": "esche-para-slov-o-hayaside-kyu→pro-vizualnyy-stil-dorohedoro",
+   "play": false,
+   "label": null,
+   "fingerprint": "13389dbe2815",
+   "decidedAt": "2026-09-25T11:30:58.502Z"
+  },
+  {
+   "key": "fey-valentayn-yaponka-kitayanka-ili-vovse-skazhem-italyanka→ranniy-dizayn-personazhey-v-kovboe-bibope",
+   "source": "fey-valentayn-yaponka-kitayanka-ili-vovse-skazhem-italyanka",
+   "target": "ranniy-dizayn-personazhey-v-kovboe-bibope",
+   "from": "main",
+   "kind": "broad",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "Мне вообще нравится такой подход, потому что на самом деле"
+   },
+   "originalPlace": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "Мне вообще нравится такой подход, потому что на самом деле"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "c64a83cc03a9",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:38:16.869Z"
+  },
+  {
+   "key": "final-ataki-titanov-chto-delat-teper→ep-33",
+   "source": "final-ataki-titanov-chto-delat-teper",
+   "target": "ep-33",
+   "from": "main",
+   "kind": "broad",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 16,
+    "anchorBlock": 16,
+    "anchorWords": "Люди плакали, когда вышел последний эпизод «Наруто» и последний фильм"
+   },
+   "originalPlace": {
+    "afterBlock": 16,
+    "anchorBlock": 16,
+    "anchorWords": "Люди плакали, когда вышел последний эпизод «Наруто» и последний фильм"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "44b6320c4539",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:37:02.918Z"
+  },
+  {
+   "key": "fotografii-kak-referens→esche-nemnogo-pro-lofery",
+   "source": "fotografii-kak-referens",
+   "target": "esche-nemnogo-pro-lofery",
+   "from": "reserve",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 12,
+    "anchorBlock": 7,
+    "anchorWords": "Я не был знаком с этим фотографом, но после «Лоферов»"
+   },
+   "originalPlace": {
+    "afterBlock": 12,
+    "anchorBlock": 7,
+    "anchorWords": "Я не был знаком с этим фотографом, но после «Лоферов»"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": "fotografii-kak-referens→pro-dizayn-doloy-bezdele",
+   "play": false,
+   "label": null,
+   "fingerprint": "6b37318649c1",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:39:52.909Z"
+  },
+  {
    "key": "gorod-krepost-koulun→ep-123",
    "source": "gorod-krepost-koulun",
    "target": "ep-123",
@@ -284,6 +1300,267 @@
    "reason": null,
    "comment": null,
    "decidedAt": "2026-09-25T10:04:59.688Z"
+  },
+  {
+   "key": "govoryaschie-imena→da-snova-pro-pesn-nochnyh-sov",
+   "source": "govoryaschie-imena",
+   "target": "da-snova-pro-pesn-nochnyh-sov",
+   "from": "main",
+   "kind": "broad",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "И их имена нам об этом рассказывают ещё до того,"
+   },
+   "originalPlace": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "И их имена нам об этом рассказывают ещё до того,"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "1605c035be01",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:37:36.036Z"
+  },
+  {
+   "key": "gramotnaya-reklama→pervye-vpechatleniya-ot-anime-po-cyberpunk",
+   "source": "gramotnaya-reklama",
+   "target": "pervye-vpechatleniya-ot-anime-po-cyberpunk",
+   "from": "reserve",
+   "kind": "broad",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 7,
+    "anchorBlock": 7,
+    "anchorWords": "Поэтому и хочется дать сериалу шанс, вдруг сама история, как"
+   },
+   "originalPlace": {
+    "afterBlock": 7,
+    "anchorBlock": 7,
+    "anchorWords": "Поэтому и хочется дать сериалу шанс, вдруг сама история, как"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": "gramotnaya-reklama→prodolzhaya-razgovor-o-talantah",
+   "play": false,
+   "label": null,
+   "fingerprint": "2b2c6c8767e0",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:40:22.542Z"
+  },
+  {
+   "key": "hori-san-i-miyamura-kun→ep-116",
+   "source": "hori-san-i-miyamura-kun",
+   "target": "ep-116",
+   "from": "main",
+   "kind": "motive",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "videoessay",
+   "place": {
+    "afterBlock": 4,
+    "anchorBlock": 4,
+    "anchorWords": "Вот так вот забавно и оказались связаны сразу несколько моих"
+   },
+   "originalPlace": {
+    "afterBlock": 4,
+    "anchorBlock": 4,
+    "anchorWords": "Вот так вот забавно и оказались связаны сразу несколько моих"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": true,
+   "label": null,
+   "fingerprint": "8a5b6e57fbf7",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:46:48.773Z"
+  },
+  {
+   "key": "inio-asano-i-reklama-likera→ep-153",
+   "source": "inio-asano-i-reklama-likera",
+   "target": "ep-153",
+   "from": "reserve",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "videoessay",
+   "place": {
+    "afterBlock": 7,
+    "anchorBlock": 5,
+    "anchorWords": "«Заботливый» — вроде бы реклама и чего ее читать. Но"
+   },
+   "originalPlace": {
+    "afterBlock": 7,
+    "anchorBlock": 5,
+    "anchorWords": "«Заботливый» — вроде бы реклама и чего ее читать. Но"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": "inio-asano-i-reklama-likera→bunko-mertvye-mertvye-demony",
+   "play": false,
+   "label": null,
+   "fingerprint": "b39583ebb3c3",
+   "decidedAt": "2026-09-25T11:30:02.052Z"
+  },
+  {
+   "key": "istoricheskiy-dzhirayya→ep-119",
+   "source": "istoricheskiy-dzhirayya",
+   "target": "ep-119",
+   "from": "reserve",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 6,
+    "anchorBlock": 5,
+    "anchorWords": "Как вы понимаете, этот сюжет, персонажи и даже их способности"
+   },
+   "originalPlace": {
+    "afterBlock": 6,
+    "anchorBlock": 5,
+    "anchorWords": "Как вы понимаете, этот сюжет, персонажи и даже их способности"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": "istoricheskiy-dzhirayya→samoe-grustnoe-ispolzovanie-mifa",
+   "play": false,
+   "label": null,
+   "fingerprint": "0cb7b369b8b9",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:49:37.975Z"
+  },
+  {
+   "key": "kaguya-priglashyonnaya-zvezda→ep-62",
+   "source": "kaguya-priglashyonnaya-zvezda",
+   "target": "ep-62",
+   "from": "main",
+   "kind": "person",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 5,
+    "anchorBlock": 3,
+    "anchorWords": "А это значит, официально, что они с президентом школьного совета"
+   },
+   "originalPlace": {
+    "afterBlock": 2,
+    "anchorBlock": 2,
+    "anchorWords": "Но главный смысл ее появления был, на самом деле, не"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "72158ee573c7",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:40:06.985Z"
+  },
+  {
+   "key": "kak-kitaytsy-fleksyat-svoimi-openingami→ep-145",
+   "source": "kak-kitaytsy-fleksyat-svoimi-openingami",
+   "target": "ep-145",
+   "from": "manual",
+   "kind": "manual",
+   "confidence": "—",
+   "channels": [],
+   "batch": 1,
+   "targetKind": "videoessay",
+   "place": {
+    "afterBlock": 9,
+    "anchorBlock": 9,
+    "anchorWords": "Так что советую приглядеться если не к самому донхуа, то"
+   },
+   "originalPlace": null,
+   "moved": false,
+   "manual": true,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "5780bb89f0ed",
+   "decidedAt": "2026-09-25T11:33:43.401Z"
+  },
+  {
+   "key": "kak-kitaytsy-fleksyat-svoimi-openingami→ep-30",
+   "source": "kak-kitaytsy-fleksyat-svoimi-openingami",
+   "target": "ep-30",
+   "from": "main",
+   "kind": "title",
+   "confidence": "средний",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 2,
+    "anchorBlock": 2,
+    "anchorWords": "В прошлом году выстрелил Link Click (послушайте наш эпизод про"
+   },
+   "originalPlace": {
+    "afterBlock": 2,
+    "anchorBlock": 2,
+    "anchorWords": "В прошлом году выстрелил Link Click (послушайте наш эпизод про"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "5780bb89f0ed",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:33:03.966Z",
+   "unlink": [
+    {
+     "raw": "[наш эпизод](/posts/ep-30/)",
+     "kind": "words",
+     "mode": "words",
+     "from": "[наш эпизод](/posts/ep-30/)",
+     "to": "наш эпизод",
+     "pre": "В прошлом году выстрелил Link Click (послушайте ",
+     "post": " про этот сериал, если еще не успели), а в этом, судя по оценкам и отзывам, себя уже неплохо показало донхуа «Пощади меня, великий господин!»."
+    }
+   ]
   },
   {
    "key": "kak-knizhnye-magaziny-povliyali-na-oblozhki-mangi→bonusnyy-vypusk-v-les-gde-mertsayut-svetlyachki",
@@ -319,6 +1596,72 @@
    "decidedAt": "2026-09-25T10:02:55.538Z"
   },
   {
+   "key": "kak-legko-pomenyat-istoriyu→kakim-vyshel-novyy-film-po-cheloveku-benzopile",
+   "source": "kak-legko-pomenyat-istoriyu",
+   "target": "kakim-vyshel-novyy-film-po-cheloveku-benzopile",
+   "from": "main",
+   "kind": "subject",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 7,
+    "anchorBlock": 4,
+    "anchorWords": "Как вам такой сюжет?"
+   },
+   "originalPlace": {
+    "afterBlock": 7,
+    "anchorBlock": 4,
+    "anchorWords": "Как вам такой сюжет?"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "e8be5a9e54fb",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:49:09.492Z"
+  },
+  {
+   "key": "kak-oshi-no-ko-vdohnovlyaetsya-tragediyami→ep-81",
+   "source": "kak-oshi-no-ko-vdohnovlyaetsya-tragediyami",
+   "target": "ep-81",
+   "from": "main",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 22,
+    "anchorBlock": 22,
+    "anchorWords": "Иронично, что самая большая драма Асиды — в ее отношениях"
+   },
+   "originalPlace": {
+    "afterBlock": 22,
+    "anchorBlock": 22,
+    "anchorWords": "Иронично, что самая большая драма Асиды — в ее отношениях"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "29712b3ddfcc",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:34:44.650Z"
+  },
+  {
    "key": "kak-osii-i-miyadzaki-pomogli-studii-gainax→ep-135",
    "source": "kak-osii-i-miyadzaki-pomogli-studii-gainax",
    "target": "ep-135",
@@ -350,6 +1693,637 @@
    "reason": null,
    "comment": null,
    "decidedAt": "2026-09-25T09:53:31.281Z"
+  },
+  {
+   "key": "kakie-isekai-posmotret→bonusnyy-vypusk-konosuba",
+   "source": "kakie-isekai-posmotret",
+   "target": "bonusnyy-vypusk-konosuba",
+   "from": "main",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 8,
+    "anchorBlock": 8,
+    "anchorWords": "Кстати, про него у нас тоже есть выпуск (правда, бонусный)."
+   },
+   "originalPlace": {
+    "afterBlock": 8,
+    "anchorBlock": 8,
+    "anchorWords": "Кстати, про него у нас тоже есть выпуск (правда, бонусный)."
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "2a17de3aa39b",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:27:07.413Z",
+   "unlink": [
+    {
+     "raw": "[есть выпуск](/posts/bonusnyy-vypusk-konosuba/)",
+     "kind": "words",
+     "mode": "words",
+     "from": "[есть выпуск](/posts/bonusnyy-vypusk-konosuba/)",
+     "to": "есть выпуск",
+     "pre": "Кстати, про него у нас тоже ",
+     "post": " (правда, бонусный)."
+    }
+   ]
+  },
+  {
+   "key": "kakie-isekai-posmotret→ep-136",
+   "source": "kakie-isekai-posmotret",
+   "target": "ep-136",
+   "from": "main",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 13,
+    "anchorBlock": 13,
+    "anchorWords": "И да, как вы могли догадаться, у нас есть про"
+   },
+   "originalPlace": {
+    "afterBlock": 13,
+    "anchorBlock": 13,
+    "anchorWords": "И да, как вы могли догадаться, у нас есть про"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "2a17de3aa39b",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:27:13.565Z",
+   "unlink": [
+    {
+     "raw": "[у нас есть про него выпуск](/posts/ep-136/)",
+     "kind": "rephrase",
+     "mode": "words",
+     "from": "[у нас есть про него выпуск](/posts/ep-136/)",
+     "to": "у нас есть про него выпуск",
+     "pre": "И да, как вы могли догадаться, ",
+     "post": "."
+    }
+   ]
+  },
+  {
+   "key": "kakie-isekai-posmotret→ep-14",
+   "source": "kakie-isekai-posmotret",
+   "target": "ep-14",
+   "from": "reserve",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 18,
+    "anchorBlock": 18,
+    "anchorWords": "И, кстати, выпуск о «Сонни бое» один из самых прослушиваемых"
+   },
+   "originalPlace": {
+    "afterBlock": 18,
+    "anchorBlock": 18,
+    "anchorWords": "И, кстати, выпуск о «Сонни бое» один из самых прослушиваемых"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": "kakie-isekai-posmotret→ep-109",
+   "play": true,
+   "label": null,
+   "fingerprint": "2a17de3aa39b",
+   "decidedAt": "2026-09-25T11:27:27.863Z"
+  },
+  {
+   "key": "kakie-isekai-posmotret→ep-57",
+   "source": "kakie-isekai-posmotret",
+   "target": "ep-57",
+   "from": "main",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 4,
+    "anchorBlock": 4,
+    "anchorWords": "Один из лучших представителей жанра и мой личный фаворит. О"
+   },
+   "originalPlace": {
+    "afterBlock": 4,
+    "anchorBlock": 4,
+    "anchorWords": "Один из лучших представителей жанра и мой личный фаворит. О"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "2a17de3aa39b",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:26:56.963Z",
+   "unlink": [
+    {
+     "raw": "[делали выпуск](/posts/ep-57/)",
+     "kind": "words",
+     "mode": "words",
+     "from": "[делали выпуск](/posts/ep-57/)",
+     "to": "делали выпуск",
+     "pre": "О котором мы ",
+     "post": " подкаста, а еще я рассказывал [тут](/posts/razmyshleniya-o-ranobe/) и [тут](https://t.me/podcastbaka/1376)."
+    }
+   ]
+  },
+  {
+   "key": "kakie-isekai-posmotret→ep-74",
+   "source": "kakie-isekai-posmotret",
+   "target": "ep-74",
+   "from": "main",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 23,
+    "anchorBlock": 23,
+    "anchorWords": "Про него мы поговорили в одном из наших спешалов из"
+   },
+   "originalPlace": {
+    "afterBlock": 23,
+    "anchorBlock": 23,
+    "anchorWords": "Про него мы поговорили в одном из наших спешалов из"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "2a17de3aa39b",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T12:21:53.000Z",
+   "unlink": [
+    {
+     "raw": "[в одном из наших спешалов из прошлого сезона](https://youtu.be/uT0zSFjRc5Y?si=QadGMC4L2JFgPqXU)",
+     "kind": "words",
+     "mode": "words",
+     "from": "[в одном из наших спешалов из прошлого сезона](https://youtu.be/uT0zSFjRc5Y?si=QadGMC4L2JFgPqXU)",
+     "to": "в одном из наших спешалов из прошлого сезона",
+     "pre": "Про него мы поговорили ",
+     "post": "."
+    }
+   ],
+   "restored": "25.09.2026: запись дважды пропала из файла решений (клавиша «г» — «вернуть не решено» — при наборе «готово» не в том окне), восстановлена по журналу вставок и журналу сервера (14:21:53 approved · ссылка: words)"
+  },
+  {
+   "key": "kakoy-vyshla-novaya-seriya-ataki-titanov→ep-33",
+   "source": "kakoy-vyshla-novaya-seriya-ataki-titanov",
+   "target": "ep-33",
+   "from": "main",
+   "kind": "broad",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 20,
+    "anchorBlock": 14,
+    "anchorWords": "Но, если вы «Атаку» еще не смотрели совсем — я"
+   },
+   "originalPlace": {
+    "afterBlock": 20,
+    "anchorBlock": 14,
+    "anchorWords": "Но, если вы «Атаку» еще не смотрели совсем — я"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "d6c7dadb78bc",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:37:08.635Z"
+  },
+  {
+   "key": "kakuyu-mangu-chitat→ep-103",
+   "source": "kakuyu-mangu-chitat",
+   "target": "ep-103",
+   "from": "main",
+   "kind": "motive",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 6,
+    "anchorBlock": 4,
+    "anchorWords": "У обеих манг есть свои плюсы и минусы, поэтому аниме"
+   },
+   "originalPlace": {
+    "afterBlock": 6,
+    "anchorBlock": 4,
+    "anchorWords": "У обеих манг есть свои плюсы и минусы, поэтому аниме"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": true,
+   "label": null,
+   "fingerprint": "62ec56192352",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:34:53.434Z"
+  },
+  {
+   "key": "kon→dizayn-personazhey-cheloveka-benzopily",
+   "source": "kon",
+   "target": "dizayn-personazhey-cheloveka-benzopily",
+   "from": "main",
+   "kind": "subject",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 5,
+    "anchorBlock": 4,
+    "anchorWords": "Интересно, знает ли Дэдпул, что Лис предоставляет возможность призывать его"
+   },
+   "originalPlace": {
+    "afterBlock": 5,
+    "anchorBlock": 4,
+    "anchorWords": "Интересно, знает ли Дэдпул, что Лис предоставляет возможность призывать его"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "ca2805d7b9be",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:49:13.192Z"
+  },
+  {
+   "key": "krasota-na-mechah→bunko-kagurabati",
+   "source": "krasota-na-mechah",
+   "target": "bunko-kagurabati",
+   "from": "main",
+   "kind": "motive",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 11,
+    "anchorBlock": 3,
+    "anchorWords": "«Кагурабати» — это не просто замемевшаяся манга, это еще и"
+   },
+   "originalPlace": {
+    "afterBlock": 11,
+    "anchorBlock": 3,
+    "anchorWords": "«Кагурабати» — это не просто замемевшаяся манга, это еще и"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "9702e0f85fac",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:26:26.363Z"
+  },
+  {
+   "key": "madhouse-snova-raduet→ep-117",
+   "source": "madhouse-snova-raduet",
+   "target": "ep-117",
+   "from": "main",
+   "kind": "subject",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "videoessay",
+   "place": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "Однако если вы фанат исторических жестоких драм в духе «Саги"
+   },
+   "originalPlace": {
+    "afterBlock": 2,
+    "anchorBlock": 2,
+    "anchorWords": "Это история о средневековой Европе, когда за еретические идеи сжигали"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "d641121ec1c9",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:46:57.590Z"
+  },
+  {
+   "key": "mesta-iz-klinka-rassekayuschego-demonov-v-realnoy-zhizni→ep-56",
+   "source": "mesta-iz-klinka-rassekayuschego-demonov-v-realnoy-zhizni",
+   "target": "ep-56",
+   "from": "reserve",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 6,
+    "anchorBlock": 5,
+    "anchorWords": "Другие аспекты «Клинка» мы подробно обсудили в нашем подкасте, послушайте,"
+   },
+   "originalPlace": {
+    "afterBlock": 6,
+    "anchorBlock": 5,
+    "anchorWords": "Другие аспекты «Клинка» мы подробно обсудили в нашем подкасте, послушайте,"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": "mesta-iz-klinka-rassekayuschego-demonov-v-realnoy-zhizni→ep-58",
+   "play": false,
+   "label": null,
+   "fingerprint": "02cdf9c6b2a8",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:34:06.269Z"
+  },
+  {
+   "key": "minutka-estetiki→ep-38",
+   "source": "minutka-estetiki",
+   "target": "ep-38",
+   "from": "main",
+   "kind": "subject",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 9,
+    "anchorBlock": 2,
+    "anchorWords": "Поэтому вот собрал одни из лучших обложек глав «Наруто»:"
+   },
+   "originalPlace": {
+    "afterBlock": 9,
+    "anchorBlock": 2,
+    "anchorWords": "Поэтому вот собрал одни из лучших обложек глав «Наруто»:"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "5fbbfd29e26f",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:48:27.357Z"
+  },
+  {
+   "key": "minutka-voshischeniya→da-snova-pro-pesn-nochnyh-sov",
+   "source": "minutka-voshischeniya",
+   "target": "da-snova-pro-pesn-nochnyh-sov",
+   "from": "main",
+   "kind": "broad",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 8,
+    "anchorBlock": 4,
+    "anchorWords": "Это красиво (1) и это передаёт нам, зрителям, ощущения, которые"
+   },
+   "originalPlace": {
+    "afterBlock": 8,
+    "anchorBlock": 4,
+    "anchorWords": "Это красиво (1) и это передаёт нам, зрителям, ощущения, которые"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "1185037e3c10",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:37:40.251Z"
+  },
+  {
+   "key": "monstry-ili-lyudi→nastoyaschaya-istoriya-ob-elfiyke",
+   "source": "monstry-ili-lyudi",
+   "target": "nastoyaschaya-istoriya-ob-elfiyke",
+   "from": "main",
+   "kind": "broad",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 8,
+    "anchorBlock": 6,
+    "anchorWords": "Сейчас на английском доступно уже четыре главы. И выходить они"
+   },
+   "originalPlace": {
+    "afterBlock": 8,
+    "anchorBlock": 6,
+    "anchorWords": "Сейчас на английском доступно уже четыре главы. И выходить они"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "ecf93568cea0",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:49:48.459Z"
+  },
+  {
+   "key": "multivselennaya-milyh-devochek→esche-rybalka",
+   "source": "multivselennaya-milyh-devochek",
+   "target": "esche-rybalka",
+   "from": "main",
+   "kind": "title",
+   "confidence": "слабый",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "article",
+   "place": {
+    "afterBlock": 9,
+    "anchorBlock": 9,
+    "anchorWords": "Так что появление Боччи-тян в «Петле» скорее всего было требованием"
+   },
+   "originalPlace": {
+    "afterBlock": 9,
+    "anchorBlock": 9,
+    "anchorWords": "Так что появление Боччи-тян в «Петле» скорее всего было требованием"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "16d9e913c8f1",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:47:35.824Z"
+  },
+  {
+   "key": "multivselennaya-milyh-devochek→polnyy-vostorg",
+   "source": "multivselennaya-milyh-devochek",
+   "target": "polnyy-vostorg",
+   "from": "reserve",
+   "kind": "subject",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 2,
+    "anchorBlock": 2,
+    "anchorWords": "И если про «Рок-тихоню» все уже наслышаны, то вот про"
+   },
+   "originalPlace": {
+    "afterBlock": 2,
+    "anchorBlock": 2,
+    "anchorWords": "И если про «Рок-тихоню» все уже наслышаны, то вот про"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": "multivselennaya-milyh-devochek→golovokruzhitelnyy-uspeh",
+   "play": false,
+   "label": null,
+   "fingerprint": "16d9e913c8f1",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:47:28.669Z"
+  },
+  {
+   "key": "ne-prosto-benger→dandadan-romantika-pod-sousom-bezumiya",
+   "source": "ne-prosto-benger",
+   "target": "dandadan-romantika-pod-sousom-bezumiya",
+   "from": "reserve",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 12,
+    "anchorBlock": 12,
+    "anchorWords": "Автор манги, Юкинобу Тацу, кстати, в интервью признавался, что именно"
+   },
+   "originalPlace": {
+    "afterBlock": 12,
+    "anchorBlock": 12,
+    "anchorWords": "Автор манги, Юкинобу Тацу, кстати, в интервью признавался, что именно"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": "ne-prosto-benger→ispolzovanie-kart-taro-v-anime",
+   "play": false,
+   "label": null,
+   "fingerprint": "11eab55de7fc",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:36:11.435Z"
+  },
+  {
+   "key": "nemnogo-o-tusovschike-kunmine-i-muzyke-ado→ep-74",
+   "source": "nemnogo-o-tusovschike-kunmine-i-muzyke-ado",
+   "target": "ep-74",
+   "from": "main",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 10,
+    "anchorBlock": 10,
+    "anchorWords": "И мне очень любопытно наблюдать, какой из путей, о которых"
+   },
+   "originalPlace": {
+    "afterBlock": 10,
+    "anchorBlock": 10,
+    "anchorWords": "И мне очень любопытно наблюдать, какой из путей, о которых"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "c76b5c7f4aaf",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:50:12.143Z"
   },
   {
    "key": "neveroyatnye-raskadrovki-satosi-kona→ep-12",
@@ -385,6 +2359,38 @@
    "decidedAt": "2026-09-25T10:02:15.888Z"
   },
   {
+   "key": "nezametnye-detali→bonusnyy-vypusk-pesn-nochnyh-sov",
+   "source": "nezametnye-detali",
+   "target": "bonusnyy-vypusk-pesn-nochnyh-sov",
+   "from": "reserve",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 5,
+    "anchorBlock": 5,
+    "anchorWords": "Это приятная маленькая деталь, показывающая проработку истории"
+   },
+   "originalPlace": {
+    "afterBlock": 5,
+    "anchorBlock": 5,
+    "anchorWords": "Это приятная маленькая деталь, показывающая проработку истории"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": "nezametnye-detali→da-snova-pro-pesn-nochnyh-sov",
+   "play": false,
+   "label": null,
+   "fingerprint": "9777b9a98447",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:37:44.372Z"
+  },
+  {
    "key": "nostalgiya-opasna→ep-123",
    "source": "nostalgiya-opasna",
    "target": "ep-123",
@@ -416,6 +2422,235 @@
    "reason": null,
    "comment": null,
    "decidedAt": "2026-09-25T10:05:57.739Z"
+  },
+  {
+   "key": "o-net-opyat-inoplanetyane→ep-47",
+   "source": "o-net-opyat-inoplanetyane",
+   "target": "ep-47",
+   "from": "main",
+   "kind": "subject",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 2,
+    "anchorBlock": 2,
+    "anchorWords": "И первая реакция на нее была неоднозначная, потому что в"
+   },
+   "originalPlace": {
+    "afterBlock": 2,
+    "anchorBlock": 2,
+    "anchorWords": "И первая реакция на нее была неоднозначная, потому что в"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "19f7c483eb25",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:50:37.626Z"
+  },
+  {
+   "key": "obzor-anime-gospozha-kaguya→ep-127",
+   "source": "obzor-anime-gospozha-kaguya",
+   "target": "ep-127",
+   "from": "main",
+   "kind": "theme",
+   "confidence": "слабый",
+   "channels": [
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "videoessay",
+   "place": {
+    "afterBlock": 21,
+    "anchorBlock": 21,
+    "anchorWords": "К концу второго сезона мне уже начало надоедать, что из"
+   },
+   "originalPlace": {
+    "afterBlock": 21,
+    "anchorBlock": 21,
+    "anchorWords": "К концу второго сезона мне уже начало надоедать, что из"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "b9fc045cfd10",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:37:18.835Z"
+  },
+  {
+   "key": "obzor-anime-gospozha-kaguya→ep-62",
+   "source": "obzor-anime-gospozha-kaguya",
+   "target": "ep-62",
+   "from": "main",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 26,
+    "anchorBlock": 26,
+    "anchorWords": "Я же посмотрел залпом и получил удовольствие от расслабления —"
+   },
+   "originalPlace": {
+    "afterBlock": 26,
+    "anchorBlock": 26,
+    "anchorWords": "Я же посмотрел залпом и получил удовольствие от расслабления —"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "b9fc045cfd10",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:37:21.952Z"
+  },
+  {
+   "key": "obzor-anime-horimiya→ep-116",
+   "source": "obzor-anime-horimiya",
+   "target": "ep-116",
+   "from": "main",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "videoessay",
+   "place": {
+    "afterBlock": 31,
+    "anchorBlock": 31,
+    "anchorWords": "Поэтому я советую ее, только если вы любите сёдзе и"
+   },
+   "originalPlace": {
+    "afterBlock": 31,
+    "anchorBlock": 31,
+    "anchorWords": "Поэтому я советую ее, только если вы любите сёдзе и"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": true,
+   "label": "Посмотреть эссе про аниме",
+   "fingerprint": "f8adb62fba3a",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:38:10.253Z"
+  },
+  {
+   "key": "obzor-anime-horimiya→ep-127",
+   "source": "obzor-anime-horimiya",
+   "target": "ep-127",
+   "from": "main",
+   "kind": "theme",
+   "confidence": "слабый",
+   "channels": [
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "videoessay",
+   "place": {
+    "afterBlock": 20,
+    "anchorBlock": 20,
+    "anchorWords": "Их отношения тоже развиваются без всяких затяжек и клише. Уже"
+   },
+   "originalPlace": {
+    "afterBlock": 20,
+    "anchorBlock": 20,
+    "anchorWords": "Их отношения тоже развиваются без всяких затяжек и клише. Уже"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "f8adb62fba3a",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:37:55.586Z"
+  },
+  {
+   "key": "obzor-filma-tvoyo-imya→ep-99",
+   "source": "obzor-filma-tvoyo-imya",
+   "target": "ep-99",
+   "from": "main",
+   "kind": "person",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "videoessay",
+   "place": {
+    "afterBlock": 17,
+    "anchorBlock": 17,
+    "anchorWords": "А я дополнительно благодарен Синкаю, за героиню для обложки «Баки!»"
+   },
+   "originalPlace": {
+    "afterBlock": 17,
+    "anchorBlock": 17,
+    "anchorWords": "А я дополнительно благодарен Синкаю, за героиню для обложки «Баки!»"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "2f73b7b78f64",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:50:42.976Z"
+  },
+  {
+   "key": "panelnaya-nostalgiya-po-schastlivomu-detstvu→ep-101",
+   "source": "panelnaya-nostalgiya-po-schastlivomu-detstvu",
+   "target": "ep-101",
+   "from": "main",
+   "kind": "broad",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "videoessay",
+   "place": {
+    "afterBlock": 16,
+    "anchorBlock": 16,
+    "anchorWords": "И отпускать старые вещи, чтобы цукумогами могли уйти на покой."
+   },
+   "originalPlace": {
+    "afterBlock": 16,
+    "anchorBlock": 16,
+    "anchorWords": "И отпускать старые вещи, чтобы цукумогами могли уйти на покой."
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "dac5f4a0d82f",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:32:57.600Z"
   },
   {
    "key": "para-slov-o-rezhissure-v-devochke-pokorivshey-vremya→bonusnyy-vypusk-devochka-pokorivshaya-vremya",
@@ -484,6 +2719,232 @@
    "decidedAt": "2026-09-25T10:03:48.754Z"
   },
   {
+   "key": "po-sledam-tragediy→ep-93",
+   "source": "po-sledam-tragediy",
+   "target": "ep-93",
+   "from": "main",
+   "kind": "person",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 13,
+    "anchorBlock": 13,
+    "anchorWords": "Но кроме этого она встречает и людей, которые пережив эти"
+   },
+   "originalPlace": {
+    "afterBlock": 13,
+    "anchorBlock": 13,
+    "anchorWords": "Но кроме этого она встречает и людей, которые пережив эти"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "dd57d3674f26",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:39:03.646Z"
+  },
+  {
+   "key": "podruga-starshey-sestry→bez-spoylerov",
+   "source": "podruga-starshey-sestry",
+   "target": "bez-spoylerov",
+   "from": "main",
+   "kind": "broad",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 6,
+    "anchorBlock": 5,
+    "anchorWords": "Так что если искали какой-нибудь романтический онгоинг — смело забирайте"
+   },
+   "originalPlace": {
+    "afterBlock": 6,
+    "anchorBlock": 5,
+    "anchorWords": "Так что если искали какой-нибудь романтический онгоинг — смело забирайте"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "d92bf1dc1ce4",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:48:14.141Z"
+  },
+  {
+   "key": "potrogat-travu→bunko-v-loferah-vpripryzhku-ili-doloy-bezdele",
+   "source": "potrogat-travu",
+   "target": "bunko-v-loferah-vpripryzhku-ili-doloy-bezdele",
+   "from": "reserve",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 8,
+    "anchorBlock": 8,
+    "anchorWords": "Мицуми вырвалась из родной деревни и поступила в токийскую старшую"
+   },
+   "originalPlace": {
+    "afterBlock": 8,
+    "anchorBlock": 8,
+    "anchorWords": "Мицуми вырвалась из родной деревни и поступила в токийскую старшую"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": "potrogat-travu→spisok-pyati-tselebnyh-anime",
+   "play": false,
+   "label": null,
+   "fingerprint": "a4af8e6b249f",
+   "decidedAt": "2026-09-25T11:28:14.839Z"
+  },
+  {
+   "key": "potrogat-travu→ep-133",
+   "source": "potrogat-travu",
+   "target": "ep-133",
+   "from": "main",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 17,
+    "anchorBlock": 17,
+    "anchorWords": "Молодого каллиграфа Сэйшу отправляют в «ссылку» на небольшой островок. Там"
+   },
+   "originalPlace": {
+    "afterBlock": 17,
+    "anchorBlock": 17,
+    "anchorWords": "Молодого каллиграфа Сэйшу отправляют в «ссылку» на небольшой островок. Там"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "a4af8e6b249f",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:28:41.648Z"
+  },
+  {
+   "key": "potrogat-travu→ep-39",
+   "source": "potrogat-travu",
+   "target": "ep-39",
+   "from": "main",
+   "kind": "theme",
+   "confidence": "средний",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "videoessay",
+   "place": {
+    "afterBlock": 14,
+    "anchorBlock": 14,
+    "anchorWords": "Здесь наоборот, столичная девочка Хотару переехала в деревенскую глубинку. Ей"
+   },
+   "originalPlace": {
+    "afterBlock": 14,
+    "anchorBlock": 14,
+    "anchorWords": "Здесь наоборот, столичная девочка Хотару переехала в деревенскую глубинку. Ей"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "a4af8e6b249f",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:28:38.830Z"
+  },
+  {
+   "key": "pro-dizayn-doloy-bezdele→bonusnyy-vypusk-v-loferah-vpripryzhku",
+   "source": "pro-dizayn-doloy-bezdele",
+   "target": "bonusnyy-vypusk-v-loferah-vpripryzhku",
+   "from": "reserve",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 7,
+    "anchorBlock": 6,
+    "anchorWords": "Ну и на афише все герои в школьных лоферах, дабы"
+   },
+   "originalPlace": {
+    "afterBlock": 7,
+    "anchorBlock": 6,
+    "anchorWords": "Ну и на афише все герои в школьных лоферах, дабы"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": "pro-dizayn-doloy-bezdele→fotografii-kak-referens",
+   "play": false,
+   "label": null,
+   "fingerprint": "e8aa0faabcc1",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:47:50.964Z"
+  },
+  {
+   "key": "prodolzhaya-razgovor-o-talantah→pervye-vpechatleniya-ot-anime-po-cyberpunk",
+   "source": "prodolzhaya-razgovor-o-talantah",
+   "target": "pervye-vpechatleniya-ot-anime-po-cyberpunk",
+   "from": "reserve",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 4,
+    "anchorBlock": 4,
+    "anchorWords": "Теперь еще больше задумываюсь о том, чтобы все-таки посмотреть этот"
+   },
+   "originalPlace": {
+    "afterBlock": 4,
+    "anchorBlock": 4,
+    "anchorWords": "Теперь еще больше задумываюсь о том, чтобы все-таки посмотреть этот"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": "prodolzhaya-razgovor-o-talantah→gramotnaya-reklama",
+   "play": false,
+   "label": null,
+   "fingerprint": "b48b4c6ad817",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:35:10.423Z"
+  },
+  {
    "key": "puteshestvie-syuny-i-skazaniya-o-zemnomore-2330→bonusnyy-vypusk-skazaniya-zemnomorya",
    "source": "puteshestvie-syuny-i-skazaniya-o-zemnomore-2330",
    "target": "bonusnyy-vypusk-skazaniya-zemnomorya",
@@ -517,6 +2978,113 @@
    "decidedAt": "2026-09-25T10:06:14.072Z"
   },
   {
+   "key": "ranniy-dizayn-personazhey-v-kovboe-bibope→ep-16",
+   "source": "ranniy-dizayn-personazhey-v-kovboe-bibope",
+   "target": "ep-16",
+   "from": "reserve",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 10,
+    "anchorBlock": 10,
+    "anchorWords": "Сама Йоко Канно, которая на раннем этапе не верила в"
+   },
+   "originalPlace": {
+    "afterBlock": 10,
+    "anchorBlock": 10,
+    "anchorWords": "Сама Йоко Канно, которая на раннем этапе не верила в"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": "ranniy-dizayn-personazhey-v-kovboe-bibope→fey-valentayn-yaponka-kitayanka-ili-vovse-skazhem-italyanka",
+   "play": false,
+   "label": null,
+   "fingerprint": "1367d3a5c840",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:47:44.414Z"
+  },
+  {
+   "key": "razmyshleniya-o-ranobe→ep-57",
+   "source": "razmyshleniya-o-ranobe",
+   "target": "ep-57",
+   "from": "reserve",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 12,
+    "anchorBlock": 11,
+    "anchorWords": "В итоге я уже неделю не могу отлипнуть от ранобэ,"
+   },
+   "originalPlace": {
+    "afterBlock": 12,
+    "anchorBlock": 11,
+    "anchorWords": "В итоге я уже неделю не могу отлипнуть от ранобэ,"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": "razmyshleniya-o-ranobe→reinkarnatsiya-bezrabotnogo-vtoroy-sezon-ne-prosto-anime-pro-potentsiyu",
+   "play": false,
+   "label": null,
+   "fingerprint": "37847fbc9938",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:35:20.640Z"
+  },
+  {
+   "key": "rukovodstvo-po-tomu-kak-byt-devochkoy→ep-57",
+   "source": "rukovodstvo-po-tomu-kak-byt-devochkoy",
+   "target": "ep-57",
+   "from": "reserve",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 2,
+    "anchorBlock": 2,
+    "anchorWords": "У новообразованной студии Bind ушло три года на продакшн сериала."
+   },
+   "originalPlace": {
+    "afterBlock": 2,
+    "anchorBlock": 2,
+    "anchorWords": "У новообразованной студии Bind ушло три года на продакшн сериала."
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": "rukovodstvo-po-tomu-kak-byt-devochkoy→reinkarnatsiya-bezrabotnogo-vtoroy-sezon-ne-prosto-anime-pro-potentsiyu",
+   "play": false,
+   "label": null,
+   "fingerprint": "4aa8963dd95d",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:35:35.359Z",
+   "unlink": [
+    {
+     "raw": "[обсуждали](/posts/ep-57/)",
+     "kind": "words",
+     "mode": "words",
+     "from": "[обсуждали](/posts/ep-57/)",
+     "to": "обсуждали",
+     "pre": "В результате он стал одним из лучших выпущенных исекаев и собрал кучу наград (мы подробнее с Ксюшей ",
+     "post": " эту историю в подкасте про это аниме)."
+    }
+   ]
+  },
+  {
    "key": "samaya-dolgaya-manga-v-istorii-shonen-jump→vedmnadzor-anime-sitkom-kotoryy-my-zasluzhili",
    "source": "samaya-dolgaya-manga-v-istorii-shonen-jump",
    "target": "vedmnadzor-anime-sitkom-kotoryy-my-zasluzhili",
@@ -547,7 +3115,292 @@
    "fingerprint": "9ff9d215f7eb",
    "reason": null,
    "comment": null,
-   "decidedAt": "2026-09-25T10:04:48.772Z"
+   "decidedAt": "2026-09-25T11:21:08.460Z",
+   "unlink": [
+    {
+     "raw": "[бонусном выпуске про «Ведьмнадзор»](/posts/vedmnadzor-anime-sitkom-kotoryy-my-zasluzhili/)",
+     "kind": "words",
+     "mode": "words",
+     "from": "[бонусном выпуске про «Ведьмнадзор»](/posts/vedmnadzor-anime-sitkom-kotoryy-my-zasluzhili/)",
+     "to": "бонусном выпуске про «Ведьмнадзор»",
+     "pre": "В ",
+     "post": " мы с Ксюшей обсуждали, что на самом деле самой популярной и долгоиграющей мангой в Shonen Jump являются далеко не боевые сенены, а классические комедии."
+    }
+   ]
+  },
+  {
+   "key": "samoe-grustnoe-ispolzovanie-mifa→istoricheskiy-dzhirayya",
+   "source": "samoe-grustnoe-ispolzovanie-mifa",
+   "target": "istoricheskiy-dzhirayya",
+   "from": "main",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 7,
+    "anchorBlock": 6,
+    "anchorWords": "Печально, что такой образ был полностью профукан."
+   },
+   "originalPlace": {
+    "afterBlock": 7,
+    "anchorBlock": 6,
+    "anchorWords": "Печально, что такой образ был полностью профукан."
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "d564d60d9ddf",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:50:27.709Z"
+  },
+  {
+   "key": "saundtrek-v-mange→blich-vremennyy-shinigami",
+   "source": "saundtrek-v-mange",
+   "target": "blich-vremennyy-shinigami",
+   "from": "main",
+   "kind": "motive",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 10,
+    "anchorBlock": 4,
+    "anchorWords": "К сожалению, аниме из-за авторских прав не могло использовать эту"
+   },
+   "originalPlace": {
+    "afterBlock": 10,
+    "anchorBlock": 4,
+    "anchorWords": "К сожалению, аниме из-за авторских прав не могло использовать эту"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "cef71b2c810e",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:27:59.582Z"
+  },
+  {
+   "key": "skrytye-spoylery-v-openinge-cheloveka-benzopily→kakim-vyshel-novyy-film-po-cheloveku-benzopile",
+   "source": "skrytye-spoylery-v-openinge-cheloveka-benzopily",
+   "target": "kakim-vyshel-novyy-film-po-cheloveku-benzopile",
+   "from": "main",
+   "kind": "subject",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 8,
+    "anchorBlock": 8,
+    "anchorWords": "Если вы читали мангу, вы уловили параллель, я думаю."
+   },
+   "originalPlace": {
+    "afterBlock": 8,
+    "anchorBlock": 8,
+    "anchorWords": "Если вы читали мангу, вы уловили параллель, я думаю."
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "6aba38a0504c",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:49:18.542Z"
+  },
+  {
+   "key": "sleduy-za-ogonkami→chto-eto-za-palki-na-kladbischah",
+   "source": "sleduy-za-ogonkami",
+   "target": "chto-eto-za-palki-na-kladbischah",
+   "from": "reserve",
+   "kind": "theme",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 5,
+    "anchorBlock": 5,
+    "anchorWords": "Так что будьте осторожны, когда следуете за огоньками!"
+   },
+   "originalPlace": {
+    "afterBlock": 5,
+    "anchorBlock": 5,
+    "anchorWords": "Так что будьте осторожны, когда следуете за огоньками!"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": "sleduy-za-ogonkami→tszyanshi",
+   "play": false,
+   "label": null,
+   "fingerprint": "f163752945ea",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:39:39.374Z"
+  },
+  {
+   "key": "slishkom-mnogo-otsylok→lazar-chto-poshlo-ne-tak",
+   "source": "slishkom-mnogo-otsylok",
+   "target": "lazar-chto-poshlo-ne-tak",
+   "from": "main",
+   "kind": "subject",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 10,
+    "anchorBlock": 10,
+    "anchorWords": "Ватанабэ не изменяет себе."
+   },
+   "originalPlace": {
+    "afterBlock": 2,
+    "anchorBlock": 2,
+    "anchorWords": "Но что меня отдельно зацепило, так это то, насколько много"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "8eb438551568",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:47:07.357Z"
+  },
+  {
+   "key": "smeschyonnyy-final→mnogoznachnyy-vizualnyy-element",
+   "source": "smeschyonnyy-final",
+   "target": "mnogoznachnyy-vizualnyy-element",
+   "from": "main",
+   "kind": "broad",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 13,
+    "anchorBlock": 13,
+    "anchorWords": "Поэтому последний сезон «Орегару» так хорош."
+   },
+   "originalPlace": {
+    "afterBlock": 13,
+    "anchorBlock": 13,
+    "anchorWords": "Поэтому последний сезон «Орегару» так хорош."
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "eed840247b35",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:49:22.958Z"
+  },
+  {
+   "key": "snova-pro-mangu→ep-13",
+   "source": "snova-pro-mangu",
+   "target": "ep-13",
+   "from": "main",
+   "kind": "subject",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 2,
+    "anchorBlock": 2,
+    "anchorWords": "Решил вам напомнить, что создательница культового «Стального Алхимика», Хирому Аракава,"
+   },
+   "originalPlace": {
+    "afterBlock": 2,
+    "anchorBlock": 2,
+    "anchorWords": "Решил вам напомнить, что создательница культового «Стального Алхимика», Хирому Аракава,"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "a0919882c5e5",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:36:40.151Z",
+   "unlink": [
+    {
+     "raw": "[«Стального Алхимика»,](/posts/ep-13/)",
+     "kind": "words",
+     "mode": "words",
+     "from": "[«Стального Алхимика»,](/posts/ep-13/)",
+     "to": "«Стального Алхимика»,",
+     "pre": "Решил вам напомнить, что создательница культового ",
+     "post": " Хирому Аракава, выпускает новую мангу — «Цугаи загробного мира»."
+    }
+   ]
+  },
+  {
+   "key": "snova-pro-mangu→kak-sozdayutsya-tsugai-zagrobnogo-mira",
+   "source": "snova-pro-mangu",
+   "target": "kak-sozdayutsya-tsugai-zagrobnogo-mira",
+   "from": "reserve",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 5,
+    "anchorBlock": 5,
+    "anchorWords": "Да, дизайн персонажей похож на «Алхимика», но история, кажется, совсем"
+   },
+   "originalPlace": {
+    "afterBlock": 2,
+    "anchorBlock": 2,
+    "anchorWords": "Решил вам напомнить, что создательница культового «Стального Алхимика», Хирому Аракава,"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "a0919882c5e5",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:36:56.668Z"
   },
   {
    "key": "spisok-pyati-tselebnyh-anime→bonusnyy-vypusk-v-loferah-vpripryzhku",
@@ -680,6 +3533,291 @@
    "decidedAt": "2026-09-25T09:52:57.678Z"
   },
   {
+   "key": "turbo-babka→dandadan-v-kino-post-ot-ksyushi",
+   "source": "turbo-babka",
+   "target": "dandadan-v-kino-post-ot-ksyushi",
+   "from": "reserve",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 5,
+    "anchorBlock": 5,
+    "anchorWords": "Так что будьте осторожны на японских дорогах — «Дандадан» не"
+   },
+   "originalPlace": {
+    "afterBlock": 5,
+    "anchorBlock": 5,
+    "anchorWords": "Так что будьте осторожны на японских дорогах — «Дандадан» не"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": "turbo-babka→ne-prosto-benger",
+   "play": false,
+   "label": null,
+   "fingerprint": "d500ad1035f0",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:36:30.909Z"
+  },
+  {
+   "key": "unikalnyy-vizualnyy-stil-mangi-made-in-abyss→ep-70",
+   "source": "unikalnyy-vizualnyy-stil-mangi-made-in-abyss",
+   "target": "ep-70",
+   "from": "main",
+   "kind": "motive",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 10,
+    "anchorBlock": 9,
+    "anchorWords": "И поэтому воспринимать мангу адекватно становится довольно сложно. К счастью,"
+   },
+   "originalPlace": {
+    "afterBlock": 10,
+    "anchorBlock": 9,
+    "anchorWords": "И поэтому воспринимать мангу адекватно становится довольно сложно. К счастью,"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": true,
+   "label": null,
+   "fingerprint": "4dbb61857b8f",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:26:32.896Z"
+  },
+  {
+   "key": "vam-nuzhny-dokazatelstva→ep-84",
+   "source": "vam-nuzhny-dokazatelstva",
+   "target": "ep-84",
+   "from": "main",
+   "kind": "motive",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 1,
+    "anchorBlock": 1,
+    "anchorWords": "В нашем недавнем выпуске подкаста про «Волейбол» (посмотрите и послушайте,"
+   },
+   "originalPlace": {
+    "afterBlock": 6,
+    "anchorBlock": 6,
+    "anchorWords": "Мне кажется, что вот такая статистика отлично показывает, насколько искренними"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": null,
+   "play": true,
+   "label": null,
+   "fingerprint": "5ded7782a39d",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:30:23.065Z"
+  },
+  {
+   "key": "vanshot-o-minato→esche-odna-istoriya-o-kakashi",
+   "source": "vanshot-o-minato",
+   "target": "esche-odna-istoriya-o-kakashi",
+   "from": "main",
+   "kind": "subject",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 7,
+    "anchorBlock": 7,
+    "anchorWords": "В итоге, я остался доволен ваншотом, хотя и ждал от"
+   },
+   "originalPlace": {
+    "afterBlock": 7,
+    "anchorBlock": 7,
+    "anchorWords": "В итоге, я остался доволен ваншотом, хотя и ждал от"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "c8c8d0bc12d8",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:46:42.457Z"
+  },
+  {
+   "key": "vliyanie-na-realnuyu-zhizn→voleybol-kakim-poluchilsya-vtoroy-sezon",
+   "source": "vliyanie-na-realnuyu-zhizn",
+   "target": "voleybol-kakim-poluchilsya-vtoroy-sezon",
+   "from": "main",
+   "kind": "motive",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "bonus",
+   "place": {
+    "afterBlock": 3,
+    "anchorBlock": 3,
+    "anchorWords": "Оказалось, что история Хинаты и его друзей буквально вдохновляет подростков"
+   },
+   "originalPlace": {
+    "afterBlock": 3,
+    "anchorBlock": 3,
+    "anchorWords": "Оказалось, что история Хинаты и его друзей буквально вдохновляет подростков"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": false,
+   "label": null,
+   "fingerprint": "1f9b752d1565",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:30:33.248Z"
+  },
+  {
+   "key": "vnezapnye-paralleli→ep-75",
+   "source": "vnezapnye-paralleli",
+   "target": "ep-75",
+   "from": "main",
+   "kind": "motive",
+   "confidence": "сильный",
+   "channels": [
+    "titles",
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 7,
+    "anchorBlock": 6,
+    "anchorWords": "Так что, Юкимура не только про викингов читал, но явно"
+   },
+   "originalPlace": {
+    "afterBlock": 7,
+    "anchorBlock": 6,
+    "anchorWords": "Так что, Юкимура не только про викингов читал, но явно"
+   },
+   "moved": false,
+   "manual": false,
+   "replaces": null,
+   "play": true,
+   "label": null,
+   "fingerprint": "ef34b6d89390",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:31:05.898Z"
+  },
+  {
+   "key": "volshebnaya-kuhnya→kakimi-poluchilis-pervye-dve-serii-atele-koldovskih-kolpakov",
+   "source": "volshebnaya-kuhnya",
+   "target": "kakimi-poluchilis-pervye-dve-serii-atele-koldovskih-kolpakov",
+   "from": "reserve",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 6,
+    "anchorBlock": 4,
+    "anchorWords": "Если вам в «Подземелье вкусностей» нравились развороты с едой и"
+   },
+   "originalPlace": {
+    "afterBlock": 6,
+    "anchorBlock": 4,
+    "anchorWords": "Если вам в «Подземелье вкусностей» нравились развороты с едой и"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": "volshebnaya-kuhnya→ep-115",
+   "play": false,
+   "label": null,
+   "fingerprint": "2c4f630850cd",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:49:01.599Z"
+  },
+  {
+   "key": "vsegda-znal-chto-mezhdu-akamaru-i-naruto-mnogo-obschego→ep-3",
+   "source": "vsegda-znal-chto-mezhdu-akamaru-i-naruto-mnogo-obschego",
+   "target": "ep-3",
+   "from": "reserve",
+   "kind": "title",
+   "confidence": "сильный",
+   "channels": [
+    "titles"
+   ],
+   "batch": 1,
+   "targetKind": "podcast",
+   "place": {
+    "afterBlock": 10,
+    "anchorBlock": 10,
+    "anchorWords": "И теперь я не могу перестать слышать в голосе Наруто"
+   },
+   "originalPlace": {
+    "afterBlock": 10,
+    "anchorBlock": 10,
+    "anchorWords": "И теперь я не могу перестать слышать в голосе Наруто"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": "vsegda-znal-chto-mezhdu-akamaru-i-naruto-mnogo-obschego→ep-38",
+   "play": false,
+   "label": null,
+   "fingerprint": "7397df0df017",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:48:52.160Z"
+  },
+  {
+   "key": "vy-dumali-ya-zabyl→provozhayuschaya-v-posledniy-put-friren-5-prichin-pochemu-eto-odno-iz-luchshih-anime-goda",
+   "source": "vy-dumali-ya-zabyl",
+   "target": "provozhayuschaya-v-posledniy-put-friren-5-prichin-pochemu-eto-odno-iz-luchshih-anime-goda",
+   "from": "manual",
+   "kind": "manual",
+   "confidence": "—",
+   "channels": [],
+   "batch": 1,
+   "targetKind": "external",
+   "place": {
+    "afterBlock": 8,
+    "anchorBlock": 5,
+    "anchorWords": "Заставляет задать себе вопрос, а смог бы ты получать удовольствие"
+   },
+   "originalPlace": null,
+   "moved": false,
+   "manual": true,
+   "replaces": "vy-dumali-ya-zabyl→ep-86",
+   "play": false,
+   "label": null,
+   "fingerprint": "95906e3fc553",
+   "decidedAt": "2026-09-25T11:38:54.698Z"
+  },
+  {
    "key": "zhit-i-naslazhdatsya-prostoy-zhiznyu→ep-114",
    "source": "zhit-i-naslazhdatsya-prostoy-zhiznyu",
    "target": "ep-114",
@@ -711,11 +3849,43 @@
    "reason": null,
    "comment": null,
    "decidedAt": "2026-09-25T10:02:39.071Z"
+  },
+  {
+   "key": "znakomtes-sofi-li→vse-na-svoih-mestah-dazhe-tsveta",
+   "source": "znakomtes-sofi-li",
+   "target": "vse-na-svoih-mestah-dazhe-tsveta",
+   "from": "reserve",
+   "kind": "broad",
+   "confidence": "слабый",
+   "channels": [
+    "themes"
+   ],
+   "batch": 1,
+   "targetKind": "note",
+   "place": {
+    "afterBlock": 5,
+    "anchorBlock": 3,
+    "anchorWords": "Она работала над «Скотт Пилигрим жмёт на газ», «Дандаданом» и"
+   },
+   "originalPlace": {
+    "afterBlock": 5,
+    "anchorBlock": 3,
+    "anchorWords": "Она работала над «Скотт Пилигрим жмёт на газ», «Дандаданом» и"
+   },
+   "moved": true,
+   "manual": false,
+   "replaces": "znakomtes-sofi-li→deti-ubiytsy",
+   "play": false,
+   "label": null,
+   "fingerprint": "b6454eedd9f9",
+   "reason": null,
+   "comment": null,
+   "decidedAt": "2026-09-25T11:50:01.867Z"
   }
  ],
  "deferred": [],
  "cursor": {
-  "post": "krasota-na-mechah",
-  "at": "2026-09-25T10:09:14.897Z"
+  "post": "kakie-isekai-posmotret",
+  "at": "2026-09-25T12:21:51.486Z"
  }
 }

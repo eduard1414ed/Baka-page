@@ -26,6 +26,7 @@ import { normalizeFrontmatter } from '../../src/lib/frontmatter.mjs';
 import { isPublished } from '../../src/lib/publishing.mjs';
 import { isExternalPost } from '../../src/lib/externalPost.mjs';
 import { canPlayInline } from '../../src/lib/postRef.mjs';
+import { embeddedYoutube, linksOfNodes, OWN_POST_RE, TG_POST_RE } from './unlink.mjs';
 
 const ANIME_DIR = new URL('../../src/content/anime/', import.meta.url);
 
@@ -60,14 +61,19 @@ export async function loadAnime() {
 	return entries;
 }
 
-// Адрес своего материала → id поста. Сайт и зеркало, с доменом и без.
-const OWN_POST_RE = /^(?:https?:\/\/(?:www\.)?(?:ru\.)?bakapodcast\.com)?\/posts\/([^/?#]+)\/?(?:[?#].*)?$/u;
-const TG_POST_RE = /^https?:\/\/t\.me\/podcastbaka\/(\d+)\/?(?:\?.*)?$/u;
+// Адрес своего материала → id поста: OWN_POST_RE и TG_POST_RE живут в unlink.mjs.
 
 /** Все ссылки блока (адреса), включая вложенные. */
 function collectLinks(node, out = []) {
 	if (node.type === 'link' && node.url) out.push(node.url);
 	for (const child of node.children ?? []) collectLinks(child, out);
+	return out;
+}
+
+/** Узлы-ссылки блока (с местом в тексте) — для поиска дублей (unlink.mjs). */
+function collectLinkNodes(node, out = []) {
+	if (node.type === 'link' && node.url) out.push(node);
+	for (const child of node.children ?? []) collectLinkNodes(child, out);
 	return out;
 }
 
@@ -140,6 +146,9 @@ export async function loadCorpus({ now = new Date(), exceptions = null } = {}) {
 
 	const byTg = new Map();
 	for (const r of raws) if (r.front?.tgId) byTg.set(String(r.front.tgId), r.id);
+	// Ролик YouTube → посты, в которые он встроен (снятие дублей, сессия 3б).
+	const byYoutube = new Map();
+	for (const r of raws) for (const v of embeddedYoutube(r.body)) byYoutube.set(v, [...new Set([...(byYoutube.get(v) ?? []), r.id])]);
 
 	const posts = [];
 	const mismatches = [];
@@ -199,6 +208,9 @@ export async function loadCorpus({ now = new Date(), exceptions = null } = {}) {
 					const tg = url.match(TG_POST_RE);
 					if (tg) block.ownLinks.push({ url, target: byTg.get(tg[1]) ?? null, tg: tg[1] });
 				}
+				// Те же ссылки с местом в тексте и словами — для снятия дублей (сессия 3б).
+				block.links = linksOfNodes(r.body, collectLinkNodes(node), (id) => byTg.get(id) ?? null, (v) => byYoutube.get(v) ?? []);
+				if (block.links.length) block.raw = raw;
 			}
 			if (kind === 'text') block.textN = ++textN;
 			if (kind === 'material') {

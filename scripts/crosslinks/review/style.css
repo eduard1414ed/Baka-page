@@ -176,3 +176,15 @@ a { color: var(--accent); }
 .opts.replace { display: block; }
 .opts.replace input { width: 100%; margin-bottom: 6px; }
 .opts.replace .hint { display: block; margin-bottom: 6px; }
+
+/* Дубль ссылки в абзаце-якоре (сессия 3б) */
+.dup { margin: 0 20px 14px; padding: 10px 14px; border: 1px solid var(--wait); border-radius: 6px; background: var(--wait-bg); font-size: 15px; }
+.dup-head { font-weight: 600; color: var(--wait); margin-bottom: 6px; }
+.dup-item + .dup-item { border-top: 1px solid var(--line); margin-top: 10px; padding-top: 10px; }
+.dup-row { margin: 4px 0; line-height: 1.5; }
+.dup-row b { display: inline-block; min-width: 64px; color: var(--muted); font-weight: 400; }
+.dup mark { background: #d9ecd6; color: var(--ink); padding: 0 2px; border-radius: 2px; }
+.dup mark.was { background: #f3d9de; }
+.dup .opts { padding: 8px 0 0; }
+.dup .chk { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+.dup textarea { width: 100%; font: inherit; border: 1px solid var(--line); border-radius: 6px; padding: 6px 9px; background: #fff; }

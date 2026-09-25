@@ -1,4 +1,4 @@
-// ПЕРЕЛИНКОВКА — ВСТАВЛЯЛКА (сессия 3).
+// ПЕРЕЛИНКОВКА — ВСТАВЛЯЛКА (сессия 3; снятие дублей — сессия 3б).
 //
 //   npm run crosslinks:apply -- --batch 1            — сухой прогон по пачке
 //   npm run crosslinks:apply -- --posts a,b          — по списку постов
@@ -31,10 +31,21 @@
 // идёт в строку сразу за последним знаком блока, а пустые строки после неё
 // остаются прежние.
 //
-// После --write каждый изменённый файл сверяется с исходным (verify-diff.mjs):
-// красный свет — файл возвращается побайтно, пост уходит в отчёт.
-// Журнал — статус/перелинковка/вставлено.json (номер коммита дописывается
-// после коммита: `--commit <хеш>` без отбора и без --write).
+// СНЯТИЕ ДУБЛЯ (сессия 3б, исключение CLAUDE.md, пункт 2). У решения может
+// быть поле `unlink` — список решений Эда по ссылкам на ту же цель в абзаце-
+// якоре: { raw, mode: words | custom | keep, from, to }. После вставки блока
+// (или у вставки, вписанной раньше, — тогда блок не трогается) кусок `from`
+// ищется в абзаце-якоре — в том, после которого стоит вставка на эту цель
+// (через картинки), — и должен найтись там РОВНО ОДИН раз. Нашёлся — заменяется
+// на `to`; нет или дважды — снятие пропускается, пост в «место потеряно».
+// Абзац-якорь сверяется по первым словам с решением.
+//
+// После --write каждый изменённый файл сверяется с исходным (verify-diff.mjs)
+// вместе со снятиями этого прогона: красный свет — файл возвращается побайтно,
+// пост уходит в отчёт. Журнал — статус/перелинковка/вставлено.json: запись
+// на вставку, снятия — её полем `unlinks`. Номер коммита в журнал НЕ пишется
+// (решение Эда 3б): пачка — один коммит, найти его —
+// `git log -- статус/перелинковка/вставлено.json`.
 
 import { readFile, rename, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -44,7 +55,8 @@ import { parseBody } from '../archive-clean-lib.mjs';
 import { toPlainText } from '../../src/lib/plainText.mjs';
 import { SITE_URL } from '../../src/lib/site.mjs';
 import { fingerprint, reanchor } from './review/fresh.mjs';
-import { verifyInsertOnly } from './verify-diff.mjs';
+import { verifyChange, tgMapOf, ytMapOf } from './verify-diff.mjs';
+import { occurrences } from './unlink.mjs';
 
 const REPO = fileURLToPath(new URL('../../', import.meta.url));
 const DIR = join(REPO, 'статус/перелинковка');
@@ -107,15 +119,36 @@ function nodes(body) {
 	}));
 }
 
-// ——— Дописать номер коммита в журнал ———
-if (opt('--commit')) {
-	const journal = await readJournal();
-	let n = 0;
-	for (const x of journal) if (!x.commit) (x.commit = opt('--commit')), n++;
-	await writeAtomic(journalFile, JSON.stringify(journal, null, 1) + '\n');
-	console.log(`Номер коммита ${opt('--commit')} дописан к ${n} записям журнала.`);
-	process.exit(0);
+/** Узел — картинка (абзац из одних картинок или блок картинки/галереи/видео). */
+function isImageNode(n) {
+	if (n.type === 'leafDirective' || n.type === 'containerDirective') return ['image', 'gallery', 'video'].includes(n.name);
+	if (n.type !== 'paragraph') return false;
+	const kids = (n.children ?? []).filter((c) => !(c.type === 'text' && !c.value.trim()));
+	return kids.length > 0 && kids.every((c) => c.type === 'image');
 }
+
+/**
+ * Абзац-якорь вставки на цель: текстовый узел прямо перед блоком
+ * `::material{id=цель}` (картинки между ними пропускаются). Нет — null.
+ */
+function anchorBefore(body, target) {
+	const kids = parseBody(body).children;
+	const mi = kids.findIndex((n) => n.type === 'leafDirective' && n.name === 'material' && n.attributes?.id === target);
+	if (mi < 0) return null;
+	let j = mi - 1;
+	while (j >= 0 && isImageNode(kids[j])) j--;
+	const a = kids[j];
+	if (!a || !['paragraph', 'list', 'blockquote'].includes(a.type)) return null;
+	const start = a.position.start.offset;
+	const end = a.position.end.offset;
+	return { start, end, words: firstWords(toPlainText(body.slice(start, end))) };
+}
+
+const journalBefore = await readJournal();
+/** Снятие уже в журнале (вписано раньше)? */
+const unlinkDone = (rec, u) => journalBefore.some((x) => x.key === rec.key && (x.unlinks ?? []).some((y) => y.from === u.from && y.to === u.to));
+/** Снятия решения, которые надо сделать в этом прогоне. */
+const todoUnlinks = (rec) => (rec.unlink ?? []).filter((u) => (u.mode === 'words' || u.mode === 'custom') && typeof u.from === 'string' && typeof u.to === 'string' && !unlinkDone(rec, u));
 
 const byPosts = list(opt('--posts'));
 const byKeys = list(opt('--keys'));
@@ -141,6 +174,8 @@ const rawOf = new Map();
 const skipped = []; // { key, why }
 const lost = []; // посты «место потеряно»
 const plan = new Map(); // источник → [{ rec, place, line }]
+const unlinkOnly = new Map(); // источник → [rec] — вставка уже стоит, снять только ссылку
+const already = []; // вставка уже стоит, снимать нечего
 
 for (const a of chosen) {
 	const src = byId.get(a.source);
@@ -164,7 +199,10 @@ for (const a of chosen) {
 		continue;
 	}
 	if (src.blocks.some((b) => b.kind === 'material' && b.target === a.target)) {
-		skip('в посте уже стоит вставка на эту цель');
+		if (todoUnlinks(a).length) {
+			if (!unlinkOnly.has(a.source)) unlinkOnly.set(a.source, []);
+			unlinkOnly.get(a.source).push(a);
+		} else already.push(a);
 		continue;
 	}
 	let place = a.place;
@@ -194,6 +232,7 @@ for (const a of chosen) {
 
 // ——— Вписывание: в памяти, с конца к началу, с проверкой после каждой ———
 const results = []; // { source, before, after, items }
+for (const sid of unlinkOnly.keys()) if (!plan.has(sid)) plan.set(sid, []);
 for (const [sid, items] of plan) {
 	const file = join(postsDir, `${sid}.md`);
 	const before = await readFile(file);
@@ -225,7 +264,41 @@ for (const [sid, items] of plan) {
 		for (const it of items) skipped.push({ key: it.rec.key, source: sid, why: `пост не вписан целиком: ${broken}` });
 		continue;
 	}
-	results.push({ sid, file, before, after: Buffer.from(head + body, 'utf8'), items: items.slice().reverse() });
+	// Снятие дублей — после всех вставок: абзац-якорь ищется у готового блока.
+	const unlinked = []; // { rec, u, anchorWords }
+	const recs = [...items.map((it) => it.rec), ...(unlinkOnly.get(sid) ?? [])];
+	const shape = nodes(body).map((n) => `${n.type}:${n.name ?? ''}:${n.id ?? ''}`).join('|');
+	for (const rec of recs) {
+		for (const u of todoUnlinks(rec)) {
+			const why = (w) => {
+				skipped.push({ key: rec.key, source: sid, why: `ссылка не снята (${w}) — место потеряно, пересмотреть на странице: «${u.from.slice(0, 70)}»` });
+				lost.push(sid);
+			};
+			const a = anchorBefore(body, rec.target);
+			if (!a) {
+				why('нет абзаца перед вставкой');
+				continue;
+			}
+			if (a.words !== firstWords(rec.place?.anchorWords, 10)) {
+				why(`абзац перед вставкой начинается со слов «${firstWords(a.words, 6)}…», а не как в решении`);
+				continue;
+			}
+			const para = body.slice(a.start, a.end);
+			const n = occurrences(para, u.from);
+			if (n !== 1) {
+				why(n ? `кусок встречается в абзаце ${n} раза` : 'куска в абзаце нет');
+				continue;
+			}
+			body = body.slice(0, a.start) + para.replace(u.from, () => u.to) + body.slice(a.end);
+			unlinked.push({ rec, u, anchorWords: a.words });
+		}
+	}
+	if (nodes(body).map((n) => `${n.type}:${n.name ?? ''}:${n.id ?? ''}`).join('|') !== shape) {
+		for (const x of unlinked) skipped.push({ key: x.rec.key, source: sid, why: 'после снятия ссылки поменялось строение текста — пост не вписан' });
+		continue;
+	}
+	if (!items.length && !unlinked.length) continue;
+	results.push({ sid, file, before, after: Buffer.from(head + body, 'utf8'), items: items.slice().reverse(), unlinked });
 }
 
 // ——— Отчёт ———
@@ -244,11 +317,17 @@ for (const sid of sources) {
 		console.log(`  + после абзаца, начинающегося со слов «${firstWords(it.place.anchorWords, 8)}…», — «${it.targetTitle}»${extras.length ? ` (${extras.join(', ')})` : ''}`);
 		console.log(`      ${it.line}${it.how.startsWith('заново') ? `\n      место найдено ${it.how}` : ''}`);
 	}
+	for (const x of r?.unlinked ?? []) {
+		console.log(`  ✂ снять ссылку на «${byId.get(x.rec.target)?.title ?? x.rec.target}» (${x.u.mode === 'words' ? 'слова остаются' : 'свой вариант'}) в абзаце «${firstWords(x.anchorWords, 8)}…»`);
+		console.log(`      было:  ${x.u.from}\n      стало: ${x.u.to}`);
+	}
+	for (const a of already.filter((x) => x.source === sid)) console.log(`  · ${a.target}: вставка уже стоит, снимать нечего`);
 	for (const s of skippedBySource.get(sid) ?? []) console.log(`  − пропуск ${s.key.split('→')[1]}: ${s.why}`);
 	console.log('');
 }
 const nIns = results.reduce((n, r) => n + r.items.length, 0);
-console.log(`Итого: вписать ${nIns}, пропусков ${skipped.length}.`);
+const nUn = results.reduce((n, r) => n + r.unlinked.length, 0);
+console.log(`Итого: вписать ${nIns}, снять ссылок ${nUn}, уже стояло ${already.length}, пропусков ${skipped.length}.`);
 if (lost.length) console.log(`Место потеряно, пересмотреть на странице: ${[...new Set(lost)].join(', ')}`);
 
 if (!WRITE) {
@@ -257,7 +336,9 @@ if (!WRITE) {
 }
 
 // ——— Запись и страховка ———
-const journal = await readJournal();
+const journal = journalBefore;
+const tgToId = tgMapOf(postsDir);
+const ytToIds = ytMapOf(postsDir);
 const red = [];
 const now = new Date().toISOString();
 // --test-spoil: только для проверки страховки и только на копии постов —
@@ -265,7 +346,7 @@ const now = new Date().toISOString();
 const spoil = args.includes('--test-spoil') && postsDir !== POSTS_DIR;
 for (const r of results) {
 	await writeFile(r.file, spoil ? Buffer.from(r.after.toString('utf8').replace('а', 'о'), 'utf8') : r.after);
-	const check = verifyInsertOnly(r.before, await readFile(r.file));
+	const check = verifyChange(r.before, await readFile(r.file), { unlinks: r.unlinked.map((x) => ({ target: x.rec.target, from: x.u.from, to: x.u.to })), tgToId, ytToIds });
 	if (!check.ok) {
 		await writeFile(r.file, r.before);
 		const back = Buffer.compare(await readFile(r.file), r.before) === 0;
@@ -280,11 +361,15 @@ for (const r of results) {
 			afterWords: firstWords(it.place.anchorWords, 10),
 			line: it.line,
 			insertedAt: now,
-			commit: null,
 		};
 		const i = journal.findIndex((x) => x.key === entry.key);
 		if (i >= 0) journal[i] = entry;
 		else journal.push(entry);
+	}
+	for (const x of r.unlinked) {
+		const e = journal.find((y) => y.key === x.rec.key);
+		if (!e) throw new Error(`в журнале нет записи вставки ${x.rec.key} — снятие некуда записать`);
+		(e.unlinks ??= []).push({ mode: x.u.mode, from: x.u.from, to: x.u.to, anchorWords: x.anchorWords, at: now });
 	}
 }
 journal.sort((a, b) => a.key.localeCompare(b.key));

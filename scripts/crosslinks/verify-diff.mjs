@@ -1,12 +1,15 @@
-// ПЕРЕЛИНКОВКА — ПРОВЕРКА ДИФФА (сессия 3). Страховка вставлялки.
+// ПЕРЕЛИНКОВКА — ПРОВЕРКА ДИФФА (сессия 3, снятие ссылок — сессия 3б).
 //
 //   node scripts/crosslinks/verify-diff.mjs                 — изменённые посты рабочей копии против HEAD
 //   node scripts/crosslinks/verify-diff.mjs --against <ref> — против другой версии (например, main)
 //   node scripts/crosslinks/verify-diff.mjs <файл> …         — только эти файлы
 //
 // Исключение из правила «опубликованные посты не правим» (CLAUDE.md, проект
-// «Перелинковка») узкое: в пост можно ДОБАВИТЬ строку `::material{…}` и пустые
-// строки вокруг неё. Больше ничего. Здесь это проверяется так:
+// «Перелинковка») узкое, и правок в нём ровно два вида:
+//   1. ДОБАВИТЬ строку `::material{…}` и пустые строки вокруг неё;
+//   2. СНЯТЬ ССЫЛКУ-ДУБЛЬ: в строке абзаца, сразу после которого стоит вставка
+//      на цель X, кусок «было» из журнала заменён на «стало» из журнала.
+// Больше ничего. Здесь это проверяется так:
 //
 //   1. Файлы сравниваются ПОБАЙТНО: строки режутся по байту \n, а читаются
 //      как latin1 — любой изменённый байт, \r, потерянный перевод строки
@@ -15,18 +18,31 @@
 //      вокруг, а на их место ставится промежуток той длины, что стоял
 //      в «до». Длина берётся у «до», но не больше, чем пустых строк было
 //      вокруг блока: промежуток можно только РАСШИРИТЬ, а не сузить.
-//   3. Всё остальное обязано совпасть с «до» байт в байт.
+//   3. Строка, отличающаяся от «до», законна, только если она получается из
+//      строки «до» заменами из журнала — каждая ровно один раз, «было»
+//      встречается в строке ровно однажды, и больше в строке не изменилось
+//      ни байта. Каждая запись журнала обязана найтись в файле ровно один раз.
+//   4. У каждой замены: в «было» есть ссылка на цель X (адрес на сайте или
+//      пост в телеграме), в «стало» ссылки на X нет, а за абзацем с этой
+//      строкой (через пустые строки и картинки) стоит `::material{id="X"…}` —
+//      новый или бывший там раньше. Нет вставки — снимать дубль нечему.
+//   5. Всё остальное обязано совпасть с «до» байт в байт.
 //
 // Строка блока — только такого вида, как у 71 вставки Эда: id, потом label,
 // потом mode="play". Блок в шапке поста (фронтматтере) — красный свет.
 //
-// Ничего не пишет. Вставлялка (apply.mjs) зовёт verifyInsertOnly сама после
+// Журнал снятий — поле `unlinks` у записи статус/перелинковка/вставлено.json.
+// В командной строке новыми считаются снятия, которых нет в журнале версии
+// `--against` (по умолчанию HEAD).
+//
+// Ничего не пишет. Вставлялка (apply.mjs) зовёт verifyChange сама после
 // записи и при красном свете возвращает файл.
 
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { readdirSync, readFileSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { embeddedYoutube, occurrences, targetsOfUrl, urlsIn } from './unlink.mjs';
 
 const REPO = fileURLToPath(new URL('../../', import.meta.url));
 
@@ -42,15 +58,48 @@ function frontEnd(L) {
 	return -1;
 }
 
+const toLatin = (s) => Buffer.from(String(s), 'utf8').toString('latin1');
+
+/**
+ * Замены из журнала, превращающие строку «до» в строку «после».
+ * Кандидаты — записи, чьё «было» встречается в строке ровно однажды;
+ * перебираются все наборы (их единицы — в одной строке редко больше двух).
+ * @returns {number[]|null} номера использованных записей
+ */
+function matchLine(b, a, pool, used) {
+	const cand = pool.map((u, k) => k).filter((k) => !used[k] && occurrences(b, pool[k].fromL) === 1);
+	for (let mask = 1; mask < 1 << cand.length; mask++) {
+		const pick = cand.filter((_, i) => mask & (1 << i));
+		let cur = b;
+		let okAll = true;
+		for (const k of pick) {
+			if (occurrences(cur, pool[k].fromL) !== 1) {
+				okAll = false;
+				break;
+			}
+			cur = cur.replace(pool[k].fromL, () => pool[k].toL);
+		}
+		if (okAll && cur === a) return pick;
+	}
+	return null;
+}
+
+const IMAGE_LINE = /^(?:!\[|::(?:image|gallery|video)\b)/u;
+
 /**
  * @param {Buffer|string} before
  * @param {Buffer|string} after
- * @returns {{ ok: boolean, problems: string[], added: string[] }}
+ * @param {{ unlinks?: {target:string, from:string, to:string}[], tgToId?: (n:string)=>string|null }} [opts]
+ *        unlinks — снятия, которые должны быть в этом файле (из журнала)
+ * @returns {{ ok: boolean, problems: string[], added: string[], unlinked: number }}
  */
-export function verifyInsertOnly(before, after) {
+export function verifyChange(before, after, { unlinks = [], tgToId = () => null, ytToIds = () => [] } = {}) {
 	const B = lines(before);
 	const A = lines(after);
 	const problems = [];
+	const pool = unlinks.map((u) => ({ ...u, fromL: toLatin(u.from), toL: toLatin(u.to) }));
+	const used = pool.map(() => false);
+	const usedAt = pool.map(() => -1); // строка «после»
 	const count = (L, s) => L.filter((x) => x === s).length;
 
 	// Новые строки блока: те, которых в «после» больше, чем в «до».
@@ -79,7 +128,7 @@ export function verifyInsertOnly(before, after) {
 	let j = 0; // позиция в «после»
 	const fail = (why) => {
 		problems.push(why);
-		return { ok: false, problems, added };
+		return { ok: false, problems, added, unlinked: 0 };
 	};
 	while (j < A.length) {
 		// Где следующий новый блок?
@@ -90,7 +139,11 @@ export function verifyInsertOnly(before, after) {
 		if (m < A.length) while (pieceEnd > j && A[pieceEnd - 1] === '') pieceEnd--;
 		for (let x = j; x < pieceEnd; x++, i++) {
 			if (i >= B.length) return fail(`строка ${x + 1} «после» лишняя: ${show(A[x]).slice(0, 80)}`);
-			if (A[x] !== B[i]) return fail(`строка ${i + 1} изменена:\n    было:  ${show(B[i]).slice(0, 120)}\n    стало: ${show(A[x]).slice(0, 120)}`);
+			if (A[x] !== B[i]) {
+				const pick = matchLine(B[i], A[x], pool, used);
+				if (!pick) return fail(`строка ${i + 1} изменена не по журналу:\n    было:  ${show(B[i]).slice(0, 160)}\n    стало: ${show(A[x]).slice(0, 160)}`);
+				for (const k of pick) (used[k] = true), (usedAt[k] = x);
+			}
 		}
 		if (m >= A.length) break;
 		// Пустые до блока, блок, пустые после (и следующие блоки подряд).
@@ -120,8 +173,56 @@ export function verifyInsertOnly(before, after) {
 		j = k;
 	}
 	if (i !== B.length) return fail(`из «до» пропали строки начиная с ${i + 1}: ${show(B[i]).slice(0, 80)}`);
-	if (!added.length && Buffer.compare(Buffer.from(before), Buffer.from(after)) !== 0) return fail('файлы различаются, а нового блока нет');
-	return { ok: problems.length === 0, problems, added };
+
+	// Снятия: каждое найдено, ссылка — на ту цель, и стоит она перед вставкой.
+	pool.forEach((u, k) => {
+		const name = `снятие «${u.from.slice(0, 60)}» (цель ${u.target})`;
+		if (!used[k]) return problems.push(`${name}: в журнале есть, в файле не найдено`);
+		const hits = (url) => targetsOfUrl(url, tgToId, ytToIds).includes(u.target);
+		if (!urlsIn(u.from).some(hits)) problems.push(`${name}: в «было» нет ссылки на эту цель`);
+		if (urlsIn(u.to).some(hits)) problems.push(`${name}: в «стало» осталась ссылка на эту цель`);
+		// Абзац со строкой → конец абзаца → через пустые и картинки → вставка на цель.
+		let y = usedAt[k];
+		while (y + 1 < A.length && A[y + 1] !== '') y++;
+		y++;
+		while (y < A.length && (A[y] === '' || IMAGE_LINE.test(A[y]))) {
+			if (A[y] !== '' && IMAGE_LINE.test(A[y])) {
+				// картинка — пропускаем её строки до пустой
+				while (y < A.length && A[y] !== '') y++;
+			} else y++;
+		}
+		const m = y < A.length ? show(A[y]).match(/^::material\{id="([^"]+)"/u) : null;
+		if (m?.[1] !== u.target) problems.push(`${name}: ссылка снята не в абзаце перед вставкой на эту цель (дальше идёт «${show(A[y] ?? '').slice(0, 50)}»)`);
+	});
+	if (!added.length && !pool.length && Buffer.compare(Buffer.from(before), Buffer.from(after)) !== 0) return fail('файлы различаются, а нового блока нет');
+	return { ok: problems.length === 0, problems, added, unlinked: used.filter(Boolean).length };
+}
+
+/** Прежнее имя: только новые блоки, без снятий. */
+export const verifyInsertOnly = (before, after) => verifyChange(before, after);
+
+// ——— Журнал снятий: что добавилось по сравнению с версией ref ———
+export function newUnlinks(journalNow, journalRef) {
+	const was = new Set((journalRef ?? []).flatMap((x) => (x.unlinks ?? []).map((u) => JSON.stringify([x.source, x.target, u.from, u.to]))));
+	return (journalNow ?? []).flatMap((x) => (x.unlinks ?? []).filter((u) => !was.has(JSON.stringify([x.source, x.target, u.from, u.to]))).map((u) => ({ source: x.source, target: x.target, from: u.from, to: u.to })));
+}
+
+/** Номер поста в телеграме → id поста сайта (поле tgId), по папке постов. */
+export function tgMapOf(postsDir) {
+	const map = new Map();
+	for (const f of readdirSync(postsDir).filter((x) => x.endsWith('.md'))) {
+		const m = readFileSync(join(postsDir, f), 'utf8').match(/^tgId:\s*['"]?(\d+)/mu);
+		if (m) map.set(m[1], f.slice(0, -3));
+	}
+	return (n) => map.get(String(n)) ?? null;
+}
+
+/** Ролик YouTube → посты, в которые он встроен (::video), по папке постов. */
+export function ytMapOf(postsDir) {
+	const map = new Map();
+	for (const f of readdirSync(postsDir).filter((x) => x.endsWith('.md')))
+		for (const v of embeddedYoutube(readFileSync(join(postsDir, f), 'utf8'))) map.set(v, [...(map.get(v) ?? []), f.slice(0, -3)]);
+	return (v) => map.get(v) ?? [];
 }
 
 // ——— Командная строка ———
@@ -133,9 +234,23 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
 		const out = execFileSync('git', ['-c', 'core.quotepath=false', 'diff', '--name-only', '-z', ref, '--', 'src/content/posts/'], { cwd: REPO });
 		files = out.toString('utf8').split('\0').filter(Boolean);
 	}
+	const JOURNAL = 'статус/перелинковка/вставлено.json';
+	const journalNow = JSON.parse(readFileSync(join(REPO, JOURNAL), 'utf8'));
+	let journalRef = [];
+	try {
+		journalRef = JSON.parse(execFileSync('git', ['show', `${ref}:${JOURNAL}`], { cwd: REPO, maxBuffer: 1 << 26 }).toString('utf8'));
+	} catch {
+		// Журнала в ref ещё не было — новые все.
+	}
+	const fresh = newUnlinks(journalNow, journalRef);
+	const tgToId = tgMapOf(join(REPO, 'src/content/posts'));
+	const ytToIds = ytMapOf(join(REPO, 'src/content/posts'));
 	let bad = 0;
+	const seen = new Set();
 	for (const f of files) {
 		const rel = f.startsWith('/') ? f.slice(REPO.length) : f;
+		const id = rel.split('/').pop().replace(/\.md$/u, '');
+		seen.add(id);
 		let before;
 		try {
 			before = execFileSync('git', ['show', `${ref}:${rel}`], { cwd: REPO, maxBuffer: 1 << 26 });
@@ -144,13 +259,18 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
 			bad++;
 			continue;
 		}
-		const r = verifyInsertOnly(before, readFileSync(resolve(REPO, rel)));
-		if (r.ok) console.log(`✓ ${rel}: только новые блоки (${r.added.length})`);
+		const r = verifyChange(before, readFileSync(resolve(REPO, rel)), { unlinks: fresh.filter((u) => u.source === id), tgToId, ytToIds });
+		if (r.ok) console.log(`✓ ${rel}: новых блоков ${r.added.length}, снятых ссылок ${r.unlinked}`);
 		else {
 			bad++;
 			console.log(`✗ ${rel}:\n  ${r.problems.join('\n  ')}`);
 		}
 	}
-	console.log(files.length ? (bad ? `КРАСНЫЙ СВЕТ: ${bad} из ${files.length}` : `Зелёный: ${files.length} из ${files.length}`) : 'Изменённых постов нет.');
+	for (const u of fresh.filter((u) => !seen.has(u.source))) {
+		bad++;
+		console.log(`✗ ${u.source}: в журнале новое снятие «${u.from.slice(0, 60)}», а файл поста не изменён`);
+	}
+	const n = files.length;
+	console.log(n || fresh.length ? (bad ? `КРАСНЫЙ СВЕТ: ${bad}` : `Зелёный: ${n} из ${n}`) : 'Изменённых постов нет.');
 	process.exitCode = bad ? 1 : 0;
 }

@@ -13,7 +13,10 @@
 //   replaces — ключ основного, вместо которого подставлен запасной;
 //   play, label — вид вставки; reason, comment — причина отказа;
 //   kind, confidence — вид связи и уверенность НА МОМЕНТ РЕШЕНИЯ: по ним
-//   считается статистика, и она не должна зависеть от будущего пересчёта.
+//   считается статистика, и она не должна зависеть от будущего пересчёта;
+//   unlink  — решения по обычным ссылкам на ту же цель в абзаце-якоре (3б):
+//   [{ raw, mode: words | custom | keep, text? }]; «было/стало» (from/to)
+//   считает и дописывает сервер (unlink.mjs), страница его не сочиняет.
 
 (() => {
 	'use strict';
@@ -48,7 +51,7 @@
 					return r.json();
 				},
 				async save(rec) {
-					await post('api/decision', rec);
+					return (await post('api/decision', rec)).rec;
 				},
 				async remove(key) {
 					await post('api/decision', { key, remove: true });
@@ -65,6 +68,7 @@
 			toast(`НЕ СОХРАНИЛОСЬ: ${t}`, true);
 			throw new Error(t);
 		}
+		return r.json();
 	}
 
 	let toastTimer = null;
@@ -172,6 +176,27 @@
 	}
 	const placeAt = (p, b) => ({ afterBlock: b, ...anchorAt(p, b) });
 
+	// ——— Дубль ссылки в абзаце-якоре (сессия 3б) ———
+	/** Абзац-якорь: у вписанной — текст прямо перед вставкой, иначе — абзац места. */
+	function anchorFor(p, targetId, place) {
+		if (p.inserted?.includes(targetId) && p.insertedAnchor?.[targetId] != null) return p.insertedAnchor[targetId];
+		return place ? (place.anchorBlock ?? place.afterBlock) : null;
+	}
+	const dupsFor = (p, targetId, place) => (p.blocks[anchorFor(p, targetId, place)]?.dups ?? []).filter((d) => (d.targets ?? [d.target]).includes(targetId));
+	const dupsOf = (p, c) => dupsFor(p, c.target, placeOf(c));
+	/** По умолчанию: «слова останутся» — снять, остальное — оставить (решение Эда). */
+	const defaultMode = (d) => (d.kind === 'words' && d.wordsFrag ? 'words' : 'keep');
+	/** Прежние решения по ссылкам, если они про те же ссылки; иначе — по умолчанию. */
+	function unlinkFor(p, c, place, had) {
+		const dups = dupsFor(p, c.target, place);
+		if (!dups.length) return null;
+		const old = had?.unlink ?? [];
+		return dups.map((d) => {
+			const o = old.find((u) => u.raw === d.raw);
+			return o ? { raw: o.raw, mode: o.mode, ...(o.mode === 'custom' ? { text: o.text } : {}) } : { raw: d.raw, mode: defaultMode(d) };
+		});
+	}
+
 	// ——— Решения ———
 	function baseRecord(c, extra = {}) {
 		const p = P();
@@ -199,11 +224,23 @@
 			decidedAt: new Date().toISOString(),
 		};
 	}
+	/** Запись с решениями по ссылкам (у вписанной без решения — не трогаем). */
+	function withUnlink(p, c, rec) {
+		const had = decision(c.key);
+		if (rec.state !== 'approved') return { ...rec, unlink: null };
+		if (p.inserted?.includes(c.target) && !had?.unlink) return rec;
+		return { ...rec, unlink: unlinkFor(p, c, rec.place, had) };
+	}
 
 	async function setDecision(rec) {
 		S.decisions.set(rec.key, rec);
 		render();
-		await api.save(rec);
+		const saved = await api.save(rec);
+		// Сервер дописывает «было/стало» к снятию ссылки — берём его запись.
+		if (saved) {
+			S.decisions.set(saved.key, saved);
+			render();
+		}
 	}
 	async function removeDecision(key) {
 		S.decisions.delete(key);
@@ -211,7 +248,7 @@
 		await api.remove(key);
 	}
 
-	const approve = (c, extra = {}) => setDecision(baseRecord(c, { state: 'approved', reason: null, comment: null, ...extra }));
+	const approve = (c, extra = {}) => setDecision(withUnlink(P(), c, baseRecord(c, { state: 'approved', reason: null, comment: null, ...extra })));
 	const defer = (c) => setDecision(baseRecord(c, { state: 'deferred', reason: null, comment: null }));
 	const reject = (c, reason, comment = null) => setDecision(baseRecord(c, { state: 'rejected', reason, comment }));
 
@@ -221,7 +258,7 @@
 		const extra = { place: placeAt(p, b), moved: b !== c.place?.afterBlock };
 		UI.moving = null;
 		if (!had || had.state === 'rejected') await approve(c, extra);
-		else await setDecision(baseRecord(c, { ...extra, state: had.state, reason: had.reason, comment: had.comment }));
+		else await setDecision(withUnlink(p, c, baseRecord(c, { ...extra, state: had.state, reason: had.reason, comment: had.comment })));
 		const w = placeWarnings(p, c, b);
 		toast(w.length ? `Перенесено. Внимание: ${w.join('; ')}` : 'Перенесено и одобрено', w.length > 0);
 	}
@@ -256,7 +293,7 @@
 		UI.replacing = null;
 		UI.rsearch = '';
 		await reject(old, 'better', `заменена на «${target(targetId).title}»`);
-		await setDecision(baseRecord(c, { state: 'approved', place: placeAt(p, placeOf(old).afterBlock), moved: false, manual: !reserve, replaces: oldKey, play: reserve ? playOf(c) : false }));
+		await setDecision(withUnlink(p, c, baseRecord(c, { state: 'approved', place: placeAt(p, placeOf(old).afterBlock), moved: false, manual: !reserve, replaces: oldKey, play: reserve ? playOf(c) : false })));
 		UI.cur = items(p).findIndex((x) => x.key === key);
 		render();
 		toast(`Заменено: «${target(targetId).title}»`);
@@ -289,7 +326,7 @@
 		}
 		const b = tailStart(p) - 1;
 		const c = { key, target: targetId, kind: 'manual', confidence: '—', channels: [], from: 'manual', place: null, playDefault: false };
-		await setDecision(baseRecord(c, { state: 'approved', place: placeAt(p, b), moved: false, manual: true, play: false }));
+		await setDecision(withUnlink(p, c, baseRecord(c, { state: 'approved', place: placeAt(p, b), moved: false, manual: true, play: false })));
 		UI.cur = items(p).findIndex((x) => x.key === key);
 		UI.moving = key;
 		UI.search = '';
@@ -348,6 +385,69 @@
 		return `<div class="ref${thumb ? '' : ' no-cover'}"><div class="label">${esc(label)}</div><div class="ref-row">${thumb}<div><div class="ref-title">${esc(t.title)} <span class="arrow">${t.external ? '↗' : '→'}</span></div><div class="ref-meta">${meta}</div></div></div></div>`;
 	}
 
+	/** Разметка для показа: ссылки — подчёркнутыми словами, остальное как есть. */
+	const mdLite = (t) => esc(t).replace(/\[([^\]]*)\]\([^)]*\)/g, '<u>$1</u>');
+
+	/** «В этом абзаце уже есть ссылка на эту цель» — под плашкой (сессия 3б). */
+	function dupHtml(p, c, idx, st) {
+		const dups = dupsOf(p, c);
+		if (!dups.length) return '';
+		const d = decision(c.key);
+		const inserted = st === 'approved' && p.inserted?.includes(c.target);
+		let h = `<div class="dup"><div class="dup-head">⚠ В этом абзаце уже есть ссылка на эту цель${dups.length > 1 ? ` (${dups.length})` : ''}</div>`;
+		dups.forEach((x, j) => {
+			const u = d?.unlink?.find((y) => y.raw === x.raw) ?? null;
+			const undecided = st === 'approved' && !u;
+			const mode = u?.mode ?? defaultMode(x);
+			const w = x.wordsFrag;
+			const was = w ? `${mdLite(w.pre)}<mark class="was">${mdLite(x.raw)}</mark>${mdLite(w.post)}` : mdLite(x.view);
+			let will;
+			const pv = UI.preview?.[c.key + '|' + x.raw];
+			if (UI.editing === c.key + '|' + x.raw && pv && !pv.error) will = `${mdLite(pv.pre)}<mark>${mdLite(pv.to)}</mark>${mdLite(pv.post)}`;
+			else if (mode === 'custom' && u?.from != null) will = `${mdLite(u.pre ?? '')}<mark>${mdLite(u.to)}</mark>${mdLite(u.post ?? '')}`;
+			else if (mode === 'words' && w) will = `${mdLite(w.pre)}<mark>${mdLite(w.to)}</mark>${mdLite(w.post)}`;
+			else will = null;
+			const wasCustom = UI.editing === c.key + '|' + x.raw && pv && !pv.error ? `${mdLite(pv.pre)}<mark class="was">${mdLite(pv.from)}</mark>${mdLite(pv.post)}` : mode === 'custom' && u?.from != null ? `${mdLite(u.pre ?? '')}<mark class="was">${mdLite(u.from)}</mark>${mdLite(u.post ?? '')}` : was;
+			h += `<div class="dup-item"><div class="dup-kind"><span class="tag ${x.kind === 'words' ? 'strong' : 'medium'}">${esc(x.kindLabel)}</span>${x.youtube ? ' <span class="hint">ссылка на ролик этого материала на YouTube</span>' : ''}${x.parts > 1 ? ` <span class="hint">ссылка нарезана на ${x.parts} куска подряд — снимается целиком</span>` : ''}</div>`;
+			h += `<div class="dup-row"><b>было:</b> ${wasCustom}</div>`;
+			h += `<div class="dup-row"><b>станет:</b> ${will ?? '<i>без изменений — ссылка остаётся</i>'}</div>`;
+			if (st !== 'approved') {
+				h += `<div class="hint">При одобрении: ${defaultMode(x) === 'words' ? 'ссылка будет снята, слова останутся' : 'ссылка останется; после одобрения можно вписать свой вариант'}.</div></div>`;
+				return;
+			}
+			const on = mode === 'words' || mode === 'custom';
+			h += `<div class="opts dup-acts"><label class="chk"><input type="checkbox" data-act="unlink-toggle" data-idx="${idx}" data-j="${j}" ${on ? 'checked' : ''}> убрать ссылку из текста${mode === 'custom' ? ' (свой вариант)' : ''}</label>`;
+			if (undecided) h += `<span class="tag warn">не решено</span><button class="btn" data-act="unlink-accept" data-idx="${idx}">принять как показано</button>`;
+			const open = UI.editing === c.key + '|' + x.raw || (x.kind !== 'words' && mode !== 'words');
+			if (!open) h += `<button class="btn" data-act="unlink-edit" data-idx="${idx}" data-j="${j}">свой вариант…</button>`;
+			h += `</div>`;
+			if (open) {
+				const val = UI.drafts?.[c.key + '|' + x.raw] ?? u?.text ?? x.view;
+				h += `<div class="opts dup-edit"><textarea data-act="unlink-text" data-idx="${idx}" data-j="${j}" rows="3">${esc(val)}</textarea>`;
+				h += `<button class="btn" data-act="unlink-save" data-idx="${idx}" data-j="${j}">сохранить свой вариант</button><span class="hint">Поправьте предложение. Заменится только подсвеченный кусок в «было» — в пределах этого предложения. Ctrl+Enter — сохранить.</span>`;
+				if (pv?.error && UI.editing === c.key + '|' + x.raw) h += `<span class="tag warn">⚠ ${esc(pv.error)}</span>`;
+				h += `</div>`;
+			}
+			h += `</div>`;
+		});
+		return h + `</div>`;
+	}
+
+	/** Дубли у вписанных вставок — по всем постам (сессия 3б, шаг 2.4). */
+	function insertedDups() {
+		const out = [];
+		D.posts.forEach((p, i) => {
+			for (const r of S.decisions.values()) {
+				if (r.source !== p.id || r.state !== 'approved' || !p.inserted?.includes(r.target)) continue;
+				const dups = dupsFor(p, r.target, null);
+				if (!dups.length) continue;
+				const done = dups.every((x) => r.unlink?.some((u) => u.raw === x.raw));
+				out.push({ post: i, key: r.key, title: p.title, target: target(r.target).title, n: dups.length, done, modes: (r.unlink ?? []).map((u) => ({ words: 'убрать', custom: 'свой вариант', keep: 'оставить' })[u.mode]).join(', ') });
+			}
+		});
+		return out;
+	}
+
 	function insHtml(p, c, idx) {
 		const t = target(c.target);
 		const st = stateOf(c);
@@ -372,6 +472,7 @@
 		html += `<div class="why"><b>Почему:</b><ul>${reasons.map((r) => `<li>${esc(r)}</li>`).join('')}</ul>`;
 		if (pl) html += `<div style="color:var(--muted);font-size:14px;margin-top:6px">Место: после абзаца ${textUpTo(p, pl.afterBlock)} из ${p.blocks.filter((x) => x.kind === 'text').length}${c.place?.mode && !d?.moved ? ` (${esc(c.place.mode)})` : ''} — «${esc(pl.anchorWords)}…»</div>`;
 		html += ` <a href="${esc(t.url)}" target="_blank" rel="noopener">открыть цель на сайте ↗</a></div>`;
+		html += dupHtml(p, c, idx, st);
 
 		html += `<div class="acts">`;
 		html += `<button class="btn${st === 'approved' ? ' ok' : ''}" data-act="approve" data-idx="${idx}">✅ Одобрить<kbd>A</kbd></button>`;
@@ -432,6 +533,12 @@
 		} else UI.hitList = [];
 		h += `</section>`;
 
+		const idups = insertedDups();
+		if (idups.length) {
+			h += `<section><h2>Дубли у вписанного (${idups.filter((x) => !x.done).length} не решено из ${idups.length})</h2>`;
+			h += idups.map((x) => `<button class="hit" data-act="goinserted" data-post="${x.post}" data-key="${esc(x.key)}">${x.done ? '✓' : '○'} ${esc(x.title)}<br><small>→ ${esc(x.target)} · ${x.done ? esc(x.modes) : 'не решено'}</small></button>`).join('');
+			h += `</section>`;
+		}
 		h += `<section><h2>Весь пост</h2><button class="btn no wrap" data-act="rejectall">${UI.confirmAll ? 'Точно? Нажмите ещё раз' : 'Всё отклонить — посту не нужны вставки'}<kbd>X</kbd></button></section>`;
 		return h + keysHtml();
 	}
@@ -641,6 +748,52 @@
 				return render();
 			case 'manual':
 				return addManual(el.dataset.id);
+			case 'goinserted': {
+				UI.summary = false;
+				goPost(+el.dataset.post);
+				const i = items(P()).findIndex((x) => x.key === el.dataset.key);
+				if (i >= 0) UI.cur = i;
+				render();
+				return document.querySelector('.ins.current')?.scrollIntoView({ block: 'center' });
+			}
+			case 'unlink-accept': {
+				const d = decision(c.key);
+				return setDecision({ ...d, unlink: unlinkFor(p, c, placeOf(c), d), decidedAt: new Date().toISOString() });
+			}
+			case 'unlink-toggle': {
+				const d = decision(c.key);
+				const x = dupsOf(p, c)[+el.dataset.j];
+				const list = unlinkFor(p, c, placeOf(c), d);
+				const u = list.find((y) => y.raw === x.raw);
+				const was = d?.unlink?.find((y) => y.raw === x.raw)?.mode ?? defaultMode(x);
+				if (was === 'words' || was === 'custom') (u.mode = 'keep'), delete u.text;
+				else if (x.wordsFrag) u.mode = 'words';
+				else {
+					UI.editing = c.key + '|' + x.raw;
+					toast('Слов у ссылки нет — впишите свой вариант');
+					return render();
+				}
+				return setDecision({ ...d, unlink: list, decidedAt: new Date().toISOString() });
+			}
+			case 'unlink-edit': {
+				const x = dupsOf(p, c)[+el.dataset.j];
+				UI.editing = c.key + '|' + x.raw;
+				return render();
+			}
+			case 'unlink-save': {
+				const d = decision(c.key);
+				const x = dupsOf(p, c)[+el.dataset.j];
+				const text = document.querySelector(`textarea[data-act="unlink-text"][data-idx="${idx}"][data-j="${el.dataset.j}"]`)?.value ?? '';
+				const list = unlinkFor(p, c, placeOf(c), d);
+				const u = list.find((y) => y.raw === x.raw);
+				if (text.trim() === x.view.trim()) (u.mode = x.wordsFrag ? 'words' : 'keep'), delete u.text;
+				else (u.mode = 'custom'), (u.text = text.trim());
+				await setDecision({ ...d, unlink: list, decidedAt: new Date().toISOString() });
+				UI.editing = null;
+				delete UI.drafts?.[c.key + '|' + x.raw];
+				render();
+				return toast(u.mode === 'custom' ? 'Свой вариант сохранён' : 'Текст не изменён — ссылка снимется, слова останутся');
+			}
 			case 'rejectall':
 				if (!UI.confirmAll) {
 					UI.confirmAll = true;
@@ -659,7 +812,7 @@
 			return moveTo(c, +mv.dataset.move);
 		}
 		const el = e.target.closest('[data-act]');
-		if (el && el.tagName !== 'INPUT' && !(el.tagName === 'A')) {
+		if (el && el.tagName !== 'INPUT' && el.tagName !== 'TEXTAREA' && !(el.tagName === 'A')) {
 			if (el.classList.contains('overlay') && e.target !== el) return;
 			e.preventDefault();
 			return act(el.dataset.act, el);
@@ -675,9 +828,32 @@
 
 	document.addEventListener('change', (e) => {
 		if (e.target.id === 'batch') goPost(D.posts.findIndex((x) => x.batch === +e.target.value));
+		if (e.target.dataset?.act === 'unlink-toggle') act('unlink-toggle', e.target);
 	});
 
+	let previewTimer = null;
 	document.addEventListener('input', (e) => {
+		if (e.target.dataset?.act === 'unlink-text') {
+			const el = e.target;
+			const p = P();
+			const c = cand(+el.dataset.idx);
+			const x = dupsOf(p, c)[+el.dataset.j];
+			const k = c.key + '|' + x.raw;
+			UI.editing = k;
+			(UI.drafts ??= {})[k] = el.value;
+			clearTimeout(previewTimer);
+			previewTimer = setTimeout(async () => {
+				if (window.STATIC) return;
+				const r = await post('api/unlink-preview', { source: p.id, target: c.target, place: placeOf(c), raw: x.raw, text: el.value.trim() });
+				(UI.preview ??= {})[k] = r;
+				// Перерисовка сбрасывает фокус — возвращаем курсор в поле.
+				const pos = el.selectionStart;
+				render();
+				const again = document.querySelector(`textarea[data-act="unlink-text"][data-idx="${el.dataset.idx}"][data-j="${el.dataset.j}"]`);
+				if (again) (again.focus(), again.setSelectionRange(pos, pos));
+			}, 350);
+			return;
+		}
 		if (e.target.id === 'rsearch') {
 			UI.rsearch = e.target.value;
 			UI.rhit = 0;
@@ -730,6 +906,11 @@
 			if (e.key === 'Escape') t.blur();
 			return;
 		}
+		if (t.dataset?.act === 'unlink-text') {
+			if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) (e.preventDefault(), act('unlink-save', t));
+			if (e.key === 'Escape') (t.blur(), (UI.editing = null), render());
+			return;
+		}
 		if (t.id === 'other-comment') {
 			if (e.key === 'Enter' && !e.shiftKey) {
 				e.preventDefault();
@@ -770,7 +951,16 @@
 			m: () => act('move'),
 			s: () => act('defer'),
 			z: () => act('replace-open'),
-			u: () => c && decision(c.key) && act('undo'),
+			// Одна буква, стёртая решением, — дорого: «г» — первая буква «готово»,
+			// набранного не в том окне (сессия 3б). С клавиатуры — только вторым
+			// нажатием за 2 секунды; кнопка на экране работает с первого.
+			u: () => {
+				if (!c || !decision(c.key)) return;
+				if (UI.undoArmed === c.key && Date.now() - UI.undoAt < 2000) return (UI.undoArmed = null), act('undo');
+				UI.undoArmed = c.key;
+				UI.undoAt = Date.now();
+				toast('Нажмите U ещё раз, чтобы вернуть «не решено»');
+			},
 			p: () => act('play'),
 			l: () => document.querySelector(`input[data-act="label"][data-idx="${UI.cur}"]`)?.focus(),
 			j: () => ((UI.cur = Math.min(list.length - 1, UI.cur + 1)), (UI.rejecting = null), render(), document.querySelector('.ins.current')?.scrollIntoView({ block: 'center', behavior: 'smooth' })),

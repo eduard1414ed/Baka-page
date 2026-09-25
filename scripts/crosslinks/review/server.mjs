@@ -33,6 +33,7 @@ import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildReview, REPO, CANDIDATES_FILE } from './model.mjs';
 import { reanchor } from './fresh.mjs';
+import { dupLinks, dupKind, fragmentFor, targetsOfUrl, youtubeId, urlsIn } from '../unlink.mjs';
 
 const HERE = fileURLToPath(new URL('./', import.meta.url));
 const args = process.argv.slice(2);
@@ -94,6 +95,32 @@ function freshRecord(r) {
 	return re ? { ...r, place: { ...r.place, ...re }, reanchored: true } : { ...r, placeLost: true };
 }
 
+// ——— Дубль ссылки в абзаце-якоре (сессия 3б) ———
+// Абзац-якорь: у вписанной вставки — текстовый блок прямо перед ней, иначе —
+// абзац места решения. Так же ищет apply.mjs (anchorBefore).
+function anchorBlockOf(rec) {
+	const p = postsById.get(rec.source);
+	if (!p) return null;
+	const n = p.inserted.includes(rec.target) ? p.insertedAnchor[rec.target] : (rec.place?.anchorBlock ?? rec.place?.afterBlock);
+	return n == null ? null : data.corpus.get(rec.source)?.blocks[n] ?? null;
+}
+
+/** Решение по одной ссылке → { raw, kind, mode, text?, from, to } или ошибка. */
+function resolveUnlink(rec, u) {
+	const block = anchorBlockOf(rec);
+	const link = dupLinks(block, rec.target).find((l) => l.raw === u?.raw);
+	if (!link) throw new Error('этой ссылки на цель в абзаце-якоре нет — обновите страницу');
+	const kind = dupKind(link);
+	if (u.mode === 'keep') return { raw: link.raw, kind, mode: 'keep', from: null, to: null };
+	if (u.mode !== 'words' && u.mode !== 'custom') throw new Error(`неизвестный режим ${u.mode}`);
+	const f = fragmentFor(block, link, u.mode, u.text);
+	if (f.error) throw new Error(f.error);
+	// Ссылка на ту же цель в своём варианте: адрес на сайте — или тот же ролик, что у снятой.
+	if (urlsIn(f.to).some((url) => targetsOfUrl(url, () => null).includes(rec.target) || (link.youtube && youtubeId(url) === link.youtube))) throw new Error('в своём варианте осталась ссылка на ту же цель');
+	// pre/post — остаток предложения вокруг куска, только для показа на странице.
+	return { raw: link.raw, kind, mode: u.mode, ...(u.mode === 'custom' ? { text: String(u.text) } : {}), from: f.from, to: f.to, pre: f.pre, post: f.post };
+}
+
 // Решения по одному ключу пишутся по очереди: два быстрых нажатия подряд
 // не должны читать и писать файлы одновременно.
 let queue = Promise.resolve();
@@ -101,10 +128,14 @@ const serial = (fn) => (queue = queue.then(fn, fn));
 
 async function saveDecision(rec) {
 	if (typeof rec?.key !== 'string') throw new Error('нет ключа');
+	// Снятие ссылки считается ДО того, как прежнее решение убрано из памяти:
+	// ошибка здесь не должна стоить уже записанного решения.
+	const unlink = !rec.remove && rec.state === 'approved' && Array.isArray(rec.unlink) ? rec.unlink.map((u) => resolveUnlink(freshRecord(rec), u)) : null;
 	decisions.approved = decisions.approved.filter((r) => r.key !== rec.key);
 	decisions.deferred = decisions.deferred.filter((r) => r.key !== rec.key);
 	const wasRejected = rejected.some((r) => r.key === rec.key);
 	rejected = rejected.filter((r) => r.key !== rec.key);
+	let saved = null;
 	if (!rec.remove) {
 		const [source, target] = rec.key.split('→');
 		if (source !== rec.source || target !== rec.target) throw new Error(`ключ ${rec.key} не совпадает с источником и целью`);
@@ -112,16 +143,25 @@ async function saveDecision(rec) {
 		if (!targetIds.has(target)) throw new Error(`цели ${target} нет среди опубликованных`);
 		if (!STATES.has(rec.state)) throw new Error(`неизвестное состояние ${rec.state}`);
 		const { state, remove, placeLost, reanchored, ...clean } = rec;
+		// Снятие ссылки: только у одобренной вставки, «было/стало» считает сервер.
+		if (unlink) clean.unlink = unlink;
+		else delete clean.unlink;
 		if (state === 'rejected') {
 			if (!REASON_TEXT[clean.reason]) throw new Error(`неизвестная причина ${clean.reason}`);
 			rejected.push({ ...clean, reasonText: REASON_TEXT[clean.reason] });
 		} else decisions[state].push(clean);
+		saved = { ...clean, state };
 	}
 	decisions.approved.sort(byKey);
 	decisions.deferred.sort(byKey);
 	rejected.sort(byKey);
 	await writeOwn(FILES.decisions, decisions);
 	if (wasRejected || rec.state === 'rejected') await writeOwn(FILES.rejected, rejected);
+	// Строка в вывод на каждое решение: пропажу записи (сессия 3б — «вернуть
+	// не решено», нажатое случайно) иначе не восстановить, кто и когда.
+	const un = saved?.unlink?.map((u) => u.mode).join(',');
+	console.log(`${new Date().toLocaleTimeString('ru-RU')} ${rec.remove ? 'УБРАНО (не решено)' : saved.state}${un ? ` · ссылка: ${un}` : ''} — ${rec.key}`);
+	return saved;
 }
 
 // ——— HTTP ———
@@ -162,8 +202,15 @@ const server = http.createServer(async (req, res) => {
 		if (req.method === 'GET' && path === '/api/state') return send(res, 200, { decisions: allRecords().map(freshRecord), cursor: decisions.cursor });
 		if (req.method === 'POST' && path === '/api/decision') {
 			const rec = await body(req);
-			await serial(() => saveDecision(rec));
-			return send(res, 200, { ok: true });
+			const saved = await serial(() => saveDecision(rec));
+			return send(res, 200, { ok: true, rec: saved });
+		}
+		if (req.method === 'POST' && path === '/api/unlink-preview') {
+			const q = await body(req);
+			const block = anchorBlockOf(freshRecord({ source: q.source, target: q.target, place: q.place }));
+			const link = dupLinks(block, q.target).find((l) => l.raw === q.raw);
+			if (!link) return send(res, 200, { error: 'ссылки в абзаце нет' });
+			return send(res, 200, fragmentFor(block, link, 'custom', q.text));
 		}
 		if (req.method === 'POST' && path === '/api/cursor') {
 			const c = await body(req);

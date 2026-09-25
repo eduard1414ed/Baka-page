@@ -1,5 +1,209 @@
 [
  {
+  "key": "a-kakie-fillery-smotret→bonusnyy-epizod-naruto-rayga",
+  "source": "a-kakie-fillery-smotret",
+  "target": "bonusnyy-epizod-naruto-rayga",
+  "from": "reserve",
+  "kind": "theme",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 29,
+   "anchorBlock": 29,
+   "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+  },
+  "originalPlace": {
+   "afterBlock": 29,
+   "anchorBlock": 29,
+   "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "19ccdf830c3d",
+  "reason": "better",
+  "comment": null,
+  "decidedAt": "2026-09-25T11:45:02.622Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "a-kakie-fillery-smotret→bonusnyy-epizod-naruto-selenie-zvezdy",
+  "source": "a-kakie-fillery-smotret",
+  "target": "bonusnyy-epizod-naruto-selenie-zvezdy",
+  "from": "reserve",
+  "kind": "theme",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 29,
+   "anchorBlock": 29,
+   "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+  },
+  "originalPlace": {
+   "afterBlock": 29,
+   "anchorBlock": 29,
+   "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "19ccdf830c3d",
+  "reason": "better",
+  "comment": null,
+  "decidedAt": "2026-09-25T11:45:05.055Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "a-kakie-fillery-smotret→bonusnyy-epizod-naruto-ubezhische-orochimaru",
+  "source": "a-kakie-fillery-smotret",
+  "target": "bonusnyy-epizod-naruto-ubezhische-orochimaru",
+  "from": "reserve",
+  "kind": "theme",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 29,
+   "anchorBlock": 29,
+   "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+  },
+  "originalPlace": {
+   "afterBlock": 29,
+   "anchorBlock": 29,
+   "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "19ccdf830c3d",
+  "reason": "better",
+  "comment": null,
+  "decidedAt": "2026-09-25T11:45:17.339Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "a-kakie-fillery-smotret→bonusnyy-epizod-naruto-vozvraschenie-midzuki",
+  "source": "a-kakie-fillery-smotret",
+  "target": "bonusnyy-epizod-naruto-vozvraschenie-midzuki",
+  "from": "reserve",
+  "kind": "theme",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 29,
+   "anchorBlock": 29,
+   "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+  },
+  "originalPlace": {
+   "afterBlock": 29,
+   "anchorBlock": 29,
+   "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "19ccdf830c3d",
+  "reason": "better",
+  "comment": null,
+  "decidedAt": "2026-09-25T11:45:43.405Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "a-kakie-fillery-smotret→bonusnyy-vypusk-naruto-sinobadzu",
+  "source": "a-kakie-fillery-smotret",
+  "target": "bonusnyy-vypusk-naruto-sinobadzu",
+  "from": "reserve",
+  "kind": "theme",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 29,
+   "anchorBlock": 29,
+   "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+  },
+  "originalPlace": {
+   "afterBlock": 29,
+   "anchorBlock": 29,
+   "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "19ccdf830c3d",
+  "reason": "better",
+  "comment": null,
+  "decidedAt": "2026-09-25T11:45:52.156Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "a-kakie-fillery-smotret→bonusnyy-vypusk-naruto-sitensyounin",
+  "source": "a-kakie-fillery-smotret",
+  "target": "bonusnyy-vypusk-naruto-sitensyounin",
+  "from": "reserve",
+  "kind": "theme",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 29,
+   "anchorBlock": 29,
+   "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+  },
+  "originalPlace": {
+   "afterBlock": 29,
+   "anchorBlock": 29,
+   "anchorWords": "Рок Ли открывает свою школу боевых искусств."
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "19ccdf830c3d",
+  "reason": "better",
+  "comment": null,
+  "decidedAt": "2026-09-25T11:45:59.889Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
   "key": "a-vot-i-leto-2147→kak-sdelat-iz-obychnyh-predmetov-pingvinov",
   "source": "a-vot-i-leto-2147",
   "target": "kak-sdelat-iz-obychnyh-predmetov-pingvinov",
@@ -63,6 +267,1120 @@
   "reason": "better",
   "comment": null,
   "decidedAt": "2026-09-25T09:56:42.420Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "agni-face→kak-legko-pomenyat-istoriyu",
+  "source": "agni-face",
+  "target": "kak-legko-pomenyat-istoriyu",
+  "from": "main",
+  "kind": "theme",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 7,
+   "anchorBlock": 7,
+   "anchorWords": "А что было дальше вы знаете. И, кстати, теперь Фудзимото"
+  },
+  "originalPlace": {
+   "afterBlock": 7,
+   "anchorBlock": 7,
+   "anchorWords": "А что было дальше вы знаете. И, кстати, теперь Фудзимото"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "8030ae7c6a41",
+  "reason": "better",
+  "comment": "заменена на «Восемь сторон Фудзимото»",
+  "decidedAt": "2026-09-25T11:48:04.775Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "anime-v-stile-traditsionnogo-izobrazitelnogo-iskusstva-2224→tvoy-tsvet-seraya-bezdelushka-ili-krasochniy-brilliant",
+  "source": "anime-v-stile-traditsionnogo-izobrazitelnogo-iskusstva-2224",
+  "target": "tvoy-tsvet-seraya-bezdelushka-ili-krasochniy-brilliant",
+  "from": "main",
+  "kind": "title",
+  "confidence": "слабый",
+  "channels": [
+   "titles"
+  ],
+  "batch": 1,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 9,
+   "anchorBlock": 9,
+   "anchorWords": "Бива — дочь странствующего монаха, а ныне сирота, и самое"
+  },
+  "originalPlace": {
+   "afterBlock": 9,
+   "anchorBlock": 9,
+   "anchorWords": "Бива — дочь странствующего монаха, а ныне сирота, и самое"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "748fe4fe04f9",
+  "reason": "weak",
+  "comment": null,
+  "decidedAt": "2026-09-25T11:29:42.482Z",
+  "reasonText": "слабая связь"
+ },
+ {
+  "key": "chto-eto-za-palki-na-kladbischah→tszyanshi",
+  "source": "chto-eto-za-palki-na-kladbischah",
+  "target": "tszyanshi",
+  "from": "main",
+  "kind": "theme",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 5,
+   "anchorBlock": 3,
+   "anchorWords": "Сотобы часто появляются и в аниме. Чаще всего, как просто"
+  },
+  "originalPlace": {
+   "afterBlock": 5,
+   "anchorBlock": 3,
+   "anchorWords": "Сотобы часто появляются и в аниме. Чаще всего, как просто"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "3998929528c3",
+  "reason": "better",
+  "comment": "заменена на «История одной сцены и всего «Шаман Кинга»»",
+  "decidedAt": "2026-09-25T11:39:24.566Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "esche-para-slov-o-hayaside-kyu→pro-vizualnyy-stil-dorohedoro",
+  "source": "esche-para-slov-o-hayaside-kyu",
+  "target": "pro-vizualnyy-stil-dorohedoro",
+  "from": "main",
+  "kind": "person",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 10,
+   "anchorBlock": 5,
+   "anchorWords": "Заметьте, кстати, сколько разных вариантов спецназовцев — вот откуда столько"
+  },
+  "originalPlace": {
+   "afterBlock": 10,
+   "anchorBlock": 5,
+   "anchorWords": "Заметьте, кстати, сколько разных вариантов спецназовцев — вот откуда столько"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "13389dbe2815",
+  "reason": "better",
+  "comment": "заменена на «Дорохедоро — кровь, грязь и гёдза»",
+  "decidedAt": "2026-09-25T11:30:58.481Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "fotografii-kak-referens→pro-dizayn-doloy-bezdele",
+  "source": "fotografii-kak-referens",
+  "target": "pro-dizayn-doloy-bezdele",
+  "from": "main",
+  "kind": "broad",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 12,
+   "anchorBlock": 7,
+   "anchorWords": "Я не был знаком с этим фотографом, но после «Лоферов»"
+  },
+  "originalPlace": {
+   "afterBlock": 12,
+   "anchorBlock": 7,
+   "anchorWords": "Я не был знаком с этим фотографом, но после «Лоферов»"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "6b37318649c1",
+  "reason": "better",
+  "comment": "заменена на «Еще немного про «Лоферы»»",
+  "decidedAt": "2026-09-25T11:39:52.884Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "gramotnaya-reklama→prodolzhaya-razgovor-o-talantah",
+  "source": "gramotnaya-reklama",
+  "target": "prodolzhaya-razgovor-o-talantah",
+  "from": "main",
+  "kind": "theme",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 7,
+   "anchorBlock": 7,
+   "anchorWords": "Поэтому и хочется дать сериалу шанс, вдруг сама история, как"
+  },
+  "originalPlace": {
+   "afterBlock": 7,
+   "anchorBlock": 7,
+   "anchorWords": "Поэтому и хочется дать сериалу шанс, вдруг сама история, как"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "2b2c6c8767e0",
+  "reason": "better",
+  "comment": "заменена на «Первые впечатления от аниме по Cyberpunk»",
+  "decidedAt": "2026-09-25T11:40:22.518Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "inio-asano-i-reklama-likera→bunko-mertvye-mertvye-demony",
+  "source": "inio-asano-i-reklama-likera",
+  "target": "bunko-mertvye-mertvye-demony",
+  "from": "main",
+  "kind": "motive",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 7,
+   "anchorBlock": 5,
+   "anchorWords": "«Заботливый» — вроде бы реклама и чего ее читать. Но"
+  },
+  "originalPlace": {
+   "afterBlock": 7,
+   "anchorBlock": 5,
+   "anchorWords": "«Заботливый» — вроде бы реклама и чего ее читать. Но"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "b39583ebb3c3",
+  "reason": "better",
+  "comment": "заменена на «Как жить во время конца света? — «Мертвые мертвые демоны»»",
+  "decidedAt": "2026-09-25T11:30:02.031Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "istoricheskiy-dzhirayya→samoe-grustnoe-ispolzovanie-mifa",
+  "source": "istoricheskiy-dzhirayya",
+  "target": "samoe-grustnoe-ispolzovanie-mifa",
+  "from": "main",
+  "kind": "theme",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 6,
+   "anchorBlock": 5,
+   "anchorWords": "Как вы понимаете, этот сюжет, персонажи и даже их способности"
+  },
+  "originalPlace": {
+   "afterBlock": 6,
+   "anchorBlock": 5,
+   "anchorWords": "Как вы понимаете, этот сюжет, персонажи и даже их способности"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "0cb7b369b8b9",
+  "reason": "better",
+  "comment": "заменена на «Когда «Наруто» становится серьезным? Арка о доблестном Джирайе»",
+  "decidedAt": "2026-09-25T11:49:37.942Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "kak-kitaytsy-fleksyat-svoimi-openingami→prostye-momenty",
+  "source": "kak-kitaytsy-fleksyat-svoimi-openingami",
+  "target": "prostye-momenty",
+  "from": "main",
+  "kind": "theme",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 5,
+   "anchorBlock": 5,
+   "anchorWords": "Еще он работал над «Боруто», «Фури-кури», «Приоритетом чудо-яйца» и вышедшей"
+  },
+  "originalPlace": {
+   "afterBlock": 5,
+   "anchorBlock": 5,
+   "anchorWords": "Еще он работал над «Боруто», «Фури-кури», «Приоритетом чудо-яйца» и вышедшей"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "5780bb89f0ed",
+  "reason": "place",
+  "comment": null,
+  "decidedAt": "2026-09-25T11:33:24.366Z",
+  "reasonText": "не то место"
+ },
+ {
+  "key": "kak-oshi-no-ko-vdohnovlyaetsya-tragediyami→nemnogo-o-tusovschike-kunmine-i-muzyke-ado",
+  "source": "kak-oshi-no-ko-vdohnovlyaetsya-tragediyami",
+  "target": "nemnogo-o-tusovschike-kunmine-i-muzyke-ado",
+  "from": "main",
+  "kind": "theme",
+  "confidence": "слабый",
+  "channels": [
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 9,
+   "anchorBlock": 9,
+   "anchorWords": "А нападавшего посадили в тюрьму на 14 лет."
+  },
+  "originalPlace": {
+   "afterBlock": 9,
+   "anchorBlock": 9,
+   "anchorWords": "А нападавшего посадили в тюрьму на 14 лет."
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "29712b3ddfcc",
+  "reason": "weak",
+  "comment": null,
+  "decidedAt": "2026-09-25T11:34:41.334Z",
+  "reasonText": "слабая связь"
+ },
+ {
+  "key": "kakie-isekai-posmotret→ep-109",
+  "source": "kakie-isekai-posmotret",
+  "target": "ep-109",
+  "from": "main",
+  "kind": "title",
+  "confidence": "сильный",
+  "channels": [
+   "titles"
+  ],
+  "batch": 1,
+  "targetKind": "videoessay",
+  "place": {
+   "afterBlock": 18,
+   "anchorBlock": 18,
+   "anchorWords": "И, кстати, выпуск о «Сонни бое» один из самых прослушиваемых"
+  },
+  "originalPlace": {
+   "afterBlock": 18,
+   "anchorBlock": 18,
+   "anchorWords": "И, кстати, выпуск о «Сонни бое» один из самых прослушиваемых"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "2a17de3aa39b",
+  "reason": "better",
+  "comment": "заменена на «Сонни бой | Как понять это аниме и зачем для этого вспоминать Евангелион?»",
+  "decidedAt": "2026-09-25T11:27:24.898Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "mesta-iz-klinka-rassekayuschego-demonov-v-realnoy-zhizni→ep-58",
+  "source": "mesta-iz-klinka-rassekayuschego-demonov-v-realnoy-zhizni",
+  "target": "ep-58",
+  "from": "main",
+  "kind": "subject",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "podcast",
+  "place": {
+   "afterBlock": 6,
+   "anchorBlock": 5,
+   "anchorWords": "Другие аспекты «Клинка» мы подробно обсудили в нашем подкасте, послушайте,"
+  },
+  "originalPlace": {
+   "afterBlock": 6,
+   "anchorBlock": 5,
+   "anchorWords": "Другие аспекты «Клинка» мы подробно обсудили в нашем подкасте, послушайте,"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "02cdf9c6b2a8",
+  "reason": "better",
+  "comment": "заменена на «Истребитель демонов | Как создать идеального героя и не заскучать?»",
+  "decidedAt": "2026-09-25T11:34:06.250Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "multivselennaya-milyh-devochek→golovokruzhitelnyy-uspeh",
+  "source": "multivselennaya-milyh-devochek",
+  "target": "golovokruzhitelnyy-uspeh",
+  "from": "main",
+  "kind": "subject",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 2,
+   "anchorBlock": 2,
+   "anchorWords": "И если про «Рок-тихоню» все уже наслышаны, то вот про"
+  },
+  "originalPlace": {
+   "afterBlock": 2,
+   "anchorBlock": 2,
+   "anchorWords": "И если про «Рок-тихоню» все уже наслышаны, то вот про"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "16d9e913c8f1",
+  "reason": "better",
+  "comment": "заменена на «Полный восторг — «Рок-тихоня!»»",
+  "decidedAt": "2026-09-25T11:47:28.641Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "ne-prosto-benger→ispolzovanie-kart-taro-v-anime",
+  "source": "ne-prosto-benger",
+  "target": "ispolzovanie-kart-taro-v-anime",
+  "from": "main",
+  "kind": "theme",
+  "confidence": "слабый",
+  "channels": [
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 11,
+   "anchorBlock": 11,
+   "anchorWords": "Отсылка к двум популярным хоррорам: «Звонок» (призрака зовут Садако) и"
+  },
+  "originalPlace": {
+   "afterBlock": 11,
+   "anchorBlock": 11,
+   "anchorWords": "Отсылка к двум популярным хоррорам: «Звонок» (призрака зовут Садако) и"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "11eab55de7fc",
+  "reason": "better",
+  "comment": "заменена на «Дандадан | Романтика под соусом безумия»",
+  "decidedAt": "2026-09-25T11:36:01.601Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "ne-prosto-benger→turbo-babka",
+  "source": "ne-prosto-benger",
+  "target": "turbo-babka",
+  "from": "main",
+  "kind": "theme",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 12,
+   "anchorBlock": 12,
+   "anchorWords": "Автор манги, Юкинобу Тацу, кстати, в интервью признавался, что именно"
+  },
+  "originalPlace": {
+   "afterBlock": 12,
+   "anchorBlock": 12,
+   "anchorWords": "Автор манги, Юкинобу Тацу, кстати, в интервью признавался, что именно"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "11eab55de7fc",
+  "reason": "better",
+  "comment": null,
+  "decidedAt": "2026-09-25T11:36:17.701Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "nemnogo-o-tusovschike-kunmine-i-muzyke-ado→anime-o-traditsionnoy-yaponskoy-muzyke",
+  "source": "nemnogo-o-tusovschike-kunmine-i-muzyke-ado",
+  "target": "anime-o-traditsionnoy-yaponskoy-muzyke",
+  "from": "main",
+  "kind": "theme",
+  "confidence": "слабый",
+  "channels": [
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "article",
+  "place": {
+   "afterBlock": 7,
+   "anchorBlock": 6,
+   "anchorWords": "Самый яркий пример из музыки сейчас — певица Ado. Она"
+  },
+  "originalPlace": {
+   "afterBlock": 7,
+   "anchorBlock": 6,
+   "anchorWords": "Самый яркий пример из музыки сейчас — певица Ado. Она"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "c76b5c7f4aaf",
+  "reason": "better",
+  "comment": null,
+  "decidedAt": "2026-09-25T11:50:18.560Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "nezametnye-detali→da-snova-pro-pesn-nochnyh-sov",
+  "source": "nezametnye-detali",
+  "target": "da-snova-pro-pesn-nochnyh-sov",
+  "from": "main",
+  "kind": "broad",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 5,
+   "anchorBlock": 5,
+   "anchorWords": "Это приятная маленькая деталь, показывающая проработку истории"
+  },
+  "originalPlace": {
+   "afterBlock": 5,
+   "anchorBlock": 5,
+   "anchorWords": "Это приятная маленькая деталь, показывающая проработку истории"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "9777b9a98447",
+  "reason": "better",
+  "comment": "заменена на «Бонусный выпуск | Песнь ночных сов»",
+  "decidedAt": "2026-09-25T11:37:44.352Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "panelnaya-nostalgiya-po-schastlivomu-detstvu→kak-sdelat-iz-obychnyh-predmetov-pingvinov",
+  "source": "panelnaya-nostalgiya-po-schastlivomu-detstvu",
+  "target": "kak-sdelat-iz-obychnyh-predmetov-pingvinov",
+  "from": "main",
+  "kind": "person",
+  "confidence": "средний",
+  "channels": [
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 5,
+   "anchorBlock": 5,
+   "anchorWords": "Новый фильм режиссера Хироясу Исиды (я писал про него прошлым"
+  },
+  "originalPlace": {
+   "afterBlock": 5,
+   "anchorBlock": 5,
+   "anchorWords": "Новый фильм режиссера Хироясу Исиды (я писал про него прошлым"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "dac5f4a0d82f",
+  "reason": "better",
+  "comment": null,
+  "decidedAt": "2026-09-25T11:32:42.166Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "potrogat-travu→spisok-pyati-tselebnyh-anime",
+  "source": "potrogat-travu",
+  "target": "spisok-pyati-tselebnyh-anime",
+  "from": "main",
+  "kind": "theme",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "article",
+  "place": {
+   "afterBlock": 8,
+   "anchorBlock": 8,
+   "anchorWords": "Мицуми вырвалась из родной деревни и поступила в токийскую старшую"
+  },
+  "originalPlace": {
+   "afterBlock": 8,
+   "anchorBlock": 8,
+   "anchorWords": "Мицуми вырвалась из родной деревни и поступила в токийскую старшую"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "a4af8e6b249f",
+  "reason": "better",
+  "comment": "заменена на «Бунко! | В лоферах вприпрыжку (или Долой безделье!)»",
+  "decidedAt": "2026-09-25T11:28:14.814Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "pravda-li-chto-gollivud-podsmatrival-idei-u-satosi-kona→ep-12",
+  "source": "pravda-li-chto-gollivud-podsmatrival-idei-u-satosi-kona",
+  "target": "ep-12",
+  "from": "main",
+  "kind": "person",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "podcast",
+  "place": {
+   "afterBlock": 6,
+   "anchorBlock": 5,
+   "anchorWords": "Другая очевидная параллель — Дэвид Линч, фантазер-сюрреалист, тоже увлеченный изнанкой"
+  },
+  "originalPlace": {
+   "afterBlock": 6,
+   "anchorBlock": 5,
+   "anchorWords": "Другая очевидная параллель — Дэвид Линч, фантазер-сюрреалист, тоже увлеченный изнанкой"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "855995ffd78d",
+  "reason": "none",
+  "comment": null,
+  "decidedAt": "2026-09-25T11:34:23.117Z",
+  "reasonText": "посту не нужна вставка"
+ },
+ {
+  "key": "pravda-li-chto-gollivud-podsmatrival-idei-u-satosi-kona→rozhdestvenskaya-podborka-anime",
+  "source": "pravda-li-chto-gollivud-podsmatrival-idei-u-satosi-kona",
+  "target": "rozhdestvenskaya-podborka-anime",
+  "from": "main",
+  "kind": "title",
+  "confidence": "средний",
+  "channels": [
+   "titles"
+  ],
+  "batch": 1,
+  "targetKind": "article",
+  "place": {
+   "afterBlock": 8,
+   "anchorBlock": 8,
+   "anchorWords": "Если посмотреть на всю фильмографию Сатоси Кона, то она поразит"
+  },
+  "originalPlace": {
+   "afterBlock": 8,
+   "anchorBlock": 8,
+   "anchorWords": "Если посмотреть на всю фильмографию Сатоси Кона, то она поразит"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "855995ffd78d",
+  "reason": "none",
+  "comment": null,
+  "decidedAt": "2026-09-25T11:34:25.917Z",
+  "reasonText": "посту не нужна вставка"
+ },
+ {
+  "key": "pro-dizayn-doloy-bezdele→fotografii-kak-referens",
+  "source": "pro-dizayn-doloy-bezdele",
+  "target": "fotografii-kak-referens",
+  "from": "main",
+  "kind": "broad",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 7,
+   "anchorBlock": 6,
+   "anchorWords": "Ну и на афише все герои в школьных лоферах, дабы"
+  },
+  "originalPlace": {
+   "afterBlock": 7,
+   "anchorBlock": 6,
+   "anchorWords": "Ну и на афише все герои в школьных лоферах, дабы"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "e8aa0faabcc1",
+  "reason": "better",
+  "comment": "заменена на «Бонусный выпуск | В лоферах вприпрыжку»",
+  "decidedAt": "2026-09-25T11:47:50.941Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "prodolzhaya-razgovor-o-talantah→gramotnaya-reklama",
+  "source": "prodolzhaya-razgovor-o-talantah",
+  "target": "gramotnaya-reklama",
+  "from": "main",
+  "kind": "theme",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 4,
+   "anchorBlock": 4,
+   "anchorWords": "Теперь еще больше задумываюсь о том, чтобы все-таки посмотреть этот"
+  },
+  "originalPlace": {
+   "afterBlock": 4,
+   "anchorBlock": 4,
+   "anchorWords": "Теперь еще больше задумываюсь о том, чтобы все-таки посмотреть этот"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "b48b4c6ad817",
+  "reason": "better",
+  "comment": "заменена на «Первые впечатления от аниме по Cyberpunk»",
+  "decidedAt": "2026-09-25T11:35:10.400Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "ranniy-dizayn-personazhey-v-kovboe-bibope→fey-valentayn-yaponka-kitayanka-ili-vovse-skazhem-italyanka",
+  "source": "ranniy-dizayn-personazhey-v-kovboe-bibope",
+  "target": "fey-valentayn-yaponka-kitayanka-ili-vovse-skazhem-italyanka",
+  "from": "main",
+  "kind": "broad",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 10,
+   "anchorBlock": 10,
+   "anchorWords": "Сама Йоко Канно, которая на раннем этапе не верила в"
+  },
+  "originalPlace": {
+   "afterBlock": 10,
+   "anchorBlock": 10,
+   "anchorWords": "Сама Йоко Канно, которая на раннем этапе не верила в"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "1367d3a5c840",
+  "reason": "better",
+  "comment": "заменена на «Ковбой Бибоп | Как сериал изобрел новый жанр и почему у него такой потрясающий саундтрек?»",
+  "decidedAt": "2026-09-25T11:47:44.391Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "razmyshleniya-o-ranobe→reinkarnatsiya-bezrabotnogo-vtoroy-sezon-ne-prosto-anime-pro-potentsiyu",
+  "source": "razmyshleniya-o-ranobe",
+  "target": "reinkarnatsiya-bezrabotnogo-vtoroy-sezon-ne-prosto-anime-pro-potentsiyu",
+  "from": "main",
+  "kind": "subject",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 12,
+   "anchorBlock": 11,
+   "anchorWords": "В итоге я уже неделю не могу отлипнуть от ранобэ,"
+  },
+  "originalPlace": {
+   "afterBlock": 12,
+   "anchorBlock": 11,
+   "anchorWords": "В итоге я уже неделю не могу отлипнуть от ранобэ,"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "37847fbc9938",
+  "reason": "better",
+  "comment": "заменена на «Реинкарнация безработного | Как рассказать идеальную историю взросления и сделать хороший исекай?»",
+  "decidedAt": "2026-09-25T11:35:20.617Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "rukovodstvo-po-tomu-kak-byt-devochkoy→reinkarnatsiya-bezrabotnogo-vtoroy-sezon-ne-prosto-anime-pro-potentsiyu",
+  "source": "rukovodstvo-po-tomu-kak-byt-devochkoy",
+  "target": "reinkarnatsiya-bezrabotnogo-vtoroy-sezon-ne-prosto-anime-pro-potentsiyu",
+  "from": "main",
+  "kind": "subject",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "bonus",
+  "place": {
+   "afterBlock": 2,
+   "anchorBlock": 2,
+   "anchorWords": "У новообразованной студии Bind ушло три года на продакшн сериала."
+  },
+  "originalPlace": {
+   "afterBlock": 2,
+   "anchorBlock": 2,
+   "anchorWords": "У новообразованной студии Bind ушло три года на продакшн сериала."
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "4aa8963dd95d",
+  "reason": "better",
+  "comment": "заменена на «Реинкарнация безработного | Как рассказать идеальную историю взросления и сделать хороший исекай?»",
+  "decidedAt": "2026-09-25T11:35:35.334Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "sleduy-za-ogonkami→tszyanshi",
+  "source": "sleduy-za-ogonkami",
+  "target": "tszyanshi",
+  "from": "main",
+  "kind": "theme",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 5,
+   "anchorBlock": 5,
+   "anchorWords": "Так что будьте осторожны, когда следуете за огоньками!"
+  },
+  "originalPlace": {
+   "afterBlock": 5,
+   "anchorBlock": 5,
+   "anchorWords": "Так что будьте осторожны, когда следуете за огоньками!"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "f163752945ea",
+  "reason": "better",
+  "comment": "заменена на «Что это за палки на кладбищах?»",
+  "decidedAt": "2026-09-25T11:39:39.350Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "slishkom-mnogo-otsylok→ispolzovanie-kart-taro-v-anime",
+  "source": "slishkom-mnogo-otsylok",
+  "target": "ispolzovanie-kart-taro-v-anime",
+  "from": "main",
+  "kind": "theme",
+  "confidence": "слабый",
+  "channels": [
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 10,
+   "anchorBlock": 10,
+   "anchorWords": "Ватанабэ не изменяет себе."
+  },
+  "originalPlace": {
+   "afterBlock": 10,
+   "anchorBlock": 10,
+   "anchorWords": "Ватанабэ не изменяет себе."
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "8eb438551568",
+  "reason": "better",
+  "comment": null,
+  "decidedAt": "2026-09-25T11:47:11.707Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "turbo-babka→ne-prosto-benger",
+  "source": "turbo-babka",
+  "target": "ne-prosto-benger",
+  "from": "main",
+  "kind": "theme",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 5,
+   "anchorBlock": 5,
+   "anchorWords": "Так что будьте осторожны на японских дорогах — «Дандадан» не"
+  },
+  "originalPlace": {
+   "afterBlock": 5,
+   "anchorBlock": 5,
+   "anchorWords": "Так что будьте осторожны на японских дорогах — «Дандадан» не"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "d500ad1035f0",
+  "reason": "better",
+  "comment": "заменена на «Дандадан в кино»",
+  "decidedAt": "2026-09-25T11:36:30.885Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "volshebnaya-kuhnya→ep-115",
+  "source": "volshebnaya-kuhnya",
+  "target": "ep-115",
+  "from": "main",
+  "kind": "subject",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "videoessay",
+  "place": {
+   "afterBlock": 6,
+   "anchorBlock": 4,
+   "anchorWords": "Если вам в «Подземелье вкусностей» нравились развороты с едой и"
+  },
+  "originalPlace": {
+   "afterBlock": 6,
+   "anchorBlock": 4,
+   "anchorWords": "Если вам в «Подземелье вкусностей» нравились развороты с едой и"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "2c4f630850cd",
+  "reason": "better",
+  "comment": "заменена на «Какими получились первые две серии «Ателье колдовских колпаков»?»",
+  "decidedAt": "2026-09-25T11:49:01.576Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "vsegda-znal-chto-mezhdu-akamaru-i-naruto-mnogo-obschego→ep-38",
+  "source": "vsegda-znal-chto-mezhdu-akamaru-i-naruto-mnogo-obschego",
+  "target": "ep-38",
+  "from": "main",
+  "kind": "subject",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "podcast",
+  "place": {
+   "afterBlock": 10,
+   "anchorBlock": 10,
+   "anchorWords": "И теперь я не могу перестать слышать в голосе Наруто"
+  },
+  "originalPlace": {
+   "afterBlock": 10,
+   "anchorBlock": 10,
+   "anchorWords": "И теперь я не могу перестать слышать в голосе Наруто"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "7397df0df017",
+  "reason": "better",
+  "comment": "заменена на «Наруто. Экзамен на Чуунина. Часть 1 | Темари — лучшая героиня аниме и что не так с Гаарой?»",
+  "decidedAt": "2026-09-25T11:48:52.125Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "vy-dumali-ya-zabyl→ep-86",
+  "source": "vy-dumali-ya-zabyl",
+  "target": "ep-86",
+  "from": "main",
+  "kind": "broad",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "videoessay",
+  "place": {
+   "afterBlock": 8,
+   "anchorBlock": 5,
+   "anchorWords": "Заставляет задать себе вопрос, а смог бы ты получать удовольствие"
+  },
+  "originalPlace": {
+   "afterBlock": 8,
+   "anchorBlock": 5,
+   "anchorWords": "Заставляет задать себе вопрос, а смог бы ты получать удовольствие"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "95906e3fc553",
+  "reason": "better",
+  "comment": "заменена на ««Провожающая в последний путь Фрирен»: 5 причин, почему это одно из лучших аниме года»",
+  "decidedAt": "2026-09-25T11:38:54.675Z",
+  "reasonText": "цель неудачная, есть лучше"
+ },
+ {
+  "key": "znakomtes-sofi-li→deti-ubiytsy",
+  "source": "znakomtes-sofi-li",
+  "target": "deti-ubiytsy",
+  "from": "main",
+  "kind": "broad",
+  "confidence": "сильный",
+  "channels": [
+   "titles",
+   "themes"
+  ],
+  "batch": 1,
+  "targetKind": "note",
+  "place": {
+   "afterBlock": 5,
+   "anchorBlock": 3,
+   "anchorWords": "Она работала над «Скотт Пилигрим жмёт на газ», «Дандаданом» и"
+  },
+  "originalPlace": {
+   "afterBlock": 5,
+   "anchorBlock": 3,
+   "anchorWords": "Она работала над «Скотт Пилигрим жмёт на газ», «Дандаданом» и"
+  },
+  "moved": false,
+  "manual": false,
+  "replaces": null,
+  "play": false,
+  "label": null,
+  "fingerprint": "b6454eedd9f9",
+  "reason": "better",
+  "comment": "заменена на «Все на своих местах — даже цвета»",
+  "decidedAt": "2026-09-25T11:50:01.842Z",
   "reasonText": "цель неудачная, есть лучше"
  }
 ]
