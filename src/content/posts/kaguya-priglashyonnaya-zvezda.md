@@ -40,6 +40,10 @@ anime:
 
 ::image{src="/images/uploads/tg-443.jpg" alt="" width="column"}
 
+
+::material{id="ep-62"}
+
+
 ::anime-ref{id="oshi-no-ko" source="shikimori" source-id="52034"}
 
 ::anime-ref{id="kaguya-sama-wa-kokurasetai-tensai-tachi-no-renai-zunousen" source="shikimori" source-id="37999"}

@@ -62,4 +62,8 @@ anime:
 
 ::image{src="/images/uploads/tg-4120.jpg" alt="" width="column"}
 
+
+::material{id="bunko-kagurabati"}
+
+
 ::anime-ref{id="kagurabachi" source="shikimori" source-id="64058"}

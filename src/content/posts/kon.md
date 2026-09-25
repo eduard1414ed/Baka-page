@@ -38,4 +38,7 @@ anime:
 ::image{src="/images/uploads/tg-2040.jpg" alt="" width="column"}
 
 
+::material{id="dizayn-personazhey-cheloveka-benzopily"}
+
+
 ::anime-ref{id="chainsaw-man" source="shikimori" source-id="44511"}

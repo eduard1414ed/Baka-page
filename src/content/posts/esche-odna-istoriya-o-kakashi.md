@@ -36,6 +36,10 @@ anime:
 
 На английском можно найти новеллу целиком, а на русский пока [переведено](https://ranobelib.me/kakashi-retsuden-rokuyo-hokage-to-ochikobore-no-shonen) три главы из пяти.
 
+
+::material{id="ep-51" mode="play"}
+
+
 ::anime-ref{id="naruto-shippuuden" source="shikimori" source-id="1735"}
 
 ::anime-ref{id="boruto-naruto-the-movie" source="shikimori" source-id="28755"}

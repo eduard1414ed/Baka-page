@@ -36,4 +36,8 @@ anime:
 
 Это приятная маленькая деталь, показывающая проработку истории
 
+
+::material{id="bonusnyy-vypusk-pesn-nochnyh-sov"}
+
+
 ::anime-ref{id="yofukashi-no-uta" source="shikimori" source-id="50346"}

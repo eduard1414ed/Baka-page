@@ -34,4 +34,8 @@ anime:
 
 Вот так вот забавно и оказались связаны сразу несколько моих эссе.
 
+
+::material{id="ep-116" mode="play"}
+
+
 ::anime-ref{id="hori-san-to-miyamura-kun" source="shikimori" source-id="14753"}

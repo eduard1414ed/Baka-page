@@ -47,4 +47,8 @@ Made in Abyss больше похожа на иллюстрации к нове�
 
 ::image{src="/images/uploads/tg-1069.jpg" alt="" width="column"}
 
+
+::material{id="ep-70" mode="play"}
+
+
 ::anime-ref{id="made-in-abyss" source="shikimori" source-id="34599"}

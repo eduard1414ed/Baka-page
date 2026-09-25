@@ -26,7 +26,7 @@ anime:
 ::image{src="/images/uploads/tg-3317.jpg" alt="" width="column"}
 
 
-В [бонусном выпуске про «Ведьмнадзор»](/posts/vedmnadzor-anime-sitkom-kotoryy-my-zasluzhili/) мы с Ксюшей обсуждали, что на самом деле самой популярной и долгоиграющей мангой в Shonen Jump являются далеко не боевые сенены, а классические комедии.
+В бонусном выпуске про «Ведьмнадзор» мы с Ксюшей обсуждали, что на самом деле самой популярной и долгоиграющей мангой в Shonen Jump являются далеко не боевые сенены, а классические комедии.
 
 
 ::material{id="vedmnadzor-anime-sitkom-kotoryy-my-zasluzhili"}

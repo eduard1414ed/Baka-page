@@ -40,3 +40,6 @@ tgUrl: https://t.me/podcastbaka/1211
 
 
 ::image{src="/images/uploads/tg-1212.jpg" alt="" width="column"}
+
+
+::material{id="bonusnyy-vypusk-v-loferah-vpripryzhku"}

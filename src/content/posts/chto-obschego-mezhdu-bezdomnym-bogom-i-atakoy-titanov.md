@@ -40,6 +40,10 @@ anime:
 
 Возможно, третьего сезона «Бездомного бога» нет только потому, что авторы ждут выхода продолжения Титанов-школьников.
 
+
+::material{id="bonusnyy-vypusk-bezdomnyy-bog"}
+
+
 ::anime-ref{id="shingeki-kyojin-chuugakkou" source="shikimori" source-id="31374"}
 
 ::anime-ref{id="noragami" source="shikimori" source-id="20507"}

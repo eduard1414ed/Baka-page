@@ -40,4 +40,8 @@ anime:
 
 И их имена нам об этом рассказывают ещё до того, как это показывает сам сериал (сама манга).
 
+
+::material{id="da-snova-pro-pesn-nochnyh-sov"}
+
+
 ::anime-ref{id="yofukashi-no-uta" source="shikimori" source-id="50346"}

@@ -41,4 +41,8 @@ anime:
 
 Поэтому и хочется дать сериалу шанс, вдруг сама история, как и опенинг, тоже окажется не такой банальной, как я ожидал.
 
+
+::material{id="pervye-vpechatleniya-ot-anime-po-cyberpunk"}
+
+
 ::anime-ref{id="cyberpunk-edgerunners" source="shikimori" source-id="42310"}

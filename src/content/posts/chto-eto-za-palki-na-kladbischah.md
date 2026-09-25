@@ -38,6 +38,10 @@ anime:
 
 ::image{src="/images/uploads/tg-3560.jpg" alt="" width="column"}
 
+
+::material{id="ep-124"}
+
+
 ::anime-ref{id="kuroshitsuji" source="shikimori" source-id="4898"}
 
 ::anime-ref{id="shaman-king" source="shikimori" source-id="154"}

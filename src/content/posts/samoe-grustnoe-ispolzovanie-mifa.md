@@ -42,4 +42,8 @@ anime:
 
 ::image{src="/images/uploads/tg-503.jpg" alt="" width="column"}
 
+
+::material{id="istoricheskiy-dzhirayya"}
+
+
 ::anime-ref{id="naruto" source="shikimori" source-id="20"}

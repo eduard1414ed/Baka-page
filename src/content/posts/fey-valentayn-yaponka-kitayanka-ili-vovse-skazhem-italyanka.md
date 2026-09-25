@@ -39,4 +39,8 @@ anime:
 
 Мне вообще нравится такой подход, потому что на самом деле нет никакой разницы, к какой национальности или расе принадлежит Фэй Валентайн, важно лишь то, что она остается интересным персонажем.
 
+
+::material{id="ranniy-dizayn-personazhey-v-kovboe-bibope"}
+
+
 ::anime-ref{id="cowboy-bebop" source="shikimori" source-id="1"}

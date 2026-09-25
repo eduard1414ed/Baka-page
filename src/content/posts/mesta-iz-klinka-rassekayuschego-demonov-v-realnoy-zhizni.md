@@ -39,4 +39,8 @@ anime:
 
 ::image{src="/images/uploads/tg-676.jpg" alt="" width="column"}
 
+
+::material{id="ep-56"}
+
+
 ::anime-ref{id="kimetsu-no-yaiba" source="shikimori" source-id="38000"}

@@ -37,3 +37,6 @@ tgUrl: https://t.me/podcastbaka/2004
 
 
 ::image{src="/images/uploads/tg-2005.jpg" alt="" width="column"}
+
+
+::material{id="bez-spoylerov"}

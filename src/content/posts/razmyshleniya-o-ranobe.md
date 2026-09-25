@@ -51,4 +51,8 @@ anime:
 
 ::image{src="/images/uploads/tg-1443.jpg" alt="" width="column"}
 
+
+::material{id="ep-57"}
+
+
 ::anime-ref{id="mushoku-tensei-isekai-ittara-honki-dasu" source="shikimori" source-id="39535"}

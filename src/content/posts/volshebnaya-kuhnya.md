@@ -37,4 +37,8 @@ anime:
 
 ::image{src="/images/uploads/tg-3931.jpg" alt="" width="column"}
 
+
+::material{id="kakimi-poluchilis-pervye-dve-serii-atele-koldovskih-kolpakov"}
+
+
 ::anime-ref{id="tongari-boushi-no-atelier" source="shikimori" source-id="51553"}

@@ -49,4 +49,7 @@ anime:
 ::image{src="/images/uploads/tg-434.jpg" alt="" width="column"}
 
 
+::material{id="da-snova-pro-pesn-nochnyh-sov"}
+
+
 ::anime-ref{id="yofukashi-no-uta" source="shikimori" source-id="50346"}

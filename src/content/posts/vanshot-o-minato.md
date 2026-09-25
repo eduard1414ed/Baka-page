@@ -42,6 +42,10 @@ anime:
 
 В итоге, я остался доволен ваншотом, хотя и ждал от него немного большего.
 
+
+::material{id="esche-odna-istoriya-o-kakashi"}
+
+
 ::anime-ref{id="naruto" source="shikimori" source-id="20"}
 
 ::anime-ref{id="boruto-naruto-the-movie" source="shikimori" source-id="28755"}

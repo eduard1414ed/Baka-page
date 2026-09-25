@@ -48,4 +48,7 @@ anime:
 ::image{src="/images/uploads/tg-1949.jpg" alt="" width="column"}
 
 
+::material{id="provozhayuschaya-v-posledniy-put-friren-5-prichin-pochemu-eto-odno-iz-luchshih-anime-goda"}
+
+
 ::anime-ref{id="sousou-no-frieren" source="shikimori" source-id="52991"}

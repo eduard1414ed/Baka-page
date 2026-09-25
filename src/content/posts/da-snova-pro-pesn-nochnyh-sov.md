@@ -43,4 +43,8 @@ anime:
 
 Получается, что ощущения героев передаются не словами или даже эмоциями на лицах, а построением самого кадра.
 
+
+::material{id="govoryaschie-imena"}
+
+
 ::anime-ref{id="yofukashi-no-uta" source="shikimori" source-id="50346"}

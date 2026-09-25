@@ -45,4 +45,8 @@ anime:
 
 Опять же, детективной истории не очень много, зато сам план интересный и нам показывают сильно повзрослевшего Ниа
 
+
+::material{id="ep-43" mode="play"}
+
+
 ::anime-ref{id="death-note" source="shikimori" source-id="1535"}

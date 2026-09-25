@@ -52,6 +52,10 @@ anime:
 
 Поэтому последний сезон «Орегару» так хорош.
 
+
+::material{id="mnogoznachnyy-vizualnyy-element"}
+
+
 ::anime-ref{id="yahari-ore-no-seishun-love-comedy-wa-machigatteiru" source="shikimori" source-id="14813"}
 
 ::anime-ref{id="yahari-ore-no-seishun-love-comedy-wa-machigatteiru-kan" source="shikimori" source-id="39547"}

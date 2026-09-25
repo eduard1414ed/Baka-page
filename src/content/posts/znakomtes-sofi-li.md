@@ -39,4 +39,8 @@ anime:
 
 ::image{src="/images/uploads/tg-3488.jpg" alt="" width="column"}
 
+
+::material{id="vse-na-svoih-mestah-dazhe-tsveta"}
+
+
 ::anime-ref{id="sanda" source="shikimori" source-id="59267"}

@@ -45,4 +45,8 @@ anime:
 
 ::image{src="/images/uploads/tg-747.jpg" alt="" width="column"}
 
+
+::material{id="kakim-vyshel-novyy-film-po-cheloveku-benzopile"}
+
+
 ::anime-ref{id="chainsaw-man" source="shikimori" source-id="44511"}

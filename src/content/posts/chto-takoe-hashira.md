@@ -38,4 +38,8 @@ anime:
 
 То есть, хашира — это не только столпы, но еще и перечисление богов. Вполне логично, учитывая их силу.
 
+
+::material{id="ep-58"}
+
+
 ::anime-ref{id="kimetsu-no-yaiba" source="shikimori" source-id="38000"}

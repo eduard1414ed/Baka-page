@@ -35,4 +35,8 @@ anime:
 
 Теперь еще больше задумываюсь о том, чтобы все-таки посмотреть этот сериал.
 
+
+::material{id="pervye-vpechatleniya-ot-anime-po-cyberpunk"}
+
+
 ::anime-ref{id="cyberpunk-edgerunners" source="shikimori" source-id="42310"}

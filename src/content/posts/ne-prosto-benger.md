@@ -50,4 +50,8 @@ anime:
 
 Автор манги, Юкинобу Тацу, кстати, в интервью признавался, что именно этот фильм вдохновил его на создание «Дандадан». Потому что ему понравилась смесь страшного и смешного.
 
+
+::material{id="dandadan-romantika-pod-sousom-bezumiya"}
+
+
 ::anime-ref{id="dandadan" source="shikimori" source-id="57334"}

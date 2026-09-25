@@ -41,4 +41,8 @@ anime:
 
 ::image{src="/images/uploads/tg-1145.jpg" alt="" width="column"}
 
+
+::material{id="ep-75" mode="play"}
+
+
 ::anime-ref{id="vinland-saga" source="shikimori" source-id="37521"}

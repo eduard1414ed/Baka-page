@@ -42,4 +42,8 @@ anime:
 
 Если вы читали мангу, вы уловили параллель, я думаю.
 
+
+::material{id="kakim-vyshel-novyy-film-po-cheloveku-benzopile"}
+
+
 ::anime-ref{id="chainsaw-man" source="shikimori" source-id="44511"}
