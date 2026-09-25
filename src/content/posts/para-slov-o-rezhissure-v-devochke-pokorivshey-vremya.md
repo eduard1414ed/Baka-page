@@ -38,4 +38,8 @@ anime:
 
 Вот как минута фильма без слов и музыки рассказывает историю персонажа. Это и есть хорошая режиссура.
 
+
+::material{id="bonusnyy-vypusk-devochka-pokorivshaya-vremya"}
+
+
 ::anime-ref{id="toki-wo-kakeru-shoujo" source="shikimori" source-id="2236"}

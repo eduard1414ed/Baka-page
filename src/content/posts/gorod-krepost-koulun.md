@@ -57,4 +57,8 @@ anime:
 
 ::image{src="/images/uploads/tg-2884.jpg" alt="" width="column"}
 
+
+::material{id="ep-123"}
+
+
 ::anime-ref{id="kowloon-generic-romance" source="shikimori" source-id="60083"}

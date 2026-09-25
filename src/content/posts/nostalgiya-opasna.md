@@ -38,4 +38,8 @@ anime:
 
 Пожалуй, это самый интригующий тайтл этого сезона.
 
+
+::material{id="ep-123"}
+
+
 ::anime-ref{id="kowloon-generic-romance" source="shikimori" source-id="60083"}

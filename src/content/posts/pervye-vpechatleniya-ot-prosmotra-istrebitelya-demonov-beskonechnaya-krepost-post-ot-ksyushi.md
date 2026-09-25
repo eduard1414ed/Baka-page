@@ -37,4 +37,8 @@ anime:
 
 Так что советую захватить платочки для слез.
 
+
+::material{id="ep-58"}
+
+
 ::anime-ref{id="kimetsu-no-yaiba-movie-1-mugenjou-hen-akaza-sairai" source="shikimori" source-id="59192"}
