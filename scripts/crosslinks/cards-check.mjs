@@ -1,6 +1,9 @@
 // ПЕРЕЛИНКОВКА, КАНАЛ «ТЕМЫ» — ПРОВЕРКА КАРТОЧЕК РАЗМЕТЧИКА (сессия 1б).
 //
-//   node scripts/crosslinks/cards-check.mjs <папка пачек> [<папка карточек>] [--selftest]
+//   node scripts/crosslinks/cards-check.mjs <папка пачек> [<папка карточек>] [--selftest] [--present]
+//
+// --present  проверять только пачки, у которых карточки уже есть (разметка
+//            архива идёт кругами, и неразмеченная пачка — не ошибка круга).
 //
 // Сверяет ответ помощника с пачкой (пачки.json) и словарём:
 //   - на каждый пост пачки ровно одна карточка;
@@ -19,10 +22,12 @@ import { readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadCorpus } from './lib.mjs';
+import { readDictionary } from './dictionary.mjs';
 
 const REPO = fileURLToPath(new URL('../../', import.meta.url));
 const args = process.argv.slice(2).filter((a) => !a.startsWith('--'));
 const selftest = process.argv.includes('--selftest');
+const presentOnly = process.argv.includes('--present');
 const batchDir = args[0];
 const cardDir = args[1] ?? batchDir;
 
@@ -32,20 +37,8 @@ export const SCOPES = ['общий', 'узкий'];
 export const VERDICTS = ['тема', 'пример'];
 export const ROLES = ['мангака', 'режиссёр', 'аниматор', 'арт-директор', 'дизайнер персонажей', 'композитор', 'сэйю', 'продюсер', 'сценарист', 'автор ранобэ', 'автор игры', 'другое'];
 
-/** Коды меток и известные люди — из словаря, а не из копии в этом файле. */
-export async function readDictionary() {
-	const text = await readFile(join(REPO, 'статус/перелинковка/словарь.md'), 'utf8');
-	const codes = new Set([...text.matchAll(/^\*\*[^*\n]+\*\* \(`([^`]+)`\)/gmu)].map((m) => m[1]));
-	const peopleBlock = text.slice(text.indexOf('**Люди, найденные в выборке**'), text.indexOf('## 4.'));
-	// Строки «- мангаки: А, Б,» и продолжения «  В, Г;».
-	const names = [];
-	for (const line of peopleBlock.split('\n')) {
-		if (/^- [^:]+:/u.test(line)) names.push(...line.slice(line.indexOf(':') + 1).split(','));
-		else if (/^ {2}\S/u.test(line)) names.push(...line.split(','));
-	}
-	const people = new Set(names.map((s) => s.replace(/\*\*|\(.*?\)|[;.]/gu, '').trim()).filter(Boolean));
-	return { codes, people };
-}
+// Коды меток и известные люди — из словаря (dictionary.mjs), а не из копии здесь.
+export { readDictionary };
 
 export function checkCards({ cards, batch, byId, animeIds, dict }) {
 	const errors = [];
@@ -156,6 +149,7 @@ async function main() {
 	for (const batch of manifest.batches) {
 		const file = `${batch.name}.json`;
 		if (!files.has(file)) {
+			if (presentOnly) continue;
 			console.log(`✗ ${batch.name}: карточек нет (${join(cardDir, file)})`);
 			total++;
 			continue;
@@ -174,8 +168,31 @@ async function main() {
 		for (const e of errors) console.log('    ' + e);
 		total += errors.length;
 	}
-	console.log(`\nНовых людей (нет в словаре): ${allNew.length}`);
-	for (const p of allNew) console.log('  + ' + p);
+	// Новые люди — по имени, с числом постов; ниже — пары похожих написаний
+	// (одна фамилия или разница в одну-две буквы): опечатки и дубли вроде
+	// «Хидеаки / Хидэаки Анно» видны сразу, а не на ревью.
+	const byName = new Map();
+	for (const s of allNew) {
+		const m = s.match(/^(.*?) \((.*?)\) — (.*)$/u);
+		if (!m) continue;
+		const e = byName.get(m[1]) ?? { roles: new Set(), posts: [] };
+		e.roles.add(m[2]);
+		e.posts.push(m[3]);
+		byName.set(m[1], e);
+	}
+	console.log(`\nНовых людей (нет в словаре): ${byName.size} имён, упоминаний ${allNew.length}`);
+	for (const [name, e] of [...byName].sort((a, b) => b[1].posts.length - a[1].posts.length || a[0].localeCompare(b[0], 'ru'))) console.log(`  + ${name} (${[...e.roles].join(', ')}) ×${e.posts.length}: ${e.posts.slice(0, 4).join(', ')}${e.posts.length > 4 ? '…' : ''}`);
+	const lev = (a, b) => {
+		const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
+		for (let j = 1; j <= b.length; j++) d[0][j] = j;
+		for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+		return d[a.length][b.length];
+	};
+	const everyone = [...new Set([...byName.keys(), ...dict.people])];
+	const last = (n) => n.trim().split(/\s+/u).pop().toLowerCase();
+	const similar = [];
+	for (const a of byName.keys()) for (const b of everyone) if (a < b || !byName.has(b)) if (a !== b && (last(a) === last(b) || lev(a.toLowerCase(), b.toLowerCase()) <= 2)) similar.push(`${a} ≈ ${b}${byName.has(b) ? '' : ' (словарь)'}`);
+	if (similar.length) console.log(`\nПохожие написания — проверить, не одно ли лицо (${similar.length}):\n  ${[...new Set(similar)].join('\n  ')}`);
 	console.log(`\nОшибок всего: ${total}`);
 	process.exitCode = total ? 1 : 0;
 }

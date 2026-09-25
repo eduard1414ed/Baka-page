@@ -1,6 +1,9 @@
 // ПЕРЕЛИНКОВКА, ШАГ 4 — ПРОВЕРКА ПОИСКОВИКА НА СУЩЕСТВУЮЩИХ ВСТАВКАХ ЭДА.
 //
-//   node scripts/crosslinks/check71.mjs [--out <файл.md>]
+//   node scripts/crosslinks/check71.mjs [--out <файл.md>] [--titles-only]
+//
+// С сессии 1в проверяется ОБЪЕДИНЁННЫЙ список (pipeline.mjs, оба канала) —
+// ровно тот, что уходит на ревью. --titles-only — прежний режим, для сравнения.
 //
 // Поисковику дают посты БЕЗ их вставок (убираются в памяти, файлы не трогаются)
 // и спрашивают, нашёл ли он ту же цель, туда ли поставил и насколько уверен.
@@ -10,7 +13,14 @@
 
 import { writeFile } from 'node:fs/promises';
 import { loadCorpus, classifyAnime, animeName } from './lib.mjs';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { findTitleCandidates } from './finder.mjs';
+import { buildCandidates } from './pipeline.mjs';
+import { readDictionary } from './dictionary.mjs';
+
+const REPO = fileURLToPath(new URL('../../', import.meta.url));
 
 const args = process.argv.slice(2);
 const outFile = args.includes('--out') ? args[args.indexOf('--out') + 1] : null;
@@ -19,7 +29,13 @@ const { posts: all, anime } = await loadCorpus();
 const posts = all.filter((p) => p.published);
 const byId = new Map(posts.map((p) => [p.id, p]));
 const franchiseOf = new Map(anime.map((a) => [a.id, a.data.franchise || null]));
-const { candidates } = findTitleCandidates({ posts, anime, stripExisting: true });
+let candidates;
+if (args.includes('--titles-only')) ({ candidates } = findTitleCandidates({ posts, anime, stripExisting: true }));
+else {
+	const cards = new Map(JSON.parse(await readFile(join(REPO, 'статус/перелинковка/карточки.json'), 'utf8')).cards.map((c) => [c.id, c]));
+	const { broad, occasions } = await readDictionary();
+	({ candidates } = buildCandidates({ posts, anime, cards, broad, occasions, stripExisting: true }));
+}
 const byKey = new Map(candidates.map((c) => [c.key, c]));
 
 // Позиция вставки Эда в посте без вставок: номер текстового абзаца перед ней.
@@ -63,6 +79,7 @@ for (const p of posts) {
 			shared: [...shared, ...fam.map((x) => '~' + x)],
 			anyShared,
 			found: c ? c.status : 'нет',
+			channels: c?.channels?.join('+') ?? '',
 			confidence: c?.confidence ?? '',
 			signal: c?.signal ?? '',
 			mine: c?.place ? `${c.place.afterTextN} (${c.place.mode})` : '',
@@ -84,7 +101,8 @@ say(`Тайтловые: цель найдена ${cnt(t, (r) => r.found !== 'н
 say(`Запасные: равноценная замена по тому же тайтлу ${cnt(t, (r) => r.instead.includes('равноценная'))}, вытеснены другим тайтлом ${cnt(t, (r) => r.instead.includes('другой тайтл'))}.`);
 say(`Место (из найденных с местом): то же ${cnt(t, (r) => r.where === 'то же')}, соседний ${cnt(t, (r) => r.where === 'соседний')}, далеко ${cnt(t, (r) => r.where.startsWith('далеко'))}.`);
 say(`Уверенность у найденных: сильный ${cnt(t, (r) => r.confidence === 'сильный')}, средний ${cnt(t, (r) => r.confidence === 'средний')}, слабый ${cnt(t, (r) => r.confidence === 'слабый')}.`);
-say(`Тематические, которые канал «тайтлы» всё равно нашёл: ${cnt(th, (r) => r.found !== 'нет')} из ${th.length}.`);
+say(`Тематические найдены: ${cnt(th, (r) => r.found !== 'нет')} из ${th.length} (основной ${cnt(th, (r) => r.found === 'основной')}, запасной ${cnt(th, (r) => r.found === 'запасной')}).`);
+say(`Каналы у найденных: ${Object.entries(rows.filter((r) => r.found !== 'нет').reduce((o, r) => ((o[r.channels || '—'] = (o[r.channels || '—'] ?? 0) + 1), o), {})).map(([k, v]) => `${k} ${v}`).join(', ')}.`);
 say();
 say('| источник | → цель | тип | общий тайтл | найден | уверенность | место Эда | моё место | совпадение | вместо | почему |');
 say('|---|---|---|---|---|---|---|---|---|---|---|');

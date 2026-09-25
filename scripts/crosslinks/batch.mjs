@@ -1,13 +1,24 @@
 // ПЕРЕЛИНКОВКА, КАНАЛ «ТЕМЫ» — ПАЧКИ ДЛЯ РАЗМЕТЧИКА (сессия 1б).
 //
-//   node scripts/crosslinks/batch.mjs --ids <файл> --out <папка> [--size 8] [--strip-existing]
+//   node scripts/crosslinks/batch.mjs --ids <файл> --out <папка> [--size 8] [--strip-existing] [--full]
 //
 // --ids   JSON: массив id или объект с полем posts: [{ id }] (как выборка.json).
 //         Без --ids — все опубликованные посты со своей страницей.
 // --size  постов в пачке (по умолчанию 8).
+// --max-chars  предел текста постов в пачке, знаков (по умолчанию без предела):
+//         пачка закрывается, когда следующий пост его превысил бы. Длина постов
+//         разная (описание бонуса 300 знаков, подборка 15 000), и одинаковое
+//         число постов даёт пачки разного веса. Контрольная пачка 1в: 23 поста,
+//         ≈ 70 000 знаков — помощник справился.
 // --strip-existing  вопросы смыслового фильтра задаются так, будто вставок
 //         в постах нет (как в проверке на 71): иначе пары, которые Эд уже
 //         поставил, поисковик не предлагает и спросить про них нельзя.
+// --full  по полной инструкции `разметчик.md` и полному словарю (как в 1б).
+//         По умолчанию (с 1в) — сжатая `разметчик-сжато.md`, а сжатый словарь
+//         и известные люди кладутся в начало пачки (dictionary.compactDictionary).
+//
+// Видеоэссе получают выжимку расшифровки из статус/перелинковка/эссе/<id>.md,
+// если она есть (решение Эда 1в, вариант Г). Нет выжимки — только описание.
 //
 // Пишет <папка>/пачка-NN.md — самодостаточный текст для одного помощника —
 // и <папка>/пачки.json — какие посты в какой пачке и какие вопросы им заданы
@@ -20,13 +31,21 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { loadCorpus, classifyAnime, animeName } from './lib.mjs';
 import { findTitleCandidates } from './finder.mjs';
+import { DICTIONARY_FILE, compactDictionary } from './dictionary.mjs';
+import { existsSync, readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+const ESSAYS = fileURLToPath(new URL('../../статус/перелинковка/эссе/', import.meta.url));
 
 const args = process.argv.slice(2);
 const opt = (name, dflt) => (args.includes(name) ? args[args.indexOf(name) + 1] : dflt);
 const outDir = opt('--out', null);
 if (!outDir) throw new Error('Нужен --out <папка>');
 const size = Number(opt('--size', 8));
+const maxChars = Number(opt('--max-chars', Infinity));
 const strip = args.includes('--strip-existing');
+const full = args.includes('--full');
+const compact = full ? null : compactDictionary(await readFile(DICTIONARY_FILE, 'utf8'));
 
 const { posts: all, anime } = await loadCorpus();
 const posts = all.filter((p) => p.published);
@@ -90,6 +109,12 @@ function render(p) {
 		else if (b.kind === 'anime-ref') out.push(`[${b.n}] (карточка тайтла \`${b.animeId}\`)`);
 		else out.push(`[${b.n}] (${b.kind === 'image' ? 'картинка' : b.kind === 'video' ? 'видео' : 'служебный блок'})`);
 	}
+	const essay = join(ESSAYS, `${p.id}.md`);
+	if (p.category === 'videoessay' && existsSync(essay)) {
+		// Выжимка — после описания, без номеров блоков: номера у поста только свои.
+		const text = readFileSync(essay, 'utf8').replace(/^#.*\n+/u, '').trim();
+		out.push('', '### Выжимка расшифровки эссе (не текст поста, номеров блоков нет)', '', text);
+	}
 	const qs = questions.get(p.id) ?? [];
 	if (qs.length) {
 		out.push('', '### Вопросы смыслового фильтра', '');
@@ -103,23 +128,51 @@ function render(p) {
 }
 
 await mkdir(outDir, { recursive: true });
-const manifest = { made: new Date().toISOString(), strip, size, batches: [] };
-for (let i = 0; i * size < ids.length; i++) {
-	const chunk = ids.slice(i * size, (i + 1) * size);
+const manifest = { made: new Date().toISOString(), strip, size, instruction: full ? 'разметчик.md' : 'разметчик-сжато.md', batches: [] };
+const chunks = [];
+{
+	let cur = [];
+	let chars = 0;
+	for (const id of ids) {
+		const r = { id, ...render(byId.get(id)) };
+		if (cur.length && (cur.length >= size || chars + r.text.length > maxChars)) (chunks.push(cur), (cur = []), (chars = 0));
+		cur.push(r);
+		chars += r.text.length;
+	}
+	if (cur.length) chunks.push(cur);
+}
+for (let i = 0; i < chunks.length; i++) {
+	const rendered = chunks[i];
+	const chunk = rendered.map((r) => r.id);
 	const name = `пачка-${String(i + 1).padStart(2, '0')}`;
-	const rendered = chunk.map((id) => ({ id, ...render(byId.get(id)) }));
-	const head = [
-		`# ${name}: ${chunk.length} постов`,
-		'',
-		`Разметь каждый пост по инструкции \`scripts/crosslinks/разметчик.md\` и словарю`,
-		'`статус/перелинковка/словарь.md`. Ответ — JSON-массив карточек в том же порядке.',
-		'',
-		'---',
-		'',
-	];
+	const head = full
+		? [
+				`# ${name}: ${chunk.length} постов`,
+				'',
+				`Разметь каждый пост по инструкции \`scripts/crosslinks/разметчик.md\` и словарю`,
+				'`статус/перелинковка/словарь.md`. Ответ — JSON-массив карточек в том же порядке.',
+				'',
+				'---',
+				'',
+			]
+		: [
+				`# ${name}: ${chunk.length} постов`,
+				'',
+				'Разметь каждый пост по инструкции `scripts/crosslinks/разметчик-сжато.md`.',
+				'Словарь меток — ниже, полный словарь читать не нужно. Ответ — JSON-массив',
+				'карточек в том же порядке.',
+				'',
+				'## Словарь меток',
+				'',
+				compact,
+				'',
+				'---',
+				'',
+			];
 	await writeFile(join(outDir, `${name}.md`), head.join('\n') + rendered.map((r) => r.text).join('\n---\n\n'));
 	manifest.batches.push({ name, posts: rendered.map(({ id, questions, mainAnime }) => ({ id, questions, mainAnime })) });
 }
 await writeFile(join(outDir, 'пачки.json'), JSON.stringify(manifest, null, 1));
 const nq = manifest.batches.flatMap((b) => b.posts).reduce((s, p) => s + p.questions.length, 0);
-console.log(`Постов ${ids.length}, пачек ${manifest.batches.length} по ${size}, вопросов фильтра ${nq}. Записано в ${outDir}`);
+const sizes = manifest.batches.map((b) => b.posts.length);
+console.log(`Постов ${ids.length}, пачек ${manifest.batches.length} (постов в пачке ${Math.min(...sizes)}–${Math.max(...sizes)}${Number.isFinite(maxChars) ? `, текста до ${maxChars} знаков` : ''}), вопросов фильтра ${nq}. Записано в ${outDir}`);

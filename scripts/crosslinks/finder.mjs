@@ -79,7 +79,7 @@ function sectionEnd(post, h, limit) {
 }
 
 /** Документ «вставка после блока b» → что показать человеку. */
-function describePlace(post, b, mode) {
+export function describePlace(post, b, mode) {
 	let anchor = null;
 	for (let i = b; i >= 0; i--) if (post.blocks[i].kind === 'text') { anchor = post.blocks[i]; break; }
 	const at = post.blocks[b];

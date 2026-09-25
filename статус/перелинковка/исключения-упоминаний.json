@@ -3,5 +3,15 @@
 		"post": "anime-belyy-albom-pro-lyubov-shou-biznes-iskusstvo-muzyki",
 		"anime": "nana",
 		"why": "«Нана» — имя сэйю Наны Мидзуки, а не тайтл «Нана» (сессия 1, выборка шага 5)"
+	},
+	{
+		"post": "ii-i-perevod",
+		"anime": "orange",
+		"why": "Orange — японская компания машинного перевода, а не тайтл «Орендж» (сессия 1в, шаг 0; галочка «только в кавычках» на латиницу не действует)"
+	},
+	{
+		"post": "kakoe-anime-stoit-smotret-etoy-zimoy-2023",
+		"anime": "orange",
+		"why": "Orange — студия, делающая ремейк «Тригана», а не тайтл «Орендж» (сессия 1в, шаг 0)"
 	}
 ]

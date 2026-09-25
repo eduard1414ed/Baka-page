@@ -5,6 +5,7 @@
 //        или цель появились или менялись после даты (оба направления: новые посты
 //        как источники и новые посты как цели для старых источников)
 //   --out <папка>       куда писать (по умолчанию ~/baka-audit/crosslinks/candidates/)
+//   --titles-only       только канал «тайтлы», как до сессии 1в (для сравнения)
 //   --rejected <файл>   отклонённые Эдом пары (по умолчанию статус/перелинковка/отклонено.json;
 //                       нет файла — нет отклонённых)
 //
@@ -21,6 +22,8 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadCorpus } from './lib.mjs';
 import { findTitleCandidates, mergeCandidates, RULES } from './finder.mjs';
+import { buildCandidates } from './pipeline.mjs';
+import { readDictionary } from './dictionary.mjs';
 
 const REPO = fileURLToPath(new URL('../../', import.meta.url));
 const args = process.argv.slice(2);
@@ -57,10 +60,23 @@ function changedSince(date, posts) {
 const { posts: all, anime } = await loadCorpus();
 const posts = all.filter((p) => p.published);
 const rejected = await readRejected(rejectedFile);
-const { candidates: titles, forStep5 } = findTitleCandidates({ posts, anime, rejected });
-
-// Канал «темы» (сессия 1б) ляжет сюда вторым списком.
-let candidates = mergeCandidates(titles);
+// С сессии 1в — оба канала (pipeline.mjs): карточки разметчика
+// статус/перелинковка/карточки.json, широкие метки — из словаря.
+let candidates;
+let forStep5;
+let stats = null;
+if (args.includes('--titles-only')) {
+	const r = findTitleCandidates({ posts, anime, rejected });
+	candidates = mergeCandidates(r.candidates);
+	forStep5 = r.forStep5;
+} else {
+	const cards = new Map(JSON.parse(await readFile(join(REPO, 'статус/перелинковка/карточки.json'), 'utf8')).cards.map((c) => [c.id, c]));
+	const { broad, occasions } = await readDictionary();
+	const r = buildCandidates({ posts, anime, cards, broad, occasions, rejected });
+	candidates = r.candidates;
+	forStep5 = r.forStep5;
+	stats = { ...r.stats, coverage: r.coverageLog.length };
+}
 
 let fresh = null;
 if (since) {
@@ -75,11 +91,14 @@ const result = {
 	since,
 	rules: RULES,
 	rejectedCount: rejected.size,
+	channels: args.includes('--titles-only') ? ['titles'] : ['titles', 'themes'],
+	stats,
 	sources: posts.filter((p) => p.ownPage && RULES.sourceCategories.includes(p.category)).length,
 	candidates,
 	forStep5: forStep5.filter((c) => !fresh || fresh.has(c.source) || fresh.has(c.target)),
 };
 await writeFile(join(outDir, `candidates${stamp}.json`), JSON.stringify(result, null, 1));
 console.log(`Кандидатов: ${candidates.length} (основных ${candidates.filter((c) => c.status === 'основной').length}), для шага 5: ${result.forStep5.length}. Отклонённых в списке: ${rejected.size}.`);
+if (stats) console.log(`Слияние: найдено обоими каналами ${stats.merged}, снято фильтром ${stats.filtered}, решений охвата ${stats.coverage}.`);
 if (fresh) console.log(`Новых или изменённых постов после ${since}: ${fresh.size}.`);
 console.log(`Записано: ${join(outDir, `candidates${stamp}.json`)}`);
