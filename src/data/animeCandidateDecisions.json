@@ -13847,5 +13847,17 @@
 		"at": "2026-08-20T08:47:03.282Z",
 		"result": "заведён: src/content/anime/tekkon-kinkreet.json",
 		"applied": "2026-08-20T08:47:12.307Z"
+	},
+	{
+		"id": "cand:40052",
+		"what": "create",
+		"sourceId": 40052,
+		"source": "shikimori",
+		"slug": "great-pretender",
+		"title": "Великий притворщик",
+		"phrases": [
+			"Великий притворщик"
+		],
+		"at": "2026-09-28T06:35:49.911Z"
 	}
 ]
