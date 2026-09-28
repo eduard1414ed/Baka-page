@@ -13919,5 +13919,17 @@
 			"Коллекция Дзюндзи Ито"
 		],
 		"at": "2026-09-28T06:37:30.429Z"
+	},
+	{
+		"id": "cand:51265",
+		"what": "create",
+		"sourceId": 51265,
+		"source": "shikimori",
+		"slug": "inu-ni-nattara-suki-na-hito-ni-hirowareta",
+		"title": "Стать любимой собачкой",
+		"phrases": [
+			"Стать любимой собачкой"
+		],
+		"at": "2026-09-28T06:37:41.396Z"
 	}
 ]
