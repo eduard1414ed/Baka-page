@@ -11,6 +11,7 @@ externalSource: ''
 adLabel: ''
 animeSuggested: []
 mentionsHidden: ''
+transcript: ''
 speakers: ''
 corrections: ''
 script: ''
@@ -20,13 +21,12 @@ pullMedia: false
 tgId: 2224
 tgUrl: https://t.me/podcastbaka/2224
 anime:
+  - ayakashi-japanese-classic-horror
   - kaguya-hime-no-monogatari
   - inu-ou
   - mononoke
-  - ayakashi-japanese-classic-horror
   - heike-monogatari
 ---
-
 
 ::image{src="/images/uploads/tg-2224.jpg" alt="" width="column"}
 
@@ -57,7 +57,7 @@ anime:
 
 Бива — дочь странствующего монаха, а ныне сирота, и самое большое её сокровище — старый музыкальный инструмент, некогда принадлежавший отцу. Девочка может видеть будущее и после горькой утраты отправляется к порогу семьи Тайра, чтобы лично оповестить её членов о грядущей трагедии.
 
-#### Аякаси: Классика японских ужасов
+#### :anime[Аякаси: Классика японских ужасов]{id="ayakashi-japanese-classic-horror" source="shikimori" source-id="586"}
 
 
 ::image{src="/images/uploads/pasted-image-1786662515929.webp" alt="" caption="Аниме студии Toei Animation" width="column"}
