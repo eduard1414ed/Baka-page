@@ -22,9 +22,15 @@
 // исходы, и человеку о них говорится разное («ничего не нашлось» против
 // «внешние каталоги не отвечают»).
 //
-// ВЗРОСЛОЕ ОТСЕКАЕТСЯ НА СТОРОНЕ СЕРВИСА: `censored: true` у Шикимори,
+// ВЗРОСЛОЕ ОТСЕКАЕТСЯ НА СТОРОНЕ СЕРВИСА: рейтинг `!rx` у Шикимори,
 // `isAdult: false` у AniList. Сайт открыт всем, и подсказка поиска не должна
 // предлагать то, чего на нём не было бы.
+//
+// НЕ `censored: true`: у Шикимори он прячет не рейтинг, а ЖАНРЫ — хентай,
+// яой и юри целиком, включая детские по рейтингу. Замер 3 октября 2026:
+// «given» не находил Given (PG-13, жанр «яой») вовсе, а вместо него отдавал
+// два чужих тайтла — и до AniList дело не доходило, ответ-то непустой.
+// `rating: "!rx"` отсекает ровно хентай, как `isAdult` у AniList.
 
 const TIMEOUT = 6000;
 const LIMIT = 8;
@@ -97,7 +103,7 @@ export function parseAniList(json) {
 
 /** @returns {Promise<{ ok: boolean, items: object[] }>} */
 export async function searchShikimori(query) {
-	const json = await post(SHIKI_API, `query($q: String) { animes(search: $q, limit: ${LIMIT}, censored: true) { ${SHIKI_FIELDS} } }`, {
+	const json = await post(SHIKI_API, `query($q: String) { animes(search: $q, limit: ${LIMIT}, censored: false, rating: "!rx") { ${SHIKI_FIELDS} } }`, {
 		q: query,
 	});
 	const items = parseShikimori(json);
