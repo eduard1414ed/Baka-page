@@ -139,3 +139,47 @@ export async function lookupByIds(items) {
 	for (const item of [...(parseShikimori(a) ?? []), ...(parseAniList(b) ?? [])]) found.set(`${item.src}:${item.id}`, item);
 	return found;
 }
+
+/**
+ * ПОСТЕРЫ ДЛЯ КАРТИНКИ — ТОЛЬКО ТЕ, ЧТО МОЖНО СОХРАНИТЬ (задача 22, часть 2).
+ *
+ * Чужая картинка на холсте запрещает его сохранять, если её сервер не дал
+ * разрешения. Проверено запросами 3 октября 2026: AniList (`s4.anilist.co`)
+ * отвечает `access-control-allow-origin: <наш адрес>` — и основному, и зеркалу;
+ * Шикимори не отвечает ничем. Поэтому постер Шикимори в картинку не берётся
+ * НИКОГДА, вместо него — постер AniList по тому же номеру: номер тайтла
+ * у Шикимори — это номер MyAnimeList, а AniList ищет по нему (`idMal_in`).
+ *
+ * Берётся крупный размер (`extraLarge`, около 460 px): марка в картинке 9:16
+ * шириной 286 px, а постер со страницы (`large`) уже — растянулся бы.
+ *
+ * Один запрос на всю девятку. Не вышло — пустой ответ, и марки без постера
+ * рисуются заглушкой: одна неудачная не отменяет остальные.
+ *
+ * @returns {Promise<Map<string, string>>} ключ — `${src}:${id}`, значение — адрес
+ */
+export async function picturePosters(items) {
+	const ids = items.filter((i) => i.src === 'anilist').map((i) => Number(i.id));
+	const mal = items.filter((i) => i.src === 'shiki').map((i) => Number(i.id));
+	const found = new Map();
+	if (!ids.length && !mal.length) return found;
+	// В запрос идёт только та половина, у которой есть номера: пустой список
+	// в `id_in` AniList понимает как «без отбора», а объявленная, но не
+	// использованная переменная — это ошибка всего запроса (замер: девятка
+	// из одних тайтлов Шикимори получала пустой ответ).
+	const vars = [];
+	const parts = [];
+	if (ids.length) {
+		vars.push('$ids: [Int]');
+		parts.push(`a: Page(perPage: ${ids.length}) { media(id_in: $ids, type: ANIME) { id coverImage { extraLarge large } } }`);
+	}
+	if (mal.length) {
+		vars.push('$mal: [Int]');
+		parts.push(`m: Page(perPage: ${mal.length}) { media(idMal_in: $mal, type: ANIME) { idMal coverImage { extraLarge large } } }`);
+	}
+	const json = await post(ANILIST_API, `query(${vars.join(', ')}) { ${parts.join(' ')} }`, { ids, mal });
+	const url = (m) => https(m?.coverImage?.extraLarge) || https(m?.coverImage?.large);
+	for (const m of json?.data?.a?.media ?? []) if (url(m)) found.set(`anilist:${m.id}`, url(m));
+	for (const m of json?.data?.m?.media ?? []) if (url(m)) found.set(`shiki:${m.idMal}`, url(m));
+	return found;
+}

@@ -2,8 +2,9 @@
 // «МОИ ДЕВЯТЬ АНИМЕ» — `/mybest/` (задача 22).
 // ТЗ: тз/тз-22-moi-devyat-anime.md; размеры: тз/спецификация-22-вид.md;
 // макет: холст «Моя девятка — интерфейс», экраны «Страница», «Выбор аниме»,
-// «Телефон». Первая часть: справочник, страница, поиск, выбор. Картинка —
-// следующей сессией, поэтому ни выбора формата, ни кнопки «Скачать» тут нет.
+// «Телефон», «Картинка 16:9», «Картинка 9:16». Первая часть: справочник,
+// страница, поиск, выбор. Вторая: картинка — выбор формата и «Скачать
+// картинку» (рисует src/lib/mybestImage.mjs, см. «Картинка» в скрипте ниже).
 //
 // ЧТО ОТКУДА:
 //   справочник своего каталога — `/mybest/titles.json` (titles.json.ts рядом),
@@ -13,7 +14,9 @@
 //   внешний поиск — src/lib/mybestExternal.mjs (Шикимори, потом AniList);
 //   подпись под маркой — `shortTitle` из src/lib/animeShortTitle.mjs, одно
 //     правило на страницу и будущую картинку;
-//   что выбрано и как это живёт в адресе — src/lib/mybestState.mjs.
+//   что выбрано и как это живёт в адресе — src/lib/mybestState.mjs;
+//   картинка — src/lib/mybestImage.mjs (раскладка и рисование), постеры
+//     для неё — `picturePosters` из mybestExternal.mjs.
 //
 // В ПОИСК ПО САЙТУ СТРАНИЦА НЕ ИДЁТ: на ней нет `data-pagefind-body`, как
 // и на `/search/`, — это инструмент, а не материал.
@@ -42,6 +45,9 @@
 // никогда не прячут элемент правилом CSS (дизайн-система, §2.1).
 import Layout from '../../layouts/Layout.astro';
 import { DEFAULT_CAPTION, MAX_TEXT } from '../../lib/mybestState.mjs';
+// Логотип в картинку — тот же файл, что в шапке (Header.astro): японские знаки
+// в нём нарисованы, шрифтами сайта их не набрать.
+import logo from '../../assets/images/logo-ink.png';
 
 const DESCRIPTION =
 	'Соберите девять любимых аниме и поделитесь подборкой: поиск по каталогу «Баки!», Шикимори и AniList.';
@@ -49,7 +55,7 @@ const DESCRIPTION =
 
 <Layout title="Мои девять аниме" description={DESCRIPTION}>
 	<div class="site">
-		<div class="mb" data-mybest>
+		<div class="mb" data-mybest data-logo={logo.src}>
 			<div class="mb-intro">
 				<h1 class="mb-title" data-title>Мои девять аниме</h1>
 				<p class="mb-lead">
@@ -76,8 +82,21 @@ const DESCRIPTION =
 			</div>
 
 			<div class="mb-actions">
+				{/* Картинка — только у своей девятки. Линии над блоком нет: её сняли
+				    по решению заказчика 3 октября 2026 (третий заход). */}
 				<div data-own-only>
-					<button type="button" class="mb-btn" data-copy>Скопировать ссылку</button>
+					<div class="mb-picture">
+						<span class="eyebrow tech mb-label" id="mb-format-label">формат картинки</span>
+						<div class="mb-formats" role="group" aria-labelledby="mb-format-label">
+							<button type="button" class="mb-format tech" data-format="9x16" aria-pressed="true">9:16</button>
+							<button type="button" class="mb-format tech" data-format="16x9" aria-pressed="false">16:9</button>
+						</div>
+					</div>
+					<div class="mb-buttons">
+						<button type="button" class="mb-btn mb-btn-main" data-download>Скачать картинку</button>
+						<button type="button" class="mb-btn" data-copy>Скопировать ссылку</button>
+					</div>
+					<p class="mb-note" data-picture-status aria-live="polite"></p>
 				</div>
 				<div data-foreign-only hidden>
 					<a class="mb-btn" href="/mybest/">Собрать свою девятку</a>
@@ -246,9 +265,13 @@ const DESCRIPTION =
 		margin-top: var(--sp-6);
 	}
 
-	/* Кегль заголовка — общий H1 сайта (`h1` в global.css). */
+	/* Кегль заголовка — общий H1 сайта (`h1` в global.css). Отступ до подводки
+	   — общий отступ заголовка сайта (16), на широком экране 24: у H1 строка
+	   тесная (1.02), и при двух строках — у чужой девятки заголовком стоит её
+	   подпись — хвосты «р» и «у» вставали вплотную к подводке (замечание
+	   заказчика 3 октября 2026; было 12). */
 	.mb-title {
-		margin-bottom: var(--sp-3);
+		margin-bottom: var(--sp-4);
 	}
 
 	.mb-lead {
@@ -333,6 +356,76 @@ const DESCRIPTION =
 	.mb-btn:focus-visible {
 		border-color: var(--accent-text);
 		color: var(--accent-text);
+	}
+
+	/* ——— Картинка ———
+	   Кнопки формата — техслой с рамкой `--line`, выбранная — рамка и текст
+	   `--ink`, начертание 600 (спецификация). Капслок и разрядку техслоя
+	   пишем ЯВНО: на `<button>` браузер сбрасывает их своими правилами, и класс
+	   `.tech` их не возвращает (урок CLAUDE.md). */
+	.mb-picture {
+		margin-bottom: var(--sp-6);
+	}
+
+	.mb-formats {
+		display: flex;
+		gap: var(--sp-2);
+	}
+
+	.mb-format {
+		min-height: 44px;
+		padding: 0 var(--sp-4);
+		border: 1px solid var(--line);
+		border-radius: 0;
+		background: transparent;
+		color: var(--muted);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		transition:
+			color var(--transition-fast),
+			border-color var(--transition-fast);
+	}
+
+	.mb-format:hover,
+	.mb-format:focus-visible {
+		border-color: var(--accent-text);
+		color: var(--accent-text);
+	}
+
+	.mb-format[aria-pressed='true'] {
+		border-color: var(--ink);
+		color: var(--ink);
+		font-weight: 600;
+	}
+
+	.mb-buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--sp-3);
+	}
+
+	/* «Скачать картинку» — заливка `--ink`, текст бумагой (спецификация).
+	   Наведение — та же смена на акцент, что у кнопок с рамкой, только заливкой.
+	   Погашенная (выбрано меньше девяти или идёт рисование) — вид кнопки
+	   с рамкой и `--muted`; что случилось, говорит строка под кнопками. */
+	.mb-btn.mb-btn-main {
+		border-color: var(--ink);
+		background: var(--ink);
+		color: var(--paper);
+	}
+
+	.mb-btn.mb-btn-main:hover,
+	.mb-btn.mb-btn-main:focus-visible {
+		border-color: var(--accent-text);
+		background: var(--accent-text);
+		color: var(--paper);
+	}
+
+	.mb-btn.mb-btn-main:disabled {
+		border-color: var(--line);
+		background: transparent;
+		color: var(--muted);
+		cursor: default;
 	}
 
 	/* ——— Сетка девяти ———
@@ -826,6 +919,10 @@ const DESCRIPTION =
 			margin-top: var(--sp-8);
 		}
 
+		.mb-title {
+			margin-bottom: var(--sp-6);
+		}
+
 		/* На телефоне Body M: подпись по умолчанию («9 аниме, которые меня
 		   сформировали») в Card title 20 в поле шириной 354 не помещалась. */
 		.mb-caption-input,
@@ -905,7 +1002,9 @@ const DESCRIPTION =
 		readStored,
 		sameItem,
 	} from '../../lib/mybestState.mjs';
-	import { searchShikimori, searchAniList, lookupByIds } from '../../lib/mybestExternal.mjs';
+	import { searchShikimori, searchAniList, lookupByIds, picturePosters } from '../../lib/mybestExternal.mjs';
+	import { drawPicture, pixelSize, PICTURE_ADDRESS } from '../../lib/mybestImage.mjs';
+	import { slugify } from '../../lib/slug.mjs';
 
 	const STORE_KEY = 'mybest:v1';
 	const CACHE_KEY = 'mybest:q:';
@@ -978,6 +1077,215 @@ const DESCRIPTION =
 		},
 	};
 
+	// ——— Картинка: постеры, шрифты, рисование, файл ———
+
+	type Format = '9x16' | '16x9';
+	type Delivery = 'downloaded' | 'shared' | 'cancelled' | 'tap';
+
+	/** Ошибка, у которой есть что сказать человеку. */
+	class PictureError extends Error {}
+
+	const PICTURE_TIMEOUT = 10000;
+
+	function withTimeout<T>(promise: Promise<T>, ms = PICTURE_TIMEOUT): Promise<T> {
+		return Promise.race([promise, new Promise<T>((_, no) => setTimeout(() => no(new Error('timeout')), ms))]);
+	}
+
+	// КАРТИНКА ГРУЗИТСЯ КАК ДАННЫЕ, А НЕ ТЕГОМ. Скачанный файл превращается
+	// в адрес внутри страницы (`blob:`), и холст считает его своим. Постер
+	// чужого сервера, разрешившего чтение (AniList), проходит; не разрешившего —
+	// падает здесь, на загрузке, а не потом на сохранении всей картинки.
+	async function loadPicture(url: string) {
+		const controller = new AbortController();
+		const timer = setTimeout(() => controller.abort(), PICTURE_TIMEOUT);
+		try {
+			const response = await fetch(url, { mode: 'cors', credentials: 'omit', signal: controller.signal });
+			if (!response.ok) return null;
+			const blobUrl = URL.createObjectURL(await response.blob());
+			const img = new Image();
+			img.src = blobUrl;
+			try {
+				await img.decode();
+				return img;
+			} finally {
+				URL.revokeObjectURL(blobUrl);
+			}
+		} catch {
+			return null;
+		} finally {
+			clearTimeout(timer);
+		}
+	}
+
+	// ВИД КАРТИНКИ — ИЗ СТИЛЕЙ САЙТА, А НЕ КОПИЕЙ ЧИСЕЛ. Цвета и пропорция
+	// марки — токены; заглушка «изображения нет» снимается с настоящего
+	// элемента (`imageMissingHtml` внутри марки страницы): рисунок, заливка,
+	// доля ширины, прозрачность и наложение — какими их видит читатель.
+	async function pictureLook(root: HTMLElement) {
+		const css = getComputedStyle(document.documentElement);
+		const token = (name: string) => css.getPropertyValue(name).trim();
+		const probe = document.createElement('span');
+		probe.className = 'mb-stamp';
+		probe.setAttribute('aria-hidden', 'true');
+		probe.style.cssText = 'position:absolute;left:-10000px;top:0;width:200px;visibility:hidden';
+		probe.innerHTML = imageMissingHtml({ compact: true });
+		const box = probe.querySelector<HTMLElement>('.img-missing')!;
+		const art = box.querySelector('img')!;
+		art.loading = 'eager';
+		root.append(probe);
+		try {
+			const [image, logo] = await Promise.all([withTimeout(art.decode().then(() => art)).catch(() => null), loadPicture(root.dataset.logo!)]);
+			if (!logo) throw new PictureError('logo');
+			const artStyle = getComputedStyle(art);
+			return {
+				logo,
+				look: {
+					colors: {
+						paper: token('--paper'),
+						ink: token('--ink'),
+						muted: token('--muted'),
+						line: token('--line'),
+						lineSoft: getComputedStyle(probe).backgroundColor,
+					},
+					fonts: { display: token('--font-display'), tech: token('--font-tech') },
+					ratio: parseFloat(token('--poster-ratio')),
+					missing: {
+						image,
+						fill: getComputedStyle(box).backgroundColor,
+						share: art.getBoundingClientRect().width / box.getBoundingClientRect().width,
+						alpha: parseFloat(artStyle.opacity),
+						blend: artStyle.mixBlendMode === 'normal' ? 'source-over' : artStyle.mixBlendMode,
+					},
+				},
+			};
+		} finally {
+			probe.remove();
+		}
+	}
+
+	// ШРИФТЫ — ДО РИСОВАНИЯ. Холст не ждёт шрифт, как страница: не загруженный
+	// — и подписи молча выходят Georgia, а видно это только на готовом файле.
+	// Спрашиваем ровно те буквы, что пойдут в картинку: шрифты сайта разрезаны
+	// по диапазонам знаков, и браузер грузит только нужные куски.
+	async function fontsReady(fonts: { display: string; tech: string }, texts: string[]) {
+		const family = (faces: FontFace[], name: string) => faces.some((f) => f.family.replace(/["']/g, '') === name && f.status === 'loaded');
+		try {
+			const [display, tech] = await withTimeout(
+				Promise.all([
+					document.fonts.load(`400 40px ${fonts.display}`, texts.join(' ')),
+					document.fonts.load(`400 12px ${fonts.tech}`, `${PICTURE_ADDRESS} 0123456789`),
+				]),
+			);
+			return family(display, 'Literata') && family(tech, 'IBM Plex Mono');
+		} catch {
+			return false;
+		}
+	}
+
+	// Подписи приходят готовыми — те же, что под марками на странице
+	// (`captionOf` в `setup`): второго правила подписи здесь нет.
+	async function makePicture(
+		format: Format,
+		caption: string,
+		items: Item[],
+		captions: string[],
+		progress: (done: number, total: number) => void,
+	) {
+		const root = document.querySelector<HTMLElement>('[data-mybest]')!;
+		const [{ logo, look }, remote] = await Promise.all([pictureLook(root), picturePosters(items)]);
+		if (!(await fontsReady(look.fonts, [caption, ...captions]))) throw new PictureError('fonts');
+
+		// Откуда постер: свой каталог — свой файл; AniList — крупный с AniList,
+		// не ответил — тот, что был на странице; Шикимори — ТОЛЬКО через AniList
+		// (свой сервер Шикимори сохранять картинку не разрешает); ручная — без.
+		const sources = items.map((item) => {
+			if (item.src === 'cat') return item.poster ?? null;
+			if (item.src === 'anilist') return remote.get(`anilist:${item.id}`) ?? item.poster ?? null;
+			if (item.src === 'shiki') return remote.get(`shiki:${item.id}`) ?? null;
+			return null;
+		});
+		let done = 0;
+		const expected = sources.filter(Boolean).length;
+		progress(0, expected);
+		const images = await Promise.all(
+			sources.map(async (url) => {
+				if (!url) return null;
+				const img = await loadPicture(url);
+				progress(++done, expected);
+				return img;
+			}),
+		);
+		// Не нашлось или не загрузилось то, что должно было быть, — назовём.
+		// У ручной марки постера нет по замыслу, это не потеря.
+		const missing = items.flatMap((item, i) => (item.src !== 'manual' && !images[i] ? [captions[i]] : []));
+
+		const canvas = document.createElement('canvas');
+		drawPicture(canvas, {
+			format,
+			caption,
+			cells: captions.map((text, i) => ({ caption: text, image: images[i] })),
+			logo,
+			look,
+		});
+		const blob = await new Promise<Blob | null>((ok) => {
+			try {
+				canvas.toBlob(ok, 'image/jpeg', 0.92);
+			} catch {
+				ok(null);
+			}
+		});
+		if (!blob) throw new PictureError('save');
+		return { blob, missing };
+	}
+
+	// ИМЯ ФАЙЛА — ИЗ ПОДПИСИ, ЛАТИНИЦЕЙ: `baka-9-anime-kotorye-menya-sformirovali-9x16.jpg`.
+	// Латиницей, потому что русское имя файла телефоны и мессенджеры коверкают.
+	// Длинная подпись режется до 60 знаков по границе слова, а не посреди него.
+	const FILE_WORDS = 60;
+	function fileName(caption: string, format: Format) {
+		const slug = slugify(caption);
+		const words = slug.length > FILE_WORDS ? slug.slice(0, FILE_WORDS + 1).replace(/-[^-]*$/, '') : slug;
+		return `baka-${words || 'moi-9-anime'}-${format}.jpg`;
+	}
+
+	// ТЕЛЕФОН. Айфон по ссылке «скачать» кладёт файл в приложение «Файлы»,
+	// а сторис берут картинку из «Фото» — поэтому на айфоне открываем меню
+	// «Поделиться» с файлом: в нём есть «Сохранить изображение» (в «Фото»)
+	// и сразу Телеграм. Меню браузер открывает только сразу после нажатия;
+	// опоздали — просим нажать ещё раз (`tap`). Остальные — обычная загрузка:
+	// компьютер и Андроид кладут файл в «Загрузки».
+	async function deliver(file: File): Promise<Delivery> {
+		const apple = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+		if (apple && navigator.canShare?.({ files: [file] })) {
+			try {
+				await navigator.share({ files: [file] });
+				return 'shared';
+			} catch (error) {
+				const name = (error as Error)?.name;
+				if (name === 'AbortError') return 'cancelled';
+				if (name === 'NotAllowedError') return 'tap';
+			}
+		}
+		const link = document.createElement('a');
+		link.href = URL.createObjectURL(file);
+		link.download = file.name;
+		document.body.append(link);
+		link.click();
+		link.remove();
+		setTimeout(() => URL.revokeObjectURL(link.href), 60000);
+		return 'downloaded';
+	}
+
+	function pictureError(error: unknown) {
+		const kind = error instanceof PictureError ? error.message : '';
+		if (kind === 'fonts')
+			return 'Не загрузились шрифты сайта — без них подписи вышли бы не той гарнитурой. Проверьте интернет и нажмите «Скачать картинку» ещё раз.';
+		if (kind === 'save')
+			return 'Браузер не разрешил сохранить картинку. Нажмите ещё раз; если не выйдет снова — откройте страницу в другом браузере.';
+		if (kind === 'logo') return 'Не загрузился логотип сайта. Проверьте интернет и нажмите «Скачать картинку» ещё раз.';
+		return 'Картинку нарисовать не вышло. Обновите страницу и нажмите «Скачать картинку» ещё раз.';
+	}
+
 	// Esc выводит из режима перестановки. Слушатель один на вкладку: при
 	// переходах без перезагрузки `setup` зовётся заново и только меняет,
 	// кого звать.
@@ -1041,6 +1349,99 @@ const DESCRIPTION =
 			render();
 		}
 
+		// ——— Картинка ———
+		// Нажали «Скачать картинку» — кнопка гаснет до конца работы (второе
+		// нажатие ничего не плодит), строка под кнопками говорит, что идёт
+		// и сколько ждать. Готовый файл помнится, пока девятка и формат те же:
+		// на айфоне меню «Сохранить изображение» открывается только по нажатию,
+		// и если рисование заняло дольше, чем браузер ждёт после нажатия,
+		// кнопка становится «Сохранить картинку» — повторно рисовать не надо.
+		const download = $<HTMLButtonElement>('[data-download]');
+		const pictureStatus = $<HTMLElement>('[data-picture-status]');
+		const formatButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-format]')];
+		let format: Format = '9x16';
+		let drawing = false;
+		let ready: { key: string; file: File; missing: string[] } | null = null;
+		let noteKey = '';
+
+		const pictureKey = () => `${format}|${encodeState(state)}`;
+
+		function note(text: string) {
+			pictureStatus.textContent = text;
+			noteKey = pictureKey();
+		}
+
+		function updateDownload() {
+			const filled = state.slots.filter(Boolean).length;
+			const key = pictureKey();
+			if (ready && ready.key !== key) ready = null;
+			download.disabled = drawing || filled < SLOTS;
+			download.textContent = drawing ? 'Рисуем…' : ready ? 'Сохранить картинку' : 'Скачать картинку';
+			if (drawing) return;
+			// Сообщение о прошлой картинке живёт, пока девятка та же.
+			if (noteKey !== key) note(filled < SLOTS ? `Картинка соберётся, когда будут выбраны все девять — сейчас ${filled}.` : '');
+		}
+
+		for (const button of formatButtons) {
+			button.addEventListener('click', () => {
+				format = button.dataset.format as Format;
+				for (const b of formatButtons) b.setAttribute('aria-pressed', String(b === button));
+				updateDownload();
+			});
+		}
+
+		download.addEventListener('click', async () => {
+			if (drawing) return;
+			const key = pictureKey();
+			if (ready?.key === key) return void tell(await deliver(ready.file), ready.file, ready.missing);
+			if (state.slots.filter(Boolean).length < SLOTS) return;
+
+			drawing = true;
+			ready = null;
+			updateDownload();
+			const size = pixelSize(format);
+			const name = format === '9x16' ? '9:16' : '16:9';
+			note(`Рисуем картинку ${name} — обычно это занимает несколько секунд.`);
+			try {
+				const items = state.slots.map((item) => item!);
+				const picture = await makePicture(
+					format,
+					state.caption,
+					items,
+					items.map((item) => captionOf(item).caption),
+					(done, total) => note(`Рисуем картинку ${name} — обычно это занимает несколько секунд. Постеры: ${done} из ${total}.`),
+				);
+				const file = new File([picture.blob], fileName(state.caption, format), { type: picture.blob.type });
+				ready = { key, file, missing: picture.missing };
+				drawing = false;
+				updateDownload();
+				tell(await deliver(file), file, picture.missing, size);
+			} catch (error) {
+				note(pictureError(error));
+			} finally {
+				drawing = false;
+				updateDownload();
+			}
+		});
+
+		function tell(outcome: Delivery, file: File, missing: string[], size = pixelSize(format)) {
+			const where = {
+				downloaded: `Картинка скачана: ${file.name}, ${size.width}×${size.height}. Она в папке «Загрузки».`,
+				shared: `Готово: ${file.name}, ${size.width}×${size.height}.`,
+				cancelled: 'Сохранение отменено. Картинка готова — нажмите «Сохранить картинку», чтобы открыть меню ещё раз.',
+				tap: 'Картинка готова — нажмите «Сохранить картинку».',
+			}[outcome];
+			const lost = missing.length
+				? ` Не загрузилось постеров: ${missing.length} (${missing.map((t) => `«${t}»`).join(', ')}) — на их месте заглушка «изображения нет». Можно нажать ещё раз через минуту.`
+				: '';
+			// Отданный файл больше не держим: следующее нажатие рисует заново —
+			// и заново пробует постеры, которые не загрузились. Держим только
+			// не отданный (айфон ждёт второго нажатия).
+			if (outcome === 'downloaded' || outcome === 'shared') ready = null;
+			note(where + lost);
+			updateDownload();
+		}
+
 		function captionOf(item: Item) {
 			// Марка каталога из ссылки до прихода справочника знает только адрес.
 			const title = item.title || item.id || '';
@@ -1053,6 +1454,7 @@ const DESCRIPTION =
 			const filled = state.slots.filter(Boolean).length;
 			const movingItem = moving >= 0 ? state.slots[moving] : null;
 			count.textContent = movingItem ? `куда переставить «${captionOf(movingItem).caption}»?` : `выбрано ${filled} из ${SLOTS}`;
+			if (!foreign) updateDownload();
 			clear.textContent = movingItem ? 'Отменить' : 'Очистить всё';
 			clear.disabled = !movingItem && filled === 0;
 			onEscape = movingItem ? cancelMove : null;
@@ -1252,6 +1654,7 @@ const DESCRIPTION =
 		captionInput.addEventListener('input', () => {
 			state.caption = captionInput.value.replace(/\s+/g, ' ').trim() || DEFAULT_CAPTION;
 			save();
+			updateDownload();
 		});
 
 		// Ссылка собирается в момент нажатия: адрес своей страницы остаётся

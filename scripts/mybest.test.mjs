@@ -5,6 +5,11 @@
 //      находит запрос читателя. Порядок и состав выдачи глазами не проверить:
 //      «нашлось два» от «нашлось два, но не те» на экране не отличается.
 //   2. `shortTitle` (src/lib/animeShortTitle.mjs) — короткая подпись под маркой.
+//   3. Перфорация картинки (`PERF` в src/lib/mybestImage.mjs) — те же числа,
+//      что у марки каталога и марки страницы в CSS. На холсте узора-градиента
+//      нет, кружки рисуются кодом по своим числам, — и разъедись они с CSS,
+//      на сайте и в картинке стало бы две разные перфорации, причём заметно
+//      это только рядом, глазами.
 //
 // Две части, как у scripts/anime-clash.test.mjs: ЗАКОН — на выдуманных
 // и записанных образцах, роняет проверку; ЗАМЕР — по живому справочнику,
@@ -19,6 +24,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { buildAnimeMatcher, matchQuery as realMatch, fold } from '../src/lib/animeMentions.mjs';
 import { shortTitle as realShort } from '../src/lib/animeShortTitle.mjs';
 import { emptyState, encodeState, decodeState, readStored } from '../src/lib/mybestState.mjs';
+import { PERF } from '../src/lib/mybestImage.mjs';
 
 const ROOT = new URL('..', import.meta.url);
 
@@ -103,6 +109,44 @@ function law(matchQuery, shortTitle, encode = encodeState) {
 	return fails;
 }
 
+// ПЕРФОРАЦИЯ: числа холста против CSS. Ищем оба узора (верхний край и боковой)
+// В КАЖДОМ файле; не нашёлся — тоже беда: узор переписали, и сверять нечем.
+const PERF_FILES = ['src/components/AnimeCard.astro', 'src/pages/mybest/index.astro'];
+const NUM = '(\\d+(?:\\.\\d+)?)';
+const EDGE = new RegExp(`radial-gradient\\(circle at ${NUM}px 0, var\\(--paper\\) ${NUM}px, transparent [\\d.]+px\\) 0 0 / ${NUM}px ${NUM}px repeat-x`, 'g');
+const SIDE = new RegExp(`radial-gradient\\(circle at 0 ${NUM}px, var\\(--paper\\) ${NUM}px, transparent [\\d.]+px\\) 0 0 / ${NUM}px ${NUM}px repeat-y`, 'g');
+
+function perfLaw(sources, perf) {
+	const fails = [];
+	for (const [name, css] of Object.entries(sources)) {
+		const edge = [...css.matchAll(EDGE)];
+		const side = [...css.matchAll(SIDE)];
+		if (edge.length !== 1 || side.length !== 1) {
+			fails.push(`${name}: узоров перфорации ${edge.length} и ${side.length}, ждали по одному — правило переписали?`);
+			continue;
+		}
+		const [, eOffset, eRadius, eStep] = edge[0].map(Number);
+		const [, sOffset, sRadius, , sStep] = side[0].map(Number);
+		const got = { radius: [eRadius, sRadius], step: [eStep, sStep], offset: [eOffset, sOffset] };
+		for (const [key, values] of Object.entries(got))
+			for (const v of values) if (v !== perf[key]) fails.push(`${name}: ${key} в CSS ${v}, на холсте ${perf[key]}`);
+		if (!new RegExp(`top: -${perf.shift}px`).test(css)) fails.push(`${name}: сдвиг полосы за край не ${perf.shift}px`);
+	}
+	return fails;
+}
+
+const perfSources = Object.fromEntries(PERF_FILES.map((f) => [f, readFileSync(new URL(f, ROOT), 'utf8')]));
+
+// Подлоги перфорации разводят ОДНУ копию, как и случится в жизни: правят шаг
+// у марки страницы и не правят у каталога и холста.
+const BROKEN_PERF = {
+	'шаг марки страницы 20 вместо 18': () =>
+		perfLaw({ ...perfSources, [PERF_FILES[1]]: perfSources[PERF_FILES[1]].replace('0 0 / 18px 12px repeat-x', '0 0 / 20px 12px repeat-x') }, PERF),
+	'кружок на холсте 4 вместо 5': () => perfLaw(perfSources, { ...PERF, radius: 4 }),
+	'боковой узор переписан другой записью': () =>
+		perfLaw({ ...perfSources, [PERF_FILES[0]]: perfSources[PERF_FILES[0]].replace('circle at 0 6px', 'circle at 0px 6px') }, PERF),
+};
+
 // Сломанные так, как их сломали бы в жизни.
 const BROKEN = {
 	'поиск требует целое слово (как findMentions)': [
@@ -150,17 +194,22 @@ if (process.argv.includes('--selftest')) {
 		console.log(fails.length > 0 ? `✓ подлог «${name}» пойман (${fails.length})` : `✗ подлог «${name}» НЕ пойман`);
 		if (fails.length === 0) code = 1;
 	}
-	const clean = law(realMatch, realShort);
+	for (const [name, run] of Object.entries(BROKEN_PERF)) {
+		const fails = run();
+		console.log(fails.length > 0 ? `✓ подлог «${name}» пойман (${fails.length})` : `✗ подлог «${name}» НЕ пойман`);
+		if (fails.length === 0) code = 1;
+	}
+	const clean = [...law(realMatch, realShort), ...perfLaw(perfSources, PERF)];
 	console.log(clean.length === 0 ? '✓ на настоящем коде закон зелёный' : `✗ на настоящем коде закон красный:\n  ${clean.join('\n  ')}`);
 	if (clean.length) code = 1;
 	process.exit(code);
 }
 
-const fails = law(realMatch, realShort);
+const fails = [...law(realMatch, realShort), ...perfLaw(perfSources, PERF)];
 if (fails.length) {
 	console.log('✗ ЗАКОН:\n  ' + fails.join('\n  '));
 	code = 1;
-} else console.log('✓ закон: поиск и короткая подпись — все случаи');
+} else console.log('✓ закон: поиск, короткая подпись, перфорация картинки = CSS — все случаи');
 
 // ЗАМЕР по живому справочнику.
 const dir = new URL('src/content/anime/', ROOT);
