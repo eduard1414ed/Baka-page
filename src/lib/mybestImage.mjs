@@ -52,9 +52,14 @@ const TECH_LINE = 1.35; // межстрочный техслоя сайта (§3
 
 // ГОД ВЫХОДА — В КАРТИНКЕ ЕСТЬ, НА СТРАНИЦЕ НЕТ (решение заказчика 3 октября
 // 2026: со страницы год сняли ради кнопок у марки, а в картинке он нужен).
-// Техслой 12, `--muted`. У ручной марки года нет — строка пустая, но место
-// под неё оставлено: годы ряда стоят на одной линии, как стояли на странице.
+// Техслой 12, `--muted`. ГОД ПРИЛИПАЕТ К НАЗВАНИЮ (правка заказчика того же
+// дня): в 9:16 — строкой сразу под последней строкой подписи, а не на общей
+// линии ряда (у однострочной подписи между ними зиял разрыв); в 16:9 — в той
+// же строке, сразу после названия, а не колонкой по правому краю. Место под
+// двухстрочную подпись с годом в 9:16 по-прежнему держится всегда: ряд марок
+// от длины подписи не прыгает.
 const YEAR_BEFORE = 4; // space-1
+const YEAR_GAP = 12; // space-3: от конца названия до года в 16:9
 
 // НАЗВАНИЯ КРУПНЕЕ СПЕЦИФИКАЦИИ (решение заказчика 3 октября 2026,
 // «мелковаты в обоих форматах»): 9:16 — 18 вместо 15, 16:9 — 26 вместо 21.
@@ -85,13 +90,12 @@ export const FORMATS = {
 		columnGap: 64,
 		grid: { gapX: 16, gapY: 18 },
 		title: { size: 40, lineHeight: 1.12, after: 30, lines: 2 },
-		// Год — колонкой справа, `yearColumn` — его место вместе с зазором.
 		// `room` — наименьший зазор между списком и линией брендинга (space-6):
 		// не влезает список с двухстрочными названиями — в одну строку
 		// с многоточием уходят САМЫЕ ДЛИННЫЕ, по одному, пока не влезет.
 		// Все разом — нельзя: замер на девяти самых длинных названиях каталога
 		// дал обрезанный список и 326 px пустоты под ним.
-		list: { size: 26, lineHeight: 1.3, gap: 13, lines: 2, numberColumn: 26, yearColumn: 64, room: 24 },
+		list: { size: 26, lineHeight: 1.3, gap: 13, lines: 2, numberColumn: 26, room: 24 },
 		brand: { pad: 20 },
 	},
 };
@@ -342,11 +346,11 @@ function drawStory(ctx, f, { caption, cells, logo, look }) {
 		drawStamp(ctx, look, cell, x, top, column, stamp);
 		ctx.fillStyle = colors.ink;
 		ctx.font = font(f.cap.size, fonts.display);
-		drawText(ctx, wrapLines(ctx, cell.caption, column, f.cap.lines), x, top + stamp + f.cap.before, f.cap.size, f.cap.lineHeight);
+		const height = drawText(ctx, wrapLines(ctx, cell.caption, column, f.cap.lines), x, top + stamp + f.cap.before, f.cap.size, f.cap.lineHeight);
 		if (cell.year) {
 			ctx.font = font(TECH_SIZE, fonts.tech);
 			ctx.fillStyle = colors.muted;
-			const yearTop = top + stamp + f.cap.before + capLines + YEAR_BEFORE;
+			const yearTop = top + stamp + f.cap.before + height + YEAR_BEFORE;
 			drawTracked(ctx, String(cell.year), x, baseline(ctx, yearTop, TECH_SIZE, TECH_LINE));
 		}
 	});
@@ -378,18 +382,33 @@ function drawWide(ctx, f, { caption, cells, logo, look }) {
 	y += drawText(ctx, wrapLines(ctx, caption, width, f.title.lines), left, y, f.title.size, f.title.lineHeight);
 	y += f.title.after;
 
-	// Номер слева и год справа стоят на базовой линии первой строки названия.
+	// Номер стоит на базовой линии первой строки названия, год — на базовой
+	// линии последней, сразу за ней.
 	const { list } = f;
 	const bottom = f.height - f.pad;
 	const brandTop = bottom - logoHeightOf(ctx, look) - f.brand.pad;
-	const nameWidth = width - list.numberColumn - list.yearColumn;
-	ctx.font = font(list.size, fonts.display);
+	const nameWidth = width - list.numberColumn;
+	const yearWidth = (year) => {
+		if (!year) return 0;
+		ctx.font = font(TECH_SIZE, fonts.tech);
+		const text = String(year);
+		return ctx.measureText(text).width + TECH_SIZE * TECH_TRACKING * (text.length - 1) + YEAR_GAP;
+	};
+	// Год обязан уместиться за последней строкой. Не умещается — название
+	// переносится уже, освобождая ему место, а не уводит год на новую строку.
+	const wrapName = (cell, max) => {
+		const room = yearWidth(cell.year);
+		ctx.font = font(list.size, fonts.display);
+		const lines = wrapLines(ctx, cell.caption, nameWidth, max);
+		if (ctx.measureText(lines.at(-1)).width + room <= nameWidth) return lines;
+		return wrapLines(ctx, cell.caption, nameWidth - room, max);
+	};
 	const heightOf = (wrapped) => wrapped.reduce((sum, lines) => sum + lines.length * list.size * list.lineHeight, 0) + list.gap * (cells.length - 1);
-	const wrapped = cells.map((cell) => wrapLines(ctx, cell.caption, nameWidth, list.lines));
+	const wrapped = cells.map((cell) => wrapName(cell, list.lines));
 	const byLength = cells.map((cell, i) => i).sort((a, b) => cells[b].caption.length - cells[a].caption.length);
 	for (const i of byLength) {
 		if (y + heightOf(wrapped) <= brandTop - list.room) break;
-		if (wrapped[i].length > 1) wrapped[i] = wrapLines(ctx, cells[i].caption, nameWidth, 1);
+		if (wrapped[i].length > 1) wrapped[i] = wrapName(cells[i], 1);
 	}
 	cells.forEach((cell, i) => {
 		if (i) y += list.gap;
@@ -397,10 +416,12 @@ function drawWide(ctx, f, { caption, cells, logo, look }) {
 		ctx.fillStyle = colors.ink;
 		const first = baseline(ctx, y, list.size, list.lineHeight);
 		const height = drawText(ctx, wrapped[i], left + list.numberColumn, y, list.size, list.lineHeight);
+		const lastEnd = left + list.numberColumn + ctx.measureText(wrapped[i].at(-1)).width;
+		const last = first + (wrapped[i].length - 1) * list.size * list.lineHeight;
 		ctx.font = font(TECH_SIZE, fonts.tech);
 		ctx.fillStyle = colors.muted;
 		drawTracked(ctx, String(i + 1).padStart(2, '0'), left, first);
-		if (cell.year) drawTracked(ctx, String(cell.year), left + width, first, 'right');
+		if (cell.year) drawTracked(ctx, String(cell.year), lastEnd + YEAR_GAP, last);
 		y += height;
 	});
 
