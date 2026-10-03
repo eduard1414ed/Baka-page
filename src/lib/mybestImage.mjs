@@ -48,6 +48,22 @@ export const LOGO_CAP_SHARE = 0.99;
 
 const TECH_SIZE = 12; // техслой в картинках — 12 (спецификация, «Шрифты»)
 const TECH_TRACKING = 0.08; // em, как у техслоя сайта
+const TECH_LINE = 1.35; // межстрочный техслоя сайта (§3.2)
+
+// ГОД ВЫХОДА — В КАРТИНКЕ ЕСТЬ, НА СТРАНИЦЕ НЕТ (решение заказчика 3 октября
+// 2026: со страницы год сняли ради кнопок у марки, а в картинке он нужен).
+// Техслой 12, `--muted`. У ручной марки года нет — строка пустая, но место
+// под неё оставлено: годы ряда стоят на одной линии, как стояли на странице.
+const YEAR_BEFORE = 4; // space-1
+
+// НАЗВАНИЯ КРУПНЕЕ СПЕЦИФИКАЦИИ (решение заказчика 3 октября 2026,
+// «мелковаты в обоих форматах»): 9:16 — 18 вместо 15, 16:9 — 26 вместо 21.
+// 18 — ПОТОЛОК 9:16, И ЭТО АРИФМЕТИКА: худший случай — подпись над картинкой
+// в три строки; тогда сетке остаётся 1258 единиц, три ряда марок по 332.9
+// и два зазора по 26 оставляют подписи с годом 75.4 на ряд, то есть 9 + 2×1.2×к
+// + 4 + 16.2 ≤ 75.4 → к ≤ 19.2. Вырастет кегль — девятая марка упрётся
+// в брендинг. Порог `shortTitle` (50 знаков) мерился под 15: при 18 в две
+// строки колонки 238 влезает меньше, и длинное режет многоточие.
 
 export const FORMATS = {
 	// 9:16 — заголовок сверху, сетка 3×3 с подписями, брендинг строкой внизу.
@@ -57,7 +73,7 @@ export const FORMATS = {
 		pad: { top: 52, side: 70, bottom: 44 },
 		title: { size: 44, lineHeight: 1.12, after: 34, lines: 3 },
 		grid: { gapX: 22, gapY: 26 },
-		cap: { size: 15, lineHeight: 1.2, before: 9, lines: 2 },
+		cap: { size: 18, lineHeight: 1.2, before: 9, lines: 2 },
 		brand: { pad: 20 },
 	},
 	// 16:9 — сетка слева, справа заголовок и список 01–09, брендинг внизу правой.
@@ -69,7 +85,13 @@ export const FORMATS = {
 		columnGap: 64,
 		grid: { gapX: 16, gapY: 18 },
 		title: { size: 40, lineHeight: 1.12, after: 30, lines: 2 },
-		list: { size: 21, lineHeight: 1.3, gap: 13, lines: 2, numberColumn: 26 },
+		// Год — колонкой справа, `yearColumn` — его место вместе с зазором.
+		// `room` — наименьший зазор между списком и линией брендинга (space-6):
+		// не влезает список с двухстрочными названиями — в одну строку
+		// с многоточием уходят САМЫЕ ДЛИННЫЕ, по одному, пока не влезет.
+		// Все разом — нельзя: замер на девяти самых длинных названиях каталога
+		// дал обрезанный список и 326 px пустоты под ним.
+		list: { size: 26, lineHeight: 1.3, gap: 13, lines: 2, numberColumn: 26, yearColumn: 64, room: 24 },
 		brand: { pad: 20 },
 	},
 };
@@ -234,10 +256,13 @@ export function drawStamp(ctx, look, cell, x, y, w, h) {
  * базовой линии (низ логотипа — базовая линия «БАКА!»). `bottom` — нижний
  * край строки. Возвращает верх строки (где линия).
  */
-function drawBrand(ctx, look, logo, x, width, bottom, pad) {
+function logoHeightOf(ctx, look) {
 	ctx.font = font(LOGO_CAP_SIZE, look.fonts.display);
-	const capHeight = ctx.measureText('Б').actualBoundingBoxAscent;
-	const logoHeight = capHeight / LOGO_CAP_SHARE;
+	return ctx.measureText('Б').actualBoundingBoxAscent / LOGO_CAP_SHARE;
+}
+
+function drawBrand(ctx, look, logo, x, width, bottom, pad) {
+	const logoHeight = logoHeightOf(ctx, look);
 	const logoWidth = logoHeight * (logo.naturalWidth / logo.naturalHeight);
 	const top = bottom - logoHeight - pad;
 	hairline(ctx, look.colors.line, x, top, width);
@@ -266,7 +291,7 @@ function hairline(ctx, color, x, y, width) {
  * @param {{
  *   format: '9x16' | '16x9',
  *   caption: string,
- *   cells: { caption: string, image: CanvasImageSource | null }[],
+ *   cells: { caption: string, year?: number, image: CanvasImageSource | null }[],
  *   logo: HTMLImageElement,
  *   look: {
  *     colors: { paper, ink, muted, line, lineSoft },
@@ -308,8 +333,9 @@ function drawStory(ctx, f, { caption, cells, logo, look }) {
 
 	const column = (width - f.grid.gapX * 2) / 3;
 	const stamp = column / look.ratio;
-	const capBlock = f.cap.before + f.cap.size * f.cap.lineHeight * f.cap.lines;
-	ctx.font = font(f.cap.size, fonts.display);
+	const capLines = f.cap.size * f.cap.lineHeight * f.cap.lines;
+	const yearLine = TECH_SIZE * TECH_LINE;
+	const capBlock = f.cap.before + capLines + YEAR_BEFORE + yearLine;
 	cells.forEach((cell, i) => {
 		const x = left + (i % 3) * (column + f.grid.gapX);
 		const top = y + Math.floor(i / 3) * (stamp + capBlock + f.grid.gapY);
@@ -317,6 +343,12 @@ function drawStory(ctx, f, { caption, cells, logo, look }) {
 		ctx.fillStyle = colors.ink;
 		ctx.font = font(f.cap.size, fonts.display);
 		drawText(ctx, wrapLines(ctx, cell.caption, column, f.cap.lines), x, top + stamp + f.cap.before, f.cap.size, f.cap.lineHeight);
+		if (cell.year) {
+			ctx.font = font(TECH_SIZE, fonts.tech);
+			ctx.fillStyle = colors.muted;
+			const yearTop = top + stamp + f.cap.before + capLines + YEAR_BEFORE;
+			drawTracked(ctx, String(cell.year), x, baseline(ctx, yearTop, TECH_SIZE, TECH_LINE));
+		}
 	});
 	const rows = Math.ceil(cells.length / 3);
 	const gridBottom = y + rows * (stamp + capBlock) + (rows - 1) * f.grid.gapY;
@@ -346,22 +378,32 @@ function drawWide(ctx, f, { caption, cells, logo, look }) {
 	y += drawText(ctx, wrapLines(ctx, caption, width, f.title.lines), left, y, f.title.size, f.title.lineHeight);
 	y += f.title.after;
 
-	// Номер стоит на базовой линии первой строки названия.
+	// Номер слева и год справа стоят на базовой линии первой строки названия.
 	const { list } = f;
+	const bottom = f.height - f.pad;
+	const brandTop = bottom - logoHeightOf(ctx, look) - f.brand.pad;
+	const nameWidth = width - list.numberColumn - list.yearColumn;
+	ctx.font = font(list.size, fonts.display);
+	const heightOf = (wrapped) => wrapped.reduce((sum, lines) => sum + lines.length * list.size * list.lineHeight, 0) + list.gap * (cells.length - 1);
+	const wrapped = cells.map((cell) => wrapLines(ctx, cell.caption, nameWidth, list.lines));
+	const byLength = cells.map((cell, i) => i).sort((a, b) => cells[b].caption.length - cells[a].caption.length);
+	for (const i of byLength) {
+		if (y + heightOf(wrapped) <= brandTop - list.room) break;
+		if (wrapped[i].length > 1) wrapped[i] = wrapLines(ctx, cells[i].caption, nameWidth, 1);
+	}
 	cells.forEach((cell, i) => {
 		if (i) y += list.gap;
 		ctx.font = font(list.size, fonts.display);
-		const lines = wrapLines(ctx, cell.caption, width - list.numberColumn, list.lines);
 		ctx.fillStyle = colors.ink;
 		const first = baseline(ctx, y, list.size, list.lineHeight);
-		const height = drawText(ctx, lines, left + list.numberColumn, y, list.size, list.lineHeight);
+		const height = drawText(ctx, wrapped[i], left + list.numberColumn, y, list.size, list.lineHeight);
 		ctx.font = font(TECH_SIZE, fonts.tech);
 		ctx.fillStyle = colors.muted;
 		drawTracked(ctx, String(i + 1).padStart(2, '0'), left, first);
+		if (cell.year) drawTracked(ctx, String(cell.year), left + width, first, 'right');
 		y += height;
 	});
 
-	const bottom = f.height - f.pad;
-	const brandTop = drawBrand(ctx, look, logo, left, width, bottom, f.brand.pad);
+	drawBrand(ctx, look, logo, left, width, bottom, f.brand.pad);
 	return { gridBottom, textBottom: y, brandTop, bottom };
 }

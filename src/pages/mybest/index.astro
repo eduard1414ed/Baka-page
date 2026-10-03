@@ -984,6 +984,30 @@ const DESCRIPTION =
 		.mb-help {
 			align-self: end;
 		}
+
+		/* ИНСТРУКЦИЯ — У ПОДВАЛА, ДАЖЕ КОГДА ОКНО ВЫШЕ СТРАНИЦЫ. С 3 октября 2026
+		   подвал прижат к низу окна (`body > main` растёт, global.css), и на
+		   большом мониторе между сеткой и подвалом появлялась пустота, а
+		   инструкция оставалась у сетки (замечание заказчика). Поэтому рост
+		   доходит до девятки: `main` и оболочка этой страницы — колонки flex,
+		   `.mb` тянется на всю их высоту, и последняя строка грида (1fr) с
+		   инструкцией вместе с ней. Внутри `main` здесь ровно одна оболочка,
+		   внутри неё ровно `.mb` — полей между соседями, которые flex перестал
+		   бы схлопывать, нет. Без `:has` (Safari до 15.4) — как было раньше. */
+		main:has(> .site > .mb) {
+			display: flex;
+			flex-direction: column;
+		}
+
+		main:has(> .site > .mb) > .site {
+			display: flex;
+			flex: 1 0 auto;
+			flex-direction: column;
+		}
+
+		.mb {
+			flex: 1 0 auto;
+		}
 	}
 </style>
 
@@ -1223,7 +1247,7 @@ const DESCRIPTION =
 		drawPicture(canvas, {
 			format,
 			caption,
-			cells: captions.map((text, i) => ({ caption: text, image: images[i] })),
+			cells: captions.map((text, i) => ({ caption: text, year: items[i].year, image: images[i] })),
 			logo,
 			look,
 		});
