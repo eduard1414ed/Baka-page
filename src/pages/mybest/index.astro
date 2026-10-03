@@ -81,16 +81,23 @@ const DESCRIPTION =
 			<div class="mb-actions">
 				<div data-own-only>
 					<button type="button" class="mb-btn" data-copy>Скопировать ссылку</button>
-					<p class="mb-note mb-hint">
-						Подпись под маркой правится нажатием на неё. Чтобы поменять марки местами, нажмите ⇄ у одной
-						и выберите место.
-					</p>
 				</div>
 				<div data-foreign-only hidden>
 					<a class="mb-btn" href="/mybest/">Собрать свою девятку</a>
-					<p class="mb-note mb-hint">Это чужая девятка — её можно только смотреть. Ваша собственная не пропадёт.</p>
 				</div>
 				<p class="visually-hidden" aria-live="polite" data-announce></p>
+			</div>
+
+			{/* Инструкция — в самом низу, над линией подвала (решение заказчика
+			    3 октября 2026): она нужна, когда уже что-то выбрано, а не до. */}
+			<div class="mb-help">
+				<p class="mb-note" data-own-only>
+					Подпись под маркой правится нажатием на неё. Чтобы поменять марки местами, нажмите ⇄ у одной
+					и выберите место.
+				</p>
+				<p class="mb-note" data-foreign-only hidden>
+					Это чужая девятка — её можно только смотреть. Ваша собственная не пропадёт.
+				</p>
 			</div>
 
 			<section class="mb-picks" aria-label="Девять аниме">
@@ -148,7 +155,7 @@ const DESCRIPTION =
 					<figure class="mb-pick">
 						<a class="mb-stamp"><span class="mb-perf"></span></a>
 						<div class="mb-under mb-under-tall">
-							<button type="button" class="mb-cap mb-cap-edit"></button>
+							<button type="button" class="mb-cap-edit"><span class="mb-cap"></span></button>
 							<div class="mb-tools">
 								<button type="button" class="mb-icon mb-move">
 									<svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
@@ -211,7 +218,7 @@ const DESCRIPTION =
 
 	.mb {
 		display: grid;
-		grid-template-areas: 'intro' 'caption' 'picks' 'actions';
+		grid-template-areas: 'intro' 'caption' 'picks' 'actions' 'help';
 		padding-block: var(--sp-6) var(--sp-8);
 	}
 
@@ -231,8 +238,11 @@ const DESCRIPTION =
 	.mb-actions {
 		grid-area: actions;
 		margin-top: var(--sp-6);
-		padding-top: var(--sp-4);
-		border-top: 1px solid var(--line);
+	}
+
+	.mb-help {
+		grid-area: help;
+		margin-top: var(--sp-6);
 	}
 
 	/* Кегль заголовка — общий H1 сайта (`h1` в global.css). */
@@ -272,7 +282,10 @@ const DESCRIPTION =
 		color: var(--ink);
 		font-family: var(--font-display);
 		font-size: var(--body-md);
-		line-height: 1.15;
+		/* 1.5, а не 1.15: у Literata хвосты «р», «у», «д» уходят ниже тесной
+		   строки, и поле срезает их по краю (замечено заказчиком 3 октября 2026,
+		   «Борут»). Та же грабля, что «гарнитура не помещается в свою строку». */
+		line-height: 1.5;
 		-webkit-appearance: none;
 		appearance: none;
 	}
@@ -303,10 +316,6 @@ const DESCRIPTION =
 		font-size: var(--caption);
 		line-height: 1.45;
 		color: var(--muted);
-	}
-
-	.mb-hint {
-		margin-top: var(--sp-4);
 	}
 
 	/* Кнопка — Outline button §8: min-height 44, рамка `--line`. */
@@ -486,9 +495,9 @@ const DESCRIPTION =
 
 	/* ПОД МАРКОЙ: подпись слева, кнопки столбиком справа (правка 3 октября
 	   2026: в одной строке с годом кнопки читались приложением к году; год
-	   снят совсем). Столбик — две зоны 44×44, поэтому место под маркой
-	   не меньше 88 у своей девятки и у целей перестановки: ряд не прыгает,
-	   когда клетка становится целью. */
+	   снят совсем). Столбик — две зоны 44×44 (88), поднятые на 20 (см. `.mb-tools`),
+	   поэтому место под маркой — 68 у своей девятки и у целей перестановки:
+	   ряд не прыгает, когда клетка становится целью. */
 	.mb-under {
 		display: flex;
 		align-items: flex-start;
@@ -497,7 +506,7 @@ const DESCRIPTION =
 	}
 
 	.mb-under-tall {
-		min-height: 88px;
+		min-height: 68px;
 	}
 
 	/* Подпись под маркой: не больше трёх строк, дальше многоточие (вторая
@@ -519,13 +528,22 @@ const DESCRIPTION =
 		overflow-wrap: anywhere;
 	}
 
-	/* У своей девятки подпись — кнопка правки: цель нажатия ≥ 44. */
+	/* У своей девятки подпись — кнопка правки: цель нажатия ≥ 44.
+	   ТЕКСТ — ОТДЕЛЬНЫМ ЭЛЕМЕНТОМ ВНУТРИ, прижатым к верху: своё содержимое
+	   кнопка браузера ставит по вертикальной середине, и однострочная подпись
+	   («Наруто») опускалась на 15 px ниже трёхстрочной соседки (замер
+	   3 октября 2026). */
 	.mb-cap-edit {
+		display: flex;
+		flex: 1 1 auto;
+		align-items: flex-start;
+		min-width: 0;
 		min-height: 44px;
 		padding: 0;
 		border: 0;
 		background: transparent;
 		color: var(--ink);
+		text-align: left;
 		cursor: text;
 	}
 
@@ -539,6 +557,7 @@ const DESCRIPTION =
 		min-width: 0;
 		height: 44px;
 		padding: 0;
+		line-height: 1.5;
 		border: 0;
 		border-bottom: 1px solid var(--ink);
 		border-radius: 0;
@@ -553,10 +572,20 @@ const DESCRIPTION =
 		outline: none;
 	}
 
+	/* ЗНАЧКИ ВМЕСТЕ, ЗОНЫ ПО 44. Значок по центру своей зоны давал между ⇄ и ×
+	   33 px, и × висел отдельно, как чужой элемент (замечание заказчика
+	   3 октября 2026). Зоны сблизить нельзя — каждая 44×44, — поэтому сдвинуты
+	   значки: ⇄ к низу своей зоны, × к верху своей, между ними 12.
+	   Столбик поднят на 20 = зазор под маркой (8) + полоса перфорации (12):
+	   так ⇄ встаёт вровень с первой строкой подписи, а верхняя зона заходит
+	   только на декоративную полосу перфорации, не на постер. */
 	.mb-tools {
+		position: relative;
+		z-index: 4;
 		display: flex;
 		flex: 0 0 44px;
 		flex-direction: column;
+		margin-top: calc(var(--sp-2) * -1 - 12px);
 	}
 
 	/* Значки 11 px в зонах 44×44. */
@@ -569,6 +598,17 @@ const DESCRIPTION =
 		border: 0;
 		background: transparent;
 		color: var(--muted);
+	}
+
+	/* Два класса, а не один: у `.mb-icon` свой `place-items`, и при равном
+	   весе исход решал бы порядок правил в файле. */
+	.mb-icon.mb-move {
+		align-items: end;
+		padding-bottom: var(--sp-3);
+	}
+
+	.mb-icon.mb-remove {
+		align-items: start;
 	}
 
 	.mb-icon:hover,
@@ -801,12 +841,9 @@ const DESCRIPTION =
 		}
 
 		.mb-picks,
-		.mb-actions {
+		.mb-actions,
+		.mb-help {
 			margin-top: var(--sp-8);
-		}
-
-		.mb-actions {
-			padding-top: var(--sp-6);
 		}
 
 		.mb-head {
@@ -838,18 +875,24 @@ const DESCRIPTION =
 
 	/* Две колонки: управление слева, сетка справа (460 из спецификации),
 	   зазор 64 по шкале. Сетка занимает всю высоту справа, левые блоки стоят
-	   по верху. */
+	   по верху, инструкция — по низу. */
 	@media (min-width: 1101px) {
 		.mb {
 			grid-template-columns: minmax(0, 1fr) 460px;
-			grid-template-rows: auto auto 1fr;
-			grid-template-areas: 'intro picks' 'caption picks' 'actions picks';
+			grid-template-rows: auto auto auto 1fr;
+			grid-template-areas: 'intro picks' 'caption picks' 'actions picks' 'help picks';
 			column-gap: var(--sp-16);
 			align-items: start;
 		}
 
 		.mb-picks {
 			margin-top: 0;
+		}
+
+		/* Последняя строка тянется до низа сетки, инструкция прижата к её низу —
+		   то есть стоит прямо над линией подвала. */
+		.mb-help {
+			align-self: end;
 		}
 	}
 </style>
@@ -1073,8 +1116,9 @@ const DESCRIPTION =
 			cap.textContent = caption;
 			if (kind === 'view') return cell;
 
-			cap.dataset.slot = String(i);
-			cap.setAttribute('aria-label', `Подпись «${caption}», править`);
+			const edit = cell.querySelector<HTMLButtonElement>('.mb-cap-edit')!;
+			edit.dataset.slot = String(i);
+			edit.setAttribute('aria-label', `Подпись «${caption}», править`);
 			const move = cell.querySelector<HTMLButtonElement>('.mb-move')!;
 			move.dataset.slot = String(i);
 			move.setAttribute('aria-label', moving === i ? `Не переставлять «${caption}»` : `Переставить «${caption}»`);
@@ -1159,7 +1203,7 @@ const DESCRIPTION =
 				change();
 				say(`«${title}» убрано`);
 				focusSlot('.mb-slot', i);
-			} else if (el.classList.contains('mb-cap')) editLabel(i, el as HTMLButtonElement);
+			} else if (el.classList.contains('mb-cap-edit')) editLabel(i, el as HTMLButtonElement);
 		});
 
 		clear.addEventListener('click', () => {
@@ -1195,7 +1239,7 @@ const DESCRIPTION =
 					item.label = value && value !== shortTitle(item.title) ? value : undefined;
 					change();
 				} else render();
-				focusSlot('.mb-cap', i);
+				focusSlot('.mb-cap-edit', i);
 			};
 			input.addEventListener('keydown', (event) => {
 				if (event.key === 'Enter') finish(true);
@@ -1320,7 +1364,7 @@ const DESCRIPTION =
 			state.slots[i] = clean;
 			closePicker();
 			change();
-			focusSlot('.mb-cap', i);
+			focusSlot('.mb-cap-edit', i);
 			say(`«${item.title}» — ${ORDINALS[i]} в девятке`);
 		}
 
