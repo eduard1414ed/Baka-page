@@ -417,6 +417,77 @@ export function findMentions(text, matcher) {
 	return found;
 }
 
+/**
+ * КАКИЕ ТАЙТЛЫ ИМЕЕТ В ВИДУ ЧЕЛОВЕК, НАБРАВШИЙ ЗАПРОС (задача 22, `/mybest/`).
+ *
+ * Вопрос обратный тому, что задаёт `findMentions`: там ищем названия ВНУТРИ
+ * текста, тут — запрос внутри названий. Живёт здесь же, потому что второго
+ * правила совпадения в проекте быть не должно (тз-22, «Поиск»): названия —
+ * ровно список `buildAnimeMatcher` со всеми вариантами написания, падежами
+ * и куском до двоеточия; сравнение — та же `fold` (регистр, «е»/«ё»); граница
+ * слова — та же `isWordChar`.
+ *
+ * НОВОГО ТУТ ОДНО: ПОСЛЕДНЕЕ СЛОВО ЗАПРОСА МОЖЕТ БЫТЬ НЕДОПИСАННЫМ. Человек
+ * набирает по букве, и «стальн» обязан найти «Стального алхимика», иначе
+ * поиск по своему каталогу молчал бы до последней буквы, а страница тем
+ * временем шла бы за чужой выдачей — для тайтла, который у нас есть.
+ * Поэтому справа граница слова не требуется, слева — требуется: «битва»
+ * находит «Магическую битву», а «итва» не находит ничего.
+ *
+ * И В ОБРАТНУЮ СТОРОНУ ТОЖЕ: запрос, в котором название стоит целиком
+ * («стального алхимика братство»), находит тайтл через `findMentions` —
+ * то есть тем же правилом, каким сайт находит упоминания в тексте.
+ *
+ * ИСКЛЮЧИТЕЛЬНОСТИ, КАК У УПОМИНАНИЙ, ТУТ НЕТ. В тексте один кусок принадлежит
+ * одному тайтлу; в поиске «стальной алхимик» законно описывает и сериал 2003
+ * года, и «Братство», у которого это кусок до двоеточия. Показываем оба.
+ *
+ * Порядок выдачи: точное совпадение, потом начало названия, потом начало
+ * слова внутри, потом название внутри запроса. Внутри ступени — тот же ключ,
+ * что у матчера: целое название выше обрезанного, короткое собственное имя
+ * выше длинного, напоследок `id`.
+ *
+ * @param {string} query
+ * @param {ReturnType<typeof buildAnimeMatcher>} matcher
+ * @returns {string[]} id тайтлов, лучшие первыми
+ */
+export function matchQuery(query, matcher) {
+	const q = fold(query).replace(/\s+/g, ' ').trim();
+	if (q.length < MIN_NAME_LENGTH) return [];
+
+	const best = new Map();
+	for (const { id, folded, cut, canon } of matcher) {
+		let rank;
+		if (folded === q) rank = 0;
+		else if (folded.startsWith(q)) rank = 1;
+		else if (startsWordAt(folded, q)) rank = 2;
+		else if (findMentions(query, [{ id, folded, strict: false }]).length > 0) rank = 3;
+		else continue;
+
+		const score = [rank, Number(cut), canon];
+		const prev = best.get(id);
+		if (!prev || compareScores(score, prev) < 0) best.set(id, score);
+	}
+
+	return [...best]
+		.sort(([idA, a], [idB, b]) => compareScores(a, b) || (idA < idB ? -1 : idA > idB ? 1 : 0))
+		.map(([id]) => id);
+}
+
+function startsWordAt(folded, q) {
+	let at = folded.indexOf(q, 1);
+	while (at !== -1) {
+		if (!isWordChar(folded[at - 1])) return true;
+		at = folded.indexOf(q, at + 1);
+	}
+	return false;
+}
+
+function compareScores(a, b) {
+	for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return a[i] - b[i];
+	return 0;
+}
+
 // Убранные руками упоминания (см. src/lib/mentionExceptions.mjs) на страницу
 // не попадают вовсе и в индекс не идут. По умолчанию не убрано ничего.
 const KEEP_ALL = { isHidden: () => false };

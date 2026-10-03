@@ -1,0 +1,1292 @@
+---
+// «МОИ ДЕВЯТЬ АНИМЕ» — `/mybest/` (задача 22).
+// ТЗ: тз/тз-22-moi-devyat-anime.md; размеры: тз/спецификация-22-вид.md;
+// макет: холст «Моя девятка — интерфейс», экраны «Страница», «Выбор аниме»,
+// «Телефон». Первая часть: справочник, страница, поиск, выбор. Картинка —
+// следующей сессией, поэтому ни выбора формата, ни кнопки «Скачать» тут нет.
+//
+// ЧТО ОТКУДА:
+//   справочник своего каталога — `/mybest/titles.json` (titles.json.ts рядом),
+//     качается при заходе на эту страницу и больше нигде;
+//   поиск по своему каталогу — `matchQuery` из src/lib/animeMentions.mjs,
+//     то есть тот же список названий, падежей и вариантов, что у упоминаний;
+//   внешний поиск — src/lib/mybestExternal.mjs (Шикимори, потом AniList);
+//   подпись под маркой — `shortTitle` из src/lib/animeShortTitle.mjs, одно
+//     правило на страницу и будущую картинку;
+//   что выбрано и как это живёт в адресе — src/lib/mybestState.mjs.
+//
+// В ПОИСК ПО САЙТУ СТРАНИЦА НЕ ИДЁТ: на ней нет `data-pagefind-body`, как
+// и на `/search/`, — это инструмент, а не материал.
+//
+// ПЕРЕТАСКИВАНИЯ НЕТ, ЕСТЬ ПЕРЕСТАНОВКА НАЖАТИЯМИ (решение заказчика
+// 3 октября 2026): «переставить» под одной маркой, потом нажать на место.
+// Работает одинаково мышью и пальцем и не спорит с прокруткой страницы.
+//
+// СТИЛИ ГЛОБАЛЬНЫЕ, НО ТОЛЬКО ЭТОЙ СТРАНИЦЫ, И ВСЕ ОДНОЙ ФОРМОЙ — класс
+// с приставкой `mb-`. Марки и строки выдачи собирает скрипт, а у собранного
+// скриптом нет меток Astro: ограниченные стили до них бы не дотянулись,
+// а смесь из ограниченных и `:global()` — это две формы селектора в одном
+// компоненте.
+import Layout from '../../layouts/Layout.astro';
+import { DEFAULT_CAPTION, MAX_TEXT } from '../../lib/mybestState.mjs';
+
+const DESCRIPTION =
+	'Соберите девять любимых аниме и поделитесь подборкой: поиск по каталогу «Баки!», Шикимори и AniList.';
+---
+
+<Layout title="Мои девять аниме" description={DESCRIPTION}>
+	<div class="mb" data-mybest>
+		<div class="mb-intro">
+			<h1 class="mb-title">Мои девять аниме</h1>
+			<p class="mb-lead">
+				Соберите свои любимые тайтлы или персональную подборку по жанрам и заберите красивую картинку — для канала,
+				сторис или чтобы поспорить с друзьями.
+			</p>
+		</div>
+
+		<div class="mb-caption">
+			<label for="mb-caption-input" class="eyebrow tech mb-label">подпись на картинке</label>
+			<input
+				id="mb-caption-input"
+				class="mb-caption-input"
+				type="text"
+				value={DEFAULT_CAPTION}
+				maxlength={MAX_TEXT}
+				autocomplete="off"
+				spellcheck="false"
+			/>
+			<p class="mb-note">Можно поменять: «9 аниме детства», «9 аниме, после которых я плакал».</p>
+		</div>
+
+		<div class="mb-actions">
+			<button type="button" class="mb-btn" data-copy>Скопировать ссылку</button>
+			<p class="mb-note mb-hint">
+				Подпись под маркой правится нажатием на неё. Чтобы поменять марки местами, нажмите «переставить» под одной
+				и выберите место.
+			</p>
+			<p class="visually-hidden" aria-live="polite" data-announce></p>
+		</div>
+
+		<section class="mb-picks" aria-label="Девять аниме">
+			<div class="mb-head">
+				<span class="eyebrow tech mb-count" data-count>выбрано 0 из 9</span>
+				<button type="button" class="mb-clear tech" data-clear>Очистить всё</button>
+			</div>
+			<ol class="mb-grid" data-grid></ol>
+		</section>
+
+		<dialog class="mb-dialog" data-dialog aria-labelledby="mb-dialog-title">
+			<div class="mb-dialog-head">
+				<h2 class="mb-dialog-title" id="mb-dialog-title" data-dialog-title>Первое аниме</h2>
+				<button type="button" class="mb-close tech" data-close>Закрыть</button>
+			</div>
+			<input
+				class="mb-search"
+				type="search"
+				aria-label="Поиск аниме"
+				placeholder="Название аниме"
+				autocomplete="off"
+				spellcheck="false"
+				data-search
+			/>
+			<p class="mb-status tech" data-status hidden></p>
+			<ul class="mb-results" data-results></ul>
+			<div class="mb-empty" data-empty hidden>
+				<p class="mb-empty-title" data-empty-title></p>
+				<p class="mb-empty-text" data-empty-text></p>
+				<button type="button" class="mb-btn mb-manual" data-manual>Вписать руками</button>
+			</div>
+		</dialog>
+
+		{/* Заготовки марок. Собирает скрипт, вид задают стили ниже. */}
+		<template data-tpl-slot>
+			<li class="mb-cell">
+				<button type="button" class="mb-slot">
+					<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+						<path d="M9 1v16M1 9h16"></path>
+					</svg>
+				</button>
+			</li>
+		</template>
+		<template data-tpl-pick>
+			<li class="mb-cell">
+				<figure class="mb-pick">
+					<a class="mb-stamp"><span class="mb-perf"></span></a>
+					<button type="button" class="mb-cap"></button>
+					<div class="mb-foot">
+						<span class="mb-year tech"></span>
+						<button type="button" class="mb-icon mb-move">
+							<svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+								<path d="M1 3.5h9M7.5 1l2.5 2.5L7.5 6M10 7.5H1M3.5 5L1 7.5 3.5 10"></path>
+							</svg>
+						</button>
+						<button type="button" class="mb-icon mb-remove">
+							<svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+								<path d="M1 1l9 9M10 1L1 10"></path>
+							</svg>
+						</button>
+					</div>
+				</figure>
+			</li>
+		</template>
+		<template data-tpl-row>
+			<li>
+				<button type="button" class="mb-row">
+					<span class="mb-thumb"></span>
+					<span class="mb-row-text">
+						<span class="mb-row-title"></span>
+						<span class="mb-row-meta tech"></span>
+					</span>
+				</button>
+			</li>
+		</template>
+	</div>
+</Layout>
+
+<style is:global>
+	/* Числа — из тз/спецификация-22-вид.md, цвета — токены сайта по её таблице
+	   соответствий. Где спецификация расходится с дизайн-системой, взято
+	   из дизайн-системы, и каждое такое место подписано.
+
+	   ПОРЯДОК: сначала узкий экран (поля 18, спецификация «Страница, телефон»),
+	   с 621 px — числа десктопа, с 1101 px — две колонки. */
+
+	.mb {
+		display: grid;
+		grid-template-areas: 'intro' 'caption' 'picks' 'actions';
+		gap: 0;
+		max-width: 1180px;
+		margin-inline: auto;
+		padding: 20px 18px 24px;
+	}
+
+	.mb-intro {
+		grid-area: intro;
+	}
+
+	.mb-caption {
+		grid-area: caption;
+	}
+
+	.mb-picks {
+		grid-area: picks;
+		margin-top: 18px;
+	}
+
+	.mb-actions {
+		grid-area: actions;
+		margin-top: 20px;
+		padding-top: 16px;
+		border-top: 1px solid var(--line);
+	}
+
+	/* Кегль заголовка — из спецификации (28 на телефоне, 40 на десктопе),
+	   а не из шкалы сайта (`--h1` там 40/48/56): спецификация собрана так,
+	   чтобы управление и сетка стояли рядом. */
+	.mb-title {
+		margin: 0 0 10px;
+		font-size: 28px;
+		line-height: 1.1;
+	}
+
+	.mb-lead {
+		margin: 0 0 18px;
+		max-width: 30em;
+		font-size: var(--body-sm);
+		line-height: 1.5;
+	}
+
+	/* Надзаголовок общий (`.eyebrow` в global.css: скобки, акцент, полужирный),
+	   отступ под ним — из спецификации. Стоит в два класса, потому что
+	   у `.eyebrow` свой отступ и равный вес решал бы порядок файлов. */
+	.mb-label.eyebrow {
+		display: block;
+		margin-bottom: 8px;
+	}
+
+	.mb-caption-input {
+		display: block;
+		width: 100%;
+		min-height: 44px;
+		padding: 7px 0 9px;
+		border: 0;
+		border-bottom: 1px solid var(--line);
+		border-radius: 0;
+		background: transparent;
+		color: var(--ink);
+		font-family: var(--font-display);
+		font-size: 15px;
+	}
+
+	.mb-caption-input:focus,
+	.mb-search:focus {
+		outline: none;
+		border-bottom-color: var(--ink);
+	}
+
+	.mb-caption-input:focus-visible,
+	.mb-search:focus-visible {
+		outline: 2px solid var(--accent-text);
+		outline-offset: 2px;
+	}
+
+	.mb-note {
+		margin: 8px 0 0;
+		font-size: 13px;
+		line-height: 1.5;
+		color: var(--muted);
+	}
+
+	.mb-hint {
+		margin-top: 16px;
+	}
+
+	/* Кнопка — рамка `--line`: «рамка контролов» спецификации (#8F8A82)
+	   на сайте отменена решением заказчика, ВСЕ рамки контролов рисует
+	   `--line` (tokens.css). */
+	.mb-btn {
+		min-height: 46px;
+		padding: 0 18px;
+		border: 1px solid var(--line);
+		border-radius: 0;
+		background: transparent;
+		color: var(--ink);
+		font-family: var(--font-body);
+		font-size: var(--body-sm);
+		transition:
+			color var(--transition-fast),
+			border-color var(--transition-fast);
+	}
+
+	.mb-btn:hover,
+	.mb-btn:focus-visible {
+		border-color: var(--accent-text);
+		color: var(--accent-text);
+	}
+
+	/* ——— Сетка девяти ———
+	   Ровно три колонки, а не `auto-fill`: девятка — это 3×3 по смыслу,
+	   на любой ширине. `auto-fill` в §4.5 дизайн-системы — про ленты, где число
+	   колонок решает ширина экрана. */
+	.mb-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		margin-bottom: 4px;
+	}
+
+	.mb-count.eyebrow {
+		margin: 0;
+	}
+
+	/* Цель нажатия 44 px, а строка над сеткой от этого не толстеет: лишнее
+	   уходит в поля сверху и снизу. */
+	.mb-clear {
+		min-height: 44px;
+		margin-block: -6px;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: var(--muted);
+	}
+
+	.mb-clear:hover,
+	.mb-clear:focus-visible {
+		color: var(--accent-text);
+	}
+
+	.mb-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px 10px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.mb-cell {
+		min-width: 0;
+	}
+
+	.mb-pick {
+		margin: 0;
+	}
+
+	/* Пустой слот: рамка `--line`, плюс в центре. Пропорция — та же, что
+	   у марки рядом, иначе ряд прыгал бы по высоте при каждом выборе. */
+	.mb-slot {
+		display: grid;
+		place-items: center;
+		width: 100%;
+		aspect-ratio: var(--poster-ratio);
+		padding: 0;
+		border: 1px solid var(--line);
+		border-radius: 0;
+		background: transparent;
+		color: var(--line-strong);
+		transition:
+			border-color var(--transition-fast),
+			color var(--transition-fast);
+	}
+
+	.mb-slot:hover,
+	.mb-slot:focus-visible {
+		border-color: var(--accent-text);
+		color: var(--accent-text);
+	}
+
+	/* ——— Марка ———
+	   ВИД ИЗ ДИЗАЙН-СИСТЕМЫ (§11, §9.0), А НЕ ИЗ ПРИБЛИЖЕНИЯ МАКЕТА: постер
+	   заполняет рамку (`cover`), рамка — от `--poster-ratio`, а не 2:3,
+	   перфорация — кружками цвета бумаги по четырём сторонам, теми же числами,
+	   что у вертикальной марки каталога (AnimeCard.astro: полоса 12, кружок 5,
+	   шаг 18). Пунктир 3 px из макета — его приближение, на сайте такого нет.
+	   Заливка `--line-soft` из спецификации видна только пока постера нет. */
+	.mb-stamp {
+		position: relative;
+		display: block;
+		aspect-ratio: var(--poster-ratio);
+		overflow: hidden;
+		background: var(--line-soft);
+		color: var(--ink);
+		transition: transform var(--transition-fast);
+	}
+
+	.mb-stamp[href]:hover {
+		transform: translateY(-3px);
+	}
+
+	.mb-stamp img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center;
+	}
+
+	.mb-stamp .img-missing {
+		height: 100%;
+	}
+
+	.mb-stamp::before,
+	.mb-stamp::after {
+		content: '';
+		position: absolute;
+		z-index: 3;
+		left: 0;
+		right: 0;
+		height: 12px;
+		pointer-events: none;
+		background: radial-gradient(circle at 6px 0, var(--paper) 5px, transparent 5.5px) 0 0 / 18px 12px repeat-x;
+	}
+
+	.mb-stamp::before {
+		top: -1px;
+	}
+
+	.mb-stamp::after {
+		bottom: -1px;
+		transform: rotate(180deg);
+	}
+
+	.mb-perf {
+		position: absolute;
+		z-index: 3;
+		inset: 0;
+		pointer-events: none;
+	}
+
+	.mb-perf::before,
+	.mb-perf::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		width: 12px;
+		background: radial-gradient(circle at 0 6px, var(--paper) 5px, transparent 5.5px) 0 0 / 12px 18px repeat-y;
+	}
+
+	.mb-perf::before {
+		left: -1px;
+	}
+
+	.mb-perf::after {
+		right: -1px;
+		transform: rotate(180deg);
+	}
+
+	/* Подпись под маркой — кнопка: нажатие открывает правку. Не больше трёх
+	   строк, дальше многоточие (вторая из трёх мер против длинных названий;
+	   первая — `shortTitle`, третья — эта правка).
+	   ВЫСОТА ПОСТОЯННАЯ — РОВНО ТРИ СТРОКИ, иначе год под однострочной подписью
+	   стоял выше, чем под трёхстрочной соседкой (на 5 px, замер 3 октября 2026).
+	   На телефоне три строки 11/1.2 — это 39.6, поэтому 44: цель нажатия. */
+	.mb-cap {
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+		line-clamp: 3;
+		width: 100%;
+		height: 44px;
+		margin-top: 6px;
+		padding: 0;
+		overflow: hidden;
+		border: 0;
+		background: transparent;
+		color: var(--ink);
+		font-family: var(--font-display);
+		font-size: 11px;
+		line-height: 1.2;
+		text-align: left;
+		overflow-wrap: anywhere;
+		cursor: text;
+	}
+
+	.mb-cap:hover,
+	.mb-cap:focus-visible {
+		color: var(--accent-text);
+	}
+
+	.mb-cap-input {
+		display: block;
+		width: 100%;
+		height: 44px;
+		margin-top: 6px;
+		padding: 0 0 4px;
+		border: 0;
+		border-bottom: 1px solid var(--ink);
+		border-radius: 0;
+		background: transparent;
+		color: var(--ink);
+		font-family: var(--font-display);
+		font-size: 11px;
+	}
+
+	/* Зоны значков 44 px, а строка года от этого не толстеет снизу: лишнее
+	   уходит в зазор между рядами (12/16 px). Сверху — нет, там подпись,
+	   и зоны нажатия не должны лечь на неё. */
+	.mb-foot {
+		display: flex;
+		align-items: center;
+		min-width: 0;
+		margin-bottom: -10px;
+	}
+
+	.mb-year {
+		flex: 1 1 auto;
+		min-width: 0;
+		color: var(--muted);
+	}
+
+	/* Значки 11 px в зоне 44×44. Правая зона заходит в межколонный зазор
+	   на 5 px — на телефоне колонка 111 px, а год и две зоны дают 117. */
+	.mb-icon {
+		display: grid;
+		flex: 0 0 44px;
+		place-items: center;
+		width: 44px;
+		height: 44px;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: var(--muted);
+	}
+
+	.mb-remove {
+		margin-right: -5px;
+	}
+
+	.mb-icon:hover,
+	.mb-icon:focus-visible,
+	.mb-move[aria-pressed='true'] {
+		color: var(--accent-text);
+	}
+
+	/* Режим перестановки: выбранная марка помечена подписью акцентом,
+	   остальные клетки ждут нажатия. Без обводок и теней — линия на сайте одна. */
+	.mb-moving .mb-cap {
+		color: var(--accent-text);
+	}
+
+	/* ——— Окно выбора ——— */
+	.mb-dialog {
+		width: calc(100% - 36px);
+		max-width: 720px;
+		max-height: calc(100dvh - 36px);
+		margin: 18px auto auto;
+		overflow: auto;
+		padding: 20px 18px 18px;
+		border: 1px solid var(--line);
+		border-radius: 0;
+		background: var(--paper);
+		color: var(--ink);
+	}
+
+	.mb-dialog::backdrop {
+		background: var(--paper-veil);
+	}
+
+	.mb-dialog-head {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 24px;
+		margin-bottom: 14px;
+	}
+
+	.mb-dialog-title {
+		margin: 0;
+		font-size: 24px;
+		line-height: 1.15;
+		letter-spacing: 0;
+	}
+
+	.mb-close {
+		min-height: 44px;
+		margin-block: -12px;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: var(--muted);
+	}
+
+	.mb-close:hover,
+	.mb-close:focus-visible {
+		color: var(--accent-text);
+	}
+
+	.mb-search {
+		display: block;
+		width: 100%;
+		min-height: 44px;
+		padding: 8px 0 11px;
+		border: 0;
+		border-bottom: 1px solid var(--ink);
+		border-radius: 0;
+		background: transparent;
+		color: var(--ink);
+		font-family: var(--font-display);
+		font-size: 21px;
+		-webkit-appearance: none;
+		appearance: none;
+	}
+
+	.mb-search::-webkit-search-decoration,
+	.mb-search::-webkit-search-cancel-button {
+		-webkit-appearance: none;
+	}
+
+	.mb-status {
+		margin: 16px 0 0;
+		color: var(--muted);
+	}
+
+	.mb-results {
+		margin: 12px 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.mb-row {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		width: 100%;
+		min-height: 44px;
+		padding: 12px 4px;
+		border: 0;
+		border-top: 1px solid var(--line);
+		border-radius: 0;
+		background: transparent;
+		color: var(--ink);
+		text-align: left;
+	}
+
+	.mb-results > li:first-child .mb-row {
+		border-top: 0;
+	}
+
+	.mb-row:hover .mb-row-title,
+	.mb-row:focus-visible .mb-row-title {
+		color: var(--accent-text);
+	}
+
+	.mb-row:disabled {
+		cursor: default;
+	}
+
+	.mb-row:disabled .mb-row-title {
+		color: var(--muted);
+	}
+
+	.mb-thumb {
+		display: block;
+		flex: 0 0 46px;
+		width: 46px;
+		height: 69px;
+		overflow: hidden;
+		background: var(--line-soft);
+	}
+
+	.mb-thumb img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.mb-thumb .img-missing {
+		height: 100%;
+	}
+
+	.mb-row-text {
+		display: block;
+		min-width: 0;
+	}
+
+	.mb-row-title {
+		display: block;
+		font-family: var(--font-display);
+		font-size: 17px;
+		line-height: 1.25;
+		transition: color var(--transition-fast);
+	}
+
+	.mb-row-meta {
+		display: block;
+		margin-top: 4px;
+		color: var(--muted);
+	}
+
+	.mb-empty {
+		margin-top: 20px;
+	}
+
+	.mb-empty-title {
+		margin: 0 0 8px;
+		font-family: var(--font-display);
+		font-size: 19px;
+		line-height: 1.35;
+	}
+
+	.mb-empty-text {
+		margin: 0;
+		font-size: var(--body-sm);
+		line-height: 1.55;
+		color: var(--muted);
+	}
+
+	.mb-manual {
+		margin-top: 16px;
+	}
+
+	@media (min-width: 621px) {
+		.mb {
+			padding: 36px 32px 40px;
+		}
+
+		.mb-title {
+			margin-bottom: 14px;
+			font-size: 40px;
+			line-height: 1.08;
+		}
+
+		.mb-lead {
+			margin-bottom: 30px;
+			font-size: 15px;
+			line-height: 1.55;
+		}
+
+		.mb-caption-input {
+			padding: 8px 0 10px;
+			font-size: 19px;
+		}
+
+		.mb-picks {
+			margin-top: 30px;
+		}
+
+		.mb-actions {
+			margin-top: 30px;
+			padding-top: 24px;
+		}
+
+		.mb-btn {
+			min-height: 44px;
+		}
+
+		.mb-head {
+			margin-bottom: 14px;
+		}
+
+		.mb-grid {
+			gap: 16px 14px;
+			max-width: 460px;
+		}
+
+		.mb-cap,
+		.mb-cap-input {
+			margin-top: 8px;
+			font-size: 13px;
+			line-height: 1.25;
+		}
+
+		/* Три строки по 13 × 1.25 = 48.75. Поле правки той же высоты —
+		   ряд не прыгает, когда подпись превращается в поле. */
+		.mb-cap,
+		.mb-cap-input {
+			height: 49px;
+		}
+
+		.mb-dialog {
+			margin-top: 40px;
+			padding: 30px 36px 28px;
+		}
+
+		.mb-dialog-head {
+			margin-bottom: 22px;
+		}
+
+		.mb-results {
+			margin-top: 20px;
+		}
+	}
+
+	/* Две колонки: управление слева, сетка справа (`minmax(0,1fr)` и 460,
+	   зазор 56). Сетка занимает всю высоту справа, левые блоки стоят по верху. */
+	@media (min-width: 1101px) {
+		.mb {
+			grid-template-columns: minmax(0, 1fr) 460px;
+			grid-template-rows: auto auto 1fr;
+			grid-template-areas: 'intro picks' 'caption picks' 'actions picks';
+			column-gap: 56px;
+			align-items: start;
+			padding-inline: 48px;
+		}
+
+		.mb-picks {
+			margin-top: 0;
+		}
+	}
+</style>
+
+<script>
+	import { buildAnimeMatcher, matchQuery, fold } from '../../lib/animeMentions.mjs';
+	import { shortTitle } from '../../lib/animeShortTitle.mjs';
+	import { imageMissingHtml } from '../../lib/imageMissing.mjs';
+	import {
+		SLOTS,
+		ORDINALS,
+		MAX_TEXT,
+		DEFAULT_CAPTION,
+		emptyState,
+		encodeState,
+		decodeState,
+		readStored,
+		sameItem,
+	} from '../../lib/mybestState.mjs';
+	import { searchShikimori, searchAniList, lookupByIds } from '../../lib/mybestExternal.mjs';
+
+	const STORE_KEY = 'mybest:v1';
+	const CACHE_KEY = 'mybest:q:';
+	/** Пауза в наборе перед походом к чужим сервисам. Свой каталог ищется сразу. */
+	const PAUSE = 400;
+	const SOURCE_LABEL = { shiki: 'шикимори', anilist: 'анилист' };
+
+	type Item = {
+		src: 'cat' | 'shiki' | 'anilist' | 'manual';
+		id?: string;
+		title: string;
+		year?: number;
+		studio?: string;
+		poster?: string;
+		thumb?: string;
+		href?: string;
+		label?: string;
+	};
+	type State = { caption: string; slots: (Item | null)[] };
+	type Entry = { id: string; ru?: string; orig: string; year?: number; studio?: string; poster?: string; aliases?: string[]; auto?: string[] };
+
+	// Справочник один на вкладку: переход по сайту без перезагрузки и возврат
+	// на страницу не качают его второй раз.
+	let catalogPromise: Promise<{ byId: Map<string, Entry>; matcher: any[] } | null> | null = null;
+
+	function loadCatalog() {
+		catalogPromise ??= fetch('/mybest/titles.json')
+			.then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+			.then((list: Entry[]) => ({
+				byId: new Map(list.map((e) => [e.id, e])),
+				matcher: buildAnimeMatcher(
+					list.map((e) => ({ id: e.id, data: { titleRu: e.ru, titleOriginal: e.orig, aliases: e.aliases, aliasesAuto: e.auto } })),
+					{ quotes: 'ignore', speech: false },
+				),
+			}))
+			.catch(() => {
+				catalogPromise = null;
+				return null;
+			});
+		return catalogPromise;
+	}
+
+	function fromCatalog(entry: Entry): Item {
+		return {
+			src: 'cat',
+			id: entry.id,
+			title: entry.ru || entry.orig,
+			year: entry.year,
+			studio: entry.studio,
+			poster: entry.poster,
+			thumb: entry.poster,
+			href: `/anime/${entry.id}/`,
+		};
+	}
+
+	// Хранилища браузера бывают выключены и бывают полны — ни то ни другое
+	// не повод ломать страницу.
+	const store = {
+		get(key: string, session = false) {
+			try {
+				return (session ? sessionStorage : localStorage).getItem(key);
+			} catch {
+				return null;
+			}
+		},
+		set(key: string, value: string, session = false) {
+			try {
+				(session ? sessionStorage : localStorage).setItem(key, value);
+			} catch {}
+		},
+	};
+
+	function setup() {
+		const root = document.querySelector<HTMLElement>('[data-mybest]');
+		if (!root) return;
+
+		const $ = <T extends Element>(sel: string) => root.querySelector<T>(sel)!;
+		const grid = $<HTMLOListElement>('[data-grid]');
+		const count = $<HTMLElement>('[data-count]');
+		const clear = $<HTMLButtonElement>('[data-clear]');
+		const captionInput = $<HTMLInputElement>('#mb-caption-input');
+		const copy = $<HTMLButtonElement>('[data-copy]');
+		const announce = $<HTMLElement>('[data-announce]');
+		const dialog = $<HTMLDialogElement>('[data-dialog]');
+		const dialogTitle = $<HTMLElement>('[data-dialog-title]');
+		const search = $<HTMLInputElement>('[data-search]');
+		const status = $<HTMLElement>('[data-status]');
+		const results = $<HTMLUListElement>('[data-results]');
+		const empty = $<HTMLElement>('[data-empty]');
+		const emptyTitle = $<HTMLElement>('[data-empty-title]');
+		const emptyText = $<HTMLElement>('[data-empty-text]');
+		const tplSlot = $<HTMLTemplateElement>('[data-tpl-slot]');
+		const tplPick = $<HTMLTemplateElement>('[data-tpl-pick]');
+		const tplRow = $<HTMLTemplateElement>('[data-tpl-row]');
+
+		// Ссылка на чужую девятку главнее своей сохранённой: человек пришёл
+		// посмотреть именно её. Своя при этом не затирается, пока он ничего
+		// не поменял.
+		const fromUrl = decodeState(location.search) as State | null;
+		let state: State = fromUrl ?? (readStored(store.get(STORE_KEY) ?? '') as State | null) ?? (emptyState() as State);
+		let touched = !fromUrl;
+		let openSlot = -1;
+		let moving = -1;
+		let editing = -1;
+
+		captionInput.value = state.caption;
+
+		function save() {
+			const tail = encodeState(state);
+			history.replaceState(history.state, '', tail ? `${location.pathname}?${tail}` : location.pathname);
+			if (touched) store.set(STORE_KEY, JSON.stringify(state));
+		}
+
+		function change() {
+			touched = true;
+			save();
+			render();
+		}
+
+		// ——— Сетка ———
+
+		function render() {
+			const filled = state.slots.filter(Boolean).length;
+			count.textContent = moving >= 0 ? 'куда переставить?' : `выбрано ${filled} из ${SLOTS}`;
+			clear.textContent = moving >= 0 ? 'Отменить' : 'Очистить всё';
+			clear.disabled = moving < 0 && filled === 0;
+			grid.replaceChildren(...state.slots.map((item, i) => (item ? pickCell(item, i) : slotCell(i))));
+		}
+
+		function slotCell(i: number) {
+			const cell = tplSlot.content.firstElementChild!.cloneNode(true) as HTMLElement;
+			const button = cell.querySelector<HTMLButtonElement>('.mb-slot')!;
+			button.dataset.slot = String(i);
+			button.setAttribute('aria-label', moving >= 0 ? `Поставить сюда, ${ORDINALS[i]} место` : `Выбрать ${ORDINALS[i]} аниме`);
+			return cell;
+		}
+
+		function pickCell(item: Item, i: number) {
+			const cell = tplPick.content.firstElementChild!.cloneNode(true) as HTMLElement;
+			cell.classList.toggle('mb-moving', moving === i);
+			// Марка каталога из ссылки до прихода справочника знает только адрес.
+			const title = item.title || item.id || '';
+			const caption = item.label || shortTitle(title);
+
+			const stamp = cell.querySelector<HTMLAnchorElement>('.mb-stamp')!;
+			stamp.dataset.slot = String(i);
+			if (item.href) {
+				stamp.href = item.href;
+				if (item.src !== 'cat') {
+					stamp.target = '_blank';
+					stamp.rel = 'noopener';
+				}
+				stamp.setAttribute('aria-label', item.src === 'cat' ? `«${title}» в каталоге «Баки!»` : `«${title}» на сайте ${SOURCE_LABEL[item.src as 'shiki']}`);
+			} else {
+				stamp.setAttribute('role', 'img');
+				stamp.setAttribute('aria-label', `«${title}»`);
+			}
+			if (item.poster) {
+				const img = document.createElement('img');
+				img.src = item.poster;
+				img.alt = '';
+				img.decoding = 'async';
+				if (item.src !== 'cat') img.referrerPolicy = 'no-referrer';
+				stamp.prepend(img);
+			} else if (item.src === 'manual') {
+				// Постера нет и не будет — заглушка обязательна (§9.1). У внешних
+				// без постера её нет: постер ещё дозапрашивается.
+				stamp.insertAdjacentHTML('afterbegin', imageMissingHtml({ compact: true }));
+			}
+
+			const cap = cell.querySelector<HTMLButtonElement>('.mb-cap')!;
+			cap.textContent = caption;
+			cap.dataset.slot = String(i);
+			cap.setAttribute('aria-label', `Подпись «${caption}», править`);
+
+			cell.querySelector<HTMLElement>('.mb-year')!.textContent = item.year ? String(item.year) : '';
+			const move = cell.querySelector<HTMLButtonElement>('.mb-move')!;
+			move.dataset.slot = String(i);
+			move.setAttribute('aria-label', `Переставить «${caption}»`);
+			move.setAttribute('aria-pressed', String(moving === i));
+			const remove = cell.querySelector<HTMLButtonElement>('.mb-remove')!;
+			remove.dataset.slot = String(i);
+			remove.setAttribute('aria-label', `Убрать «${caption}»`);
+			return cell;
+		}
+
+		function place(target: number) {
+			const slots = [...state.slots];
+			[slots[moving], slots[target]] = [slots[target], slots[moving]];
+			state.slots = slots;
+			moving = -1;
+			change();
+			grid.querySelector<HTMLElement>(`[data-slot="${target}"]`)?.focus();
+		}
+
+		grid.addEventListener('click', (event) => {
+			const el = (event.target as Element).closest<HTMLElement>('[data-slot]');
+			if (!el) return;
+			const i = Number(el.dataset.slot);
+
+			if (el.classList.contains('mb-move')) {
+				moving = moving === i ? -1 : i;
+				render();
+				grid.querySelector<HTMLElement>(`.mb-move[data-slot="${i}"]`)?.focus();
+				return;
+			}
+			// В режиме перестановки любая клетка — это место, а не ссылка.
+			if (moving >= 0) {
+				event.preventDefault();
+				if (i === moving) {
+					moving = -1;
+					render();
+				} else place(i);
+				return;
+			}
+			if (el.classList.contains('mb-slot')) openPicker(i);
+			else if (el.classList.contains('mb-remove')) {
+				const title = state.slots[i]?.title;
+				state.slots[i] = null;
+				change();
+				say(`«${title}» убрано`);
+				grid.querySelector<HTMLElement>(`.mb-slot[data-slot="${i}"]`)?.focus();
+			} else if (el.classList.contains('mb-cap')) editLabel(i, el as HTMLButtonElement);
+		});
+
+		clear.addEventListener('click', () => {
+			if (moving >= 0) {
+				moving = -1;
+				render();
+				return;
+			}
+			state.slots = Array(SLOTS).fill(null);
+			change();
+			say('Девятка очищена');
+		});
+
+		// ——— Правка подписи под маркой ———
+
+		function editLabel(i: number, cap: HTMLButtonElement) {
+			const item = state.slots[i];
+			if (!item || editing >= 0) return;
+			editing = i;
+			const input = document.createElement('input');
+			input.className = 'mb-cap-input';
+			input.type = 'text';
+			input.maxLength = MAX_TEXT;
+			input.value = item.label || shortTitle(item.title);
+			input.setAttribute('aria-label', `Подпись под маркой «${item.title}». Пустая — вернётся название.`);
+			cap.replaceWith(input);
+			input.focus();
+			input.select();
+
+			let done = false;
+			const finish = (keep: boolean) => {
+				if (done) return;
+				done = true;
+				editing = -1;
+				if (keep) {
+					const value = input.value.replace(/\s+/g, ' ').trim();
+					item.label = value && value !== shortTitle(item.title) ? value : undefined;
+					change();
+				} else render();
+				grid.querySelector<HTMLElement>(`.mb-cap[data-slot="${i}"]`)?.focus();
+			};
+			input.addEventListener('keydown', (event) => {
+				if (event.key === 'Enter') finish(true);
+				if (event.key === 'Escape') {
+					event.preventDefault();
+					finish(false);
+				}
+			});
+			input.addEventListener('blur', () => finish(true));
+		}
+
+		// ——— Подпись над картинкой, ссылка ———
+
+		captionInput.addEventListener('input', () => {
+			state.caption = captionInput.value.replace(/\s+/g, ' ').trim() || DEFAULT_CAPTION;
+			touched = true;
+			save();
+		});
+
+		let copyTimer = 0;
+		copy.addEventListener('click', async () => {
+			let ok = false;
+			try {
+				await navigator.clipboard.writeText(location.href);
+				ok = true;
+			} catch {}
+			copy.textContent = ok ? 'Ссылка скопирована' : 'Не вышло — скопируйте адрес из строки браузера';
+			say(copy.textContent);
+			clearTimeout(copyTimer);
+			copyTimer = window.setTimeout(() => (copy.textContent = 'Скопировать ссылку'), 2500);
+		});
+
+		function say(text: string) {
+			announce.textContent = text;
+		}
+
+		// ——— Окно выбора ———
+
+		let token = 0;
+		let pauseTimer = 0;
+
+		function openPicker(i: number) {
+			openSlot = i;
+			const name = ORDINALS[i];
+			dialogTitle.textContent = `${name[0].toUpperCase()}${name.slice(1)} аниме`;
+			search.value = '';
+			showRows([]);
+			setStatus('');
+			empty.hidden = true;
+			dialog.showModal();
+			search.focus();
+			void loadCatalog();
+		}
+
+		// ОКНО ЗАКРЫВАЕТСЯ ТОЛЬКО ЗДЕСЬ. Браузер сообщает о закрытии событием
+		// `close` с опозданием, уже следующей задачей: открой окно на другой
+		// клетке сразу после выбора — и опоздавшее событие забыло бы, в какую
+		// клетку выбирают (поймано прогоном страницы, 3 октября 2026). Поэтому
+		// Escape тоже идёт сюда, а не в штатное закрытие.
+		function closePicker() {
+			token++;
+			clearTimeout(pauseTimer);
+			const back = openSlot;
+			openSlot = -1;
+			if (dialog.open) dialog.close();
+			grid.querySelector<HTMLElement>(`[data-slot="${back}"]`)?.focus();
+		}
+
+		dialog.addEventListener('cancel', (event) => {
+			event.preventDefault();
+			closePicker();
+		});
+		// Нажатие на подложку вокруг окна закрывает его, как «Закрыть». Подложка
+		// и поля самого окна для браузера — один и тот же элемент, поэтому
+		// смотрим, куда пришлось нажатие, а не на что.
+		dialog.addEventListener('click', (event) => {
+			if (event.target !== dialog) return;
+			const box = dialog.getBoundingClientRect();
+			const inside = event.clientX >= box.left && event.clientX <= box.right && event.clientY >= box.top && event.clientY <= box.bottom;
+			if (!inside) closePicker();
+		});
+		root.querySelector('[data-close]')!.addEventListener('click', closePicker);
+
+		function setStatus(text: string) {
+			status.textContent = text;
+			status.hidden = !text;
+		}
+
+		function showRows(items: Item[]) {
+			results.replaceChildren(...items.map(row));
+		}
+
+		function row(item: Item) {
+			const li = tplRow.content.firstElementChild!.cloneNode(true) as HTMLElement;
+			const button = li.querySelector<HTMLButtonElement>('.mb-row')!;
+			const thumb = li.querySelector<HTMLElement>('.mb-thumb')!;
+			if (item.thumb) {
+				const img = document.createElement('img');
+				img.src = item.thumb;
+				img.alt = '';
+				img.loading = 'lazy';
+				if (item.src !== 'cat') img.referrerPolicy = 'no-referrer';
+				thumb.append(img);
+			}
+			li.querySelector('.mb-row-title')!.textContent = item.title;
+			const taken = state.slots.some((s, i) => i !== openSlot && sameItem(s, item));
+			const meta = [item.year, item.studio, SOURCE_LABEL[item.src as 'shiki'], taken ? 'уже в девятке' : ''].filter(Boolean);
+			li.querySelector('.mb-row-meta')!.textContent = meta.join(' · ');
+			button.disabled = taken;
+			button.addEventListener('click', () => choose(item));
+			return li;
+		}
+
+		function choose(item: Item) {
+			const i = openSlot;
+			if (i < 0) return;
+			const { label, ...clean } = item;
+			state.slots[i] = clean;
+			closePicker();
+			change();
+			grid.querySelector<HTMLElement>(`.mb-cap[data-slot="${i}"]`)?.focus();
+			say(`«${item.title}» — ${ORDINALS[i]} в девятке`);
+		}
+
+		root.querySelector('[data-manual]')!.addEventListener('click', () => {
+			const title = search.value.replace(/\s+/g, ' ').trim().slice(0, MAX_TEXT);
+			if (title) choose({ src: 'manual', title });
+		});
+
+		search.addEventListener('input', () => void find());
+
+		// ТРИ СТУПЕНИ, ОДИН СПИСОК. Нашлось у себя — дальше не ищем и чужого
+		// не показываем. Не нашлось — Шикимори; не ответил или пусто — AniList;
+		// пусто везде — предложение вписать руками. Заголовков ступеней нет:
+		// внешние строки подписаны названием источника, и всё.
+		async function find() {
+			const mine = ++token;
+			clearTimeout(pauseTimer);
+			const query = search.value.replace(/\s+/g, ' ').trim();
+			empty.hidden = true;
+			if (fold(query).length < 2) {
+				showRows([]);
+				setStatus('');
+				return;
+			}
+
+			const catalog = await loadCatalog();
+			if (mine !== token) return;
+			if (catalog) {
+				const ids = matchQuery(query, catalog.matcher);
+				if (ids.length) {
+					setStatus('');
+					showRows(ids.slice(0, 12).map((id) => fromCatalog(catalog.byId.get(id)!)));
+					return;
+				}
+			}
+
+			showRows([]);
+			setStatus('Ищем…');
+			pauseTimer = window.setTimeout(async () => {
+				const outcome = await external(query, mine);
+				if (mine !== token) return;
+				setStatus('');
+				if (outcome.items.length) return showRows(outcome.items);
+				emptyTitle.textContent = `По запросу «${query}» ничего не нашлось.`;
+				emptyText.textContent = outcome.failed
+					? 'Внешние каталоги сейчас не отвечают. Можно вписать название руками — марка будет без постера.'
+					: 'Попробуйте оригинальное название. Если и так пусто — впишите название руками, марка будет без постера.';
+				empty.hidden = false;
+			}, PAUSE);
+		}
+
+		// Ответ на тот же запрос в этой вкладке в сеть второй раз не ходит.
+		// Запоминается только честный ответ: «не ответил» спросим снова.
+		async function external(query: string, mine: number) {
+			let failed = 0;
+			for (const [src, run] of [
+				['shiki', searchShikimori],
+				['anilist', searchAniList],
+			] as const) {
+				const key = `${CACHE_KEY}${src}:${fold(query)}`;
+				const cached = store.get(key, true);
+				let outcome: { ok: boolean; items: Item[] } | null = null;
+				if (cached) {
+					try {
+						outcome = JSON.parse(cached);
+					} catch {}
+				}
+				if (!outcome) {
+					outcome = (await run(query)) as { ok: boolean; items: Item[] };
+					if (mine !== token) return { items: [], failed: false };
+					if (outcome.ok) store.set(key, JSON.stringify(outcome), true);
+				}
+				if (!outcome.ok) failed++;
+				if (outcome.items.length) return { items: outcome.items, failed: false };
+			}
+			return { items: [], failed: failed === 2 };
+		}
+
+		// ——— Первый показ ———
+
+		render();
+		save();
+
+		// Марки каталога приходят адресом и названием из справочника: свежим,
+		// а не тем, что было на момент сохранения.
+		void loadCatalog().then((catalog) => {
+			if (!catalog || !document.contains(root)) return;
+			let changed = false;
+			state.slots = state.slots.map((item) => {
+				if (item?.src !== 'cat') return item;
+				const entry = catalog.byId.get(item.id!);
+				changed = true;
+				// Тайтл убрали из каталога — марка остаётся ручной, а не пропадает.
+				if (!entry) return item.title ? { src: 'manual', title: item.title, label: item.label } : null;
+				return { ...fromCatalog(entry), label: item.label };
+			});
+			if (changed && editing < 0) {
+				if (touched) store.set(STORE_KEY, JSON.stringify(state));
+				render();
+			}
+		});
+
+		// Внешние марки из ссылки приходят без постера — дозапрашиваем.
+		const bare = state.slots.filter((i): i is Item => !!i && (i.src === 'shiki' || i.src === 'anilist') && !i.poster);
+		if (bare.length) {
+			void lookupByIds(bare).then((found) => {
+				if (!document.contains(root)) return;
+				state.slots = state.slots.map((item) => {
+					const hit = item && found.get(`${item.src}:${item.id}`);
+					return hit ? { ...item, poster: hit.poster, thumb: hit.thumb, href: hit.href, studio: hit.studio } : item;
+				});
+				if (editing < 0) render();
+			});
+		}
+	}
+
+	// Переходы между страницами идут без перезагрузки (<ClientRouter />
+	// в Layout.astro), поэтому подписываемся на событие Astro, а не выполняем
+	// код один раз при загрузке файла.
+	document.addEventListener('astro:page-load', setup);
+</script>
