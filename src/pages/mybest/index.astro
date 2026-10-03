@@ -149,6 +149,7 @@ const DESCRIPTION =
 					<div class="mb-dialog-scroll">
 						<p class="mb-status tech" data-status hidden></p>
 						<ul class="mb-results" data-results></ul>
+						<button type="button" class="mb-more tech" data-more hidden>Нет нужного? Искать на Шикимори и AniList</button>
 						<div class="mb-empty" data-empty hidden>
 							<p class="mb-empty-title" data-empty-title></p>
 							<p class="mb-empty-text" data-empty-text></p>
@@ -902,6 +903,30 @@ const DESCRIPTION =
 		color: var(--muted);
 	}
 
+	/* «Нет нужного?» — под выдачей СВОЕГО каталога, тихо: линия как между
+	   строками, технический слой, приглушённый цвет. Капслок и трекинг
+	   прописаны явно: на <button> браузер снимает их у класса .tech. */
+	.mb-more {
+		display: block;
+		width: 100%;
+		min-height: 44px;
+		padding: var(--sp-3) var(--sp-1);
+		border: 0;
+		border-top: 1px solid var(--line);
+		border-radius: 0;
+		background: transparent;
+		color: var(--muted);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		text-align: left;
+		transition: color var(--transition-fast);
+	}
+
+	.mb-more:hover,
+	.mb-more:focus-visible {
+		color: var(--accent-text);
+	}
+
 	.mb-empty {
 		margin-top: var(--sp-6);
 	}
@@ -1353,6 +1378,7 @@ const DESCRIPTION =
 		const search = $<HTMLInputElement>('[data-search]');
 		const status = $<HTMLElement>('[data-status]');
 		const results = $<HTMLUListElement>('[data-results]');
+		const more = $<HTMLButtonElement>('[data-more]');
 		const empty = $<HTMLElement>('[data-empty]');
 		const emptyTitle = $<HTMLElement>('[data-empty-title]');
 		const emptyText = $<HTMLElement>('[data-empty-text]');
@@ -1795,6 +1821,7 @@ const DESCRIPTION =
 
 		function showRows(items: Item[]) {
 			results.replaceChildren(...items.map(row));
+			more.hidden = true;
 		}
 
 		function row(item: Item) {
@@ -1835,12 +1862,23 @@ const DESCRIPTION =
 		});
 
 		search.addEventListener('input', () => void find());
+		more.addEventListener('click', () => {
+			void find(true);
+			search.focus();
+		});
 
 		// ТРИ СТУПЕНИ, ОДИН СПИСОК. Нашлось у себя — дальше не ищем и чужого
 		// не показываем. Не нашлось — Шикимори; не ответил или пусто — AniList;
 		// пусто везде — предложение вписать руками. Заголовков ступеней нет:
 		// внешние строки подписаны названием источника, и всё.
-		async function find() {
+		//
+		// «НЕТ НУЖНОГО?» под своей выдачей — решение заказчика 3 октября 2026.
+		// Каталог мог найти ДРУГОЙ тайтл с тем же словом в названии, и тогда
+		// до нужного было не добраться ничем: так «Паразит» находил клип
+		// с Хацунэ Мику и никогда — сериал. Кнопка повторяет поиск мимо своего
+		// каталога (`outside`); правило «нашлось у себя — чужого не показываем»
+		// осталось как было, просто перестало быть тупиком.
+		async function find(outside = false) {
 			const mine = ++token;
 			clearTimeout(pauseTimer);
 			const query = search.value.replace(/\s+/g, ' ').trim();
@@ -1851,13 +1889,14 @@ const DESCRIPTION =
 				return;
 			}
 
-			const catalog = await loadCatalog();
+			const catalog = outside ? null : await loadCatalog();
 			if (mine !== token) return;
 			if (catalog) {
 				const ids = matchQuery(query, catalog.matcher);
 				if (ids.length) {
 					setStatus('');
 					showRows(ids.slice(0, 12).map((id) => fromCatalog(catalog.byId.get(id)!)));
+					more.hidden = false;
 					return;
 				}
 			}
