@@ -21,7 +21,7 @@ pullMedia: false
 tgId: 2541
 tgUrl: https://t.me/podcastbaka/2541
 anime:
-  - parasite
+  - kiseijuu-sei-no-kakuritsu
 ---
 
 ::image{src="/images/uploads/tg-2541.jpg" alt="" width="column"}
@@ -43,4 +43,4 @@ anime:
 ::material{id="ep-117"}
 
 
-::anime-ref{id="parasite" source="shikimori" source-id="51476"}
+::anime-ref{id="kiseijuu-sei-no-kakuritsu" source="shikimori" source-id="22535"}
