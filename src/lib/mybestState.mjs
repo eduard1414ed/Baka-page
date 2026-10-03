@@ -133,3 +133,45 @@ export function sameItem(a, b) {
 	if (!a || !b || a.src !== b.src) return false;
 	return a.src === 'manual' ? a.title.toLowerCase() === b.title.toLowerCase() : String(a.id) === String(b.id);
 }
+
+// ПРИГЛАШЕНИЕ СО СТРАНИЦЫ ТАЙТЛА (задача 23). Кнопка «Собрать девятку» под
+// упоминаниями ведёт на `/mybest/`, где этот тайтл уже стоит первой клеткой.
+//
+// ФОРМАТ ТОТ ЖЕ, что у «Скопировать ссылку»: хвост собирает `encodeState`,
+// разбирает `decodeState`, второго правила нет. Сверху ровно одна метка
+// `add=1` — и без неё не обойтись: голый `?t=…` страница честно читает
+// присланной ЧУЖОЙ девяткой, только для просмотра, а «друг прислал девятку
+// из одного тайтла» и «пришёл со страницы тайтла» по самому хвосту
+// не различить. Угадывать нельзя: угаданное правило записало бы чужой
+// тайтл в свою сохранённую девятку.
+//
+// ПРЕЖНЯЯ ДЕВЯТКА ОЧИЩАЕТСЯ — решение заказчика 3 октября 2026: пришёл
+// со страницы тайтла — собираешь новую, с него и начиная. Сколько было
+// выбрано раньше, не важно; подпись тоже возвращается к общей.
+export const INVITE_PARAM = 'add';
+
+/** Адрес кнопки на странице тайтла: `/mybest/?t=<адрес тайтла>&add=1`. */
+export function inviteLink(id) {
+	const state = emptyState();
+	state.slots[0] = { src: 'cat', id };
+	return `/mybest/?${encodeState(state)}&${INVITE_PARAM}=1`;
+}
+
+/** Пришли по приглашению? Тогда хвост адреса — не чужая девятка. */
+export function isInvite(search) {
+	return new URLSearchParams(search).get(INVITE_PARAM) === '1';
+}
+
+/**
+ * Приглашение → новая девятка: приглашённый тайтл первым, остальное пусто.
+ * Не приглашение или тайтла в нём не разобрать — `null`, и своя девятка
+ * остаётся как была: ломать её из-за испорченной ссылки нельзя.
+ */
+export function readInvite(search) {
+	if (!isInvite(search)) return null;
+	const first = decodeState(search)?.slots[0];
+	if (!first) return null;
+	const state = emptyState();
+	state.slots[0] = first;
+	return state;
+}

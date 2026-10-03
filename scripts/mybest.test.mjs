@@ -23,7 +23,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { buildAnimeMatcher, matchQuery as realMatch, fold } from '../src/lib/animeMentions.mjs';
 import { shortTitle as realShort } from '../src/lib/animeShortTitle.mjs';
-import { emptyState, encodeState, decodeState, readStored } from '../src/lib/mybestState.mjs';
+import { emptyState, encodeState, decodeState, readStored, inviteLink, isInvite, readInvite } from '../src/lib/mybestState.mjs';
 import { PERF } from '../src/lib/mybestImage.mjs';
 
 const ROOT = new URL('..', import.meta.url);
@@ -105,6 +105,18 @@ function law(matchQuery, shortTitle, encode = encodeState) {
 	expect('адрес без девятки — не девятка', decodeState('?utm_source=telegram'), null);
 	expect('мусор в адресе — пустые клетки, а не поломка', decodeState('?t=%3Cscript%3E&t=s.abc.2000.X&t=m.')?.slots.slice(0, 3), [null, null, null]);
 	expect('чужое в хранилище — не девятка', readStored('{"slots":5}'), null);
+
+	// Приглашение со страницы тайтла (задача 23): тот же хвост плюс метка.
+	const invite = inviteLink('sousou-no-frieren').slice('/mybest/'.length);
+	expect('приглашение: адрес', inviteLink('sousou-no-frieren'), '/mybest/?t=sousou-no-frieren&add=1');
+	expect('приглашение: хвост разбирается тем же правилом', decodeState(invite)?.slots[0], { src: 'cat', id: 'sousou-no-frieren' });
+	expect('приглашение: тайтл первым, остальное пусто, подпись общая', readInvite(invite), {
+		...emptyState(),
+		slots: [{ src: 'cat', id: 'sousou-no-frieren' }, null, null, null, null, null, null, null, null],
+	});
+	expect('ссылка друга — не приглашение', isInvite('?t=sousou-no-frieren'), false);
+	expect('ссылка друга из девяти — не приглашение', readInvite(`?${encode(nine)}`), null);
+	expect('битое приглашение — своя девятка не трогается', readInvite('?t=%3Cscript%3E&add=1'), null);
 
 	return fails;
 }

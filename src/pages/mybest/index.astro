@@ -27,6 +27,8 @@
 //   чужая — пришла ссылкой с девяткой в адресе. Только смотреть: ни плюсов,
 //     ни кнопок у марок, ни правки подписи; кнопка «Собрать свою девятку»
 //     ведёт на голый `/mybest/`. Своя сохранённая при этом не трогается.
+//   Отдельно — ПРИГЛАШЕНИЕ со страницы тайтла (задача 23, метка `add=1`):
+//     это своя девятка, начатая заново с этого тайтла; см. setup().
 //
 // ПЕРЕТАСКИВАНИЯ НЕТ, ЕСТЬ ПЕРЕСТАНОВКА НАЖАТИЯМИ (решение заказчика
 // 3 октября 2026): ⇄ у одной марки, потом нажатие на место. Работает одинаково
@@ -58,9 +60,12 @@ const DESCRIPTION =
 		<div class="mb" data-mybest data-logo={logo.src}>
 			<div class="mb-intro">
 				<h1 class="mb-title" data-title>Мои девять аниме</h1>
+				{/* «—&nbsp;для&nbsp;канала» склеены: тире и предлог переносятся
+				    вместе со словом, а не висят в конце строки (правка заказчика
+				    3 октября 2026). */}
 				<p class="mb-lead">
-					Соберите свои любимые тайтлы или персональную подборку по жанрам и заберите красивую картинку — для
-					канала, сторис или чтобы поспорить с друзьями.
+					Соберите свои любимые тайтлы или персональную подборку по жанрам и заберите красивую картинку
+					—&nbsp;для&nbsp;канала, сторис или чтобы поспорить с друзьями.
 				</p>
 			</div>
 
@@ -749,13 +754,22 @@ const DESCRIPTION =
 	}
 
 	/* ——— Окно выбора ———
-	   ПО ЦЕНТРУ ЭКРАНА: `margin: auto` у модального окна ставит его в середину
-	   по обеим осям. Голова и поле стоят на месте, прокручивается только
-	   выдача — внутри окна, а не страница под ним. */
+	   ПО ЦЕНТРУ ЭКРАНА от 621 px: `margin: auto` у модального окна ставит его
+	   в середину по обеим осям. Голова и поле стоят на месте, прокручивается
+	   только выдача — внутри окна, а не страница под ним.
+
+	   НА ТЕЛЕФОНЕ — К ВЕРХУ ТОГО, ЧТО ВИДНО НАД КЛАВИАТУРОЙ. Айфон, выдвигая
+	   клавиатуру, НЕ уменьшает ни `100dvh`, ни окно страницы: окно выбора
+	   растягивалось на весь экран, Safari уводил его вверх, и поле с первыми
+	   строками выдачи оказывались за краем (снимок заказчика 3 октября 2026,
+	   запрос «Ми»). Видимую область знает только `visualViewport`; её высоту
+	   и сдвиг скрипт кладёт в `--mb-view-h` и `--mb-view-top`, пока окно
+	   открыто. Нет переменных (браузер без `visualViewport`) — прежнее
+	   поведение по `100dvh`. */
 	.mb-dialog {
 		width: calc(100% - var(--sp-8));
 		max-width: 720px;
-		margin: auto;
+		margin: calc(var(--mb-view-top, 0px) + var(--sp-4)) auto auto;
 		padding: 0;
 		overflow: hidden;
 		border: 1px solid var(--line);
@@ -771,7 +785,7 @@ const DESCRIPTION =
 	.mb-dialog-body {
 		display: flex;
 		flex-direction: column;
-		max-height: calc(100dvh - var(--sp-8));
+		max-height: calc(var(--mb-view-h, 100dvh) - var(--sp-8));
 		padding: var(--sp-6) var(--sp-4) var(--sp-4);
 	}
 
@@ -947,10 +961,11 @@ const DESCRIPTION =
 
 		.mb-dialog {
 			width: calc(100% - var(--sp-16));
+			margin: auto;
 		}
 
 		.mb-dialog-body {
-			max-height: calc(100dvh - var(--sp-16));
+			max-height: calc(var(--mb-view-h, 100dvh) - var(--sp-16));
 			padding: var(--sp-8);
 		}
 
@@ -1025,6 +1040,8 @@ const DESCRIPTION =
 		decodeState,
 		readStored,
 		sameItem,
+		isInvite,
+		readInvite,
 	} from '../../lib/mybestState.mjs';
 	import { searchShikimori, searchAniList, lookupByIds, picturePosters } from '../../lib/mybestExternal.mjs';
 	import { drawPicture, pixelSize, PICTURE_ADDRESS } from '../../lib/mybestImage.mjs';
@@ -1347,10 +1364,19 @@ const DESCRIPTION =
 		// своя сохранённая девятка от этого не меняется. Исключение одно:
 		// человек открыл ссылку на собственную девятку (совпала с сохранённой
 		// до буквы) — тогда это своя, и адрес становится голым.
-		const own = readStored(store.get(STORE_KEY) ?? '') as State | null;
-		const fromUrl = decodeState(location.search) as State | null;
+		//
+		// ТРЕТИЙ СЛУЧАЙ — ПРИГЛАШЕНИЕ со страницы тайтла (задача 23, метка
+		// `add=1`, см. mybestState.mjs). Это не чужая девятка, а начало своей:
+		// прежняя очищается (решение заказчика), тайтл встаёт первым, всё
+		// сохраняется сразу, а адрес становится голым — иначе обновление
+		// страницы очищало бы девятку заново.
+		const invite = isInvite(location.search);
+		const invited = readInvite(location.search) as State | null;
+		if (invited) store.set(STORE_KEY, JSON.stringify(invited));
+		const own = invited ?? (readStored(store.get(STORE_KEY) ?? '') as State | null);
+		const fromUrl = invite ? null : (decodeState(location.search) as State | null);
 		const foreign = !!fromUrl && encodeState(fromUrl) !== encodeState(own ?? emptyState());
-		if (fromUrl && !foreign) history.replaceState(history.state, '', location.pathname);
+		if (invite || (fromUrl && !foreign)) history.replaceState(history.state, '', location.pathname);
 
 		let state: State = foreign ? fromUrl! : (own ?? (emptyState() as State));
 		let openSlot = -1;
@@ -1716,8 +1742,19 @@ const DESCRIPTION =
 			setStatus('');
 			empty.hidden = true;
 			dialog.showModal();
+			fitView();
+			view?.addEventListener('resize', fitView);
+			view?.addEventListener('scroll', fitView);
 			search.focus();
 			void loadCatalog();
+		}
+
+		// Видимая область над клавиатурой — см. «Окно выбора» в стилях.
+		const view = window.visualViewport;
+		function fitView() {
+			if (!view) return;
+			dialog.style.setProperty('--mb-view-h', `${view.height}px`);
+			dialog.style.setProperty('--mb-view-top', `${view.offsetTop}px`);
 		}
 
 		// ОКНО ЗАКРЫВАЕТСЯ ТОЛЬКО ЗДЕСЬ. Браузер сообщает о закрытии событием
@@ -1730,6 +1767,8 @@ const DESCRIPTION =
 			clearTimeout(pauseTimer);
 			const back = openSlot;
 			openSlot = -1;
+			view?.removeEventListener('resize', fitView);
+			view?.removeEventListener('scroll', fitView);
 			if (dialog.open) dialog.close();
 			focusSlot('', back);
 		}
