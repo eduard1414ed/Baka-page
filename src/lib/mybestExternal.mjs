@@ -101,13 +101,40 @@ export function parseAniList(json) {
 		.filter((a) => /^\d+$/.test(a.id) && a.title);
 }
 
+/**
+ * ПОСТЕР, КОТОРОГО ШИКИМОРИ НЕ ОТДАЁТ, — С ANILIST ПО ТОМУ ЖЕ НОМЕРУ.
+ *
+ * У тайтлов из жанров, которые Шикимори прячет от гостей (яой, юри), он
+ * отдаёт сам тайтл, но `poster: null` — замер 3 октября 2026: Given (39533)
+ * без постера, «Паразит» (22535) с постером. Номер тайтла у Шикимори — это
+ * номер MyAnimeList, и AniList ищет по нему (`idMal_in`), как и для картинки
+ * в `picturePosters`. Один запрос и только когда есть кому: у обычной
+ * выдачи постеры на месте, и в AniList она не ходит вовсе. Не ответил —
+ * марки остаются как были, без постера.
+ */
+async function borrowAniListPosters(items) {
+	const bare = items.filter((i) => i.src === 'shiki' && !i.poster);
+	if (!bare.length) return items;
+	const json = await post(
+		ANILIST_API,
+		`query($mal: [Int]) { Page(perPage: ${bare.length}) { media(idMal_in: $mal, type: ANIME) { idMal coverImage { medium large } } } }`,
+		{ mal: bare.map((i) => Number(i.id)) },
+	);
+	const byMal = new Map((json?.data?.Page?.media ?? []).map((m) => [String(m?.idMal), m]));
+	return items.map((i) => {
+		const m = i.src === 'shiki' && !i.poster ? byMal.get(i.id) : undefined;
+		const poster = https(m?.coverImage?.large);
+		return poster ? { ...i, poster, thumb: https(m.coverImage.medium) ?? poster } : i;
+	});
+}
+
 /** @returns {Promise<{ ok: boolean, items: object[] }>} */
 export async function searchShikimori(query) {
 	const json = await post(SHIKI_API, `query($q: String) { animes(search: $q, limit: ${LIMIT}, censored: false, rating: "!rx") { ${SHIKI_FIELDS} } }`, {
 		q: query,
 	});
 	const items = parseShikimori(json);
-	return items ? { ok: true, items } : { ok: false, items: [] };
+	return items ? { ok: true, items: await borrowAniListPosters(items) } : { ok: false, items: [] };
 }
 
 /** @returns {Promise<{ ok: boolean, items: object[] }>} */
@@ -142,7 +169,7 @@ export async function lookupByIds(items) {
 				})
 			: null,
 	]);
-	for (const item of [...(parseShikimori(a) ?? []), ...(parseAniList(b) ?? [])]) found.set(`${item.src}:${item.id}`, item);
+	for (const item of [...(await borrowAniListPosters(parseShikimori(a) ?? [])), ...(parseAniList(b) ?? [])]) found.set(`${item.src}:${item.id}`, item);
 	return found;
 }
 
