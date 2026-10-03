@@ -51,14 +51,15 @@ const DESCRIPTION =
 	<div class="site">
 		<div class="mb" data-mybest>
 			<div class="mb-intro">
-				<h1 class="mb-title">Мои девять аниме</h1>
+				<h1 class="mb-title" data-title>Мои девять аниме</h1>
 				<p class="mb-lead">
 					Соберите свои любимые тайтлы или персональную подборку по жанрам и заберите красивую картинку — для
 					канала, сторис или чтобы поспорить с друзьями.
 				</p>
 			</div>
 
-			<div class="mb-caption">
+			{/* У чужой девятки этого блока нет: её подпись стоит заголовком. */}
+			<div class="mb-caption" data-own-only>
 				<div data-own-only>
 					<label for="mb-caption-input" class="eyebrow tech mb-label">подпись на картинке</label>
 					<input
@@ -71,10 +72,6 @@ const DESCRIPTION =
 						spellcheck="false"
 					/>
 					<p class="mb-note">Можно поменять: «9 аниме детства», «9 аниме, после которых я плакал».</p>
-				</div>
-				<div data-foreign-only hidden>
-					<p class="eyebrow tech mb-label">чужая подборка</p>
-					<p class="mb-caption-text" data-caption-text></p>
 				</div>
 			</div>
 
@@ -226,8 +223,12 @@ const DESCRIPTION =
 		grid-area: intro;
 	}
 
+	/* Отступ от подводки стоит у блока подписи, а не у подводки: у чужой
+	   девятки блока нет, и кнопка встаёт под подводкой с тем же отступом,
+	   а не с двойным. */
 	.mb-caption {
 		grid-area: caption;
+		margin-top: var(--sp-6);
 	}
 
 	.mb-picks {
@@ -251,7 +252,7 @@ const DESCRIPTION =
 	}
 
 	.mb-lead {
-		margin: 0 0 var(--sp-6);
+		margin: 0;
 		max-width: 30em;
 		font-size: var(--body-sm);
 		line-height: 1.5;
@@ -301,14 +302,6 @@ const DESCRIPTION =
 	.mb-search::-webkit-search-decoration,
 	.mb-search::-webkit-search-cancel-button {
 		-webkit-appearance: none;
-	}
-
-	.mb-caption-text {
-		margin: 0;
-		font-family: var(--font-display);
-		font-size: var(--card-title);
-		line-height: 1.15;
-		overflow-wrap: anywhere;
 	}
 
 	.mb-note {
@@ -829,8 +822,8 @@ const DESCRIPTION =
 			padding-block: var(--sp-8) var(--sp-12);
 		}
 
-		.mb-lead {
-			margin-bottom: var(--sp-8);
+		.mb-caption {
+			margin-top: var(--sp-8);
 		}
 
 		/* На телефоне Body M: подпись по умолчанию («9 аниме, которые меня
@@ -1003,7 +996,7 @@ const DESCRIPTION =
 		const count = $<HTMLElement>('[data-count]');
 		const clear = $<HTMLButtonElement>('[data-clear]');
 		const captionInput = $<HTMLInputElement>('#mb-caption-input');
-		const captionText = $<HTMLElement>('[data-caption-text]');
+		const title = $<HTMLElement>('[data-title]');
 		const copy = $<HTMLButtonElement>('[data-copy]');
 		const announce = $<HTMLElement>('[data-announce]');
 		const dialog = $<HTMLDialogElement>('[data-dialog]');
@@ -1035,7 +1028,9 @@ const DESCRIPTION =
 		for (const el of root.querySelectorAll<HTMLElement>('[data-own-only]')) el.hidden = foreign;
 		for (const el of root.querySelectorAll<HTMLElement>('[data-foreign-only]')) el.hidden = !foreign;
 		captionInput.value = state.caption;
-		captionText.textContent = state.caption;
+		// У чужой девятки заголовок страницы — её подпись (решение заказчика
+		// 3 октября 2026): это название подборки, «Мои девять аниме» тут неправда.
+		if (foreign) title.textContent = state.caption;
 
 		function save() {
 			if (!foreign) store.set(STORE_KEY, JSON.stringify(state));
