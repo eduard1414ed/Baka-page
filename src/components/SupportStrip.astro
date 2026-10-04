@@ -101,7 +101,7 @@ const support = platformsOfKind('support');
 
 {
 	nine && (
-		<section class="support-strip" aria-labelledby="nine-title" data-pagefind-ignore>
+		<section class="support-strip support-strip-nine" aria-labelledby="nine-title" data-pagefind-ignore>
 			{/* Иллюстрация, а не чья-то девятка: блок рисуется при сборке
 			    и одинаков для всех (решение заказчика 3 октября 2026 —
 			    настоящую девятку из браузера не показываем). Поэтому клетки
@@ -164,6 +164,14 @@ const support = platformsOfKind('support');
 		gap: 20px;
 		padding: var(--sp-12) 0;
 		border-top: 1px solid var(--line);
+	}
+
+	/* У входа на девятку линии сверху НЕТ — решение заказчика 4 октября 2026:
+	   над блоком и так стоит черта «Показать ещё тайтлы» / «Все упоминания
+	   показаны», и вторая линия в шестидесяти пикселях под ней лишняя.
+	   Линия у блока поддержки остаётся. */
+	.support-strip-nine {
+		border-top: 0;
 	}
 
 	/* `align-self` тут не ставится нарочно: на широком экране блок выравнивает
