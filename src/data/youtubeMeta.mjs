@@ -276,6 +276,11 @@ export const youtubeMeta = {
 		"uploadDate": "2022-05-07T15:05:09-07:00",
 		"description": "Kaguya-sama wa Kokurasetai: Ultra Romantic Ending Theme 2 \"My Nonfiction\" by Miyuki Shirogane (Makoto Furukawa) & Chika Fujiwara (Konomi Kohara)\nTV Anime \"Kaguya-sama: Love is War Season 3\" Ending Theme 2 (Special ED)\nLyrics: [CC]\n\n------------------------------------------------------------------------------------\n⎚ Anime : Kaguya-sama: Love is War\n✎ Artist / Singer : Miyuki Shirogane (Makoto Furukawa) & Chika Fujiwara (Konomi Kohara)\n♫ Song Title : My Nonfiction\n\n➤Endcard made by me\n➤Support me: https://ko-fi.com/triaxfx\n------------------------------------------------------------------------------------\nCopyright:\nBe aware this channel is only for promotion purpose. All music belongs to the original creators."
 	},
+	"OeZxU9TK_8U": {
+		"name": "Vei Returns - September 13",
+		"uploadDate": "2026-09-07T12:00:19-07:00",
+		"description": "September 13\n1 PM CST\nhttps://www.twitch.tv/vei\n\n• SUBSCRIBE: https://bit.ly/3sapg7Q\n• Twitter: https://twitter.com/Veibae\n• TikTok: https://www.tiktok.com/@veibae.official\n• Full VOD Channel: https://www.youtube.com/@veibaevods\n• Reddit: https://www.reddit.com/r/vei/\n\n• directed by:\nhttps://x.com/evakoiani\n• layout\nhttps://x.com/lunja__\nhttps://x.com/evakoiani\nhttps://x.com/haryiharyi\n• backgrounds\nhttps://x.com/S1momark\n• additional clean up\nhttps://x.com/HollyTheMighty\nhttps://x.com/NifaRetter\n• coloring\nhttps://x.com/Serebrenniko_V\nhttps://x.com/Elfiriin\n• compositing\nhttps://x.com/So_im_yoko\nhttps://x.com/pav_prod\n• sound design\nhttps://x.com/Jinbutsu_off\n\n#Veibae #VTuber #debut"
+	},
 	"OpYbFIxUAh8": {
 		"name": "Комитет по производству. Кто на самом деле стоит за всеми главными решениями в аниме? | Врата аниме",
 		"uploadDate": "2022-11-25T22:12:15-08:00",
@@ -453,6 +458,11 @@ export const youtubeMeta = {
 		"uploadDate": "2022-11-19T12:30:00-08:00",
 		"description": "Watch Hell's Paradise on Crunchyroll! https://got.cr/cc-hppv\n\nGabimaru reigns as the strongest and most ruthless assassin in his village. But now finds himself on death row—with only one way out: retrieve the Elixir of Life from a sinister island. Longing for freedom, he accepts the challenge. But with fellow convicts vying for the same prize and demonic beasts lurking, how will Gabimaru survive this harrowing quest?\n\nCrunchyroll Collection brings you the latest clips, openings, full episodes, and more from your favorite anime!\n\nFREE 14-DAY CRUNCHYROLL TRIAL 🌟 https://got.cr/cc-14dayspv\n\n#HellsParadise #Anime #Crunchyroll"
 	},
+	"apx5g2LufbQ": {
+		"name": "HANGIN teaser (indie anime)",
+		"uploadDate": "2026-04-01T10:38:53-07:00",
+		"description": "indie anime short-film"
+	},
 	"bXgip0F6qdc": {
 		"name": "Dr. STONE New World | OFFICIAL TRAILER",
 		"uploadDate": "2023-03-12T05:59:56-07:00",
@@ -533,6 +543,11 @@ export const youtubeMeta = {
 		"name": "Junko Takeuchi  - Voice Roles Compilation",
 		"uploadDate": "2021-03-31T18:40:41-07:00",
 		"description": "These are all the voices done by the Japanese voice actress/seiyuu Junko Takeuchi. she has voiced over 20+ characters such as:\n\n1). Naruto Uzumaki Namikaze from \"Naruto\" series\n2). Endou Mamoru from Inazuma Eleven\n3). Mokuba Kaiba from Yu-Gi-Oh! 2000\n4). Rin Natsuki/Cure Rogue from Yes! Precure 5\n5). Gon Freecs from Hunter x Hunter 1999\n6). Gomamon and Takuya Kanbara from \"Digimon\" franchise\n\nAll clips and videos belong to their respective owners, I do not own any of these clips, this video is for entertainment purpose only."
+	},
+	"lUHLwBOY04I": {
+		"name": "【崩壊：スターレイル】零光 | 宮野真守 / EVAKOI - HoYoFair",
+		"uploadDate": "2025-11-22T19:00:55-08:00",
+		"description": "『#崩壊スターレイル』の「黄金裔」を描いた特別な映像作品\n\n🦖 #HoYoFair「キメリックパーク」フル動画ご視聴はこちら：\nhttps://www.youtube.com/watch?v=mmyz8SZWyfk\n\n• 『零光』\nVocals:\n宮野真守 Mamoru Miyano\n\nLyrics:\nAPAZZI\n\nComposition:\nAPAZZI\n\nArrangement:\nAPAZZI\n\n• Official Animated MV『Farewell to Dawn』\nDirector:\nEVAKOI\n\nStory Development:\nEVAKOI\nNick Pavlov\nPolina Weiss (snegg)\nkitani\n\nScript Supervision:\nNiсk Pavlov\nEVAKOI\n\nArt Director:\nsimomark\n\nVoice Direction:\nNiсk Pavlov\n\nCharacter Design:\nEVAKOI\n\nAssistant Character Design:\nKitani\nShadrin D.\n\nAnimation Check:\nEVAKOI\nKitani\nFlanu\nBrando (SOEM)\nzumorin\nKCISOR\n\nCompositing Director:\nWickiToons\n\n3D Lead Artist:\nSwedli\n\nSound Design:\nAkariASMR\nSkelktons\n\nSound Mixing and Additional Sound Design:\nStephan Efremov\n\nVoice Cast:\nNiсk Pavlov – Phainon / Flame Reaver / Additional Voices\nAnastasia Skachkova – Cyrene / Additional Voices\nVasilisa Eldarova – Tribbie\nZarina Kudashova – Aglaea / Additional Voices\nChristina Sherman – Castorice\nMona Lazerova – Hyacine\nIvan Alexandrov – Mydei\nOleg Korenev – Anaxa\n\nLayout:\nHaryi\nSutik03\nInkora\nlunja\nTARABAN\nMIraiiirikanami\nDrag\npochatok\nHeyzumNtabs\nIKIO\nShadrin D.\nViktor Serebrennikov\nEuhoetus\nRomario Clarke\nEVAKOI\nVITA\n\nClean Up:\nTOGONAI\nViktor Serebrennikov\nHaryi\nFUFEllKAO\nInkora\nTARABAN\nSutik03\nkriskringe\nKitani\nDrag\nSaginomiya\npochatok\nVITA\nFlanu\nHeyzumNtabs\nShiga\nShadrin D.\nKANENOBU\nAizen Zaref (BLINK BLINK)\nluci\nKCISOR\nEVAKOI\n\nAdditional Layout and Clean Up:\nBrando Leon Rustici (SOEM Studios)\nMikey Nowack (SOEM Studios)\nAndremation (SOEM Studios)\nSnepchan (SOEM Studios)\nBatorasama (SOEM Studios)\nSalim Gallow (ANIME INFINITE)\nNathan Yugen (ANIME INFINITE)\n\nColoring:\nTOGONAI\nViktor Serebrennikov\nFUFEllKAO\nSutik03\nTanamio\nsupkartopl\nShiga\nAizen Zaref (BLINK BLINK)\nARCHI\nElfirin\nzumorin\nKANENOBU\nEVAKOI\nSOEM Studios\n\nBackground Art:\nsimomark\nCassandra J Ly\n\nCompositing:\nWickiToons\nYoko\nVermii\nJuliaV\n\n3D CGI:\nSWEF Production\nSwedli\nAniTeld\n\n🎧️https://lnk.to/MM_FACE\n\n▷8thアルバム「FACE」\n発売中！\n\n▷詳細はアルバム特設サイトをチェック！\nhttps://king-cr.jp/miyanomamoru_8thalbum/\n\n＜初回限定盤（CD+Blu-ray）＞\n税込￥4,950（税抜￥4,500）\nフォトブック封入＆スペシャルケース仕様 \n\n＜通常盤（CD Only）＞ \n税込￥3,630（税抜￥3,300）\n\n※ご購入はこちらから\nhttps://lnk.to/MM_8thAL_release\n\n◎ライブツアー2025開催中！\nMAMORU MIYANO ASIA LIVE TOUR 2025-2026 〜VACATIONING!〜\nhttps://miyanomamoru.com/live/vacationing/\n\n🎫チケット発売中！\nhttps://tix.to/MM_VACATIONING\n\n・開催日程／会場\n11月22日（土）宮城・ゼビオアリーナ仙台\n11月23日（日）宮城・ゼビオアリーナ仙台\n\n11月29日（土）兵庫・神戸ワールド記念ホール\n11月30日（日）兵庫・神戸ワールド記念ホール\n\n12月13日（土）神奈川・横浜アリーナ\n12月14日（日）神奈川・横浜アリーナ\n\n2026年\n1月31日（土）上海・回響之地 Echo Land Music Park\n2月7日（土）台北・Legacy Tera\n\n・チケット料金\n12,100円（税込）\n\n#宮野真守\n\n＊＊＊関連リンク＊＊＊\n▼ 宮野真守　公式ホームページ\nhttp://miyanomamoru.com\n\n▼ 宮野真守 Twitter公式アカウント\nhttps://twitter.com/miyanomamoru_PR\n\n▼ 宮野真守 Instagram公式アカウント\nhttps://www.instagram.com/miyano_mamo...\n\n▼宮野真守 TikTok公式アカウント\nhttps://www.tiktok.com/@miyanomamoru_pr\n\n▼ 「KING AMUSEMENT CREATIVE」公式Twitter\n https://twitter.com/kac_officialhp\n\n▼ 「KING AMUSEMENT CREATIVE」公式サイト\nhttp://king-cr.jp/\n\n▼ 「KING AMUSEMENT CREATIVE」公式チャンネル\nhttps://bit.ly/2G7MMk2"
 	},
 	"lfBg6xps6aI": {
 		"name": "Лучшие аниме года 2024 | Бака Anime Awards",
