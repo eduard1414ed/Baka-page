@@ -9,7 +9,6 @@ noCover: false
 externalUrl: ''
 externalSource: ''
 adLabel: ''
-anime: []
 animeSuggested: []
 mentionsHidden: ''
 transcript: ''
@@ -21,6 +20,8 @@ bonusLinks: null
 pullMedia: false
 tgId: null
 tgUrl: ''
+anime:
+  - nier-automata-ver-1-1a
 ---
 
 Слава Кольченко (EVAKOI), аниматор многих успешных аниме (от «Магической битвы» до «Реинкарнации безработного»), а также художник недавно анонсированной игры [Last Ditch Effort](https://store.steampowered.com/app/5056630/Last_Ditch_Effort/), объявил об открытии собственной студии под названием [Blink Blink](https://blinkblink.studio/).
@@ -85,7 +86,7 @@ tgUrl: ''
 ::video{youtube="https://youtu.be/apx5g2LufbQ?si=MQlGgwP-cVI8t81V"}
 
 
-Если вкратце описать что это за проект... Хм, представьте что The Creator и Scavengers Reign встретились с Made in Abyss и Nier Automata. Но полагаю пока только на уровне ощущений, а не нарратива. Честно, пока не знаю как получится по хронометражу, посмотрим. Сколько нужно будет времени, столько и будет.
+Если вкратце описать что это за проект... Хм, представьте что The Creator и Scavengers Reign встретились с Made in Abyss и :anime[Nier Automata]{id="nier-automata-ver-1-1a" source="shikimori" source-id="51105"}. Но полагаю пока только на уровне ощущений, а не нарратива. Честно, пока не знаю как получится по хронометражу, посмотрим. Сколько нужно будет времени, столько и будет.
 
 Я, конечно, в себя верю, но это пока тоже первый проект, который я пишу и режиссирую с таким хронометражом и полноценной историей. Не хочу перехайпить, хаха! Сдержанные ожидания гораздо лучше чем несдержанные. Но я приложу все усилия.
 
@@ -105,4 +106,3 @@ tgUrl: ''
 
 
 ::material{id="ep-108"}
-
