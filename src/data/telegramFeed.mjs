@@ -33,10 +33,10 @@
 // приехать запасным путём, со страницы канала. Поставь мы здесь ноль, робот
 // счёл бы пропущенным весь архив разом.
 export const telegramFeed = {
-	"offset": 232983529,
-	"lastSeenId": 4232,
-	"lastPostAt": "2026-10-05T08:01:16.292Z",
-	"lastRunAt": "2026-10-06T02:01:13.164Z",
+	"offset": 232983536,
+	"lastSeenId": 4236,
+	"lastPostAt": "2026-10-06T08:01:16.920Z",
+	"lastRunAt": "2026-10-06T08:01:16.920Z",
 	"albums": {
 		"14305965453808114": {
 			"slug": "oboi-i-kalendari",
@@ -88,6 +88,16 @@ export const telegramFeed = {
 				4227,
 				4228,
 				4229
+			]
+		},
+		"14330167016580074": {
+			"slug": "chetyre-versii-odnogo-personazha",
+			"tgId": 4233,
+			"photoIds": [
+				4233,
+				4234,
+				4235,
+				4236
 			]
 		}
 	}
