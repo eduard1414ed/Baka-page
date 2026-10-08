@@ -100,7 +100,7 @@ const optionalUrl = z.preprocess(emptyToUndefined, z.string().url().optional());
 // имени (проверено по коду Sveltia 0.193.2). Под одним ключом совпадать
 // не с чем.
 //
-// `type` — вид теста: `quiz` (викторина) или `personality` (личностный).
+// `kind.type` — вид теста: `quiz` (викторина) или `personality` (личностный).
 // Его пишет сама админка: это «объект с вариантами» (`types`), поля которого
 // зависят от выбранного вида.
 const looseString = z.preprocess(emptyToUndefined, z.string().optional());
@@ -113,44 +113,62 @@ const looseNumber = z.preprocess((value) => {
 }, z.number().optional());
 const looseList = <T extends z.ZodType>(item: T) => z.preprocess(emptyToUndefined, z.array(item).default([]));
 
-const testSchema = z.object({
-	type: looseString,
-	questions: looseList(
+const testResult = z.object({
+	// ПОЛЯ id НЕТ (решение заказчика 8 октября 2026): адрес результата
+	// собирается из заголовка тем же правилом, что адреса постов,
+	// src/lib/slug.mjs. Переименовали результат — сменился адрес.
+	title: looseString,
+	image: looseString,
+	text: looseString,
+	// Только викторина: диапазон числа верных ответов, включительно.
+	from: looseNumber,
+	to: looseNumber,
+	// Ссылки под результатом — адресами, как их знает сайт: пост — имя
+	// файла без .md (как «Закреплённый материал» на главной), тайтл —
+	// его id (как поле `anime` у поста).
+	posts: looseList(z.string()),
+	anime: looseList(z.string()),
+});
+
+const testQuestion = z.object({
+	text: looseString,
+	// Ни одной, одна или сетка до четырёх.
+	images: looseList(z.object({ src: looseString, alt: looseString })),
+	options: looseList(
 		z.object({
 			text: looseString,
-			// Ни одной, одна или сетка до четырёх.
-			images: looseList(z.object({ src: looseString, alt: looseString })),
-			options: looseList(
-				z.object({
-					text: looseString,
-					// Только викторина: верный вариант.
-					correct: looseBoolean,
-					// Только личностный: id результатов через запятую — руками,
-					// Sveltia не умеет выбирать из строк той же записи.
-					scores: looseString,
-					// Только личностный: реплика после выбора.
-					reply: looseString,
-				}),
+			// Только викторина: верный вариант.
+			correct: looseBoolean,
+			// Только личностный: ЗАГОЛОВКИ результатов, которым вариант даёт
+			// по баллу. Админка пишет список (выбор из результатов этого теста);
+			// одиночную строку читаем списком из одного — так её запишет рука.
+			scores: z.preprocess(
+				(value) => (typeof value === 'string' && value !== '' ? [value] : emptyToUndefined(value)),
+				z.array(z.string()).default([]),
 			),
-			// Только викторина: пояснение, markdown со ссылками.
-			explanation: looseString,
+			// Только личностный: реплика после выбора.
+			reply: looseString,
 		}),
 	),
-	results: looseList(
-		z.object({
-			id: looseString,
-			title: looseString,
-			image: looseString,
-			text: looseString,
-			// Только викторина: диапазон числа верных ответов, включительно.
-			from: looseNumber,
-			to: looseNumber,
-			// Ссылки под результатом — адресами, как их знает сайт: пост — имя
-			// файла без .md (как «Закреплённый материал» на главной), тайтл —
-			// его id (как поле `anime` у поста).
-			posts: looseList(z.string()),
-			anime: looseList(z.string()),
-		}),
+	// Только викторина: пояснение, markdown со ссылками.
+	explanation: looseString,
+});
+
+// РАСКЛАДКА: результаты отдельно, вид и вопросы отдельно. Так требует
+// админка: «Баллы» — выпадающий список из результатов, а внутрь «объекта
+// с вариантами» (`kind`) список подсказок у Sveltia 0.193.2 не заглядывает
+// (подробно — у пункта «Тесты» в public/admin/config.yml).
+const testSchema = z.object({
+	results: looseList(testResult),
+	kind: z.preprocess(
+		emptyToUndefined,
+		z
+			.object({
+				// `quiz` — викторина, `personality` — личностный.
+				type: looseString,
+				questions: looseList(testQuestion),
+			})
+			.optional(),
 	),
 });
 
