@@ -48,13 +48,17 @@
 			//
 			// Если однажды она начнёт перекрывать что-то нужное — удалите этот
 			// блок целиком, страница останется доступной по адресу.
+			//
+			// В ПРАВОМ НИЖНЕМ УГЛУ с 8 октября 2026 (просьба заказчика): в левом
+			// она закрывала подсказки полей в форме редактора. Справа внизу
+			// у Sveltia только поле предпросмотра.
 			document.addEventListener('DOMContentLoaded', () => {
 				const link = document.createElement('a');
 				link.href = '/admin/tools/';
 				link.textContent = 'Робот ↗';
 				link.title = 'Запустить добор выпусков, не дожидаясь утра';
 				link.style.cssText = [
-					'position:fixed', 'left:12px', 'bottom:12px', 'z-index:9999',
+					'position:fixed', 'right:12px', 'bottom:12px', 'z-index:9999',
 					'font:600 12px/1 "IBM Plex Mono", Menlo, monospace',
 					'letter-spacing:.08em', 'text-transform:uppercase',
 					'color:#a64e65', 'background:#f8f6f0',
