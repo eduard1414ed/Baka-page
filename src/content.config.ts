@@ -79,6 +79,81 @@ const optionalDate = z.preprocess(emptyToUndefined, z.coerce.date().optional());
 const optionalNumber = z.preprocess(emptyToUndefined, z.number().optional());
 const optionalUrl = z.preprocess(emptyToUndefined, z.string().url().optional());
 
+// --- Тест: викторина или личностный (тз/ТЗ-тесты.md, §3) ---
+//
+// ВСЁ ЗДЕСЬ НЕОБЯЗАТЕЛЬНО И НЕСТРОГО — НАМЕРЕННО. Схема проверяет файлы ВСЕХ
+// постов, черновиков тоже, а падение схемы роняет сборку ВСЕГО САЙТА. Строгая
+// схема значила бы: недозаполненный тест-черновик в админке останавливает
+// выкладку. Правило проекта обратное — черновик только предупреждает.
+//
+// Поэтому правила теста («ровно один верный», «диапазоны без дыр», «такой
+// результат есть») живут в ОДНОМ месте — scripts/check-quizzes.mjs, который
+// идёт первым шагом `npm run build`: опубликованный тест с ошибкой роняет
+// сборку там, с понятным сообщением, а не здесь, строчкой zod. Здесь только
+// форма, в которой сайт получает данные. Кривое значение (буквы в числе)
+// схема читает как «пусто», а называет его вслух проверка — она читает файл
+// сырым.
+//
+// ДАННЫЕ ТЕСТА ЛЕЖАТ ПОД ОДНИМ КЛЮЧОМ `test`, которого нет у постов. Тест —
+// пост в той же папке, и если его откроют формой «Постов», админка при
+// открытии выбросит значение, чей тип не сходится с полем формы того же
+// имени (проверено по коду Sveltia 0.193.2). Под одним ключом совпадать
+// не с чем.
+//
+// `type` — вид теста: `quiz` (викторина) или `personality` (личностный).
+// Его пишет сама админка: это «объект с вариантами» (`types`), поля которого
+// зависят от выбранного вида.
+const looseString = z.preprocess(emptyToUndefined, z.string().optional());
+const looseBoolean = z.preprocess((value) => value === true || value === 'true', z.boolean());
+const looseNumber = z.preprocess((value) => {
+	const filled = emptyToUndefined(value);
+	if (filled === undefined) return undefined;
+	const number = Number(filled);
+	return Number.isFinite(number) ? number : undefined;
+}, z.number().optional());
+const looseList = <T extends z.ZodType>(item: T) => z.preprocess(emptyToUndefined, z.array(item).default([]));
+
+const testSchema = z.object({
+	type: looseString,
+	questions: looseList(
+		z.object({
+			text: looseString,
+			// Ни одной, одна или сетка до четырёх.
+			images: looseList(z.object({ src: looseString, alt: looseString })),
+			options: looseList(
+				z.object({
+					text: looseString,
+					// Только викторина: верный вариант.
+					correct: looseBoolean,
+					// Только личностный: id результатов через запятую — руками,
+					// Sveltia не умеет выбирать из строк той же записи.
+					scores: looseString,
+					// Только личностный: реплика после выбора.
+					reply: looseString,
+				}),
+			),
+			// Только викторина: пояснение, markdown со ссылками.
+			explanation: looseString,
+		}),
+	),
+	results: looseList(
+		z.object({
+			id: looseString,
+			title: looseString,
+			image: looseString,
+			text: looseString,
+			// Только викторина: диапазон числа верных ответов, включительно.
+			from: looseNumber,
+			to: looseNumber,
+			// Ссылки под результатом — адресами, как их знает сайт: пост — имя
+			// файла без .md (как «Закреплённый материал» на главной), тайтл —
+			// его id (как поле `anime` у поста).
+			posts: looseList(z.string()),
+			anime: looseList(z.string()),
+		}),
+	),
+});
+
 const posts = defineCollection({
 	loader: glob({ pattern: '**/*.md', base: './src/content/posts' }),
 	schema: () =>
@@ -262,6 +337,9 @@ const posts = defineCollection({
 				// риска не стоит — худшее, что бывает со строкой, это что она
 				// никуда не ведёт.
 				animeSuggested: z.preprocess(emptyToUndefined, z.array(z.string()).optional()),
+			// Данные теста — только у категории `test`. Почему необязательно
+			// даже там — у testSchema выше.
+			test: z.preprocess(emptyToUndefined, testSchema.optional()),
 		}),
 });
 
