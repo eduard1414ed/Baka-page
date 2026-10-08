@@ -36,6 +36,7 @@ export default {
 	"146cb154-d4e2-4c74-94da-4d7ee4c87884": { status: "готов", hash: "9772b9cc8190fbce" },
 	"15-png": { status: "не по шаблону", hash: "6ef6e03e7b54ca6c", why: "не квадрат (1280×720)" },
 	"18220bf5-e38b-40ec-bc3b-3718b824693f": { status: "не по шаблону", hash: "a120f43e9894dd99", why: "рамка не найдена — обложка не по шаблону" },
+	"18c801a1-7b69-4920-a68e-eb914e11c16a": { status: "не по шаблону", hash: "a871e87885e6199a", why: "рамка не найдена — обложка не по шаблону" },
 	"1b1227ae-1884-4084-af6a-f16aa08d1085": { status: "готов", hash: "7feca5fd4e6a4f98" },
 	"1b7a3fe9-0385-4ca1-a0b8-5029d2e8906f": { status: "готов", hash: "d667edf1cdabe2d1" },
 	"1e0dd09a-8268-47d7-8cd7-d73c02408793": { status: "готов", hash: "b9425c0fb6c59aa1" },
