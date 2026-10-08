@@ -64,6 +64,16 @@ collections:
     create: true
     format: frontmatter
     extension: md
+    # ВСЁ, КРОМЕ ТЕСТОВ: у них свой пункт «Тесты» (ниже) и своя форма.
+    # Отбор Sveltia умеет только «совпадает с образцом», отрицание — образцом
+    # `^(?!test$)`: пропускает любую категорию, кроме ровно `test`. Проверено
+    # на всех постах архива тем же разбором строки, что у Sveltia 0.193.2
+    # (getRegex): прошли все пять категорий, скрыто только `test`.
+    #
+    # ОСТОРОЖНО С ОПЕЧАТКОЙ ЗДЕСЬ. Кривой образец Sveltia молча выбрасывает,
+    # и тогда отбор не пропускает НИЧЕГО — список «Постов» опустеет целиком.
+    # Данные при этом целы, но пугает; правка — вернуть строку как была.
+    filter: { field: category, pattern: '^(?!test$)' }
     # ЦВЕТНОЙ КРУЖОК СЛЕВА — У ТЕХ, КОГО НА САЙТЕ ЕЩЁ НЕТ (11 августа 2026):
     # серый — черновик, жёлтый — ждёт своего часа, у вышедшего метки нет вовсе.
     # Норма читается отсутствием пометки, а глаз цепляется за то, что требует
@@ -495,6 +505,248 @@ collections:
         hint: >-
           Заполняет импорт. Нужна, чтобы одним нажатием открыть оригинал
           и сверить текст с тем, что было в канале.
+
+  # ТЕСТЫ: викторина и личностный (тз/ТЗ-тесты.md, §3; сессия «Тесты-2»).
+  #
+  # ТЕСТ — ЭТО ПОСТ КАТЕГОРИИ `test` В ТОЙ ЖЕ ПАПКЕ (вариант A, решение
+  # заказчика 8 октября 2026). Отсюда два отбора по одному полю: здесь —
+  # только `test`, у «Постов» — всё, кроме него. Отбор не подставляет
+  # категорию новой записи сам, поэтому она стоит скрытым полем ниже.
+  #
+  # ВСЁ ПРО ТЕСТ ЛЕЖИТ ПОД ОДНИМ КЛЮЧОМ `test`. Откроют тест формой «Постов» —
+  # Sveltia 0.193.2 поля, которых в форме нет, не выбрасывает, а дописывает
+  # в конец файла (проверено по её коду, draft/save/serialize.js); выбрасывает
+  # она только значение, чей тип расходится с полем формы ТОГО ЖЕ ИМЕНИ.
+  # Под одним ключом, которого у постов нет, совпадать не с чем.
+  #
+  # ВИД ТЕСТА — «ОБЪЕКТ С ВАРИАНТАМИ» (`types`): выбрали «Викторина» — видны
+  # только её поля. Решение заказчика (способ 1) и его цена: сменить вид
+  # у заполненного теста можно только удалив блок вместе с вопросами.
+  # Поля вопросов у двух видов поэтому описаны дважды — у каждого свои
+  # варианты ответа. Якорями YAML не склеены нарочно: Sveltia правит объекты
+  # настройки на месте, а якорь дал бы двум видам один общий объект.
+  #
+  # ТОЛЬКО ВСТРОЕННЫЕ ПОЛЯ. Свои компоненты админки дважды теряли данные.
+  # Список внутри списка (вопросы → варианты) у нас впервые — проверен
+  # сохранением черновика в сессии «Тесты-2».
+  #
+  # ОБЯЗАТЕЛЬНЫХ ПОЛЕЙ МАЛО НАМЕРЕННО: обязательное поле не даёт сохранить
+  # недоделанный черновик. Правила теста (один верный, диапазоны без дыр,
+  # такой результат есть) проверяет scripts/check-quizzes.mjs при сборке:
+  # опубликованный тест с ошибкой не выложится, черновик только предупредит.
+  - name: tests
+    label: Тесты
+    label_singular: Тест
+    folder: src/content/posts
+    create: true
+    format: frontmatter
+    extension: md
+    filter: { field: category, value: test }
+    summary: "{{fields.draft | ternary('⚪️ ', '')}}{{title}}{{fields.draft | ternary(' · черновик', '')}}"
+    fields:
+      - { label: Заголовок, name: title, widget: string }
+      - label: Подзаголовок
+        name: description
+        widget: text
+        required: false
+        hint: >-
+          Строка под заголовком. Она же описание в ленте, в поиске и в превью
+          ссылки в чате. Держитесь примерно 160 знаков.
+      - label: Дата
+        name: date
+        widget: datetime
+        date_format: 'YYYY-MM-DD'
+        time_format: false
+      - { label: Категория, name: category, widget: hidden, default: test }
+      - { label: Черновик, name: draft, widget: boolean, default: true }
+      - label: Обложка
+        name: cover
+        widget: image
+        required: false
+        hint: Для ленты и для превью, когда ссылку кидают в чат.
+      - label: Вступление
+        name: body
+        widget: richtext
+        required: false
+        # Кнопок вставок нет: вступление — короткий текст перед вопросами.
+        editor_components: []
+        hint: Текст перед первым вопросом. Можно жирный, курсив и ссылки.
+      # РЕЗУЛЬТАТЫ ВНЕ ВЫБОРА ВИДА — НЕ ДЛЯ КРАСОТЫ. «Баллы» у вариантов
+      # личностного теста — выпадающий список из результатов этого же теста
+      # (relation на эту же коллекцию с отбором по адресу записи, `{{slug}}`).
+      # Подсказки Sveltia 0.193.2 собирает, НЕ ЗНАЯ выбранного вида
+      # (relation/helpers/entries.js зовёт getField без значений записи), и
+      # путь внутрь «объекта с вариантами» у неё ведёт в пустоту. Список
+      # результатов в простом объекте она находит. Цена: «От» и «До» видны
+      # и у личностного теста, с пометкой.
+      #
+      # Результаты стоят ПЕРВЫМИ: их заводят до вопросов и сохраняют —
+      # подсказки берутся из СОХРАНЁННОЙ версии теста.
+      - label: Тест
+        name: test
+        widget: object
+        required: false
+        fields:
+          - label: Результаты
+            name: results
+            widget: list
+            required: false
+            label_singular: результат
+            summary: '{{fields.title}}'
+            hint: >-
+              Заведите результаты первыми и сохраните тест — тогда в «Баллах»
+              у вариантов личностного теста они появятся выпадающим списком.
+              Адрес результата сайт делает из заголовка сам: переименуете —
+              старые ссылки на него перестанут открываться.
+            fields:
+              - { label: Заголовок, name: title, widget: string }
+              - { label: Картинка, name: image, widget: image, required: false }
+              - { label: Текст, name: text, widget: richtext, required: false, editor_components: [] }
+              - label: От (верных ответов)
+                name: from
+                widget: number
+                value_type: int
+                min: 0
+                required: false
+                hint: Только для викторины. Диапазоны должны покрыть всё от 0 до числа вопросов и не пересекаться.
+              - label: До (включительно)
+                name: to
+                widget: number
+                value_type: int
+                min: 0
+                required: false
+                hint: Только для викторины.
+              - label: Ссылки на посты
+                name: posts
+                widget: relation
+                required: false
+                multiple: true
+                # Тот же вид ссылки, что у «Закреплённого материала» на
+                # главной: имя файла поста без расширения.
+                collection: posts
+                value_field: '{{slug}}'
+                display_fields: ['{{title}}']
+                search_fields: ['title']
+                hint: Необязательно. Начните печатать название — список подскажет. Покажутся под результатом.
+              - label: Ссылки на тайтлы
+                name: anime
+                widget: relation
+                required: false
+                multiple: true
+                # Тот же вид, что у поля `anime` поста: адрес тайтла,
+                # он же имя его файла.
+                collection: anime
+                value_field: '{{slug}}'
+                display_fields: ['{{titleRu}}']
+                search_fields: ['titleRu', 'titleOriginal']
+                hint: Необязательно. Начните печатать название — список подскажет.
+          - label: Вид и вопросы
+            name: kind
+            widget: object
+            required: false
+            hint: Выберите вид теста. Сменить его потом можно только удалив этот блок вместе с вопросами.
+            types:
+              - name: quiz
+                label: Викторина
+                fields:
+                  - label: Вопросы
+                    name: questions
+                    widget: list
+                    required: false
+                    label_singular: вопрос
+                    summary: '{{fields.text}}'
+                    fields:
+                      - { label: Текст вопроса, name: text, widget: text }
+                      - label: Картинки
+                        name: images
+                        widget: list
+                        required: false
+                        max: 4
+                        label_singular: картинку
+                        hint: Ни одной, одна или до четырёх — четыре встанут сеткой 2×2.
+                        fields:
+                          - { label: Картинка, name: src, widget: image }
+                          - label: Что на картинке
+                            name: alt
+                            widget: string
+                            required: false
+                            hint: Для незрячих и поисковиков. Например, «Кадр из „Фрирен“».
+                      - label: Варианты ответа
+                        name: options
+                        widget: list
+                        required: false
+                        max: 6
+                        label_singular: вариант
+                        summary: "{{fields.correct | ternary('✓ ', '')}}{{fields.text}}"
+                        hint: От двух до шести. Верный — ровно один.
+                        fields:
+                          - { label: Текст варианта, name: text, widget: string }
+                          - { label: Верный, name: correct, widget: boolean, default: false, required: false }
+                      - label: Пояснение
+                        name: explanation
+                        widget: richtext
+                        required: false
+                        editor_components: []
+                        hint: Показывается внутри верного варианта после ответа. Можно ссылки.
+              - name: personality
+                label: Личностный тест
+                fields:
+                  - label: Вопросы
+                    name: questions
+                    widget: list
+                    required: false
+                    label_singular: вопрос
+                    summary: '{{fields.text}}'
+                    fields:
+                      - { label: Текст вопроса, name: text, widget: text }
+                      - label: Картинки
+                        name: images
+                        widget: list
+                        required: false
+                        max: 4
+                        label_singular: картинку
+                        hint: Ни одной, одна или до четырёх — четыре встанут сеткой 2×2.
+                        fields:
+                          - { label: Картинка, name: src, widget: image }
+                          - label: Что на картинке
+                            name: alt
+                            widget: string
+                            required: false
+                            hint: Для незрячих и поисковиков. Например, «Кадр из „Фрирен“».
+                      - label: Варианты ответа
+                        name: options
+                        widget: list
+                        required: false
+                        max: 6
+                        label_singular: вариант
+                        summary: '{{fields.text}}'
+                        hint: От двух до шести.
+                        fields:
+                          - { label: Текст варианта, name: text, widget: string }
+                          - label: Баллы
+                            name: scores
+                            widget: relation
+                            required: false
+                            multiple: true
+                            # Результаты ЭТОГО теста: та же коллекция, отбор
+                            # по адресу записи. У ни разу не сохранённого теста
+                            # адреса ещё нет — Sveltia тогда отбор снимает и
+                            # показывает результаты ВСЕХ тестов (её код,
+                            # relation/helpers/filters.js). Отсюда «сначала
+                            # сохраните» в подсказке; чужой заголовок ловит
+                            # scripts/check-quizzes.mjs.
+                            collection: tests
+                            filters:
+                              - { field: slug, values: ['{{slug}}'] }
+                            value_field: 'test.results.*.title'
+                            display_fields: ['test.results.*.title']
+                            search_fields: ['test.results.*.title']
+                            hint: Каким результатам этот вариант даёт по баллу. Список — из сохранённых результатов этого теста; новые появятся после сохранения.
+                          - label: Реплика
+                            name: reply
+                            widget: text
+                            required: false
+                            hint: Необязательно. Короткая фраза, которая появится под вариантом после выбора.
 
   # Отдельные страницы сайта. Это «файловая коллекция»: записи не создаются
   # и не удаляются, их список известен заранее и записан прямо здесь.
