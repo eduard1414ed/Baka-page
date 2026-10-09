@@ -59,7 +59,10 @@ function imageSrcs(src, dev) {
 async function image(raw, dev) {
 	const src = String(raw?.src ?? '').trim();
 	if (!src) return null;
-	return { ...imageSrcs(src, dev), alt: String(raw?.alt ?? '').trim(), ratio: await imageRatio(src) };
+	// `file` — путь к оригиналу в public/: из него сборка рисует превью
+	// страницы результата (src/plugins/og-test-card.mjs), а `src` на сайте —
+	// уже сжатая копия.
+	return { ...imageSrcs(src, dev), file: src, alt: String(raw?.alt ?? '').trim(), ratio: await imageRatio(src) };
 }
 
 /** Адреса тайтлов, на которые ведут ссылки в готовой разметке. Тот же образец,

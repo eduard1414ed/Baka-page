@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import sharp from 'sharp';
 import { ogSize, OG_DEFAULT_WIDTH, OG_DEFAULT_HEIGHT, OG_BACKGROUND, OG_DEFAULT } from '../lib/ogImage.mjs';
+import { renderTestResultCard } from './og-test-card.mjs';
 
 /**
  * Картинки превью для соцсетей: /og/{slug}.jpg (тз/08, 2.4).
@@ -95,10 +96,35 @@ async function buildDefaultBanner() {
 		.toBuffer();
 }
 
+/**
+ * Превью страницы результата теста — рисуется заново (og-test-card.mjs),
+ * а не повторяет обложку. Картинка результата — ОРИГИНАЛ из public/:
+ * в готовой сборке его может уже не быть, шаг сжатия оставляет только
+ * копии, на которые ссылаются страницы.
+ *
+ * Картинки нет на диске или она с чужого сервера — превью без картинки
+ * и строчка в лог: за чужим файлом сборка в сеть не ходит.
+ */
+async function buildTestResultCard({ og, test, title, image }, root, logger) {
+	let file = null;
+	if (image && !/^https?:\/\//.test(image)) {
+		const local = fileURLToPath(new URL(`public${decodeURIComponent(image)}`, root));
+		if (existsSync(local)) file = await readFile(local);
+	}
+	if (image && !file) logger.warn(`Превью ${og}: картинка результата недоступна (${image}), нарисовал без неё`);
+	const card = await renderTestResultCard({ test, title, image: file });
+	if (card.cut) logger.warn(`Превью ${og}: заголовок результата «${title}» не влез и при ${card.size} px — в превью он обрезан многоточием`);
+	return card.jpg;
+}
+
 export default function ogImagesIntegration() {
+	let root;
 	return {
 		name: 'og-images',
 		hooks: {
+			'astro:config:done': ({ config }) => {
+				root = config.root;
+			},
 			'astro:build:done': async ({ dir, logger }) => {
 				const ogDir = new URL(`${OG_DIR}/`, dir);
 				await mkdir(fileURLToPath(ogDir), { recursive: true });
@@ -119,13 +145,24 @@ export default function ogImagesIntegration() {
 
 				let made = 0;
 				let fellBack = 0;
+				let cards = 0;
 
-				for (const { og, source } of sources) {
+				for (const entry of sources) {
+					const { og, source } = entry;
 					// Только то, на что реально ссылаются собранные страницы.
 					// Тот же приём, что у обложек выпусков в optimize-uploads:
 					// иначе на архиве в полторы сотни постов сюда посыпались бы
 					// файлы для страниц, которых не существует.
 					if (!builtHtml.includes(og)) continue;
+
+					// Результат теста: своя папка /og/test/<тест>/ и свой рисовальщик.
+					if (entry.kind === 'test-result') {
+						const cardPath = fileURLToPath(new URL(`.${og}`, dir));
+						await mkdir(path.dirname(cardPath), { recursive: true });
+						await writeFile(cardPath, await buildTestResultCard(entry, root, logger));
+						cards += 1;
+						continue;
+					}
 
 					const outPath = fileURLToPath(new URL(path.basename(og), ogDir));
 
@@ -154,6 +191,7 @@ export default function ogImagesIntegration() {
 
 				const tail = fellBack > 0 ? `, ещё ${fellBack} с общей картинкой` : '';
 				logger.info(`Сделал ${made} картинок превью, каждая в форме своей обложки${tail}`);
+				if (cards > 0) logger.info(`Сделал ${cards} превью страниц результатов тестов`);
 
 				// Список исходников — рабочий файл сборки, на сайте ему делать
 				// нечего.

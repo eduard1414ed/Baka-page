@@ -112,3 +112,14 @@ export function ogUrlForPost(slug) {
 export function ogUrlForAnime(animeId) {
 	return `/og/anime-${animeId}.jpg`;
 }
+
+/**
+ * Адрес превью страницы результата теста (сессия «Тесты-5б»).
+ *
+ * Своя папка `/og/test/<тест>/`, а не плоское имя: адрес результата берётся
+ * из его заголовка и сам по себе ни от чего не огорожен — плоское
+ * `/og/<тест>-<результат>.jpg` могло бы совпасть с превью материала.
+ */
+export function ogUrlForTestResult(testId, resultSlug) {
+	return `/og/test/${testId}/${resultSlug}.jpg`;
+}

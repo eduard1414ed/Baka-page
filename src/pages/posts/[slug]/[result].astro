@@ -21,8 +21,11 @@
 // у самого теста (`isDevTestPreview`). Заслон scripts/check-drafts-in-dist.mjs
 // ловит и их: они лежат внутри папки теста.
 //
-// ПРЕВЬЮ ДЛЯ СОЦСЕТЕЙ ПОКА ОБЩЕЕ С ТЕСТОМ — его обложка или общая картинка
-// сайта. Своё превью 1200×630 у каждого результата — сессия «Тесты-5б».
+// ПРЕВЬЮ ДЛЯ СОЦСЕТЕЙ У КАЖДОГО РЕЗУЛЬТАТА СВОЁ, 1200×630 (сессия «Тесты-5б»):
+// название теста, заголовок и картинка результата. Рисует сборка
+// (src/plugins/og-test-card.mjs) по списку src/pages/og-sources.json.ts;
+// у черновика его нет — в режиме разработки адрес ведёт в пустоту, и это
+// нестрашно: черновик не пересылают.
 import { getCollection, getEntry } from 'astro:content';
 import Layout from '../../../layouts/Layout.astro';
 import ContentHeader from '../../../components/ContentHeader.astro';
@@ -31,7 +34,7 @@ import AnimeHoverCard from '../../../components/AnimeHoverCard.astro';
 import { isPublished, isDevTestPreview } from '../../../lib/publishing.mjs';
 import { isExternalPost } from '../../../lib/externalPost.mjs';
 import { prepareTest } from '../../../lib/testPage.mjs';
-import { socialSource } from '../../../lib/postImage.mjs';
+import { ogUrlForTestResult } from '../../../lib/ogImage.mjs';
 import { buildCatalog } from '../../../lib/animeCatalog.mjs';
 import { hoverTitles } from '../../../lib/animeHoverTitles.mjs';
 
@@ -60,8 +63,6 @@ const { post, test, result } = Astro.props;
 const { title } = post.data;
 const testPath = `/posts/${post.id}/`;
 
-// Превью — то же, что у страницы теста (там же правило, src/lib/postImage.mjs).
-const ogImage = socialSource({ cover: post.data.cover, episodeImageUrl: null, body: post.body });
 
 const description = `Результат теста «${title}» — «${result.title}». Пройдите тест и узнайте свой.`;
 
@@ -82,8 +83,8 @@ const hoverEntries = (await Promise.all(result.textAnime.map((id: string) => get
 <Layout
 	title={`«${result.title}» — результат теста «${title}»`}
 	description={description}
-	ogSlug={ogImage ? post.id : null}
-	imageAlt={ogImage ? `Обложка: ${title}` : ''}
+	ogUrl={ogUrlForTestResult(post.id, result.slug)}
+	imageAlt={`Результат «${result.title}» в тесте «${title}»`}
 	noindex
 	canonicalPath={testPath}
 >

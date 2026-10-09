@@ -23,6 +23,10 @@
 // утекла хоть одна страница результата — папка черновика в сборке есть.
 // В сообщении они перечисляются поимённо.
 //
+// ПРЕВЬЮ РЕЗУЛЬТАТОВ ТЕСТА (сессия «Тесты-5б») лежат в /og/test/<тест>/ —
+// отдельно от страниц, и в них видны название теста и заголовки результатов.
+// Утекло превью без страницы — это тоже утечка: его можно открыть по адресу.
+//
 // СПРАШИВАЕТ ТОЛЬКО ПАПКУ СТРАНИЦЫ, А НЕ УПОМИНАНИЯ АДРЕСА. Ссылка на черновик
 // из опубликованного поста — обычное дело (её показывает post-links-integration),
 // и заслон, краснеющий на обычной работе, сняли бы вместе с пользой.
@@ -58,13 +62,17 @@ export function findDraftPages(postsDir, distDir) {
 		checked++;
 		const id = file.replace(/\.md$/, '');
 		const folder = join(distDir, 'posts', id);
-		if (!existsSync(folder)) continue;
+		const ogFolder = join(distDir, 'og', 'test', id);
+		if (!existsSync(folder) && !existsSync(ogFolder)) continue;
 		// Вложенные папки — страницы результатов теста.
-		const results = readdirSync(folder, { withFileTypes: true })
-			.filter((entry) => entry.isDirectory())
-			.map((entry) => entry.name)
-			.sort();
-		leaks.push({ id, title: String(data.title ?? id), results });
+		const results = existsSync(folder)
+			? readdirSync(folder, { withFileTypes: true })
+					.filter((entry) => entry.isDirectory())
+					.map((entry) => entry.name)
+					.sort()
+			: [];
+		const previews = existsSync(ogFolder) ? readdirSync(ogFolder).sort() : [];
+		leaks.push({ id, title: String(data.title ?? id), page: existsSync(folder), results, previews });
 	}
 	return { checked, leaks };
 }
@@ -76,8 +84,9 @@ function report({ checked, leaks }) {
 	}
 	console.error(`✗✗ В ГОТОВОМ САЙТЕ ЕСТЬ СТРАНИЦЫ НЕОПУБЛИКОВАННЫХ МАТЕРИАЛОВ: ${leaks.length}. Выкладывать нельзя.`);
 	for (const leak of leaks) {
-		console.error(`   /posts/${leak.id}/ — «${leak.title}»`);
+		console.error(`   ${leak.page ? `/posts/${leak.id}/` : `(страницы нет) ${leak.id}`} — «${leak.title}»`);
 		for (const result of leak.results) console.error(`      и страница результата /posts/${leak.id}/${result}/`);
+		for (const file of leak.previews) console.error(`      и превью результата /og/test/${leak.id}/${file}`);
 	}
 	console.error('   Скорее всего, сломано условие показа черновиков в режиме разработки:');
 	console.error('   isDevTestPreview в src/lib/publishing.mjs и места, где его зовут.');
@@ -122,6 +131,25 @@ function selftest() {
 			r.leaks.length === 1 && r.leaks[0].id === 'chernovik-testa' && r.leaks[0].results.join() === 'novichok',
 		);
 
+		rmSync(join(dist, 'posts', 'chernovik-testa'), { recursive: true });
+
+		// Подлог как в жизни: страниц нет, а превью результата черновика
+		// нарисовано (сломан отбор в src/pages/og-sources.json.ts).
+		mkdirSync(join(dist, 'og', 'test', 'chernovik-testa'), { recursive: true });
+		writeFileSync(join(dist, 'og', 'test', 'chernovik-testa', 'novichok.jpg'), 'jpg');
+		r = findDraftPages(posts, dist);
+		check(
+			'только превью результата черновика: поймано и названо',
+			r.leaks.length === 1 && r.leaks[0].id === 'chernovik-testa' && !r.leaks[0].page && r.leaks[0].previews.join() === 'novichok.jpg',
+		);
+		rmSync(join(dist, 'og', 'test', 'chernovik-testa'), { recursive: true });
+
+		// У опубликованного теста превью результатов законны — молчим.
+		mkdirSync(join(dist, 'og', 'test', 'opublikovan'), { recursive: true });
+		writeFileSync(join(dist, 'og', 'test', 'opublikovan', 'znatok.jpg'), 'jpg');
+		r = findDraftPages(posts, dist);
+		check('превью опубликованного: молчит', r.leaks.length === 0);
+
 		// У опубликованного теста страницы результатов законны — молчим.
 		mkdirSync(join(dist, 'posts', 'opublikovan', 'znatok'));
 		r = findDraftPages(posts, dist);
@@ -131,7 +159,7 @@ function selftest() {
 		mkdirSync(join(dist, 'posts', 'pustaya-galochka'));
 		mkdirSync(join(dist, 'posts', 'v-budushchem'));
 		r = findDraftPages(posts, dist);
-		check('пустая галочка и отложенный: пойманы оба', r.leaks.length === 3);
+		check('пустая галочка и отложенный: пойманы оба', r.leaks.map((leak) => leak.id).sort().join() === 'pustaya-galochka,v-budushchem');
 		check('код выхода при находке — 1', report(r) === 1);
 	} finally {
 		rmSync(box, { recursive: true, force: true });

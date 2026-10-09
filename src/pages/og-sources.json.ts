@@ -21,7 +21,8 @@ import { isExternalPost } from '../lib/externalPost.mjs';
 import { findEpisodeByGuid } from '../lib/podcastFeed.mjs';
 import { socialSource } from '../lib/postImage.mjs';
 import { animeSocialSource } from '../lib/animePoster.mjs';
-import { ogUrlForPost, ogUrlForAnime } from '../lib/ogImage.mjs';
+import { ogUrlForPost, ogUrlForAnime, ogUrlForTestResult } from '../lib/ogImage.mjs';
+import { prepareTest } from '../lib/testPage.mjs';
 
 export const prerender = true;
 
@@ -58,7 +59,27 @@ export const GET: APIRoute = async () => {
 		})
 		.filter(Boolean);
 
-	return new Response(JSON.stringify([...list.filter(Boolean), ...animeSources]), {
+	// Страницы результатов тестов (сессия «Тесты-5б»): превью РИСУЕТСЯ, а не
+	// берётся с обложки, — поэтому запись другого вида, `kind: 'test-result'`,
+	// с текстом и картинкой вместо `source`. Тот же отбор и тот же адрес
+	// результата, что у самих страниц (posts/[slug]/[result].astro,
+	// prepareTest): черновику превью не рисуется вовсе.
+	const tests = posts.filter((post) => post.data.category === 'test');
+	const testSources = [];
+	for (const post of tests) {
+		const test = await prepareTest(post, { dev: false, publishedIds: new Set(), postRefs: false });
+		for (const result of test.results) {
+			testSources.push({
+				og: ogUrlForTestResult(post.id, result.slug),
+				kind: 'test-result',
+				test: post.data.title,
+				title: result.title,
+				image: result.image?.file ?? null,
+			});
+		}
+	}
+
+	return new Response(JSON.stringify([...list.filter(Boolean), ...animeSources, ...testSources]), {
 		headers: { 'Content-Type': 'application/json' },
 	});
 };
