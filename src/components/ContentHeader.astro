@@ -17,15 +17,19 @@ interface Props {
 	/** Куда ведёт «← Назад», когда возвращаться некуда: раздел материала.
 	    Подпись у ссылки одна на весь сайт и живёт в разметке ниже. */
 	backHref: string;
-	date: Date;
+	/** Дата материала справа в метастроке. Нет — там стоит `label`. */
+	date?: Date | null;
 	/** «6 мин читать» или «19 мин смотреть». null — показывать нечего. */
 	timing?: string | null;
 	title: string;
 	/** Подводка. Есть только у статьи и заметки, и только если её написали. */
 	lead?: string | null;
+	/** Подпись справа ВМЕСТО даты и длительности. Случай один: страница
+	    результата теста — «результат теста» (ТЗ-тесты §5, макет, экран 6). */
+	label?: string | null;
 }
 
-const { backHref, date, timing = null, title, lead = null } = Astro.props;
+const { backHref, date = null, timing = null, title, lead = null, label = null } = Astro.props;
 ---
 
 <header class="content-header">
@@ -40,9 +44,10 @@ const { backHref, date, timing = null, title, lead = null } = Astro.props;
 		    возвращаться некуда. */}
 		<a class="back" href={backHref} data-back>← Назад</a>
 		<div class="content-meta-right">
-			<time datetime={date.toISOString().slice(0, 10)}>{formatPostDate(date)}</time>
+			{label && <span>{label}</span>}
+			{date && <time datetime={date.toISOString().slice(0, 10)}>{formatPostDate(date)}</time>}
 			{
-				timing && (
+				date && timing && (
 					<Fragment>
 						<span class="meta-dot" aria-hidden="true">
 							·

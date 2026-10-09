@@ -90,9 +90,12 @@ async function postRefsHtml(ids, publishedIds, where) {
 
 /**
  * @param {{ id: string, data: Record<string, any> }} post
- * @param {{ dev: boolean, publishedIds: Set<string> }} options
+ * @param {{ dev: boolean, publishedIds: Set<string>, postRefs?: boolean }} options
+ *   `postRefs: false` — врезки «ещё по теме» не размечать: странице
+ *   результата они не нужны (ТЗ §5), а лог сборки повторил бы строку
+ *   про битую врезку, уже сказанную страницей теста.
  */
-export async function prepareTest(post, { dev, publishedIds }) {
+export async function prepareTest(post, { dev, publishedIds, postRefs = true }) {
 	const test = post.data.test ?? {};
 	const kind = test.kind?.type === 'personality' ? 'personality' : 'quiz';
 	const rawQuestions = test.kind?.questions ?? [];
@@ -135,7 +138,9 @@ export async function prepareTest(post, { dev, publishedIds }) {
 		const title = String(r.title ?? '').trim();
 		if (!title) continue; // без заголовка нет адреса; о нём говорит проверка тестов
 		const textHtml = await renderMarkdownString(r.text);
-		animeLinks(textHtml).forEach((id) => animeInText.add(id));
+		// Тайтлы ссылок в тексте ЭТОГО результата — марке страницы результата.
+		const textAnime = [...new Set(animeLinks(textHtml))];
+		textAnime.forEach((id) => animeInText.add(id));
 		results.push({
 			slug: slugify(title),
 			title,
@@ -143,11 +148,14 @@ export async function prepareTest(post, { dev, publishedIds }) {
 			textHtml,
 			from: typeof r.from === 'number' ? r.from : null,
 			to: typeof r.to === 'number' ? r.to : null,
-			postsHtml: await postRefsHtml(
-				(r.posts ?? []).map((id) => String(id).trim()).filter(Boolean),
-				publishedIds,
-				`${post.id}, результат «${title}»`,
-			),
+			postsHtml: postRefs
+				? await postRefsHtml(
+						(r.posts ?? []).map((id) => String(id).trim()).filter(Boolean),
+						publishedIds,
+						`${post.id}, результат «${title}»`,
+					)
+				: '',
+			textAnime,
 			anime: (r.anime ?? []).map((id) => String(id).trim()).filter(Boolean),
 		});
 	}

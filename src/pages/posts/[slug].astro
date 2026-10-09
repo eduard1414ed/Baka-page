@@ -47,9 +47,7 @@ import { resolveEpisodeCover } from '../../lib/episodeCover.mjs';
 import { isPublished, isDevTestPreview } from '../../lib/publishing.mjs';
 import { prepareTest } from '../../lib/testPage.mjs';
 import { buildCatalog } from '../../lib/animeCatalog.mjs';
-import { stampVar } from '../../lib/animeStamp.mjs';
-import { getAnimePosterSrcs } from '../../lib/animePoster.mjs';
-import { plural } from '../../lib/plural.mjs';
+import { hoverTitles as buildHoverTitles } from '../../lib/animeHoverTitles.mjs';
 import { getPostTiming } from '../../lib/postTiming.mjs';
 import { isExternalPost } from '../../lib/externalPost.mjs';
 import { getCardMedia } from '../../lib/postCardMedia.mjs';
@@ -375,27 +373,9 @@ const hoverEntries = testData
 		]
 	: animeEntries;
 
-const hoverTitles = hoverEntries.map((entry) => {
-	const item = catalogById.get(entry!.id);
-	const posters = getAnimePosterSrcs(entry!.data.poster);
-	const count = item?.count ?? 0;
-
-	return {
-		id: entry!.id,
-		href: `/anime/${entry!.id}/`,
-		code: item?.code ?? null,
-		title: entry!.data.titleRu || entry!.data.titleOriginal,
-		// Две строки, как в блоке каталога на главной: одной строкой перенос рвал
-		// её по любому пробелу, и число отрывалось от своего слова.
-		meta: [
-			[entry!.data.year, entry!.data.studio].filter(Boolean).join(' · '),
-			count > 0 ? `${count} ${plural(count, ['упоминание', 'упоминания', 'упоминаний'])}` : '',
-		] as [string, string],
-		// Постер 320w: колонка в марке 120 px, этого хватает и на плотный экран.
-		poster: posters.length > 0 ? posters[0].src : null,
-		stamp: stampVar(entry!.id),
-	};
-});
+// Данные марки — общим правилом со страницей результата теста
+// (src/lib/animeHoverTitles.mjs).
+const hoverTitles = buildHoverTitles(hoverEntries as any[], catalogById);
 
 // Слова упомянутых тайтлов для поиска — невидимой строкой в конце статьи,
 // см. комментарий у самой строки ниже.

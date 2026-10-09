@@ -4,9 +4,15 @@
 // `<template class="result-tpl">`.
 //
 // ОДИН КОМПОНЕНТ НА ДВА МЕСТА, И ЭТО ГЛАВНОЕ В НЁМ. Блок рисует тест
-// (в шаблоне, на место его ставит скрипт Quiz.astro) и будет рисовать
-// страница результата (ТЗ §5). Две копии разметки разъехались бы молча:
-// страницу результата и тест рядом никто не открывает.
+// (в шаблоне, на место его ставит скрипт Quiz.astro) и страница результата
+// (`page`, posts/[slug]/[result].astro, ТЗ §5). Две копии разметки
+// разъехались бы молча: страницу результата и тест рядом никто не открывает.
+//
+// НА СТРАНИЦЕ РЕЗУЛЬТАТА (`page`) у блока нет названия теста (оно в заголовке
+// страницы), подписи `[ ТЕСТ ]`, кнопок и «ещё по теме». Строка счёта лежит
+// спрятанной (`hidden`), а блок — без `has-score`: число берётся из ссылки
+// (`?score=9`), и показывает его скрипт страницы, только если число годное.
+// Без скрипта и без годного числа блок выглядит как у личностного теста.
 //
 // Прятать его разметку от поиска — дело того, кто его ставит: тест кладёт
 // блок в `<template>`, туда поиск не заглядывает.
@@ -18,8 +24,9 @@ interface Image {
 }
 
 interface Props {
-	/** Название теста — подпись блока (его скринят без страницы). */
-	testTitle: string;
+	/** Название теста — подпись блока (его скринят без страницы).
+	    На странице результата (`page`) не нужно: оно в заголовке страницы. */
+	testTitle?: string;
 	/** Сколько вопросов — для строки «9 из 12». */
 	total: number;
 	/** Есть ли строка счёта (у викторины есть, у личностного нет). Само
@@ -30,10 +37,14 @@ interface Props {
 		image: Image | null;
 		textHtml: string;
 		postsHtml: string;
+		from?: number | null;
+		to?: number | null;
 	};
+	/** Блок для страницы результата (ТЗ §5), а не для теста. */
+	page?: boolean;
 }
 
-const { testTitle, total, withScore, result: r } = Astro.props;
+const { testTitle = '', total, withScore, result: r, page = false } = Astro.props;
 
 // Слово через дефис («VHS-полка», «что-то») в заголовке результата не рвём
 // по строкам (ТЗ §4): такие слова уходят в неразрывную обёртку.
@@ -48,10 +59,22 @@ const withNobr = (text: string) => text.split(/(\S+-\S+)/).map((part, i) => ({ p
 const imgPlace = (img: Image | null) => (!img ? null : (img.ratio ?? 0) > 1 ? 'img-top' : 'img-side');
 ---
 
-<section class="result" aria-label="Ваш результат" tabindex="-1">
-	<span class="rcard-test tech">[&thinsp;Тест&thinsp;]</span>
-	<p class="rcard-name">{testTitle}</p>
-	<div class:list={['rcard-body', imgPlace(r.image), withScore && 'has-score']}>
+<section
+	class:list={['result', page && 'is-page']}
+	aria-label={page ? 'Результат' : 'Ваш результат'}
+	tabindex={page ? undefined : '-1'}
+	data-score-from={page && withScore ? (r.from ?? '') : undefined}
+	data-score-to={page && withScore ? (r.to ?? '') : undefined}
+>
+	{
+		!page && (
+			<>
+				<span class="rcard-test tech">[&thinsp;Тест&thinsp;]</span>
+				<p class="rcard-name">{testTitle}</p>
+			</>
+		)
+	}
+	<div class:list={['rcard-body', imgPlace(r.image), withScore && !page && 'has-score']}>
 		{r.image && (
 			<img
 				class="rcard-img"
@@ -68,7 +91,7 @@ const imgPlace = (img: Image | null) => (!img ? null : (img.ratio ?? 0) > 1 ? 'i
 			/>
 		)}
 		{withScore && (
-			<p class="rcard-score">
+			<p class="rcard-score" hidden={page}>
 				<span class="rcard-score-n" />
 				&nbsp;из&nbsp;{total}
 			</p>
@@ -81,12 +104,16 @@ const imgPlace = (img: Image | null) => (!img ? null : (img.ratio ?? 0) > 1 ? 'i
 	{/* Кнопки «Поделиться результатом» пока нет — она появится
 	    в сессии «Тесты-5». Места под неё не держим: «Пройти ещё
 	    раз» стоит одна. Вид кнопки — `.quiz-btn` в Quiz.astro. */}
-	<div class="result-actions">
-		<button type="button" class="quiz-btn" data-again>
-			Пройти ещё раз
-		</button>
-	</div>
-	{r.postsHtml && (
+	{
+		!page && (
+			<div class="result-actions">
+				<button type="button" class="quiz-btn" data-again>
+					Пройти ещё раз
+				</button>
+			</div>
+		)
+	}
+	{!page && r.postsHtml && (
 		<div class="result-group">
 			<span class="eyebrow tech">ещё по теме</span>
 			<Fragment set:html={r.postsHtml} />
@@ -110,6 +137,14 @@ const imgPlace = (img: Image | null) => (!img ? null : (img.ratio ?? 0) > 1 ? 'i
 	   поломкой; у кнопок внутри обводка своя, общая. */
 	.result:focus {
 		outline: none;
+	}
+
+	/* На странице результата блок стоит сразу под заголовочным блоком
+	   страницы — своя подпись не отмечает начало, отбивку даёт шапка
+	   (макет, экран 6). */
+	.result.is-page,
+	.is-page .rcard-body {
+		margin-top: 0;
 	}
 
 	.rcard-test {

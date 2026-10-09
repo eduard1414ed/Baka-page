@@ -18,6 +18,11 @@
 // по шапке, прочитанной `normalizeFrontmatter` (пустая галочка «черновик» —
 // черновик). Своей копии правила тут нет.
 //
+// СТРАНИЦЫ РЕЗУЛЬТАТОВ ТЕСТА (сессия «Тесты-5а») лежат ВНУТРИ папки теста —
+// /posts/<тест>/<результат>/, — поэтому вопрос «есть ли папка» ловит и их:
+// утекла хоть одна страница результата — папка черновика в сборке есть.
+// В сообщении они перечисляются поимённо.
+//
 // СПРАШИВАЕТ ТОЛЬКО ПАПКУ СТРАНИЦЫ, А НЕ УПОМИНАНИЯ АДРЕСА. Ссылка на черновик
 // из опубликованного поста — обычное дело (её показывает post-links-integration),
 // и заслон, краснеющий на обычной работе, сняли бы вместе с пользой.
@@ -37,7 +42,7 @@ const ROOT = fileURLToPath(new URL('..', import.meta.url));
  *
  * @param {string} postsDir папка с .md материалов
  * @param {string} distDir  папка готового сайта
- * @returns {{ checked: number, leaks: { id: string, title: string }[] }}
+ * @returns {{ checked: number, leaks: { id: string, title: string, results: string[] }[] }}
  */
 export function findDraftPages(postsDir, distDir) {
 	let checked = 0;
@@ -52,7 +57,14 @@ export function findDraftPages(postsDir, distDir) {
 
 		checked++;
 		const id = file.replace(/\.md$/, '');
-		if (existsSync(join(distDir, 'posts', id))) leaks.push({ id, title: String(data.title ?? id) });
+		const folder = join(distDir, 'posts', id);
+		if (!existsSync(folder)) continue;
+		// Вложенные папки — страницы результатов теста.
+		const results = readdirSync(folder, { withFileTypes: true })
+			.filter((entry) => entry.isDirectory())
+			.map((entry) => entry.name)
+			.sort();
+		leaks.push({ id, title: String(data.title ?? id), results });
 	}
 	return { checked, leaks };
 }
@@ -63,7 +75,10 @@ function report({ checked, leaks }) {
 		return 0;
 	}
 	console.error(`✗✗ В ГОТОВОМ САЙТЕ ЕСТЬ СТРАНИЦЫ НЕОПУБЛИКОВАННЫХ МАТЕРИАЛОВ: ${leaks.length}. Выкладывать нельзя.`);
-	for (const leak of leaks) console.error(`   /posts/${leak.id}/ — «${leak.title}»`);
+	for (const leak of leaks) {
+		console.error(`   /posts/${leak.id}/ — «${leak.title}»`);
+		for (const result of leak.results) console.error(`      и страница результата /posts/${leak.id}/${result}/`);
+	}
 	console.error('   Скорее всего, сломано условие показа черновиков в режиме разработки:');
 	console.error('   isDevTestPreview в src/lib/publishing.mjs и места, где его зовут.');
 	return 1;
@@ -96,6 +111,21 @@ function selftest() {
 		mkdirSync(join(dist, 'posts', 'chernovik-testa'));
 		r = findDraftPages(posts, dist);
 		check('страница черновика теста: поймана', r.leaks.length === 1 && r.leaks[0].id === 'chernovik-testa');
+		rmSync(join(dist, 'posts', 'chernovik-testa'), { recursive: true });
+
+		// Подлог как в жизни: страницы самого теста нет, а страница его
+		// результата в сборку попала (сломан отбор у posts/[slug]/[result].astro).
+		mkdirSync(join(dist, 'posts', 'chernovik-testa', 'novichok'), { recursive: true });
+		r = findDraftPages(posts, dist);
+		check(
+			'только страница результата черновика: поймана и названа',
+			r.leaks.length === 1 && r.leaks[0].id === 'chernovik-testa' && r.leaks[0].results.join() === 'novichok',
+		);
+
+		// У опубликованного теста страницы результатов законны — молчим.
+		mkdirSync(join(dist, 'posts', 'opublikovan', 'znatok'));
+		r = findDraftPages(posts, dist);
+		check('результат опубликованного: молчит', !r.leaks.some((leak) => leak.id === 'opublikovan'));
 
 		// Пустая галочка читается черновиком (в безопасную сторону).
 		mkdirSync(join(dist, 'posts', 'pustaya-galochka'));

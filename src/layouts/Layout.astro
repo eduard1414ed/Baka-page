@@ -40,6 +40,13 @@ interface Props {
 	    поиска не путать: та закрыта `noindex`, но живёт по своему адресу,
 	    и канонический ей нужен. */
 	noCanonical?: boolean;
+	/** Канонический адрес — ДРУГАЯ страница (путь от корня сайта).
+	    Случай ровно один: страница результата теста, её канонический
+	    адрес — сам тест (ТЗ-тесты §5). Своим адресом для соцсетей
+	    (`og:url`) она остаётся: по нему ВКонтакте и Facebook решают, чьё
+	    превью показать, и с адресом теста в превью был бы тест, а не
+	    результат. */
+	canonicalPath?: string | null;
 }
 // Разметка Schema.org приезжает в <head> через именованный слот `head`,
 // а не через свойство: так страница пишет её обычным <JsonLd slot="head" />.
@@ -54,6 +61,7 @@ const {
 	type = 'website',
 	noindex = false,
 	noCanonical = false,
+	canonicalPath = null,
 } = Astro.props;
 
 const documentTitle = titleFull ?? pageTitle(title);
@@ -73,7 +81,8 @@ const ogImage = absoluteUrl(ogUrl ?? (ogSlug ? ogUrlForPost(ogSlug) : OG_DEFAULT
 // Закрывает сразу два случая: www.bakapodcast.com, который показывает тот же
 // сайт, и адреса с хвостом вроде ?utm_source=telegram или #t=730 из поиска
 // по расшифровке — для поисковика это тоже были бы отдельные страницы.
-const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ownUrl = new URL(Astro.url.pathname, Astro.site).href;
+const canonical = canonicalPath ? new URL(canonicalPath, Astro.site).href : ownUrl;
 ---
 
 <!doctype html>
@@ -109,7 +118,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 		<meta property="og:type" content={type} />
 		<meta property="og:site_name" content={SITE_NAME} />
 		<meta property="og:locale" content={SITE_LOCALE} />
-		<meta property="og:url" content={canonical} />
+		<meta property="og:url" content={ownUrl} />
 		<meta property="og:title" content={documentTitle} />
 		<meta property="og:description" content={description} />
 		<meta property="og:image" content={ogImage} />

@@ -1,0 +1,183 @@
+---
+// Страница результата теста (ТЗ-тесты §5; макет, экран 6). Сессия «Тесты-5а».
+// Адрес — /posts/<тест>/<адрес-результата>/; адрес результата — тем же
+// правилом, что баллы и шаблоны теста (`slug` в src/lib/testPage.mjs).
+//
+// Сюда ведёт ссылка «Поделиться результатом»: тот, кто её получил, видит
+// чужой результат и большую кнопку пройти тест самому. Поэтому на странице
+// ровно три вещи — заголовочный блок (название теста), блок результата
+// и «ПРОЙТИ ТЕСТ →»; под ней 64 px и подвал, без соседних материалов
+// и «Поддержать».
+//
+// БЛОК РЕЗУЛЬТАТА — ТОТ ЖЕ КОМПОНЕНТ, ЧТО У ТЕСТА (TestResult.astro, `page`).
+//
+// ДЛЯ ПОИСКОВИКОВ СТРАНИЦЫ НЕТ: `noindex`, канонический адрес — сам тест
+// (почти пустых страниц было бы по десятку на тест). В карту сайта, RSS
+// и `llms.txt` она не попадает сама: их строят из списка постов, а результат
+// не пост. В поиск по сайту — тоже: Pagefind берёт только страницы
+// с `data-pagefind-body`, а здесь его нет (как у `/mybest/` и `/search/`).
+//
+// ЧЕРНОВИК ТЕСТА — страницы результатов только в режиме разработки, как
+// у самого теста (`isDevTestPreview`). Заслон scripts/check-drafts-in-dist.mjs
+// ловит и их: они лежат внутри папки теста.
+//
+// ПРЕВЬЮ ДЛЯ СОЦСЕТЕЙ ПОКА ОБЩЕЕ С ТЕСТОМ — его обложка или общая картинка
+// сайта. Своё превью 1200×630 у каждого результата — сессия «Тесты-5б».
+import { getCollection, getEntry } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import ContentHeader from '../../../components/ContentHeader.astro';
+import TestResult from '../../../components/TestResult.astro';
+import AnimeHoverCard from '../../../components/AnimeHoverCard.astro';
+import { isPublished, isDevTestPreview } from '../../../lib/publishing.mjs';
+import { isExternalPost } from '../../../lib/externalPost.mjs';
+import { prepareTest } from '../../../lib/testPage.mjs';
+import { socialSource } from '../../../lib/postImage.mjs';
+import { buildCatalog } from '../../../lib/animeCatalog.mjs';
+import { hoverTitles } from '../../../lib/animeHoverTitles.mjs';
+
+export async function getStaticPaths() {
+	// Тот же отбор, что у страницы теста (posts/[slug].astro): у результата
+	// страница есть ровно тогда, когда она есть у его теста.
+	const tests = await getCollection(
+		'posts',
+		({ data }) =>
+			data.category === 'test' &&
+			(isPublished(data) || isDevTestPreview(data, import.meta.env.DEV)) &&
+			!isExternalPost(data),
+	);
+
+	const paths = [];
+	for (const post of tests) {
+		const test = await prepareTest(post, { dev: import.meta.env.DEV, publishedIds: new Set(), postRefs: false });
+		for (const result of test.results) {
+			paths.push({ params: { slug: post.id, result: result.slug }, props: { post, test, result } });
+		}
+	}
+	return paths;
+}
+
+const { post, test, result } = Astro.props;
+const { title } = post.data;
+const testPath = `/posts/${post.id}/`;
+
+// Превью — то же, что у страницы теста (там же правило, src/lib/postImage.mjs).
+const ogImage = socialSource({ cover: post.data.cover, episodeImageUrl: null, body: post.body });
+
+const description = `Результат теста «${title}» — «${result.title}». Пройдите тест и узнайте свой.`;
+
+// Марка над ссылками на тайтлы в тексте результата — как на странице теста.
+// Каталог собирается тем же вызовом, что у страницы материала, и потому
+// берётся из её запомненного ответа, а не считается заново.
+const animeList = await getCollection('anime');
+const catalogById = new Map(
+	buildCatalog({
+		posts: await getCollection('posts', ({ data }) => isPublished(data)),
+		transcripts: await getCollection('transcripts'),
+		animeList,
+	}).map((item) => [item.id, item]),
+);
+const hoverEntries = (await Promise.all(result.textAnime.map((id: string) => getEntry('anime', id)))).filter(Boolean);
+---
+
+<Layout
+	title={`«${result.title}» — результат теста «${title}»`}
+	description={description}
+	ogSlug={ogImage ? post.id : null}
+	imageAlt={ogImage ? `Обложка: ${title}` : ''}
+	noindex
+	canonicalPath={testPath}
+>
+	<div class="site">
+		<article class="result-page">
+			<ContentHeader backHref={testPath} title={title} label="результат теста" />
+			<div class="result-col">
+				<TestResult page total={test.total} withScore={test.kind === 'quiz'} result={result} />
+				<a class="quiz-cta" href={testPath}>Пройти тест<span aria-hidden="true">→</span></a>
+			</div>
+		</article>
+	</div>
+	<AnimeHoverCard titles={hoverTitles(hoverEntries, catalogById)} />
+</Layout>
+
+<style>
+	/* Колонка чтения, как у текста материала и самого теста. Снизу 64 —
+	   и сразу подвал (ТЗ §5). */
+	.result-col {
+		width: 100%;
+		max-width: var(--reading);
+		margin: 0 auto var(--sp-16);
+	}
+
+	/* «ПРОЙТИ ТЕСТ →» — размер «Large action» (§8 дизайн-системы): 56 в
+	   высоту, Inter капслоком, залита чернилами — главное действие страницы.
+	   Капслок и разрядку пишем явно, как в макете, а не классом
+	   технического слоя: гарнитура у кнопки своя, Inter. На телефоне во всю
+	   ширину, на компьютере по содержимому (макет, экран 6). */
+	.quiz-cta {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--sp-2);
+		width: 100%;
+		min-height: 56px;
+		margin-top: var(--sp-6);
+		padding: 0 var(--sp-4);
+		border: 1px solid var(--ink);
+		background: var(--ink);
+		color: var(--paper);
+		font-family: var(--font-body);
+		font-size: var(--caption);
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		text-decoration: none;
+		transition:
+			background var(--transition-fast),
+			border-color var(--transition-fast);
+	}
+
+	.quiz-cta:hover,
+	.quiz-cta:focus-visible {
+		background: var(--accent-text);
+		border-color: var(--accent-text);
+		color: var(--paper);
+	}
+
+	@media (min-width: 621px) {
+		.quiz-cta {
+			display: inline-flex;
+			width: auto;
+			padding: 0 var(--sp-8);
+		}
+	}
+</style>
+
+<script>
+	// «9 ИЗ 12» — ИЗ ССЫЛКИ (`?score=9`, ТЗ §5). Страница статичная и счёта
+	// не знает; показываем строку, только если в ссылке целое число ВНУТРИ
+	// диапазона этого результата («Знаток» 3–3 — только `?score=3`). Мусор
+	// (`?score=99`, `abc`, `1.5`, пусто) — строки нет вовсе, блок выглядит как
+	// у личностного теста: честнее промолчать, чем показать невозможный счёт.
+	//
+	// На `astro:page-load`, а не один раз: переходы по сайту идут без
+	// перезагрузки, и скрипт иначе сработал бы только на первой странице.
+	function показатьСчёт() {
+		const блок = document.querySelector<HTMLElement>('.result.is-page[data-score-from]');
+		const строка = блок?.querySelector<HTMLElement>('.rcard-score');
+		const число = строка?.querySelector('.rcard-score-n');
+		if (!блок || !строка || !число) return;
+
+		const сырое = new URLSearchParams(location.search).get('score') ?? '';
+		const от = Number(блок.dataset.scoreFrom);
+		const до = Number(блок.dataset.scoreTo);
+		if (!/^\d+$/.test(сырое) || блок.dataset.scoreFrom === '' || блок.dataset.scoreTo === '') return;
+		const счёт = Number(сырое);
+		if (счёт < от || счёт > до) return;
+
+		число.textContent = String(счёт);
+		строка.hidden = false;
+		блок.querySelector('.rcard-body')?.classList.add('has-score');
+	}
+
+	document.addEventListener('astro:page-load', показатьСчёт);
+</script>
