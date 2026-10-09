@@ -27,7 +27,7 @@ test:
       from: 3
       to: 3
       posts:
-        - lyubuemsya
+        - lyubuemsya-3990
       anime: []
   kind:
     type: quiz
