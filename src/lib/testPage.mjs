@@ -69,10 +69,30 @@ function animeLinks(html) {
 }
 
 /**
- * @param {{ id: string, data: Record<string, any> }} post
- * @param {{ dev: boolean }} options
+ * Врезки «Наш материал» под результатом — ТЕМ ЖЕ КОДОМ, что `::material`
+ * в статье: размечаем ровно такой блок, и вид у них не может разойтись.
+ *
+ * Только на опубликованное: врезка на черновик вела бы в никуда. Такой
+ * адрес не ставим и говорим об этом в лог сборки — молча терять ссылку,
+ * которую автор выбрал, нельзя.
  */
-export async function prepareTest(post, { dev }) {
+async function postRefsHtml(ids, publishedIds, where) {
+	const parts = [];
+	for (const id of ids) {
+		if (!publishedIds.has(id)) {
+			console.warn(`[тест] ${where}: материала «${id}» на сайте нет (черновик, удалён или переименован) — врезку не ставим. Выберите материал заново в админке.`);
+			continue;
+		}
+		parts.push(await renderMarkdownString(`::material{id="${id}"}`));
+	}
+	return parts.join('');
+}
+
+/**
+ * @param {{ id: string, data: Record<string, any> }} post
+ * @param {{ dev: boolean, publishedIds: Set<string> }} options
+ */
+export async function prepareTest(post, { dev, publishedIds }) {
 	const test = post.data.test ?? {};
 	const kind = test.kind?.type === 'personality' ? 'personality' : 'quiz';
 	const rawQuestions = test.kind?.questions ?? [];
@@ -116,7 +136,11 @@ export async function prepareTest(post, { dev }) {
 			textHtml,
 			from: typeof r.from === 'number' ? r.from : null,
 			to: typeof r.to === 'number' ? r.to : null,
-			posts: (r.posts ?? []).map((id) => String(id).trim()).filter(Boolean),
+			postsHtml: await postRefsHtml(
+				(r.posts ?? []).map((id) => String(id).trim()).filter(Boolean),
+				publishedIds,
+				`${post.id}, результат «${title}»`,
+			),
 			anime: (r.anime ?? []).map((id) => String(id).trim()).filter(Boolean),
 		});
 	}

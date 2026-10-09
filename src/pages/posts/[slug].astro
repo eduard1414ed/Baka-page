@@ -205,7 +205,6 @@ const isVideoEssay = category === 'videoessay';
 // Тест (тз/ТЗ-тесты.md): раскладка статьи, а тело — вступление и вопросы
 // (src/components/Quiz.astro). Данные готовит src/lib/testPage.mjs.
 const isTest = category === 'test';
-const testData = isTest ? await prepareTest(post, { dev: import.meta.env.DEV }) : null;
 
 // Куда перематывает нажатие на строку таймкодов: у видеоэссе — в ролик,
 // у всех остальных — в аудиоплеер (тз/08, 9.3). Решение принимается ЗДЕСЬ,
@@ -338,6 +337,25 @@ const animeEntries = (await Promise.all(animeIds.map((id) => getEntry('anime', i
 // ключ не совпал бы, и вся эта работа делалась бы второй раз за сборку.
 const catalogPosts = await getCollection('posts', ({ data }) => isPublished(data));
 const catalogTranscripts = await getCollection('transcripts');
+// Данные теста — здесь, а не выше: врезкам под результатом нужен список
+// опубликованного (`catalogPosts`), а он собирается ровно тут.
+const testData = isTest
+	? await prepareTest(post, { dev: import.meta.env.DEV, publishedIds: new Set(catalogPosts.map((entry) => entry.id)) })
+	: null;
+
+// Тайтлы каждого результата — для блока «Упоминается в результате» (ТЗ §4,
+// «Финал»): он стоит там же, где у статьи «Упоминается в материале», и
+// появляется вместе со своим результатом. Нет такого тайтла в справочнике —
+// просто не показываем, как и в обычных марках.
+const resultMentions = testData
+	? await Promise.all(
+			testData.results.map(async (result) => ({
+				slug: result.slug,
+				entries: (await Promise.all(result.anime.map((id) => getEntry('anime', id)))).filter(Boolean),
+			})),
+		)
+	: [];
+
 const catalogById = new Map(
 	buildCatalog({ posts: catalogPosts, transcripts: catalogTranscripts, animeList }).map((item) => [item.id, item]),
 );
@@ -654,7 +672,15 @@ const postSearchMeta = [
 				</div>
 				{/* Вопросы теста — РЯДОМ с текстом, а не внутри: почему —
 				    в шапке Quiz.astro. */}
-				{testData && <Quiz kind={testData.kind} total={testData.total} questions={testData.questions} />}
+				{testData && (
+					<Quiz
+						kind={testData.kind}
+						total={testData.total}
+						title={title}
+						questions={testData.questions}
+						results={testData.results}
+					/>
+				)}
 
 			</section>
 
@@ -703,7 +729,30 @@ const postSearchMeta = [
 			    и «в видеоэссе» на разных страницах — два текста об одном и том же,
 			    и разойтись им проще, чем кажется. */}
 			{/* У ТЕСТА БЛОКА НЕТ (ТЗ §2): марки показывают год и студию, то есть
-			    подсказывают ответы викторины. */}
+			    подсказывают ответы викторины. Вместо него — блок тайтлов
+			    РЕЗУЛЬТАТА, тот же вид и те же марки, спрятанный, пока результата
+			    нет. Показывает нужный скрипт теста (Quiz.astro) по метке
+			    `data-result-mentions` — блок объявляет о себе сам. */}
+			{resultMentions
+				.filter((group) => group.entries.length > 0)
+				.map((group) => (
+					<section
+						class="mentions"
+						aria-labelledby={`mentions-title-${group.slug}`}
+						data-pagefind-ignore
+						data-result-mentions={group.slug}
+						hidden
+					>
+						<h2 class="mentions-title eyebrow tech" id={`mentions-title-${group.slug}`}>
+							упоминается в результате
+						</h2>
+						<div class="stamp-grid">
+							{group.entries.map((entry) => (
+								<AnimeBadge anime={entry} />
+							))}
+						</div>
+					</section>
+				))}
 			{
 				!isTest && animeEntries.length > 0 && (
 					<section class="mentions" aria-labelledby="mentions-title" data-pagefind-ignore>
