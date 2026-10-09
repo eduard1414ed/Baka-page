@@ -40,6 +40,7 @@ export default {
 	"1b1227ae-1884-4084-af6a-f16aa08d1085": { status: "готов", hash: "7feca5fd4e6a4f98" },
 	"1b7a3fe9-0385-4ca1-a0b8-5029d2e8906f": { status: "готов", hash: "d667edf1cdabe2d1" },
 	"1e0dd09a-8268-47d7-8cd7-d73c02408793": { status: "готов", hash: "b9425c0fb6c59aa1" },
+	"2-1-webp": { status: "не по шаблону", hash: "f9ddcdf0f39fb957", why: "не квадрат (1672×941)" },
 	"2-webp": { status: "не по шаблону", hash: "2804cf6b4ffa325a", why: "не квадрат (1920×1080)" },
 	"2079aef0-bd5a-485b-925e-5936b539d7df": { status: "готов", hash: "182fa74a230cc44a" },
 	"21498a1e-4e9a-4922-a770-a1fa703c7f35": { status: "готов", hash: "817369d0c4e2889f" },
