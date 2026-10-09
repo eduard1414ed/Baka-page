@@ -209,7 +209,7 @@ const rowsOf = (images: Image[]) => (images.length === 4 ? [images.slice(0, 2), 
 		transition: color var(--transition-fast);
 	}
 
-	.opt-btn:disabled {
+	.opt-btn[aria-disabled='true'] {
 		cursor: default;
 	}
 
@@ -254,12 +254,167 @@ const rowsOf = (images: Image[]) => (images.length === 4 ? [images.slice(0, 2), 
 
 	/* Наведение — рамка и текст акцентом. Фокус с клавиатуры рисует общая
 	   обводка сайта (global.css, `:focus-visible`), своей не заводим. */
-	.opt:has(.opt-btn:hover:not(:disabled)) {
+	.opt:has(.opt-btn:hover:not([aria-disabled='true'])) {
 		border-color: var(--accent-text);
 	}
 
-	.opt-btn:hover:not(:disabled) .opt-text,
-	.opt-btn:focus-visible .opt-text {
+	.opt-btn:hover:not([aria-disabled='true']) .opt-text,
+	.opt-btn:focus-visible:not([aria-disabled='true']) .opt-text {
 		color: var(--accent-text);
 	}
+
+	/* ——— Состояния после ответа (ТЗ §4, макет, экран 3) ———
+	   Цвета «верно / неверно» — исключение из палитры, только для тестов
+	   (tokens.css, `--test-*`). Цвет никогда не говорит один: рядом всегда
+	   значок ✓ или ✗ и, на компьютере, подпись. */
+	/* Остальные варианты приглушены. Цветные исключены ЯВНО, а не тем, что
+	   их правило стоит ниже: вес у них одинаковый, и равный вес решался бы
+	   порядком в файле (урок CLAUDE.md «равный вес — это тоже перевес»). */
+	.q.is-answered .opt:not(.is-right, .is-wrong) .opt-btn {
+		color: var(--muted);
+	}
+
+	.opt.is-right {
+		background: var(--test-correct-bg);
+		border-color: var(--test-correct-line);
+	}
+
+	.opt.is-right .opt-btn {
+		color: var(--test-correct-text);
+	}
+
+	.opt.is-right .opt-state {
+		display: flex;
+		color: var(--test-correct-icon);
+	}
+
+	.opt.is-wrong {
+		background: var(--test-wrong-bg);
+		border-color: var(--test-wrong-line);
+	}
+
+	.opt.is-wrong .opt-btn {
+		color: var(--test-wrong-text);
+	}
+
+	.opt.is-wrong .opt-state {
+		display: flex;
+		color: var(--test-wrong-icon);
+	}
+
+	/* В разметке оба значка, показывается нужный. */
+	.opt-state .i-x,
+	.opt.is-wrong .i-v {
+		display: none;
+	}
+
+	.opt.is-wrong .i-x {
+		display: block;
+	}
+
+	/* ПОЯСНЕНИЕ — ПОД ТЕКСТОМ ВЕРНОГО ВАРИАНТА, ВНЕ КНОПКИ: в нём бывают
+	   ссылки, а ссылку внутрь кнопки класть нельзя (журнал Тесты-М).
+	   Его ставит скрипт из `<template>`, поэтому метки компонента на нём
+	   нет — правила писаны `:global` внутри своего `.test`. */
+	.test :global(.opt-extra) {
+		padding: 0 var(--sp-4) var(--sp-4);
+		font-size: var(--body-sm);
+		line-height: 1.5;
+		color: var(--text);
+	}
+
+	.test :global(.opt-extra p) {
+		margin: 0;
+	}
+
+	.test :global(.opt-extra p + p) {
+		margin-top: var(--sp-2);
+	}
+
+	/* Обычная ссылка — акцентом и подчёркнутая, как в макете. Ссылку на тайтл
+	   не трогаем: у неё свой вид на весь сайт (global.css, `.anime-mention`). */
+	.test :global(.opt-extra a:not(.anime-mention)) {
+		color: var(--accent-text);
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+	}
 </style>
+
+<script>
+	// ПРОХОЖДЕНИЕ ВИКТОРИНЫ (ТЗ §4, макет, экран 3). Личностный тест
+	// в этой сессии не нажимается: его подсчёт — сессия «Тесты-4».
+	//
+	// ЗАПУСК НА `astro:page-load`, А НЕ ОДИН РАЗ. Переходы по сайту идут без
+	// перезагрузки (ClientRouter), и скрипт компонента браузер выполняет один
+	// раз за сеанс: тест, открытый переходом с главной, иначе не нажимался бы.
+	// Событие приходит и при первой загрузке, и после каждого перехода.
+	//
+	// ОТВЕТ НЕ МЕНЯЕТСЯ. Варианты отвеченного вопроса помечаются
+	// `aria-disabled`, а не настоящим `disabled`: выключенная кнопка теряет
+	// фокус, и человек с клавиатуры улетал бы в начало страницы. Фокус
+	// остаётся на выбранном варианте, остальные выходят из обхода по Tab.
+
+	const ПОДПИСЬ = { верно: 'верно', верныйОтвет: 'верный ответ', вашОтвет: 'ваш ответ' };
+
+	function ответить(вопрос: HTMLElement, выбран: HTMLElement) {
+		if (вопрос.classList.contains('is-answered')) return;
+		вопрос.classList.add('is-answered');
+
+		const варианты = [...вопрос.querySelectorAll<HTMLElement>('.opt')];
+		const верный = варианты.find((вариант) => вариант.hasAttribute('data-correct'));
+
+		for (const вариант of варианты) {
+			const кнопка = вариант.querySelector<HTMLButtonElement>('.opt-btn');
+			if (!кнопка) continue;
+			кнопка.setAttribute('aria-disabled', 'true');
+			if (вариант !== выбран) кнопка.tabIndex = -1;
+		}
+
+		const подписать = (вариант: HTMLElement, слово: string) => {
+			const подпись = вариант.querySelector('.opt-label');
+			if (подпись) подпись.textContent = слово;
+		};
+
+		if (верный) {
+			верный.classList.add('is-right');
+			подписать(верный, выбран === верный ? ПОДПИСЬ.верно : ПОДПИСЬ.верныйОтвет);
+
+			// Пояснение — из `<template>` под кнопку верного варианта.
+			const шаблон = верный.querySelector<HTMLTemplateElement>('template.opt-extra');
+			if (шаблон && !верный.querySelector('div.opt-extra')) {
+				const пояснение = document.createElement('div');
+				пояснение.className = 'opt-extra';
+				пояснение.append(шаблон.content.cloneNode(true));
+				верный.append(пояснение);
+			}
+		}
+
+		if (выбран !== верный) {
+			выбран.classList.add('is-wrong');
+			подписать(выбран, ПОДПИСЬ.вашОтвет);
+		}
+
+		вопрос.dataset.score = выбран === верный ? '1' : '0';
+	}
+
+	function запустить() {
+		document.querySelectorAll<HTMLElement>('.test[data-kind="quiz"]').forEach((тест) => {
+			// Один обработчик на тест: страница, вернувшаяся из истории,
+			// приезжает с уже помеченным тестом — второй обработчик засчитал бы
+			// нажатие дважды.
+			if (тест.dataset.ready) return;
+			тест.dataset.ready = '1';
+
+			тест.addEventListener('click', (событие) => {
+				const кнопка = (событие.target as Element).closest<HTMLButtonElement>('.opt-btn');
+				if (!кнопка || кнопка.getAttribute('aria-disabled') === 'true') return;
+				const вопрос = кнопка.closest<HTMLElement>('.q');
+				const вариант = кнопка.closest<HTMLElement>('.opt');
+				if (вопрос && вариант) ответить(вопрос, вариант);
+			});
+		});
+	}
+
+	document.addEventListener('astro:page-load', запустить);
+</script>
