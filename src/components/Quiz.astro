@@ -321,9 +321,12 @@ const rowsOf = (images: Image[]) => (images.length === 4 ? [images.slice(0, 2), 
 
 	/* НА ТЕЛЕФОНЕ ПОДПИСИ У ЗНАЧКА НЕТ — только значок и цвет рамки (журнал
 	   Тесты-М). Убрана от глаза, а не из разметки: диктору «верно» или «ваш
-	   ответ» нужнее, чем зрячему, — цвета он не видит. */
+	   ответ» нужнее, чем зрячему, — цвета он не видит.
+	   КРОМЕ ВЫБОРА ЛИЧНОСТНОГО ТЕСТА: значка у него нет, и без подписи
+	   выбор на телефоне держался бы на одном полужирном (макет, `тест.css`:
+	   `.opt.is-picked .opt-label` видна на любой ширине). */
 	@media (max-width: 620px) {
-		.opt-label {
+		.opt:not(.is-picked) .opt-label {
 			position: absolute;
 			width: 1px;
 			height: 1px;
@@ -352,7 +355,7 @@ const rowsOf = (images: Image[]) => (images.length === 4 ? [images.slice(0, 2), 
 	/* Остальные варианты приглушены. Цветные исключены ЯВНО, а не тем, что
 	   их правило стоит ниже: вес у них одинаковый, и равный вес решался бы
 	   порядком в файле (урок CLAUDE.md «равный вес — это тоже перевес»). */
-	.q.is-answered .opt:not(.is-right, .is-wrong) .opt-btn {
+	.q.is-answered .opt:not(.is-right, .is-wrong, .is-picked) .opt-btn {
 		color: var(--muted);
 	}
 
@@ -392,6 +395,28 @@ const rowsOf = (images: Image[]) => (images.length === 4 ? [images.slice(0, 2), 
 
 	.opt.is-wrong .i-x {
 		display: block;
+	}
+
+	/* ЛИЧНОСТНЫЙ ТЕСТ: ВЫБОР — ЧЕРНИЛАМИ (ТЗ §4, макет, экран 3, состояния
+	   7 и 8). Рамка и текст чернилами, полужирный, подпись «ваш ответ».
+	   Ни значка, ни цветов «верно / неверно»: верных ответов тут нет,
+	   и галочка читалась бы «угадали». */
+	.opt.is-picked {
+		border-color: var(--ink);
+	}
+
+	.opt.is-picked .opt-btn {
+		color: var(--ink);
+		font-weight: 600;
+	}
+
+	.opt.is-picked .opt-state {
+		display: flex;
+		color: var(--ink);
+	}
+
+	.opt.is-picked .opt-state svg {
+		display: none;
 	}
 
 	/* ПОЯСНЕНИЕ — ПОД ТЕКСТОМ ВЕРНОГО ВАРИАНТА, ВНЕ КНОПКИ: в нём бывают
@@ -638,8 +663,9 @@ const rowsOf = (images: Image[]) => (images.length === 4 ? [images.slice(0, 2), 
 </style>
 
 <script>
-	// ПРОХОЖДЕНИЕ ВИКТОРИНЫ (ТЗ §4, макет, экран 3). Личностный тест
-	// в этой сессии не нажимается: его подсчёт — сессия «Тесты-4».
+	// ПРОХОЖДЕНИЕ ТЕСТА (ТЗ §4, макет, экран 3): викторина — сессия
+	// «Тесты-3», личностный — «Тесты-4». Различаются выбором варианта
+	// (`ответить`) и тем, как выбирается результат; остальное общее.
 	//
 	// ЗАПУСК НА `astro:page-load`, А НЕ ОДИН РАЗ. Переходы по сайту идут без
 	// перезагрузки (ClientRouter), и скрипт компонента браузер выполняет один
@@ -653,12 +679,27 @@ const rowsOf = (images: Image[]) => (images.length === 4 ? [images.slice(0, 2), 
 
 	const ПОДПИСЬ = { верно: 'верно', верныйОтвет: 'верный ответ', вашОтвет: 'ваш ответ' };
 
-	function ответить(вопрос: HTMLElement, выбран: HTMLElement) {
+	const подписать = (вариант: HTMLElement, слово: string) => {
+		const подпись = вариант.querySelector('.opt-label');
+		if (подпись) подпись.textContent = слово;
+	};
+
+	/** Пояснение викторины или реплика личностного — из `<template>` под
+	    кнопку варианта (вне кнопки: в пояснении бывают ссылки). */
+	function раскрыть(вариант: HTMLElement) {
+		const шаблон = вариант.querySelector<HTMLTemplateElement>('template.opt-extra');
+		if (!шаблон || вариант.querySelector('div.opt-extra')) return;
+		const блок = document.createElement('div');
+		блок.className = 'opt-extra';
+		блок.append(шаблон.content.cloneNode(true));
+		вариант.append(блок);
+	}
+
+	function ответить(тест: HTMLElement, вопрос: HTMLElement, выбран: HTMLElement) {
 		if (вопрос.classList.contains('is-answered')) return;
 		вопрос.classList.add('is-answered');
 
 		const варианты = [...вопрос.querySelectorAll<HTMLElement>('.opt')];
-		const верный = варианты.find((вариант) => вариант.hasAttribute('data-correct'));
 
 		for (const вариант of варианты) {
 			const кнопка = вариант.querySelector<HTMLButtonElement>('.opt-btn');
@@ -667,23 +708,21 @@ const rowsOf = (images: Image[]) => (images.length === 4 ? [images.slice(0, 2), 
 			if (вариант !== выбран) кнопка.tabIndex = -1;
 		}
 
-		const подписать = (вариант: HTMLElement, слово: string) => {
-			const подпись = вариант.querySelector('.opt-label');
-			if (подпись) подпись.textContent = слово;
-		};
+		// ЛИЧНОСТНЫЙ (ТЗ §4): верных нет — выбор чернилами, «ваш ответ»,
+		// реплика выбранного варианта, если она есть.
+		if (тест.dataset.kind === 'personality') {
+			выбран.classList.add('is-picked');
+			подписать(выбран, ПОДПИСЬ.вашОтвет);
+			раскрыть(выбран);
+			return;
+		}
+
+		const верный = варианты.find((вариант) => вариант.hasAttribute('data-correct'));
 
 		if (верный) {
 			верный.classList.add('is-right');
 			подписать(верный, выбран === верный ? ПОДПИСЬ.верно : ПОДПИСЬ.верныйОтвет);
-
-			// Пояснение — из `<template>` под кнопку верного варианта.
-			const шаблон = верный.querySelector<HTMLTemplateElement>('template.opt-extra');
-			if (шаблон && !верный.querySelector('div.opt-extra')) {
-				const пояснение = document.createElement('div');
-				пояснение.className = 'opt-extra';
-				пояснение.append(шаблон.content.cloneNode(true));
-				верный.append(пояснение);
-			}
+			раскрыть(верный);
 		}
 
 		if (выбран !== верный) {
@@ -717,7 +756,11 @@ const rowsOf = (images: Image[]) => (images.length === 4 ? [images.slice(0, 2), 
 		if (!конец || вопросы.length === 0) return;
 
 		const пропущены = вопросы.filter((вопрос) => !вопрос.classList.contains('is-answered'));
-		if (пропущены.length === 0) return показатьРезультат(тест, конец, вопросы);
+		if (пропущены.length === 0) {
+			// Подсчёт личностного — шаг 2 сессии «Тесты-4»; до него результата нет.
+			if (тест.dataset.kind === 'personality') return void конец.replaceChildren();
+			return показатьРезультат(тест, конец, вопросы);
+		}
 
 		if (!вопросы.at(-1)!.classList.contains('is-answered')) {
 			конец.replaceChildren();
@@ -796,7 +839,7 @@ const rowsOf = (images: Image[]) => (images.length === 4 ? [images.slice(0, 2), 
 			delete вопрос.dataset.score;
 		});
 		тест.querySelectorAll<HTMLElement>('.opt').forEach((вариант) => {
-			вариант.classList.remove('is-right', 'is-wrong');
+			вариант.classList.remove('is-right', 'is-wrong', 'is-picked');
 			вариант.querySelector('div.opt-extra')?.remove();
 			const подпись = вариант.querySelector('.opt-label');
 			if (подпись) подпись.textContent = '';
@@ -819,7 +862,7 @@ const rowsOf = (images: Image[]) => (images.length === 4 ? [images.slice(0, 2), 
 	}
 
 	function запустить() {
-		document.querySelectorAll<HTMLElement>('.test[data-kind="quiz"]').forEach((тест) => {
+		document.querySelectorAll<HTMLElement>('.test[data-kind]').forEach((тест) => {
 			// Один обработчик на тест: страница, вернувшаяся из истории,
 			// приезжает с уже помеченным тестом — второй обработчик засчитал бы
 			// нажатие дважды.
@@ -846,7 +889,7 @@ const rowsOf = (images: Image[]) => (images.length === 4 ? [images.slice(0, 2), 
 				const вопрос = кнопка.closest<HTMLElement>('.q');
 				const вариант = кнопка.closest<HTMLElement>('.opt');
 				if (!вопрос || !вариант || вопрос.classList.contains('is-answered')) return;
-				ответить(вопрос, вариант);
+				ответить(тест, вопрос, вариант);
 				обновитьФинал(тест);
 			});
 		});
