@@ -117,7 +117,14 @@ export async function prepareTest(post, { dev, publishedIds }) {
 				text: String(o.text ?? '').trim(),
 				correct: kind === 'quiz' && o.correct === true,
 				reply: kind === 'personality' ? String(o.reply ?? '').trim() : '',
-				scores: kind === 'personality' ? (o.scores ?? []) : [],
+				// «Баллы» — заголовки результатов; странице нужны их АДРЕСА: по
+				// адресу скрипт находит шаблон результата (Quiz.astro). Адрес —
+				// тем же правилом, что у самого результата ниже, иначе
+				// «Ферн» в баллах и «Ферн» в результатах разошлись бы.
+				scores:
+					kind === 'personality'
+						? (o.scores ?? []).map((title) => slugify(String(title).trim())).filter(Boolean)
+						: [],
 			})),
 			explanationHtml,
 		});
