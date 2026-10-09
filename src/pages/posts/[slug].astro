@@ -44,7 +44,8 @@ import { buildAnimeMatcher } from '../../lib/animeMentions.mjs';
 import { makeExceptionFilter } from '../../lib/mentionExceptions.mjs';
 import { animeHiddenInPost, animeMentionCountsInPostText, animeMentionedIn, sortAnimeByMentions } from '../../lib/animeMentionIndex.mjs';
 import { resolveEpisodeCover } from '../../lib/episodeCover.mjs';
-import { isPublished } from '../../lib/publishing.mjs';
+import { isPublished, isDevTestPreview } from '../../lib/publishing.mjs';
+import { prepareTest } from '../../lib/testPage.mjs';
 import { buildCatalog } from '../../lib/animeCatalog.mjs';
 import { stampVar } from '../../lib/animeStamp.mjs';
 import { getAnimePosterSrcs } from '../../lib/animePoster.mjs';
@@ -56,6 +57,7 @@ import BonusPaywall from '../../components/BonusPaywall.astro';
 import TimecodeList from '../../components/TimecodeList.astro';
 import SocialStrip from '../../components/SocialStrip.astro';
 import SupportStrip from '../../components/SupportStrip.astro';
+import Quiz from '../../components/Quiz.astro';
 
 export async function getStaticPaths() {
 	// Внешние посты (тз/10, задача 2) сюда НЕ ПОПАДАЮТ, и это главное правило
@@ -66,7 +68,13 @@ export async function getStaticPaths() {
 	//
 	// Отсюда же растёт их отсутствие в карте сайта: src/pages/sitemap.xml.ts
 	// делает ровно ту же проверку, и там написано, почему это не случайность.
-	const posts = await getCollection('posts', ({ data }) => isPublished(data) && !isExternalPost(data));
+	//
+	// ЧЕРНОВИК ТЕСТА ВИДЕН ТОЛЬКО В РЕЖИМЕ РАЗРАБОТКИ (сессия «Тесты-3»):
+	// почему на сайт он не попадёт — у `isDevTestPreview`.
+	const posts = await getCollection(
+		'posts',
+		({ data }) => (isPublished(data) || isDevTestPreview(data, import.meta.env.DEV)) && !isExternalPost(data),
+	);
 
 	// Соседние материалы — внутри РАЗДЕЛА, а не по всему сайту: со страницы
 	// выпуска логично попасть в соседний выпуск, а не в заметку, случайно
@@ -193,6 +201,11 @@ const timecodeRows = parseTimecodeList(post.data.timecodes, (message) =>
 // это не «подстраховались», а «не решили, где они должны быть».
 const isBonus = category === 'bonus';
 const isVideoEssay = category === 'videoessay';
+
+// Тест (тз/ТЗ-тесты.md): раскладка статьи, а тело — вступление и вопросы
+// (src/components/Quiz.astro). Данные готовит src/lib/testPage.mjs.
+const isTest = category === 'test';
+const testData = isTest ? await prepareTest(post, { dev: import.meta.env.DEV }) : null;
 
 // Куда перематывает нажатие на строку таймкодов: у видеоэссе — в ролик,
 // у всех остальных — в аудиоплеер (тз/08, 9.3). Решение принимается ЗДЕСЬ,
@@ -329,7 +342,22 @@ const catalogById = new Map(
 	buildCatalog({ posts: catalogPosts, transcripts: catalogTranscripts, animeList }).map((item) => [item.id, item]),
 );
 
-const hoverTitles = animeEntries.map((entry) => {
+// У ТЕСТА К НИМ ДОБАВЛЯЮТСЯ ТАЙТЛЫ ИЗ ПОЯСНЕНИЙ И РЕЗУЛЬТАТОВ: те лежат
+// в шапке файла, а не в теле, и `inTextCounts` их не видит. Ссылка
+// в пояснении без них осталась бы без марки. В блок марок под текстом они
+// не идут — у теста его нет вовсе (ТЗ §2).
+const hoverEntries = testData
+	? [
+			...animeEntries,
+			...(
+				await Promise.all(
+					[...testData.animeInText].filter((id) => !animeIds.includes(id)).map((id) => getEntry('anime', id)),
+				)
+			).filter(Boolean),
+		]
+	: animeEntries;
+
+const hoverTitles = hoverEntries.map((entry) => {
 	const item = catalogById.get(entry!.id);
 	const posters = getAnimePosterSrcs(entry!.data.poster);
 	const count = item?.count ?? 0;
@@ -443,8 +471,11 @@ const videoSchemas = videoObjectsSchema(youtubeEmbedsInBody(post.body), pageUrl,
 
 // Крошки ведут в тот же раздел, что и ссылка «← назад» над заголовком,
 // и подписаны так же — расходиться им нельзя.
+//
+// У ТЕСТА СВОЕГО РАЗДЕЛА НЕТ (категория скрытая, ТЗ §2) — и крошки, и запасной
+// путь «назад» ведут в архив.
 const crumbs = breadcrumbsSchema([
-	{ name: categoryLabel, path: `/category/${sectionId}/` },
+	isTest ? { name: 'Архив', path: '/archive/' } : { name: categoryLabel, path: `/category/${sectionId}/` },
 	{ name: title, path: `/posts/${post.id}/` },
 ]);
 
@@ -457,7 +488,7 @@ const playerCaption = isEpisode
 	? [SITE_NAME, playerNumber && `выпуск ${playerNumber}`].filter(Boolean).join(' · ')
 	: `${SITE_NAME} · аудиоверсия`;
 
-const backHref = `/category/${sectionId}/`;
+const backHref = isTest ? '/archive/' : `/category/${sectionId}/`;
 const isoDate = date.toISOString().slice(0, 10);
 
 // ЧТО ПОИСК ПО САЙТУ ПОКАЗЫВАЕТ В РЕЗУЛЬТАТЕ-МАТЕРИАЛЕ (часть 8).
@@ -621,6 +652,9 @@ const postSearchMeta = [
 				<div class="content">
 					<Content />
 				</div>
+				{/* Вопросы теста — РЯДОМ с текстом, а не внутри: почему —
+				    в шапке Quiz.astro. */}
+				{testData && <Quiz kind={testData.kind} total={testData.total} questions={testData.questions} />}
 
 			</section>
 
@@ -668,8 +702,10 @@ const postSearchMeta = [
 			    это технический слой, а не подпись под конкретный тип. «В выпуске»
 			    и «в видеоэссе» на разных страницах — два текста об одном и том же,
 			    и разойтись им проще, чем кажется. */}
+			{/* У ТЕСТА БЛОКА НЕТ (ТЗ §2): марки показывают год и студию, то есть
+			    подсказывают ответы викторины. */}
 			{
-				animeEntries.length > 0 && (
+				!isTest && animeEntries.length > 0 && (
 					<section class="mentions" aria-labelledby="mentions-title" data-pagefind-ignore>
 						<h2 class="mentions-title eyebrow tech" id="mentions-title">упоминается в материале</h2>
 						<div class="stamp-grid">

@@ -1,18 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import remarkDirective from 'remark-directive';
-import remarkColonText from './src/plugins/remark-colon-text.mjs';
-import remarkImageFigure from './src/plugins/remark-image-figure.mjs';
-import remarkEpisodeCover from './src/plugins/remark-episode-cover.mjs';
-import remarkLeadCover from './src/plugins/remark-lead-cover.mjs';
-import remarkAdLabel from './src/plugins/remark-ad-label.mjs';
-import remarkSpoiler from './src/plugins/remark-spoiler.mjs';
-import remarkVideo from './src/plugins/remark-video.mjs';
-import remarkLinkList from './src/plugins/remark-link-list.mjs';
-import remarkBlockLabel from './src/plugins/remark-block-label.mjs';
-import remarkPostRef from './src/plugins/remark-post-ref.mjs';
-import remarkAnime from './src/plugins/remark-anime.mjs';
-import remarkTimecode from './src/plugins/remark-timecode.mjs';
+import { remarkPlugins } from './src/plugins/markdown-plugins.mjs';
 import optimizeUploadsIntegration from './src/plugins/optimize-uploads-integration.mjs';
 import ogImagesIntegration from './src/plugins/og-images-integration.mjs';
 import postLinksIntegration from './src/plugins/post-links-integration.mjs';
@@ -32,59 +20,9 @@ export default defineConfig({
 	// в никуда у опубликованных постов, поэтому его место в списке безразлично.
 	integrations: [optimizeUploadsIntegration(), ogImagesIntegration(), postLinksIntegration()],
 	markdown: {
-		// Порядок важен: спойлер должен видеть уже сгруппированные картинки/галереи.
-		remarkPlugins: [
-			remarkDirective,
-			// Двоеточие перед словом («Re:Zero», «Erid:2Vtz…», «в 20:00») разбор
-			// считает меткой и слово после него теряет. Возвращаем такие места
-			// в текст ДО всех остальных плагинов — они должны видеть текст целым.
-			remarkColonText,
-			// Обычная markdown-картинка с хостинга подкаста → сжатая копия
-			// из public/episodes/. Он же убирает из текста картинку, которая
-			// уже показана в шапке выпуска или бонуса.
-			//
-			// ИДЁТ ДО remarkImageFigure, И ЭТО ОБЯЗАТЕЛЬНО: тот превращает блок
-			// `::image` в готовую вёрстку с подписью и номером, и после него
-			// узла-директивы, который надо убрать, в дереве уже нет. Раньше
-			// плагин стоял после — тогда он умел убирать только markdown-картинку
-			// с хостинга подкаста, а её remarkImageFigure и не трогает.
-			remarkEpisodeCover,
-			// Обложка поста в начало текста, если картинок в тексте нет ни одной.
-			// СТРОГО ЗДЕСЬ: после remarkEpisodeCover — иначе обложка выпуска,
-			// которую тот вот-вот уберёт из тела, посчиталась бы картинкой
-			// в тексте; до remarkAdLabel и remarkImageFigure — чтобы маркировка
-			// рекламы встала под наш кадр, а сам кадр разобрал тот же код,
-			// что и обычные иллюстрации. Зачем это нужно — в шапке плагина.
-			remarkLeadCover,
-			// Маркировка рекламы из поля поста. МЕЖДУ ЭТИМИ ДВУМЯ И НИГДЕ БОЛЬШЕ:
-			// после remarkEpisodeCover — чтобы не встать под обложку выпуска,
-			// которую тот только что убрал из тела; до remarkImageFigure —
-			// чтобы `::image` и `::video` были ещё директивами и медиа можно было
-			// отличить от текста. Зачем это нужно — в шапке самого плагина.
-			remarkAdLabel,
-			remarkImageFigure,
-			remarkVideo,
-			// Собирает подряд идущие `::link` в одну врезку — до спойлера,
-			// чтобы внутри спрятанного блока врезка была уже одним узлом,
-			// а не россыпью отдельных маркеров.
-			remarkLinkList,
-			// Подпись блока внутри текста — тоже до спойлера, чтобы спрятанный
-			// блок уносил её вместе с собой одним куском.
-			remarkBlockLabel,
-			// Врезка на другой материал сайта. СТРОГО ЗДЕСЬ:
-			//   после remarkBlockLabel — врезка сама рисует свою подпись
-			//     `[ ещё по теме ]`, и чужая подпись, поставленная автором
-			//     отдельным блоком, к этому моменту уже разобрана;
-			//   до remarkAnime — иначе название тайтла внутри заголовка врезки
-			//     стало бы ссылкой на тайтл ВНУТРИ ссылки на материал, а вложенных
-			//     ссылок не бывает: у слова пропало бы нажатие целиком;
-			//   до remarkSpoiler — чтобы спрятанный блок уносил врезку с собой
-			//     одним куском, как уже уносит галерею и список ссылок.
-			remarkPostRef,
-			remarkAnime,
-			remarkTimecode,
-			remarkSpoiler,
-		],
+		// Список и его порядок — в src/plugins/markdown-plugins.mjs: его читает
+		// ещё и страница теста, вторая копия разошлась бы молча.
+		remarkPlugins,
 	},
 	// ── ИМЕНА ФАЙЛОВ СТИЛЕЙ И СКРИПТОВ — БЕЗ ХЕША СОДЕРЖИМОГО ──
 	//

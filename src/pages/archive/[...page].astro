@@ -14,7 +14,7 @@ import Layout from '../../layouts/Layout.astro';
 import ArchiveView from '../../components/ArchiveView.astro';
 import JsonLd from '../../components/JsonLd.astro';
 import { archiveSections } from '../../content.config';
-import { isPublished } from '../../lib/publishing.mjs';
+import { isPublished, isDevTestPreview } from '../../lib/publishing.mjs';
 import {
 	PER_PAGE,
 	ARCHIVE_TITLE,
@@ -28,9 +28,14 @@ import { breadcrumbsSchema } from '../../lib/schema.mjs';
 export const getStaticPaths = (async ({ paginate }) => {
 	// Те же две проверки, что решают, попадёт ли материал в ленту на главной
 	// и в карту сайта: `isPublished` и сортировка по дате от свежих к старым.
-	const posts = (await getCollection('posts', ({ data }) => isPublished(data))).sort(
-		(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-	);
+	//
+	// В РЕЖИМЕ РАЗРАБОТКИ СЮДА ЖЕ ПОПАДАЕТ ЧЕРНОВИК ТЕСТА — чтобы его карточку
+	// можно было увидеть в ленте до публикации (сессия «Тесты-3»). Только
+	// здесь, в архиве: одного места для этого довольно. На сайт он не попадёт —
+	// почему, сказано у `isDevTestPreview`.
+	const posts = (
+		await getCollection('posts', ({ data }) => isPublished(data) || isDevTestPreview(data, import.meta.env.DEV))
+	).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 	// Строка счёта считается ОДИН РАЗ по всему архиву и раздаётся всем
 	// страницам: на пятой странице она обязана говорить то же, что на первой.

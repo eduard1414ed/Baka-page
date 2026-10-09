@@ -10,6 +10,7 @@
 import { getReadingTime, MIN_MINUTES } from './readingTime.mjs';
 import { findEpisodeByGuid } from './podcastFeed.mjs';
 import { isExternalPost, externalSourceName } from './externalPost.mjs';
+import { withCount } from './plural.mjs';
 
 // Категории, у которых своя длительность и время чтения не имеет смысла:
 // у выпуска подкаста — длительность аудио, у видеоэссе — длина ролика с его
@@ -78,7 +79,7 @@ export function formatClock(seconds) {
 }
 
 /**
- * @typedef {{ kind: 'duration' | 'reading' | 'source', label: string, meta: string }} PostTiming
+ * @typedef {{ kind: 'duration' | 'reading' | 'source' | 'count', label: string, meta: string }} PostTiming
  *
  * `label` — строка рядом с датой на странице материала («1 ч 6 мин слушать»).
  * `meta`  — то же самое для метастроки карточки в ленте («01:06:33»).
@@ -128,6 +129,21 @@ export async function getPostTiming(post) {
 	}
 
 	if (CATEGORIES_WITHOUT_TIMING.includes(post.data.category)) return null;
+
+	// ТЕСТ: ВМЕСТО ВРЕМЕНИ ЧТЕНИЯ — ЧИСЛО ВОПРОСОВ (ТЗ-тесты §2, Тесты-М,
+	// вариант A): «[ ТЕСТ ] · 12 ВОПРОСОВ» на карточке, «12 вопросов» рядом
+	// с датой. Время чтения тут посчиталось бы по вступлению — а вопросы
+	// лежат в шапке файла, и «<3 мин чтения» у теста на двенадцать вопросов
+	// было бы прямой неправдой. Капслок на карточке делает стиль.
+	//
+	// Вопросов нет (тест только начат в админке) — молчим: «0 вопросов»
+	// читалось бы поломкой.
+	if (post.data.category === 'test') {
+		const count = post.data.test?.kind?.questions?.length ?? 0;
+		if (count === 0) return null;
+		const text = withCount(count, ['вопрос', 'вопроса', 'вопросов']);
+		return { kind: 'count', label: text, meta: text };
+	}
 
 	if (CATEGORIES_WITH_OWN_DURATION.includes(post.data.category)) {
 		// Длительность берём из RSS, а не из своих файлов, по той же причине,
