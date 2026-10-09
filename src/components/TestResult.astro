@@ -42,9 +42,12 @@ interface Props {
 	};
 	/** Блок для страницы результата (ТЗ §5), а не для теста. */
 	page?: boolean;
+	/** Адрес страницы этого результата, `/posts/<тест>/<результат>/` —
+	    куда ведёт «Поделиться результатом». Нужен только тесту. */
+	sharePath?: string;
 }
 
-const { testTitle = '', total, withScore, result: r, page = false } = Astro.props;
+const { testTitle = '', total, withScore, result: r, page = false, sharePath = '' } = Astro.props;
 
 // Слово через дефис («VHS-полка», «что-то») в заголовке результата не рвём
 // по строкам (ТЗ §4): такие слова уходят в неразрывную обёртку.
@@ -65,6 +68,8 @@ const imgPlace = (img: Image | null) => (!img ? null : (img.ratio ?? 0) > 1 ? 'i
 	tabindex={page ? undefined : '-1'}
 	data-score-from={page && withScore ? (r.from ?? '') : undefined}
 	data-score-to={page && withScore ? (r.to ?? '') : undefined}
+	data-share-path={page ? undefined : sharePath}
+	data-share-text={page ? undefined : `Мой результат в тесте «${testTitle}» — ${r.title}`}
 >
 	{
 		!page && (
@@ -101,16 +106,24 @@ const imgPlace = (img: Image | null) => (!img ? null : (img.ratio ?? 0) > 1 ? 'i
 		</h2>
 	</div>
 	{r.textHtml && <div class="rcard-text" set:html={r.textHtml} />}
-	{/* Кнопки «Поделиться результатом» пока нет — она появится
-	    в сессии «Тесты-5». Места под неё не держим: «Пройти ещё
-	    раз» стоит одна. Вид кнопки — `.quiz-btn` в Quiz.astro. */}
+	{/* «ПОДЕЛИТЬСЯ РЕЗУЛЬТАТОМ» — ОДНА КНОПКА (ТЗ §5, решение заказчика
+	    в Тесты-М), над «Пройти ещё раз»: на телефоне обе во всю ширину одна
+	    под другой, на компьютере в ряд. Что она делает — скрипт Quiz.astro,
+	    `поделиться`; под кнопками строка, куда он пишет, что вышло. Вид
+	    кнопок — `.quiz-btn` в Quiz.astro. */}
 	{
 		!page && (
-			<div class="result-actions">
-				<button type="button" class="quiz-btn" data-again>
-					Пройти ещё раз
-				</button>
-			</div>
+			<>
+				<div class="result-actions">
+					<button type="button" class="quiz-btn quiz-btn--main" data-share>
+						Поделиться результатом
+					</button>
+					<button type="button" class="quiz-btn" data-again>
+						Пройти ещё раз
+					</button>
+				</div>
+				<p class="result-note" aria-live="polite" />
+			</>
 		)
 	}
 	{!page && r.postsHtml && (
@@ -292,6 +305,35 @@ const imgPlace = (img: Image | null) => (!img ? null : (img.ratio ?? 0) > 1 ? 'i
 		.result-actions {
 			display: grid;
 		}
+	}
+
+	/* Что вышло у «Поделиться»: «ссылка скопирована» или ссылка текстом,
+	   если браузер копировать не дал (макет, экран 5). Пусто — строки нет. */
+	.result-note {
+		margin: var(--sp-3) 0 0;
+		font-size: var(--body-sm);
+		line-height: 1.5;
+		color: var(--muted);
+	}
+
+	.result-note:empty {
+		display: none;
+	}
+
+	/* Ссылка, которую не удалось скопировать: поле только для чтения —
+	   его содержимое выделяется целиком одним касанием (скрипт выделяет его
+	   сам), и длинный адрес не рвёт строку. Поле ставит скрипт — метки
+	   компонента на нём нет. */
+	.result-note :global(input) {
+		display: block;
+		width: 100%;
+		margin-top: var(--sp-2);
+		padding: var(--sp-2) var(--sp-3);
+		border: 1px solid var(--line);
+		background: transparent;
+		color: var(--ink);
+		font-family: var(--font-body);
+		font-size: var(--body-sm);
 	}
 
 	/* «Ещё по теме» — врезки «Наш материал», тот же блок, что `::material`

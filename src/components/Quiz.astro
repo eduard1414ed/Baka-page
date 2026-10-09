@@ -40,6 +40,9 @@ interface Props {
 	total: number;
 	/** Название теста — подпись блока результата (его скринят без страницы). */
 	title: string;
+	/** Адрес страницы теста, `/posts/<тест>/`: от него — адреса страниц
+	    результатов, куда ведёт «Поделиться результатом». */
+	path: string;
 	questions: {
 		n: number;
 		text: string;
@@ -59,7 +62,7 @@ interface Props {
 	}[];
 }
 
-const { kind, total, title, questions, results } = Astro.props;
+const { kind, total, title, path, questions, results } = Astro.props;
 
 // Четыре картинки — два ряда по две (2 × 2), остальные — одним рядом.
 const rowsOf = (images: Image[]) => (images.length === 4 ? [images.slice(0, 2), images.slice(2)] : [images]);
@@ -144,7 +147,7 @@ const rowsOf = (images: Image[]) => (images.length === 4 ? [images.slice(0, 2), 
 	{
 		results.map((r) => (
 			<template class="result-tpl" data-slug={r.slug} data-from={r.from ?? ''} data-to={r.to ?? ''}>
-				<TestResult testTitle={title} total={total} withScore={kind === 'quiz'} result={r} />
+				<TestResult testTitle={title} total={total} withScore={kind === 'quiz'} result={r} sharePath={`${path}${r.slug}/`} />
 			</template>
 		))
 	}
@@ -469,6 +472,23 @@ const rowsOf = (images: Image[]) => (images.length === 4 ? [images.slice(0, 2), 
 		border-color: var(--accent-text);
 		color: var(--accent-text);
 	}
+
+	/* Главная кнопка блока результата — «Поделиться результатом»: залита
+	   чернилами (макет, экран 5). Селектор весомее обычной кнопки нарочно:
+	   при равном весе решал бы порядок в файле (урок CLAUDE.md «равный вес —
+	   это тоже перевес»). */
+	.test :global(.quiz-btn.quiz-btn--main) {
+		border-color: var(--ink);
+		background: var(--ink);
+		color: var(--paper);
+	}
+
+	.test :global(.quiz-btn.quiz-btn--main:hover),
+	.test :global(.quiz-btn.quiz-btn--main:focus-visible) {
+		border-color: var(--accent-text);
+		background: var(--accent-text);
+		color: var(--paper);
+	}
 </style>
 
 <script>
@@ -673,6 +693,59 @@ const rowsOf = (images: Image[]) => (images.length === 4 ? [images.slice(0, 2), 
 		блок?.focus({ preventScroll: true });
 	}
 
+	const СКОПИРОВАНО =
+		'Ссылка на ваш результат скопирована. Вставьте её в Telegram, ВКонтакте или куда угодно — в превью будет виден ваш результат.';
+	const НЕ_ВЫШЛО = 'Скопировать не получилось: браузер не разрешил. Вот ссылка — выделите её и скопируйте:';
+
+	/**
+	 * «Поделиться результатом» (ТЗ §5).
+	 *
+	 * Ссылка — на страницу результата, у викторины со счётом (`?score=9`).
+	 * Адрес — того сайта, где тест открыт (`location.origin`), как у ссылки
+	 * на `/mybest/`: открыли зеркало — делимся зеркалом.
+	 *
+	 * СИСТЕМНОЕ ОКНО — ТОЛЬКО НА СЕНСОРНЫХ ЭКРАНАХ (решение заказчика
+	 * 9 октября 2026, Тесты-5а). Safari на маке и Chrome на Windows его тоже
+	 * умеют, но на компьютере кнопка всегда копирует ссылку и говорит об этом.
+	 * Закрыл окно, ничего не выбрав (`AbortError`), — это не ошибка, молчим.
+	 * Любой другой отказ окна — копируем, как на компьютере.
+	 *
+	 * Копировать браузер не дал — честная фраза и ссылка в поле, откуда её
+	 * можно выделить руками.
+	 */
+	async function поделиться(блок: HTMLElement, тест: HTMLElement) {
+		const строка = блок.querySelector<HTMLElement>('.result-note');
+		const адрес = new URL(блок.dataset.sharePath ?? '', location.origin);
+		const счёт = блок.querySelector('.rcard-score-n')?.textContent ?? '';
+		if (тест.dataset.kind === 'quiz' && счёт !== '') адрес.searchParams.set('score', счёт);
+		const ссылка = адрес.href;
+		строка?.replaceChildren();
+
+		if (matchMedia('(pointer: coarse)').matches && typeof navigator.share === 'function') {
+			try {
+				await navigator.share({ text: блок.dataset.shareText ?? '', url: ссылка });
+				return;
+			} catch (ошибка) {
+				if ((ошибка as Error)?.name === 'AbortError') return;
+			}
+		}
+
+		try {
+			await navigator.clipboard.writeText(ссылка);
+			if (строка) строка.textContent = СКОПИРОВАНО;
+		} catch {
+			if (!строка) return;
+			const поле = document.createElement('input');
+			поле.type = 'text';
+			поле.readOnly = true;
+			поле.value = ссылка;
+			поле.setAttribute('aria-label', 'Ссылка на ваш результат');
+			поле.addEventListener('focus', () => поле.select());
+			строка.replaceChildren(НЕ_ВЫШЛО, поле);
+			поле.focus();
+		}
+	}
+
 	/** «Пройти ещё раз»: всё как при открытии страницы, и к первому вопросу. */
 	function сбросить(тест: HTMLElement) {
 		тест.querySelectorAll<HTMLElement>('.q').forEach((вопрос) => {
@@ -722,6 +795,13 @@ const rowsOf = (images: Image[]) => (images.length === 4 ? [images.slice(0, 2), 
 
 				if (цель.closest('[data-again]')) {
 					сбросить(тест);
+					return;
+				}
+
+				const кнопкаПоделиться = цель.closest<HTMLElement>('[data-share]');
+				if (кнопкаПоделиться) {
+					const блок = кнопкаПоделиться.closest<HTMLElement>('.result');
+					if (блок) поделиться(блок, тест);
 					return;
 				}
 
