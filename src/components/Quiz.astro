@@ -23,6 +23,11 @@
 //
 // ЗНАЧКИ ✓ И ✗ — SVG ПРЯМО В РАЗМЕТКЕ, не знаки шрифта: в урезанных шрифтах
 // сайта их нет, и на айфоне на их место встал бы цветной эмодзи (ТЗ §4).
+//
+// БЛОК РЕЗУЛЬТАТА — СВОЙ КОМПОНЕНТ, src/components/TestResult.astro: его
+// рисует и страница результата (ТЗ §5), копии разметки быть не должно.
+import TestResult from './TestResult.astro';
+
 interface Image {
 	src: string;
 	srcset: string | null;
@@ -55,18 +60,6 @@ interface Props {
 }
 
 const { kind, total, title, questions, results } = Astro.props;
-
-// Слово через дефис («VHS-полка», «что-то») в заголовке результата не рвём
-// по строкам (ТЗ §4): такие слова уходят в неразрывную обёртку.
-const withNobr = (text: string) => text.split(/(\S+-\S+)/).map((part, i) => ({ part, nobr: i % 2 === 1 }));
-
-// КАРТИНКА РЕЗУЛЬТАТА: вертикальная и квадратная — слева от заголовка
-// (макет, экран 5, «Мушиси»: 104 px на телефоне, 180 на компьютере);
-// ШИРОКАЯ — над заголовком во всю колонку (решение заказчика 9 октября
-// 2026, Тесты-4). Слева в 180 px широкая обложка выходила полоской высотой
-// в сотню пикселей. Пропорцию не знаем (файла нет на диске) — слева, как
-// в макете.
-const imgPlace = (img: Image | null) => (!img ? null : (img.ratio ?? 0) > 1 ? 'img-top' : 'img-side');
 
 // Четыре картинки — два ряда по две (2 × 2), остальные — одним рядом.
 const rowsOf = (images: Image[]) => (images.length === 4 ? [images.slice(0, 2), images.slice(2)] : [images]);
@@ -151,51 +144,7 @@ const rowsOf = (images: Image[]) => (images.length === 4 ? [images.slice(0, 2), 
 	{
 		results.map((r) => (
 			<template class="result-tpl" data-slug={r.slug} data-from={r.from ?? ''} data-to={r.to ?? ''}>
-				<section class="result" aria-label="Ваш результат" tabindex="-1">
-					<span class="rcard-test tech">[&thinsp;Тест&thinsp;]</span>
-					<p class="rcard-name">{title}</p>
-					<div class:list={['rcard-body', imgPlace(r.image), kind === 'quiz' && 'has-score']}>
-						{r.image && (
-							<img
-								class="rcard-img"
-								src={r.image.src}
-								srcset={r.image.srcset ?? undefined}
-								sizes={
-									!r.image.srcset
-										? undefined
-										: imgPlace(r.image) === 'img-top'
-											? '(min-width: 740px) 700px, 100vw'
-											: '(min-width: 621px) 180px, 104px'
-								}
-								alt=""
-							/>
-						)}
-						{kind === 'quiz' && (
-							<p class="rcard-score">
-								<span class="rcard-score-n" />
-								&nbsp;из&nbsp;{total}
-							</p>
-						)}
-						<h2 class="rcard-title">
-							{withNobr(r.title).map(({ part, nobr }) => (nobr ? <span class="nobr">{part}</span> : part))}
-						</h2>
-					</div>
-					{r.textHtml && <div class="rcard-text" set:html={r.textHtml} />}
-					{/* Кнопки «Поделиться результатом» пока нет — она появится
-					    в сессии «Тесты-5». Места под неё не держим: «Пройти ещё
-					    раз» стоит одна. */}
-					<div class="result-actions">
-						<button type="button" class="quiz-btn" data-again>
-							Пройти ещё раз
-						</button>
-					</div>
-					{r.postsHtml && (
-						<div class="result-group">
-							<span class="eyebrow tech">ещё по теме</span>
-							<Fragment set:html={r.postsHtml} />
-						</div>
-					)}
-				</section>
+				<TestResult testTitle={title} total={total} withScore={kind === 'quiz'} result={r} />
 			</template>
 		))
 	}
@@ -218,10 +167,10 @@ const rowsOf = (images: Image[]) => (images.length === 4 ? [images.slice(0, 2), 
 		margin-top: var(--sp-16);
 	}
 
-	/* Скрипт прокручивает к вопросу («К вопросу 2 ↑», «Пройти ещё раз»)
-	   и к результату. Без запаса подпись вставала вплотную к краю экрана. */
-	.q,
-	.result {
+	/* Скрипт прокручивает к вопросу («К вопросу 2 ↑», «Пройти ещё раз»).
+	   Без запаса подпись вставала вплотную к краю экрана. Запас блока
+	   результата — в TestResult.astro. */
+	.q {
 		scroll-margin-top: var(--sp-6);
 	}
 
@@ -519,196 +468,6 @@ const rowsOf = (images: Image[]) => (images.length === 4 ? [images.slice(0, 2), 
 	.test :global(.quiz-btn:focus-visible) {
 		border-color: var(--accent-text);
 		color: var(--accent-text);
-	}
-
-	/* ——— Блок результата (ТЗ §4, «Финал»; макет, экран 5) ———
-	   Без рамки и без логотипа, по левому краю. Начало отмечает подпись,
-	   снизу 64 воздуха (их даёт `.test`). Всё до кнопки влезает в один
-	   экран телефона — его скринят. */
-	.result {
-		margin-top: var(--sp-16);
-	}
-
-	/* Фокус сюда ставит скрипт, чтобы диктор начал читать с результата.
-	   Это не элемент управления, и обводка вокруг всего блока читалась бы
-	   поломкой; у кнопок внутри обводка своя, общая. */
-	.result:focus {
-		outline: none;
-	}
-
-	.rcard-test {
-		display: block;
-		color: var(--accent-text);
-	}
-
-	.rcard-name {
-		margin: var(--sp-1) 0 0;
-		font-family: var(--font-display);
-		font-size: var(--card-title);
-		line-height: 1.15;
-		color: var(--ink);
-	}
-
-	.rcard-body {
-		display: grid;
-		gap: var(--sp-2) var(--sp-4);
-		margin-top: var(--sp-6);
-		align-items: center;
-		grid-template-areas: 'score' 'title';
-	}
-
-	.rcard-body:not(.has-score) {
-		grid-template-areas: 'title';
-	}
-
-	.rcard-body.img-side.has-score {
-		grid-template-columns: 104px minmax(0, 1fr);
-		grid-template-areas: 'img score' 'title title';
-	}
-
-	.rcard-body.img-side:not(.has-score) {
-		grid-template-columns: 104px minmax(0, 1fr);
-		grid-template-areas: 'img title';
-	}
-
-	/* Широкая картинка — над всем остальным, по левому краю. Потолок
-	   высоты тот же, что у одиночной картинки вопроса (360, на компьютере
-	   420): почти квадратная во всю колонку иначе вытолкнула бы кнопки
-	   из первого экрана телефона, а его скринят. */
-	.rcard-body.img-top.has-score {
-		grid-template-areas: 'img' 'score' 'title';
-	}
-
-	.rcard-body.img-top:not(.has-score) {
-		grid-template-areas: 'img' 'title';
-	}
-
-	.rcard-body.img-top {
-		align-items: start;
-	}
-
-	.rcard-img {
-		grid-area: img;
-		height: auto;
-		object-fit: contain;
-	}
-
-	.img-side .rcard-img {
-		width: 104px;
-		max-height: 150px;
-	}
-
-	.img-top .rcard-img {
-		width: auto;
-		max-width: 100%;
-		max-height: 360px;
-		margin-bottom: var(--sp-2);
-	}
-
-	.rcard-score {
-		grid-area: score;
-		margin: 0;
-		font-family: var(--font-display);
-		font-size: var(--h1);
-		line-height: var(--h1-lh);
-		letter-spacing: var(--h1-ls);
-		color: var(--ink);
-	}
-
-	.rcard-title {
-		grid-area: title;
-		margin: 0;
-		font-size: var(--h2);
-		line-height: var(--h2-lh);
-		letter-spacing: var(--h2-ls);
-		color: var(--ink);
-	}
-
-	.nobr {
-		white-space: nowrap;
-	}
-
-	@media (min-width: 621px) {
-		.img-side .rcard-img {
-			width: 180px;
-			max-height: 260px;
-		}
-
-		.img-top .rcard-img {
-			max-height: 420px;
-		}
-
-		.rcard-body.img-side.has-score {
-			grid-template-columns: 180px minmax(0, 1fr);
-			grid-template-rows: auto 1fr;
-			grid-template-areas: 'img score' 'img title';
-			column-gap: var(--sp-8);
-			align-items: start;
-		}
-
-		.rcard-body.img-side:not(.has-score) {
-			grid-template-columns: 180px minmax(0, 1fr);
-			column-gap: var(--sp-8);
-			align-items: start;
-		}
-	}
-
-	/* Текст результата — разметка из админки, метки компонента на ней нет. */
-	.rcard-text {
-		margin-top: var(--sp-4);
-		font-size: var(--body-lg);
-		line-height: 1.6;
-		color: var(--text);
-	}
-
-	.rcard-text :global(p) {
-		margin: 0;
-	}
-
-	.rcard-text :global(p + p) {
-		margin-top: var(--sp-4);
-	}
-
-	.result-actions {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--sp-3);
-		margin-top: var(--sp-6);
-	}
-
-	/* На телефоне кнопки во всю ширину, одна под другой (макет). */
-	@media (max-width: 620px) {
-		.result-actions {
-			display: grid;
-		}
-	}
-
-	/* «Ещё по теме» — врезки «Наш материал», тот же блок, что `::material`
-	   в статье. Подпись у группы ОДНА, над всеми врезками (макет, экран 5):
-	   свою подпись каждая врезка рисует сама, и здесь она спрятана, иначе
-	   «[ ещё по теме ]» стояло бы над каждой. Поля врезки (48 сверху и
-	   снизу — отбивка от абзацев статьи) тут заменены на 16 между соседями:
-	   абзацев вокруг нет, рядом только такие же врезки. */
-	.result-group {
-		margin-top: var(--sp-12);
-	}
-
-	.result-group > .eyebrow {
-		display: block;
-		color: var(--accent-text);
-		margin-bottom: var(--sp-3);
-	}
-
-	.result-group :global(.post-ref) {
-		margin-block: 0;
-	}
-
-	.result-group :global(.post-ref + .post-ref) {
-		margin-top: var(--sp-4);
-	}
-
-	.result-group :global(.post-ref > .body-label) {
-		display: none;
 	}
 </style>
 
